@@ -1,0 +1,27 @@
+/* inside public Pickupable Pickup(bool events = true) AT END */
+
+if(Multiplayer.isActive) {
+		Vector3 position = this.gameObject.transform.position;
+		Multiplayer.client.pickupItem(position, this.gameObject.transform.name, techType.ToString());
+}
+
+
+
+/* inside method into Pickupable */
+
+	public void checkForMultiplayerDrop(Vector3 dropPosition, Vector3 pushVelocity)
+	{
+		if(Multiplayer.isActive) {
+			TechType techType = this.GetTechType();
+			Multiplayer.client.dropItem(techType.ToString(), dropPosition, pushVelocity);
+		}
+	}
+}
+
+
+/* ADD IL to drop(vector3 positon, vector3 pushVelocity) - BELOW PlayOneShot: */
+
+ldarg.0
+ldarg.1
+ldarg.2
+call checkForMultipalyerDrop

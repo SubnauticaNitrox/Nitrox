@@ -1,0 +1,2 @@
+// Within Awake()
+base.gameObject.AddComponent<Multiplayer>();
