@@ -1,0 +1,6 @@
+		/* Constructable in construct before updateMaterial() */
+
+		if (Multiplayer.isActive && (this.constructedAmount >= 1f || resourceID2 != resourceID))
+		{
+			Multiplayer.client.changeConstructionAmount(base.gameObject.transform.position, this.constructedAmount);
+		}

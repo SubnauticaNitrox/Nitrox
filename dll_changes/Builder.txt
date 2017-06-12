@@ -1,0 +1,6 @@
+/* Builder - TryPlace 265   */
+
+			if(Multiplayer.isActive) {
+				TechType techType = CraftData.GetTechType(gameObject);
+				Multiplayer.client.buildItem(techType.ToString(), Builder.placePosition, Builder.placeRotation);
+			}
