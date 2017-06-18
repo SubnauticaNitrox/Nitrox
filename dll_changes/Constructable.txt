@@ -1,4 +1,7 @@
-		/* Constructable in construct before updateMaterial() */
+		
+using NitroxClient.MonoBehaviours;
+
+/* Constructable in construct before updateMaterial() */
 
 		if (Multiplayer.isActive && (this.constructedAmount >= 1f || resourceID2 != resourceID))
 		{

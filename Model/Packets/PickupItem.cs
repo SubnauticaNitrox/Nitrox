@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public String GameObjectName { get; private set; }
         public String TechType { get; private set; }
 
-        public PickupItem(String playerId, Vector3 playerPosition, Vector3 itemPosition, String gameObjectName, String techType) : base(playerId, playerPosition)
+        public PickupItem(String playerId, Vector3 itemPosition, String gameObjectName, String techType) : base(playerId, itemPosition)
         {
             this.ItemPosition = itemPosition;
             this.GameObjectName = gameObjectName;
