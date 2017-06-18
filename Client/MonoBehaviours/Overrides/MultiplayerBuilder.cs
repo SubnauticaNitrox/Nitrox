@@ -108,11 +108,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
             expr_58.rotation = MultiplayerBuilder.placeRotation * MultiplayerBuilder.ghostModelRotation;
             expr_58.localScale = MultiplayerBuilder.ghostModelScale;
             Color color = (!MultiplayerBuilder.canPlace) ? MultiplayerBuilder.placeColorDeny : MultiplayerBuilder.placeColorAllow;
-            IBuilderGhostModel[] components = MultiplayerBuilder.ghostModel.GetComponents<IBuilderGhostModel>();
-            for (int i = 0; i < components.Length; i++)
-            {
-                components[i].UpdateGhostModelColor(MultiplayerBuilder.canPlace, ref color);
-            }
             MaterialExtensions.SetColor(MultiplayerBuilder.renderers, ShaderPropertyID._Tint, color);
         }
 

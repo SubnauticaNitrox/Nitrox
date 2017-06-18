@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public Quaternion Rotation { get; private set; }
         public String TechType { get; private set; }
 
-        public BeginItemConstruction(String playerId, Vector3 playerPosition, Vector3 itemPosition, Quaternion rotation, String techType) : base(playerId, playerPosition)
+        public BeginItemConstruction(String playerId, Vector3 itemPosition, Quaternion rotation, String techType) : base(playerId, itemPosition)
         {
             this.ItemPosition = itemPosition;
             this.Rotation = rotation;

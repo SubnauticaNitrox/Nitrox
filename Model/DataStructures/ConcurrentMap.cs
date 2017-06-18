@@ -8,7 +8,7 @@ namespace NitroxModel.DataStructures
     public class ConcurrentMap<K, V>
     {
         readonly Dictionary<K, V> _map = new Dictionary<K, V>();
-
+        
         public bool TryGetValue(K key, out V value)
         {
             lock (_map)

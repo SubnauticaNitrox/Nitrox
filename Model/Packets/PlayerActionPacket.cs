@@ -7,17 +7,15 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlayerActionPacket : Packet
+    public abstract class PlayerActionPacket : Packet
     {
-        public Vector3 PlayerPosition { get; protected set; }
+        public Vector3 ActionPosition { get; protected set; }
         public bool PlayerMustBeInRangeToReceive { get; protected set; }
-        public bool IgnoreIfPlayerNotInRange { get; protected set; }
 
-        public PlayerActionPacket(String playerId, Vector3 playerPosition) : base(playerId)
+        public PlayerActionPacket(String playerId, Vector3 eventPosition) : base(playerId)
         {
-            this.PlayerPosition = playerPosition;
+            this.ActionPosition = eventPosition;
             this.PlayerMustBeInRangeToReceive = true;
-            this.IgnoreIfPlayerNotInRange = false;
         }
     }
 }

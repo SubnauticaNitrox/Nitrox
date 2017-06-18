@@ -10,19 +10,21 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
 {
-    class TcpClient
+    public class TcpClient
     {
+        private ChunkAwarePacketManager packetManager;
         private const int port = 11000;
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
         private static String response = String.Empty;
         private Connection connection;
         
-        public Dictionary<Type, Queue<Packet>> ReceivedPacketsByType { get; protected set; }
+        public TcpClient(ChunkAwarePacketManager packetManager)
+        {
+            this.packetManager = packetManager;
+        }
 
         public void Start()
         {
-            ReceivedPacketsByType = new Dictionary<Type, Queue<Packet>>();
-            
             IPHostEntry ipHostInfo = Dns.Resolve("104.232.113.100");
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
@@ -80,39 +82,11 @@ namespace NitroxClient.Communication
 
                 while (connection.ReceivedPackets.Count > 0)
                 {
-                    Packet incomingPacket = connection.ReceivedPackets.Dequeue();
-
-                    lock (ReceivedPacketsByType)
-                    {
-                        if (!ReceivedPacketsByType.ContainsKey(incomingPacket.GetType()))
-                        {
-                            ReceivedPacketsByType[incomingPacket.GetType()] = new Queue<Packet>();
-                        }
-
-                        ReceivedPacketsByType[incomingPacket.GetType()].Enqueue(incomingPacket);
-                    }
+                    packetManager.PacketReceived(connection.ReceivedPackets.Dequeue());
                 }
             }
 
             client.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0, new AsyncCallback(PacketPieceReceived), connection);
-        }
-
-        public Queue<T> getReceivedPacketsOfType<T>() where T : Packet
-        {
-            Queue<T> packetsOfType = new Queue<T>();
-
-            lock (ReceivedPacketsByType)
-            {
-                if (ReceivedPacketsByType.ContainsKey(typeof(T)))
-                {
-                    while (ReceivedPacketsByType[typeof(T)].Count > 0)
-                    {
-                        packetsOfType.Enqueue((T)ReceivedPacketsByType[typeof(T)].Dequeue());
-                    }
-                }
-            }
-
-            return packetsOfType;
         }
 
         public void Send(Packet packet)

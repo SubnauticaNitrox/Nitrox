@@ -1,6 +1,11 @@
-/* Builder - TryPlace 265   */
 
-			if(Multiplayer.isActive) {
-				TechType techType = CraftData.GetTechType(gameObject);
-				Multiplayer.client.buildItem(techType.ToString(), Builder.placePosition, Builder.placeRotation);
-			}
+using NitroxClient.MonoBehaviours;
+
+
+/* Builder - TryPlace 265 after componenetInParent else*/
+
+		if (Multiplayer.isActive)
+		{
+			TechType techType = CraftData.GetTechType(Builder.prefab);
+			Multiplayer.client.buildItem(Enum.GetName(typeof(TechType), techType), Builder.ghostModel.transform.position, Builder.placeRotation);
+		}

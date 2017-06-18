@@ -1,5 +1,6 @@
 ﻿using NitroxModel.Packets;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,12 +10,15 @@ namespace NitroxClient.Communication
 {
     public class MultiplayerClient
     {
+        private ChunkAwarePacketManager packetManager;
         private String playerId;
         private TcpClient client;
         public NitroxModel.DataStructures.Vector3 MockedPlayerPosition { get; set; }
         
         public MultiplayerClient(String playerId)
         {
+            this.packetManager = new ChunkAwarePacketManager();
+            client = new TcpClient(packetManager);
             this.playerId = playerId;
             FileLogger.LogInfo("Starting Multiplayer for player " + playerId);
             connect();
@@ -25,7 +29,6 @@ namespace NitroxClient.Communication
         {
             try
             {
-                client = new TcpClient();
                 client.Start();
                 FileLogger.LogInfo("Connected to server successfully");
             }
@@ -66,7 +69,7 @@ namespace NitroxClient.Communication
         {
             try
             {
-                PickupItem pickupItem = new PickupItem(playerId, getPlayerPosition(), ApiHelper.Vector3(itemPosition), gameObjectName, techType);
+                PickupItem pickupItem = new PickupItem(playerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
                 client.Send(pickupItem);
                 FileLogger.LogInfo("Sent " + playerId + " picked up " + techType + " " + gameObjectName + " at " + itemPosition);
             }
@@ -80,7 +83,7 @@ namespace NitroxClient.Communication
         {
             try
             {
-                DroppedItem droppedItem = new DroppedItem(playerId, techType, getPlayerPosition(), ApiHelper.Vector3(itemPosition), ApiHelper.Vector3(pushVelocity));
+                DroppedItem droppedItem = new DroppedItem(playerId, techType, ApiHelper.Vector3(itemPosition), ApiHelper.Vector3(pushVelocity));
                 client.Send(droppedItem);
                 FileLogger.LogInfo("Sent " + playerId + " dropped up " + techType + " at " + itemPosition + " with velocity " + pushVelocity);
             }
@@ -94,7 +97,7 @@ namespace NitroxClient.Communication
         {
             try
             {
-                BeginItemConstruction buildItem = new BeginItemConstruction(playerId, getPlayerPosition(), ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+                BeginItemConstruction buildItem = new BeginItemConstruction(playerId, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
                 client.Send(buildItem);
                 FileLogger.LogInfo("Sent " + playerId + " dropped up " + techType + " at " + itemPosition + " with quaternion " + quaternion);
             }
@@ -108,7 +111,7 @@ namespace NitroxClient.Communication
         {
             try
             {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(playerId, getPlayerPosition(), ApiHelper.Vector3(itemPosition), amount);
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(playerId, ApiHelper.Vector3(itemPosition), amount);
                 client.Send(amountChanged);
                 FileLogger.LogInfo("Sent " + playerId + " changed construction amount at " + itemPosition + " with amount " + amount);
             }
@@ -120,35 +123,35 @@ namespace NitroxClient.Communication
 
         public Queue<Movement> getOtherPlayerMovements()
         {
-            Queue<Movement> moves = client.getReceivedPacketsOfType<Movement>();
+            Queue<Movement> moves = packetManager.GetReceivedPacketsOfType<Movement>();
             //FileLogger.LogInfo("returning " + moves.Count() + " moves");
             return moves;
         }
 
         public Queue<PickupItem> getPickedUpItems()
         {
-            Queue<PickupItem> pickedUpItems = client.getReceivedPacketsOfType<PickupItem>();
+            Queue<PickupItem> pickedUpItems = packetManager.GetReceivedPacketsOfType<PickupItem>();
             //FileLogger.LogInfo("returning " + pickedUpItems.Count() + " picked up items");
             return pickedUpItems;
         }
 
         public Queue<DroppedItem> getDroppedItems()
         {
-            Queue<DroppedItem> droppedItems = client.getReceivedPacketsOfType<DroppedItem>();
+            Queue<DroppedItem> droppedItems = packetManager.GetReceivedPacketsOfType<DroppedItem>();
             //FileLogger.LogInfo("returning " + droppedItems.Count() + " dropped up items");
             return droppedItems;
         }
 
         public Queue<BeginItemConstruction> getBeginningItemConstructions()
         {
-            Queue<BeginItemConstruction> constructions = client.getReceivedPacketsOfType<BeginItemConstruction>();
+            Queue<BeginItemConstruction> constructions = packetManager.GetReceivedPacketsOfType<BeginItemConstruction>();
             //FileLogger.LogInfo("returning " + builtItem.Count() + " built items");
             return constructions;
         }
 
         public Queue<ConstructionAmountChanged> getConstrutionAmountChanged()
         {
-            Queue<ConstructionAmountChanged> constructions = client.getReceivedPacketsOfType<ConstructionAmountChanged>();
+            Queue<ConstructionAmountChanged> constructions = packetManager.GetReceivedPacketsOfType<ConstructionAmountChanged>();
             //FileLogger.LogInfo("returning " + builtItem.Count() + " built items");
             return constructions;
         }
@@ -162,5 +165,22 @@ namespace NitroxClient.Communication
 #endif            
         }
 
+        public void AddChunk(Vector3 chunk, MonoBehaviour mb)
+        {
+            mb.StartCoroutine(WaitAndAddChunk(chunk));
+        }
+
+        public void RemoveChunk(Vector3 chunk)
+        {
+            Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
+            packetManager.RemoveChunk(owningChunk);
+        }
+
+        private IEnumerator WaitAndAddChunk(Vector3 chunk)
+        {
+            yield return new WaitForSeconds(0.5f);
+            Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
+            packetManager.AddChunk(owningChunk);        
+        }
     }
 }

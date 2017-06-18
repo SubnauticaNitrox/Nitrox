@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         public float ConstructionAmount { get; private set; }
         public Vector3 ItemPosition { get; private set; }
 
-        public ConstructionAmountChanged(String playerId, Vector3 playerPosition, Vector3 itemPosition, float constructionAmount) : base(playerId, playerPosition)
+        public ConstructionAmountChanged(String playerId, Vector3 itemPosition, float constructionAmount) : base(playerId, itemPosition)
         {
             this.ItemPosition = itemPosition;
             this.ConstructionAmount = constructionAmount;

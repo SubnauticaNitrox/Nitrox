@@ -15,8 +15,8 @@ namespace NitroxServer
     {
         private ManualResetEvent connectionEstablished = new ManualResetEvent(false);
 
-        private ConcurrentMap<String, Connection> playerIdToConnection = new ConcurrentMap<String, Connection>();
-
+        private ConcurrentMap<String, Player> playersById = new ConcurrentMap<String, Player>();
+        
         private HashSet<Type> packetForwardBlacklist;
         private HashSet<Type> loggingPacketBlackList;
 
@@ -88,32 +88,50 @@ namespace NitroxServer
                 while(connection.ReceivedPackets.Count > 0) 
                 {
                     Packet incomingPacket = connection.ReceivedPackets.Dequeue();
-
                     String playerId = incomingPacket.PlayerId;
 
-                    playerIdToConnection.TryAdd(playerId, connection);
-                    connection.PlayerId = playerId;
+                    Player player;
+                    playersById.TryGetValue(playerId, out player);
+
+                    if (player == null)
+                    {
+                        player = new Player(playerId, connection);
+                        playersById.TryAdd(playerId, player);
+                    }
+
+                    if(incomingPacket.GetType() == typeof(Movement))
+                    {
+                        player.Position = ((Movement)incomingPacket).PlayerPosition;
+                    }
 
                     if (!loggingPacketBlackList.Contains(incomingPacket.GetType()))
                     {
                         Console.WriteLine("Received packet from socket: " + incomingPacket.ToString() + "for player " + playerId);
                     }
 
-                    if (!packetForwardBlacklist.Contains(incomingPacket.GetType())) {
-                        foreach (Connection playerConnection in playerIdToConnection.values())
-                        {
-                            if (playerConnection.PlayerId != playerId)
-                            {
-                                Send(playerConnection, incomingPacket);
-                            }
-                        }
-                    }
+                    ForwardPacketToOtherPlayers(incomingPacket, playerId);
                 }
             }
 
             handler.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0, new AsyncCallback(PacketPieceReceived), connection);
         }
 
+        private void ForwardPacketToOtherPlayers(Packet packet, String sendingPlayerId)
+        {
+            if (packetForwardBlacklist.Contains(packet.GetType()))
+            {
+                return;
+            }
+
+            foreach (Player player in playersById.values())
+            {
+                if (player.Id != sendingPlayerId)
+                {
+                    Send(player.Connection, packet);                    
+                }
+            }            
+        }
+        
         private void Send(Connection connection, Packet packet)
         {
             byte[] packetData;

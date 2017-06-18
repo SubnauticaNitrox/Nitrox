@@ -30,7 +30,7 @@ namespace NitroxClient.MonoBehaviours
                 interpolationPeriod = 0;
 
                 Vector3 currentPosition = Player.main.transform.position;
-                Multiplayer.client.updatePlayerLocation(currentPosition);
+                Multiplayer.client.updatePlayerLocation(currentPosition);                
             }
         }
 

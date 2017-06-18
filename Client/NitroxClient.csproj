@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\ChunkAwarePacketManager.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="FileLogger.cs" />
     <Compile Include="MonoBehaviours\ItemBuilt.cs" />
