@@ -44,6 +44,7 @@
     <Compile Include="DataStructures\TimedQueue.cs" />
     <Compile Include="DataStructures\Vector3.cs" />
     <Compile Include="Packets\Authenticate.cs" />
+    <Compile Include="Packets\ChatMessage.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\Movement.cs" />

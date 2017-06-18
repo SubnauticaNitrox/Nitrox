@@ -47,9 +47,7 @@ namespace NitroxClient.Communication
                     while (receivedPacketsByType[typeof(T)].Count > 0)
                     {
                         Packet packet = receivedPacketsByType[typeof(T)].Dequeue();
-
-                        Console.WriteLine("Processing packet: " + packet);
-
+                        
                         if (!PacketWasDeferred(packet))
                         {
                             packetsOfType.Enqueue((T)packet);
