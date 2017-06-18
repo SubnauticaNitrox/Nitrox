@@ -103,7 +103,7 @@ namespace NitroxClient.Communication
             }
             catch (Exception ex)
             {
-                FileLogger.LogError("Error sending drop command", ex);
+                FileLogger.LogError("Error sending built item command", ex);
             }
         }
 
@@ -117,7 +117,21 @@ namespace NitroxClient.Communication
             }
             catch (Exception ex)
             {
-                FileLogger.LogError("Error sending drop command", ex);
+                FileLogger.LogError("Error sending construction changed command", ex);
+            }
+        }
+
+        public void SendChatMessage(String text)
+        {
+            try
+            {
+                ChatMessage message = new ChatMessage(playerId, text);
+                client.Send(message);
+                FileLogger.LogInfo("Sent " + playerId + " chat message " + text);
+            }
+            catch (Exception ex)
+            {
+                FileLogger.LogError("Error sending chat message", ex);
             }
         }
 
@@ -154,6 +168,12 @@ namespace NitroxClient.Communication
             Queue<ConstructionAmountChanged> constructions = packetManager.GetReceivedPacketsOfType<ConstructionAmountChanged>();
             //FileLogger.LogInfo("returning " + builtItem.Count() + " built items");
             return constructions;
+        }
+
+        public Queue<ChatMessage> getChatMessages()
+        {
+            Queue<ChatMessage> chatMessage = packetManager.GetReceivedPacketsOfType<ChatMessage>();
+            return chatMessage;
         }
 
         public NitroxModel.DataStructures.Vector3 getPlayerPosition()

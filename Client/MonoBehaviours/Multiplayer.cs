@@ -32,9 +32,10 @@ namespace NitroxClient.MonoBehaviours
                 isActive = true;
             }
         }
-
+        
         public void InitMonoBehaviours()
         {
+            this.gameObject.AddComponent<Chat>();
             this.gameObject.AddComponent<PlayerMovement>();
             this.gameObject.AddComponent<PlayerItemPickup>();
             this.gameObject.AddComponent<PlayerDroppedItem>();
