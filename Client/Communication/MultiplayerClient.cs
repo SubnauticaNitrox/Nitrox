@@ -10,6 +10,7 @@ namespace NitroxClient.Communication
 {
     public class MultiplayerClient
     {
+        private LoadedChunks loadedChunks;
         private ChunkAwarePacketManager packetManager;
         private String playerId;
         private TcpClient client;
@@ -17,7 +18,8 @@ namespace NitroxClient.Communication
         
         public MultiplayerClient(String playerId)
         {
-            this.packetManager = new ChunkAwarePacketManager();
+            this.loadedChunks = new LoadedChunks();
+            this.packetManager = new ChunkAwarePacketManager(loadedChunks);
             client = new TcpClient(packetManager);
             this.playerId = playerId;
             FileLogger.LogInfo("Starting Multiplayer for player " + playerId);
@@ -193,14 +195,15 @@ namespace NitroxClient.Communication
         public void RemoveChunk(Vector3 chunk)
         {
             Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-            packetManager.RemoveChunk(owningChunk);
+            loadedChunks.RemoveChunk(owningChunk);
         }
 
         private IEnumerator WaitAndAddChunk(Vector3 chunk)
         {
             yield return new WaitForSeconds(0.5f);
             Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-            packetManager.AddChunk(owningChunk);        
+            loadedChunks.AddChunk(owningChunk);
+            packetManager.ChunkLoaded(owningChunk);
         }
     }
 }

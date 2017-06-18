@@ -14,13 +14,13 @@ namespace NitroxClient.Communication
 
         private Dictionary<Int3, Queue<Packet>> deferredPacketsByChunk;
         private Dictionary<Type, PriorityQueue<Packet>> receivedPacketsByType;
-        private HashSet<Int3> loadedChunks;
+        private LoadedChunks loadedChunks;
         
-        public ChunkAwarePacketManager()
+        public ChunkAwarePacketManager(LoadedChunks loadedChunks)
         {
             this.deferredPacketsByChunk = new Dictionary<Int3, Queue<Packet>>();
             this.receivedPacketsByType = new Dictionary<Type, PriorityQueue<Packet>>();
-            this.loadedChunks = new HashSet<Int3>();
+            this.loadedChunks = loadedChunks;
         }
 
         public void PacketReceived(Packet packet)
@@ -70,27 +70,17 @@ namespace NitroxClient.Communication
                     return false;
                 }
 
-                Int3 actionsChunk = getActionsChunk(playerAction);
-                bool actionOccuredInLoadedChunk = loadedChunks.Contains(actionsChunk);
-                
-                if(!actionOccuredInLoadedChunk)
+                Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
+                    
+                if (!loadedChunks.IsLoadedChunk(actionChunk))
                 {
                     Console.WriteLine("Action was deferred");
-                    addPacketToDeferredMap(playerAction, actionsChunk);
+                    addPacketToDeferredMap(playerAction, actionChunk);
                     return true;
                 }
             }
 
             return false;
-        }
-
-        private Int3 getActionsChunk(PlayerActionPacket playerAction)
-        {
-            int chunkSize = 16;
-            Vector3 actionPosition = playerAction.ActionPosition;
-            return new Int3((int)Math.Floor(actionPosition.X / chunkSize) * chunkSize,
-                            (int)Math.Floor(actionPosition.Y / chunkSize) * chunkSize,
-                            (int)Math.Floor(actionPosition.Z / chunkSize) * chunkSize);
         }
 
         private void addPacketToDeferredMap(PlayerActionPacket playerAction, Int3 chunk)
@@ -103,24 +93,17 @@ namespace NitroxClient.Communication
             deferredPacketsByChunk[chunk].Enqueue(playerAction);            
         }
 
-        public void AddChunk(Int3 position)
+        public void ChunkLoaded(Int3 position)
         {
-            loadedChunks.Add(position);
-
-            if(deferredPacketsByChunk.ContainsKey(position))
-            {               
-                while(deferredPacketsByChunk[position].Count > 0)
+            if (deferredPacketsByChunk.ContainsKey(position))
+            {
+                while (deferredPacketsByChunk[position].Count > 0)
                 {
                     Console.WriteLine("Found deferred packet... adding it back with high priority.");
                     Packet packet = deferredPacketsByChunk[position].Dequeue();
                     receivedPacketsByType[packet.GetType()].Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                 }
             }
-        }
-
-        public void RemoveChunk(Int3 position)
-        {
-            loadedChunks.Remove(position);
         }
     }
 }

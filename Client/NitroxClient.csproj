@@ -51,6 +51,7 @@
     <Compile Include="Communication\ChunkAwarePacketManager.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="FileLogger.cs" />
+    <Compile Include="LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\ItemBuilt.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
