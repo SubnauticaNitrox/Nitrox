@@ -5,5 +5,5 @@ using NitroxClient.MonoBehaviours;
 
 		if (Multiplayer.isActive && (this.constructedAmount >= 1f || resourceID2 != resourceID))
 		{
-			Multiplayer.client.changeConstructionAmount(base.gameObject.transform.position, this.constructedAmount);
+			Multiplayer.PacketSender.changeConstructionAmount(base.gameObject.transform.position, this.constructedAmount);
 		}

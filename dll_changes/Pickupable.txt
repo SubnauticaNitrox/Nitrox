@@ -2,7 +2,7 @@
 
 if(Multiplayer.isActive) {
 		Vector3 position = this.gameObject.transform.position;
-		Multiplayer.client.pickupItem(position, this.gameObject.transform.name, techType.ToString());
+		Multiplayer.PacketSender.PickupItem(position, this.gameObject.transform.name, techType.ToString());
 }
 
 
@@ -13,7 +13,7 @@ if(Multiplayer.isActive) {
 	{
 		if(Multiplayer.isActive) {
 			TechType techType = this.GetTechType();
-			Multiplayer.client.dropItem(techType.ToString(), dropPosition, pushVelocity);
+			Multiplayer.PacketSender.DropItem(techType.ToString(), dropPosition, pushVelocity);
 		}
 	}
 }
@@ -24,4 +24,4 @@ if(Multiplayer.isActive) {
 ldarg.0
 ldarg.1
 ldarg.2
-call checkForMultipalyerDrop
+call checkForMultiplayerDrop

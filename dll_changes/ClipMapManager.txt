@@ -1,9 +1,9 @@
-/* ShowMeshes() after if(ClipMapmanager) {} */
+/* ShowEntities() after if(ClipMapmanager) {} */
 if(Multiplayer.isActive) {
-    Multiplayer.client.AddChunk(this.chunk.transform.position);
+    Multiplayer.AddChunk(this.chunk.transform.position);
 }
 
-/* HideMeshes() after if(ClipMapmanager) {} */
+/* HideEntities() after if(ClipMapmanager) {} */
 if(Multiplayer.isActive) {
-    Multiplayer.client.RemoveChunk(this.chunk.transform.position);
+    Multiplayer.RemoveChunk(this.chunk.transform.position);
 }
