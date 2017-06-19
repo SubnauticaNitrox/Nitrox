@@ -68,7 +68,7 @@ namespace NitroxClient.Communication
             }
             catch (Exception ex)
             {
-                FileLogger.LogError("Error sending packet " + packet, ex);
+                Console.WriteLine("Error sending packet " + packet, ex);
             }
         }
     }
