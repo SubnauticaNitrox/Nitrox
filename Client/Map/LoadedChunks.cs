@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NitroxClient
+namespace NitroxClient.Map
 {
     public class LoadedChunks
     {

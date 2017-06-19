@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures;
 
-namespace NitroxTest
+namespace NitroxTest.Model
 {
     [TestClass]
     public class PriorityQueueTest
