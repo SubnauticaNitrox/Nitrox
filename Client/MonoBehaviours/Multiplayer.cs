@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.Map;
 using NitroxModel.Packets;
 using System;
 using System.Collections;

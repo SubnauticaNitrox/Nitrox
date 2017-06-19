@@ -59,7 +59,7 @@
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\PacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
-    <Compile Include="LoadedChunks.cs" />
+    <Compile Include="Map\LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />

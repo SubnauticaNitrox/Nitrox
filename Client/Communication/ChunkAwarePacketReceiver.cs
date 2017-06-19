@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures;
+﻿using NitroxClient.Map;
+using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
