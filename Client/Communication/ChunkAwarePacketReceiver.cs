@@ -65,7 +65,7 @@ namespace NitroxClient.Communication
                 if (!loadedChunks.IsLoadedChunk(actionChunk))
                 {
                     Console.WriteLine("Action was deferred");
-                    addPacketToDeferredMap(playerAction, actionChunk);
+                    AddPacketToDeferredMap(playerAction, actionChunk);
                     return true;
                 }
             }
@@ -73,7 +73,7 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void addPacketToDeferredMap(PlayerActionPacket playerAction, Int3 chunk)
+        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Int3 chunk)
         {
             lock (deferredPacketsByChunk)
             {
