@@ -12,15 +12,15 @@ namespace NitroxClient.Communication
 {
     public class TcpClient
     {
-        private ChunkAwarePacketManager packetManager;
+        private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
         private static String response = String.Empty;
         private Connection connection;
         
-        public TcpClient(ChunkAwarePacketManager packetManager)
+        public TcpClient(ChunkAwarePacketReceiver packetManager)
         {
-            this.packetManager = packetManager;
+            this.packetReceiver = packetManager;
         }
 
         public void Start()
@@ -82,7 +82,7 @@ namespace NitroxClient.Communication
 
                 while (connection.ReceivedPackets.Count > 0)
                 {
-                    packetManager.PacketReceived(connection.ReceivedPackets.Dequeue());
+                    packetReceiver.PacketReceived(connection.ReceivedPackets.Dequeue());
                 }
             }
 
@@ -115,12 +115,6 @@ namespace NitroxClient.Communication
                     stream.Write(packetData, 0, packetData.Length);
                 }
             }
-        }
-
-        private void SendCallback(IAsyncResult ar)
-        {
-            Socket client = (Socket)ar.AsyncState;
-            int bytesSent = client.EndSend(ar);
         }
     }
 }
