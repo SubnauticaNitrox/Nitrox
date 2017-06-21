@@ -4,7 +4,6 @@ using NitroxClient.Communication;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using System;
-using Moq;
 using NitroxClient.Map;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
