@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using System.Reflection;
 using Harmony.ILCopying;
 using NitroxModel.Helper;
+using NitroxTest.Patcher.Test;
 
 namespace NitroxTest.Patcher.Patches
 {
@@ -18,50 +19,21 @@ namespace NitroxTest.Patcher.Patches
         [TestMethod]
         public void Sanity()
         {
-            List<CodeInstruction> instructions = GenerateDummyInstructions();
+            List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
             instructions.Add(new CodeInstruction(BuilderPatch.INJECTION_OPCODE, BuilderPatch.INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(null, instructions);
-            Assert.AreEqual(113, getInstructionCount(result));
+            Assert.AreEqual(113, PatchTestHelper.GetInstructionCount(result));
         }
 
         [TestMethod]
         public void InjectionSanity()
         {
             MethodInfo targetMethod = AccessTools.Method(typeof(Builder), "TryPlace");
-            List<CodeInstruction> beforeInstructions = new List<CodeInstruction>();
-
-            foreach(ILInstruction instruction in MethodBodyReader.GetInstructions(targetMethod))
-            {
-                beforeInstructions.Add(instruction.GetCodeInstruction());
-            }
+            List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(targetMethod, beforeInstructions);
-            Assert.IsTrue(beforeInstructions.Count < getInstructionCount(result));
-        }
-
-        private int getInstructionCount(IEnumerable<CodeInstruction> result)
-        {
-            int instructionCounter = 0;
-
-            foreach (CodeInstruction instruction in result)
-            {
-                instructionCounter++;
-            }
-
-            return instructionCounter;
-        }
-
-        private List<CodeInstruction> GenerateDummyInstructions()
-        {
-            List<CodeInstruction> instructions = new List<CodeInstruction>();
-
-            for (int i = 0; i < 100; i++)
-            {
-                instructions.Add(new CodeInstruction(OpCodes.Nop));
-            }
-
-            return instructions;
+            Assert.IsTrue(beforeInstructions.Count < PatchTestHelper.GetInstructionCount(result));
         }
     }
 }
