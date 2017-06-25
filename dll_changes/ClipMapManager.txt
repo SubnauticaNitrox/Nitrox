@@ -1,6 +1,6 @@
 /* ShowEntities() after if(ClipMapmanager) {} */
 if(Multiplayer.isActive) {
-    Multiplayer.AddChunk(this.chunk.transform.position);
+    Multiplayer.AddChunk(this.chunk.transform.position, this.mgr);
 }
 
 /* HideEntities() after if(ClipMapmanager) {} */

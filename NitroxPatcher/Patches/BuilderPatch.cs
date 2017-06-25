@@ -27,6 +27,8 @@ namespace NitroxPatcher.Patches
 
             foreach (CodeInstruction instruction in instructions)
             {
+                yield return instruction;
+
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
                     /*
@@ -45,8 +47,6 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("BuildItem"));
                 }
-
-                yield return instruction;
             }
         }
         

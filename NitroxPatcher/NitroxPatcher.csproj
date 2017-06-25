@@ -58,9 +58,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Patches\Watermark.cs" />
+    <Compile Include="AssemblyTypeFinder.cs" />
     <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\ClipMapManager_ShowEntities_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
