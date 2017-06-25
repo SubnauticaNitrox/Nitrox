@@ -33,6 +33,11 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
+
+            loadedChunks = new LoadedChunks();
+            chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
+            client = new TcpClient(chunkAwarePacketReceiver);
+            PacketSender = new PacketSender(client, playerId);
         }
 
         public void Update()
@@ -67,20 +72,16 @@ namespace NitroxClient.MonoBehaviours
             if (n != null && n.data != null && n.data.Count > 0)
             {
                 playerId = (string)n.data[0];
-                InitMultiplayerVariables();
+                StartMultiplayer();
                 InitMonoBehaviours();
                 isActive = true;
             }
         }
 
-        private void InitMultiplayerVariables()
+        private void StartMultiplayer()
         {
-            loadedChunks = new LoadedChunks();
-            chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client, playerId);
-
             client.Start();
+            PacketSender.Active = true;
             PacketSender.Authenticate();
         }
         

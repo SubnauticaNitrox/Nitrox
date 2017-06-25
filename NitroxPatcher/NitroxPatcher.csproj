@@ -4,16 +4,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</ProjectGuid>
+    <ProjectGuid>{BE983E25-24CC-4FC8-9017-61EEC43DD618}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NitroxModel</RootNamespace>
-    <AssemblyName>NitroxModel</AssemblyName>
+    <RootNamespace>NitroxPatcher</RootNamespace>
+    <AssemblyName>NitroxPatcher</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,32 +33,50 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>.\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="DataStructures\Quaternion.cs" />
-    <Compile Include="DataStructures\TimedQueue.cs" />
-    <Compile Include="DataStructures\Vector3.cs" />
-    <Compile Include="Helper\Validate.cs" />
-    <Compile Include="Packets\Authenticate.cs" />
-    <Compile Include="Packets\ChatMessage.cs" />
-    <Compile Include="Packets\ConstructionAmountChanged.cs" />
-    <Compile Include="Packets\DroppedItem.cs" />
-    <Compile Include="Packets\Movement.cs" />
-    <Compile Include="Packets\BeginItemConstruction.cs" />
-    <Compile Include="Packets\PickupItem.cs" />
-    <Compile Include="DataStructures\ConcurrentMap.cs" />
-    <Compile Include="DataStructures\Connection.cs" />
-    <Compile Include="Packets\Packet.cs" />
-    <Compile Include="Packets\PlayerActionPacket.cs" />
+    <Compile Include="Mock\Builder.cs" />
+    <Compile Include="Patches\Watermark.cs" />
+    <Compile Include="Patches\BuilderPatch.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidatedCodeInstruction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Client\NitroxClient.csproj">
+      <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
+      <Name>NitroxClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Model\NitroxModel.csproj">
+      <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
+      <Name>NitroxModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

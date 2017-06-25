@@ -9,6 +9,8 @@ namespace NitroxClient.Communication
 {
     public class PacketSender
     {
+        public bool Active { get; set; }
+
         private TcpClient client;
         private String playerId;
 
@@ -16,6 +18,7 @@ namespace NitroxClient.Communication
         {
             this.client = client;
             this.playerId = playerId;
+            this.Active = false;
         }
 
         public void Authenticate()
@@ -62,13 +65,16 @@ namespace NitroxClient.Communication
 
         private void Send(Packet packet)
         {
-            try
+            if (Active)
             {
-                client.Send(packet);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error sending packet " + packet, ex);
+                try
+                {
+                    client.Send(packet);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error sending packet " + packet, ex);
+                }
             }
         }
     }
