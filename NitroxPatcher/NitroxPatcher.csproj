@@ -58,7 +58,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Mock\Builder.cs" />
     <Compile Include="Patches\Watermark.cs" />
     <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />

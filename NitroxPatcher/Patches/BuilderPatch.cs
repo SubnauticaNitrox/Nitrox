@@ -17,17 +17,21 @@ namespace NitroxPatcher.Patches
     [HarmonyPatch("TryPlace")]
     public class BuilderPatch
     {
-        public static readonly int EXPECTED_INJECT_POINT = 132;
+        public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
+        public static readonly object INJECTION_OPERAND = typeof(SkyEnvironmentChanged).GetMethod("Send", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(Component) }, null);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            object requiredOperand = getRequiredOperand();
-            Validate.NotNull(requiredOperand);
+            Validate.NotNull(INJECTION_OPCODE);
+            Validate.NotNull(INJECTION_OPERAND);
 
             foreach (CodeInstruction instruction in instructions)
             {
-                if (instruction.opcode == OpCodes.Call && instruction.operand.Equals(requiredOperand))
+                if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
+                    /*
+                     * Multiplayer.PacketSender.BuildItem(Enum.GetName(typeof(TechType), CraftData.GetTechType(Builder.prefab)), Builder.ghostModel.transform.position, Builder.placeRotation);
+                     */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("PacketSender", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldtoken, typeof(TechType));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(System.Type).GetMethod("GetTypeFromHandle", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(RuntimeTypeHandle) }, null));
@@ -45,11 +49,6 @@ namespace NitroxPatcher.Patches
                 yield return instruction;
             }
         }
-
-        public static object getRequiredOperand()
-        {
-            return typeof(SkyEnvironmentChanged).GetMethod("Send", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(Component) }, null);
-        }
-
+        
     }
 }
