@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NitroxPatcher\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -54,7 +58,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -63,6 +69,7 @@
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Test\TestActionPacket.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
+    <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +80,10 @@
     <ProjectReference Include="..\Model\NitroxModel.csproj">
       <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
       <Name>NitroxModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
+      <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
+      <Name>NitroxPatcher</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
