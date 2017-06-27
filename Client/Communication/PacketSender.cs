@@ -51,10 +51,13 @@ namespace NitroxClient.Communication
             Send(buildItem);
         }
 
-        public void ChangeConstructionAmount(Vector3 itemPosition, float amount)
+        public void ChangeConstructionAmount(Vector3 itemPosition, float amount, int resourceId1, int resourceId2)
         {
-            ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(playerId, ApiHelper.Vector3(itemPosition), amount);
-            Send(amountChanged);
+            if (amount >= 1f || resourceId1 != resourceId2)
+            {
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(playerId, ApiHelper.Vector3(itemPosition), amount);
+                Send(amountChanged);
+            }
         }
 
         public void SendChatMessage(String text)
