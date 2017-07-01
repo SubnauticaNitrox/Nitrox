@@ -9,8 +9,20 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
-            Listener listener = new Listener();
-            listener.Start();
+            try
+            { 
+                Listener listener = new Listener();
+                listener.Start();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            while (true)
+            {
+                Console.ReadLine();
+            }
         }
     }
 }

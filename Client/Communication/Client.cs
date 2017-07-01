@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures.Tcp;
 
 namespace NitroxClient.Communication
 {
@@ -29,92 +30,45 @@ namespace NitroxClient.Communication
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
-            connection = new Connection();
-            connection.Socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-            Socket socket = (Socket)connection.Socket;
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            connection = new Connection(socket);
 
             socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), connection);
             connectDone.WaitOne();
 
-            Receive(connection);
+            connection.BeginReceive(new AsyncCallback(DataReceived));
         }
 
-        public void Stop()
+        public void Close()
         {
-            Socket socket = (Socket)connection.Socket;
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
+            connection.Close();
         }
 
         private void ConnectCallback(IAsyncResult ar)
         {
-            Connection connection = (Connection)ar.AsyncState;
-            Socket socket = (Socket)connection.Socket;
-
-            Console.WriteLine("Socket connected to {0}",
-                socket.RemoteEndPoint.ToString());
-
             connectDone.Set();
         }
-
-        private void Receive(Connection connection)
-        {
-            Socket socket = (Socket)connection.Socket;
-
-            socket.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0,
-                new AsyncCallback(PacketPieceReceived), connection);   
-        }
-
-        private void PacketPieceReceived(IAsyncResult ar)
+        
+        private void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
-            Socket client = (Socket)connection.Socket;
 
-            int bytesRead = client.EndReceive(ar);
-
-            if (bytesRead > 0)
+            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                lock (connection)
-                {
-                    connection.ProcessNewMessagePiecesInBuffer(bytesRead);
-                }
-
-                while (connection.ReceivedPackets.Count > 0)
-                {
-                    packetReceiver.PacketReceived(connection.ReceivedPackets.Dequeue());
-                }
+                packetReceiver.PacketReceived(packet);                
             }
 
-            client.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0, new AsyncCallback(PacketPieceReceived), connection);
+            connection.BeginReceive(new AsyncCallback(DataReceived));
         }
 
         public void Send(Packet packet)
         {
-            byte[] packetData;
-            BinaryFormatter bf = new BinaryFormatter();
+            connection.SendPacket(packet, new AsyncCallback(PacketSentSuccessful));
+        }
 
-            //DataContractJsonSerializer formatter = new DataContractJsonSerializer(packet.GetType());
+        public void PacketSentSuccessful(IAsyncResult ar)
+        {
 
-            Socket socket = (Socket)connection.Socket;
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                bf.Serialize(ms, packet);
-                packetData = ms.ToArray();
-            }
-
-            lock (connection.Socket)
-            {
-                using (var stream = new NetworkStream(socket))
-                {
-                    Int16 packetSize = (Int16)packetData.Length;
-                    byte[] packetSizeBytes = BitConverter.GetBytes(packetSize);
-
-                    stream.Write(packetSizeBytes, 0, packetSizeBytes.Length);
-                    stream.Write(packetData, 0, packetData.Length);
-                }
-            }
         }
     }
 }

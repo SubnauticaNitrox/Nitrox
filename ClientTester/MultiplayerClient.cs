@@ -25,8 +25,8 @@ namespace ClientTester
         public void Start()
         {
             client.Start();
+            PacketSender.Active = true;
             PacketSender.Authenticate();
-        } 
-
+        }
     }
 }
