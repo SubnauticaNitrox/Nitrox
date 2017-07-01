@@ -7,7 +7,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
-namespace NitroxModel.DataStructures.Tcp
+namespace NitroxModel.Tcp
 {
     public class MessageBuffer
     {

@@ -1,6 +1,6 @@
 ﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Tcp;
 using NitroxModel.Packets;
+using NitroxModel.Tcp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
