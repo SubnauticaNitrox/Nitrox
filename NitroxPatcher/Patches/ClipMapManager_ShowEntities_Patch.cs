@@ -23,6 +23,8 @@ namespace NitroxPatcher.Patches
         {
             foreach (CodeInstruction instruction in instructions)
             {
+                yield return instruction;
+
                 if (instruction.opcode.Equals(INJECTION_OPCODE))
                 {
                     /*
@@ -36,8 +38,6 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_mgr"));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("AddChunk", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Vector3), typeof(MonoBehaviour) }, null));
                 }
-
-                yield return instruction;
             }
         }
 

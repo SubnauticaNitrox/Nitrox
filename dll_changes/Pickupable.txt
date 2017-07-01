@@ -1,9 +1,7 @@
 /* inside public Pickupable Pickup(bool events = true) AT END */
 
-if(Multiplayer.isActive) {
-		Vector3 position = this.gameObject.transform.position;
-		Multiplayer.PacketSender.PickupItem(position, this.gameObject.transform.name, techType.ToString());
-}
+Multiplayer.PacketSender.PickupItem(this.gameObject.transform.position, this.gameObject.transform.name, techType.ToString());
+
 
 
 
