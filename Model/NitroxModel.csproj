@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\Quaternion.cs" />
+    <Compile Include="DataStructures\Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\TimedQueue.cs" />
     <Compile Include="DataStructures\Vector3.cs" />
     <Compile Include="Helper\Validate.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Packets\BeginItemConstruction.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="DataStructures\ConcurrentMap.cs" />
-    <Compile Include="DataStructures\Connection.cs" />
+    <Compile Include="DataStructures\Tcp\Connection.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PlayerActionPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

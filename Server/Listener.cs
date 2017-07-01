@@ -8,13 +8,12 @@ using System.IO;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures.Tcp;
 
 namespace NitroxServer
 {
     public class Listener
     {
-        private ManualResetEvent connectionEstablished = new ManualResetEvent(false);
-
         private ConcurrentMap<String, Player> playersById = new ConcurrentMap<String, Player>();
         
         private HashSet<Type> packetForwardBlacklist;
@@ -33,87 +32,55 @@ namespace NitroxServer
         {
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
-            Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
-            try
-            {
-                listener.Bind(localEndPoint);
-                listener.Listen(4000);
-
-                while (true)
-                {
-                    connectionEstablished.Reset();
-                    
-                    Console.WriteLine("Waiting for a connection...");
-                    listener.BeginAccept(new AsyncCallback(ClientAccepted), listener);
-
-                    connectionEstablished.WaitOne();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-
-            Console.ReadLine();
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
+            socket.Bind(localEndPoint);
+            socket.Listen(4000);
+            socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
         }
 
         public void ClientAccepted(IAsyncResult ar)
         {
-            connectionEstablished.Set();
+            Console.WriteLine("New client connected");
 
-            Socket listener = (Socket)ar.AsyncState;
-            Socket handler = listener.EndAccept(ar);
+            Socket socket = (Socket)ar.AsyncState;
             
-            Connection connection = new Connection();
-            connection.Socket = handler;
+            Connection connection = new Connection(socket.EndAccept(ar));
+            connection.BeginReceive(new AsyncCallback(DataReceived));
 
-            handler.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0, new AsyncCallback(PacketPieceReceived), connection);
+            socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
         }
 
-        public void PacketPieceReceived(IAsyncResult ar)
+        public void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
-            Socket handler = connection.Socket;
             
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
+            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                lock (connection)
+                String playerId = packet.PlayerId;
+
+                Player player;
+                playersById.TryGetValue(playerId, out player);
+
+                if (player == null)
                 {
-                    connection.ProcessNewMessagePiecesInBuffer(bytesRead);
+                    player = new Player(playerId, connection);
+                    playersById.TryAdd(playerId, player);
                 }
 
-                while(connection.ReceivedPackets.Count > 0) 
+                if(packet.GetType() == typeof(Movement))
                 {
-                    Packet incomingPacket = connection.ReceivedPackets.Dequeue();
-                    String playerId = incomingPacket.PlayerId;
-
-                    Player player;
-                    playersById.TryGetValue(playerId, out player);
-
-                    if (player == null)
-                    {
-                        player = new Player(playerId, connection);
-                        playersById.TryAdd(playerId, player);
-                    }
-
-                    if(incomingPacket.GetType() == typeof(Movement))
-                    {
-                        player.Position = ((Movement)incomingPacket).PlayerPosition;
-                    }
-
-                    if (!loggingPacketBlackList.Contains(incomingPacket.GetType()))
-                    {
-                        Console.WriteLine("Received packet from socket: " + incomingPacket.ToString() + "for player " + playerId);
-                    }
-
-                    ForwardPacketToOtherPlayers(incomingPacket, playerId);
+                    player.Position = ((Movement)packet).PlayerPosition;
                 }
+
+                if (!loggingPacketBlackList.Contains(packet.GetType()))
+                {
+                    Console.WriteLine("Received packet from socket: " + packet.ToString() + "for player " + playerId);
+                }
+
+                ForwardPacketToOtherPlayers(packet, playerId);
             }
 
-            handler.BeginReceive(connection.MessagePieceBuffer, 0, Connection.MessagePieceBufferSize, 0, new AsyncCallback(PacketPieceReceived), connection);
+            connection.BeginReceive(new AsyncCallback(DataReceived));
         }
 
         private void ForwardPacketToOtherPlayers(Packet packet, String sendingPlayerId)
@@ -127,43 +94,17 @@ namespace NitroxServer
             {
                 if (player.Id != sendingPlayerId)
                 {
-                    Send(player.Connection, packet);                    
+                    player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
                 }
-            }            
-        }
-        
-        private void Send(Connection connection, Packet packet)
-        {
-            byte[] packetData;
-            BinaryFormatter bf = new BinaryFormatter();
-
-            using (MemoryStream ms = new MemoryStream())
-            {
-                //place holder for size, will be filled in later... allows us
-                //to avoid doing a byte array merge... zomg premature optimization
-                ms.Write(new Byte[] { 0x00, 0x00 }, 0, 2);
-                bf.Serialize(ms, packet);
-                packetData = ms.ToArray();
             }
-
-            Int16 packetSize = (Int16)(packetData.Length - 2); // subtract 2 because we dont want to take into account the added bytes
-            byte[] packetSizeBytes = BitConverter.GetBytes(packetSize);
-
-            //premature optimization continued :)
-            packetData[0] = packetSizeBytes[0];
-            packetData[1] = packetSizeBytes[1];
-
-            connection.Socket.BeginSend(packetData, 0, packetData.Length, 0, new AsyncCallback(SendCompleted), connection.Socket);
         }
 
         private void SendCompleted(IAsyncResult ar)
         {
             try
             {
-                Socket handler = (Socket)ar.AsyncState;
-                
+                Socket handler = (Socket)ar.AsyncState;                
                 int bytesSent = handler.EndSend(ar);
-                //Console.WriteLine("Sent {0} bytes to client.", bytesSent);
             }
             catch (Exception e)
             {
