@@ -8,7 +8,7 @@ using System.IO;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.Packets;
-using NitroxModel.DataStructures.Tcp;
+using NitroxModel.Tcp;
 
 namespace NitroxServer
 {

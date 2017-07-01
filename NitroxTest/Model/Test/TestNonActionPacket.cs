@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace NitroxTest.Model
 {
+    [Serializable]
     public class TestNonActionPacket : Packet
     {
         public TestNonActionPacket(string playerId) : base(playerId)
