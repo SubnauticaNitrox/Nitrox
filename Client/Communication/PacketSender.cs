@@ -10,44 +10,43 @@ namespace NitroxClient.Communication
     public class PacketSender
     {
         public bool Active { get; set; }
+        public String PlayerId { get; set; }
 
         private TcpClient client;
-        private String playerId;
 
-        public PacketSender(TcpClient client, String playerId)
+        public PacketSender(TcpClient client)
         {
             this.client = client;
-            this.playerId = playerId;
             this.Active = false;
         }
 
         public void Authenticate()
         {
-            Authenticate auth = new Authenticate(playerId);
+            Authenticate auth = new Authenticate(PlayerId);
             Send(auth);
         }
 
         public void UpdatePlayerLocation(Vector3 location)
         {
-            Movement move = new Movement(playerId, ApiHelper.Vector3(location));
+            Movement move = new Movement(PlayerId, ApiHelper.Vector3(location));
             Send(move);
         }
         
         public void PickupItem(Vector3 itemPosition, String gameObjectName, String techType)
         {
-            PickupItem pickupItem = new PickupItem(playerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
+            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
             Send(pickupItem);
         }
 
         public void DropItem(String techType, Vector3 itemPosition, Vector3 pushVelocity)
         {
-            DroppedItem droppedItem = new DroppedItem(playerId, techType, ApiHelper.Vector3(itemPosition), ApiHelper.Vector3(pushVelocity));
+            DroppedItem droppedItem = new DroppedItem(PlayerId, techType, ApiHelper.Vector3(itemPosition), ApiHelper.Vector3(pushVelocity));
             Send(droppedItem);
         }
 
         public void BuildItem(String techType, Vector3 itemPosition, Quaternion quaternion)
         {
-            BeginItemConstruction buildItem = new BeginItemConstruction(playerId, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+            BeginItemConstruction buildItem = new BeginItemConstruction(PlayerId, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
             Send(buildItem);
         }
 
@@ -55,14 +54,14 @@ namespace NitroxClient.Communication
         {
             if (amount >= 1f || resourceId1 != resourceId2)
             {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(playerId, ApiHelper.Vector3(itemPosition), amount);
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(PlayerId, ApiHelper.Vector3(itemPosition), amount);
                 Send(amountChanged);
             }
         }
 
         public void SendChatMessage(String text)
         {
-            ChatMessage message = new ChatMessage(playerId, text);
+            ChatMessage message = new ChatMessage(PlayerId, text);
             Send(message);
         }
 

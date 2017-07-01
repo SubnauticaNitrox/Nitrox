@@ -18,9 +18,7 @@ namespace NitroxClient.MonoBehaviours
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
-
-        private String playerId;
-
+        
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
@@ -37,7 +35,7 @@ namespace NitroxClient.MonoBehaviours
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client, playerId);
+            PacketSender = new PacketSender(client);
         }
 
         public void Update()
@@ -71,7 +69,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (n != null && n.data != null && n.data.Count > 0)
             {
-                playerId = (string)n.data[0];
+                PacketSender.PlayerId = (string)n.data[0];
                 StartMultiplayer();
                 InitMonoBehaviours();
                 isActive = true;

@@ -73,7 +73,7 @@
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Test\TestActionPacket.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
-    <Compile Include="Patcher\Patches\ConstructablePatchTest.cs" />
+    <Compile Include="Patcher\Patches\Constructable_Construct_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ClipMapManager_HideEntities_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ClipMapManager_ShowEntities_PatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
