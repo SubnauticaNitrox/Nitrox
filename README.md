@@ -1,0 +1,29 @@
+<p align="center">
+    <img src="https://s3.amazonaws.com/nitroxmod/Logo.png" alt="Nitrox" />
+</p>
+
+# Subnautica Nitrox
+An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>. 
+
+## FAQ
+
+### What is the current status?
+The mod is in the very early stages of development; however, a solid foundation has been laid for the community to iterate on. 
+The following milestones have been completed:
+
+* Client / Server Communication
+* Player movement
+* Picking up / Dropping item syncing
+* Long-range world syncing
+* Basic base building sync
+* Rudimentary chat system
+* Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
+
+### How can I play this mod?
+Until a stable version is released, it is not recommended for casual play.  Please be patient as we work to build a great enhancement for the game.
+
+### How can I contribute?
+Simply submit a pull request.  Full documentation will be found in the wiki tab very soon.  Feel free to join us in the Subnautica Modders Discord channel.
+
+### Why the name 'Nitrox'?
+Nitrox is an alternative air mixture, used by scuba divers, to achieve longer bottom times. As a mod, it will provide a new dimension of gameplay to extend your enjoyment. 
