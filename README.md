@@ -23,7 +23,7 @@ The following milestones have been completed:
 Until a stable version is released, it is not recommended for casual play.  Please be patient as we work to build a great enhancement for the game.
 
 ### How can I contribute?
-Simply submit a pull request.  Full documentation will be found in the wiki tab very soon.  Feel free to join us in the Subnautica Modders Discord channel.
+Simply submit a pull request.  Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the Subnautica Modders Discord channel.
 
 ### Why the name 'Nitrox'?
 Nitrox is an alternative air mixture, used by scuba divers, to achieve longer bottom times. As a mod, it will provide a new dimension of gameplay to extend your enjoyment. 
