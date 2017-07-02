@@ -12,12 +12,12 @@ namespace NitroxModel.Tcp
     public class MessageBuffer
     {
         public const int HEADER_BYTE_SIZE = 2;
-        public const int ReceivingBufferSize = 4096;
-        public const int MessageConstructingBufferSize = Int16.MaxValue;
+        public const int RECEIVING_BUFFER_SIZE = 4096;
+        public const int MESSAGE_CONSTRUCTING_BUFFER_SIZE = Int16.MaxValue;
         
         public byte[] ReceivingBuffer { get; set; }
-        private byte[] MessageConstructingBuffer { get; set; }
 
+        private byte[] MessageConstructingBuffer;
         private int MessageConstructingBufferPointer = 0;
         private Int16 CurrentPacketLength = 0;
 
@@ -25,8 +25,8 @@ namespace NitroxModel.Tcp
         
         public MessageBuffer()
         {
-            this.ReceivingBuffer = new byte[ReceivingBufferSize];
-            this.MessageConstructingBuffer = new byte[MessageConstructingBufferSize];
+            this.ReceivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
+            this.MessageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
         }
 
         public IEnumerable<Packet> GetReceivedPackets(int receivedDataLength)

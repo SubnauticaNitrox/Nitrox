@@ -22,9 +22,9 @@ namespace ClientTester
             PacketSender.PlayerId = playerId;
         }
 
-        public void Start()
+        public void Start(String ip)
         {
-            client.Start();
+            client.Start(ip);
             PacketSender.Active = true;
             PacketSender.Authenticate();
         }

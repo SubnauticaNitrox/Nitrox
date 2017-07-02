@@ -65,7 +65,7 @@ namespace NitroxClient.Communication
                     
                 if (!loadedChunks.IsLoadedChunk(actionChunk))
                 {
-                    Console.WriteLine("Action was deferred");
+                    Console.WriteLine("Action was deferred, chunk not loaded: " + actionChunk);
                     AddPacketToDeferredMap(playerAction, actionChunk);
                     return true;
                 }

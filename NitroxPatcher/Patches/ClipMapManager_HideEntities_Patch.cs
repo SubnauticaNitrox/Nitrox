@@ -23,8 +23,6 @@ namespace NitroxPatcher.Patches
         {
             foreach (CodeInstruction instruction in instructions)
             {
-                yield return instruction;
-
                 if (instruction.opcode.Equals(INJECTION_OPCODE))
                 {
                     /*
@@ -32,15 +30,18 @@ namespace NitroxPatcher.Patches
                      */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_chunk"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(GameObject).GetMethod("get_transform"));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_transform"));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("RemoveChunk", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Vector3) }, null));
                 }
+
+                yield return instruction;
             }
         }
 
         public static void Patch(HarmonyInstance harmony)
         {
+            Console.WriteLine("[Nitrox] Patching ClipMapManager_HideEntities_Patch");
             MethodInfo transpiler = typeof(ClipMapManager_HideEntities_Patch).GetMethod("Transpiler");
             Validate.NotNull(transpiler);
             HarmonyMethod harmonyMethod = new HarmonyMethod(typeof(ClipMapManager_HideEntities_Patch), "Transpiler");

@@ -56,33 +56,50 @@ namespace NitroxServer
             
             foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                String playerId = packet.PlayerId;
-
-                Player player;
-                playersById.TryGetValue(playerId, out player);
-
-                if (player == null)
-                {
-                    player = new Player(playerId, connection);
-                    playersById.TryAdd(playerId, player);
-                }
-
-                if(packet.GetType() == typeof(Movement))
-                {
-                    player.Position = ((Movement)packet).PlayerPosition;
-                }
+                Player player = getPlayer(packet, connection);
+                connection.PlayerId = player.Id;
+                UpdatePlayerPosition(player, packet);
 
                 if (!loggingPacketBlackList.Contains(packet.GetType()))
                 {
-                    Console.WriteLine("Received packet from socket: " + packet.ToString() + "for player " + playerId);
+                    Console.WriteLine("Received packet from socket: " + packet.ToString() + "for player " + player.Id);
                 }
 
-                ForwardPacketToOtherPlayers(packet, playerId);
+                ForwardPacketToOtherPlayers(packet, player.Id);
             }
 
-            connection.BeginReceive(new AsyncCallback(DataReceived));
+            if (connection.Open != false)
+            {
+                connection.BeginReceive(new AsyncCallback(DataReceived));
+            }
+            else
+            {
+                playersById.TryRemove(connection.PlayerId);
+                Console.WriteLine("Player disconnected: " + connection.PlayerId);
+            }
         }
 
+        private Player getPlayer(Packet packet, Connection connection)
+        {
+            Player player;
+
+            if(!playersById.TryGetValue(packet.PlayerId, out player))
+            {
+                player = new Player(packet.PlayerId, connection);
+                playersById.TryAdd(packet.PlayerId, player);
+            }
+            
+            return player;
+        }
+
+        private void UpdatePlayerPosition(Player player, Packet packet)
+        {
+            if (packet.GetType() == typeof(Movement))
+            {
+                player.Position = ((Movement)packet).PlayerPosition;
+            }
+        }
+        
         private void ForwardPacketToOtherPlayers(Packet packet, String sendingPlayerId)
         {
             if (packetForwardBlacklist.Contains(packet.GetType()))
@@ -92,7 +109,7 @@ namespace NitroxServer
 
             foreach (Player player in playersById.values())
             {
-                if (player.Id != sendingPlayerId)
+                if (player.Id != sendingPlayerId && player.Connection.Open)
                 {
                     player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
                 }

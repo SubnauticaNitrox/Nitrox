@@ -13,6 +13,8 @@ namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
+        private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
+
         public static bool isActive = false;
         public static PacketSender PacketSender;
         private static LoadedChunks loadedChunks;
@@ -70,15 +72,23 @@ namespace NitroxClient.MonoBehaviours
             if (n != null && n.data != null && n.data.Count > 0)
             {
                 PacketSender.PlayerId = (string)n.data[0];
-                StartMultiplayer();
+
+                String ip = DEFAULT_IP_ADDRESS;
+
+                if(n.data.Count >= 2)
+                {
+                    ip = (string)n.data[1];
+                }
+
+                StartMultiplayer(ip);
                 InitMonoBehaviours();
                 isActive = true;
             }
         }
 
-        private void StartMultiplayer()
+        private void StartMultiplayer(String ipAddress)
         {
-            client.Start();
+            client.Start(ipAddress);
             PacketSender.Active = true;
             PacketSender.Authenticate();
         }

@@ -16,7 +16,6 @@ namespace NitroxClient.Communication
         private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static String response = String.Empty;
         private Connection connection;
         
         public TcpClient(ChunkAwarePacketReceiver packetManager)
@@ -24,9 +23,9 @@ namespace NitroxClient.Communication
             this.packetReceiver = packetManager;
         }
 
-        public void Start()
+        public void Start(String ip)
         {
-            IPHostEntry ipHostInfo = Dns.Resolve("104.232.113.100");
+            IPHostEntry ipHostInfo = Dns.Resolve(ip);
             IPAddress ipAddress = ipHostInfo.AddressList[0];
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
