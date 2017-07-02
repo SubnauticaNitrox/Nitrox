@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "Server\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel", "Model\NitroxModel.csproj", "{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel", "NitroxModel\NitroxModel.csproj", "{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxClient", "Client\NitroxClient.csproj", "{ED5034BD-66B5-4596-94B7-66A28D3EFF49}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxClient", "NitroxClient\NitroxClient.csproj", "{ED5034BD-66B5-4596-94B7-66A28D3EFF49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTester", "ClientTester\ClientTester.csproj", "{55193579-4D88-4735-BC85-9FD58D556F14}"
 	ProjectSection(ProjectDependencies) = postProject
