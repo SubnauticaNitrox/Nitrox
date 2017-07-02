@@ -18,6 +18,7 @@ namespace NitroxPatcher
 
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             ClipMapManager_ShowEntities_Patch.Patch(harmony);
+            ClipMapManager_HideEntities_Patch.Patch(harmony);
 
             Console.WriteLine("Completed patching for nitrox using " + Assembly.GetExecutingAssembly().FullName);
         }

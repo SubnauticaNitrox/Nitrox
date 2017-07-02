@@ -58,7 +58,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyTypeFinder.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Patches\BuilderPatch.cs" />

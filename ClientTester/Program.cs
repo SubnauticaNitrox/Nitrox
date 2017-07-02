@@ -5,6 +5,8 @@ namespace ClientTester
 {
     class Program
     {
+        private static readonly string DEFAULT_IP_ADDRESS = "127.0.0.1";
+
         static void Main(string[] args)
         {
             String playerId1 = "sunrunner";
@@ -13,7 +15,7 @@ namespace ClientTester
             System.Threading.Thread.Sleep(1000);
 
             MultiplayerClient mplayer1 = new MultiplayerClient(playerId1);
-            mplayer1.Start();
+            mplayer1.Start(DEFAULT_IP_ADDRESS);
 
             while (true)
             {
