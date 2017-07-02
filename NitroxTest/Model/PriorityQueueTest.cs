@@ -45,5 +45,34 @@ namespace NitroxTest.Model
             Assert.AreEqual("Second", queue.Dequeue());
             Assert.AreEqual("Third", queue.Dequeue());
         }
+
+        [TestMethod]
+        public void PrioritySanity()
+        {
+            PriorityQueue<String> queue = new PriorityQueue<String>();
+            queue.Enqueue(2, "Second");
+            queue.Enqueue(3, "First");
+            queue.Enqueue(1, "Third");
+
+            Assert.AreEqual("First", queue.Dequeue());
+            Assert.AreEqual("Second", queue.Dequeue());
+            Assert.AreEqual("Third", queue.Dequeue());
+        }
+
+        [TestMethod]
+        public void CountSanity()
+        {
+            PriorityQueue<String> queue = new PriorityQueue<String>();
+            queue.Enqueue(2, "Second");
+            queue.Enqueue(3, "First");
+            queue.Enqueue(1, "Third");
+
+            Assert.AreEqual(3, queue.Count);
+
+            queue.Dequeue();
+            queue.Dequeue();
+            
+            Assert.AreEqual(1, queue.Count);
+        }
     }
 }
