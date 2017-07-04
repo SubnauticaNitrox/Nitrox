@@ -15,7 +15,6 @@ namespace NitroxClient.Communication
     {
         private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
-        private static ManualResetEvent connectDone = new ManualResetEvent(false);
         private Connection connection;
         
         public TcpClient(ChunkAwarePacketReceiver packetManager)
@@ -25,15 +24,18 @@ namespace NitroxClient.Communication
 
         public void Start(String ip)
         {
-            IPHostEntry ipHostInfo = Dns.Resolve(ip);
-            IPAddress ipAddress = ipHostInfo.AddressList[0];
+            IPAddress ipAddress = IPAddress.Parse(ip);
             IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             connection = new Connection(socket);
 
-            socket.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), connection);
-            connectDone.WaitOne();
+            socket.Connect(remoteEP);
+
+            if(!socket.Connected)
+            {
+                throw new InvalidOperationException("Socket could not connect.");
+            }
 
             connection.BeginReceive(new AsyncCallback(DataReceived));
         }
@@ -41,11 +43,6 @@ namespace NitroxClient.Communication
         public void Close()
         {
             connection.Close();
-        }
-
-        private void ConnectCallback(IAsyncResult ar)
-        {
-            connectDone.Set();
         }
         
         private void DataReceived(IAsyncResult ar)
