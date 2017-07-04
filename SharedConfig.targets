@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="TestSubnauticaFolder">
+  <PropertyGroup>
+    <DevVars>DevVars.targets</DevVars>
+    <DevVarsLoc>$(SolutionDir)\$(DevVars)</DevVarsLoc>
+    <SubnauticaDir Condition="!Exists($(DevVarsLoc))">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</SubnauticaDir>
+  </PropertyGroup>
+
+  <Import Project="$(DevVarsLoc)" Condition="Exists($(DevVarsLoc))" />
+
+  <Target Name="MaybeCopyDevVars" Condition="!Exists($(SubnauticaDir)) and !Exists($(DevVarsLoc))">
+    <Copy SourceFiles="$(DevVarsLoc).example" DestinationFiles="$(DevVarsLoc)" />
+    <Error Text="It appears your Subnautica installation is not in the default Steam directory. Please set the path correctly in $(DevVars) (it has been copied there for you)." />
+  </Target>
+
+  <Target Name="DevVarsInvalid" Condition="!Exists($(SubnauticaDir)) and Exists($(DevVarsLoc))">
+    <!--If the default path is overriden in DevVars, and it doesn't exist-->
+    <Error Text="Your Subnautica installation folder has not been found at the path defined in $(DevVars). Please set it correctly." Condition="Exists($(DevVarsLoc))" />
+  </Target>
+
+  <!--Using DependsOnTarget with Conditional targets as an if else structure...-->
+  <Target Name="TestSubnauticaFolder" DependsOnTargets="MaybeCopyDevVars;DevVarsInvalid" Condition="!Exists($(SubnauticaDir))">
+  </Target>
+
+  <PropertyGroup>
+    <SubnauticaManaged>$(SubnauticaDir)\Subnautica_Data\Managed</SubnauticaManaged>
+  </PropertyGroup>
+</Project>
