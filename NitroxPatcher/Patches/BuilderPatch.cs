@@ -13,10 +13,11 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    [HarmonyPatch(typeof(Builder))]
-    [HarmonyPatch("TryPlace")]
-    public class BuilderPatch
+    public class BuilderPatch : NitroxPatch
     {
+        public static readonly Type TARGET_CLASS = typeof(Builder);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryPlace");
+
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = typeof(SkyEnvironmentChanged).GetMethod("Send", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(Component) }, null);
 
@@ -49,6 +50,10 @@ namespace NitroxPatcher.Patches
                 }
             }
         }
-        
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            this.PatchTranspiler(harmony, TARGET_METHOD);
+        }
     }
 }

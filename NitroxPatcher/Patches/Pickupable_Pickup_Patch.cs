@@ -12,15 +12,20 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    [HarmonyPatch(typeof(Pickupable))]
-    [HarmonyPatch("Pickup")]
-    public class Pickupable_Pickup
+    public class Pickupable_Pickup_Patch : NitroxPatch
     {
-        [HarmonyPrefix]
+        public static readonly Type TARGET_CLASS = typeof(Pickupable);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Pickup");
+
         public static bool Prefix(Pickupable __instance)
         {
             Multiplayer.PacketSender.PickupItem(__instance.gameObject.transform.position, __instance.gameObject.transform.name, __instance.GetTechType().ToString());
             return true;
+        }
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            this.PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

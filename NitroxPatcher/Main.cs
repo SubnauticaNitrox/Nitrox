@@ -11,14 +11,27 @@ namespace NitroxPatcher
 {
     class Main
     {
+        private static readonly List<NitroxPatch> patches = new List<NitroxPatch>()
+        {
+            new BuilderPatch(),
+            new ClipMapManager_HideEntities_Patch(),
+            new ClipMapManager_ShowEntities_Patch(),
+            new Constructable_Construct_Patch(),
+            new Pickupable_Pickup_Patch(),
+            new SpawnConsoleCommand_Patch()
+        };
+
         public static void Execute()
         {
             Console.WriteLine("Patching subnautica for nitrox");
             HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
 
-            harmony.PatchAll(Assembly.GetExecutingAssembly());
-            ClipMapManager_ShowEntities_Patch.Patch(harmony);
-            ClipMapManager_HideEntities_Patch.Patch(harmony);
+            foreach(NitroxPatch patch in patches)
+            {
+                Console.WriteLine("[NITROX] Applying " + patch.GetType());
+                patch.Patch(harmony);
+            }
+
 
             Console.WriteLine("Completed patching for nitrox using " + Assembly.GetExecutingAssembly().FullName);
         }
