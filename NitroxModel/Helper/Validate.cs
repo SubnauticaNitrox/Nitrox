@@ -15,5 +15,12 @@ namespace NitroxModel.Helper
             }
         }
 
+        public static void NotNull(Object o, String message)
+        {
+            if (o == null)
+            {
+                throw new ArgumentNullException(message);
+            }
+        }
     }
 }

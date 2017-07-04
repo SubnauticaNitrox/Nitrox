@@ -101,13 +101,19 @@ namespace NitroxClient.MonoBehaviours
 
         public static void AddChunk(Vector3 chunk, MonoBehaviour mb)
         {
-            mb.StartCoroutine(WaitAndAddChunk(chunk));
+            if (chunk != null && loadedChunks != null && mb != null)
+            {
+                mb.StartCoroutine(WaitAndAddChunk(chunk));
+            }
         }
 
         public static void RemoveChunk(Vector3 chunk)
         {
-            Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-            loadedChunks.RemoveChunk(owningChunk);
+            if (chunk != null && loadedChunks != null)
+            {
+                Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
+                loadedChunks.RemoveChunk(owningChunk);
+            }
         }
 
         private static IEnumerator WaitAndAddChunk(Vector3 chunk)

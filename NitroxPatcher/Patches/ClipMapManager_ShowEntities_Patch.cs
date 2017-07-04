@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    public class ClipMapManager_ShowEntities_Patch
+    public class ClipMapManager_ShowEntities_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(ClipMapManager).GetNestedType("Cell", BindingFlags.NonPublic);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ShowEntities");
@@ -41,13 +41,9 @@ namespace NitroxPatcher.Patches
             }
         }
 
-        public static void Patch(HarmonyInstance harmony)
+        public override void Patch(HarmonyInstance harmony)
         {
-            Console.WriteLine("[Nitrox] Patching ClipMapManager_ShowEntities_Patch");
-            MethodInfo transpiler = typeof(ClipMapManager_ShowEntities_Patch).GetMethod("Transpiler");
-            Validate.NotNull(transpiler);
-            HarmonyMethod harmonyMethod = new HarmonyMethod(typeof(ClipMapManager_ShowEntities_Patch), "Transpiler");
-            harmony.Patch(TARGET_METHOD, null, null, harmonyMethod);
+            this.PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

@@ -13,10 +13,11 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    [HarmonyPatch(typeof(Constructable))]
-    [HarmonyPatch("Construct")]
-    public class Constructable_Construct_Patch
+    public class Constructable_Construct_Patch : NitroxPatch
     {
+        public static readonly Type TARGET_CLASS = typeof(Constructable);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Construct");
+
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = typeof(Constructable).GetMethod("UpdateMaterial", BindingFlags.NonPublic | BindingFlags.Instance);
 
@@ -34,6 +35,7 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.PacketSender.ChangeConstructionAmount(base.gameObject.transform.position, this.constructedAmount, resourceID, resourceID2);
                      */
+                     /*
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("PacketSender", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(GameObject).GetMethod("get_gameObject", BindingFlags.Public | BindingFlags.Instance));
@@ -43,10 +45,14 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Constructable).GetField("constructedAmount", BindingFlags.Public | BindingFlags.Instance));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_2);
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("ChangeConstructionAmount"));                    
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("ChangeConstructionAmount")); */                 
                 }
             }
         }
-        
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            this.PatchTranspiler(harmony, TARGET_METHOD);
+        }
     }
 }
