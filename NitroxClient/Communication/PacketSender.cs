@@ -1,4 +1,7 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.ServerModel;
+using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,10 +29,21 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location)
+        public void UpdatePlayerLocation(Vector3 location, Quaternion rotation, Optional<VehicleModel> opVehicle)
         {
-            Movement move = new Movement(PlayerId, ApiHelper.Vector3(location));
-            Send(move);
+            Movement movement;
+
+            if (opVehicle.IsPresent())
+            {
+                VehicleModel vehicle = opVehicle.Get();
+                movement = new VehicleMovement(PlayerId, ApiHelper.Vector3(location), vehicle.Rotation, vehicle.TechType, vehicle.Guid);
+            }
+            else
+            {
+                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation));
+            }
+
+            Send(movement);
         }
         
         public void PickupItem(Vector3 itemPosition, String gameObjectName, String techType)

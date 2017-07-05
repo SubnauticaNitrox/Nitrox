@@ -9,10 +9,12 @@ namespace NitroxModel.Packets
     public class Movement : PlayerActionPacket
     {
         public Vector3 PlayerPosition { get; protected set; }
+        public Quaternion Rotation { get; protected set; }
 
-        public Movement(String playerId, Vector3 playerPosition) : base(playerId, playerPosition)
+        public Movement(String playerId, Vector3 playerPosition, Quaternion rotation) : base(playerId, playerPosition)
         {
             this.PlayerPosition = playerPosition;
+            this.Rotation = rotation;
             this.PlayerMustBeInRangeToReceive = false;
         }
     }

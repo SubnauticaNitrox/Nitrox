@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using System;
@@ -20,14 +21,18 @@ namespace NitroxClient.MonoBehaviours
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
-        
+
+        private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
+        private static VehicleGameObjectManager vehicleGameObjectManager = new VehicleGameObjectManager();
+
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
             {typeof(DroppedItem), new DroppedItemProcessor() },
-            {typeof(Movement), new MovementProcessor() },
-            {typeof(PickupItem), new PickupItemProcessor() }
+            {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
+            {typeof(PickupItem), new PickupItemProcessor() },
+            {typeof(VehicleMovement), new VehicleMovementProcessor(vehicleGameObjectManager, playerGameObjectManager) }
         };
 
         public void Awake()
