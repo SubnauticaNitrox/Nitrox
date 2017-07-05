@@ -16,6 +16,7 @@ The following milestones have been completed:
 * Picking up / Dropping item syncing
 * Long-range world syncing
 * Basic base building sync
+* Seamoth & Exosuit Syncing
 * Rudimentary chat system
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 
