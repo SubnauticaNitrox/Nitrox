@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,6 +59,9 @@ namespace NitroxClient.GameLogic
 
                 Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
                 rigidBody.isKinematic = false;
+
+                ManagedMultiplayerObject managedObject = gameObject.AddComponent<ManagedMultiplayerObject>();
+                managedObject.ChangeGuid(guid);
 
                 return Optional<GameObject>.Of(gameObject);
             }
