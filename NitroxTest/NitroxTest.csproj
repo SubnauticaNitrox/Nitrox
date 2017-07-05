@@ -70,6 +70,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Client\Communication\ChunkAwarePacketReceiverTest.cs" />
+    <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Tcp\MessageBufferTest.cs" />
     <Compile Include="Model\Test\TestActionPacket.cs" />

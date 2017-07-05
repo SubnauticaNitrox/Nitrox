@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.ServerModel;
+using System;
 using UnityEngine;
 
 namespace ClientTester
@@ -20,14 +22,21 @@ namespace ClientTester
             while (true)
             {
                 Console.ReadLine();
-               // mplayer1.SendChatMessage("Get gud noob");
-                 mplayer1.PacketSender.PickupItem(new Vector3(-50.6f, -4.8f, -38.0f), "Coral_reef_purple_mushrooms_01_04(Clone)", "AcidMushroom");
+                // mplayer1.SendChatMessage("Get gud noob");
+                /*
+                VehicleModel vehicleModel = new VehicleModel(Enum.GetName(typeof(TechType), TechType.Seamoth), "GUID");
+
+                mplayer1.PacketSender.UpdatePlayerLocation(new Vector3(-55.25951f, -1.23748684f, -24.0218639f), Optional<VehicleModel>.Of(vehicleModel));
+                mplayer1.PacketSender.UpdatePlayerLocation(new Vector3(-55.35951f, -1.23748684f, -24.0218639f), Optional<VehicleModel>.Of(vehicleModel));
+                mplayer1.PacketSender.UpdatePlayerLocation(new Vector3(-55.45951f, -1.23748684f, -24.0218639f), Optional<VehicleModel>.Of(vehicleModel));
+                mplayer1.PacketSender.UpdatePlayerLocation(new Vector3(-55.55951f, -1.23748684f, -24.0218639f), Optional<VehicleModel>.Of(vehicleModel));*/
+                //mplayer1.PacketSender.PickupItem(new Vector3(-50.6f, -4.8f, -38.0f), "Coral_reef_purple_mushrooms_01_04(Clone)", "AcidMushroom");
                 //mplayer1.dropItem("BaseFoundation", new Vector3(-55.25951f, -1.23748684f, -24.0218639f), new Vector3(0, 0, 0));
-              // mplayer1.buildItem("BaseFoundation", new Vector3(-52f, -4.6f, -21.6f), new Quaternion(0, 1, 0, 0));
-               // Console.ReadLine();
-              //  mplayer1.changeConstructionAmount(new Vector3(-52f, -4.6f, -21.6f), 0.5f);
-              //  Console.ReadLine();
-              //  mplayer1.changeConstructionAmount(new Vector3(-52f, -4.6f, -21.6f), 1f);
+                // mplayer1.buildItem("BaseFoundation", new Vector3(-52f, -4.6f, -21.6f), new Quaternion(0, 1, 0, 0));
+                // Console.ReadLine();
+                //  mplayer1.changeConstructionAmount(new Vector3(-52f, -4.6f, -21.6f), 0.5f);
+                //  Console.ReadLine();
+                //  mplayer1.changeConstructionAmount(new Vector3(-52f, -4.6f, -21.6f), 1f);
             }
 
         }

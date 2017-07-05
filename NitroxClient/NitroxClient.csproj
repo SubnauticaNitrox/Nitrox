@@ -56,11 +56,15 @@
     <Compile Include="Communication\Packets\Processors\BeginItemConstructionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\GenericPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\PacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
+    <Compile Include="GameLogic\PlayerGameObjectManager.cs" />
+    <Compile Include="GameLogic\VehicleGameObjectManager.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
+    <Compile Include="MonoBehaviours\ManagedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
