@@ -28,5 +28,6 @@ namespace NitroxClient.MonoBehaviours
             GUID = guid;
             managedObjects[GUID] = this.gameObject;
         }
+        
     }
 }
