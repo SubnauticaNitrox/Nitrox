@@ -41,7 +41,10 @@ namespace NitroxClient.GameLogic
 
         public void RemovePlayerGameObject(String playerId)
         {
-            GameObject.Destroy(gameObjectByPlayerId[playerId]);
+            GameObject player = gameObjectByPlayerId[playerId];
+            player.SetActive(false);
+            GameObject.DestroyImmediate(player);
+            gameObjectByPlayerId.Remove(playerId);
         }
     }
 }
