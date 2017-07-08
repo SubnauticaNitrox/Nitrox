@@ -59,7 +59,15 @@ namespace NitroxModel.Tcp
         public void SendPacket(Packet packet, AsyncCallback callback)
         {
             byte[] packetData = packet.SerializeWithHeaderData();
-            Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+            try
+            {
+                Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("Error sending packet");
+                Open = false;
+            }
         }
 
         public void Close()
