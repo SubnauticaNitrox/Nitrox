@@ -54,7 +54,14 @@ namespace NitroxClient.Communication
                 packetReceiver.PacketReceived(packet);                
             }
 
-            connection.BeginReceive(new AsyncCallback(DataReceived));
+            if (connection.Open)
+            {
+                connection.BeginReceive(new AsyncCallback(DataReceived));
+            } else
+            {
+                Console.WriteLine("Disconnected from server.");
+                // TODO: Disconnect gracefully, clean up
+            }
         }
 
         public void Send(Packet packet)

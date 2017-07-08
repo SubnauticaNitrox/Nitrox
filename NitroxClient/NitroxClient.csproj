@@ -56,6 +56,7 @@
     <Compile Include="Communication\Packets\Processors\BeginItemConstructionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\GenericPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />

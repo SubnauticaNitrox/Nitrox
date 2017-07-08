@@ -40,6 +40,7 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
+            DevConsole.RegisterConsoleCommand(this, "disconnect", false);
 
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
@@ -93,11 +94,27 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void OnConsoleCommand_disconnect(NotificationCenter.Notification n)
+        {
+            if (n != null)
+            {
+                StopMultiplayer(); // TODO: More than just disconnect (clean up injections or something)
+            }
+        }
+
         private void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
             PacketSender.Active = true;
             PacketSender.Authenticate();
+        }
+
+        private void StopMultiplayer()
+        {
+            if (client != null)
+            {
+                client.Close(); // TODO: Better way than force shutting down connection
+            }
         }
         
         public void InitMonoBehaviours()
