@@ -38,5 +38,10 @@ namespace NitroxClient.GameLogic
         {
             return GameObject.CreatePrimitive(PrimitiveType.Sphere);
         }
+
+        public void RemovePlayerGameObject(String playerId)
+        {
+            GameObject.Destroy(gameObjectByPlayerId[playerId]);
+        }
     }
 }

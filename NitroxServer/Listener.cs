@@ -62,7 +62,7 @@ namespace NitroxServer
 
                 if (!loggingPacketBlackList.Contains(packet.GetType()))
                 {
-                    Console.WriteLine("Received packet from socket: " + packet.ToString() + "for player " + player.Id);
+                    Console.WriteLine("Received packet from socket: " + packet.ToString() + " for player " + player.Id);
                 }
 
                 ForwardPacketToOtherPlayers(packet, player.Id);
@@ -74,6 +74,8 @@ namespace NitroxServer
             }
             else
             {
+                Packet disconnectPacket = new Disconnect(connection.PlayerId);
+                ForwardPacketToOtherPlayers(disconnectPacket, connection.PlayerId);
                 playersById.TryRemove(connection.PlayerId);
                 Console.WriteLine("Player disconnected: " + connection.PlayerId);
             }
