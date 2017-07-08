@@ -71,10 +71,20 @@ namespace ClientTester
                         Console.WriteLine("Mouse is now attached. Press any key to exit");
                         Timer mouseTimer = new Timer();
                         mouseTimer.Elapsed += delegate { mouseTimerTick(mplayer1); };
-                        mouseTimer.Interval = 100;
+                        mouseTimer.Interval = 50;
                         mouseTimer.Start();
                         Console.ReadKey();
+                        lastX = -1;
+                        lastY = -1;
                         mouseTimer.Stop();
+                        break;
+                    case "movez":
+                        if (cmd.Count < 2) { Console.WriteLine($"\"{cmd[0]}\" does not take {cmd.Count - 1} arguments"); break; }
+                        clientPos.z = float.Parse(cmd[1]);
+                        mplayer1.PacketSender.UpdatePlayerLocation(clientPos, Quaternion.identity, Optional<VehicleModel>.Empty());
+                        break;
+                    case "pos":
+                        Console.WriteLine(clientPos.ToString());
                         break;
                     case "help":
                         Console.WriteLine("chat <message>");
@@ -83,6 +93,8 @@ namespace ClientTester
                         Console.WriteLine("construct <amount> <x> <y> <z>");
                         Console.WriteLine("drop <techtype> <x> <y> <z>");
                         Console.WriteLine("move");
+                        Console.WriteLine("movez <z>");
+                        Console.WriteLine("pos");
                         break;
                 }
             }
@@ -99,8 +111,7 @@ namespace ClientTester
                 float velX = curX - lastX;
                 float velY = curY - lastY;
                 clientPos += new Vector3(velX / 10f, 0, velY / 10f);
-                Optional<VehicleModel> vehicle = Optional<VehicleModel>.Empty();
-                client.PacketSender.UpdatePlayerLocation(clientPos, Quaternion.identity, vehicle);
+                client.PacketSender.UpdatePlayerLocation(clientPos, Quaternion.identity, Optional<VehicleModel>.Empty());
             }
             lastX = curX;
             lastY = curY;

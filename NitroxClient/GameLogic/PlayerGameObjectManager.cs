@@ -9,13 +9,13 @@ namespace NitroxClient.GameLogic
     public class PlayerGameObjectManager
     {
         private Dictionary<String, GameObject> gameObjectByPlayerId = new Dictionary<String, GameObject>();
-        
+
         public void UpdatePlayerPosition(String playerId, Vector3 position, Quaternion rotation)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
-            player.transform.position = position;
-            player.transform.rotation = rotation;
+            iTween.MoveTo(player, iTween.Hash("position", position, "easetype", iTween.EaseType.easeInOutSine, "time", 0.05f));
+            iTween.RotateTo(player, iTween.Hash("rotation", rotation.eulerAngles, "easetype", iTween.EaseType.easeInOutSine, "time", 0.05f));
         }
 
         public void HidePlayerGameObject(String playerId)
@@ -36,7 +36,13 @@ namespace NitroxClient.GameLogic
 
         private GameObject createOtherPlayer(String playerId)
         {
-            return GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject body = GameObject.Find("body");
+            //Cheap fix for showing head, much easier since male_geo contains many different heads
+            body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            GameObject bodyCopy = UnityEngine.Object.Instantiate(body);
+            body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            bodyCopy.transform.Find("player_view").gameObject.GetComponent<ArmsController>().smoothSpeed = 0; //Disables the other character's move animations
+            return bodyCopy;
         }
     }
 }
