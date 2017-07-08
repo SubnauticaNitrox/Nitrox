@@ -40,6 +40,7 @@ namespace NitroxClient.MonoBehaviours
         public void Awake()
         {
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
+            DevConsole.RegisterConsoleCommand(this, "warpto", false);
 
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
@@ -61,7 +62,7 @@ namespace NitroxClient.MonoBehaviours
 
             foreach (Packet packet in packets)
             {
-                if(packetProcessorsByType.ContainsKey(packet.GetType()))
+                if (packetProcessorsByType.ContainsKey(packet.GetType()))
                 {
                     PacketProcessor processor = packetProcessorsByType[packet.GetType()];
                     processor.ProcessPacket(packet);
@@ -75,7 +76,7 @@ namespace NitroxClient.MonoBehaviours
         
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (n != null && n.data != null && n.data.Count > 0)
+            if (n?.data?.Count > 0)
             {
                 PacketSender.PlayerId = (string)n.data[0];
 
@@ -89,6 +90,20 @@ namespace NitroxClient.MonoBehaviours
                 StartMultiplayer(ip);
                 InitMonoBehaviours();
                 isActive = true;
+            }
+        }
+
+        public void OnConsoleCommand_warpto(NotificationCenter.Notification n)
+        {
+            if (n?.data?.Count > 0)
+            {
+                string otherPlayerId = (string)n.data[0];
+                var otherPlayer = playerGameObjectManager.FindPlayerGameObject(otherPlayerId);
+                if (otherPlayer != null)
+                {
+                    Player.main.SetPosition(otherPlayer.transform.position);
+                    Player.main.OnPlayerPositionCheat();
+                }
             }
         }
 
