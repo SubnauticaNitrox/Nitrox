@@ -24,25 +24,39 @@ namespace NitroxClient.Communication
 
         public void Start(String ip)
         {
-            IPAddress ipAddress = IPAddress.Parse(ip);
-            IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
-
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            connection = new Connection(socket);
-
-            socket.Connect(remoteEP);
-
-            if(!socket.Connected)
+            try
             {
-                throw new InvalidOperationException("Socket could not connect.");
-            }
+                IPAddress ipAddress = IPAddress.Parse(ip);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
-            connection.BeginReceive(new AsyncCallback(DataReceived));
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                connection = new Connection(socket);
+
+                socket.Connect(remoteEP);
+
+                if (!socket.Connected)
+                {
+                    ErrorMessage.AddMessage("Unable to connect to server.");
+                    throw new InvalidOperationException("Socket could not connect.");
+                }
+                else
+                {
+                    ErrorMessage.AddMessage("Connected to server.");
+                }
+
+                connection.BeginReceive(new AsyncCallback(DataReceived));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error connecting to server");
+                ErrorMessage.AddMessage("Unable to connect to server");
+            }
         }
 
-        public void Close()
+        public void Stop()
         {
-            connection.Close();
+            connection.Close(); // Server will clean up pretty quickly
+            ErrorMessage.AddMessage("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -59,8 +73,8 @@ namespace NitroxClient.Communication
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             } else
             {
-                Console.WriteLine("Disconnected from server.");
-                // TODO: Disconnect gracefully, clean up
+                Console.WriteLine("Error reading data from server");
+                Stop();
             }
         }
 
@@ -72,6 +86,15 @@ namespace NitroxClient.Communication
         public void PacketSentSuccessful(IAsyncResult ar)
         {
 
+        }
+
+        public bool isConnected()
+        {
+            if (connection == null)
+            {
+                return false;
+            }
+            return connection.Open;
         }
     }
 }

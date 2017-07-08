@@ -15,7 +15,7 @@ namespace NitroxModel.Tcp
         public String PlayerId { get; set; }
         private Socket Socket;
         private MessageBuffer MessageBuffer;
-        public Boolean Open { get; private set; }
+        public bool Open { get; private set; }
 
         public Connection(Socket socket)
         {
@@ -58,22 +58,33 @@ namespace NitroxModel.Tcp
 
         public void SendPacket(Packet packet, AsyncCallback callback)
         {
-            byte[] packetData = packet.SerializeWithHeaderData();
-            try
+            if (Open) // Can remove check if able to unload Mono behaviors
             {
-                Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
-            }
-            catch (SocketException se)
-            {
-                Console.WriteLine("Error sending packet");
-                Open = false;
+                byte[] packetData = packet.SerializeWithHeaderData();
+                try
+                {
+                    Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("Error sending packet");
+                    Open = false;
+                }
             }
         }
 
         public void Close()
         {
-            Socket.Shutdown(SocketShutdown.Both);
-            Socket.Close();
+            Open = false;
+            try
+            {
+                Socket.Shutdown(SocketShutdown.Both);
+                Socket.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error closing socket -- probably already closed");
+            }
         }
     }
 }

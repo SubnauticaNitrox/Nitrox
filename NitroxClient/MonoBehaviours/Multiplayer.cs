@@ -16,12 +16,12 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
-
-        public static bool isActive = false;
+        
         public static PacketSender PacketSender;
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+        private static bool hasLoadedMonoBehaviors;
 
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
         private static MultiplayerObjectManager multiplayerObjectManager = new MultiplayerObjectManager();
@@ -30,6 +30,7 @@ namespace NitroxClient.MonoBehaviours
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
+            {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
             {typeof(DroppedItem), new DroppedItemProcessor(multiplayerObjectManager) },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
@@ -50,7 +51,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            if (isActive)
+            if (client != null && client.isConnected())
             {
                 ProcessPackets();
             }
@@ -76,7 +77,10 @@ namespace NitroxClient.MonoBehaviours
         
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (n != null && n.data != null && n.data.Count > 0)
+            if (client.isConnected())
+            {
+                ErrorMessage.AddMessage("Already connected to a server");
+            } else if (n != null && n.data != null && n.data.Count > 0)
             {
                 PacketSender.PlayerId = (string)n.data[0];
 
@@ -89,7 +93,9 @@ namespace NitroxClient.MonoBehaviours
 
                 StartMultiplayer(ip);
                 InitMonoBehaviours();
-                isActive = true;
+            } else
+            {
+                ErrorMessage.AddMessage("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -110,16 +116,21 @@ namespace NitroxClient.MonoBehaviours
 
         private void StopMultiplayer()
         {
-            if (client != null)
+            if (client.isConnected())
             {
-                client.Close(); // TODO: Better way than force shutting down connection
+                client.Stop();
+                PacketSender.Active = false;
             }
         }
         
         public void InitMonoBehaviours()
         {
-            this.gameObject.AddComponent<Chat>();
-            this.gameObject.AddComponent<PlayerMovement>();
+            if (!hasLoadedMonoBehaviors)
+            {
+                this.gameObject.AddComponent<Chat>();
+                this.gameObject.AddComponent<PlayerMovement>();
+                hasLoadedMonoBehaviors = true;
+            }
         }
 
         public static void AddChunk(Vector3 chunk, MonoBehaviour mb)
