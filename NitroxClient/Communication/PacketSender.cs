@@ -72,6 +72,20 @@ namespace NitroxClient.Communication
                 Send(amountChanged);
             }
         }
+        
+        public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)
+        {
+            ManagedMultiplayerObject managedObject = constructor.GetComponent<ManagedMultiplayerObject>();
+
+            if(managedObject == null)
+            {
+                Console.WriteLine(techType + " built by an unmanaged constructor - not sending to the server");
+                return;
+            }
+
+            ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), duration);
+            Send(beginCrafting);
+        }
 
         public void SendChatMessage(String text)
         {

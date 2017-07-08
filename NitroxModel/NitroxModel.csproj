@@ -43,6 +43,7 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\Quaternion.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
+    <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\TimedQueue.cs" />

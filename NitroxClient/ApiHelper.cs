@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.Util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,5 +28,19 @@ namespace NitroxClient
         {
             return new Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
+
+        public static String TechType(TechType techType)
+        {
+            return Enum.GetName(typeof(TechType), techType);
+        }
+
+        public static Optional<TechType> TechType(String techTypeString)
+        {
+            TechType techType;
+            UWE.Utils.TryParseEnum<TechType>(techTypeString, out techType);
+
+            return Optional<TechType>.OfNullable(techType);
+        }
+
     }
 }
