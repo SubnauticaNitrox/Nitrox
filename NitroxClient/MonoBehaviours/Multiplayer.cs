@@ -30,11 +30,11 @@ namespace NitroxClient.MonoBehaviours
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
-            {typeof(DroppedItem), new DroppedItemProcessor() },
+            {typeof(DroppedItem), new DroppedItemProcessor(multiplayerObjectManager) },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(multiplayerObjectManager, playerGameObjectManager) },
-            {typeof(ConstructorBeginCraftingProcessor), new ConstructorBeginCraftingProcessor(multiplayerObjectManager) }
+            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor(multiplayerObjectManager) }
         };
 
         public void Awake()
@@ -44,7 +44,7 @@ namespace NitroxClient.MonoBehaviours
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client);
+            PacketSender = new PacketSender(client, multiplayerObjectManager);
         }
 
         public void Update()
@@ -61,10 +61,9 @@ namespace NitroxClient.MonoBehaviours
 
             foreach (Packet packet in packets)
             {
-                PacketProcessor processor = packetProcessorsByType[packet.GetType()];
-
-                if (processor != null)
+                if(packetProcessorsByType.ContainsKey(packet.GetType()))
                 {
+                    PacketProcessor processor = packetProcessorsByType[packet.GetType()];
                     processor.ProcessPacket(packet);
                 }
                 else
