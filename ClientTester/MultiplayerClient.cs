@@ -17,7 +17,7 @@ namespace ClientTester
         {
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver);
+            client = new TcpClient(chunkAwarePacketReceiver, true);
             PacketSender = new PacketSender(client);
             PacketSender.PlayerId = playerId;
         }
@@ -25,8 +25,11 @@ namespace ClientTester
         public void Start(String ip)
         {
             client.Start(ip);
-            PacketSender.Active = true;
-            PacketSender.Authenticate();
+            if (client.isConnected())
+            {
+                PacketSender.Active = true;
+                PacketSender.Authenticate();
+            }
         }
     }
 }
