@@ -10,12 +10,11 @@ namespace NitroxClient.MonoBehaviours
     {
         private static Dictionary<String, GameObject> managedObjects = new Dictionary<String, GameObject>();
 
-        public String GUID { get; protected set; }
+        public String GUID { get; protected set; } = Guid.NewGuid().ToString();
 
         public void Awake()
         {
-            String guid = Guid.NewGuid().ToString();
-            ChangeGuid(guid);
+            managedObjects[GUID] = this.gameObject;
         }
 
         public void ChangeGuid(string guid)
