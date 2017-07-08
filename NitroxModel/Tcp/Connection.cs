@@ -31,7 +31,16 @@ namespace NitroxModel.Tcp
 
         public IEnumerable<Packet> GetPacketsFromRecievedData(IAsyncResult ar)
         {
-            int bytesRead = Socket.EndReceive(ar);
+            int bytesRead = 0;
+            try
+            {
+                bytesRead = Socket.EndReceive(ar);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("Error reading data from socket");
+                Open = false;
+            }
 
             if (bytesRead > 0)
             {
@@ -42,6 +51,7 @@ namespace NitroxModel.Tcp
             }
             else
             {
+                Console.WriteLine("No data found from socket, disconnecting");
                 Open = false;
             }
         }
