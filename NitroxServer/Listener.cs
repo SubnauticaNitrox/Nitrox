@@ -126,7 +126,6 @@ namespace NitroxServer
 
         private void SendCompleted(IAsyncResult ar)
         {
-            Thread.Sleep(40);
             try
             {
                 Socket handler = (Socket)ar.AsyncState;                
@@ -144,12 +143,15 @@ namespace NitroxServer
 
         private void playerDisconnected(String PlayerId)
         {
-            lock (playersById)
+            if (PlayerId != null)
             {
-                playersById.Remove(PlayerId);
-                Packet disconnectPacket = new Disconnect(PlayerId);
-                ForwardPacketToOtherPlayers(disconnectPacket, PlayerId);
-                Console.WriteLine("Player disconnected: " + PlayerId);
+                lock (playersById)
+                {
+                    playersById.Remove(PlayerId);
+                    Packet disconnectPacket = new Disconnect(PlayerId);
+                    ForwardPacketToOtherPlayers(disconnectPacket, PlayerId);
+                    Console.WriteLine("Player disconnected: " + PlayerId);
+                }
             }
         }
     }

@@ -16,10 +16,17 @@ namespace NitroxClient.Communication
         private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
         private Connection connection;
+        private bool testClient = false;
         
         public TcpClient(ChunkAwarePacketReceiver packetManager)
         {
             this.packetReceiver = packetManager;
+        }
+
+        public TcpClient(ChunkAwarePacketReceiver packetManager, bool testClient)
+        {
+            this.packetReceiver = packetManager;
+            this.testClient = testClient;
         }
 
         public void Start(String ip)
@@ -36,27 +43,26 @@ namespace NitroxClient.Communication
 
                 if (!socket.Connected)
                 {
-                    ErrorMessage.AddMessage("Unable to connect to server.");
+                    outputMessage("Unable to connect to server.");
                     throw new InvalidOperationException("Socket could not connect.");
                 }
                 else
                 {
-                    ErrorMessage.AddMessage("Connected to server.");
+                    outputMessage("Connected to server.");
                 }
 
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error connecting to server");
-                ErrorMessage.AddMessage("Unable to connect to server");
+                outputMessage("Unable to connect to server");
             }
         }
 
         public void Stop()
         {
             connection.Close(); // Server will clean up pretty quickly
-            ErrorMessage.AddMessage("Disconnected from server.");
+            outputMessage("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -95,6 +101,17 @@ namespace NitroxClient.Communication
                 return false;
             }
             return connection.Open;
+        }
+
+        private void outputMessage(String msg)
+        {
+            if (testClient)
+            {
+                Console.WriteLine(msg);
+            } else
+            {
+                ErrorMessage.AddMessage(msg);
+            }
         }
     }
 }
