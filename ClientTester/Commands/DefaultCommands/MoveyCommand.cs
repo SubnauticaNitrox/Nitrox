@@ -8,11 +8,15 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveyCommand : NitroxCommand
     {
-        public override void Execute(MultiplayerClient client, string[] args)
+        MoveyCommand()
         {
             Name = "movey";
             Description = "Moves the player up and down";
             Syntax = "movey <y>";
+        }
+
+        public override void Execute(MultiplayerClient client, string[] args)
+        {
             if (args.Length < 1)
             {
                 CommandManager.NotEnoughArgumentsMessage(1, Syntax);

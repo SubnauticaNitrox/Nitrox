@@ -6,11 +6,15 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class ChatCommand : NitroxCommand
     {
-        public override void Execute(MultiplayerClient client, string[] args)
+        public ChatCommand()
         {
             Name = "chat";
             Description = "Sends a chat message to other players.";
             Syntax = "chat <message>";
+        }
+
+        public override void Execute(MultiplayerClient client, string[] args)
+        {
             if (args.Length < 1)
             {
                 CommandManager.NotEnoughArgumentsMessage(1, Syntax);

@@ -6,11 +6,15 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class PickupCommand : NitroxCommand
     {
-        public override void Execute(MultiplayerClient client, string[] args)
+        public PickupCommand()
         {
             Name = "pickup";
             Description = "Picks up an item at location.";
             Syntax = "pickup <gameobjectname> <x> <y> <z>";
+        }
+
+        public override void Execute(MultiplayerClient client, string[] args)
+        {
             if (args.Length < 4)
             {
                 CommandManager.NotEnoughArgumentsMessage(1, Syntax);

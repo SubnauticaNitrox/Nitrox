@@ -9,14 +9,17 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveCommand : NitroxCommand
     {
-        private int lastX = -1;
-        private int lastY = -1;
-        public override void Execute(MultiplayerClient client, string[] args)
+        public MoveCommand()
         {
             Name = "move";
             Description = "Allows you to move the player with the mouse.";
             Syntax = "move";
+        }
 
+        private int lastX = -1;
+        private int lastY = -1;
+        public override void Execute(MultiplayerClient client, string[] args)
+        {
             Console.WriteLine("Mouse is now attached. Press any key to exit");
             Timer mouseTimer = new Timer();
             mouseTimer.Elapsed += delegate { mouseTimerTick(client); };

@@ -6,6 +6,13 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class ConstructCommand : NitroxCommand
     {
+        public ConstructCommand()
+        {
+            Name = "construct";
+            Description = "Sets a base item's constructed amount. Set to 1 to build.";
+            Syntax = "construct <amount> <x> <y> <z>";
+        }
+
         public override void Execute(MultiplayerClient client, string[] args)
         {
             Name = "construct";
