@@ -1,11 +1,9 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.GameLogic.ManagedObjects;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -45,9 +43,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 rigidBody.AddForce(ApiHelper.Vector3(drop.PushVelocity), ForceMode.VelocityChange);
 
                 multiplayerObjectManager.SetupManagedObject(drop.Guid, gameObject);
+                
+                ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
+                itemDropAction.ProcessDroppedItem(gameObject);
             }
-
-            //TODO: TechType specific logic when dropped, ex: constructor.deploy();
         }
     }
 }
