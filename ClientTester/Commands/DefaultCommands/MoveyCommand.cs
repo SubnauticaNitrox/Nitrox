@@ -8,7 +8,7 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveyCommand : NitroxCommand
     {
-        MoveyCommand()
+        public MoveyCommand()
         {
             Name = "movey";
             Description = "Moves the player up and down";
