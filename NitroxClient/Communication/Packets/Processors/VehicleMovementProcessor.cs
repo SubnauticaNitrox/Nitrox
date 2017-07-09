@@ -42,8 +42,9 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             GameObject gameObject = opGameObject.Get();
-            gameObject.transform.position = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
-            gameObject.transform.rotation = ApiHelper.Quaternion(vehicleMovement.Rotation);            
+            Vector3 position = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
+            Quaternion rotation = ApiHelper.Quaternion(vehicleMovement.Rotation);
+            MovementHelper.MoveGameObject(gameObject, position, rotation);
         }
 
         private Optional<GameObject> createVehicle(String techTypeString, String guid)

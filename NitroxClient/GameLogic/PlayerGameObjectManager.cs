@@ -14,8 +14,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
-            iTween.MoveTo(player, iTween.Hash("position", position, "easetype", iTween.EaseType.easeInOutSine, "time", 0.05f));
-            iTween.RotateTo(player, iTween.Hash("rotation", rotation.eulerAngles, "easetype", iTween.EaseType.easeInOutSine, "time", 0.05f));
+            MovementHelper.MoveGameObject(player, position, rotation);
         }
 
         public void HidePlayerGameObject(String playerId)
