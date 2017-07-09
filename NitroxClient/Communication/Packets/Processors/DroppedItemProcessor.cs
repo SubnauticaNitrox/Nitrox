@@ -1,4 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.GameLogic.ManagedObjects;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -10,12 +12,25 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class DroppedItemProcessor : GenericPacketProcessor<DroppedItem>
     {
+        private MultiplayerObjectManager multiplayerObjectManager;
+
+        public DroppedItemProcessor(MultiplayerObjectManager multiplayerObjectManager)
+        {
+            this.multiplayerObjectManager = multiplayerObjectManager;
+        }
+
         public override void Process(DroppedItem drop)
         {
-            TechType techType;
+            Optional<TechType> opTechType = ApiHelper.TechType(drop.TechType);
 
-            UWE.Utils.TryParseEnum<TechType>(drop.TechType, out techType);
+            if(opTechType.IsEmpty())
+            {
+                Console.WriteLine("Attempted to drop unknown tech type: " + drop.TechType);
+                return;
+            }
 
+            TechType techType = opTechType.Get();
+            
             GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
 
             if (techPrefab != null)
@@ -28,7 +43,11 @@ namespace NitroxClient.Communication.Packets.Processors
                 Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
                 rigidBody.isKinematic = false;
                 rigidBody.AddForce(ApiHelper.Vector3(drop.PushVelocity), ForceMode.VelocityChange);
+
+                multiplayerObjectManager.SetupManagedObject(drop.Guid, gameObject);
             }
+
+            //TODO: TechType specific logic when dropped, ex: constructor.deploy();
         }
     }
 }

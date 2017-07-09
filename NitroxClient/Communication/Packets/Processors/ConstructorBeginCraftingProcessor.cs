@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
 using NitroxClient.GameLogic.ManagedObjects;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -31,11 +32,11 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             GameObject gameObject = opGameObject.Get();
-            Crafter crafter = gameObject.GetComponent<Crafter>();
+            Crafter crafter = gameObject.GetComponentInChildren<Crafter>(true);
 
             if(crafter == null)
             {
-                Console.WriteLine("Trying to build " + packet.TechType + " but we did not have a corresponding crafter - how did that happen?");
+                Console.WriteLine("Trying to build " + packet.TechType + " but we did not have a corresponding constructorInput - how did that happen?");
                 return;
             }
 
@@ -47,7 +48,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 return;
             }
 
-            MethodInfo onCraftingBegin = this.GetType().GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
+            Validate.NotNull(onCraftingBegin);
             onCraftingBegin.Invoke(crafter, new object[] { opTechType.Get(), packet.Duration }); //TODO: take into account latency for duration            
         }
     }

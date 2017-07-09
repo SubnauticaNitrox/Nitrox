@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using NitroxClient.GameLogic.ManagedObjects;
 
 namespace NitroxClient.Communication
 {
@@ -17,8 +18,11 @@ namespace NitroxClient.Communication
 
         private TcpClient client;
 
-        public PacketSender(TcpClient client)
+        private MultiplayerObjectManager multiplayerObjectManager;
+        
+        public PacketSender(TcpClient client, MultiplayerObjectManager multiplayerObjectManager)
         {
+            this.multiplayerObjectManager = multiplayerObjectManager; //Temporary until business logic refactor of packet sender.  SOON :)
             this.client = client;
             this.Active = false;
         }
@@ -52,9 +56,11 @@ namespace NitroxClient.Communication
             Send(pickupItem);
         }
 
-        public void DropItem(String techType, Vector3 itemPosition, Vector3 pushVelocity)
+        public void DropItem(GameObject gameObject, TechType techType, Vector3 dropPosition, Vector3 pushVelocity)
         {
-            DroppedItem droppedItem = new DroppedItem(PlayerId, techType, ApiHelper.Vector3(itemPosition), ApiHelper.Vector3(pushVelocity));
+            ManagedMultiplayerObject managedObject = multiplayerObjectManager.SetupManagedObject(gameObject);
+            Console.WriteLine("Dropping item with guid: " + managedObject.GUID);
+            DroppedItem droppedItem = new DroppedItem(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition), ApiHelper.Vector3(pushVelocity));
             Send(droppedItem);
         }
 
@@ -82,6 +88,8 @@ namespace NitroxClient.Communication
                 Console.WriteLine(techType + " built by an unmanaged constructor - not sending to the server");
                 return;
             }
+
+            Console.WriteLine("Building item from constructor with uuid: " + managedObject.GUID);
 
             ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), duration);
             Send(beginCrafting);
