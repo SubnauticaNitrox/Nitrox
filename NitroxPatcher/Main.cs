@@ -18,7 +18,8 @@ namespace NitroxPatcher
             new ClipMapManager_ShowEntities_Patch(),
             new Constructable_Construct_Patch(),
             new Pickupable_Pickup_Patch(),
-            new SpawnConsoleCommand_Patch()
+            new SpawnConsoleCommand_Patch(),
+            new ConstructorInput_Craft()
         };
 
         public static void Execute()
