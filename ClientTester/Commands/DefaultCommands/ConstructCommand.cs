@@ -20,7 +20,7 @@ namespace ClientTester.Commands.DefaultCommands
             Syntax = "construct <amount> <x> <y> <z>";
             if (args.Length < 4)
             {
-                CommandManager.NotEnoughArgumentsMessage(1, Syntax);
+                CommandManager.NotEnoughArgumentsMessage(4, Syntax);
                 return;
             }
 

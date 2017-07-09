@@ -34,7 +34,7 @@ namespace ClientTester.Commands
 
         public void TakeCommand(string command)
         {
-            String[] commandArray = Regex.Matches(Console.ReadLine(), @"[\""].+?[\""]|[^ ]+")
+            String[] commandArray = Regex.Matches(command, @"[\""].+?[\""]|[^ ]+")
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .ToArray();

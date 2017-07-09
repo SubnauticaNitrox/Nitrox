@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
-    public class MovementHelper
+    public static class MovementHelper
     {
         public static void MoveGameObject(GameObject go, Vector3 position, Quaternion rotation)
         {

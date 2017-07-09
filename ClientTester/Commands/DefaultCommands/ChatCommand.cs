@@ -23,7 +23,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args.Length >= 2)
             {
-                client.PacketSender.SendChatMessage(String.Join(" ", args.ToArray())); //does not support double spaces!
+                client.PacketSender.SendChatMessage(String.Join(" ", args)); //does not support double spaces!
             }
             else
             {

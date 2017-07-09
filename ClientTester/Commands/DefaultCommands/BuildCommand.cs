@@ -10,7 +10,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Name = "build";
             Description = "Builds an object with the builder tool.";
-            Syntax = "build <techtype> <x> <y> <z> [xrot] [yrot] [zrot]";
+            Syntax = "build <techtype> <x> <y> <z> [<xrot> <yrot> <zrot>]";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)

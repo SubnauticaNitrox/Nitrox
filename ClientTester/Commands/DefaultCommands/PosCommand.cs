@@ -8,19 +8,13 @@ namespace ClientTester.Commands.DefaultCommands
     {
         public PosCommand()
         {
-            Name = "drop";
-            Description = "Drops an item at a location.";
-            Syntax = "drop <techtype> <x> <y> <z>";
+            Name = "pos";
+            Description = "Gets the player's location.";
+            Syntax = "pos";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            if (args.Length < 4)
-            {
-                CommandManager.NotEnoughArgumentsMessage(1, Syntax);
-                return;
-            }
-
             Console.WriteLine(client.clientPos.ToString());
         }
     }

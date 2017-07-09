@@ -17,7 +17,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             if (args.Length < 4)
             {
-                CommandManager.NotEnoughArgumentsMessage(1, Syntax);
+                CommandManager.NotEnoughArgumentsMessage(4, Syntax);
                 return;
             }
 
