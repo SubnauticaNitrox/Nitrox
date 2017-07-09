@@ -25,4 +25,11 @@
   <PropertyGroup>
     <SubnauticaManaged>$(SubnauticaDir)\Subnautica_Data\Managed</SubnauticaManaged>
   </PropertyGroup>
+
+  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+    <OutputPath>$(SolutionDir)\bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(Configuration) == 'Release'">
+    <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
+  </PropertyGroup>
 </Project>
