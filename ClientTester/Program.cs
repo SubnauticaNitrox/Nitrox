@@ -32,22 +32,5 @@ namespace ClientTester
                 manager.TakeCommand(Console.ReadLine());
             }
         }
-
-        private static int lastX = -1;
-        private static int lastY = -1;
-        private static void mouseTimerTick(MultiplayerClient client)
-        {
-            int curX = System.Windows.Forms.Cursor.Position.X;
-            int curY = System.Windows.Forms.Cursor.Position.Y;
-            if (lastX != -1)
-            {
-                float velX = curX - lastX;
-                float velY = curY - lastY;
-                clientPos += new Vector3(velX / 10f, 0, velY / 10f);
-                client.PacketSender.UpdatePlayerLocation(clientPos, Quaternion.identity, Optional<VehicleModel>.Empty());
-            }
-            lastX = curX;
-            lastY = curY;
-        }
     }
 }
