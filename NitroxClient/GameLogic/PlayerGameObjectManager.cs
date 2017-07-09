@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerGameObjectManager
     {
-        private Dictionary<String, GameObject> gameObjectByPlayerId = new Dictionary<String, GameObject>();
-        
-        public void UpdatePlayerPosition(String playerId, Vector3 position, Quaternion rotation)
+        private Dictionary<string, GameObject> gameObjectByPlayerId = new Dictionary<string, GameObject>();
+
+        public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
@@ -18,25 +16,38 @@ namespace NitroxClient.GameLogic
             player.transform.rotation = rotation;
         }
 
-        public void HidePlayerGameObject(String playerId)
+        public void HidePlayerGameObject(string playerId)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(false);
         }
 
-        public GameObject GetPlayerGameObject(String playerId)
+        public GameObject FindPlayerGameObject(string playerId)
         {
-            if (!gameObjectByPlayerId.ContainsKey(playerId))
-            {
-                gameObjectByPlayerId[playerId] = createOtherPlayer(playerId);
-            }
-
-            return gameObjectByPlayerId[playerId];
+            return gameObjectByPlayerId.GetOrDefault(playerId, null);
         }
 
-        private GameObject createOtherPlayer(String playerId)
+        public GameObject GetPlayerGameObject(string playerId)
+        {
+            GameObject player = FindPlayerGameObject(playerId);
+            if (player == null)
+            {
+                player = gameObjectByPlayerId[playerId] = createOtherPlayer(playerId);
+            }
+            return player;
+        }
+
+        private GameObject createOtherPlayer(string playerId)
         {
             return GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        }
+
+        public void RemovePlayerGameObject(String playerId)
+        {
+            GameObject player = gameObjectByPlayerId[playerId];
+            player.SetActive(false);
+            GameObject.DestroyImmediate(player);
+            gameObjectByPlayerId.Remove(playerId);
         }
     }
 }
