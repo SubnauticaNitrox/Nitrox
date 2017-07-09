@@ -1,15 +1,8 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using Harmony;
-using System.Reflection.Emit;
-using System.Reflection;
-using Harmony.ILCopying;
-using NitroxModel.Helper;
-using NitroxPatcher;
 using NitroxTest.Patcher.Test;
 
 namespace NitroxTest.Patcher.Patches
@@ -24,7 +17,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(ClipMapManager_ShowEntities_Patch.INJECTION_OPCODE, null));
 
             IEnumerable<CodeInstruction> result = ClipMapManager_ShowEntities_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(108, PatchTestHelper.GetInstructionCount(result));
+            Assert.AreEqual(108, result.Count());
         }
 
         [TestMethod]
@@ -34,7 +27,7 @@ namespace NitroxTest.Patcher.Patches
 
             IEnumerable<CodeInstruction> result = ClipMapManager_ShowEntities_Patch.Transpiler(ClipMapManager_ShowEntities_Patch.TARGET_METHOD, beforeInstructions);
 
-            Assert.IsTrue(beforeInstructions.Count < PatchTestHelper.GetInstructionCount(result));
+            Assert.IsTrue(beforeInstructions.Count < result.Count());
         }
 
         /* TODO: Figure out E-Call errors: 

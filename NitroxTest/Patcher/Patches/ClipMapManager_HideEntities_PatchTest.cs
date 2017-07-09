@@ -1,16 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using Harmony;
-using System.Reflection.Emit;
-using System.Reflection;
-using Harmony.ILCopying;
-using NitroxModel.Helper;
-using NitroxPatcher;
 using NitroxTest.Patcher.Test;
+using System.Linq;
 
 namespace NitroxTest.Patcher.Patches
 {
@@ -24,7 +17,8 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(ClipMapManager_HideEntities_Patch.INJECTION_OPCODE, null));
 
             IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(106, PatchTestHelper.GetInstructionCount(result));
+
+            Assert.AreEqual(instructions.Count + 3, result.Count());
         }
 
         [TestMethod]
@@ -34,7 +28,9 @@ namespace NitroxTest.Patcher.Patches
 
             IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(ClipMapManager_HideEntities_Patch.TARGET_METHOD, beforeInstructions);
 
-            Assert.IsTrue(beforeInstructions.Count < PatchTestHelper.GetInstructionCount(result));
+            Assert.IsTrue(beforeInstructions.Count < result.Count());
+            // 3 instructions are added for every ret, currently there are two.
+            Assert.AreEqual(beforeInstructions.Count + 6, result.Count());
         }
     }
 }

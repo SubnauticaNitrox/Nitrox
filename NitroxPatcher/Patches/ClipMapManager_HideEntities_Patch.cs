@@ -1,14 +1,9 @@
 ﻿using Harmony;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.InteropServices;
-using System.Text;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -26,13 +21,12 @@ namespace NitroxPatcher.Patches
                 if (instruction.opcode.Equals(INJECTION_OPCODE))
                 {
                     /*
-                     * Multiplayer.RemoveChunk(this.chunk.transform.position);
+                     * Multiplayer.RemoveChunk(this.chunk);
                      */
+
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_chunk"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_transform"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("RemoveChunk", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Vector3) }, null));
+                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("RemoveChunk", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(VoxelandChunk) }, null));
                 }
 
                 yield return instruction;
@@ -45,4 +39,3 @@ namespace NitroxPatcher.Patches
         }
     }
 }
-

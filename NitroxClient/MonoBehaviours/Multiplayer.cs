@@ -8,7 +8,6 @@ using NitroxModel.Packets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -158,11 +157,11 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public static void RemoveChunk(Vector3 chunk)
+        public static void RemoveChunk(VoxelandChunk chunk)
         {
-            if (chunk != null && loadedChunks != null)
+            if (chunk?.transform != null && loadedChunks != null)
             {
-                Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
+                Int3 owningChunk = ApiHelper.Int3(chunk.transform.position);
                 loadedChunks.RemoveChunk(owningChunk);
             }
         }
