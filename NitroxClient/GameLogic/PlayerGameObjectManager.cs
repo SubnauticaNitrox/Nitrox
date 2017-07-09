@@ -12,8 +12,7 @@ namespace NitroxClient.GameLogic
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
-            player.transform.position = position;
-            player.transform.rotation = rotation;
+            MovementHelper.MoveGameObject(player, position, rotation);
         }
 
         public void HidePlayerGameObject(string playerId)
@@ -39,7 +38,13 @@ namespace NitroxClient.GameLogic
 
         private GameObject createOtherPlayer(string playerId)
         {
-            return GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            GameObject body = GameObject.Find("body");
+            //Cheap fix for showing head, much easier since male_geo contains many different heads
+            body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            GameObject bodyCopy = UnityEngine.Object.Instantiate(body);
+            body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+            bodyCopy.transform.Find("player_view").gameObject.GetComponent<ArmsController>().smoothSpeed = 0; //Disables the other character's move animations
+            return bodyCopy;
         }
 
         public void RemovePlayerGameObject(String playerId)
