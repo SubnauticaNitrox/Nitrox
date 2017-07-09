@@ -3,22 +3,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using Harmony;
 using NitroxTest.Patcher.Test;
+using System.Linq;
 
 namespace NitroxTest.Patcher.Patches
 {
     [TestClass]
     public class ClipMapManager_HideEntities_PatchTest
     {
-        // TODO: Pass a valid ILGenerator instead of null.
-
         [TestMethod]
         public void Sanity()
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
             instructions.Add(new CodeInstruction(ClipMapManager_HideEntities_Patch.INJECTION_OPCODE, null));
 
-            IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(null, null, instructions);
-            Assert.AreEqual(106, PatchTestHelper.GetInstructionCount(result));
+            IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(null, instructions);
+
+            Assert.AreEqual(instructions.Count + 3, result.Count());
         }
 
         [TestMethod]
@@ -26,9 +26,11 @@ namespace NitroxTest.Patcher.Patches
         {
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(ClipMapManager_HideEntities_Patch.TARGET_METHOD);
 
-            IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(ClipMapManager_HideEntities_Patch.TARGET_METHOD, null, beforeInstructions);
+            IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(ClipMapManager_HideEntities_Patch.TARGET_METHOD, beforeInstructions);
 
-            Assert.IsTrue(beforeInstructions.Count < PatchTestHelper.GetInstructionCount(result));
+            Assert.IsTrue(beforeInstructions.Count < result.Count());
+            // 3 instructions are added for every ret, currently there are two.
+            Assert.AreEqual(beforeInstructions.Count + 6, result.Count());
         }
     }
 }
