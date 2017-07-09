@@ -21,5 +21,10 @@ namespace NitroxModel.Packets
             this.TechType = techType;
             this.PushVelocity = pushVelocity;
         }
+
+        public override string ToString()
+        {
+            return "[DroppedItem - playerId: " + PlayerId + " guid: " + Guid + " techType: " + TechType + " itemPosition: " + ItemPosition + " pushVelocity: " + PushVelocity + "]";
+        }
     }
 }
