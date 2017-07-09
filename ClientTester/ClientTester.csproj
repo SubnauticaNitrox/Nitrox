@@ -53,6 +53,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\DefaultCommands\BuildCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\ChatCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\ConstructCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\DropCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\HelpCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\MoveCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\MoveyCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\PickupCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\PosCommand.cs" />
+    <Compile Include="Commands\NitroxCommand.cs" />
     <Compile Include="MultiplayerClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
