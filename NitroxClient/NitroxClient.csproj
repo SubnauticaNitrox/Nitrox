@@ -64,6 +64,7 @@
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\PacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
+    <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\MultiplayerObjectManager.cs" />
     <Compile Include="GameLogic\PlayerGameObjectManager.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
