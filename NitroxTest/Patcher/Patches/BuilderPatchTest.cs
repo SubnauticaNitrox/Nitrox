@@ -1,14 +1,9 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using Harmony;
-using System.Reflection.Emit;
 using System.Reflection;
-using Harmony.ILCopying;
-using NitroxModel.Helper;
 using NitroxTest.Patcher.Test;
 
 namespace NitroxTest.Patcher.Patches
@@ -23,7 +18,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(BuilderPatch.INJECTION_OPCODE, BuilderPatch.INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(null, instructions);
-            Assert.AreEqual(113, PatchTestHelper.GetInstructionCount(result));
+            Assert.AreEqual(113, result.Count());
         }
 
         [TestMethod]
@@ -33,7 +28,7 @@ namespace NitroxTest.Patcher.Patches
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(targetMethod, beforeInstructions);
-            Assert.IsTrue(beforeInstructions.Count < PatchTestHelper.GetInstructionCount(result));
+            Assert.IsTrue(beforeInstructions.Count < result.Count());
         }
     }
 }

@@ -1,9 +1,7 @@
 ﻿using NitroxModel.DataStructures.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
+
 
 namespace NitroxClient
 {
@@ -36,11 +34,14 @@ namespace NitroxClient
 
         public static Optional<TechType> TechType(String techTypeString)
         {
-            TechType techType;
-            UWE.Utils.TryParseEnum<TechType>(techTypeString, out techType);
+            UWE.Utils.TryParseEnum(techTypeString, out TechType techType);
 
             return Optional<TechType>.OfNullable(techType);
         }
 
+        public static Int3 Int3(Vector3 v)
+        {
+            return new Int3((int)v.x, (int)v.y, (int)v.z);
+        }
     }
 }

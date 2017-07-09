@@ -1,29 +1,14 @@
 ﻿using Harmony;
 using Harmony.ILCopying;
 using NitroxModel.Helper;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 
 namespace NitroxTest.Patcher.Test
 {
     public static class PatchTestHelper
     {
-        public static int GetInstructionCount(IEnumerable<CodeInstruction> result)
-        {
-            int instructionCounter = 0;
-
-            foreach (CodeInstruction instruction in result)
-            {
-                instructionCounter++;
-            }
-
-            return instructionCounter;
-        }
-
         public static List<CodeInstruction> GenerateDummyInstructions(int count)
         {
             List<CodeInstruction> instructions = new List<CodeInstruction>();
