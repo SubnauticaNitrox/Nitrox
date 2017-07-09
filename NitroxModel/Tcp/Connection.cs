@@ -15,7 +15,7 @@ namespace NitroxModel.Tcp
         public String PlayerId { get; set; }
         private Socket Socket;
         private MessageBuffer MessageBuffer;
-        public Boolean Open { get; private set; }
+        public bool Open { get; private set; }
 
         public Connection(Socket socket)
         {
@@ -31,7 +31,16 @@ namespace NitroxModel.Tcp
 
         public IEnumerable<Packet> GetPacketsFromRecievedData(IAsyncResult ar)
         {
-            int bytesRead = Socket.EndReceive(ar);
+            int bytesRead = 0;
+            try
+            {
+                bytesRead = Socket.EndReceive(ar);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("Error reading data from socket");
+                Open = false;
+            }
 
             if (bytesRead > 0)
             {
@@ -42,20 +51,40 @@ namespace NitroxModel.Tcp
             }
             else
             {
+                Console.WriteLine("No data found from socket, disconnecting");
                 Open = false;
             }
         }
 
         public void SendPacket(Packet packet, AsyncCallback callback)
         {
-            byte[] packetData = packet.SerializeWithHeaderData();
-            Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+            if (Open) // Can remove check if able to unload Mono behaviors
+            {
+                byte[] packetData = packet.SerializeWithHeaderData();
+                try
+                {
+                    Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+                }
+                catch (SocketException se)
+                {
+                    Console.WriteLine("Error sending packet");
+                    Open = false;
+                }
+            }
         }
 
         public void Close()
         {
-            Socket.Shutdown(SocketShutdown.Both);
-            Socket.Close();
+            Open = false;
+            try
+            {
+                Socket.Shutdown(SocketShutdown.Both);
+                Socket.Close();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error closing socket -- probably already closed");
+            }
         }
     }
 }

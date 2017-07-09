@@ -14,7 +14,10 @@ namespace NitroxServer
 {
     public class Listener
     {
-        private ConcurrentMap<String, Player> playersById = new ConcurrentMap<String, Player>();
+        // A ConcurrentMap will not protect against concurrency issues when
+        // iterating keys and adding/removing values. You need to lock the Map
+        // when you're using it at all, including iterating values.
+        private Dictionary<String, Player> playersById = new Dictionary<String, Player>();
         
         private HashSet<Type> packetForwardBlacklist;
         private HashSet<Type> loggingPacketBlackList;
@@ -44,7 +47,7 @@ namespace NitroxServer
 
             Socket socket = (Socket)ar.AsyncState;
             
-            Connection connection = new Connection(socket.EndAccept(ar));
+            Connection connection = new Connection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
             connection.BeginReceive(new AsyncCallback(DataReceived));
 
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
@@ -62,7 +65,7 @@ namespace NitroxServer
 
                 if (!loggingPacketBlackList.Contains(packet.GetType()))
                 {
-                    Console.WriteLine("Received packet from socket: " + packet.ToString() + "for player " + player.Id);
+                    Console.WriteLine("Received packet from socket: " + packet.ToString() + " for player " + player.Id);
                 }
 
                 ForwardPacketToOtherPlayers(packet, player.Id);
@@ -74,8 +77,7 @@ namespace NitroxServer
             }
             else
             {
-                playersById.TryRemove(connection.PlayerId);
-                Console.WriteLine("Player disconnected: " + connection.PlayerId);
+                playerDisconnected(connection.PlayerId);
             }
         }
 
@@ -83,10 +85,13 @@ namespace NitroxServer
         {
             Player player;
 
-            if(!playersById.TryGetValue(packet.PlayerId, out player))
+            lock (playersById)
             {
-                player = new Player(packet.PlayerId, connection);
-                playersById.TryAdd(packet.PlayerId, player);
+                if (!playersById.TryGetValue(packet.PlayerId, out player))
+                {
+                    player = new Player(packet.PlayerId, connection);
+                    playersById.Add(packet.PlayerId, player);
+                }
             }
             
             return player;
@@ -107,11 +112,14 @@ namespace NitroxServer
                 return;
             }
 
-            foreach (Player player in playersById.values())
+            lock (playersById)
             {
-                if (player.Id != sendingPlayerId && player.Connection.Open)
+                foreach (Player player in playersById.Values)
                 {
-                    player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    if (player.Id != sendingPlayerId && player.Connection.Open)
+                    {
+                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    }
                 }
             }
         }
@@ -123,9 +131,27 @@ namespace NitroxServer
                 Socket handler = (Socket)ar.AsyncState;                
                 int bytesSent = handler.EndSend(ar);
             }
+            catch (SocketException e)
+            {
+                Console.WriteLine("Listener: Error sending packet");
+            }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        private void playerDisconnected(String PlayerId)
+        {
+            if (PlayerId != null)
+            {
+                lock (playersById)
+                {
+                    playersById.Remove(PlayerId);
+                    Packet disconnectPacket = new Disconnect(PlayerId);
+                    ForwardPacketToOtherPlayers(disconnectPacket, PlayerId);
+                    Console.WriteLine("Player disconnected: " + PlayerId);
+                }
             }
         }
     }
