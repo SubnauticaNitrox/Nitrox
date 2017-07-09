@@ -21,7 +21,7 @@ namespace ClientTester.Commands.DefaultCommands
                 return;
             }
 
-            client.PacketSender.DropItem(args[0], CommandManager.GetVectorFromArgs(args, 1), Vector3.zero);
+            client.PacketSender.DropItem(new GameObject(), UWE.Utils.ParseEnum<TechType>(args[0]), CommandManager.GetVectorFromArgs(args, 1), Vector3.zero);
         }
     }
 }
