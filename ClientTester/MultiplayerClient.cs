@@ -2,12 +2,14 @@
 using NitroxClient.Communication;
 using NitroxClient.Map;
 using System;
+using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
         public PacketSender PacketSender { get; set; }
+        public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
 
         LoadedChunks loadedChunks;
         ChunkAwarePacketReceiver chunkAwarePacketReceiver;
