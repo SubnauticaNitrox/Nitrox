@@ -22,7 +22,21 @@ namespace NitroxClient.GameLogic.ManagedObjects
             return Optional<GameObject>.Empty();
         }
 
-        public void SetupManagedObject(String guid, GameObject gameObject)
+        public ManagedMultiplayerObject SetupManagedObject(GameObject gameObject)
+        {
+            ManagedMultiplayerObject managedObject = gameObject.GetComponent<ManagedMultiplayerObject>();
+
+            if (managedObject == null)
+            {
+                managedObject = gameObject.AddComponent<ManagedMultiplayerObject>();
+            }
+            
+            objectsByGuid.Add(managedObject.GUID, gameObject);
+
+            return managedObject;
+        }
+
+        public ManagedMultiplayerObject SetupManagedObject(String guid, GameObject gameObject)
         {
             ManagedMultiplayerObject managedObject = gameObject.GetComponent<ManagedMultiplayerObject>();
 
@@ -33,6 +47,8 @@ namespace NitroxClient.GameLogic.ManagedObjects
             }
 
             objectsByGuid.Add(guid, gameObject);
+
+            return managedObject;
         }
     }
 }

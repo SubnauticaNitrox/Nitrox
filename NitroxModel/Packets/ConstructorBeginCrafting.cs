@@ -18,5 +18,10 @@ namespace NitroxModel.Packets
             this.TechType = techType;
             this.Duration = duration;
         }
+
+        public override string ToString()
+        {
+            return "[ConstructorBeginCrafting - Guid: " + Guid + " TechType: " + TechType + " Duration: " + Duration + "]";
+        }
     }
 }
