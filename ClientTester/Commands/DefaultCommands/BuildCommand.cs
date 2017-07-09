@@ -6,11 +6,15 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class BuildCommand : NitroxCommand
     {
-        public override void Execute(MultiplayerClient client, string[] args)
+        public BuildCommand()
         {
             Name = "build";
             Description = "Builds an object with the builder tool.";
             Syntax = "build <techtype> <x> <y> <z> [xrot] [yrot] [zrot]";
+        }
+
+        public override void Execute(MultiplayerClient client, string[] args)
+        {
             if (args.Length < 4)
             {
                 CommandManager.NotEnoughArgumentsMessage(4, Syntax);

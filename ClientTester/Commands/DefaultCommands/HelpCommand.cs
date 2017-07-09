@@ -11,13 +11,13 @@ namespace ClientTester.Commands.DefaultCommands
         public HelpCommand(List<NitroxCommand> commands)
         {
             this.commands = commands;
+            Name = "help";
+            Description = "Shows help commands";
+            Syntax = "help";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            Name = "help";
-            Description = "Shows help commands";
-            Syntax = "help";
             foreach (NitroxCommand command in commands)
             {
                 Console.WriteLine(command.Name);
