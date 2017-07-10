@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
                     /*
-                     * Multiplayer.PacketSender.DropItem(base.gameObject, this.GetTechType(), dropPosition, pushVelocity);
+                     * Multiplayer.PacketSender.DropItem(base.gameObject, this.GetTechType(), dropPosition);
                      */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("PacketSender", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
@@ -41,7 +41,6 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Pickupable).GetMethod("GetTechType", BindingFlags.Public | BindingFlags.Instance));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_1);
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldarg_2);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("DropItem"));
                 }
             }

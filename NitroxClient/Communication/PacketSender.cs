@@ -49,18 +49,27 @@ namespace NitroxClient.Communication
 
             Send(movement);
         }
-        
+
+        public void UpdateItemPosition(String guid, Vector3 location, Quaternion rotation)
+        {
+            ItemPosition itemPosition = new ItemPosition(PlayerId, guid, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation));            
+            Send(itemPosition);
+        }
+
         public void PickupItem(Vector3 itemPosition, String gameObjectName, String techType)
         {
             PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
             Send(pickupItem);
         }
 
-        public void DropItem(GameObject gameObject, TechType techType, Vector3 dropPosition, Vector3 pushVelocity)
+        public void DropItem(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
             ManagedMultiplayerObject managedObject = multiplayerObjectManager.SetupManagedObject(gameObject);
+            managedObject.BroadcastLocation = true;
+
             Console.WriteLine("Dropping item with guid: " + managedObject.GUID);
-            DroppedItem droppedItem = new DroppedItem(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition), ApiHelper.Vector3(pushVelocity));
+
+            DroppedItem droppedItem = new DroppedItem(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition));
             Send(droppedItem);
         }
 
@@ -101,7 +110,7 @@ namespace NitroxClient.Communication
             Send(message);
         }
 
-        private void Send(Packet packet)
+        public void Send(Packet packet)
         {
             if (Active)
             {

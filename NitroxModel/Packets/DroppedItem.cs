@@ -11,20 +11,18 @@ namespace NitroxModel.Packets
     {
         public String Guid { get; private set; }
         public String TechType { get; private set; }
-        public Vector3 PushVelocity { get; private set; }
         public Vector3 ItemPosition { get; private set; }
 
-        public DroppedItem(String playerId, String guid, String techType, Vector3 itemPosition, Vector3 pushVelocity) : base(playerId, itemPosition)
+        public DroppedItem(String playerId, String guid, String techType, Vector3 itemPosition) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.ItemPosition = itemPosition;
             this.TechType = techType;
-            this.PushVelocity = pushVelocity;
         }
 
         public override string ToString()
         {
-            return "[DroppedItem - playerId: " + PlayerId + " guid: " + Guid + " techType: " + TechType + " itemPosition: " + ItemPosition + " pushVelocity: " + PushVelocity + "]";
+            return "[DroppedItem - playerId: " + PlayerId + " guid: " + Guid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
         }
     }
 }

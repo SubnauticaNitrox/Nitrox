@@ -34,7 +34,8 @@ namespace NitroxClient.MonoBehaviours
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(multiplayerObjectManager, playerGameObjectManager) },
-            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor(multiplayerObjectManager) }
+            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor(multiplayerObjectManager) },
+            {typeof(ItemPosition), new ItemPositionProcessor(multiplayerObjectManager) }
         };
 
         public void Awake()

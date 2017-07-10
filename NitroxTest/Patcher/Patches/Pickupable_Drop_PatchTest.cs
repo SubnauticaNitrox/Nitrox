@@ -18,7 +18,7 @@ namespace NitroxTest.Patcher.Patches
 
             IEnumerable<CodeInstruction> result = Pickupable_Drop_Patch.Transpiler(null, instructions);
 
-            Assert.AreEqual(instructions.Count + 8, result.Count());
+            Assert.AreEqual(instructions.Count + 7, result.Count());
         }
 
         [TestMethod]
@@ -29,7 +29,7 @@ namespace NitroxTest.Patcher.Patches
             IEnumerable<CodeInstruction> result = Pickupable_Drop_Patch.Transpiler(Pickupable_Drop_Patch.TARGET_METHOD, beforeInstructions);
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());
-            Assert.AreEqual(beforeInstructions.Count + 8, result.Count());
+            Assert.AreEqual(beforeInstructions.Count + 7, result.Count());
         }
     }
 }
