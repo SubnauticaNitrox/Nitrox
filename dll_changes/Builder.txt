@@ -1,8 +1,0 @@
-
-using NitroxClient.MonoBehaviours;
-
-
-/* Builder - TryPlace 265 after componenetInParent else*/
-
-
-Multiplayer.PacketSender.BuildItem(Enum.GetName(typeof(TechType), CraftData.GetTechType(Builder.prefab)), Builder.ghostModel.transform.position, Builder.placeRotation);

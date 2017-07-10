@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 
-
 namespace NitroxClient
 {
     public class ApiHelper
@@ -34,7 +33,8 @@ namespace NitroxClient
 
         public static Optional<TechType> TechType(String techTypeString)
         {
-            UWE.Utils.TryParseEnum(techTypeString, out TechType techType);
+            TechType techType;
+            UWE.Utils.TryParseEnum(techTypeString, out techType);
 
             return Optional<TechType>.OfNullable(techType);
         }
