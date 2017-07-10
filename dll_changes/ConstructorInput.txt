@@ -1,3 +1,0 @@
-//TODO: Harmony
-//Craft at the end
-Multiplayer.PacketSender.ConstructorBeginCrafting(this.constructor.gameObject, techType, duration);
