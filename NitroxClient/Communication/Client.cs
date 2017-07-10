@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NitroxModel.Packets;
+using NitroxModel.Tcp;
+using NitroxClient.Logger;
+using NitroxClient.MonoBehaviours;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using NitroxModel.Packets;
-using NitroxModel.Tcp;
 
 namespace NitroxClient.Communication
 {
@@ -38,26 +40,28 @@ namespace NitroxClient.Communication
 
                 if (!socket.Connected)
                 {
-                    OutputMessage("Unable to connect to server.");
+                    ClientLogger.WriteLine("Unable to connect to server.");
                     throw new InvalidOperationException("Socket could not connect.");
                 }
                 else
                 {
-                    OutputMessage("Connected to server.");
+                    ClientLogger.WriteLine("Connected to server.");
                 }
 
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             }
             catch (Exception)
             {
-                OutputMessage("Unable to connect to server");
+                ClientLogger.WriteLine("Unforeseen error when connecting: " + e.GetBaseException());
+                throw new InvalidOperationException("Unknown error while connecting");
             }
         }
 
         public void Stop()
         {
             connection.Close(); // Server will clean up pretty quickly
-            OutputMessage("Disconnected from server.");
+            Multiplayer.PacketSender.Active = false;
+            ClientLogger.WriteLine("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -74,7 +78,7 @@ namespace NitroxClient.Communication
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             } else
             {
-                Console.WriteLine("Error reading data from server");
+                ClientLogger.DebugLine("Error reading data from server");
                 Stop();
             }
         }
@@ -96,17 +100,6 @@ namespace NitroxClient.Communication
                 return false;
             }
             return connection.Open;
-        }
-
-        private void OutputMessage(String msg)
-        {
-            if (testClient)
-            {
-                Console.WriteLine(msg);
-            } else
-            {
-                ErrorMessage.AddMessage(msg);
-            }
         }
     }
 }

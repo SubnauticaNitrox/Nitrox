@@ -23,7 +23,7 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 Multiplayer.Logic.Chat.SendChatMessage(text);
-                ErrorMessage.AddMessage("Me: " + text);
+                ErrorMessage.AddMessage("Me: " + text); // Assumption: This method will only be called in-game
             }
         }
     }
