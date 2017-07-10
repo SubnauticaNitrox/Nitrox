@@ -40,7 +40,7 @@
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="iTween">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\iTween.dll</HintPath>
+      <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
