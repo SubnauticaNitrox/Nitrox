@@ -2,7 +2,6 @@
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.Communication.Packets.Processors.Base;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ManagedObjects;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using System;
@@ -23,19 +22,18 @@ namespace NitroxClient.MonoBehaviours
         private static bool hasLoadedMonoBehaviors;
 
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
-        private static MultiplayerObjectManager multiplayerObjectManager = new MultiplayerObjectManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
             {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
-            {typeof(DroppedItem), new DroppedItemProcessor(multiplayerObjectManager) },
+            {typeof(DroppedItem), new DroppedItemProcessor() },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
-            {typeof(VehicleMovement), new VehicleMovementProcessor(multiplayerObjectManager, playerGameObjectManager) },
-            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor(multiplayerObjectManager) },
-            {typeof(ItemPosition), new ItemPositionProcessor(multiplayerObjectManager) }
+            {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
+            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
+            {typeof(ItemPosition), new ItemPositionProcessor() }
         };
 
         public void Awake()
@@ -47,7 +45,7 @@ namespace NitroxClient.MonoBehaviours
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client, multiplayerObjectManager);
+            PacketSender = new PacketSender(client);
         }
 
         public void Update()

@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(Pickupable __instance)
         {
-            Multiplayer.PacketSender.PickupItem(__instance.gameObject.transform.position, __instance.gameObject.transform.name, __instance.GetTechType().ToString());
+            Multiplayer.PacketSender.PickupItem(__instance.gameObject, __instance.GetTechType().ToString());
             return true;
         }
 

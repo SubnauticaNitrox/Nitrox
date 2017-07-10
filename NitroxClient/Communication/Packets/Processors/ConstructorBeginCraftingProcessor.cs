@@ -1,29 +1,19 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
-using NitroxClient.GameLogic.ManagedObjects;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructorBeginCraftingProcessor : GenericPacketProcessor<ConstructorBeginCrafting>
     {
-        private MultiplayerObjectManager multiplayerObjectManager;
-
-        public ConstructorBeginCraftingProcessor(MultiplayerObjectManager multiplayerObjectManager)
-        {
-            this.multiplayerObjectManager = multiplayerObjectManager;
-        }
-
         public override void Process(ConstructorBeginCrafting packet)
         {
-            Optional<GameObject> opGameObject = multiplayerObjectManager.GetManagedObject(packet.Guid);
+            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
 
             if(opGameObject.IsEmpty())
             {

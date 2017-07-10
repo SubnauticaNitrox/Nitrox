@@ -1,13 +1,9 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ManagedObjects;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,13 +11,11 @@ namespace NitroxClient.Communication.Packets.Processors
     public class VehicleMovementProcessor : GenericPacketProcessor<VehicleMovement>
     {
         private const float VEHICLE_TRANSFORM_SMOOTH_PERIOD = 0.05f;
-
-        private MultiplayerObjectManager multiplayerObjectManager;
+        
         private PlayerGameObjectManager playerGameObjectManager;
 
-        public VehicleMovementProcessor(MultiplayerObjectManager multiplayerObjectManager, PlayerGameObjectManager playerGameObjectManager)
+        public VehicleMovementProcessor(PlayerGameObjectManager playerGameObjectManager)
         {
-            this.multiplayerObjectManager = multiplayerObjectManager;
             this.playerGameObjectManager = playerGameObjectManager;
         }
 
@@ -29,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             playerGameObjectManager.HidePlayerGameObject(vehicleMovement.PlayerId);
 
-            Optional<GameObject> opGameObject = multiplayerObjectManager.GetManagedObject(vehicleMovement.Guid);
+            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
 
             if(opGameObject.IsEmpty())
             {
@@ -39,8 +33,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     return;
                 }
-
-                multiplayerObjectManager.SetupManagedObject(vehicleMovement.Guid, opGameObject.Get());
+                
+                GuidHelper.SetNewGuid(opGameObject.Get(), vehicleMovement.Guid);
             }
 
             GameObject gameObject = opGameObject.Get();
@@ -72,9 +66,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
                 rigidBody.isKinematic = false;
-
-                ManagedMultiplayerObject managedObject = gameObject.AddComponent<ManagedMultiplayerObject>();
-                managedObject.ChangeGuid(guid);
+                
+                GuidHelper.SetNewGuid(gameObject, guid);
 
                 return Optional<GameObject>.Of(gameObject);
             }
