@@ -3,11 +3,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.Packets;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using NitroxClient.GameLogic.ManagedObjects;
+using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.Communication
 {
@@ -17,12 +14,9 @@ namespace NitroxClient.Communication
         public String PlayerId { get; set; }
 
         private TcpClient client;
-
-        private MultiplayerObjectManager multiplayerObjectManager;
         
-        public PacketSender(TcpClient client, MultiplayerObjectManager multiplayerObjectManager)
+        public PacketSender(TcpClient client)
         {
-            this.multiplayerObjectManager = multiplayerObjectManager; //Temporary until business logic refactor of packet sender.  SOON :)
             this.client = client;
             this.Active = false;
         }
@@ -56,20 +50,23 @@ namespace NitroxClient.Communication
             Send(itemPosition);
         }
 
-        public void PickupItem(Vector3 itemPosition, String gameObjectName, String techType)
+        public void PickupItem(GameObject gameObject, String techType)
         {
-            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
+            String guid = GuidHelper.GetGuid(gameObject);
+            Vector3 itemPosition = gameObject.transform.position;
+
+            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), guid, techType);
             Send(pickupItem);
         }
 
         public void DropItem(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
-            ManagedMultiplayerObject managedObject = multiplayerObjectManager.SetupManagedObject(gameObject);
-            managedObject.BroadcastLocation = true;
+            String guid = GuidHelper.GetGuid(gameObject);
+            SyncedMultiplayerObject.ApplyTo(gameObject);
+            
+            Console.WriteLine("Dropping item with guid: " + guid);
 
-            Console.WriteLine("Dropping item with guid: " + managedObject.GUID);
-
-            DroppedItem droppedItem = new DroppedItem(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition));
+            DroppedItem droppedItem = new DroppedItem(PlayerId, guid, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition));
             Send(droppedItem);
         }
 
@@ -90,17 +87,11 @@ namespace NitroxClient.Communication
         
         public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)
         {
-            ManagedMultiplayerObject managedObject = constructor.GetComponent<ManagedMultiplayerObject>();
+            String guid = GuidHelper.GetGuid(constructor);
 
-            if(managedObject == null)
-            {
-                Console.WriteLine(techType + " built by an unmanaged constructor - not sending to the server");
-                return;
-            }
+            Console.WriteLine("Building item from constructor with uuid: " + guid);
 
-            Console.WriteLine("Building item from constructor with uuid: " + managedObject.GUID);
-
-            ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, managedObject.GUID, ApiHelper.TechType(techType), duration);
+            ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, guid, ApiHelper.TechType(techType), duration);
             Send(beginCrafting);
         }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -25,13 +26,13 @@ namespace NitroxClient.MonoBehaviours
 
                 Vector3 currentPosition = Player.main.transform.position;
                 Quaternion rotation = Player.main.transform.rotation;
-                Optional<VehicleModel> vehicle = GetAndTrackVehicle();
+                Optional<VehicleModel> vehicle = GetVehicleModel();
                
                 Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, rotation, vehicle);
             }
         }
         
-        private Optional<VehicleModel> GetAndTrackVehicle()
+        private Optional<VehicleModel> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
 
@@ -39,17 +40,12 @@ namespace NitroxClient.MonoBehaviours
             {
                 return Optional<VehicleModel>.Empty();
             }
-            
-            ManagedMultiplayerObject managedObject = vehicle.gameObject.GetComponent<ManagedMultiplayerObject>();
 
-            if (managedObject == null)
-            {
-                managedObject = vehicle.gameObject.AddComponent<ManagedMultiplayerObject>();
-            }
-
+            String guid = GuidHelper.GetGuid(vehicle.gameObject);
             Quaternion rotation = vehicle.gameObject.transform.rotation;
             TechType techType = CraftData.GetTechType(vehicle.gameObject);
-            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType), managedObject.GUID, ApiHelper.Quaternion(rotation));
+
+            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType), guid, ApiHelper.Quaternion(rotation));
 
             return Optional<VehicleModel>.Of(model);
         }

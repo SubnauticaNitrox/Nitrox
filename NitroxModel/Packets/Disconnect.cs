@@ -8,7 +8,6 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Disconnect : Packet
     {
-
         public Disconnect(String playerId) : base(playerId) {}
     }
 }

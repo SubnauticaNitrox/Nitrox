@@ -9,20 +9,20 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PickupItem : PlayerActionPacket
     {
-        public Vector3 ItemPosition { get; set; }
-        public String GameObjectName { get; private set; }
+        public String Guid { get; private set; }
+        public Vector3 ItemPosition { get; private set; }
         public String TechType { get; private set; }
 
-        public PickupItem(String playerId, Vector3 itemPosition, String gameObjectName, String techType) : base(playerId, itemPosition)
+        public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
         {
             this.ItemPosition = itemPosition;
-            this.GameObjectName = gameObjectName;
+            this.Guid = guid;
             this.TechType = techType;
         }
 
         public override string ToString()
         {
-            return "[Pickup Item - ItemPosition: " + ItemPosition + " GameObjectName: " + GameObjectName + " TechType: " + TechType + "]";
+            return "[Pickup Item - ItemPosition: " + ItemPosition + " Guid: " + Guid + " TechType: " + TechType + "]";
         }
     }
 }

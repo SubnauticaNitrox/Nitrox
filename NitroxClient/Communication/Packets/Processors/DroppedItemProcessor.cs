@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.ItemDropActions;
-using NitroxClient.GameLogic.ManagedObjects;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
@@ -10,13 +10,6 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class DroppedItemProcessor : GenericPacketProcessor<DroppedItem>
     {
-        private MultiplayerObjectManager multiplayerObjectManager;
-
-        public DroppedItemProcessor(MultiplayerObjectManager multiplayerObjectManager)
-        {
-            this.multiplayerObjectManager = multiplayerObjectManager;
-        }
-
         public override void Process(DroppedItem drop)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(drop.TechType);
@@ -37,9 +30,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 gameObject.SetActive(true);
                 CrafterLogic.NotifyCraftEnd(gameObject, techType);
                 gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
-
-                multiplayerObjectManager.SetupManagedObject(drop.Guid, gameObject);
                 
+                GuidHelper.SetNewGuid(gameObject, drop.Guid);
+
                 ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
                 itemDropAction.ProcessDroppedItem(gameObject);
             }
