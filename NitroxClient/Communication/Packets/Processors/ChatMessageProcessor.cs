@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -7,7 +8,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ChatMessage message)
         {
-            ErrorMessage.AddMessage(message.PlayerId + ": " + message.Text);
+            ClientLogger.WriteLine(message.PlayerId + ": " + message.Text);
         }
     }
 }
