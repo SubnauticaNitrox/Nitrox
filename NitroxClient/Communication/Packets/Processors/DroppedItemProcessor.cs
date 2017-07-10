@@ -38,10 +38,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 CrafterLogic.NotifyCraftEnd(gameObject, techType);
                 gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
 
-                Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
-                rigidBody.isKinematic = false;
-                rigidBody.AddForce(ApiHelper.Vector3(drop.PushVelocity), ForceMode.VelocityChange);
-
                 multiplayerObjectManager.SetupManagedObject(drop.Guid, gameObject);
                 
                 ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);

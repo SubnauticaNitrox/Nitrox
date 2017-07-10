@@ -14,6 +14,8 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleMovementProcessor : GenericPacketProcessor<VehicleMovement>
     {
+        private const float VEHICLE_TRANSFORM_SMOOTH_PERIOD = 0.05f;
+
         private MultiplayerObjectManager multiplayerObjectManager;
         private PlayerGameObjectManager playerGameObjectManager;
 
@@ -44,7 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = opGameObject.Get();
             Vector3 position = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
             Quaternion rotation = ApiHelper.Quaternion(vehicleMovement.Rotation);
-            MovementHelper.MoveGameObject(gameObject, position, rotation);
+            MovementHelper.MoveGameObject(gameObject, position, rotation, VEHICLE_TRANSFORM_SMOOTH_PERIOD);
         }
 
         private Optional<GameObject> createVehicle(String techTypeString, String guid)

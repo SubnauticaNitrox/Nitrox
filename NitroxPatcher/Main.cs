@@ -34,7 +34,6 @@ namespace NitroxPatcher
                 patch.Patch(harmony);
             }
 
-
             Console.WriteLine("Completed patching for nitrox using " + Assembly.GetExecutingAssembly().FullName);
         }
     }

@@ -6,13 +6,15 @@ namespace NitroxClient.GameLogic
 {
     public class PlayerGameObjectManager
     {
+        private const float PLAYER_TRANSFORM_SMOOTH_PERIOD = 0.05f;
+
         private Dictionary<string, GameObject> gameObjectByPlayerId = new Dictionary<string, GameObject>();
 
         public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
-            MovementHelper.MoveGameObject(player, position, rotation);
+            MovementHelper.MoveGameObject(player, position, rotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
         }
 
         public void HidePlayerGameObject(string playerId)

@@ -29,6 +29,8 @@ namespace NitroxServer
 
             loggingPacketBlackList = new HashSet<Type>();
             loggingPacketBlackList.Add(typeof(Movement));
+            loggingPacketBlackList.Add(typeof(VehicleMovement));
+            loggingPacketBlackList.Add(typeof(ItemPosition));
         }
 
         public void Start()
