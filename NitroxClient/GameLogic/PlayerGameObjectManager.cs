@@ -1,4 +1,6 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using LitJson;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -47,10 +49,26 @@ namespace NitroxClient.GameLogic
             GameObject bodyCopy = UnityEngine.Object.Instantiate(body);
             body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
+            //Get player
             GameObject playerView = bodyCopy.transform.Find("player_view").gameObject;
+            //Move variables to keep player animations from mirroring and for identification
             playerView.GetComponent<ArmsController>().smoothSpeed = 0;
 
-            //UnityEngine.Object.Destroy(playerView.GetComponent<ArmsController>());
+            //Sets a new language value
+            Language language = Language.main;
+            JsonData data = (JsonData)language.ReflectionGet("strings"); //UM4SN only: JsonData data = language.strings;
+            data["Signal_" + playerId] = "Player " + playerId;
+            language.ReflectionSet("strings", data); //UM4SN only: remove this line
+
+            //Sets up a copy from the xSignal template for the signal
+            GameObject signalBase = UnityEngine.Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
+            signalBase.name = "signal" + playerId;
+            signalBase.transform.SetParent(playerView.transform, false);
+            SignalLabel label = signalBase.GetComponent<SignalLabel>();
+            PingInstance ping = signalBase.GetComponent<PingInstance>();
+            label.description = "Signal_" + playerId;
+            ping.pingType = PingType.Signal;
+            
             playerView.AddComponent<AnimationController>();
             return bodyCopy;
         }

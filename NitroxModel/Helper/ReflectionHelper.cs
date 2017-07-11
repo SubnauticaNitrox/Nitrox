@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace NitroxPatcher
+namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
@@ -15,6 +15,17 @@ namespace NitroxPatcher
                 return mi.Invoke(o, args);
             }
             return null;
+        }
+
+        public static object ReflectionGet(this object o, string fieldName)
+        {
+            var fi = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (fi != null)
+            {
+                fi.GetValue(o);
+                return true;
+            }
+            return false;
         }
 
         public static bool ReflectionSet(this object o, string fieldName, object value)
