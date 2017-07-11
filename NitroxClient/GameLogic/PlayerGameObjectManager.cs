@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxClient.MonoBehaviours;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,7 +46,12 @@ namespace NitroxClient.GameLogic
             body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             GameObject bodyCopy = UnityEngine.Object.Instantiate(body);
             body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-            bodyCopy.transform.Find("player_view").gameObject.GetComponent<ArmsController>().smoothSpeed = 0; //Disables the other character's move animations
+
+            GameObject playerView = bodyCopy.transform.Find("player_view").gameObject;
+            playerView.GetComponent<ArmsController>().smoothSpeed = 0;
+
+            //UnityEngine.Object.Destroy(playerView.GetComponent<ArmsController>());
+            playerView.AddComponent<AnimationController>();
             return bodyCopy;
         }
 
