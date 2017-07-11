@@ -13,17 +13,10 @@ namespace NitroxClient.Communication
         private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
         private Connection connection;
-        private bool testClient = false;
         
         public TcpClient(ChunkAwarePacketReceiver packetManager)
         {
             this.packetReceiver = packetManager;
-        }
-
-        public TcpClient(ChunkAwarePacketReceiver packetManager, bool testClient)
-        {
-            this.packetReceiver = packetManager;
-            this.testClient = testClient;
         }
 
         public void Start(String ip)
@@ -61,6 +54,7 @@ namespace NitroxClient.Communication
         {
             connection.Close(); // Server will clean up pretty quickly
             Multiplayer.PacketSender.Active = false;
+            Multiplayer.RemoveAllOtherPlayers();
             ClientLogger.WriteLine("Disconnected from server.");
         }
         

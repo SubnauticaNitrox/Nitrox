@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic;
+using NitroxClient.Logger;
 using NitroxClient.Map;
 using System;
 using UnityEngine;
@@ -18,9 +19,10 @@ namespace ClientTester
 
         public MultiplayerClient(String playerId)
         {
+            ClientLogger.SetLogLocation(ClientLogger.LOG_CONSOLE | ClientLogger.LOG_DEBUG);
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver, true);
+            client = new TcpClient(chunkAwarePacketReceiver);
             PacketSender = new PacketSender(client);
             PacketSender.PlayerId = playerId;
             Logic = new Logic(PacketSender);

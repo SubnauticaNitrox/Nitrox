@@ -47,7 +47,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            ClientLogger.setLogLocation(ClientLogger.LOG_CONSOLE | ClientLogger.LOG_ERRORMESSAGE);
+            ClientLogger.SetLogLocation(ClientLogger.LOG_CONSOLE | ClientLogger.LOG_ERRORMESSAGE);
 
             this.gameObject.AddComponent<PlayerMovement>();
 
