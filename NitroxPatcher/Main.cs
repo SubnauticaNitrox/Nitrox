@@ -10,6 +10,8 @@ namespace NitroxPatcher
     {
         private static readonly List<NitroxPatch> patches = new List<NitroxPatch>()
         {
+            new ArmsController_Update_Patch(),
+            new ArmsController_Start_Patch(),
             new BuilderPatch(),
             new ClipMapManager_HideEntities_Patch(),
             new ClipMapManager_ShowEntities_Patch(),

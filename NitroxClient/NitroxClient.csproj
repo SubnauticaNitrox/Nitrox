@@ -73,6 +73,7 @@
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
+    <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />

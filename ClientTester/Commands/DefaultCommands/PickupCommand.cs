@@ -20,8 +20,10 @@ namespace ClientTester.Commands.DefaultCommands
                 CommandManager.NotEnoughArgumentsMessage(4, Syntax);
                 return;
             }
-
-            client.PacketSender.PickupItem(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
+            GameObject item = new GameObject();
+            item.AddComponent<UniqueIdentifier>().Id = Guid.NewGuid().ToString();
+            item.transform.position = CommandManager.GetVectorFromArgs(args, 1);
+            client.PacketSender.PickupItem(item, args[0]);
         }
     }
 }
