@@ -21,7 +21,14 @@ namespace NitroxModel.Tcp
         
         public void BeginReceive(AsyncCallback callback)
         {
-            Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+            try
+            {
+                Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+            } catch (SocketException)
+            {
+                Console.WriteLine("Error reading data into buffer");
+                Open = false;
+            }
         }
 
         public IEnumerable<Packet> GetPacketsFromRecievedData(IAsyncResult ar)

@@ -34,7 +34,7 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
         {
             { typeof(PlayerManager), remotePlayerManager },
-            { typeof(PacketSender), PacketSender }
+            {typeof(Connect), new ConnectProcessor() },
         };
 
         static Multiplayer()

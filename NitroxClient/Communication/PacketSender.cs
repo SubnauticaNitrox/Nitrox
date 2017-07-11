@@ -48,12 +48,6 @@ namespace NitroxClient.Communication
             Send(movement);
         }
 
-        public void PickupItem(Vector3 itemPosition, String gameObjectName, String techType)
-        {
-            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), gameObjectName, techType);
-            Send(pickupItem);
-        }
-
         public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)
         {
             String constructorGuid = GuidHelper.GetGuid(constructor);
