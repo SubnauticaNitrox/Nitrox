@@ -5,16 +5,18 @@ using System.Text;
 
 namespace NitroxClient.Logger
 {
-    class ClientLogger
+    public class ClientLogger
     {
-        public const int LOG_CONSOLE = 0x1;
-        public const int LOG_ERRORMESSAGE = 0x01;
+        public const int LOG_CONSOLE = 1;
+        public const int LOG_ERRORMESSAGE = 2;
+        public const int LOG_DEBUG = 4;
         private static int logLocations = LOG_ERRORMESSAGE;
 
         // Set with combinaition of constants -- setLogLocation(LOG_CONSOLE | LOG_ERRORMESSAGE)
-        public static void setLogLocation(int location)
+        public static void SetLogLocation(int location)
         {
             ClientLogger.logLocations = location;
+            Console.WriteLine("Log location set to " + ClientLogger.logLocations);
         }
 
         public static void WriteLine(String msg)
@@ -33,7 +35,7 @@ namespace NitroxClient.Logger
         // Should we print the calling method for this for more debug context?
         public static void DebugLine(String msg)
         {
-            if ((logLocations & LOG_CONSOLE) != 0)
+            if ((logLocations & LOG_DEBUG) != 0)
             {
                 Console.WriteLine(msg);
             }

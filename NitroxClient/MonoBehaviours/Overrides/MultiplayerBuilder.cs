@@ -1,5 +1,4 @@
-﻿using NitroxClient.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UWE;
@@ -397,7 +396,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 text,
                 text2
                 });
-                ClientLogger.DebugLine(format, default(Vector3));
+                Console.WriteLine(format, default(Vector3));
             }
         }
 
