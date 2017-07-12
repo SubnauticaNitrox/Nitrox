@@ -20,6 +20,30 @@ namespace NitroxClient.GameLogic
             MovementHelper.MoveGameObject(player, position, rotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
         }
 
+        public void UpdateAnimation(string playerId, AnimChangeType type, AnimChangeState state)
+        {
+            GameObject player = GetPlayerGameObject(playerId);
+            GameObject playerView = player.transform.Find("player_view").gameObject;
+            AnimationController controller = playerView.GetComponent<AnimationController>();
+
+            bool value;
+            if (state == AnimChangeState.Off)
+            {
+                value = false;
+            }
+            else
+            {
+                value = true;
+            }
+
+            switch (type)
+            {
+                case AnimChangeType.Underwater:
+                    controller.SetBool("is_underwater", value);
+                    break;
+            }
+        }
+
         public void HidePlayerGameObject(string playerId)
         {
             GameObject player = GetPlayerGameObject(playerId);
@@ -61,8 +85,10 @@ namespace NitroxClient.GameLogic
             language.ReflectionSet("strings", data); //UM4SN only: remove this line
 
             //Sets up a copy from the xSignal template for the signal
+            //todo: settings menu to disable this?
             GameObject signalBase = UnityEngine.Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + playerId;
+            signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(playerView.transform, false);
             SignalLabel label = signalBase.GetComponent<SignalLabel>();
             PingInstance ping = signalBase.GetComponent<PingInstance>();
