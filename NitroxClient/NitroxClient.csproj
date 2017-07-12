@@ -56,6 +56,7 @@
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BeginItemConstructionProcessor.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
+    <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />

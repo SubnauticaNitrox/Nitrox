@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Commands\DefaultCommands\AniCommand.cs" />
     <Compile Include="Commands\DefaultCommands\BuildCommand.cs" />
     <Compile Include="Commands\DefaultCommands\ChatCommand.cs" />
     <Compile Include="Commands\DefaultCommands\ConstructCommand.cs" />

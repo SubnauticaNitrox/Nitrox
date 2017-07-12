@@ -9,7 +9,11 @@ namespace NitroxClient.MonoBehaviours
     public class AnimationController : MonoBehaviour
     {
         public static readonly float SMOOTHING_SPEED = 0.95f;
-        Animator animator;
+        public Animator animator;
+        private Dictionary<string, bool> animatorBools = new Dictionary<string, bool>()
+        {
+            { "is_underwater", true }
+        };
 
         public void Start()
         {
@@ -18,7 +22,12 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            animator.SetBool("is_underwater", true);
+            foreach (KeyValuePair<string, bool> kvp in animatorBools)
+            {
+                //For whatever reason, attempting to setbool once most of the time won't work
+                //Will investigate soon but this seems to work for now
+                animator.SetBool(kvp.Key, kvp.Value);
+            }
         }
 
         Vector3 lastPosition = Vector3.zero;
@@ -36,6 +45,11 @@ namespace NitroxClient.MonoBehaviours
             animator.SetFloat("move_speed_z", velocity.z);
 
             velocity *= SMOOTHING_SPEED;
+        }
+
+        public void SetBool(string name, bool value)
+        {
+            animatorBools[name] = value;
         }
     }
 }

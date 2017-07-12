@@ -101,6 +101,12 @@ namespace NitroxClient.Communication
             Send(message);
         }
 
+        public void AnimationChange(AnimChangeType type, AnimChangeState state)
+        {
+            AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerId, (int)type, (int)state);
+            Send(animEvent);
+        }
+
         public void Send(Packet packet)
         {
             if (Active)
