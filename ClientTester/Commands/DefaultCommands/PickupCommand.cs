@@ -10,7 +10,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Name = "pickup";
             Description = "Picks up an item at location.";
-            Syntax = "pickup <gameobjectname> <x> <y> <z>";
+            Syntax = "pickup <guid> <x> <y> <z>";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)
@@ -20,10 +20,8 @@ namespace ClientTester.Commands.DefaultCommands
                 CommandManager.NotEnoughArgumentsMessage(4, Syntax);
                 return;
             }
-            GameObject item = new GameObject();
-            item.AddComponent<UniqueIdentifier>().Id = Guid.NewGuid().ToString();
-            item.transform.position = CommandManager.GetVectorFromArgs(args, 1);
-            client.PacketSender.PickupItem(item, args[0]);
+
+            client.PacketSender.PickupItem(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }
     }
 }

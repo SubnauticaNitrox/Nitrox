@@ -58,6 +58,12 @@ namespace NitroxClient.Communication
             PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), guid, techType);
             Send(pickupItem);
         }
+        
+        public void PickupItem(Vector3 itemPosition, String guid, String techType)
+        {
+            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), guid, techType);
+            Send(pickupItem);
+        }
 
         public void DropItem(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
