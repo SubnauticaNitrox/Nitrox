@@ -8,7 +8,7 @@ using System.Text;
 
 namespace NitroxPatcher.Patches
 {
-    public class ConstructorInput_Craft : NitroxPatch
+    public class ConstructorInput_Craft_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(ConstructorInput);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Craft", BindingFlags.NonPublic | BindingFlags.Instance);

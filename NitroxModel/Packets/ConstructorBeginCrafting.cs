@@ -8,20 +8,22 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ConstructorBeginCrafting : Packet
     {
-        public String Guid { get; protected set; }
+        public String ConstructorGuid { get; protected set; }
+        public String ConstructedItemGuid { get; protected set; }
         public String TechType { get; protected set; }
         public float Duration { get; protected set; }
 
-        public ConstructorBeginCrafting(String playerId, String guid, String techType, float duration) : base(playerId)
+        public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, String techType, float duration) : base(playerId)
         {
-            this.Guid = guid;
+            this.ConstructorGuid = constructorGuid;
+            this.ConstructedItemGuid = constructedItemGuid;
             this.TechType = techType;
             this.Duration = duration;
         }
 
         public override string ToString()
         {
-            return "[ConstructorBeginCrafting - Guid: " + Guid + " TechType: " + TechType + " Duration: " + Duration + "]";
+            return "[ConstructorBeginCrafting - ConstructorGuid: " + ConstructorGuid + " ConstructedItemGuid: " + ConstructedItemGuid + " TechType: " + TechType + " Duration: " + Duration + "]";
         }
     }
 }
