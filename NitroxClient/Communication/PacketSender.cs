@@ -56,7 +56,7 @@ namespace NitroxClient.Communication
             String guid = GuidHelper.GetGuid(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
 
-            PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), guid, techType);
+            PickupItem(itemPosition, guid, techType);
             Send(pickupItem);
         }
         

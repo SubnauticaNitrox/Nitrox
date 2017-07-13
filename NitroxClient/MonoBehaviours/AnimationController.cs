@@ -10,7 +10,12 @@ namespace NitroxClient.MonoBehaviours
     {
         public static readonly float SMOOTHING_SPEED = 0.95f;
         public Animator animator;
-        private Dictionary<string, bool> animatorBools = new Dictionary<string, bool>()
+
+        Vector3 lastPosition = Vector3.zero;
+        Vector3 velocity = Vector3.zero;
+        float speed;
+
+        private Dictionary<string, bool> animationStatusById = new Dictionary<string, bool>()
         {
             { "is_underwater", true }
         };
@@ -22,7 +27,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            foreach (KeyValuePair<string, bool> kvp in animatorBools)
+            foreach (KeyValuePair<string, bool> kvp in animationStatusById)
             {
                 //For whatever reason, attempting to setbool once most of the time won't work
                 //Will investigate soon but this seems to work for now
@@ -30,9 +35,6 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        Vector3 lastPosition = Vector3.zero;
-        Vector3 velocity = Vector3.zero;
-        float speed;
         public void FixedUpdate()
         {
             velocity += (transform.position - lastPosition) * 2f;
@@ -49,7 +51,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void SetBool(string name, bool value)
         {
-            animatorBools[name] = value;
+            animationStatusById[name] = value;
         }
     }
 }
