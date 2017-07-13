@@ -75,7 +75,6 @@ namespace NitroxClient.GameLogic
             Language language = Language.main;
             JsonData data = (JsonData)language.ReflectionGet("strings"); //UM4SN only: JsonData data = language.strings;
             data["Signal_" + playerId] = "Player " + playerId;
-            language.ReflectionSet("strings", data); //UM4SN only: remove this line
 
             //Sets up a copy from the xSignal template for the signal
             //todo: settings menu to disable this?
