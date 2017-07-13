@@ -19,7 +19,8 @@ namespace NitroxPatcher
             new Pickupable_Pickup_Patch(),
             new Pickupable_Drop_Patch(),
             new SpawnConsoleCommand_Patch(),
-            new ConstructorInput_Craft()
+            new ConstructorInput_Craft_Patch(),
+            new ConstructorInput_OnCraftingBegin_Patch()
         };
 
         public static void Execute()

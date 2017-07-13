@@ -5,6 +5,7 @@ using NitroxModel.Packets;
 using System;
 using UnityEngine;
 using NitroxClient.GameLogic.Helper;
+using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication
 {
@@ -93,12 +94,23 @@ namespace NitroxClient.Communication
         
         public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)
         {
-            String guid = GuidHelper.GetGuid(constructor);
+            String constructorGuid = GuidHelper.GetGuid(constructor);
 
-            Console.WriteLine("Building item from constructor with uuid: " + guid);
+            Console.WriteLine("Building item from constructor with uuid: " + constructorGuid);
 
-            ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, guid, ApiHelper.TechType(techType), duration);
-            Send(beginCrafting);
+            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+
+            if (opConstructedObject.IsPresent())
+            {
+                GameObject constructedObject = (GameObject)opConstructedObject.Get();
+                String constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(PlayerId, constructorGuid, constructedObjectGuid, ApiHelper.TechType(techType), duration);
+                Send(beginCrafting);
+            }
+            else
+            {
+                Console.WriteLine("Could not send packet because there wasn't a corresponding constructed object!");
+            }
         }
 
         public void SendChatMessage(String text)
