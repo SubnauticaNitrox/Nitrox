@@ -22,8 +22,7 @@ namespace NitroxModel.Helper
             var fi = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             if (fi != null)
             {
-                fi.GetValue(o);
-                return true;
+                return fi.GetValue(o);
             }
             return false;
         }
