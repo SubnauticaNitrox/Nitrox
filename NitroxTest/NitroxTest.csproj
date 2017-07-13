@@ -65,6 +65,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Client\Communication\ChunkAwarePacketReceiverTest.cs" />
+    <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Tcp\MessageBufferTest.cs" />
@@ -92,6 +93,10 @@
     <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
       <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
       <Name>NitroxPatcher</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
