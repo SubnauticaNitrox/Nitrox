@@ -6,14 +6,17 @@ using NitroxModel.Packets;
 using System;
 using System.Reflection;
 using UnityEngine;
+using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructorBeginCraftingProcessor : GenericPacketProcessor<ConstructorBeginCrafting>
     {
+        public static GameObject ConstructedObject;
+
         public override void Process(ConstructorBeginCrafting packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
+            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.ConstructorGuid);
 
             if(opGameObject.IsEmpty())
             {
@@ -40,7 +43,19 @@ namespace NitroxClient.Communication.Packets.Processors
 
             MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(onCraftingBegin);
-            onCraftingBegin.Invoke(crafter, new object[] { opTechType.Get(), packet.Duration }); //TODO: take into account latency for duration            
+            onCraftingBegin.Invoke(crafter, new object[] { opTechType.Get(), packet.Duration }); //TODO: take into account latency for duration       
+
+            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+
+            if(opConstructedObject.IsPresent())
+            {
+                GameObject constructedObject = (GameObject)opConstructedObject.Get();
+                GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
+            }
+            else
+            {
+                Console.WriteLine("Could not find constructed object!");
+            }
         }
     }
 }
