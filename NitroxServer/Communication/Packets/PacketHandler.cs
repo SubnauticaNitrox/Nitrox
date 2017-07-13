@@ -13,13 +13,13 @@ namespace NitroxServer.Communication.Packets
     {
         private Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
         private Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
-        
+
         private DefaultServerPacketProcessor defaultPacketProcessor;
 
         public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper)
         {
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
-            
+
             this.authenticatedPacketProcessorsByType = new Dictionary<Type, PacketProcessor>() {
                 {typeof(Movement), new MovementPacketProcessor(tcpServer) },
             };
@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(Authenticate), new AuthenticatePacketProcessor(tcpServer, timeKeeper) }
             };
         }
-        
+
         public void ProcessAuthenticated(Packet packet, Player player)
         {
             if (authenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
