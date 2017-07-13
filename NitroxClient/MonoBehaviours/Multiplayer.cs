@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication;
-using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Packets;
@@ -25,25 +25,18 @@ namespace NitroxClient.MonoBehaviours
 
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
 
-        public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
-            {typeof(PlaceBasePiece), new PlaceBasePieceProcessor() },
-            {typeof(PlaceFurniture), new PlaceFurnitureProcessor() },
-            {typeof(AnimationChangeEvent), new AnimationProcessor(playerGameObjectManager) },
-            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
-            {typeof(ChatMessage), new ChatMessageProcessor() },
-            {typeof(EquipmentAddItem), new EquipmentAddItemProcessor() },
-            {typeof(EquipmentRemoveItem), new EquipmentRemoveItemProcessor() },
-            {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
-            {typeof(ConstructionCompleted), new ConstructionCompletedProcessor() },
-            {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
-            {typeof(DroppedItem), new DroppedItemProcessor() },
-            {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
-            {typeof(MedicalCabinetClicked), new MedicalCabinetClickedProcessor() },
-            {typeof(PickupItem), new PickupItemProcessor() },
-            {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
-            {typeof(ItemPosition), new ItemPositionProcessor() },
-            {typeof(TimeChange), new TimeChangeProcessor() }
+        public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
+
+        // List of arguments that can be used in a processor:
+        private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
+        {
+            { typeof(PlayerGameObjectManager), playerGameObjectManager },
         };
+
+        static Multiplayer()
+        {
+            packetProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
+        }
 
         public void Awake()
         {
@@ -80,7 +73,7 @@ namespace NitroxClient.MonoBehaviours
                         PacketProcessor processor = packetProcessorsByType[packet.GetType()];
                         processor.ProcessPacket(packet, null);
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine("Error processing packet: " + packet + ": " + ex);
                     }
@@ -91,27 +84,27 @@ namespace NitroxClient.MonoBehaviours
                 }
             }
         }
-        
+
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
             if (client.IsConnected())
             {
                 ErrorMessage.AddMessage("Already connected to a server");
-            } 
+            }
             else if (n?.data?.Count > 0)
             {
                 PacketSender.PlayerId = (string)n.data[0];
 
                 String ip = DEFAULT_IP_ADDRESS;
 
-                if(n.data.Count >= 2)
+                if (n.data.Count >= 2)
                 {
                     ip = (string)n.data[1];
                 }
 
                 StartMultiplayer(ip);
                 InitMonoBehaviours();
-            } 
+            }
             else
             {
                 ErrorMessage.AddMessage("Command syntax: mplayer USERNAME [SERVERIP]");
@@ -155,7 +148,7 @@ namespace NitroxClient.MonoBehaviours
                 PacketSender.Active = false;
             }
         }
-        
+
         public void InitMonoBehaviours()
         {
             if (!hasLoadedMonoBehaviors)
