@@ -26,20 +26,13 @@ namespace NitroxClient.GameLogic
             GameObject playerView = player.transform.Find("player_view").gameObject;
             AnimationController controller = playerView.GetComponent<AnimationController>();
 
-            bool value;
-            if (state == AnimChangeState.Off)
-            {
-                value = false;
-            }
-            else
-            {
-                value = true;
-            }
+            bool animationValue;
 
             switch (type)
             {
                 case AnimChangeType.Underwater:
-                    controller.SetBool("is_underwater", value);
+                    animationValue = (state != AnimChangeState.Off);
+                    controller.SetBool("is_underwater", animationValue);
                     break;
             }
         }
