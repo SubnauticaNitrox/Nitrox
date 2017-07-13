@@ -15,17 +15,17 @@ namespace NitroxClient.GameLogic
 
         private Dictionary<string, GameObject> gameObjectByPlayerId = new Dictionary<string, GameObject>();
 
-        public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation, Optional<String> opSubGuid)
+        public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation, Optional<string> opSubGuid)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
 
-            if(opSubGuid.IsPresent())
+            if (opSubGuid.IsPresent())
             {
-                String subGuid = opSubGuid.Get();
+                string subGuid = opSubGuid.Get();
                 Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
 
-                if(opSub.IsPresent())
+                if (opSub.IsPresent())
                 {
                     player.transform.parent = opSub.Get().transform;
                 }
@@ -71,6 +71,7 @@ namespace NitroxClient.GameLogic
             GameObject player = FindPlayerGameObject(playerId);
             if (player == null)
             {
+                ErrorMessage.AddMessage($"{playerId} joined the game.");
                 player = gameObjectByPlayerId[playerId] = CreateOtherPlayer(playerId);
             }
             return player;
@@ -104,13 +105,14 @@ namespace NitroxClient.GameLogic
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             label.description = "Signal_" + playerId;
             ping.pingType = PingType.Signal;
-            
+
             playerView.AddComponent<AnimationController>();
             return bodyCopy;
         }
 
-        public void RemovePlayerGameObject(String playerId)
+        public void RemovePlayerGameObject(string playerId)
         {
+            ErrorMessage.AddMessage($"{playerId} left the game.");
             GameObject player = gameObjectByPlayerId[playerId];
             player.SetActive(false);
             GameObject.DestroyImmediate(player);
