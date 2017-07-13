@@ -24,7 +24,8 @@ namespace NitroxModel.Helper
             {
                 return fi.GetValue(o);
             }
-            return false;
+            new Exception($"Field {fieldName} was not found!");
+            return null;
         }
 
         public static bool ReflectionSet(this object o, string fieldName, object value)
