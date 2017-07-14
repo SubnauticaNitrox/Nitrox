@@ -57,7 +57,6 @@ namespace NitroxClient.Communication
             Vector3 itemPosition = gameObject.transform.position;
 
             PickupItem(itemPosition, guid, techType);
-            Send(pickupItem);
         }
         
         public void PickupItem(Vector3 itemPosition, String guid, String techType)

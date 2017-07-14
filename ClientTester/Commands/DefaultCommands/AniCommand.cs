@@ -25,10 +25,12 @@ namespace ClientTester.Commands.DefaultCommands
             if (args[1] == "on" || args[1] == "1" || args[1] == "true")
             {
                 state = AnimChangeState.On;
-            } else if (args[1] == "off" || args[1] == "0" || args[1] == "false")
+            }
+            else if (args[1] == "off" || args[1] == "0" || args[1] == "false")
             {
                 state = AnimChangeState.Off;
-            } else
+            }
+            else
             {
                 state = AnimChangeState.Unset;
             }
