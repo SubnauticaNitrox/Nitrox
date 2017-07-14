@@ -11,8 +11,7 @@ namespace NitroxTest.Patcher.Patches
     [TestClass]
     public class Constructable_Construct_PatchTest
     {
-        // Constructable_Construct_Patch is currently commented out, so the unittests don't work.
-        //[TestMethod]
+        [TestMethod]
         public void Sanity()
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
@@ -22,7 +21,7 @@ namespace NitroxTest.Patcher.Patches
             Assert.AreEqual(111, result.Count());
         }
 
-        //[TestMethod]
+        [TestMethod]
         public void InjectionSanity()
         {
             MethodInfo targetMethod = AccessTools.Method(typeof(Constructable), "Construct");
