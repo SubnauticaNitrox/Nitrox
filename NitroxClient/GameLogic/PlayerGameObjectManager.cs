@@ -1,4 +1,7 @@
-﻿using System;
+﻿using LitJson;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +18,23 @@ namespace NitroxClient.GameLogic
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
             MovementHelper.MoveGameObject(player, position, rotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+        }
+
+        public void UpdateAnimation(string playerId, AnimChangeType type, AnimChangeState state)
+        {
+            GameObject player = GetPlayerGameObject(playerId);
+            GameObject playerView = player.transform.Find("player_view").gameObject;
+            AnimationController controller = playerView.GetComponent<AnimationController>();
+
+            bool animationValue;
+
+            switch (type)
+            {
+                case AnimChangeType.Underwater:
+                    animationValue = (state != AnimChangeState.Off);
+                    controller.SetBool("is_underwater", animationValue);
+                    break;
+            }
         }
 
         public void HidePlayerGameObject(string playerId)
@@ -45,7 +65,29 @@ namespace NitroxClient.GameLogic
             body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             GameObject bodyCopy = UnityEngine.Object.Instantiate(body);
             body.transform.parent.gameObject.GetComponent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-            bodyCopy.transform.Find("player_view").gameObject.GetComponent<ArmsController>().smoothSpeed = 0; //Disables the other character's move animations
+
+            //Get player
+            GameObject playerView = bodyCopy.transform.Find("player_view").gameObject;
+            //Move variables to keep player animations from mirroring and for identification
+            playerView.GetComponent<ArmsController>().smoothSpeed = 0;
+
+            //Sets a new language value
+            Language language = Language.main;
+            JsonData data = (JsonData)language.ReflectionGet("strings"); //UM4SN only: JsonData data = language.strings;
+            data["Signal_" + playerId] = "Player " + playerId;
+
+            //Sets up a copy from the xSignal template for the signal
+            //todo: settings menu to disable this?
+            GameObject signalBase = UnityEngine.Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
+            signalBase.name = "signal" + playerId;
+            signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
+            signalBase.transform.SetParent(playerView.transform, false);
+            SignalLabel label = signalBase.GetComponent<SignalLabel>();
+            PingInstance ping = signalBase.GetComponent<PingInstance>();
+            label.description = "Signal_" + playerId;
+            ping.pingType = PingType.Signal;
+            
+            playerView.AddComponent<AnimationController>();
             return bodyCopy;
         }
 

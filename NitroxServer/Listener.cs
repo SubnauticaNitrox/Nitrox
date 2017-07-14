@@ -28,6 +28,7 @@ namespace NitroxServer
             packetForwardBlacklist.Add(typeof(Authenticate));
 
             loggingPacketBlackList = new HashSet<Type>();
+            loggingPacketBlackList.Add(typeof(AnimationChangeEvent));
             loggingPacketBlackList.Add(typeof(Movement));
             loggingPacketBlackList.Add(typeof(VehicleMovement));
             loggingPacketBlackList.Add(typeof(ItemPosition));
