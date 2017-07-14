@@ -24,7 +24,7 @@ namespace NitroxModel.Helper
             {
                 return fi.GetValue(o);
             }
-            new Exception($"Field {fieldName} was not found!");
+            throw new Exception($"Field {fieldName} was not found!");
             return null;
         }
 
