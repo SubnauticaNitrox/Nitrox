@@ -24,14 +24,17 @@ namespace NitroxServer
 
         public Listener()
         {
-            packetForwardBlacklist = new HashSet<Type>();
-            packetForwardBlacklist.Add(typeof(Authenticate));
-
-            loggingPacketBlackList = new HashSet<Type>();
-            loggingPacketBlackList.Add(typeof(AnimationChangeEvent));
-            loggingPacketBlackList.Add(typeof(Movement));
-            loggingPacketBlackList.Add(typeof(VehicleMovement));
-            loggingPacketBlackList.Add(typeof(ItemPosition));
+            packetForwardBlacklist = new HashSet<Type>
+            {
+                typeof(Authenticate)
+            };
+            loggingPacketBlackList = new HashSet<Type>
+            {
+                typeof(AnimationChangeEvent),
+                typeof(Movement),
+                typeof(VehicleMovement),
+                typeof(ItemPosition)
+            };
         }
 
         public void Start()
@@ -62,7 +65,7 @@ namespace NitroxServer
             
             foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                Player player = getPlayer(packet, connection);
+                Player player = GetPlayer(packet, connection);
                 connection.PlayerId = player.Id;
                 UpdatePlayerPosition(player, packet);
 
@@ -80,11 +83,11 @@ namespace NitroxServer
             }
             else
             {
-                playerDisconnected(connection.PlayerId);
+                PlayerDisconnected(connection.PlayerId);
             }
         }
 
-        private Player getPlayer(Packet packet, Connection connection)
+        private Player GetPlayer(Packet packet, Connection connection)
         {
             Player player;
 
@@ -134,7 +137,7 @@ namespace NitroxServer
                 Socket handler = (Socket)ar.AsyncState;                
                 int bytesSent = handler.EndSend(ar);
             }
-            catch (SocketException e)
+            catch (SocketException)
             {
                 Console.WriteLine("Listener: Error sending packet");
             }
@@ -144,7 +147,7 @@ namespace NitroxServer
             }
         }
 
-        private void playerDisconnected(String PlayerId)
+        private void PlayerDisconnected(String PlayerId)
         {
             if (PlayerId != null)
             {

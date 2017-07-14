@@ -26,7 +26,7 @@ namespace ClientTester
         public void Start(String ip)
         {
             client.Start(ip);
-            if (client.isConnected())
+            if (client.IsConnected())
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();

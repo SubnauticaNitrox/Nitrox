@@ -52,7 +52,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            if (client != null && client.isConnected())
+            if (client != null && client.IsConnected())
             {
                 ProcessPackets();
             }
@@ -78,7 +78,7 @@ namespace NitroxClient.MonoBehaviours
         
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (client.isConnected())
+            if (client.IsConnected())
             {
                 ErrorMessage.AddMessage("Already connected to a server");
             } 
@@ -133,7 +133,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void StopMultiplayer()
         {
-            if (client.isConnected())
+            if (client.IsConnected())
             {
                 client.Stop();
                 PacketSender.Active = false;

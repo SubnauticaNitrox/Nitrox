@@ -53,12 +53,12 @@ namespace NitroxClient.GameLogic
             GameObject player = FindPlayerGameObject(playerId);
             if (player == null)
             {
-                player = gameObjectByPlayerId[playerId] = createOtherPlayer(playerId);
+                player = gameObjectByPlayerId[playerId] = CreateOtherPlayer(playerId);
             }
             return player;
         }
 
-        private GameObject createOtherPlayer(string playerId)
+        private GameObject CreateOtherPlayer(string playerId)
         {
             GameObject body = GameObject.Find("body");
             //Cheap fix for showing head, much easier since male_geo contains many different heads
