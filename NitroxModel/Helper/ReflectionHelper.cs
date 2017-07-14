@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace NitroxModel.Helper
@@ -9,34 +10,23 @@ namespace NitroxModel.Helper
     {
         public static object ReflectionCall(this object o, string methodName, params object[] args)
         {
-            var mi = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (mi != null)
-            {
-                return mi.Invoke(o, args);
-            }
-            return null;
+            MethodInfo methodInfo = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Validate.NotNull(methodInfo, $"Class \"{o.GetType().Name}\" does not have a method called \"{methodName}\".");
+            return methodInfo.Invoke(o, args);
         }
 
         public static object ReflectionGet(this object o, string fieldName)
         {
-            var fi = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (fi != null)
-            {
-                return fi.GetValue(o);
-            }
-            throw new Exception($"Field {fieldName} was not found!");
-            return null;
+            FieldInfo fieldInfo = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Validate.NotNull(fieldInfo, $"Class \"{o.GetType().Name}\" does not have a field called \"{fieldName}\".");
+            return fieldInfo.GetValue(o);
         }
 
-        public static bool ReflectionSet(this object o, string fieldName, object value)
+        public static void ReflectionSet(this object o, string fieldName, object value)
         {
-            var fi = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (fi != null)
-            {
-                fi.SetValue(o, value);
-                return true;
-            }
-            return false;
+            FieldInfo fieldInfo = o.GetType().GetField(fieldName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Validate.NotNull(fieldInfo, $"Class \"{o.GetType().Name}\" does not have a field called \"{fieldName}\".");
+            fieldInfo.SetValue(o, value);
         }
     }
 }

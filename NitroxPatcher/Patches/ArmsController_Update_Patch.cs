@@ -30,12 +30,6 @@ namespace NitroxPatcher.Patches
             }
             return true;
         }
-        
-        /* 
-	     *  this.leftAim.Update(this.ikToggleTime);
-	     *  this.rightAim.Update(this.ikToggleTime);
-	     *  this.UpdateHandIKWeights();
-         */
 
         public override void Patch(HarmonyInstance harmony)
         {
