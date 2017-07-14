@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if(opGameObject.IsEmpty())
             {
-                opGameObject = createVehicle(vehicleMovement.TechType, vehicleMovement.Guid);
+                opGameObject = CreateVehicle(vehicleMovement.TechType, vehicleMovement.Guid);
 
                 if(opGameObject.IsEmpty())
                 {
@@ -43,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
             MovementHelper.MoveGameObject(gameObject, position, rotation, VEHICLE_TRANSFORM_SMOOTH_PERIOD);
         }
 
-        private Optional<GameObject> createVehicle(String techTypeString, String guid)
+        private Optional<GameObject> CreateVehicle(String techTypeString, String guid)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
             
