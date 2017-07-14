@@ -24,6 +24,7 @@ namespace NitroxClient.MonoBehaviours
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
+            {typeof(AnimationChangeEvent), new AnimationProcessor(playerGameObjectManager) },
             {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
@@ -144,6 +145,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 this.gameObject.AddComponent<Chat>();
                 this.gameObject.AddComponent<PlayerMovement>();
+                this.gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
         }

@@ -56,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Patches\ArmsController_Start_Patch.cs" />
+    <Compile Include="Patches\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />

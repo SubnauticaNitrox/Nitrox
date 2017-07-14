@@ -40,7 +40,10 @@
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="iTween">
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\iTween.dll</HintPath>
+      <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
+    </Reference>
+    <Reference Include="LitJson">
+      <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -53,6 +56,7 @@
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BeginItemConstructionProcessor.cs" />
@@ -74,6 +78,8 @@
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
+    <Compile Include="MonoBehaviours\AnimationController.cs" />
+    <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />

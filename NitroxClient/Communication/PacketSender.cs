@@ -56,6 +56,11 @@ namespace NitroxClient.Communication
             String guid = GuidHelper.GetGuid(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
 
+            PickupItem(itemPosition, guid, techType);
+        }
+        
+        public void PickupItem(Vector3 itemPosition, String guid, String techType)
+        {
             PickupItem pickupItem = new PickupItem(PlayerId, ApiHelper.Vector3(itemPosition), guid, techType);
             Send(pickupItem);
         }
@@ -111,6 +116,12 @@ namespace NitroxClient.Communication
         {
             ChatMessage message = new ChatMessage(PlayerId, text);
             Send(message);
+        }
+
+        public void AnimationChange(AnimChangeType type, AnimChangeState state)
+        {
+            AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerId, (int)type, (int)state);
+            Send(animEvent);
         }
 
         public void Send(Packet packet)
