@@ -16,6 +16,7 @@ namespace NitroxClient.MonoBehaviours
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
         
         public static PacketSender PacketSender;
+        public static Multiplayer main;
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
@@ -43,6 +44,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
 
+            main = this;
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
@@ -123,7 +125,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private void StartMultiplayer(String ipAddress)
+        public void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
             PacketSender.Active = true;
