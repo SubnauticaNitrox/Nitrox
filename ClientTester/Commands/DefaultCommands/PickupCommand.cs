@@ -10,7 +10,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Name = "pickup";
             Description = "Picks up an item at location.";
-            Syntax = "pickup <gameobjectname> <x> <y> <z>";
+            Syntax = "pickup <guid> <x> <y> <z>";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)

@@ -55,6 +55,7 @@
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="Commands\DefaultCommands\PlaceFurnitureCommand.cs" />
     <Compile Include="Commands\DefaultCommands\PlaceBaseCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\AniCommand.cs" />
     <Compile Include="Commands\DefaultCommands\ChatCommand.cs" />
     <Compile Include="Commands\DefaultCommands\ConstructCommand.cs" />
     <Compile Include="Commands\DefaultCommands\DropCommand.cs" />
