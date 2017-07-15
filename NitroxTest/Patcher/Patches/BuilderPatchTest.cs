@@ -15,10 +15,11 @@ namespace NitroxTest.Patcher.Patches
         public void Sanity()
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
-            instructions.Add(new CodeInstruction(BuilderPatch.INJECTION_OPCODE, BuilderPatch.INJECTION_OPERAND));
+            instructions.Add(new CodeInstruction(BuilderPatch.PLACE_BASE_INJECTION_OPCODE, BuilderPatch.PLACE_BASE_INJECTION_OPERAND));
+            instructions.Add(new CodeInstruction(BuilderPatch.PLACE_FURNITURE_INJECTION_OPCODE, BuilderPatch.PLACE_FURNITURE_INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(null, instructions);
-            Assert.AreEqual(113, result.Count());
+            Assert.AreEqual(120, result.Count());
         }
 
         [TestMethod]

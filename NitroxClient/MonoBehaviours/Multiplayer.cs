@@ -24,7 +24,8 @@ namespace NitroxClient.MonoBehaviours
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
-            {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
+            {typeof(PlaceBasePiece), new PlaceBasePieceProcessor() },
+            {typeof(PlaceFurniture), new PlaceFurnitureProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
             {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
@@ -32,7 +33,7 @@ namespace NitroxClient.MonoBehaviours
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
-            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
+            {typeof(ConstructorBeginCrafting), new PlaceBasePieceProcessor() },
             {typeof(ItemPosition), new ItemPositionProcessor() }
         };
 

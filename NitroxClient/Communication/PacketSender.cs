@@ -71,10 +71,28 @@ namespace NitroxClient.Communication
             Send(droppedItem);
         }
 
-        public void BuildItem(String techType, Vector3 itemPosition, Quaternion quaternion)
+        public void PlaceBasePiece(ConstructableBase constructableBase, TechType techType, Vector3 itemPosition, Quaternion quaternion)
         {
-            BeginItemConstruction buildItem = new BeginItemConstruction(PlayerId, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
-            Send(buildItem);
+            String guid = GuidHelper.GetGuid(constructableBase.gameObject);
+            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion);
+        }
+
+        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion)
+        {
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+            Send(placedBasePiece);
+        }
+
+        public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
+        {
+            String guid = GuidHelper.GetGuid(gameObject);
+            PlaceFurniture(guid, ApiHelper.TechType(techType), itemPosition, quaternion);
+        }
+
+        public void PlaceFurniture(String guid, String techType, Vector3 itemPosition, Quaternion quaternion)
+        {
+            PlaceFurniture placedFurniture = new PlaceFurniture(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+            Send(placedFurniture);
         }
 
         public void ChangeConstructionAmount(Vector3 itemPosition, float amount, int resourceId1, int resourceId2)
