@@ -67,6 +67,7 @@
     <Compile Include="Client\Communication\ChunkAwarePacketReceiverTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
+    <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Tcp\MessageBufferTest.cs" />
     <Compile Include="Model\Test\TestActionPacket.cs" />
