@@ -8,7 +8,7 @@ namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
-        public static object ReflectionCall(this object o, string methodName, params object[] args)
+        public static object ReflectionCall(this object o, string methodName, bool publicMethod = false, params object[] args)
         {
             MethodInfo methodInfo = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
             Validate.NotNull(methodInfo, $"Class \"{o.GetType().Name}\" does not have a method called \"{methodName}\".");
