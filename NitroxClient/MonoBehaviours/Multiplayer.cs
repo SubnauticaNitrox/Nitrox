@@ -23,14 +23,14 @@ namespace NitroxClient.MonoBehaviours
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
         private static bool hasLoadedMonoBehaviors;
 
-        private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
+        private static PlayerManager remotePlayerManager = new PlayerManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
         // List of arguments that can be used in a processor:
         private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
         {
-            { typeof(PlayerGameObjectManager), playerGameObjectManager },
+            { typeof(PlayerManager), remotePlayerManager },
         };
 
         static Multiplayer()
@@ -124,10 +124,10 @@ namespace NitroxClient.MonoBehaviours
             if (n?.data?.Count > 0)
             {
                 string otherPlayerId = (string)n.data[0];
-                var otherPlayer = playerGameObjectManager.FindPlayerGameObject(otherPlayerId);
+                var otherPlayer = remotePlayerManager.FindPlayer(otherPlayerId);
                 if (otherPlayer != null)
                 {
-                    Player.main.SetPosition(otherPlayer.transform.position);
+                    Player.main.SetPosition(otherPlayer.body.transform.position);
                     Player.main.OnPlayerPositionCheat();
                 }
             }

@@ -90,9 +90,10 @@
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
-    <Compile Include="GameLogic\PlayerGameObjectManager.cs" />
+    <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
+    <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />

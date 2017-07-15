@@ -6,16 +6,16 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class MovementProcessor : ClientPacketProcessor<Movement>
     {
-        private PlayerGameObjectManager playerGameObjectManager;
+        private PlayerManager remotePlayerManager;
 
-        public MovementProcessor(PlayerGameObjectManager playerGameObjectManager)
+        public MovementProcessor(PlayerManager remotePlayerManager)
         {
-            this.playerGameObjectManager = playerGameObjectManager;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(Movement movement)
         {
-            playerGameObjectManager.UpdatePlayerPosition(movement.PlayerId, ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation), movement.SubGuid);
+            remotePlayerManager.ForPlayer(movement.PlayerId, p => p.UpdatePosition(ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation), movement.SubGuid), true);
         }
     }
 }
