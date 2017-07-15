@@ -8,9 +8,19 @@ namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
-        public static object ReflectionCall(this object o, string methodName, params object[] args)
+        // Public calls are useful for reflected, inaccessible objects.
+        public static object ReflectionCall(this object o, string methodName, bool publicMethod = false, params object[] args)
         {
-            MethodInfo methodInfo = o.GetType().GetMethod(methodName, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            BindingFlags bf;
+            if (publicMethod)
+            {
+                bf = System.Reflection.BindingFlags.Public;
+            }
+            else
+            {
+                bf = System.Reflection.BindingFlags.NonPublic;
+            }
+            MethodInfo methodInfo = o.GetType().GetMethod(methodName, bf | System.Reflection.BindingFlags.Instance);
             Validate.NotNull(methodInfo, $"Class \"{o.GetType().Name}\" does not have a method called \"{methodName}\".");
             return methodInfo.Invoke(o, args);
         }
