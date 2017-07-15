@@ -22,8 +22,8 @@ namespace NitroxPatcher.Patches
                 object leftAim = traverse.Field("leftAim").GetValue();
                 object rightAim = traverse.Field("rightAim").GetValue();
 
-                leftAim.ReflectionCall("Update", false, __instance.ikToggleTime);
-                rightAim.ReflectionCall("Update", false, __instance.ikToggleTime);
+                leftAim.ReflectionCall("Update", true, __instance.ikToggleTime);
+                rightAim.ReflectionCall("Update", true, __instance.ikToggleTime);
                 __instance.ReflectionCall("UpdateHandIKWeights");
 
                 return false;
