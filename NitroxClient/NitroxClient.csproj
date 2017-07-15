@@ -55,7 +55,8 @@
     <Compile Include="Communication\PacketSender.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\BeginItemConstructionProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlaceFurnitureProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Base\GenericPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />

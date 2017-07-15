@@ -268,14 +268,83 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 gameObject.transform.position = overridePosition;
                 gameObject.transform.rotation = overrideQuaternion;
             }
-            Console.WriteLine("mBuilder.ghostModel.transform.position: " + MultiplayerBuilder.ghostModel.transform.position);
-            Console.WriteLine("mBuilder.placePosition: " + MultiplayerBuilder.placePosition);
-            Console.WriteLine("m op: " + MultiplayerBuilder.overridePosition);
-            Console.WriteLine("m oq: " + MultiplayerBuilder.overrideQuaternion);
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
             return true;
+        }
+
+        public static ConstructableBase TryPlaceBase()
+        {
+            MultiplayerBuilder.Initialize();
+            global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
+            ConstructableBase componentInParent = MultiplayerBuilder.ghostModel.GetComponentInParent<ConstructableBase>();
+            BaseGhost component = MultiplayerBuilder.ghostModel.GetComponent<BaseGhost>();
+            component.GhostBase.transform.position = overridePosition;
+            component.Place();
+
+            componentInParent.transform.position = overridePosition;
+
+            component.transform.position = overridePosition;
+            component.transform.rotation = overrideQuaternion;
+            if (component.TargetBase != null)
+            {
+                componentInParent.transform.SetParent(component.TargetBase.transform, true);
+            }
+            componentInParent.SetState(false, true);
+
+            component.GhostBase.transform.position = overridePosition;
+
+            if (component.TargetBase != null)
+            {
+                component.TargetBase.transform.position = overridePosition;
+            }            
+            MultiplayerBuilder.ghostModel = null;
+            MultiplayerBuilder.prefab = null;
+            MultiplayerBuilder.canPlace = false;
+
+            return componentInParent;
+        }
+
+        public static GameObject TryPlaceFurniture()
+        {
+            MultiplayerBuilder.Initialize();
+            global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
+
+            GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(MultiplayerBuilder.prefab);
+            bool flag = false;
+            bool flag2 = false;
+            SubRoot currentSub = Player.main.GetCurrentSub();
+            if (currentSub != null)
+            {
+                flag = currentSub.isBase;
+                flag2 = currentSub.isCyclops;
+                gameObject.transform.parent = currentSub.GetModulesRoot();
+            }
+            else if (MultiplayerBuilder.placementTarget != null && MultiplayerBuilder.allowedOutside)
+            {
+                SubRoot componentInParent2 = MultiplayerBuilder.placementTarget.GetComponentInParent<SubRoot>();
+                if (componentInParent2 != null)
+                {
+                    gameObject.transform.parent = componentInParent2.GetModulesRoot();
+                }
+            }
+            Transform expr_138 = gameObject.transform;
+            expr_138.position = MultiplayerBuilder.placePosition;
+            expr_138.rotation = MultiplayerBuilder.placeRotation;
+            Constructable componentInParent3 = gameObject.GetComponentInParent<Constructable>();
+            componentInParent3.SetState(false, true);
+            global::Utils.SetLayerRecursively(gameObject, LayerMask.NameToLayer((!flag) ? "Interior" : "Default"), true, -1);
+            componentInParent3.SetIsInside(flag | flag2);
+            SkyEnvironmentChanged.Send(gameObject, currentSub);
+            gameObject.transform.position = overridePosition;
+            gameObject.transform.rotation = overrideQuaternion;
+            
+            MultiplayerBuilder.ghostModel = null;
+            MultiplayerBuilder.prefab = null;
+            MultiplayerBuilder.canPlace = false;
+
+            return gameObject;
         }
 
         // Token: 0x06002B9E RID: 11166 RVA: 0x001043C0 File Offset: 0x001025C0

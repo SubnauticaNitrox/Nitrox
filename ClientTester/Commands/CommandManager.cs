@@ -16,7 +16,8 @@ namespace ClientTester.Commands
         public CommandManager(MultiplayerClient client)
         {
             this.client = client;
-            RegisterCommand(new BuildCommand());
+            RegisterCommand(new PlaceBaseCommand());
+            RegisterCommand(new PlaceFurnitureCommand());
             RegisterCommand(new ChatCommand());
             RegisterCommand(new ConstructCommand());
             RegisterCommand(new DropCommand());
