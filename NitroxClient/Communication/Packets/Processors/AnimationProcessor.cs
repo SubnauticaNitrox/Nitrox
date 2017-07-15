@@ -7,16 +7,16 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class AnimationProcessor : ClientPacketProcessor<AnimationChangeEvent>
     {
-        private PlayerGameObjectManager playerGameObjectManager;
+        private PlayerManager remotePlayerManager;
 
-        public AnimationProcessor(PlayerGameObjectManager playerGameObjectManager)
+        public AnimationProcessor(PlayerManager remotePlayerManager)
         {
-            this.playerGameObjectManager = playerGameObjectManager;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(AnimationChangeEvent animEvent)
         {
-            playerGameObjectManager.UpdateAnimation(animEvent.PlayerId, (AnimChangeType)animEvent.Type, (AnimChangeState)animEvent.State);
+            remotePlayerManager.ForPlayer(animEvent.PlayerId, p => p.UpdateAnimation((AnimChangeType)animEvent.Type, (AnimChangeState)animEvent.State));
         }
     }
 }

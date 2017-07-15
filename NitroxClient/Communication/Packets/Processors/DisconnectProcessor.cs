@@ -6,16 +6,16 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class DisconnectProcessor : ClientPacketProcessor<Disconnect>
     {
-        private PlayerGameObjectManager playerGameObjectManager;
+        private PlayerManager remotePlayerManager;
 
-        public DisconnectProcessor(PlayerGameObjectManager playerGameObjectManager)
+        public DisconnectProcessor(PlayerManager remotePlayerManager)
         {
-            this.playerGameObjectManager = playerGameObjectManager;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(Disconnect disconnect)
         {
-            playerGameObjectManager.RemovePlayerGameObject(disconnect.PlayerId);
+            remotePlayerManager.RemovePlayer(disconnect.PlayerId);
         }
     }
 }

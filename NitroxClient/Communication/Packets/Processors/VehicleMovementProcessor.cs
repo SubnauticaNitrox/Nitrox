@@ -12,17 +12,15 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private const float VEHICLE_TRANSFORM_SMOOTH_PERIOD = 0.05f;
         
-        private PlayerGameObjectManager playerGameObjectManager;
+        private PlayerManager remotePlayerManager;
 
-        public VehicleMovementProcessor(PlayerGameObjectManager playerGameObjectManager)
+        public VehicleMovementProcessor(PlayerManager remotePlayerManager)
         {
-            this.playerGameObjectManager = playerGameObjectManager;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(VehicleMovement vehicleMovement)
         {
-            playerGameObjectManager.HidePlayerGameObject(vehicleMovement.PlayerId);
-
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
 
             if(opGameObject.IsEmpty())
