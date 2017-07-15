@@ -156,7 +156,7 @@ namespace NitroxClient.MonoBehaviours
         
         public IEnumerator JoinServerWait(string serverIp)
         {
-            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", GameMode.Creative);
+            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", true, GameMode.Creative);
             StartCoroutine(startNewGame);
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
