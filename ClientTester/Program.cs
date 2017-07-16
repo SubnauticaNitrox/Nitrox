@@ -16,6 +16,7 @@ namespace ClientTester
 
         private static Vector3 clientPos = new Vector3(-50f, -2f, -38f);
 
+        [STAThread]
         static void Main(string[] args)
         {
             String playerId1 = "sunrunner";

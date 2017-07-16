@@ -52,17 +52,15 @@ namespace NitroxClient.Communication
         
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is PlayerActionPacket)
+            if (packet is PlayerActionPacket playerAction)
             {
-                PlayerActionPacket playerAction = (PlayerActionPacket)packet;
-
                 if (!playerAction.PlayerMustBeInRangeToReceive)
                 {
                     return false;
                 }
 
                 Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
-                    
+
                 if (!loadedChunks.IsLoadedChunk(actionChunk))
                 {
                     Console.WriteLine("Action was deferred, chunk not loaded: " + actionChunk);
