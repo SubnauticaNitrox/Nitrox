@@ -1,9 +1,9 @@
-﻿using System;
-using LitJson;
+﻿using LitJson;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -14,6 +14,9 @@ namespace NitroxClient.GameLogic
         private const float PLAYER_TRANSFORM_SMOOTH_PERIOD = 0.05f;
 
         public readonly GameObject body;
+        public readonly GameObject playerView;
+        public readonly AnimationController animationController;
+
         public string PlayerId { get; private set; }
 
         public RemotePlayer(string playerId)
@@ -27,7 +30,8 @@ namespace NitroxClient.GameLogic
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
             //Get player
-            GameObject playerView = body.transform.Find("player_view").gameObject;
+            playerView = body.transform.Find("player_view").gameObject;
+
             //Move variables to keep player animations from mirroring and for identification
             playerView.GetComponent<ArmsController>().smoothSpeed = 0;
 
@@ -47,12 +51,12 @@ namespace NitroxClient.GameLogic
             label.description = "Signal_" + playerId;
             ping.pingType = PingType.Signal;
 
-            playerView.AddComponent<AnimationController>();
+            animationController = playerView.AddComponent<AnimationController>();
 
             ErrorMessage.AddMessage($"{playerId} joined the game.");
         }
 
-        public void UpdatePosition(Vector3 position, Quaternion rotation, Optional<string> opSubGuid)
+        public void UpdatePosition(Vector3 position, Quaternion bodyRotation, Quaternion cameraRotation, Optional<string> opSubGuid)
         {
             body.SetActive(true);
             if (opSubGuid.IsPresent())
@@ -69,7 +73,11 @@ namespace NitroxClient.GameLogic
                     Console.WriteLine("Could not find sub for guid: " + subGuid);
                 }
             }
-            MovementHelper.MoveGameObject(body, position, rotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+
+            MovementHelper.MoveGameObject(body, position, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+            MovementHelper.RotateGameObject(playerView, cameraRotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+
+            animationController.AimingRotation = cameraRotation;
         }
 
         public void Destroy()
@@ -81,16 +89,10 @@ namespace NitroxClient.GameLogic
 
         public void UpdateAnimation(AnimChangeType type, AnimChangeState state)
         {
-            GameObject playerView = body.transform.Find("player_view").gameObject;
-            AnimationController controller = playerView.GetComponent<AnimationController>();
-
-            bool animationValue;
-
             switch (type)
             {
                 case AnimChangeType.Underwater:
-                    animationValue = (state != AnimChangeState.Off);
-                    controller.SetBool("is_underwater", animationValue);
+                    animationController.SetBool("is_underwater", state != AnimChangeState.Off);
                     break;
             }
         }

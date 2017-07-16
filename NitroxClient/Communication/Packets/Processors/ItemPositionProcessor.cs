@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if(opItem.IsPresent())
             {
-                MovementHelper.MoveGameObject(opItem.Get(), ApiHelper.Vector3(drop.Position), ApiHelper.Quaternion(drop.Rotation), ITEM_TRANSFORM_SMOOTH_PERIOD);
+                MovementHelper.MoveRotateGameObject(opItem.Get(), ApiHelper.Vector3(drop.Position), ApiHelper.Quaternion(drop.Rotation), ITEM_TRANSFORM_SMOOTH_PERIOD);
             }
         }
     }

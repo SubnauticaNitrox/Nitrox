@@ -28,7 +28,7 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Quaternion rotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
+        public void UpdatePlayerLocation(Vector3 location, Quaternion bodyRotation, Quaternion cameraRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
         {
             Movement movement;
 
@@ -39,7 +39,7 @@ namespace NitroxClient.Communication
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation), opSubGuid);
+                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(cameraRotation), opSubGuid);
             }
 
             Send(movement);

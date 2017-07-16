@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using System;
-using System.Linq;
 using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
@@ -24,7 +23,7 @@ namespace ClientTester.Commands.DefaultCommands
             }
 
             client.clientPos.y = float.Parse(args[0]);
-            client.PacketSender.UpdatePlayerLocation(client.clientPos, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<String>.Empty());
+            client.PacketSender.UpdatePlayerLocation(client.clientPos, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<String>.Empty());
         }
     }
 }
