@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 using UWE;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -306,7 +308,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             return componentInParent;
         }
 
-        public static GameObject TryPlaceFurniture()
+        public static GameObject TryPlaceFurniture(SubRoot currentSub)
         {
             MultiplayerBuilder.Initialize();
             global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
@@ -314,7 +316,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
             GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(MultiplayerBuilder.prefab);
             bool flag = false;
             bool flag2 = false;
-            SubRoot currentSub = Player.main.GetCurrentSub();
             if (currentSub != null)
             {
                 flag = currentSub.isBase;

@@ -21,7 +21,8 @@ namespace NitroxPatcher
             new SpawnConsoleCommand_Patch(),
             new ConstructorInput_Craft_Patch(),
             new ConstructorInput_OnCraftingBegin_Patch(),
-            new Constructable_Construct_Patch()
+            new Constructable_Construct_Patch(),
+            new BaseGhost_Finish_Patch()
         };
 
         public static void Execute()

@@ -58,6 +58,7 @@
     <Compile Include="Communication\PacketSender.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceFurnitureProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />

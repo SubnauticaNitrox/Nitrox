@@ -1,4 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -12,20 +14,16 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ConstructionAmountChanged amountChanged)
         {
-            Console.WriteLine("Processing ConstructionAmountChanged " + amountChanged.ItemPosition + " " + amountChanged.PlayerId + " " + amountChanged.ConstructionAmount);
+            Console.WriteLine("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.PlayerId + " " + amountChanged.ConstructionAmount);
 
-            Constructable[] constructables = GameObject.FindObjectsOfType<Constructable>();
+            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(amountChanged.Guid);
 
-            Console.WriteLine("constructables " + constructables.Length);
-
-            foreach (Constructable constructable in constructables)
+            if(opGameObject.IsPresent())
             {
-                if (constructable.transform.position == ApiHelper.Vector3(amountChanged.ItemPosition))
-                {
-                    Console.WriteLine("Found constructable!");
-                    constructable.constructedAmount = amountChanged.ConstructionAmount;
-                    constructable.Construct();
-                }
+                GameObject constructing = opGameObject.Get();
+                Constructable constructable = constructing.GetComponent<Constructable>();
+                constructable.constructedAmount = amountChanged.ConstructionAmount;
+                constructable.Construct();
             }
         }
     }

@@ -30,6 +30,7 @@ namespace NitroxClient.MonoBehaviours
             {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
+            {typeof(ConstructionCompleted), new ConstructionCompletedProcessor() },
             {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
             {typeof(DroppedItem), new DroppedItemProcessor() },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },

@@ -44,6 +44,7 @@
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\ItemPosition.cs" />

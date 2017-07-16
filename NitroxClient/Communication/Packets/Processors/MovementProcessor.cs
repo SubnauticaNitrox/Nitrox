@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Movement movement)
         {
-            playerGameObjectManager.UpdatePlayerPosition(movement.PlayerId, ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation));
+            playerGameObjectManager.UpdatePlayerPosition(movement.PlayerId, ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation), movement.SubGuid);
         }
     }
 }

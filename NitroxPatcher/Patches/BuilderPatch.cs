@@ -1,14 +1,11 @@
 ﻿using Harmony;
-using Harmony.ILCopying;
 using NitroxClient.Communication;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
