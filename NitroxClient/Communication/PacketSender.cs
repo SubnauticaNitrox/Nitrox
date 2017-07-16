@@ -81,13 +81,14 @@ namespace NitroxClient.Communication
             String guid = GuidHelper.GetGuid(constructableBase.gameObject);
             String parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
             Vector3 itemPosition = constructableBase.gameObject.transform.position;
+            Transform camera = Camera.main.transform;
 
-            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion, Optional<String>.OfNullable(parentBaseGuid));
+            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion, camera, Optional<String>.OfNullable(parentBaseGuid));
         }
 
-        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion, Optional<String> parentBaseGuid)
+        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion, Transform camera, Optional<String> parentBaseGuid)
         {
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType, parentBaseGuid);
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), techType, parentBaseGuid);
             Send(placedBasePiece);
             Console.WriteLine(placedBasePiece);
         }
@@ -96,13 +97,14 @@ namespace NitroxClient.Communication
         {
             String guid = GuidHelper.GetGuid(gameObject);
             String subGuid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
+            Transform camera = Camera.main.transform;
 
-            PlaceFurniture(guid, subGuid, ApiHelper.TechType(techType), itemPosition, quaternion);
+            PlaceFurniture(guid, subGuid, ApiHelper.TechType(techType), itemPosition, quaternion, camera);
         }
 
-        public void PlaceFurniture(String guid, String subGuid, String techType, Vector3 itemPosition, Quaternion quaternion)
+        public void PlaceFurniture(String guid, String subGuid, String techType, Vector3 itemPosition, Quaternion quaternion, Transform camera)
         {
-            PlaceFurniture placedFurniture = new PlaceFurniture(PlayerId, guid, subGuid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+            PlaceFurniture placedFurniture = new PlaceFurniture(PlayerId, guid, subGuid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), techType);
             Send(placedFurniture);
         }
                 

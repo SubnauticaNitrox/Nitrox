@@ -42,6 +42,7 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\Quaternion.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
+    <Compile Include="DataStructures\Transform.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />

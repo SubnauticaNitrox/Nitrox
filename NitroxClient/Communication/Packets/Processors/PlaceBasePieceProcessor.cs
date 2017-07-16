@@ -10,6 +10,8 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceBasePieceProcessor : GenericPacketProcessor<PlaceBasePiece>
     {
+        private GameObject otherPlayerCamera;
+
         public override void Process(PlaceBasePiece basePiecePacket)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(basePiecePacket.TechType);
@@ -17,8 +19,15 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opTechType.IsPresent())
             {
                 TechType techType = opTechType.Get();
-                GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
-                ConstructItem(basePiecePacket.Guid, ApiHelper.Vector3(basePiecePacket.ItemPosition), ApiHelper.Quaternion(basePiecePacket.Rotation), techType, basePiecePacket.ParentBaseGuid);
+
+                if (otherPlayerCamera == null)
+                {
+                    otherPlayerCamera = new GameObject();
+                }
+
+                ApiHelper.SetTransform(otherPlayerCamera.transform, basePiecePacket.Camera);
+
+                ConstructItem(basePiecePacket.Guid, ApiHelper.Vector3(basePiecePacket.ItemPosition), ApiHelper.Quaternion(basePiecePacket.Rotation), otherPlayerCamera.transform, techType, basePiecePacket.ParentBaseGuid);
             }
             else
             {
@@ -26,11 +35,12 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
         
-        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, TechType techType, Optional<String> parentBaseGuid)
+        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType, Optional<String> parentBaseGuid)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
             MultiplayerBuilder.overrideQuaternion = rotation;
+            MultiplayerBuilder.overrideTransform = cameraTransform;
             MultiplayerBuilder.placePosition = position;
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);

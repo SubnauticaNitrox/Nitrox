@@ -646,7 +646,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         // Token: 0x06002BAB RID: 11179 RVA: 0x00002AA3 File Offset: 0x00000CA3
         public static Transform GetAimTransform()
         {
-            return Camera.main.transform;
+            return overrideTransform;
         }
 
         // Token: 0x06002BAC RID: 11180 RVA: 0x0001E9B9 File Offset: 0x0001CBB9
@@ -902,6 +902,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
         public static Vector3 overridePosition;
 
         public static Quaternion overrideQuaternion;
+
+        public static Transform overrideTransform;
 
         // Token: 0x04002A71 RID: 10865
         public static readonly float additiveRotationSpeed = 90f;
