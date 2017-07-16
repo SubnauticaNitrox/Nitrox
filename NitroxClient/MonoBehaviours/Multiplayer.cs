@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Packets;

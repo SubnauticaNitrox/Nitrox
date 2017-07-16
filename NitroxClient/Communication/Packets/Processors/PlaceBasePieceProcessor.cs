@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Base;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures.Util;
@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 TechType techType = opTechType.Get();
                 GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
-                ConstructItem(basePiecePacket.Guid, ApiHelper.Vector3(basePiecePacket.ItemPosition), ApiHelper.Quaternion(basePiecePacket.Rotation), techType);
+                ConstructItem(basePiecePacket.Guid, ApiHelper.Vector3(basePiecePacket.ItemPosition), ApiHelper.Quaternion(basePiecePacket.Rotation), techType, basePiecePacket.ParentBaseGuid);
             }
             else
             {
@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
         
-        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, TechType techType)
+        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, TechType techType, Optional<String> parentBaseGuid)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
@@ -35,7 +35,9 @@ namespace NitroxClient.Communication.Packets.Processors
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            ConstructableBase constructableBase = MultiplayerBuilder.TryPlaceBase();
+            Optional<GameObject> parentBase = (parentBaseGuid.IsPresent()) ? GuidHelper.GetObjectFrom(parentBaseGuid.Get()) : Optional<GameObject>.Empty();
+
+            ConstructableBase constructableBase = MultiplayerBuilder.TryPlaceBase(parentBase);
             GuidHelper.SetNewGuid(constructableBase.gameObject, guid);
         }        
     }

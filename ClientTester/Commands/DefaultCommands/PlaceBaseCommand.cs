@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.Util;
+using System;
 using System.Linq;
 using UnityEngine;
 
@@ -23,11 +24,11 @@ namespace ClientTester.Commands.DefaultCommands
             
             if (args.Length > 4)
             {
-                client.PacketSender.PlaceBasePiece(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), CommandManager.GetQuaternionFromArgs(args, 5));
+                client.PacketSender.PlaceBasePiece(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), CommandManager.GetQuaternionFromArgs(args, 5), Optional<String>.Empty());
             }
             else
             {
-                client.PacketSender.PlaceBasePiece(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), Quaternion.identity);
+                client.PacketSender.PlaceBasePiece(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), Quaternion.identity, Optional<String>.Empty());
             }
         }
     }
