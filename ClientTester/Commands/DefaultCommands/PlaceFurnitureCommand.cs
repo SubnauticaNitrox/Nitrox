@@ -10,7 +10,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Name = "placeFurniture";
             Description = "Builds a furniture object with the builder tool.";
-            Syntax = "placeFurniture <techtype> <guid> <x> <y> <z> [<xrot> <yrot> <zrot>]";
+            Syntax = "placeFurniture <techtype> <guid> <sub-guid> <x> <y> <z> [<xrot> <yrot> <zrot>]";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)
@@ -23,11 +23,11 @@ namespace ClientTester.Commands.DefaultCommands
             
             if (args.Length > 4)
             {
-                client.PacketSender.PlaceFurniture(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), CommandManager.GetQuaternionFromArgs(args, 5));
+                client.PacketSender.PlaceFurniture(args[0], args[1], args[2], CommandManager.GetVectorFromArgs(args, 3), CommandManager.GetQuaternionFromArgs(args, 6));
             }
             else
             {
-                client.PacketSender.PlaceFurniture(args[0], args[1], CommandManager.GetVectorFromArgs(args, 2), Quaternion.identity);
+                client.PacketSender.PlaceFurniture(args[0], args[1], args[2], CommandManager.GetVectorFromArgs(args, 3), Quaternion.identity);
             }
         }
     }

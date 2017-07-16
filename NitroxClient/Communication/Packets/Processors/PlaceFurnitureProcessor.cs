@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 TechType techType = opTechType.Get();
                 GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
-                ConstructItem(placeFurniturePacket.Guid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), techType);
+                ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), techType);
             }
             else
             {
@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
         
-        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, TechType techType)
+        public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, TechType techType)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
@@ -35,7 +35,17 @@ namespace NitroxClient.Communication.Packets.Processors
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture();
+            Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
+
+            if (opSub.IsEmpty())
+            {
+                Console.WriteLine("Could not locate sub with guid" + subGuid);
+                return;
+            }
+
+            SubRoot subRoot = opSub.Get().GetComponent<SubRoot>();
+
+            GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
             GuidHelper.SetNewGuid(gameObject, guid);
         }        
     }
