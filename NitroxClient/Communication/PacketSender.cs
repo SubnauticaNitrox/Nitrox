@@ -76,16 +76,20 @@ namespace NitroxClient.Communication
             Send(droppedItem);
         }
 
-        public void PlaceBasePiece(ConstructableBase constructableBase, TechType techType, Vector3 itemPosition, Quaternion quaternion)
+        public void PlaceBasePiece(ConstructableBase constructableBase, Base targetBase, TechType techType, Quaternion quaternion)
         {
             String guid = GuidHelper.GetGuid(constructableBase.gameObject);
-            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion);
+            String parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
+            Vector3 itemPosition = constructableBase.gameObject.transform.position;
+
+            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion, Optional<String>.OfNullable(parentBaseGuid));
         }
 
-        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion)
+        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion, Optional<String> parentBaseGuid)
         {
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType, parentBaseGuid);
             Send(placedBasePiece);
+            Console.WriteLine(placedBasePiece);
         }
 
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)

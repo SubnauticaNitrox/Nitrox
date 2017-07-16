@@ -19,7 +19,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(BuilderPatch.PLACE_FURNITURE_INJECTION_OPCODE, BuilderPatch.PLACE_FURNITURE_INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(null, instructions);
-            Assert.AreEqual(120, result.Count());
+            Assert.AreEqual(119, result.Count());
         }
 
         [TestMethod]

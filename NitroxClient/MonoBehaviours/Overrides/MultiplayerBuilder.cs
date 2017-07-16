@@ -5,6 +5,7 @@ using UnityEngine;
 using UWE;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -276,7 +277,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             return true;
         }
 
-        public static ConstructableBase TryPlaceBase()
+        public static ConstructableBase TryPlaceBase(Optional<GameObject> opTargetBaseGameObject)
         {
             MultiplayerBuilder.Initialize();
             global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
@@ -289,18 +290,27 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             component.transform.position = overridePosition;
             component.transform.rotation = overrideQuaternion;
-            if (component.TargetBase != null)
+
+            if(opTargetBaseGameObject.IsPresent())
             {
-                componentInParent.transform.SetParent(component.TargetBase.transform, true);
+                GameObject targetBaseGameObject = opTargetBaseGameObject.Get();
+                Base targetBase = targetBaseGameObject.GetComponent<Base>();
+
+                if(targetBase != null)
+                {
+                    component.ReflectionSet("targetBase", targetBase);
+                    componentInParent.transform.SetParent(targetBase.transform, true);
+                }
+                else
+                {
+                    Console.WriteLine("Could not find base component on the given game object");
+                }
             }
+
             componentInParent.SetState(false, true);
 
             component.GhostBase.transform.position = overridePosition;
-
-            if (component.TargetBase != null)
-            {
-                component.TargetBase.transform.position = overridePosition;
-            }            
+            
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
