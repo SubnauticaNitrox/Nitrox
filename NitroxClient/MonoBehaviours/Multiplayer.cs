@@ -43,6 +43,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+            this.gameObject.AddComponent<PlayerMovement>();
 
             main = this;
             loadedChunks = new LoadedChunks();

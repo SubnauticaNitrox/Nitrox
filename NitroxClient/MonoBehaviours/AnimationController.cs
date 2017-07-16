@@ -8,12 +8,13 @@ namespace NitroxClient.MonoBehaviours
 {
     public class AnimationController : MonoBehaviour
     {
-        public static readonly float SMOOTHING_SPEED = 0.95f;
+        private const float SMOOTHING_SPEED = 6f;
         public Animator animator;
 
-        Vector3 lastPosition = Vector3.zero;
-        Vector3 velocity = Vector3.zero;
-        float speed;
+        public Quaternion AimingRotation { get; set; }
+
+        private Vector3 lastPosition = Vector3.zero;
+        private Vector3 smoothedVelocity = Vector3.zero;
 
         private Dictionary<string, bool> animationStatusById = new Dictionary<string, bool>()
         {
@@ -37,16 +38,22 @@ namespace NitroxClient.MonoBehaviours
 
         public void FixedUpdate()
         {
-            velocity += (transform.position - lastPosition) * 2f;
-            speed = velocity.magnitude;
+            Vector3 velocity = AimingRotation.GetInverse() * (1 / Time.fixedDeltaTime * (transform.position - lastPosition));
             lastPosition = transform.position;
 
-            animator.SetFloat("move_speed", speed);
-            animator.SetFloat("move_speed_x", velocity.x);
-            animator.SetFloat("move_speed_y", velocity.y);
-            animator.SetFloat("move_speed_z", velocity.z);
+            smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, velocity, Vector3.Normalize(velocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+            SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
+            SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
+            SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
+            SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
 
-            velocity *= SMOOTHING_SPEED;
+            float num = AimingRotation.eulerAngles.x;
+            if (num > 180f)
+            {
+                num -= 360f;
+            }
+            num = -num;
+            animator.SetFloat("view_pitch", num);
         }
 
         public void SetBool(string name, bool value)
