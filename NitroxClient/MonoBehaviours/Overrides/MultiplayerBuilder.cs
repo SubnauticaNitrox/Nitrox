@@ -346,6 +346,10 @@ namespace NitroxClient.MonoBehaviours.Overrides
             Constructable componentInParent3 = gameObject.GetComponentInParent<Constructable>();
             componentInParent3.SetState(false, true);
             global::Utils.SetLayerRecursively(gameObject, LayerMask.NameToLayer((!flag) ? "Interior" : "Default"), true, -1);
+            if (MultiplayerBuilder.ghostModel != null)
+            {
+                UnityEngine.Object.Destroy(MultiplayerBuilder.ghostModel);
+            }
             componentInParent3.SetIsInside(flag | flag2);
             SkyEnvironmentChanged.Send(gameObject, currentSub);
             gameObject.transform.position = overridePosition;
