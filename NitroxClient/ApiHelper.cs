@@ -43,5 +43,17 @@ namespace NitroxClient
         {
             return new Int3((int)v.x, (int)v.y, (int)v.z);
         }
+
+        public static NitroxModel.DataStructures.Transform Transform(Transform transform)
+        {
+            return new NitroxModel.DataStructures.Transform(Vector3(transform.position), Vector3(transform.localScale), Quaternion(transform.rotation));
+        }
+
+        public static void SetTransform(Transform transform, NitroxModel.DataStructures.Transform transform2)
+        {
+            transform.position = Vector3(transform2.Position);
+            transform.localScale = Vector3(transform2.Scale);
+            transform.rotation = Quaternion(transform2.Rotation);
+        }
     }
 }

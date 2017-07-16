@@ -10,6 +10,8 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceFurnitureProcessor : GenericPacketProcessor<PlaceFurniture>
     {
+        private static GameObject otherPlayerCamera;
+
         public override void Process(PlaceFurniture placeFurniturePacket)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(placeFurniturePacket.TechType);
@@ -17,8 +19,15 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opTechType.IsPresent())
             {
                 TechType techType = opTechType.Get();
-                GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
-                ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), techType);
+
+                if(otherPlayerCamera == null)
+                {
+                    otherPlayerCamera = new GameObject();
+                }
+
+                ApiHelper.SetTransform(otherPlayerCamera.transform, placeFurniturePacket.Camera);
+
+                ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), otherPlayerCamera.transform, techType);
             }
             else
             {
@@ -26,11 +35,12 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
         
-        public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, TechType techType)
+        public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
             MultiplayerBuilder.overrideQuaternion = rotation;
+            MultiplayerBuilder.overrideTransform = cameraTransform;
             MultiplayerBuilder.placePosition = position;
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);
