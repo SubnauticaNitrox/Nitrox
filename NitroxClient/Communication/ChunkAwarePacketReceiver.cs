@@ -52,8 +52,10 @@ namespace NitroxClient.Communication
         
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is PlayerActionPacket playerAction)
+            if (packet is PlayerActionPacket)
             {
+                PlayerActionPacket playerAction = (PlayerActionPacket)packet;
+
                 if (!playerAction.PlayerMustBeInRangeToReceive)
                 {
                     return false;
