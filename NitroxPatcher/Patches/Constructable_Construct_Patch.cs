@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using NitroxClient.Communication;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using System;
@@ -33,14 +34,15 @@ namespace NitroxPatcher.Patches
                 if (instruction.opcode.Equals(AMOUNT_CHANGED_INJECTION_OPCODE) && instruction.operand.Equals(AMOUNT_CHANGED_INJECTION_OPERAND))
                 {
                     /*
-                     * Multiplayer.PacketSender.ChangeConstructionAmount(base.gameObject.transform.position, this.constructedAmount);
+                     * Multiplayer.Logic.Building.ChangeConstructionAmount(base.gameObject, this.constructedAmount);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("PacketSender", BindingFlags.Static | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Public | BindingFlags.Instance));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldfld, typeof(Constructable).GetField("constructedAmount", BindingFlags.Public | BindingFlags.Instance));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("ChangeConstructionAmount", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(GameObject), typeof(float) }, null));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("ChangeConstructionAmount", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(GameObject), typeof(float) }, null));
                 }
 
                 yield return instruction;
@@ -48,12 +50,13 @@ namespace NitroxPatcher.Patches
                 if (instruction.opcode.Equals(CONSTRUCTION_COMPLETE_INJECTION_OPCODE) && instruction.operand.Equals(CONSTRUCTION_COMPLETE_INJECTION_OPERAND))
                 {
                     /*
-                     * Multiplayer.PacketSender.ConstructionComplete(base.gameObject);
+                     * Multiplayer.Logic.Building.ConstructionComplete(base.gameObject);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("PacketSender", BindingFlags.Static | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Public | BindingFlags.Instance));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(PacketSender).GetMethod("ConstructionComplete"));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("ConstructionComplete"));
                 }
             }
         }

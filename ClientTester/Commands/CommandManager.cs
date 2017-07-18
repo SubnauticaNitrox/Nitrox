@@ -18,7 +18,6 @@ namespace ClientTester.Commands
             this.client = client;
             RegisterCommand(new AniCommand());
             RegisterCommand(new ChatCommand());
-            RegisterCommand(new ConstructCommand());
             RegisterCommand(new DropCommand());
             RegisterCommand(new MoveCommand());
             RegisterCommand(new MoveyCommand());
