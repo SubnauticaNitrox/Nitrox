@@ -14,8 +14,9 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
-        
-        public static PacketSender PacketSender;
+
+        public static Logic Logic;
+        public static PacketSender PacketSender; //TODO: migrate logic out of and remove as member variable
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
@@ -49,6 +50,7 @@ namespace NitroxClient.MonoBehaviours
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
             PacketSender = new PacketSender(client);
+            Logic = new Logic(PacketSender);
         }
 
         public void Update()

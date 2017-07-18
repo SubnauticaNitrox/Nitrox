@@ -75,75 +75,7 @@ namespace NitroxClient.Communication
             DroppedItem droppedItem = new DroppedItem(PlayerId, guid, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition));
             Send(droppedItem);
         }
-
-        public void PlaceBasePiece(ConstructableBase constructableBase, Base targetBase, TechType techType, Quaternion quaternion)
-        {
-            String guid = GuidHelper.GetGuid(constructableBase.gameObject);
-            String parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
-            Vector3 itemPosition = constructableBase.gameObject.transform.position;
-            Transform camera = Camera.main.transform;
-
-            PlaceBasePiece(guid, ApiHelper.TechType(techType), itemPosition, quaternion, camera, Optional<String>.OfNullable(parentBaseGuid));
-        }
-
-        public void PlaceBasePiece(String guid, String techType, Vector3 itemPosition, Quaternion quaternion, Transform camera, Optional<String> parentBaseGuid)
-        {
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), techType, parentBaseGuid);
-            Send(placedBasePiece);
-            Console.WriteLine(placedBasePiece);
-        }
-
-        public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
-        {
-            String guid = GuidHelper.GetGuid(gameObject);
-            String subGuid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
-            Transform camera = Camera.main.transform;
-
-            PlaceFurniture(guid, subGuid, ApiHelper.TechType(techType), itemPosition, quaternion, camera);
-        }
-
-        public void PlaceFurniture(String guid, String subGuid, String techType, Vector3 itemPosition, Quaternion quaternion, Transform camera)
-        {
-            PlaceFurniture placedFurniture = new PlaceFurniture(PlayerId, guid, subGuid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), techType);
-            Send(placedFurniture);
-        }
-                
-        public void ChangeConstructionAmount(GameObject gameObject, float amount)
-        {     
-            Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
-
-            ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(PlayerId, ApiHelper.Vector3(itemPosition), guid, amount);
-            Send(amountChanged);            
-        }
-
-        public void ChangeConstructionAmount(String guid, Vector3 itemPosition, float amount)
-        {
-            if (amount < 1f) // Construction complete event handled by function below
-            {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(PlayerId, ApiHelper.Vector3(itemPosition), guid, amount);
-                Send(amountChanged);
-            }
-        }
-
-        public void ConstructionComplete(GameObject gameObject)
-        {
-            Optional<String> newlyConstructedBaseGuid = Optional<String>.Empty();
-            Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-
-            if (opConstructedBase.IsPresent())
-            {
-                GameObject constructedBase = (GameObject)opConstructedBase.Get();
-                newlyConstructedBaseGuid = Optional<String>.Of(GuidHelper.GetGuid(constructedBase));
-            }
-
-            Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
-
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(PlayerId, ApiHelper.Vector3(itemPosition), guid, newlyConstructedBaseGuid);
-            Send(constructionCompleted);
-        }
-
+        
         public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)
         {
             String constructorGuid = GuidHelper.GetGuid(constructor);

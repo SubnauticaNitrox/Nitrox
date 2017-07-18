@@ -19,7 +19,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(Constructable_Construct_Patch.CONSTRUCTION_COMPLETE_INJECTION_OPCODE, Constructable_Construct_Patch.CONSTRUCTION_COMPLETE_INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = Constructable_Construct_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(112, result.Count());
+            Assert.AreEqual(114, result.Count());
         }
 
         [TestMethod]

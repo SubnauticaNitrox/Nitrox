@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
@@ -11,18 +12,19 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Console.WriteLine("Processing ConstructionAmountChanged " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
+            Console.WriteLine("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
 
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(completedPacket.Guid);
 
             if(opGameObject.IsPresent())
             {
                 GameObject constructing = opGameObject.Get();
+                
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = 1f;
                 constructable.Construct();
 
-                if(completedPacket.NewBaseCreatedGuid.IsPresent())
+                if (completedPacket.NewBaseCreatedGuid.IsPresent())
                 {
                     String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
                     configureNewlyConstructedBase(newBaseGuid);

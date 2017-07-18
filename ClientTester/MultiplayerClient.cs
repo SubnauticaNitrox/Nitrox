@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using System;
 using UnityEngine;
@@ -7,7 +8,8 @@ namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public PacketSender PacketSender { get; set; }
+        public PacketSender PacketSender { get; private set; }
+        public Logic Logic { get; private set; }
         public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
         
         LoadedChunks loadedChunks;
@@ -21,6 +23,7 @@ namespace ClientTester
             client = new TcpClient(chunkAwarePacketReceiver, true);
             PacketSender = new PacketSender(client);
             PacketSender.PlayerId = playerId;
+            Logic = new Logic(PacketSender);
         }
 
         public void Start(String ip)
