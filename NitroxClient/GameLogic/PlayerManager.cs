@@ -24,7 +24,8 @@ namespace NitroxClient.GameLogic
 
         public RemotePlayer FindPlayer(string playerId, bool createPlayer = false)
         {
-            if (!playersById.TryGetValue(playerId, out RemotePlayer player) && createPlayer)
+            RemotePlayer player;
+            if (!playersById.TryGetValue(playerId, out player) && createPlayer)
                 player = playersById[playerId] = new RemotePlayer(playerId);
             return player;
         }

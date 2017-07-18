@@ -4,6 +4,7 @@
     <DevVars>DevVars.targets</DevVars>
     <DevVarsLoc>$(SolutionDir)\$(DevVars)</DevVarsLoc>
     <SubnauticaDir Condition="!Exists($(DevVarsLoc))">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</SubnauticaDir>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
 
   <Import Project="$(DevVarsLoc)" Condition="Exists($(DevVarsLoc))" />
