@@ -47,7 +47,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            ClientLogger.SetLogLocation(ClientLogger.LOG_CONSOLE | ClientLogger.LOG_ERRORMESSAGE);
+            ClientLogger.SetLogLocation(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             this.gameObject.AddComponent<PlayerMovement>();
 
@@ -138,8 +138,16 @@ namespace NitroxClient.MonoBehaviours
         public void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
-            PacketSender.Active = true;
-            PacketSender.Authenticate();
+            if (client.IsConnected())
+            {
+                PacketSender.Active = true;
+                PacketSender.Authenticate();
+                ClientLogger.WriteLine("Connected to server");
+            }
+            else
+            {
+                ClientLogger.WriteLine("Unable to connect to server");
+            }
         }
 
         private void StopMultiplayer()

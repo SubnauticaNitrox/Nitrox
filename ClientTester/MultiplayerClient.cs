@@ -19,7 +19,7 @@ namespace ClientTester
 
         public MultiplayerClient(String playerId)
         {
-            ClientLogger.SetLogLocation(ClientLogger.LOG_CONSOLE | ClientLogger.LOG_DEBUG);
+            ClientLogger.SetLogLocation(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.ConsoleDebug);
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
@@ -33,8 +33,13 @@ namespace ClientTester
             client.Start(ip);
             if (client.IsConnected())
             {
+                ClientLogger.WriteLine("Connected to server");
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
+            }
+            else
+            {
+                ClientLogger.WriteLine("Unable to connect to server");
             }
         }
     }

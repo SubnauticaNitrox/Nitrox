@@ -2,6 +2,9 @@
 using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 namespace NitroxModel.Tcp
@@ -17,7 +20,23 @@ namespace NitroxModel.Tcp
             this.Socket = socket;
             this.MessageBuffer = new MessageBuffer();
             this.Open = true;
-        }           
+        }
+
+        public void Connect(IPEndPoint remoteEP)
+        {
+            try
+            {
+                Socket.Connect(remoteEP);
+                if (!Socket.Connected)
+                {
+                    Open = false;
+                }
+            }
+            catch (SocketException)
+            {
+                Open = false;
+            }
+        }
         
         public void BeginReceive(AsyncCallback callback)
         {

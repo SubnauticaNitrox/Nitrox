@@ -28,25 +28,16 @@ namespace NitroxClient.Communication
 
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 connection = new Connection(socket);
+                connection.Connect(remoteEP);
 
-                socket.Connect(remoteEP);
-
-                if (!socket.Connected)
+                if (connection.Open)
                 {
-                    ClientLogger.WriteLine("Unable to connect to server.");
-                    throw new InvalidOperationException("Socket could not connect.");
+                    connection.BeginReceive(new AsyncCallback(DataReceived));
                 }
-                else
-                {
-                    ClientLogger.WriteLine("Connected to server.");
-                }
-
-                connection.BeginReceive(new AsyncCallback(DataReceived));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ClientLogger.WriteLine("Unforeseen error when connecting: " + e.GetBaseException());
-                throw new InvalidOperationException("Unknown error while connecting");
+                ClientLogger.DebugLine("Unforeseen error when connecting: " + e.GetBaseException());
             }
         }
 
