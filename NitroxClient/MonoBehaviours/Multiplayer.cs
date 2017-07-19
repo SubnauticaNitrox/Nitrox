@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.Communication.Packets.Processors.Base;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Packets;
@@ -17,6 +17,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static Logic Logic;
         public static PacketSender PacketSender; //TODO: migrate logic out of and remove as member variable
+        public static Multiplayer main;
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
