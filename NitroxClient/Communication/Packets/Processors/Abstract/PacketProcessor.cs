@@ -1,10 +1,6 @@
 ﻿using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace NitroxClient.Communication.Packets.Processors.Base
+namespace NitroxClient.Communication.Packets.Processors.Abstract
 {
     public abstract class PacketProcessor
     {

@@ -43,26 +43,26 @@ namespace NitroxClient.Communication
 
                 if (!socket.Connected)
                 {
-                    outputMessage("Unable to connect to server.");
+                    OutputMessage("Unable to connect to server.");
                     throw new InvalidOperationException("Socket could not connect.");
                 }
                 else
                 {
-                    outputMessage("Connected to server.");
+                    OutputMessage("Connected to server.");
                 }
 
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                outputMessage("Unable to connect to server");
+                OutputMessage("Unable to connect to server");
             }
         }
 
         public void Stop()
         {
             connection.Close(); // Server will clean up pretty quickly
-            outputMessage("Disconnected from server.");
+            OutputMessage("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -94,7 +94,7 @@ namespace NitroxClient.Communication
 
         }
 
-        public bool isConnected()
+        public bool IsConnected()
         {
             if (connection == null)
             {
@@ -103,7 +103,7 @@ namespace NitroxClient.Communication
             return connection.Open;
         }
 
-        private void outputMessage(String msg)
+        private void OutputMessage(String msg)
         {
             if (testClient)
             {

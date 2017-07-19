@@ -28,7 +28,7 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Quaternion rotation, Optional<VehicleModel> opVehicle)
+        public void UpdatePlayerLocation(Vector3 location, Quaternion rotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
         {
             Movement movement;
 
@@ -39,7 +39,7 @@ namespace NitroxClient.Communication
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation));
+                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation), opSubGuid);
             }
 
             Send(movement);
@@ -74,21 +74,6 @@ namespace NitroxClient.Communication
 
             DroppedItem droppedItem = new DroppedItem(PlayerId, guid, ApiHelper.TechType(techType), ApiHelper.Vector3(dropPosition));
             Send(droppedItem);
-        }
-
-        public void BuildItem(String techType, Vector3 itemPosition, Quaternion quaternion)
-        {
-            BeginItemConstruction buildItem = new BeginItemConstruction(PlayerId, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), techType);
-            Send(buildItem);
-        }
-
-        public void ChangeConstructionAmount(Vector3 itemPosition, float amount, int resourceId1, int resourceId2)
-        {
-            if (amount >= 1f || resourceId1 != resourceId2)
-            {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(PlayerId, ApiHelper.Vector3(itemPosition), amount);
-                Send(amountChanged);
-            }
         }
         
         public void ConstructorBeginCrafting(GameObject constructor, TechType techType, float duration)

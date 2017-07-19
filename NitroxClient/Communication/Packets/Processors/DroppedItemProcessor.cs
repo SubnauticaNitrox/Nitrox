@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Base;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxModel.DataStructures.Util;

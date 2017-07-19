@@ -42,11 +42,14 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\Quaternion.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
+    <Compile Include="DataStructures\Transform.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
+    <Compile Include="Packets\PlaceFurniture.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\TimedQueue.cs" />
@@ -57,7 +60,7 @@
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\Movement.cs" />
-    <Compile Include="Packets\BeginItemConstruction.cs" />
+    <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="DataStructures\ConcurrentMap.cs" />
     <Compile Include="Tcp\Connection.cs" />

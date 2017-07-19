@@ -62,7 +62,7 @@ namespace NitroxClient.Communication
                 }
 
                 Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
-                    
+
                 if (!loadedChunks.IsLoadedChunk(actionChunk))
                 {
                     Console.WriteLine("Action was deferred, chunk not loaded: " + actionChunk);

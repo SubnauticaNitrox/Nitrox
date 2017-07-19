@@ -8,13 +8,15 @@ namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
+        // Public calls are useful for reflected, inaccessible objects.
         public static object ReflectionCall(this object o, string methodName, bool publicMethod = false, params object[] args)
         {
             BindingFlags bf;
             if (publicMethod)
             {
                 bf = System.Reflection.BindingFlags.Public;
-            } else
+            }
+            else
             {
                 bf = System.Reflection.BindingFlags.NonPublic;
             }

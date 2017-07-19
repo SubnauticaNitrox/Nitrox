@@ -1,11 +1,6 @@
-﻿using NitroxClient.Communication.Packets.Processors.Base;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -20,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Movement movement)
         {
-            playerGameObjectManager.UpdatePlayerPosition(movement.PlayerId, ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation));
+            playerGameObjectManager.UpdatePlayerPosition(movement.PlayerId, ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.Rotation), movement.SubGuid);
         }
     }
 }

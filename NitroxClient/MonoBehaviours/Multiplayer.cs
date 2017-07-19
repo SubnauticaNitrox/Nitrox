@@ -14,9 +14,9 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
-        
-        public static PacketSender PacketSender;
-        public static Multiplayer main;
+
+        public static Logic Logic;
+        public static PacketSender PacketSender; //TODO: migrate logic out of and remove as member variable
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
@@ -25,16 +25,18 @@ namespace NitroxClient.MonoBehaviours
         private static PlayerGameObjectManager playerGameObjectManager = new PlayerGameObjectManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType = new Dictionary<Type, PacketProcessor>() {
+            {typeof(PlaceBasePiece), new PlaceBasePieceProcessor() },
+            {typeof(PlaceFurniture), new PlaceFurnitureProcessor() },
             {typeof(AnimationChangeEvent), new AnimationProcessor(playerGameObjectManager) },
-            {typeof(BeginItemConstruction), new BeginItemConstructionProcessor() },
+            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
             {typeof(ChatMessage), new ChatMessageProcessor() },
             {typeof(ConstructionAmountChanged), new ConstructionAmountChangedProcessor() },
+            {typeof(ConstructionCompleted), new ConstructionCompletedProcessor() },
             {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
             {typeof(DroppedItem), new DroppedItemProcessor() },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
-            {typeof(ConstructorBeginCrafting), new ConstructorBeginCraftingProcessor() },
             {typeof(ItemPosition), new ItemPositionProcessor() }
         };
 
@@ -49,11 +51,12 @@ namespace NitroxClient.MonoBehaviours
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
             PacketSender = new PacketSender(client);
+            Logic = new Logic(PacketSender);
         }
 
         public void Update()
         {
-            if (client != null && client.isConnected())
+            if (client != null && client.IsConnected())
             {
                 ProcessPackets();
             }
@@ -79,7 +82,7 @@ namespace NitroxClient.MonoBehaviours
         
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (client.isConnected())
+            if (client.IsConnected())
             {
                 ErrorMessage.AddMessage("Already connected to a server");
             } 
@@ -134,7 +137,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void StopMultiplayer()
         {
-            if (client.isConnected())
+            if (client.IsConnected())
             {
                 client.Stop();
                 PacketSender.Active = false;

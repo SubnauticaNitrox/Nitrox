@@ -5,6 +5,7 @@ using System.Text;
 
 namespace NitroxModel.DataStructures.Util
 {
+    [Serializable]
     public class Optional<T>
     {
         private T value;
@@ -67,6 +68,16 @@ namespace NitroxModel.DataStructures.Util
             }
 
             return elseValue;
+        }
+
+        public override string ToString()
+        {
+            if(IsEmpty())
+            {
+                return "Optional<" + typeof(T) + ">.Empty()";
+            }
+
+            return "Optional[" + Get().ToString() + "]";
         }
     }
 }
