@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = 1f;
-                constructable.Construct();
+                constructable.SetState(true, true);
 
                 if (completedPacket.NewBaseCreatedGuid.IsPresent())
                 {

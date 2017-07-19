@@ -2,8 +2,10 @@
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -49,6 +51,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
             ConstructableBase constructableBase = MultiplayerBuilder.TryPlaceBase(parentBase);
             GuidHelper.SetNewGuid(constructableBase.gameObject, guid);
+
+            /**
+             * Manually call start to initialize the object as we may need to interact with it within the same frame.
+             */
+            MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
+            Validate.NotNull(startCrafting);
+            startCrafting.Invoke(constructableBase, new object[] { }); 
         }        
     }
 }

@@ -71,8 +71,15 @@ namespace NitroxClient.MonoBehaviours
             {
                 if (packetProcessorsByType.ContainsKey(packet.GetType()))
                 {
-                    PacketProcessor processor = packetProcessorsByType[packet.GetType()];
-                    processor.ProcessPacket(packet);
+                    try
+                    {
+                        PacketProcessor processor = packetProcessorsByType[packet.GetType()];
+                        processor.ProcessPacket(packet);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine("Error processing packet: " + packet + ": " + ex);
+                    }
                 }
                 else
                 {
