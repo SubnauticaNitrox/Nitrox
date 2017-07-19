@@ -1,12 +1,7 @@
 ﻿using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Sockets;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 
 namespace NitroxModel.Tcp
 {
@@ -36,7 +31,7 @@ namespace NitroxModel.Tcp
             {
                 bytesRead = Socket.EndReceive(ar);
             }
-            catch (SocketException se)
+            catch (SocketException)
             {
                 Console.WriteLine("Error reading data from socket");
                 Open = false;
@@ -65,7 +60,7 @@ namespace NitroxModel.Tcp
                 {
                     Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
                 }
-                catch (SocketException se)
+                catch (SocketException)
                 {
                     Console.WriteLine("Error sending packet");
                     Open = false;
@@ -81,7 +76,7 @@ namespace NitroxModel.Tcp
                 Socket.Shutdown(SocketShutdown.Both);
                 Socket.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("Error closing socket -- probably already closed");
             }

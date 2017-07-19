@@ -18,5 +18,10 @@ namespace NitroxModel.DataStructures
             this.Y = y;
             this.Z = z;
         }
+
+        public override string ToString()
+        {
+            return "[Vector3 - {" + X + ", " + Y + ", " + Z + "}]";
+        }
     }
 }

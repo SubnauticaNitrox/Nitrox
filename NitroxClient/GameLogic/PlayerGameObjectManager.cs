@@ -1,5 +1,7 @@
 ﻿using LitJson;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,26 @@ namespace NitroxClient.GameLogic
 
         private Dictionary<string, GameObject> gameObjectByPlayerId = new Dictionary<string, GameObject>();
 
-        public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation)
+        public void UpdatePlayerPosition(string playerId, Vector3 position, Quaternion rotation, Optional<String> opSubGuid)
         {
             GameObject player = GetPlayerGameObject(playerId);
             player.SetActive(true);
+
+            if(opSubGuid.IsPresent())
+            {
+                String subGuid = opSubGuid.Get();
+                Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
+
+                if(opSub.IsPresent())
+                {
+                    player.transform.parent = opSub.Get().transform;
+                }
+                else
+                {
+                    Console.WriteLine("Could not find sub for guid: " + subGuid);
+                }
+            }
+
             MovementHelper.MoveGameObject(player, position, rotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
         }
 
@@ -53,12 +71,12 @@ namespace NitroxClient.GameLogic
             GameObject player = FindPlayerGameObject(playerId);
             if (player == null)
             {
-                player = gameObjectByPlayerId[playerId] = createOtherPlayer(playerId);
+                player = gameObjectByPlayerId[playerId] = CreateOtherPlayer(playerId);
             }
             return player;
         }
 
-        private GameObject createOtherPlayer(string playerId)
+        private GameObject CreateOtherPlayer(string playerId)
         {
             GameObject body = GameObject.Find("body");
             //Cheap fix for showing head, much easier since male_geo contains many different heads

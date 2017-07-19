@@ -27,8 +27,16 @@ namespace NitroxClient.MonoBehaviours
                 Vector3 currentPosition = Player.main.transform.position;
                 Quaternion rotation = Player.main.transform.rotation;
                 Optional<VehicleModel> vehicle = GetVehicleModel();
-               
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, rotation, vehicle);
+                String subGuid = null;
+
+                SubRoot currentSub = Player.main.GetCurrentSub();
+
+                if (currentSub != null)
+                {
+                    subGuid = GuidHelper.GetGuid(currentSub.gameObject);
+                }
+
+                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, rotation, vehicle, Optional<String>.OfNullable(subGuid));
             }
         }
         

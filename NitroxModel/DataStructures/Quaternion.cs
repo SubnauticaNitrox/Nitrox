@@ -20,5 +20,10 @@ namespace NitroxModel.DataStructures
             this.Z = z;
             this.W = w;
         }
+
+        public override string ToString()
+        {
+            return "[Quaternion - {" + X + ", " + Y + ", " + Z + "," + W + "}]";
+        }
     }
 }
