@@ -7,13 +7,18 @@ namespace NitroxClient.Logger
 {
     public class ClientLogger
     {
-        public const int LOG_CONSOLE = 1;
-        public const int LOG_ERRORMESSAGE = 2;
-        public const int LOG_DEBUG = 4;
-        private static int logLocations = LOG_ERRORMESSAGE;
+        [Flags]
+        public enum LogLevel
+        {
+            Disabled = 0,
+            InGameMessages = 1,
+            ConsoleMessages = 2,
+            ConsoleDebug = 4
+        }
+        private static LogLevel logLocations = LogLevel.Disabled;
 
-        // Set with combinaition of constants -- setLogLocation(LOG_CONSOLE | LOG_ERRORMESSAGE)
-        public static void SetLogLocation(int location)
+        // Set with combinaition of enum -- setLogLocation(LOG_CONSOLE | LOG_ERRORMESSAGE)
+        public static void SetLogLocation(LogLevel location)
         {
             ClientLogger.logLocations = location;
             Console.WriteLine("Log location set to " + ClientLogger.logLocations);
@@ -21,11 +26,11 @@ namespace NitroxClient.Logger
 
         public static void WriteLine(String msg)
         {
-            if ((logLocations & LOG_CONSOLE) != 0) // == LOG_CONSOLE works as well, but is more verbose
+            if ((logLocations & LogLevel.ConsoleMessages) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
                 Console.WriteLine(msg);
             }
-            if ((logLocations & LOG_ERRORMESSAGE) != 0)
+            if ((logLocations & LogLevel.InGameMessages) != 0)
             {
                 ErrorMessage.AddMessage(msg);
             }
@@ -35,7 +40,7 @@ namespace NitroxClient.Logger
         // Should we print the calling method for this for more debug context?
         public static void DebugLine(String msg)
         {
-            if ((logLocations & LOG_DEBUG) != 0)
+            if ((logLocations & LogLevel.ConsoleDebug) != 0)
             {
                 Console.WriteLine(msg);
             }

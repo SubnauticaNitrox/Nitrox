@@ -17,7 +17,7 @@ namespace NitroxServer
         public event EventHandler PlayerAuthenticated;
 
         private Dictionary<String, Player> playersById = new Dictionary<String, Player>();
-        
+
         private HashSet<Type> packetForwardBlacklist;
         private HashSet<Type> loggingPacketBlackList;
 
@@ -41,7 +41,7 @@ namespace NitroxServer
         {
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
             socket.Listen(4000);
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
@@ -52,7 +52,7 @@ namespace NitroxServer
             Console.WriteLine("New client connected");
 
             Socket socket = (Socket)ar.AsyncState;
-            
+
             Connection connection = new Connection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
             connection.BeginReceive(new AsyncCallback(dropPacketsUntilAuthentication));
             connection.BeginReceive(new AsyncCallback(DataReceived));
@@ -70,11 +70,12 @@ namespace NitroxServer
                 if (authenticated)
                 {
                     ParsePacket(connection, packet);
-                } else
+                }
+                else
                 {
                     if (packet is Authenticate)
                     {
-                        Player player = getPlayer(packet, connection);
+                        Player player = GetPlayer(packet, connection);
                         connection.PlayerId = player.Id;
                         Console.WriteLine("Player authenticated: " + player.Id);
                         Packet connectPacket = new Connect(packet.PlayerId);
@@ -92,8 +93,8 @@ namespace NitroxServer
         public void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
-            
-            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
+
+            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
                 ParsePacket(connection, packet);
             }
@@ -110,7 +111,7 @@ namespace NitroxServer
 
         private void ParsePacket(Connection connection, Packet packet)
         {
-            Player player = getPlayer(packet, connection);
+            Player player = GetPlayer(packet, connection);
             connection.PlayerId = player.Id;
             UpdatePlayerPosition(player, packet);
 
@@ -135,7 +136,7 @@ namespace NitroxServer
                     PlayerAuthenticated(this, EventArgs.Empty);
                 }
             }
-            
+
             return player;
         }
 
@@ -146,7 +147,7 @@ namespace NitroxServer
                 player.Position = ((Movement)packet).PlayerPosition;
             }
         }
-        
+
         private void ForwardPacketToOtherPlayers(PlayerPacket packet, String sendingPlayerId)
         {
             if (packetForwardBlacklist.Contains(packet.GetType()))
@@ -170,7 +171,7 @@ namespace NitroxServer
         {
             try
             {
-                Socket handler = (Socket)ar.AsyncState;                
+                Socket handler = (Socket)ar.AsyncState;
                 int bytesSent = handler.EndSend(ar);
             }
             catch (SocketException)
