@@ -5,7 +5,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class Authenticate : Packet
+    public class Authenticate : PlayerPacket
     {
         public String User { get; set; }
         public String Password { get; set; }

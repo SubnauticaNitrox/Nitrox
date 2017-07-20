@@ -6,7 +6,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructorBeginCrafting : Packet
+    public class ConstructorBeginCrafting : PlayerPacket
     {
         public String ConstructorGuid { get; protected set; }
         public String ConstructedItemGuid { get; protected set; }

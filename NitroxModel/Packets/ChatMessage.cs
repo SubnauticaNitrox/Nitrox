@@ -6,7 +6,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ChatMessage : Packet
+    public class ChatMessage : PlayerPacket
     {
         public String Text { get; set; }
 

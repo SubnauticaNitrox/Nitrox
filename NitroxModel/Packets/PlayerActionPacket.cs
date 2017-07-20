@@ -1,13 +1,10 @@
 ﻿using NitroxModel.DataStructures;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public abstract class PlayerActionPacket : Packet
+    public abstract class PlayerActionPacket : PlayerPacket
     {
         public Vector3 ActionPosition { get; protected set; }
         public bool PlayerMustBeInRangeToReceive { get; protected set; }
