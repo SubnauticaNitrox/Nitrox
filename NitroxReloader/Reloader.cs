@@ -20,8 +20,15 @@ namespace NitroxReloader
     {
         private static readonly HashSet<string> assemblies = new HashSet<string>() {
             "NitroxModel.dll",
-            "NitroxClient.dll"
+            "NitroxClient.dll",
+            "NitroxPatcher.dll",
         };
+
+        // TODO: Store methods per assembly (and then only reload assemblies if the initial one had at least one ReloadableMethod)
+        // TODO: Use a class, in these more properties can be defined, for instance to patch every single friggen method, see how that works out.
+        // Most notably test properties (maybe this breaks with autoproperties).
+        // TODO: See if method-size is an easy thing. If so, code could be copied but is slower.
+        // TODO: Figure out assembly unloading.
 
         private Dictionary<string, MethodInfo> reloadableMethods;
 
@@ -54,8 +61,9 @@ namespace NitroxReloader
                 var key = QualifiedName(method);
                 Console.WriteLine("Reloader: found reloadable method " + key);
                 return key;
-            }, method => method);
+            }, null);
 
+            // TODO: Change this.
             var managedFolder = @"D:\Users\marij\Documents\code\VSProjects\Nitrox\bin\Debug";
             //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var watcher = new FileSystemWatcher()
@@ -70,7 +78,6 @@ namespace NitroxReloader
             FileSystemEventHandler handler = (s, e) =>
             {
                 var fn = Path.GetFileName(e.Name);
-                Console.WriteLine($"Reloader: {fn} {e.ChangeType}");
                 if (assemblies.Contains(fn))
                     ReloadAssembly(e.FullPath);
             };
@@ -81,15 +88,7 @@ namespace NitroxReloader
 
         public void ReloadAssembly(string path)
         {
-            Console.WriteLine(path);
-            Console.WriteLine("before name");
-            AssemblyName name = new AssemblyName(path);
-            Console.WriteLine("after");
-            //name.Version = new Version(1, 0, 0, name.Version.Revision + 1);
-            // TODO
-            Console.WriteLine("before load");
             var assembly = Assembly.Load(File.ReadAllBytes(path));
-            Console.WriteLine(assembly.GetTypes().Length);
             foreach (var method in assembly.GetTypes()
                 .SelectMany(type => type.GetMethods(allBindings))
                 .Where(IsMarkedReloadable))
@@ -101,7 +100,10 @@ namespace NitroxReloader
                 {
                     var originalCodeStart = GetMethodStart(originalMethod);
                     var newCodeStart = GetMethodStart(method);
-                    WriteJump(originalCodeStart, newCodeStart);
+                    if (originalCodeStart == newCodeStart)
+                        Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
+                    else
+                        WriteJump(originalCodeStart, newCodeStart);
                 }
                 else
                     Console.WriteLine("Reloader: Original method missing (did you add a method with ReloadableMethod attribute?)");
@@ -127,7 +129,10 @@ namespace NitroxReloader
 
         public static unsafe void WriteJump(IntPtr original, IntPtr destination)
         {
-            if (IntPtr.Size == 8)
+            Console.WriteLine("Reloader: Writing jump to {0:X8} at {1:X8}", destination, original);
+            bool x64 = IntPtr.Size == sizeof(long);
+#if true
+            if (x64)
             {
                 ushort* original_s = (ushort*)original;
                 original_s[0] = 0xB848;
@@ -140,14 +145,38 @@ namespace NitroxReloader
                 original_b[0] = 0x68;
                 *(uint*)(original_b + 1) = (uint)destination;
                 original_b[5] = 0xC3;
-
             }
+#else
+            // For some reason, this doesn't work...
+            using (UnmanagedMemoryStream ums = new UnmanagedMemoryStream((byte*)original, x64 ? (4 + sizeof(long)) : (2 + sizeof(int))))
+            using (BinaryWriter bw = new BinaryWriter(ums))
+                if (x64)
+                {
+                    byte[] bla = new byte[] { 0x48, 0xB8, 0xFF, 0xE0 };
+                    // MOVABS RAX, 64:
+                    bw.Write(bla, 0, 2);
+                    // operand:
+                    bw.Write(destination.ToInt64());
+                    // JMP RAX:
+                    bw.Write(bla, 2, 2);
+                }
+                else
+                {
+                    // PUSH imm16/32:
+                    bw.Write((byte)0x68);
+                    // operand:
+                    bw.Write(destination.ToInt32());
+                    // RET:
+                    bw.Write((byte)0xC3);
+                }
+#endif
         }
 
         private static RuntimeMethodHandle GetRuntimeMethodHandle(MethodBase method)
         {
             if (method is DynamicMethod)
             {
+                Console.WriteLine($"Reloader: {method} Is a dynamic method!");
                 var nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
                 // DynamicMethod actually generates its m_methodHandle on-the-fly and therefore

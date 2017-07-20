@@ -38,6 +38,8 @@ namespace NitroxPatcher
             new Reloader();
 
             Console.WriteLine("[NITROX] Reloader initialized");
+
+            DevConsole.disableConsole = false;
         }
     }
 }
