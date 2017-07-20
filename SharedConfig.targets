@@ -33,4 +33,37 @@
   <PropertyGroup Condition="$(Configuration) == 'Release'">
     <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
   </PropertyGroup>
+
+    <!-- TODO: add some Conditions to the Target. -->
+    <!-- Changes can be unstaged from git using git checkout **/AssemblyInfo.cs (should find something better though) -->
+   <UsingTask
+    TaskName="TransformVersionTask"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <AssemblyFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Using Namespace="System.Text.RegularExpressions"/>
+      <Code Type="Fragment" Language="cs">
+      <![CDATA[
+var lines = File.ReadAllLines(AssemblyFile);
+using (var f = new StreamWriter(AssemblyFile))
+    foreach (var line in lines)
+    {
+        if (line.Contains("AssemblyVersion(") && !line.StartsWith("//"))
+            f.WriteLine("[assembly: AssemblyVersion(\"1.0.0.{0}\")]", (DateTime.UtcNow - new DateTime(2017, 7, 19)).TotalSeconds.ToString().Substring(0, 5));
+        else
+            f.WriteLine(line);
+    }
+      ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="VersionTask" BeforeTargets="BeforeBuild">
+    <TransformVersionTask AssemblyFile="$(ProjectDir)Properties\AssemblyInfo.cs"/>
+  </Target>
 </Project>
