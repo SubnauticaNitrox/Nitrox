@@ -3,6 +3,7 @@ using NitroxPatcher.Patches;
 using System;
 using System.Linq;
 using System.Reflection;
+using NitroxReloader;
 
 namespace NitroxPatcher
 {
@@ -31,6 +32,12 @@ namespace NitroxPatcher
                 });
 
             Console.WriteLine("[NITROX] Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+
+            Console.WriteLine("[NITROX] Initializing reloader...");
+
+            new Reloader();
+
+            Console.WriteLine("[NITROX] Reloader initialized");
         }
     }
 }
