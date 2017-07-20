@@ -6,7 +6,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class AnimationChangeEvent : Packet
+    public class AnimationChangeEvent : PlayerPacket
     {
         public int Type { get; set; }
         public int State { get; set; }

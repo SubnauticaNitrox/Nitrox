@@ -25,10 +25,10 @@ namespace NitroxTest.Model.Tcp
         public void SinglePacket()
         {
             String playerId = "player1";
-            Packet packet = new TestNonActionPacket(playerId);
+            PlayerPacket packet = new TestNonActionPacket(playerId);
 
             int length = WritePacketToReceivedBuffer(packet, 0);
-            Queue<Packet> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(length));
+            Queue<PlayerPacket> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(length));
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(playerId, packets.Dequeue().PlayerId);
@@ -37,12 +37,12 @@ namespace NitroxTest.Model.Tcp
         [TestMethod]
         public void MultiplePackets()
         {
-            Packet packet1 = new TestNonActionPacket("Player1");
-            Packet packet2 = new TestNonActionPacket("Player2");
+            PlayerPacket packet1 = new TestNonActionPacket("Player1");
+            PlayerPacket packet2 = new TestNonActionPacket("Player2");
 
             int length = WritePacketToReceivedBuffer(packet1, 0);
             length = WritePacketToReceivedBuffer(packet2, length);
-            Queue<Packet> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(length));
+            Queue<PlayerPacket> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(length));
 
             Assert.AreEqual(2, packets.Count);
             Assert.AreEqual(packet1.PlayerId, packets.Dequeue().PlayerId);
@@ -52,12 +52,12 @@ namespace NitroxTest.Model.Tcp
         [TestMethod]
         public void receivedPartialPacket()
         {
-            Packet packet1 = new TestNonActionPacket("Player1");
+            PlayerPacket packet1 = new TestNonActionPacket("Player1");
 
             int partialLengthReceived = 2;
             int length = WritePacketToReceivedBuffer(packet1, 0);
 
-            Queue<Packet> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(partialLengthReceived));
+            Queue<PlayerPacket> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(partialLengthReceived));
             Assert.AreEqual(0, packets.Count);
 
             messageBuffer.ReceivingBuffer = messageBuffer.ReceivingBuffer.Skip(partialLengthReceived).ToArray();
@@ -70,14 +70,14 @@ namespace NitroxTest.Model.Tcp
         [TestMethod]
         public void MultipleWithPartial()
         {
-            Packet packet1 = new TestNonActionPacket("Player1");
-            Packet packet2 = new TestNonActionPacket("Player2");
+            PlayerPacket packet1 = new TestNonActionPacket("Player1");
+            PlayerPacket packet2 = new TestNonActionPacket("Player2");
 
             int length = WritePacketToReceivedBuffer(packet1, 0);
             length = WritePacketToReceivedBuffer(packet2, length);
 
             int fullWithPartialLength = length / 2 + 20;
-            Queue<Packet> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(fullWithPartialLength));
+            Queue<PlayerPacket> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(fullWithPartialLength));
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet1.PlayerId, packets.Dequeue().PlayerId);
 
@@ -88,11 +88,11 @@ namespace NitroxTest.Model.Tcp
             Assert.AreEqual(packet2.PlayerId, packets.Dequeue().PlayerId);
         }
 
-        private Queue<Packet> GetResultingPackets(IEnumerable<Packet> packets)
+        private Queue<PlayerPacket> GetResultingPackets(IEnumerable<Packet> packets)
         {
-            Queue<Packet> results = new Queue<Packet>();
+            Queue<PlayerPacket> results = new Queue<PlayerPacket>();
 
-            foreach(Packet packet in packets)
+            foreach(PlayerPacket packet in packets)
             {
                 results.Enqueue(packet);
             }

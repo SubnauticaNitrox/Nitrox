@@ -37,7 +37,8 @@ namespace NitroxClient.MonoBehaviours
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
-            {typeof(ItemPosition), new ItemPositionProcessor() }
+            {typeof(ItemPosition), new ItemPositionProcessor() },
+            {typeof(TimeChange), new TimeChangeProcessor() }
         };
 
         public void Awake()
@@ -45,7 +46,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-
+            
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
