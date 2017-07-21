@@ -47,7 +47,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            ClientLogger.SetLogLocation(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
+            ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             this.gameObject.AddComponent<PlayerMovement>();
 
@@ -82,7 +82,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 else
                 {
-                    ClientLogger.DebugLine("No packet processor for the given type: " + packet.GetType());
+                    ClientLogger.Debug("No packet processor for the given type: " + packet.GetType());
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (client.IsConnected())
             {
-                ClientLogger.WriteLine("Already connected to a server");
+                ClientLogger.IngameMessage("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
@@ -109,7 +109,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                ClientLogger.WriteLine("Command syntax: mplayer USERNAME [SERVERIP]");
+                ClientLogger.IngameMessage("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -142,11 +142,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
-                ClientLogger.WriteLine("Connected to server");
+                ClientLogger.IngameMessage("Connected to server");
             }
             else
             {
-                ClientLogger.WriteLine("Unable to connect to server");
+                ClientLogger.IngameMessage("Unable to connect to server");
             }
         }
 

@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ChatMessage message)
         {
-            ClientLogger.WriteLine(message.PlayerId + ": " + message.Text);
+            ClientLogger.IngameMessage(message.PlayerId + ": " + message.Text);
         }
     }
 }

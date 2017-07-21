@@ -15,34 +15,40 @@ namespace NitroxClient.Logger
             ConsoleMessages = 2,
             ConsoleDebug = 4
         }
-        private static LogLevel logLocations = LogLevel.Disabled;
+        private static LogLevel logLevel = LogLevel.Disabled;
 
-        // Set with combinaition of enum -- setLogLocation(LOG_CONSOLE | LOG_ERRORMESSAGE)
-        public static void SetLogLocation(LogLevel location)
+        // Set with combinaition of enum -- setLogLevel(LOG_CONSOLE | LOG_ERRORMESSAGE)
+        public static void SetLogLevel(LogLevel location)
         {
-            ClientLogger.logLocations = location;
-            Console.WriteLine("Log location set to " + ClientLogger.logLocations);
+            ClientLogger.logLevel = location;
+            Console.WriteLine("[Nitrox] Log location set to " + ClientLogger.logLevel);
         }
 
-        public static void WriteLine(String msg)
+        // For in-game notifications
+        public static void IngameMessage(String msg)
         {
-            if ((logLocations & LogLevel.ConsoleMessages) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
-            {
-                Console.WriteLine(msg);
-            }
-            if ((logLocations & LogLevel.InGameMessages) != 0)
+            if ((logLevel & LogLevel.InGameMessages) != 0)
             {
                 ErrorMessage.AddMessage(msg);
+            }
+            Info(msg);
+        }
+
+        public static void Info(String msg)
+        {
+            if ((logLevel & LogLevel.ConsoleMessages) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
+            {
+                Console.WriteLine("[Nitrox] " + msg);
             }
         }
 
         // Only for debug prints. Should not be displayed to general user.
         // Should we print the calling method for this for more debug context?
-        public static void DebugLine(String msg)
+        public static void Debug(String msg)
         {
-            if ((logLocations & LogLevel.ConsoleDebug) != 0)
+            if ((logLevel & LogLevel.ConsoleDebug) != 0)
             {
-                Console.WriteLine(msg);
+                Console.WriteLine("[Nitrox] " + msg);
             }
         }
     }
