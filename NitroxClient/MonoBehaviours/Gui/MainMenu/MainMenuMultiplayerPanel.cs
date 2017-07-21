@@ -1,74 +1,13 @@
-﻿using NitroxModel.Helper;
-using NitroxClient.MonoBehaviours;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UWE;
-using NitroxClient.Communication;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
-    public class MultiplayerButton : MonoBehaviour
-    {
-        public void Awake()
-        {
-            MultiplayerMenuMods();
-        }
-
-        private void MultiplayerMenuMods()
-        {
-            GameObject startButton = GameObject.Find("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
-            GameObject showLoadedMultiplayer = Instantiate(startButton);
-            Text buttonText = showLoadedMultiplayer.transform.Find("Circle/Bar/Text").gameObject.GetComponent<Text>() as Text;
-            buttonText.text = "Multiplayer";
-            showLoadedMultiplayer.transform.SetParent(GameObject.Find("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons").transform, false);
-            showLoadedMultiplayer.transform.SetSiblingIndex(3);
-            Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
-            showLoadedMultiplayerButton.onClick.RemoveAllListeners();
-            showLoadedMultiplayerButton.onClick.AddListener(ShowMultiplayerMenu);
-
-            MainMenuRightSide rightSide = MainMenuRightSide.main;
-            GameObject savedGamesRef = FindObject(rightSide.gameObject, "SavedGames");
-            GameObject LoadedMultiplayer = Instantiate(savedGamesRef);
-            LoadedMultiplayer.name = "Multiplayer";
-            LoadedMultiplayer.transform.Find("Header").GetComponent<Text>().text = "Multiplayer";
-            Destroy(LoadedMultiplayer.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject);
-
-            MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
-            panel.savedGamesRef = savedGamesRef;
-            panel.loadedMultiplayerRef = LoadedMultiplayer;
-            
-            Destroy(LoadedMultiplayer.GetComponent<MainMenuLoadPanel>());
-            LoadedMultiplayer.transform.SetParent(rightSide.transform, false);
-            rightSide.groups.Add(LoadedMultiplayer);
-        }
-
-        private void ShowMultiplayerMenu()
-        {
-            MainMenuRightSide rightSide = MainMenuRightSide.main;
-            rightSide.OpenGroup("Multiplayer");
-        }
-
-        private GameObject FindObject(GameObject parent, string name)
-        {
-            Component[] trs = parent.GetComponentsInChildren(typeof(Transform), true);
-            foreach (Component t in trs)
-            {
-                if (t.name == name)
-                {
-                    return t.gameObject;
-                }
-            }
-            return null;
-        }
-    }
-
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
         public static readonly string SERVER_LIST_PATH = @".\servers";
@@ -185,50 +124,6 @@ namespace NitroxClient.MonoBehaviours
             {
                 HideNewServer();
             }
-        }
-    }
-
-    public class JoinServerScript : MonoBehaviour
-    {
-        public string serverIp = "";
-        string username = "username";
-        bool showingUsername = false;
-        public void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
-
-        public void Start()
-        {
-            showingUsername = true;
-        }
-
-        public void OnGUI()
-        {
-            if (!showingUsername)
-            {
-                return;
-            }
-            username = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 25, 500, 50), username);
-            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Add server"))
-            {
-                StartCoroutine(JoinServerWait(serverIp));
-                showingUsername = false;
-            }
-        }
-        
-        public IEnumerator JoinServerWait(string serverIp)
-        {
-            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, GameMode.Creative);
-            StartCoroutine(startNewGame);
-            //Wait until game starts
-            yield return new WaitUntil(() => LargeWorldStreamer.main != null);
-            yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
-            yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.PacketSender.PlayerId = username;
-            Multiplayer.main.StartMultiplayer(serverIp);
-            Multiplayer.main.InitMonoBehaviours();
-            Destroy(gameObject);
         }
     }
 }

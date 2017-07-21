@@ -89,7 +89,9 @@
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
-    <Compile Include="MonoBehaviours\MultiplayerButton.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MultiplayerButton.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
