@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections.Generic;
-using System.IO;
-using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 

@@ -10,9 +10,9 @@ namespace NitroxServer
         static void Main(string[] args)
         {
             try
-            { 
-                Listener listener = new Listener();
-                listener.Start();
+            {
+                Server server = new Server();
+                server.Start();
             }
             catch (Exception e)
             {

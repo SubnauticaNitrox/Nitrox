@@ -14,9 +14,8 @@ namespace NitroxServer
 {
     public class Listener
     {
-        // A ConcurrentMap will not protect against concurrency issues when
-        // iterating keys and adding/removing values. You need to lock the Map
-        // when you're using it at all, including iterating values.
+        public event EventHandler PlayerAuthenticated;
+
         private Dictionary<String, Player> playersById = new Dictionary<String, Player>();
         
         private HashSet<Type> packetForwardBlacklist;
@@ -28,6 +27,7 @@ namespace NitroxServer
             {
                 typeof(Authenticate)
             };
+
             loggingPacketBlackList = new HashSet<Type>
             {
                 typeof(AnimationChangeEvent),
@@ -63,7 +63,7 @@ namespace NitroxServer
         {
             Connection connection = (Connection)ar.AsyncState;
             
-            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
+            foreach(PlayerPacket packet in connection.GetPacketsFromRecievedData(ar))
             {
                 Player player = GetPlayer(packet, connection);
                 connection.PlayerId = player.Id;
@@ -87,23 +87,24 @@ namespace NitroxServer
             }
         }
 
-        private Player GetPlayer(Packet packet, Connection connection)
+        private Player GetPlayer(PlayerPacket packet, Connection connection)
         {
             Player player;
-
+            
             lock (playersById)
             {
                 if (!playersById.TryGetValue(packet.PlayerId, out player))
                 {
                     player = new Player(packet.PlayerId, connection);
                     playersById.Add(packet.PlayerId, player);
+                    PlayerAuthenticated(this, EventArgs.Empty);
                 }
             }
             
             return player;
         }
 
-        private void UpdatePlayerPosition(Player player, Packet packet)
+        private void UpdatePlayerPosition(Player player, PlayerPacket packet)
         {
             if (packet.GetType() == typeof(Movement))
             {
@@ -111,7 +112,7 @@ namespace NitroxServer
             }
         }
         
-        private void ForwardPacketToOtherPlayers(Packet packet, String sendingPlayerId)
+        private void ForwardPacketToOtherPlayers(PlayerPacket packet, String sendingPlayerId)
         {
             if (packetForwardBlacklist.Contains(packet.GetType()))
             {
@@ -154,9 +155,20 @@ namespace NitroxServer
                 lock (playersById)
                 {
                     playersById.Remove(PlayerId);
-                    Packet disconnectPacket = new Disconnect(PlayerId);
+                    PlayerPacket disconnectPacket = new Disconnect(PlayerId);
                     ForwardPacketToOtherPlayers(disconnectPacket, PlayerId);
                     Console.WriteLine("Player disconnected: " + PlayerId);
+                }
+            }
+        }
+
+        public void SendPacketToAllPlayers(Packet packet)
+        {
+            lock (playersById)
+            {
+                foreach (Player player in playersById.Values)
+                {
+                    player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));                    
                 }
             }
         }
