@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void JoinServer(string serverIp)
         {
-            new GameObject().AddComponent<JoinServerScript>().serverIp = serverIp;
+            new GameObject().AddComponent<JoinServer>().serverIp = serverIp;
         }
 
         public void CreateNewServer()
