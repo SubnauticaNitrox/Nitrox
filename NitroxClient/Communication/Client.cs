@@ -37,7 +37,7 @@ namespace NitroxClient.Communication
             }
             catch (Exception e)
             {
-                ClientLogger.DebugLine("Unforeseen error when connecting: " + e.GetBaseException());
+                ClientLogger.Debug("Unforeseen error when connecting: " + e.GetBaseException());
             }
         }
 
@@ -46,7 +46,7 @@ namespace NitroxClient.Communication
             connection.Close(); // Server will clean up pretty quickly
             Multiplayer.PacketSender.Active = false;
             Multiplayer.RemoveAllOtherPlayers();
-            ClientLogger.WriteLine("Disconnected from server.");
+            ClientLogger.IngameMessage("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -63,7 +63,7 @@ namespace NitroxClient.Communication
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             } else
             {
-                ClientLogger.DebugLine("Error reading data from server");
+                ClientLogger.Debug("Error reading data from server");
                 Stop();
             }
         }

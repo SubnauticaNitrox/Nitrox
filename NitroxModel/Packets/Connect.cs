@@ -6,7 +6,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class Connect : Packet
+    public class Connect : PlayerPacket
     {
         public Connect(String playerId) : base(playerId) { }
     }

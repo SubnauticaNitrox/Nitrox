@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(Disconnect disconnect)
         {
             remotePlayerManager.RemovePlayer(disconnect.PlayerId);
-            ClientLogger.WriteLine(disconnect.PlayerId + " disconnected");
+            ClientLogger.IngameMessage(disconnect.PlayerId + " disconnected");
         }
     }
 }

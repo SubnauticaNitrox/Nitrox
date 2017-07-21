@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(Connect connect)
         {
             // Future: Init new player here
-            ClientLogger.WriteLine(connect.PlayerId + " connected");
+            ClientLogger.IngameMessage(connect.PlayerId + " connected");
         }
     }
 }

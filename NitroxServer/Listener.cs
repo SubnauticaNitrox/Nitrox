@@ -54,20 +54,18 @@ namespace NitroxServer
             Socket socket = (Socket)ar.AsyncState;
 
             Connection connection = new Connection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
-            connection.BeginReceive(new AsyncCallback(dropPacketsUntilAuthentication));
             connection.BeginReceive(new AsyncCallback(DataReceived));
 
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
         }
 
-        private void dropPacketsUntilAuthentication(IAsyncResult ar)
+        public void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
-            bool authenticated = false;
 
-            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
+            foreach (PlayerPacket packet in connection.GetPacketsFromRecievedData(ar))
             {
-                if (authenticated)
+                if (connection.Authenticated)
                 {
                     ParsePacket(connection, packet);
                 }
@@ -78,9 +76,9 @@ namespace NitroxServer
                         Player player = GetPlayer(packet, connection);
                         connection.PlayerId = player.Id;
                         Console.WriteLine("Player authenticated: " + player.Id);
-                        Packet connectPacket = new Connect(packet.PlayerId);
+                        PlayerPacket connectPacket = new Connect(packet.PlayerId);
                         ForwardPacketToOtherPlayers(connectPacket, packet.PlayerId);
-                        authenticated = true;
+                        connection.Authenticated = true;
                     }
                     else
                     {
@@ -88,18 +86,7 @@ namespace NitroxServer
                     }
                 }
             }
-        }
-
-        public void DataReceived(IAsyncResult ar)
-        {
-            Connection connection = (Connection)ar.AsyncState;
-
-            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
-            {
-                ParsePacket(connection, packet);
-            }
-
-            if (connection.Open != false)
+            if (connection.Open)
             {
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             }
@@ -109,7 +96,7 @@ namespace NitroxServer
             }
         }
 
-        private void ParsePacket(Connection connection, Packet packet)
+        private void ParsePacket(Connection connection, PlayerPacket packet)
         {
             Player player = GetPlayer(packet, connection);
             connection.PlayerId = player.Id;
