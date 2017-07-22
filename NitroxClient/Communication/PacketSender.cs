@@ -97,12 +97,6 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void SendChatMessage(String text)
-        {
-            ChatMessage message = new ChatMessage(PlayerId, text);
-            Send(message);
-        }
-
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
         {
             AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerId, (int)type, (int)state);

@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours
                     text += word + " ";
                 }
 
-                Multiplayer.PacketSender.SendChatMessage(text);
+                Multiplayer.Logic.Chat.SendChatMessage(text);
                 ErrorMessage.AddMessage("Me: " + text);
             }
         }

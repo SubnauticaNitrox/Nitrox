@@ -75,6 +75,7 @@
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
+    <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />

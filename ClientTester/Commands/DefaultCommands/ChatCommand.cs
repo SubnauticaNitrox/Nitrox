@@ -23,11 +23,11 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args.Length >= 2)
             {
-                client.PacketSender.SendChatMessage(String.Join(" ", args)); //does not support double spaces!
+                client.Logic.Chat.SendChatMessage(String.Join(" ", args)); //does not support double spaces!
             }
             else
             {
-                client.PacketSender.SendChatMessage(args[0]);
+                client.Logic.Chat.SendChatMessage(args[0]);
             }
         }
     }
