@@ -17,6 +17,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static Logic Logic;
         public static PacketSender PacketSender; //TODO: migrate logic out of and remove as member variable
+        public static Multiplayer main;
         private static LoadedChunks loadedChunks;
         private static TcpClient client;
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
@@ -46,7 +47,8 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            
+
+            main = this;
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
@@ -135,7 +137,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private void StartMultiplayer(String ipAddress)
+        public void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
             PacketSender.Active = true;

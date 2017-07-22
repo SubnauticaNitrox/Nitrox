@@ -39,6 +39,9 @@
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="iTween">
       <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
     </Reference>
@@ -86,6 +89,9 @@
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MultiplayerButton.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
