@@ -4,7 +4,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class MovementProcessor : GenericPacketProcessor<Movement>
+    public class MovementProcessor : ClientPacketProcessor<Movement>
     {
         private PlayerGameObjectManager playerGameObjectManager;
 

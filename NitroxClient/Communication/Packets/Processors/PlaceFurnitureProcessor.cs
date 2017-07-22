@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class PlaceFurnitureProcessor : GenericPacketProcessor<PlaceFurniture>
+    public class PlaceFurnitureProcessor : ClientPacketProcessor<PlaceFurniture>
     {
         private static GameObject otherPlayerCamera;
 

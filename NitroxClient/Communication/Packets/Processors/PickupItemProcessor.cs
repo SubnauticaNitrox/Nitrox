@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class PickupItemProcessor : GenericPacketProcessor<PickupItem>
+    public class PickupItemProcessor : ClientPacketProcessor<PickupItem>
     {
         public override void Process(PickupItem pickup)
         {

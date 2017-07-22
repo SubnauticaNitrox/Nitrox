@@ -1,9 +1,9 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace NitroxClient.MonoBehaviours
                     try
                     {
                         PacketProcessor processor = packetProcessorsByType[packet.GetType()];
-                        processor.ProcessPacket(packet);
+                        processor.ProcessPacket(packet, null);
                     }
                     catch(Exception ex)
                     {

@@ -11,7 +11,7 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class ConstructorBeginCraftingProcessor : GenericPacketProcessor<ConstructorBeginCrafting>
+    public class ConstructorBeginCraftingProcessor : ClientPacketProcessor<ConstructorBeginCrafting>
     {
         public static GameObject ConstructedObject;
 
