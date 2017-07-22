@@ -1,9 +1,7 @@
-﻿using ClientTester;
-using ClientTester.Commands.DefaultCommands;
+﻿using ClientTester.Commands.DefaultCommands;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
