@@ -1,8 +1,4 @@
-﻿using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -26,7 +22,7 @@ namespace NitroxClient.MonoBehaviours
                     text += word + " ";
                 }
 
-                Multiplayer.PacketSender.SendChatMessage(text);
+                Multiplayer.Logic.Chat.SendChatMessage(text);
                 ErrorMessage.AddMessage("Me: " + text);
             }
         }
