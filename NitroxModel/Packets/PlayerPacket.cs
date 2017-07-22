@@ -3,11 +3,11 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public abstract class PlayerPacket : Packet
+    public abstract class AuthenticatedPacket : Packet
     {
         public String PlayerId { get; protected set; }
 
-        public PlayerPacket(String playerId)
+        public AuthenticatedPacket(String playerId)
         {
             this.PlayerId = playerId;
         }

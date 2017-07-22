@@ -4,7 +4,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class DisconnectProcessor : GenericPacketProcessor<Disconnect>
+    class DisconnectProcessor : ClientPacketProcessor<Disconnect>
     {
         private PlayerGameObjectManager playerGameObjectManager;
 

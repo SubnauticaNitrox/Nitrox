@@ -22,5 +22,21 @@ namespace NitroxModel.Helper
                 throw new ArgumentNullException(message);
             }
         }
+
+        public static void IsFalse(bool b)
+        {
+            if (b)
+            {
+                throw new ArgumentNullException();
+            }
+        }
+
+        public static void IsFalse(bool b, String message)
+        {
+            if (b)
+            {
+                throw new ArgumentNullException(message);
+            }
+        }
     }
 }

@@ -1,11 +1,12 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using System;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class AuthenticatePacketProcessor : GenericServerPacketProcessor<Authenticate>
+    public class AuthenticatePacketProcessor : UnauthenticatedPacketProcessor<Authenticate>
     {
         private TcpServer tcpServer;
         private TimeKeeper timeKeeper;
@@ -16,10 +17,14 @@ namespace NitroxServer.Communication.Packets.Processors
             this.timeKeeper = timeKeeper;
         }
 
-        public override void Process(Authenticate packet, Player player)
+        public override void Process(Authenticate packet, PlayerConnection connection)
         {
             Console.WriteLine("sending time: " + timeKeeper.GetCurrentTime());
-            tcpServer.SendPacketToAllPlayers(new TimeChange(timeKeeper.GetCurrentTime()));
+
+            Player player = new Player(packet.PlayerId);
+
+            tcpServer.PlayerAuthenticated(player, connection);
+            tcpServer.SendPacketToPlayer(new TimeChange(timeKeeper.GetCurrentTime()), player);
         }
     }
 }

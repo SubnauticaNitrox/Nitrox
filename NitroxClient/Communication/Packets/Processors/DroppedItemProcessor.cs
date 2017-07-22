@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class DroppedItemProcessor : GenericPacketProcessor<DroppedItem>
+    class DroppedItemProcessor : ClientPacketProcessor<DroppedItem>
     {
         public override void Process(DroppedItem drop)
         {

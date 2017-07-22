@@ -4,7 +4,7 @@ using System;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public abstract class PlayerActionPacket : PlayerPacket
+    public abstract class PlayerActionPacket : AuthenticatedPacket
     {
         public Vector3 ActionPosition { get; protected set; }
         public bool PlayerMustBeInRangeToReceive { get; protected set; }

@@ -6,7 +6,7 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class Disconnect : PlayerPacket
+    public class Disconnect : AuthenticatedPacket
     {
         public Disconnect(String playerId) : base(playerId) {}
     }
