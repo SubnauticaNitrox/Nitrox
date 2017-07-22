@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.Tcp;
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -16,17 +17,19 @@ namespace NitroxModel.Packets
             {
                 //place holder for size, will be filled in later... allows us
                 //to avoid doing a byte array merge... zomg premature optimization
-                ms.Write(new Byte[] { 0x00, 0x00 }, 0, 2);
+                ms.Write(new Byte[MessageBuffer.HEADER_BYTE_SIZE], 0, MessageBuffer.HEADER_BYTE_SIZE);
                 bf.Serialize(ms, this);
                 packetData = ms.ToArray();
             }
 
-            Int16 packetSize = (Int16)(packetData.Length - 2); // subtract 2 because we dont want to take into account the added bytes
+            int packetSize = packetData.Length - MessageBuffer.HEADER_BYTE_SIZE; // subtract HEADER_BYTE_SIZE because we dont want to take into account the added bytes
             byte[] packetSizeBytes = BitConverter.GetBytes(packetSize);
 
             //premature optimization continued :)
-            packetData[0] = packetSizeBytes[0];
-            packetData[1] = packetSizeBytes[1];
+            for(int i = 0; i < MessageBuffer.HEADER_BYTE_SIZE; i++)
+            {
+                packetData[i] = packetSizeBytes[i];
+            }
 
             return packetData;
         }
