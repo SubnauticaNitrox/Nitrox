@@ -41,8 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Packets\Processors\Abstract\GenericServerPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\Abstract\ServerPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\AuthenticatePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
-    <Compile Include="Listener.cs" />
+    <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

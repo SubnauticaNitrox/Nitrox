@@ -1,44 +1,30 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
+using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.Communication.Packets.Processors;
 
-namespace NitroxServer
+namespace NitroxServer.Communication
 {
-    public class Listener
+    public class TcpServer
     {
-        public event EventHandler PlayerAuthenticated;
-
-        private Dictionary<String, Player> playersById = new Dictionary<String, Player>();
+        private Dictionary<String, Player> playersById;
+        private Dictionary<Type, ServerPacketProcessor> packetProcessorsByType;
+        private DefaultServerPacketProcessor defaultPacketProcessor;
         
-        private HashSet<Type> packetForwardBlacklist;
-        private HashSet<Type> loggingPacketBlackList;
-
-        public Listener()
+        public TcpServer()
         {
-            packetForwardBlacklist = new HashSet<Type>
-            {
-                typeof(Authenticate)
-            };
-
-            loggingPacketBlackList = new HashSet<Type>
-            {
-                typeof(AnimationChangeEvent),
-                typeof(Movement),
-                typeof(VehicleMovement),
-                typeof(ItemPosition)
-            };
+            this.playersById = new Dictionary<String, Player>();
+            this.defaultPacketProcessor = new DefaultServerPacketProcessor(this);
         }
 
-        public void Start()
+        public void Start(Dictionary<Type, ServerPacketProcessor> packetProcessorsByType)
         {
+            this.packetProcessorsByType = packetProcessorsByType;
+
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
@@ -69,15 +55,17 @@ namespace NitroxServer
                 connection.PlayerId = player.Id;
                 UpdatePlayerPosition(player, packet);
 
-                if (!loggingPacketBlackList.Contains(packet.GetType()))
+                if(packetProcessorsByType.ContainsKey(packet.GetType()))
                 {
-                    Console.WriteLine("Received packet from socket: " + packet.ToString() + " for player " + player.Id);
+                    packetProcessorsByType[packet.GetType()].ProcessPacket(packet, player);
                 }
-
-                ForwardPacketToOtherPlayers(packet, player.Id);
+                else
+                {
+                    defaultPacketProcessor.ProcessPacket(packet, player);
+                }
             }
 
-            if (connection.Open != false)
+            if (connection.Open)
             {
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             }
@@ -97,7 +85,6 @@ namespace NitroxServer
                 {
                     player = new Player(packet.PlayerId, connection);
                     playersById.Add(packet.PlayerId, player);
-                    PlayerAuthenticated(this, EventArgs.Empty);
                 }
             }
             
@@ -109,25 +96,6 @@ namespace NitroxServer
             if (packet.GetType() == typeof(Movement))
             {
                 player.Position = ((Movement)packet).PlayerPosition;
-            }
-        }
-        
-        private void ForwardPacketToOtherPlayers(PlayerPacket packet, String sendingPlayerId)
-        {
-            if (packetForwardBlacklist.Contains(packet.GetType()))
-            {
-                return;
-            }
-
-            lock (playersById)
-            {
-                foreach (Player player in playersById.Values)
-                {
-                    if (player.Id != sendingPlayerId && player.Connection.Open)
-                    {
-                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
-                    }
-                }
             }
         }
 
@@ -156,7 +124,7 @@ namespace NitroxServer
                 {
                     playersById.Remove(PlayerId);
                     PlayerPacket disconnectPacket = new Disconnect(PlayerId);
-                    ForwardPacketToOtherPlayers(disconnectPacket, PlayerId);
+                    SendPacketToAllPlayersExcludingOne(disconnectPacket, PlayerId);
                     Console.WriteLine("Player disconnected: " + PlayerId);
                 }
             }
@@ -167,8 +135,25 @@ namespace NitroxServer
             lock (playersById)
             {
                 foreach (Player player in playersById.Values)
+                { 
+                    if(player.Connection.Open)
+                    {                         
+                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    }                
+                }
+            }
+        }
+
+        public void SendPacketToAllPlayersExcludingOne(Packet packet, String excludeId)
+        {
+            lock (playersById)
+            {
+                foreach (Player player in playersById.Values)
                 {
-                    player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));                    
+                    if (player.Id != excludeId && player.Connection.Open)
+                    {
+                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    }
                 }
             }
         }
