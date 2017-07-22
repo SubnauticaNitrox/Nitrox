@@ -46,6 +46,8 @@
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\PlayerPacket.cs" />
+    <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
+    <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ServerInformation.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />

@@ -5,7 +5,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class TimeChangeProcessor : GenericPacketProcessor<TimeChange>
+    public class TimeChangeProcessor : ClientPacketProcessor<TimeChange>
     {
         public override void Process(TimeChange timeChangePacket)
         {

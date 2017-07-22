@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class ItemPositionProcessor : GenericPacketProcessor<ItemPosition>
+    class ItemPositionProcessor : ClientPacketProcessor<ItemPosition>
     {
         private const float ITEM_TRANSFORM_SMOOTH_PERIOD = 0.25f;
         

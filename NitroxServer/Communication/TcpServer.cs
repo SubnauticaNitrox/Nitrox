@@ -4,26 +4,23 @@ using System.Net.Sockets;
 using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
-using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets;
 
 namespace NitroxServer.Communication
 {
     public class TcpServer
     {
-        private Dictionary<String, Player> playersById;
-        private Dictionary<Type, ServerPacketProcessor> packetProcessorsByType;
-        private DefaultServerPacketProcessor defaultPacketProcessor;
-        
+        private PacketHandler packetHandler;        
+        private Dictionary<Player, Connection> connectionsByPlayer;
+                
         public TcpServer()
         {
-            this.playersById = new Dictionary<String, Player>();
-            this.defaultPacketProcessor = new DefaultServerPacketProcessor(this);
+            this.connectionsByPlayer = new Dictionary<Player, Connection>();
         }
 
-        public void Start(Dictionary<Type, ServerPacketProcessor> packetProcessorsByType)
+        public void Start(PacketHandler packetHandler)
         {
-            this.packetProcessorsByType = packetProcessorsByType;
+            this.packetHandler = packetHandler;
 
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
@@ -38,8 +35,8 @@ namespace NitroxServer.Communication
             Console.WriteLine("New client connected");
 
             Socket socket = (Socket)ar.AsyncState;
-            
-            Connection connection = new Connection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
+
+            PlayerConnection connection = new PlayerConnection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
             connection.BeginReceive(new AsyncCallback(DataReceived));
 
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
@@ -47,21 +44,24 @@ namespace NitroxServer.Communication
 
         public void DataReceived(IAsyncResult ar)
         {
-            Connection connection = (Connection)ar.AsyncState;
+            PlayerConnection connection = (PlayerConnection)ar.AsyncState;
             
-            foreach(PlayerPacket packet in connection.GetPacketsFromRecievedData(ar))
+            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                Player player = GetPlayer(packet, connection);
-                connection.PlayerId = player.Id;
-                UpdatePlayerPosition(player, packet);
-
-                if(packetProcessorsByType.ContainsKey(packet.GetType()))
+                try
                 {
-                    packetProcessorsByType[packet.GetType()].ProcessPacket(packet, player);
+                    if (connection.Player == null)
+                    {
+                        packetHandler.ProcessUnauthenticated(packet, connection);
+                    }
+                    else
+                    {
+                        packetHandler.ProcessAuthenticated(packet, connection.Player);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    defaultPacketProcessor.ProcessPacket(packet, player);
+                    Console.WriteLine("Exception while processing packet: " + packet + " " + ex);
                 }
             }
 
@@ -71,31 +71,7 @@ namespace NitroxServer.Communication
             }
             else
             {
-                PlayerDisconnected(connection.PlayerId);
-            }
-        }
-
-        private Player GetPlayer(PlayerPacket packet, Connection connection)
-        {
-            Player player;
-            
-            lock (playersById)
-            {
-                if (!playersById.TryGetValue(packet.PlayerId, out player))
-                {
-                    player = new Player(packet.PlayerId, connection);
-                    playersById.Add(packet.PlayerId, player);
-                }
-            }
-            
-            return player;
-        }
-
-        private void UpdatePlayerPosition(Player player, PlayerPacket packet)
-        {
-            if (packet.GetType() == typeof(Movement))
-            {
-                player.Position = ((Movement)packet).PlayerPosition;
+                PlayerDisconnected(connection);
             }
         }
 
@@ -116,45 +92,78 @@ namespace NitroxServer.Communication
             }
         }
 
-        private void PlayerDisconnected(String PlayerId)
+        private void PlayerDisconnected(PlayerConnection connection)
         {
-            if (PlayerId != null)
+            Player player = connection.Player;
+
+            if (player != null)
             {
-                lock (playersById)
+                lock(connectionsByPlayer)
                 {
-                    playersById.Remove(PlayerId);
-                    PlayerPacket disconnectPacket = new Disconnect(PlayerId);
-                    SendPacketToAllPlayersExcludingOne(disconnectPacket, PlayerId);
-                    Console.WriteLine("Player disconnected: " + PlayerId);
+                    connectionsByPlayer.Remove(player);
                 }
+
+                Disconnect disconnectPacket = new Disconnect(player.Id);
+                SendPacketToAllPlayers(disconnectPacket);
+                Console.WriteLine("Player disconnected: " + player.Id);
+            }
+        }
+
+        public void SendPacketToPlayer(Packet packet, Player player)
+        {
+            Connection connection;
+
+            lock (connectionsByPlayer)
+            {
+                connection = connectionsByPlayer[player];
+            }
+
+            SendPacketToConnection(packet, connection);
+        }
+
+        public void SendPacketToConnection(Packet packet, Connection connection)
+        {
+            if (connection.Open)
+            {
+                connection.SendPacket(packet, new AsyncCallback(SendCompleted));
             }
         }
 
         public void SendPacketToAllPlayers(Packet packet)
         {
-            lock (playersById)
+            lock (connectionsByPlayer)
             {
-                foreach (Player player in playersById.Values)
+                foreach (Connection connection in connectionsByPlayer.Values)
                 { 
-                    if(player.Connection.Open)
-                    {                         
-                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    if(connection.Open)
+                    {
+                        connection.SendPacket(packet, new AsyncCallback(SendCompleted));
                     }                
                 }
             }
         }
 
-        public void SendPacketToAllPlayersExcludingOne(Packet packet, String excludeId)
+        public void SendPacketToOtherPlayers(Packet packet, Player sendingPlayer)
         {
-            lock (playersById)
+            lock (connectionsByPlayer)
             {
-                foreach (Player player in playersById.Values)
+                foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
                 {
-                    if (player.Id != excludeId && player.Connection.Open)
+                    if (connectWithPlayer.Key != sendingPlayer && connectWithPlayer.Value.Open)
                     {
-                        player.Connection.SendPacket(packet, new AsyncCallback(SendCompleted));
+                        connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
                     }
                 }
+            }
+        }
+
+        public void PlayerAuthenticated(Player player, PlayerConnection connection)
+        {
+            connection.Player = player;
+
+            lock (connectionsByPlayer)
+            {
+                connectionsByPlayer[player] = connection;
             }
         }
     }

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class ConstructionCompletedProcessor : GenericPacketProcessor<ConstructionCompleted>
+    public class ConstructionCompletedProcessor : ClientPacketProcessor<ConstructionCompleted>
     {
         public override void Process(ConstructionCompleted completedPacket)
         {

@@ -66,14 +66,13 @@
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceFurnitureProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\Abstract\GenericPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\Building.cs" />

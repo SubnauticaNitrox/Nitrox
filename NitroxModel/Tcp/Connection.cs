@@ -1,13 +1,13 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 
 namespace NitroxModel.Tcp
 {
-    public class Connection
+    public class Connection : IProcessorContext
     {
-        public String PlayerId { get; set; }
         private Socket Socket;
         private MessageBuffer MessageBuffer;
         public bool Open { get; private set; }

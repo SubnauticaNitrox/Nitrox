@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class VehicleMovementProcessor : GenericPacketProcessor<VehicleMovement>
+    public class VehicleMovementProcessor : ClientPacketProcessor<VehicleMovement>
     {
         private const float VEHICLE_TRANSFORM_SMOOTH_PERIOD = 0.05f;
         

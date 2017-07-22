@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class DefaultServerPacketProcessor : GenericServerPacketProcessor<Packet>
+    public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<AuthenticatedPacket>
     {
         private TcpServer tcpServer;
 
@@ -21,14 +21,14 @@ namespace NitroxServer.Communication.Packets.Processors
             this.tcpServer = tcpServer;
         }
 
-        public override void Process(Packet packet, Player player)
+        public override void Process(AuthenticatedPacket packet, Player player)
         {
             if (!loggingPacketBlackList.Contains(packet.GetType()))
             {
                 Console.WriteLine("Using default packet processor for : " + packet.ToString() + " and player " + player.Id);
             }
 
-            tcpServer.SendPacketToAllPlayersExcludingOne(packet, player.Id);
+            tcpServer.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

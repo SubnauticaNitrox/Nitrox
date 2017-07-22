@@ -5,7 +5,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class AnimationProcessor : GenericPacketProcessor<AnimationChangeEvent>
+    public class AnimationProcessor : ClientPacketProcessor<AnimationChangeEvent>
     {
         private PlayerGameObjectManager playerGameObjectManager;
 

@@ -1,23 +1,17 @@
 ﻿using NitroxModel.DataStructures;
-using NitroxModel.Packets;
-using NitroxModel.Tcp;
+using NitroxModel.Packets.Processors.Abstract;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NitroxServer
 {
-    public class Player
+    public class Player : IProcessorContext
     {
         public String Id { get; private set; }
-        public Connection Connection { get; private set; }
         public Vector3 Position { get; set; }
 
-        public Player(String id, Connection connection)
+        public Player(String id)
         {
             this.Id = id;
-            this.Connection = connection;
         }
     }
 }
