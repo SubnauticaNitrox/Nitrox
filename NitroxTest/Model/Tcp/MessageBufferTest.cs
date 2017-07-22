@@ -54,7 +54,7 @@ namespace NitroxTest.Model.Tcp
         {
             PlayerPacket packet1 = new TestNonActionPacket("Player1");
 
-            int partialLengthReceived = 2;
+            int partialLengthReceived = MessageBuffer.HEADER_BYTE_SIZE;
             int length = WritePacketToReceivedBuffer(packet1, 0);
 
             Queue<PlayerPacket> packets = GetResultingPackets(messageBuffer.GetReceivedPackets(partialLengthReceived));

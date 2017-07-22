@@ -10,16 +10,18 @@ namespace NitroxModel.Tcp
 {
     public class MessageBuffer
     {
-        public const int HEADER_BYTE_SIZE = 2;
+        public const int HEADER_BYTE_SIZE = 3;
         public const int RECEIVING_BUFFER_SIZE = 8192;
-        public const int MESSAGE_CONSTRUCTING_BUFFER_SIZE = Int16.MaxValue;
+        public const int MESSAGE_CONSTRUCTING_BUFFER_SIZE = 1000000; // 1MB
         
         public byte[] ReceivingBuffer { get; set; }
 
         private byte[] MessageConstructingBuffer;
         private int MessageConstructingBufferPointer = 0;
-        private Int16 CurrentPacketLength = 0;
-        private byte TruncatedLengthByte = 0;
+        private int CurrentPacketLength = 0;
+
+        private int nextPacketHeaderBytesRead = 0;
+        private byte[] nextPacketHeaderBytes = new byte[4];
 
         private IFormatter formatter = new BinaryFormatter();
         
@@ -35,18 +37,22 @@ namespace NitroxModel.Tcp
 
             if(ReadingHeaderData(receivedDataLength))
             {
-                if(TruncatedLengthByte != 0)
+                if(nextPacketHeaderBytesRead != 0)
                 {
-                    CurrentPacketLength = (short)((BitConverter.ToInt16(ReceivingBuffer, 0) << 8) + TruncatedLengthByte);
-                    headerOffset = HEADER_BYTE_SIZE - 1;
+                    for(int i = nextPacketHeaderBytesRead; i < HEADER_BYTE_SIZE; i++)
+                    {
+                        nextPacketHeaderBytes[i] = ReceivingBuffer[i - nextPacketHeaderBytesRead];
+                    }
+
+                    CurrentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
+                    headerOffset = HEADER_BYTE_SIZE - nextPacketHeaderBytesRead;
                 }
                 else
                 {
                     CurrentPacketLength = BitConverter.ToInt16(ReceivingBuffer, 0);
                     headerOffset = HEADER_BYTE_SIZE;
                 }
-                
-                TruncatedLengthByte = 0;
+                nextPacketHeaderBytesRead = 0;
             }
 
             for (int i = headerOffset; i < receivedDataLength; i++)
@@ -64,19 +70,24 @@ namespace NitroxModel.Tcp
 
                     CurrentPacketLength = 0;
                     MessageConstructingBufferPointer = 0;
+                    nextPacketHeaderBytesRead = 0;
 
                     // Check to see if this message contains the header for the next message
-                    if ((i + 2) < receivedDataLength)
+                    for (int nextPacketHeaderIndex = 1; nextPacketHeaderIndex <= HEADER_BYTE_SIZE; nextPacketHeaderIndex++)
                     {
-                        //if so, set it and make i skip it.
-                        CurrentPacketLength = BitConverter.ToInt16(ReceivingBuffer, i + 1);
-                        TruncatedLengthByte = 0;
-                        i += 2;
+                        if((nextPacketHeaderIndex + i) < receivedDataLength)
+                        {
+                            nextPacketHeaderBytes[nextPacketHeaderIndex - 1] = ReceivingBuffer[i + nextPacketHeaderIndex];
+                            nextPacketHeaderBytesRead++;
+                        }
                     }
-                    else if((i + 1) < receivedDataLength) //maybe it contains a partial header?
+
+                    i += nextPacketHeaderBytesRead;
+
+                    if (nextPacketHeaderBytesRead == HEADER_BYTE_SIZE)
                     {
-                        TruncatedLengthByte = ReceivingBuffer[i + 1];
-                        i++;
+                        CurrentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
+                        nextPacketHeaderBytesRead = 0;
                     }
                 }
             }
