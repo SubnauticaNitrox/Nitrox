@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
             
             this.authenticatedPacketProcessorsByType = new Dictionary<Type, PacketProcessor>() {
-                {typeof(Movement), new MovementPacketProcessor() },
+                {typeof(Movement), new MovementPacketProcessor(tcpServer) },
             };
 
             this.unauthenticatedPacketProcessorsByType = new Dictionary<Type, PacketProcessor>() {
