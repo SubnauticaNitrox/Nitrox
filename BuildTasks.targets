@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- Changes can be unstaged from git using git checkout **/AssemblyInfo.cs (should find something better though) -->
+  <UsingTask
+    TaskName="TransformVersionTask"
+    TaskFactory="CodeTaskFactory"
+    AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll" >
+    <ParameterGroup>
+      <AssemblyFile ParameterType="System.String" Required="true" />
+    </ParameterGroup>
+    <Task>
+      <Using Namespace="System"/>
+      <Using Namespace="System.IO"/>
+      <Code Type="Fragment" Language="cs">
+        <![CDATA[
+File.WriteAllLines(AssemblyFile, File.ReadAllLines(AssemblyFile).Select(line =>
+{
+    if (line.Contains("AssemblyVersion(") && !line.StartsWith("//"))
+        return string.Format("[assembly: AssemblyVersion(\"1.0.0.{0}\")]", (DateTime.UtcNow - new DateTime(2017, 7, 19)).TotalSeconds.ToString().Substring(0, 5));
+    else
+        return line;
+}).ToArray());
+        ]]>
+      </Code>
+    </Task>
+  </UsingTask>
+
+  <Target Name="VersionTask" BeforeTargets="BeforeBuild">
+    <TransformVersionTask AssemblyFile="$(ProjectDir)Properties\AssemblyInfo.cs"/>
+  </Target>
+</Project>
