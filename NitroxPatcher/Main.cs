@@ -22,6 +22,7 @@ namespace NitroxPatcher
             new ConstructorInput_Craft_Patch(),
             new ConstructorInput_OnCraftingBegin_Patch(),
             new Constructable_Construct_Patch(),
+            new MedicalCabinet_OnHandClick_Patch(),
             new BaseGhost_Finish_Patch(),
             new uGUI_MainMenu_Start_Patch()
         };
