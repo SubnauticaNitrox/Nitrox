@@ -59,6 +59,7 @@
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
@@ -72,13 +73,14 @@
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Logic.cs" />
+    <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />

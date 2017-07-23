@@ -36,6 +36,7 @@ namespace NitroxClient.MonoBehaviours
             {typeof(Disconnect), new DisconnectProcessor(playerGameObjectManager) },
             {typeof(DroppedItem), new DroppedItemProcessor() },
             {typeof(Movement), new MovementProcessor(playerGameObjectManager) },
+            {typeof(MedicalCabinetClicked), new MedicalCabinetClickedProcessor() },
             {typeof(PickupItem), new PickupItemProcessor() },
             {typeof(VehicleMovement), new VehicleMovementProcessor(playerGameObjectManager) },
             {typeof(ItemPosition), new ItemPositionProcessor() },
