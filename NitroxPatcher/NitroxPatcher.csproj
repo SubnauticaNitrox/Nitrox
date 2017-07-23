@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -32,9 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
+  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>.\0Harmony.dll</HintPath>
@@ -102,17 +99,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Target Name="Deploy" AfterTargets="Build">
-    <!--Get outputs from referenced projects, instead of hardcoding them.-->
-    <MSBuild Projects="@(ProjectReference)" Targets="Build" BuildInParallel="true" Condition="'%(Name)'=='NitroxClient' Or '%(Name)'=='NitroxModel' Or %(Name) == 'NitroxReloader'">
-      <Output TaskParameter="TargetOutputs" ItemName="CompiledAssemblies" />
-    </MSBuild>
-    <ItemGroup>
-      <CompiledAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
-      <CompiledAssemblies Include="$(OutputPath)\0Harmony.dll" />
-    </ItemGroup>
-    <Message Text="Copying library files to: $(SubnauticaManaged)" />
-    <Message Text="@(CompiledAssemblies)" />
-    <Copy SourceFiles="@(CompiledAssemblies)" DestinationFolder="$(SubnauticaManaged)" Retries="0" ContinueOnError="true" />
-  </Target>
 </Project>

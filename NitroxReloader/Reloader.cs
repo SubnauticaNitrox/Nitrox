@@ -29,6 +29,7 @@ namespace NitroxReloader
         // Most notably test properties (maybe this breaks with autoproperties).
         // TODO: See if method-size is an easy thing. If so, code could be copied but is slower.
         // TODO: Figure out assembly unloading.
+        // TODO: Add reloader to server as well (only thing to reload so far is NitroxModel though)
 
         private Dictionary<string, MethodInfo> reloadableMethods;
 
