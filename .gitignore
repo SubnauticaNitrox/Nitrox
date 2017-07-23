@@ -5,6 +5,7 @@
 
 # Nitrox-specific files
 DevVars.targets
+NitroxReloader/ReloaderSettings.cs
 
 # User-specific files
 *.suo

@@ -55,12 +55,9 @@ namespace NitroxReloader
             }).Where(ra => ra.HasReloadableMethods)
             .ToDictionary(ra => ra.AssemblyName, null);
 
-            // TODO: Change this. Probably by another BeforeBuild task.
-            var managedFolder = @"D:\Users\marij\Documents\code\VSProjects\Nitrox\bin\Debug";
-            //Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var watcher = new FileSystemWatcher()
             {
-                Path = managedFolder,
+                Path = ReloaderSettings.Path,
                 Filter = "*.dll",
                 NotifyFilter = NotifyFilters.CreationTime
                 | NotifyFilters.LastWrite
@@ -77,7 +74,7 @@ namespace NitroxReloader
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine("Reloader: set up to watch " + managedFolder);
+            Console.WriteLine("Reloader: set up to watch " + ReloaderSettings.Path);
         }
 
         private class ReloadableAssembly

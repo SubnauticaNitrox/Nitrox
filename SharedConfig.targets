@@ -34,6 +34,7 @@
     <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
   </PropertyGroup>
 
+  <Import Project="$(SolutionDir)PreBuildTasks.targets" />
   <!-- Contains build tasks (such as deploy) that should only be done once.
        In this case by the 'top-most' project, which is the patcher. -->
   <Import Project="$(SolutionDir)FinalBuildTasks.targets" Condition="'$(MSBuildProjectName)' == 'NitroxPatcher'" />
