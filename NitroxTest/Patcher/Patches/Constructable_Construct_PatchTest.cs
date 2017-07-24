@@ -9,26 +9,25 @@ using System.Linq;
 namespace NitroxTest.Patcher.Patches
 {
     [TestClass]
-    public class Constructable_Construct_PatchTest
+    public class Equipment_RemoveItem_PatchTest
     {
         [TestMethod]
         public void Sanity()
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
-            instructions.Add(new CodeInstruction(Constructable_Construct_Patch.AMOUNT_CHANGED_INJECTION_OPCODE, Constructable_Construct_Patch.AMOUNT_CHANGED_INJECTION_OPERAND));
-            instructions.Add(new CodeInstruction(Constructable_Construct_Patch.CONSTRUCTION_COMPLETE_INJECTION_OPCODE, Constructable_Construct_Patch.CONSTRUCTION_COMPLETE_INJECTION_OPERAND));
+            instructions.Add(new CodeInstruction(Equipment_RemoveItem_Patch.INJECTION_OPCODE, null));
 
-            IEnumerable<CodeInstruction> result = Constructable_Construct_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(114, result.Count());
+            IEnumerable<CodeInstruction> result = Equipment_RemoveItem_Patch.Transpiler(null, instructions);
+            Assert.AreEqual(109, result.Count());
         }
 
         [TestMethod]
         public void InjectionSanity()
         {
-            MethodInfo targetMethod = AccessTools.Method(typeof(Constructable), "Construct");
-            List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
+            List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(Equipment_RemoveItem_Patch.TARGET_METHOD);
 
-            IEnumerable<CodeInstruction> result = Constructable_Construct_Patch.Transpiler(targetMethod, beforeInstructions);
+            IEnumerable<CodeInstruction> result = ClipMapManager_ShowEntities_Patch.Transpiler(Equipment_RemoveItem_Patch.TARGET_METHOD, beforeInstructions);
+
             Assert.IsTrue(beforeInstructions.Count < result.Count());
         }
     }

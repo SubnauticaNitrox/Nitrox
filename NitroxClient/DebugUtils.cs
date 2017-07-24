@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -26,6 +24,20 @@ namespace NitroxClient
         public static void DumpComponent(Component component, string indent)
         {
             Console.WriteLine("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
+        }
+
+        public static String ByteArrayToHexString(byte[] bytes)
+        {
+            StringBuilder hex = new StringBuilder(bytes.Length * 2);
+
+            foreach (byte b in bytes)
+            {
+                hex.Append("0x");
+                hex.Append(b.ToString("X2"));
+                hex.Append(" ");
+            }
+
+            return hex.ToString();
         }
     }
 }

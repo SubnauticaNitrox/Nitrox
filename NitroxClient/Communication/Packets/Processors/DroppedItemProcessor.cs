@@ -5,28 +5,19 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class DroppedItemProcessor : ClientPacketProcessor<DroppedItem>
     {
-        private ProtobufSerializer serializer = new ProtobufSerializer();
-
         public override void Process(DroppedItem drop)
         {
-            GameObject gameObject;
-
-            using (MemoryStream memoryStream = new MemoryStream(drop.Bytes))
-            {
-                gameObject = serializer.DeserializeObjectTree(memoryStream, 0);
-            }
-
+            GameObject gameObject = SerializationHelper.GetGameObject(drop.Bytes);
             gameObject.transform.position = ApiHelper.Vector3(drop.ItemPosition);
-            
-            Pickupable pickupable = gameObject.GetComponent<Pickupable>();
 
+            Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+                                   
             if(drop.WaterParkGuid.IsPresent())
             {
                 AssignToWaterPark(drop.WaterParkGuid.Get(), pickupable);

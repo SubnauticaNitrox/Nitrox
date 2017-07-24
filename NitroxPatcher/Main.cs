@@ -16,6 +16,8 @@ namespace NitroxPatcher
             new ClipMapManager_HideEntities_Patch(),
             new ClipMapManager_ShowEntities_Patch(),
             new Constructable_Construct_Patch(),
+            new Equipment_AddItem_Patch(),
+            new Equipment_RemoveItem_Patch(),
             new Pickupable_Pickup_Patch(),
             new Pickupable_Drop_Patch(),
             new SpawnConsoleCommand_Patch(),

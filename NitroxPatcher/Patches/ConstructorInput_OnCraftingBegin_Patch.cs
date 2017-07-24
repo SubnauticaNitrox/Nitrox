@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches
             {
                 yield return instruction;
 
-                if (instruction.opcode.Equals(INJECTION_OPCODE))
+                if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
                     /*
                      * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT, gameObject);

@@ -12,12 +12,10 @@ namespace NitroxClient.GameLogic
     public class Item
     {
         private PacketSender packetSender;
-        private ProtobufSerializer serializer;
 
         public Item(PacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.serializer = new ProtobufSerializer();
         }
 
         public void UpdatePosition(String guid, Vector3 location, Quaternion rotation)
@@ -42,17 +40,9 @@ namespace NitroxClient.GameLogic
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
-            Optional<String> waterpark = GetCurrentWaterParkGuid();
-            
+            Optional<String> waterpark = GetCurrentWaterParkGuid();            
             String guid = GuidHelper.GetGuid(gameObject);
-
-            byte[] bytes;
-
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                serializer.SerializeObjectTree(memoryStream, gameObject);
-                bytes = memoryStream.ToArray();
-            }
+            byte[] bytes = SerializationHelper.GetBytes(gameObject);
 
             SyncedMultiplayerObject.ApplyTo(gameObject);
 

@@ -59,6 +59,8 @@
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
+    <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
+    <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
