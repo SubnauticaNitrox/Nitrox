@@ -3,12 +3,15 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Nitrox-specific files
+DevVars.targets
+Shared/AssemblyInfo.cs
+
 # User-specific files
 *.suo
 *.user
 *.userosscache
 *.sln.docstates
-DevVars.targets
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

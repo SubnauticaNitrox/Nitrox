@@ -85,6 +85,7 @@ namespace NitroxReloader
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
+            Console.WriteLine("Reloader: set up to watch " + managedFolder);
         }
 
         public void ReloadAssembly(string path)
@@ -130,7 +131,7 @@ namespace NitroxReloader
 
         public static unsafe void WriteJump(IntPtr original, IntPtr destination)
         {
-            Console.WriteLine("Reloader: Writing jump to {0:X8} at {1:X8}", destination, original);
+            Console.WriteLine("Reloader: Writing jump to {0} at {1}", destination, original);
             bool x64 = IntPtr.Size == sizeof(long);
 #if true
             if (x64)
