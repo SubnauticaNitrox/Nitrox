@@ -59,6 +59,8 @@
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -77,7 +79,10 @@
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\Building.cs" />
+    <Compile Include="GameLogic\EquipmentSlots.cs" />
+    <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
+    <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\Logic.cs" />
