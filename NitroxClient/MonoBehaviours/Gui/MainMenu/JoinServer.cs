@@ -23,7 +23,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showingUsername = true;
         }
 
-        [NitroxReloader.ReloadableMethod]
         public void OnGUI()
         {
             if (!showingUsername)
