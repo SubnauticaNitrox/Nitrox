@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <!-- Changes can be unstaged from git using git checkout **/AssemblyInfo.cs (should find something better though) -->
   <UsingTask
     TaskName="TransformVersionTask"
     TaskFactory="CodeTaskFactory"
@@ -13,19 +12,26 @@
       <Using Namespace="System.IO"/>
       <Code Type="Fragment" Language="cs">
         <![CDATA[
-File.WriteAllLines(AssemblyFile, File.ReadAllLines(AssemblyFile).Select(line =>
-{
-    if (line.Contains("AssemblyVersion(") && !line.StartsWith("//"))
-        return string.Format("[assembly: AssemblyVersion(\"1.0.0.{0}\")]", (DateTime.UtcNow - new DateTime(2017, 7, 19)).TotalSeconds.ToString().Substring(0, 5));
-    else
-        return line;
-}).ToArray());
+try {
+  File.WriteAllText(AssemblyFile, string.Format("[assembly: System.Reflection.AssemblyVersion(\"1.0.0.{0}\")]", (DateTime.UtcNow - new DateTime(2017, 7, 19)).TotalSeconds.ToString().Substring(0, 5)));
+  Console.WriteLine("File modified!");
+} catch (IOException) {
+  // Multiple build processes can execute this task simultaneously. It doesn't matter, as long as the version
+  // is modified (this task has to execute for every project, because it's much harder to figure out which
+  // projects vs wants to build, and which one is first. Some projects are even built in parallel!).
+  // If the file can't be written, busy-wait until it has been written (otherwise csc may break).
+  while (true)
+    try {
+      using(var f = File.Open(AssemblyFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+        break;
+    } catch (IOException) {}
+}
         ]]>
       </Code>
     </Task>
   </UsingTask>
 
   <Target Name="VersionTask" BeforeTargets="BeforeBuild">
-    <TransformVersionTask AssemblyFile="$(ProjectDir)Properties\AssemblyInfo.cs"/>
+     <TransformVersionTask AssemblyFile="$(SolutionDir)Shared\AssemblyInfo.cs"/>
   </Target>
 </Project>
