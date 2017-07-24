@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.Helper
 
             if (uniqueIdentifier == null)
             {
-                uniqueIdentifier = gameObject.AddComponent<UniqueIdentifier>();
+                uniqueIdentifier = gameObject.AddComponent<PrefabIdentifier>();
             }
 
             return uniqueIdentifier;

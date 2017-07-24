@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours
                 Vector3 currentPosition = this.gameObject.transform.position;
                 Quaternion rotation = this.gameObject.transform.rotation;
 
-                Multiplayer.PacketSender.UpdateItemPosition(guid, currentPosition, rotation);
+                Multiplayer.Logic.Item.UpdatePosition(guid, currentPosition, rotation);
             }            
         }
 

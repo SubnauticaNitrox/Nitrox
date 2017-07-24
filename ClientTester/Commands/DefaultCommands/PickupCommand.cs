@@ -21,7 +21,7 @@ namespace ClientTester.Commands.DefaultCommands
                 return;
             }
 
-            client.PacketSender.PickupItem(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
+            client.Logic.Item.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }
     }
 }
