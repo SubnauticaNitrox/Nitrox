@@ -36,7 +36,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReloadableMethod.cs" />
     <Compile Include="Reloader.cs" />
+    <Compile Include="ReloaderAssembly.cs" />
+    <Compile Include="ReloaderHelper.cs" />
     <Compile Include="ReloaderSettings.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

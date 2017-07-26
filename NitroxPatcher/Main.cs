@@ -18,8 +18,6 @@ namespace NitroxPatcher
 
             HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
 
-            //AppDomain.CurrentDomain.GetAssemblies()
-            //.SelectMany(a => a.GetTypes().Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract))
             Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
