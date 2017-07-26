@@ -17,11 +17,6 @@ namespace NitroxReloader
             "NitroxReloader.dll",
         };
 
-        // TODO: Reloadable attribute for classes? (To define all methods in there to be reloadable)
-        // TODO: See if method-size is an easy thing. If so, code could be copied but is slower.
-        // TODO: Figure out assembly unloading.
-        // TODO: Add reloader to server as well (only thing to reload so far is NitroxModel though)
-
         private Dictionary<string, ReloaderAssembly> reloadableAssemblies;
 
         public Reloader()
@@ -43,7 +38,7 @@ namespace NitroxReloader
             })
             .Select(assembly =>
             {
-                Console.WriteLine("Reloader: reading assembly " + assembly.FullName);
+                Console.WriteLine("Reloader: Reading assembly " + assembly.FullName);
                 return new ReloaderAssembly(assembly);
             }).Where(ra => ra.HasReloadableMethods)
             .ToDictionary(ra => ra.AssemblyName, null);
@@ -67,7 +62,7 @@ namespace NitroxReloader
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine("Reloader: set up to watch " + ReloaderSettings.Path);
+            Console.WriteLine("Reloader: Set up to watch " + ReloaderSettings.Path);
         }
     }
 }

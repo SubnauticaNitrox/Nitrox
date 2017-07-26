@@ -19,31 +19,46 @@ namespace NitroxReloader
             .ToDictionary(method =>
             {
                 var key = QualifiedName(method);
-                Console.WriteLine("Reloader: found reloadable method " + key);
+                Console.WriteLine("Reloader: Found reloadable method " + key);
                 return key;
             }, null);
         }
 
         internal void Reload(string newAssemblyLocation)
         {
-            Console.WriteLine("Reloader: starting reload for " + assembly.FullName);
+            Console.WriteLine("Reloader: Starting reload for " + assembly.FullName);
             var newAssembly = Assembly.Load(File.ReadAllBytes(newAssemblyLocation));
             foreach (var method in GetReloadableMethods(newAssembly))
             {
                 var key = QualifiedName(method);
-                Console.WriteLine("Reloader: patching " + key);
-                var originalMethod = reloadableMethods[key];
-                if (originalMethod != null)
+                Console.WriteLine("Reloader: Patching " + key);
+                MethodInfo originalMethod;
+                if (!reloadableMethods.TryGetValue(key, out originalMethod))
                 {
-                    var originalCodeStart = GetMethodStart(originalMethod);
-                    var newCodeStart = GetMethodStart(method);
-                    if (originalCodeStart == newCodeStart)
-                        Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
-                    else
-                        WriteJump(originalCodeStart, newCodeStart);
+                    Console.WriteLine("Reloader: Original method missing (did you add the ReloadableMethod attribute to a method in the new assembly?)");
+                    var definingType = assembly.GetTypes().FirstOrDefault(t => t.FullName == method.DeclaringType.FullName);
+                    if (definingType == null)
+                    {
+                        Console.WriteLine("Reloader: Type {0} not found in original assembly", method.DeclaringType.FullName);
+                        continue;
+                    }
+
+                    var paramTypes = method.GetParameters().Select(pi => pi.ParameterType).ToArray();
+                    originalMethod = definingType.GetMethod(method.Name, paramTypes);
+                    if (originalMethod == null)
+                    {
+                        Console.WriteLine("Reloader: Original method not found with parameters {0}", string.Join(", ", paramTypes.Select(typ => typ.ToString()).ToArray()));
+                        continue;
+                    }
+                    Console.WriteLine("Reloader: Original method found.");
+                    reloadableMethods[key] = originalMethod;
                 }
+                var originalCodeStart = GetMethodStart(originalMethod);
+                var newCodeStart = GetMethodStart(method);
+                if (originalCodeStart == newCodeStart)
+                    Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
                 else
-                    Console.WriteLine("Reloader: Original method missing (did you add a method with ReloadableMethod attribute?)");
+                    WriteJump(originalCodeStart, newCodeStart);
             }
         }
 
