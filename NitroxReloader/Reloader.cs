@@ -14,7 +14,11 @@ namespace NitroxReloader
             "NitroxModel.dll",
             "NitroxClient.dll",
             "NitroxPatcher.dll",
-            "NitroxReloader.dll",
+            // The reloader itself should not be allowed to reload, because it 'replaces' the ReloadableMethodAttribute
+            // (as it's a different version of the assembly, that version field is saved in the other assemblies as well)
+            // and suddenly all methods in the new assemblies do not refer to the ReloadableMethodAttribute found in the
+            // current assembly and thus can't be found anymore (unless reloading the reloader first, then getting the
+            // attribute, and then finding all methods that have that exact type as attribute).
         };
 
         private Dictionary<string, ReloaderAssembly> reloadableAssemblies;
@@ -40,7 +44,7 @@ namespace NitroxReloader
             {
                 Console.WriteLine("Reloader: Reading assembly " + assembly.FullName);
                 return new ReloaderAssembly(assembly);
-            }).Where(ra => ra.HasReloadableMethods)
+            })
             .ToDictionary(ra => ra.AssemblyName, null);
 
             var watcher = new FileSystemWatcher()
@@ -54,10 +58,17 @@ namespace NitroxReloader
             };
             FileSystemEventHandler handler = (s, e) =>
             {
-                var fn = Path.GetFileName(e.Name);
-                ReloaderAssembly ra;
-                if (reloadableAssemblies.TryGetValue(fn, out ra))
-                    ra.Reload(e.FullPath);
+                try
+                {
+                    var fn = Path.GetFileName(e.Name);
+                    ReloaderAssembly ra;
+                    if (reloadableAssemblies.TryGetValue(fn, out ra))
+                        ra.Reload(e.FullPath);
+                }
+                catch (Exception exc)
+                {
+                    Console.WriteLine("An exception occured during reload!\n{0}", exc);
+                }
             };
             watcher.Created += handler;
             watcher.Changed += handler;

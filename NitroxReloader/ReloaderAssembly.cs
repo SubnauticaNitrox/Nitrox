@@ -10,49 +10,39 @@ namespace NitroxReloader
 {
     internal class ReloaderAssembly
     {
-        internal Dictionary<string, MethodInfo> reloadableMethods;
         internal Assembly assembly;
         internal ReloaderAssembly(Assembly a)
         {
             assembly = a;
-            reloadableMethods = GetReloadableMethods(assembly)
-            .ToDictionary(method =>
-            {
-                var key = QualifiedName(method);
-                Console.WriteLine("Reloader: Found reloadable method " + key);
-                return key;
-            }, null);
         }
 
         internal void Reload(string newAssemblyLocation)
         {
             Console.WriteLine("Reloader: Starting reload for " + assembly.FullName);
             var newAssembly = Assembly.Load(File.ReadAllBytes(newAssemblyLocation));
-            foreach (var method in GetReloadableMethods(newAssembly))
+            var reloadableMethods = GetReloadableMethods(newAssembly);
+            Console.WriteLine("Reloader: New assembly {0} has {1} reloadable methods.", newAssembly.FullName, reloadableMethods.Count());
+            foreach (var method in reloadableMethods)
             {
                 var key = QualifiedName(method);
                 Console.WriteLine("Reloader: Patching " + key);
-                MethodInfo originalMethod;
-                if (!reloadableMethods.TryGetValue(key, out originalMethod))
-                {
-                    Console.WriteLine("Reloader: Original method missing (did you add the ReloadableMethod attribute to a method in the new assembly?)");
-                    var definingType = assembly.GetTypes().FirstOrDefault(t => t.FullName == method.DeclaringType.FullName);
-                    if (definingType == null)
-                    {
-                        Console.WriteLine("Reloader: Type {0} not found in original assembly", method.DeclaringType.FullName);
-                        continue;
-                    }
 
-                    var paramTypes = method.GetParameters().Select(pi => pi.ParameterType).ToArray();
-                    originalMethod = definingType.GetMethod(method.Name, paramTypes);
-                    if (originalMethod == null)
-                    {
-                        Console.WriteLine("Reloader: Original method not found with parameters {0}", string.Join(", ", paramTypes.Select(typ => typ.ToString()).ToArray()));
-                        continue;
-                    }
-                    Console.WriteLine("Reloader: Original method found.");
-                    reloadableMethods[key] = originalMethod;
+                var definingType = assembly.GetTypes().FirstOrDefault(t => t.FullName == method.DeclaringType.FullName);
+                if (definingType == null)
+                {
+                    Console.WriteLine("Reloader: Type {0} not found in original assembly", method.DeclaringType.FullName);
+                    continue;
                 }
+
+                var paramTypes = method.GetParameters().Select(pi => pi.ParameterType).ToArray();
+
+                MethodInfo originalMethod = definingType.GetMethod(method.Name, paramTypes);
+                if (originalMethod == null)
+                {
+                    Console.WriteLine("Reloader: Original method not found with parameters {0}", string.Join(", ", paramTypes.Select(typ => typ.ToString()).ToArray()));
+                    continue;
+                }
+
                 var originalCodeStart = GetMethodStart(originalMethod);
                 var newCodeStart = GetMethodStart(method);
                 if (originalCodeStart == newCodeStart)
@@ -60,11 +50,6 @@ namespace NitroxReloader
                 else
                     WriteJump(originalCodeStart, newCodeStart);
             }
-        }
-
-        internal bool HasReloadableMethods
-        {
-            get { return reloadableMethods.Count > 0; }
         }
 
         internal string AssemblyName
