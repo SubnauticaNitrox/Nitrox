@@ -57,7 +57,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (techPrefab != null)
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate(techPrefab, Vector3.zero, Quaternion.FromToRotation(Vector3.up, Vector3.up));
+                GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(techPrefab, Vector3.zero, Quaternion.FromToRotation(Vector3.up, Vector3.up));
                 gameObject.SetActive(true);
                 CrafterLogic.NotifyCraftEnd(gameObject, techType);
                 gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);

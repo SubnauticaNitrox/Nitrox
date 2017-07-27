@@ -23,6 +23,7 @@ namespace NitroxPatcher
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .Select(Activator.CreateInstance)
                 .Cast<NitroxPatch>()
+                .ToList()
                 .ForEach(patch =>
                 {
                     Console.WriteLine("[NITROX] Applying " + patch.GetType());
