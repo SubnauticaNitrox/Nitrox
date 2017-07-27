@@ -3,6 +3,7 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using System;
 using System.Collections.Generic;
@@ -13,22 +14,24 @@ namespace NitroxServer.Communication.Packets
     {
         private Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
         private Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
-        
+
         private DefaultServerPacketProcessor defaultPacketProcessor;
 
         public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper)
         {
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
-            
-            this.authenticatedPacketProcessorsByType = new Dictionary<Type, PacketProcessor>() {
-                {typeof(Movement), new MovementPacketProcessor(tcpServer) },
+
+            var ProcessorArguments = new Dictionary<Type, object>
+            {
+                {typeof(TcpServer), tcpServer },
+                {typeof(TimeKeeper), timeKeeper },
             };
 
-            this.unauthenticatedPacketProcessorsByType = new Dictionary<Type, PacketProcessor>() {
-                {typeof(Authenticate), new AuthenticatePacketProcessor(tcpServer, timeKeeper) }
-            };
+            authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
+
+            unauthenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(UnauthenticatedPacketProcessor<>));
         }
-        
+
         public void ProcessAuthenticated(Packet packet, Player player)
         {
             if (authenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))

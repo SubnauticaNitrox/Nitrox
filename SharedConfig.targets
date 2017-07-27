@@ -4,6 +4,7 @@
     <DevVars>DevVars.targets</DevVars>
     <DevVarsLoc>$(SolutionDir)\$(DevVars)</DevVarsLoc>
     <SubnauticaDir Condition="!Exists($(DevVarsLoc))">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</SubnauticaDir>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
 
   <Import Project="$(DevVarsLoc)" Condition="Exists($(DevVarsLoc))" />
@@ -26,10 +27,15 @@
     <SubnauticaManaged>$(SubnauticaDir)\Subnautica_Data\Managed</SubnauticaManaged>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration) == 'Debug'">
+  <PropertyGroup Condition="$(Configuration) == 'Debug' And $(OutputType) == 'Library'">
     <OutputPath>$(SolutionDir)\bin\Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration) == 'Release'">
+  <PropertyGroup Condition="$(Configuration) == 'Release' And $(OutputType) == 'Library'">
     <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
   </PropertyGroup>
+
+  <Import Project="$(SolutionDir)PreBuildTasks.targets" />
+  <!-- Contains build tasks (such as deploy) that should only be done once.
+       In this case by the 'top-most' project, which is the patcher. -->
+  <Import Project="$(SolutionDir)FinalBuildTasks.targets" Condition="'$(MSBuildProjectName)' == 'NitroxPatcher'" />
 </Project>

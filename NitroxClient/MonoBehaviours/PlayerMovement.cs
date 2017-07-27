@@ -1,12 +1,8 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.ServerModel;
-using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
-using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -14,18 +10,20 @@ namespace NitroxClient.MonoBehaviours
     {
         private float time = 0.0f;
         public float interpolationPeriod = 0.05f;
-        
+
         public void Update()
         {
             time += Time.deltaTime;
-            
+
             // Only do on a specific cadence to avoid hammering server
             if (time >= interpolationPeriod)
             {
                 time = 0;
 
                 Vector3 currentPosition = Player.main.transform.position;
-                Quaternion rotation = Player.main.transform.rotation;
+                Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
+                Quaternion cameraRotation = MainCameraControl.main.transform.rotation;
+
                 Optional<VehicleModel> vehicle = GetVehicleModel();
                 String subGuid = null;
 
@@ -36,15 +34,15 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, rotation, vehicle, Optional<String>.OfNullable(subGuid));
+                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, bodyRotation, cameraRotation, vehicle, Optional<String>.OfNullable(subGuid));
             }
         }
-        
+
         private Optional<VehicleModel> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
 
-            if(vehicle == null)
+            if (vehicle == null)
             {
                 return Optional<VehicleModel>.Empty();
             }
