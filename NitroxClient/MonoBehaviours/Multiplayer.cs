@@ -135,10 +135,10 @@ namespace NitroxClient.MonoBehaviours
             if (n?.data?.Count > 0)
             {
                 string otherPlayerId = (string)n.data[0];
-                var otherPlayer = remotePlayerManager.FindPlayer(otherPlayerId);
-                if (otherPlayer != null)
+                var opPlayer = remotePlayerManager.Find(otherPlayerId);
+                if (opPlayer.IsPresent())
                 {
-                    Player.main.SetPosition(otherPlayer.body.transform.position);
+                    Player.main.SetPosition(opPlayer.Get().body.transform.position);
                     Player.main.OnPlayerPositionCheat();
                 }
             }
