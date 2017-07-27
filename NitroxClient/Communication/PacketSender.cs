@@ -1,10 +1,10 @@
-﻿using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
-using NitroxClient.GameLogic.Helper;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication
@@ -15,7 +15,7 @@ namespace NitroxClient.Communication
         public String PlayerId { get; set; }
 
         private TcpClient client;
-        
+
         public PacketSender(TcpClient client)
         {
             this.client = client;
@@ -28,7 +28,7 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Quaternion rotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
+        public void UpdatePlayerLocation(Vector3 location, Quaternion bodyRotation, Quaternion cameraRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
         {
             Movement movement;
 
@@ -39,7 +39,7 @@ namespace NitroxClient.Communication
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(rotation), opSubGuid);
+                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(cameraRotation), opSubGuid);
             }
 
             Send(movement);
@@ -82,7 +82,8 @@ namespace NitroxClient.Communication
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Error sending packet " + packet, ex);
+                    ErrorMessage.AddError($"Error sending {packet}: {ex.Message}");
+                    Console.WriteLine("Error sending packet {0}\n{1}", packet, ex);
                 }
             }
         }

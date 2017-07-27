@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -29,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
@@ -90,9 +90,10 @@
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="DebugUtils.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
-    <Compile Include="GameLogic\PlayerGameObjectManager.cs" />
+    <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
+    <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="Map\LoadedChunks.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
@@ -112,9 +113,13 @@
       <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
+      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
+      <Name>NitroxReloader</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

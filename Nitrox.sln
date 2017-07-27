@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
 EndProject
@@ -18,6 +18,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxTest", "NitroxTest\NitroxTest.csproj", "{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{BE983E25-24CC-4FC8-9017-61EEC43DD618}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxReloader", "NitroxReloader\NitroxReloader.csproj", "{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
