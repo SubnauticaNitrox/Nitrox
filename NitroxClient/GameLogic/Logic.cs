@@ -9,6 +9,7 @@ namespace NitroxClient.GameLogic
         public MedkitFabricator MedkitFabricator { get; private set; }
         public Item Item { get; private set; }
         public EquipmentSlots EquipmentSlots { get; private set; }
+        public ItemContainers ItemContainers { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -17,6 +18,7 @@ namespace NitroxClient.GameLogic
             this.MedkitFabricator = new MedkitFabricator(packetSender);
             this.Item = new Item(packetSender);
             this.EquipmentSlots = new EquipmentSlots(packetSender);
+            this.ItemContainers = new ItemContainers(packetSender);
         }
     }
 }
