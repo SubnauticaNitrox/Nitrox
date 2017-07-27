@@ -4,7 +4,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic

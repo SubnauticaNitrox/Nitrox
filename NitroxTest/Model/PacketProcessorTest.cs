@@ -24,6 +24,7 @@ namespace NitroxTest.Model
 
             typeof(Multiplayer).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
                 .ForEach(processor =>
                 {
                     // Make sure that each packetprocessor is derived from the ClientPacketProcessor class,
@@ -37,7 +38,7 @@ namespace NitroxTest.Model
 
                     // Check argument type availability on constructor:
                     var ctor = processor.GetConstructors().First();
-                    ctor.GetParameters().ForEach(param =>
+                    ctor.GetParameters().ToList().ForEach(param =>
                     {
                         Assert.IsTrue(processorParams.ContainsKey(param.ParameterType), $"Constructor for {processor} has an undefined argument of type {param.ParameterType}!");
                     });
@@ -66,6 +67,7 @@ namespace NitroxTest.Model
             // Check if every PacketProcessor has been detected:
             typeof(Multiplayer).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
                 .ForEach(processor =>
                     Assert.IsTrue(runtimeProcessors.Contains(processor),
                         $"{processor} has not been discovered by the runtime code!")
@@ -77,6 +79,7 @@ namespace NitroxTest.Model
         {
             typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
                 .ForEach(processor =>
                 {
                     // Make sure that each packetprocessor is derived from the ClientPacketProcessor class,
@@ -122,6 +125,7 @@ namespace NitroxTest.Model
             // Check if every PacketProcessor has been detected:
             typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
                 .ForEach(processor =>
                     Assert.IsTrue(runtimeProcessors.Contains(processor),
                         $"{processor} has not been discovered by the runtime code!")
@@ -144,6 +148,7 @@ namespace NitroxTest.Model
 
             typeof(Packet).Assembly.GetTypes()
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
                 .ForEach(packet =>
                 {
                     Console.WriteLine("Checking handler for packet {0}...", packet);

@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Packets;
 using System;
-using System.IO;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
