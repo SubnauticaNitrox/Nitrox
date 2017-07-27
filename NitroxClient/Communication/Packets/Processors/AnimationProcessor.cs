@@ -16,7 +16,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(AnimationChangeEvent animEvent)
         {
-            remotePlayerManager.ForPlayer(animEvent.PlayerId, p => p.UpdateAnimation((AnimChangeType)animEvent.Type, (AnimChangeState)animEvent.State));
+            var opPlayer = remotePlayerManager.Find(animEvent.PlayerId);
+            if (opPlayer.IsPresent())
+            {
+                opPlayer.Get().UpdateAnimation((AnimChangeType)animEvent.Type, (AnimChangeState)animEvent.State);
+            }
         }
     }
 }

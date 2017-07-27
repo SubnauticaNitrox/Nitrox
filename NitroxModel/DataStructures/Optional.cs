@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -27,7 +24,7 @@ namespace NitroxModel.DataStructures.Util
 
         public static Optional<T> Of(T value)
         {
-            if(value == null)
+            if (value == null)
             {
                 throw new InvalidOperationException("Value cannot be null");
             }
@@ -39,10 +36,10 @@ namespace NitroxModel.DataStructures.Util
         {
             return new Optional<T>(value);
         }
-        
+
         public T Get()
         {
-            if(value == null)
+            if (value == null)
             {
                 throw new InvalidOperationException("Optional did not have a value");
             }
@@ -62,7 +59,7 @@ namespace NitroxModel.DataStructures.Util
 
         public T OrElse(T elseValue)
         {
-            if(value != null)
+            if (value != null)
             {
                 return value;
             }
@@ -72,7 +69,7 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            if(IsEmpty())
+            if (IsEmpty())
             {
                 return "Optional<" + typeof(T) + ">.Empty()";
             }
