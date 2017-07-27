@@ -14,6 +14,7 @@ namespace NitroxReloader
             "NitroxModel.dll",
             "NitroxClient.dll",
             "NitroxPatcher.dll",
+            "NitroxServer.dll",
             // The reloader itself should not be allowed to reload, because it 'replaces' the ReloadableMethodAttribute
             // (as it's a different version of the assembly, that version field is saved in the other assemblies as well)
             // and suddenly all methods in the new assemblies do not refer to the ReloadableMethodAttribute found in the

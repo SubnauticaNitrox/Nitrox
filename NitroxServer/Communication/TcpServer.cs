@@ -10,9 +10,9 @@ namespace NitroxServer.Communication
 {
     public class TcpServer
     {
-        private PacketHandler packetHandler;        
+        private PacketHandler packetHandler;
         private Dictionary<Player, Connection> connectionsByPlayer;
-                
+
         public TcpServer()
         {
             this.connectionsByPlayer = new Dictionary<Player, Connection>();
@@ -24,7 +24,7 @@ namespace NitroxServer.Communication
 
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
             socket.Listen(4000);
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
@@ -45,8 +45,8 @@ namespace NitroxServer.Communication
         public void DataReceived(IAsyncResult ar)
         {
             PlayerConnection connection = (PlayerConnection)ar.AsyncState;
-            
-            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
+
+            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
                 try
                 {
@@ -79,7 +79,7 @@ namespace NitroxServer.Communication
         {
             try
             {
-                Socket handler = (Socket)ar.AsyncState;                
+                Socket handler = (Socket)ar.AsyncState;
                 int bytesSent = handler.EndSend(ar);
             }
             catch (SocketException)
@@ -98,7 +98,7 @@ namespace NitroxServer.Communication
 
             if (player != null)
             {
-                lock(connectionsByPlayer)
+                lock (connectionsByPlayer)
                 {
                     connectionsByPlayer.Remove(player);
                 }
@@ -134,11 +134,11 @@ namespace NitroxServer.Communication
             lock (connectionsByPlayer)
             {
                 foreach (Connection connection in connectionsByPlayer.Values)
-                { 
-                    if(connection.Open)
+                {
+                    if (connection.Open)
                     {
                         connection.SendPacket(packet, new AsyncCallback(SendCompleted));
-                    }                
+                    }
                 }
             }
         }

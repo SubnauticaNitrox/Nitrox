@@ -87,6 +87,10 @@
       <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
+      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
+      <Name>NitroxReloader</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameLogic\Threading\Actions\" />
