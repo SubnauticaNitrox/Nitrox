@@ -19,7 +19,9 @@ namespace NitroxModel.Packets.Processors.Abstract
                 {
                     var ctors = proc.GetConstructors();
                     if (ctors.Length > 1)
+                    {
                         throw new NotSupportedException($"{proc.Name} has more than one constructor!");
+                    }
 
                     ConstructorInfo ctor = ctors.First();
 
@@ -28,7 +30,9 @@ namespace NitroxModel.Packets.Processors.Abstract
                         {
                             object v;
                             if (ProcessorArguments.TryGetValue(pi.ParameterType, out v))
+                            {
                                 return v;
+                            }
                             throw new ArgumentException($"Argument value not defined for type {pi.ParameterType}!");
                         }).ToArray();
 

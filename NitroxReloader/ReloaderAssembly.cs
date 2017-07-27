@@ -46,9 +46,13 @@ namespace NitroxReloader
                 var originalCodeStart = GetMethodStart(originalMethod);
                 var newCodeStart = GetMethodStart(method);
                 if (originalCodeStart == newCodeStart)
+                {
                     Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
+                }
                 else
+                {
                     WriteJump(originalCodeStart, newCodeStart);
+                }
             }
         }
 
@@ -111,12 +115,16 @@ namespace NitroxReloader
 
                 var m_GetMethodDescriptor = typeof(DynamicMethod).GetMethod("GetMethodDescriptor", nonPublicInstance);
                 if (m_GetMethodDescriptor != null)
+                {
                     return (RuntimeMethodHandle)m_GetMethodDescriptor.Invoke(method, new object[0]);
+                }
 
                 // .Net Core
                 var f_m_method = typeof(DynamicMethod).GetField("m_method", nonPublicInstance);
                 if (f_m_method != null)
+                {
                     return (RuntimeMethodHandle)f_m_method.GetValue(method);
+                }
 
                 // Mono
                 var f_mhandle = typeof(DynamicMethod).GetField("mhandle", nonPublicInstance);

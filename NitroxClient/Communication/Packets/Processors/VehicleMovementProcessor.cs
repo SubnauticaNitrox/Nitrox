@@ -49,7 +49,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 CreateVehicleAt(vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
             }
 
-            RemotePlayer remotePlayer = remotePlayerManager[vehicleMovement.PlayerId];
+            RemotePlayer remotePlayer = remotePlayerManager.FindPlayer(vehicleMovement.PlayerId, true);
             remotePlayer.animationController.UpdatePlayerAnimations = false;
         }
         
