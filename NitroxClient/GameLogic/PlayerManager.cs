@@ -7,25 +7,6 @@ namespace NitroxClient.GameLogic
     {
         private readonly Dictionary<string, RemotePlayer> playersById = new Dictionary<string, RemotePlayer>();
 
-        public RemotePlayer this[string playerId]
-        {
-            get
-            {
-                return FindPlayer(playerId);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    RemovePlayer(playerId);
-                }
-                else
-                {
-                    playersById[playerId] = value;
-                }
-            }
-        }
-
         public RemotePlayer FindPlayer(string playerId, bool createPlayer = false)
         {
             RemotePlayer player;

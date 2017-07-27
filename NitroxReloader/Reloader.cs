@@ -63,7 +63,9 @@ namespace NitroxReloader
                     var fn = Path.GetFileName(e.Name);
                     ReloaderAssembly ra;
                     if (reloadableAssemblies.TryGetValue(fn, out ra))
+                    {
                         ra.Reload(e.FullPath);
+                    }
                 }
                 catch (Exception exc)
                 {
