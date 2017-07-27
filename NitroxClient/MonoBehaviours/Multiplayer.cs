@@ -15,12 +15,14 @@ namespace NitroxClient.MonoBehaviours
     {
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
 
-        public static Logic Logic;
-        public static PacketSender PacketSender; //TODO: migrate logic out of and remove as member variable
         public static Multiplayer main;
-        private static LoadedChunks loadedChunks;
-        private static TcpClient client;
-        private static ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+
+        private static LoadedChunks loadedChunks = new LoadedChunks();
+        private static ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
+        private static TcpClient client = new TcpClient(chunkAwarePacketReceiver);
+        public static PacketSender PacketSender = new PacketSender(client);
+        public static Logic Logic = new Logic(PacketSender);
+
         private static bool hasLoadedMonoBehaviors;
 
         private static PlayerManager remotePlayerManager = new PlayerManager();
@@ -31,6 +33,7 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
         {
             { typeof(PlayerManager), remotePlayerManager },
+            { typeof(PacketSender), PacketSender }
         };
 
         static Multiplayer()
@@ -43,14 +46,10 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+
             this.gameObject.AddComponent<PlayerMovement>();
 
             main = this;
-            loadedChunks = new LoadedChunks();
-            chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client);
-            Logic = new Logic(PacketSender);
         }
 
         public void Update()

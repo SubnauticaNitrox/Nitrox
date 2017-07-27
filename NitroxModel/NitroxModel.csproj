@@ -45,6 +45,8 @@
     <Compile Include="DataStructures\Transform.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\ItemContainerRemove.cs" />
+    <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\EquipmentRemoveItem.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />

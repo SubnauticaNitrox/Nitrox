@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication
@@ -15,11 +16,13 @@ namespace NitroxClient.Communication
         public String PlayerId { get; set; }
 
         private TcpClient client;
+        private HashSet<Type> suppressedPacketsTypes;
 
         public PacketSender(TcpClient client)
         {
             this.client = client;
             this.Active = false;
+            this.suppressedPacketsTypes = new HashSet<Type>();
         }
 
         public void Authenticate()
@@ -74,7 +77,7 @@ namespace NitroxClient.Communication
 
         public void Send(Packet packet)
         {
-            if (Active)
+            if (Active && !suppressedPacketsTypes.Contains(packet.GetType()))
             {
                 try
                 {
@@ -86,6 +89,16 @@ namespace NitroxClient.Communication
                     Console.WriteLine("Error sending packet {0}\n{1}", packet, ex);
                 }
             }
+        }
+
+        public void AddSuppressedPacketType(Type type)
+        {
+            suppressedPacketsTypes.Add(type);
+        }
+
+        public void RemoveSuppressedPacketType(Type type)
+        {
+            suppressedPacketsTypes.Remove(type);
         }
     }
 }
