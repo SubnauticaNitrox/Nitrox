@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -15,55 +14,31 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Construct");
-
-        public static readonly OpCode AMOUNT_CHANGED_INJECTION_OPCODE = OpCodes.Ldsfld;
-        public static readonly object AMOUNT_CHANGED_INJECTION_OPERAND = typeof(Inventory).GetField("main", BindingFlags.Public | BindingFlags.Static);
-
+        
         public static readonly OpCode CONSTRUCTION_COMPLETE_INJECTION_OPCODE = OpCodes.Callvirt;
         public static readonly object CONSTRUCTION_COMPLETE_INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
-        
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
+
+        public static bool Prefix(Constructable __instance)
         {
-            Validate.NotNull(AMOUNT_CHANGED_INJECTION_OPCODE);
-            Validate.NotNull(AMOUNT_CHANGED_INJECTION_OPERAND);
-            Validate.NotNull(CONSTRUCTION_COMPLETE_INJECTION_OPCODE);
-            Validate.NotNull(CONSTRUCTION_COMPLETE_INJECTION_OPERAND);
-            
-            foreach (CodeInstruction instruction in instructions)
+            if (!__instance._constructed && __instance.constructedAmount < 1.0f)
             {
-                if (instruction.opcode.Equals(AMOUNT_CHANGED_INJECTION_OPCODE) && instruction.operand.Equals(AMOUNT_CHANGED_INJECTION_OPERAND))
-                {
-                    /*
-                     * Multiplayer.Logic.Building.ChangeConstructionAmount(base.gameObject, this.constructedAmount);
-                     */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Public | BindingFlags.Instance));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldfld, typeof(Constructable).GetField("constructedAmount", BindingFlags.Public | BindingFlags.Instance));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("ChangeConstructionAmount", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(GameObject), typeof(float) }, null));
-                }
+                Multiplayer.Logic.Building.ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+            }
 
-                yield return instruction;
+            return true;
+        }
 
-                if (instruction.opcode.Equals(CONSTRUCTION_COMPLETE_INJECTION_OPCODE) && instruction.operand.Equals(CONSTRUCTION_COMPLETE_INJECTION_OPERAND))
-                {
-                    /*
-                     * Multiplayer.Logic.Building.ConstructionComplete(base.gameObject);
-                     */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Public | BindingFlags.Instance));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("ConstructionComplete"));
-                }
+        public static void Postfix(Constructable __instance, bool __result)
+        {
+            if (__result && __instance.constructedAmount >= 1.0f)
+            {
+                Multiplayer.Logic.Building.ConstructionComplete(__instance.gameObject);
             }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchTranspiler(harmony, TARGET_METHOD);
+            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

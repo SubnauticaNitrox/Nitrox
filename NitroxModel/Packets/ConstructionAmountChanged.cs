@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
 {
