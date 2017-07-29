@@ -10,7 +10,10 @@ namespace NitroxClient.GameLogic
 {
     public class Building
     {
+        private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
+
         private PacketSender packetSender;
+        private float timeSinceLastConstructionChangeEvent = 0.0f;
 
         public Building(PacketSender packetSender)
         {
@@ -50,15 +53,19 @@ namespace NitroxClient.GameLogic
         
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
         {
-            if (IsConstructionPacketEcho(gameObject))
+            timeSinceLastConstructionChangeEvent += Time.deltaTime;
+
+            if (IsConstructionPacketEcho(gameObject) || timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
             {
                 return;
             }
 
+            timeSinceLastConstructionChangeEvent = 0.0f;
+
             Vector3 itemPosition = gameObject.transform.position;
             String guid = GuidHelper.GetGuid(gameObject);
 
-            if (amount < 1f) // Construction complete event handled by function below
+            if (amount < 0.95f) // Construction complete event handled by function below
             {
                 ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid, amount);
                 packetSender.Send(amountChanged);

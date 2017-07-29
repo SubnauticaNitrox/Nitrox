@@ -75,9 +75,9 @@
     <Compile Include="Model\Test\TestActionPacket.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
     <Compile Include="Patcher\Patches\BaseGhost_Finish_PatchTest.cs" />
-    <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
-    <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
     <Compile Include="Patcher\Patches\Constructable_Construct_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ClipMapManager_HideEntities_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ClipMapManager_ShowEntities_PatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
