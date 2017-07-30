@@ -59,6 +59,8 @@
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemoveProcessor.cs" />
