@@ -92,6 +92,11 @@
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
+    <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
+    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\ChatKeyBindingAction.cs" />
+    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
+    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
+    <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />

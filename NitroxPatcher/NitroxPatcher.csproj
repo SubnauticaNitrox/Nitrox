@@ -64,6 +64,11 @@
     <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
+    <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
+    <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
+    <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
