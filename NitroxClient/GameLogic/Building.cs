@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
         {
             timeSinceLastConstructionChangeEvent += Time.deltaTime;
 
-            if (IsConstructionPacketEcho(gameObject) || timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
+            if (timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
             {
                 return;
             }
@@ -90,29 +90,22 @@ namespace NitroxClient.GameLogic
             packetSender.Send(constructionCompleted);
         }
 
-        private bool IsConstructionPacketEcho(GameObject gameObject)
+        public void DeconstructionBegin(GameObject gameObject)
         {
-            PlayerTool playerTool = Inventory.main.GetHeldTool();
+            Vector3 itemPosition = gameObject.transform.position;
+            String guid = GuidHelper.GetGuid(gameObject);
 
-            if (playerTool is BuilderTool)
-            {
-                Targeting.AddToIgnoreList(Player.main.gameObject);
-                GameObject target;
-                float num;
-                Targeting.GetTarget(30f, out target, out num, null);
-
-                if (target == null)
-                {
-                    return true;
-                }
-
-                Constructable constructable = target.GetComponentInParent<Constructable>();
-
-                return (constructable.gameObject != gameObject);
-            }
-
-            return true;
+            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid);
+            packetSender.Send(deconstructionBegin);
         }
 
+        public void DeconstructionComplete(GameObject gameObject)
+        {
+            Vector3 itemPosition = gameObject.transform.position;
+            String guid = GuidHelper.GetGuid(gameObject);
+
+            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid);
+            packetSender.Send(deconstructionCompleted);
+        }
     }
 }

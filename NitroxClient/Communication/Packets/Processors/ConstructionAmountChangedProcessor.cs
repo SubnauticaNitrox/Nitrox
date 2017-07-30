@@ -9,6 +9,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructionAmountChangedProcessor : ClientPacketProcessor<ConstructionAmountChanged>
     {
+        private PacketSender packetSender;
+
+        public ConstructionAmountChangedProcessor(PacketSender packetSender)
+        {
+            this.packetSender = packetSender;
+        }
+
         public override void Process(ConstructionAmountChanged amountChanged)
         {
             Console.WriteLine("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.PlayerId + " " + amountChanged.ConstructionAmount);
@@ -20,7 +27,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject constructing = opGameObject.Get();
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = amountChanged.ConstructionAmount;
+                
+                packetSender.AddSuppressedPacketType(typeof(ConstructionAmountChanged));
                 constructable.Construct();
+                packetSender.RemoveSuppressedPacketType(typeof(ConstructionAmountChanged));
             }
         }
     }
