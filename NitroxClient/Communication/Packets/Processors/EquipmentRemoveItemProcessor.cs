@@ -40,9 +40,9 @@ namespace NitroxClient.Communication.Packets.Processors
                             InventoryItem inventoryItem = itemsBySlot[packet.Slot];
                             itemsBySlot[packet.Slot] = null;
 
-                            equipment.ReflectionCall("UpdateCount", false, new object[] { pickupable.GetTechType(), false });
+                            equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
                             Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                            equipment.ReflectionCall("NotifyUnequip", false, new object[] { packet.Slot, inventoryItem });
+                            equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
                         }
                         else
                         {
