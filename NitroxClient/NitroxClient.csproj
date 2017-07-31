@@ -56,7 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\Packets\Processors\ConnectProcessor.cs" />
     <Compile Include="Logger\ClientLogger.cs" />
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />

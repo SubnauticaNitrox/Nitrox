@@ -34,12 +34,17 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
         {
             { typeof(PlayerManager), remotePlayerManager },
-            {typeof(Connect), new ConnectProcessor() },
+            { typeof(PacketSender), PacketSender }
         };
 
         static Multiplayer()
         {
             packetProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
+        }
+
+        public static void RemoveAllOtherPlayers()
+        {
+            remotePlayerManager.RemoveAllPlayers();
         }
 
         public void Awake()
