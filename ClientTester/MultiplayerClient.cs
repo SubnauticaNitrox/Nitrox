@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic;
+using NitroxClient.Logger;
 using NitroxClient.Map;
 using System;
 using UnityEngine;
@@ -18,9 +19,10 @@ namespace ClientTester
 
         public MultiplayerClient(String playerId)
         {
+            ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.ConsoleDebug);
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver, true);
+            client = new TcpClient(chunkAwarePacketReceiver);
             PacketSender = new PacketSender(client);
             PacketSender.PlayerId = playerId;
             Logic = new Logic(PacketSender);
@@ -31,8 +33,13 @@ namespace ClientTester
             client.Start(ip);
             if (client.IsConnected())
             {
+                ClientLogger.IngameMessage("Connected to server");
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
+            }
+            else
+            {
+                ClientLogger.IngameMessage("Unable to connect to server");
             }
         }
     }

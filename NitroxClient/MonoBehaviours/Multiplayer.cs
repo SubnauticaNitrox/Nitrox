@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -41,11 +42,17 @@ namespace NitroxClient.MonoBehaviours
             packetProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
         }
 
+        public static void RemoveAllOtherPlayers()
+        {
+            remotePlayerManager.RemoveAllPlayers();
+        }
+
         public void Awake()
         {
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+            ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             this.gameObject.AddComponent<PlayerMovement>();
 
@@ -80,7 +87,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 else
                 {
-                    Console.WriteLine("No packet processor for the given type: " + packet.GetType());
+                    ClientLogger.Debug("No packet processor for the given type: " + packet.GetType());
                 }
             }
         }
@@ -89,7 +96,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (client.IsConnected())
             {
-                ErrorMessage.AddMessage("Already connected to a server");
+                ClientLogger.IngameMessage("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
@@ -107,7 +114,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                ErrorMessage.AddMessage("Command syntax: mplayer USERNAME [SERVERIP]");
+                ClientLogger.IngameMessage("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -136,8 +143,16 @@ namespace NitroxClient.MonoBehaviours
         public void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
-            PacketSender.Active = true;
-            PacketSender.Authenticate();
+            if (client.IsConnected())
+            {
+                PacketSender.Active = true;
+                PacketSender.Authenticate();
+                ClientLogger.IngameMessage("Connected to server");
+            }
+            else
+            {
+                ClientLogger.IngameMessage("Unable to connect to server");
+            }
         }
 
         private void StopMultiplayer()
@@ -145,7 +160,6 @@ namespace NitroxClient.MonoBehaviours
             if (client.IsConnected())
             {
                 client.Stop();
-                PacketSender.Active = false;
             }
         }
 

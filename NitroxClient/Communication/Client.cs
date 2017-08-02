@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NitroxModel.Packets;
+using NitroxModel.Tcp;
+using NitroxClient.Logger;
+using NitroxClient.MonoBehaviours;
+using System;
 using System.Net;
 using System.Net.Sockets;
-using NitroxModel.Packets;
-using NitroxModel.Tcp;
 
 namespace NitroxClient.Communication
 {
@@ -11,17 +13,10 @@ namespace NitroxClient.Communication
         private ChunkAwarePacketReceiver packetReceiver;
         private const int port = 11000;
         private Connection connection;
-        private bool testClient = false;
         
         public TcpClient(ChunkAwarePacketReceiver packetManager)
         {
             this.packetReceiver = packetManager;
-        }
-
-        public TcpClient(ChunkAwarePacketReceiver packetManager, bool testClient)
-        {
-            this.packetReceiver = packetManager;
-            this.testClient = testClient;
         }
 
         public void Start(String ip)
@@ -33,31 +28,25 @@ namespace NitroxClient.Communication
 
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 connection = new Connection(socket);
+                connection.Connect(remoteEP);
 
-                socket.Connect(remoteEP);
-
-                if (!socket.Connected)
+                if (connection.Open)
                 {
-                    OutputMessage("Unable to connect to server.");
-                    throw new InvalidOperationException("Socket could not connect.");
+                    connection.BeginReceive(new AsyncCallback(DataReceived));
                 }
-                else
-                {
-                    OutputMessage("Connected to server.");
-                }
-
-                connection.BeginReceive(new AsyncCallback(DataReceived));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                OutputMessage("Unable to connect to server");
+                ClientLogger.Debug("Unforeseen error when connecting: " + e.GetBaseException());
             }
         }
 
         public void Stop()
         {
             connection.Close(); // Server will clean up pretty quickly
-            OutputMessage("Disconnected from server.");
+            Multiplayer.PacketSender.Active = false;
+            Multiplayer.RemoveAllOtherPlayers();
+            ClientLogger.IngameMessage("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -74,7 +63,7 @@ namespace NitroxClient.Communication
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             } else
             {
-                Console.WriteLine("Error reading data from server");
+                ClientLogger.Debug("Error reading data from server");
                 Stop();
             }
         }
@@ -96,17 +85,6 @@ namespace NitroxClient.Communication
                 return false;
             }
             return connection.Open;
-        }
-
-        private void OutputMessage(String msg)
-        {
-            if (testClient)
-            {
-                Console.WriteLine(msg);
-            } else
-            {
-                ErrorMessage.AddMessage(msg);
-            }
         }
     }
 }
