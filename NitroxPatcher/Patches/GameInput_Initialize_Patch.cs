@@ -16,7 +16,8 @@ namespace NitroxPatcher.Patches
             KeyBindingManager keyBindingManager = new KeyBindingManager();
 
             int numDevices = (int)ReflectionHelper.ReflectionGet(__instance, "numDevices", false, true);
-            int numButtons = keyBindingManager.GetHighestKeyBindingValue() + 1; // need enough space to support custom bindings
+            int currentNumButtons = (int)ReflectionHelper.ReflectionGet(__instance, "numButtons", false, true);
+            int numButtons = Math.Max((keyBindingManager.GetHighestKeyBindingValue() + 1), currentNumButtons); // need enough space to support custom bindings
             int numBindingSets = (int)ReflectionHelper.ReflectionGet(__instance, "numBindingSets", false, true);
 
             ReflectionHelper.ReflectionSet(__instance, "numButtons", numButtons, false, true);

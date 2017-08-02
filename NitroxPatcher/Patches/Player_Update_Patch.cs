@@ -16,13 +16,13 @@ namespace NitroxPatcher.Patches
         {
             KeyBindingManager keyBindingManager = new KeyBindingManager();
             
-            foreach(KeyBinding keyBinding in keyBindingManager.keyboardKeyBindings)
+            foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
             {
-                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall(typeof(GameInput), "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.button);
+                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall(typeof(GameInput), "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
 
                 if(isButtonDown)
                 {
-                    keyBinding.action.Execute();
+                    keyBinding.Action.Execute();
                 }
             }
         }

@@ -16,9 +16,9 @@ namespace NitroxPatcher.Patches
         {
             KeyBindingManager keyBindingManager = new KeyBindingManager();
             
-            foreach(KeyBinding keyBinding in keyBindingManager.keyboardKeyBindings)
+            foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
             {
-                ReflectionHelper.ReflectionCall(typeof(GameInput), "SetBindingInternal", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet), typeof(string) }, false, true, keyBinding.device, keyBinding.button, keyBinding.defaultKeyBinding.bindingSet, keyBinding.defaultKeyBinding.binding);
+                ReflectionHelper.ReflectionCall(typeof(GameInput), "SetBindingInternal", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet), typeof(string) }, false, true, keyBinding.Device, keyBinding.Button, keyBinding.DefaultKeyBinding.BindingSet, keyBinding.DefaultKeyBinding.Binding);
             }
         }
 
