@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.MonoBehaviours;
 using UnityEngine;
 using UWE;
 using NitroxClient.GameLogic.Helper;
@@ -397,7 +396,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 text,
                 text2
                 });
-                ErrorMessage.AddError(format, default(Vector3));
+                Console.WriteLine(format, default(Vector3));
             }
         }
 

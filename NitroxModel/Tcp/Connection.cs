@@ -2,6 +2,9 @@
 using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 
 namespace NitroxModel.Tcp
@@ -11,17 +14,42 @@ namespace NitroxModel.Tcp
         private Socket Socket;
         private MessageBuffer MessageBuffer;
         public bool Open { get; private set; }
+        public bool Authenticated { get; set; }
 
         public Connection(Socket socket)
         {
             this.Socket = socket;
             this.MessageBuffer = new MessageBuffer();
             this.Open = true;
-        }           
+        }
+
+        public void Connect(IPEndPoint remoteEP)
+        {
+            try
+            {
+                Socket.Connect(remoteEP);
+                if (!Socket.Connected)
+                {
+                    Open = false;
+                }
+            }
+            catch (SocketException)
+            {
+                Open = false;
+            }
+        }
         
         public void BeginReceive(AsyncCallback callback)
         {
-            Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+            try
+            {
+                Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("Error reading data into buffer: " + se.Message);
+                Open = false;
+            }
         }
 
         public IEnumerable<Packet> GetPacketsFromRecievedData(IAsyncResult ar)

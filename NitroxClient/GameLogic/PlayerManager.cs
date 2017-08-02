@@ -42,5 +42,13 @@ namespace NitroxClient.GameLogic
             playersById[playerId].Destroy();
             playersById.Remove(playerId);
         }
+
+        public void RemoveAllPlayers()
+        {
+            foreach (String playerId in playersById.Keys)
+            {
+                RemovePlayer(playerId);
+            }
+        }
     }
 }
