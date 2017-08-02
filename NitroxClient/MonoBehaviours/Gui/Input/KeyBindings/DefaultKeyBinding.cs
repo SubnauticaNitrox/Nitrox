@@ -2,13 +2,13 @@
 {
     public class DefaultKeyBinding
     {
-        public string binding { get; set; }
-        public GameInput.BindingSet bindingSet { get; set; }
+        public string Binding { get; private set; }
+        public GameInput.BindingSet BindingSet { get; private set; }
 
         public DefaultKeyBinding(string defaultBinding, GameInput.BindingSet defaultBindingSet)
         {
-            binding = defaultBinding;
-            bindingSet = defaultBindingSet;
+            Binding = defaultBinding;
+            BindingSet = defaultBindingSet;
         }
     }
 }

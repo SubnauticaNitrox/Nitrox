@@ -18,9 +18,9 @@ namespace NitroxPatcher.Patches
 
             if (device == GameInput.Device.Keyboard)
             {
-                foreach(KeyBinding keyBinding in keyBindingManager.keyboardKeyBindings)
+                foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
-                    ReflectionHelper.ReflectionCall(__instance, "AddBindingOption", true, false, tabIndex, keyBinding.label, keyBinding.device, keyBinding.button);
+                    ReflectionHelper.ReflectionCall(__instance, "AddBindingOption", true, false, tabIndex, keyBinding.Label, keyBinding.Device, keyBinding.Button);
                 }
             }
         }

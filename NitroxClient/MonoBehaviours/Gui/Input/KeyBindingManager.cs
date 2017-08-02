@@ -7,16 +7,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
 {
     public class KeyBindingManager
     {
-        public List<KeyBinding> keyboardKeyBindings { get; set; }
+        public List<KeyBinding> KeyboardKeyBindings { get; set; }
 
-        public static int CHAT_KEY_VALUE = 45;
+        public static int CHAT_KEY_VALUE = 45; 
         public static string CHAT_KEY_LABEL = "Chat";
 
         public KeyBindingManager()
         {
-            keyboardKeyBindings = new List<KeyBinding>();
+            KeyboardKeyBindings = new List<KeyBinding>();
 
-            keyboardKeyBindings.Add(new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()));
+            // new bindings should not be set to a value equivalent to a pre-existing GameInput.Button enum or another custom binding
+            KeyboardKeyBindings.Add(new KeyBinding(CHAT_KEY_VALUE, CHAT_KEY_LABEL, GameInput.Device.Keyboard, new DefaultKeyBinding("Y", GameInput.BindingSet.Primary), new ChatKeyBindingAction()));
         }
 
         // Returns highest custom key binding value. If no custom key bindings, returns 0. 
@@ -24,9 +25,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Input
         {
             int value = 0;
 
-            foreach(KeyBinding keyBinding in keyboardKeyBindings)
+            foreach(KeyBinding keyBinding in KeyboardKeyBindings)
             {
-                int keyValue = (int)keyBinding.button;
+                int keyValue = (int)keyBinding.Button;
                 if(keyValue > value)
                 {
                     value = keyValue;
