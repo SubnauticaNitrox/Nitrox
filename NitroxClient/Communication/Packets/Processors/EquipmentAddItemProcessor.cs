@@ -36,9 +36,9 @@ namespace NitroxClient.Communication.Packets.Processors
                     Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
                     itemsBySlot[packet.Slot] = inventoryItem;
 
-                    equipment.ReflectionCall("UpdateCount", false, new object[] { pickupable.GetTechType(), true });
+                    equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
                     Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                    equipment.ReflectionCall("NotifyEquip", false, new object[] { packet.Slot, inventoryItem });
+                    equipment.ReflectionCall("NotifyEquip", false, false, new object[] { packet.Slot, inventoryItem });
                 }
                 else
                 {
