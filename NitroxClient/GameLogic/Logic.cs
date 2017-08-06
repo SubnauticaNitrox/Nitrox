@@ -10,6 +10,7 @@ namespace NitroxClient.GameLogic
         public Item Item { get; private set; }
         public EquipmentSlots EquipmentSlots { get; private set; }
         public ItemContainers ItemContainers { get; private set; }
+        public PlayerAttributes PlayerAttributes { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -19,6 +20,7 @@ namespace NitroxClient.GameLogic
             this.Item = new Item(packetSender);
             this.EquipmentSlots = new EquipmentSlots(packetSender);
             this.ItemContainers = new ItemContainers(packetSender);
+            this.PlayerAttributes = new PlayerAttributes(packetSender);
         }
     }
 }

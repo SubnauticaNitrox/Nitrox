@@ -16,30 +16,42 @@ namespace NitroxClient.GameLogic
             set
             {
                 if (value == null)
+                {
                     RemovePlayer(playerId);
+                }
                 else
+                {
                     playersById[playerId] = value;
+                }
             }
         }
 
         public RemotePlayer FindPlayer(string playerId, bool createPlayer = false)
         {
             RemotePlayer player;
+
             if (!playersById.TryGetValue(playerId, out player) && createPlayer)
+            {
                 player = playersById[playerId] = new RemotePlayer(playerId);
+            }
+
             return player;
         }
 
         public void ForPlayer(string playerId, Action<RemotePlayer> action, bool createPlayer = false)
         {
             var player = FindPlayer(playerId, createPlayer);
+
             if (player != null)
+            {
                 action(player);
+            }
         }
 
         public void RemovePlayer(string playerId)
         {
-            playersById[playerId].Destroy();
+            RemotePlayer remotePlayer = playersById[playerId];
+            remotePlayer.Destroy();
             playersById.Remove(playerId);
         }
 
