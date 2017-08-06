@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,33 +24,48 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         public String playerName;
         public int position;
 
-        private GameObject oxygenBar;
-        private GameObject healthBar;
-        private GameObject foodBar;
-        private GameObject waterBar;
+        private class Bar
+        {
+            public GameObject GameObject;
+            public SmoothedValue SmoothedValue;
+            public String ValueUnit;
+
+            public Bar(GameObject gameObject, SmoothedValue smoothedValue, String valueUnit)
+            {
+                this.GameObject = gameObject;
+                this.SmoothedValue = smoothedValue;
+                this.ValueUnit = valueUnit;
+            }
+        }
+
+        private Bar oxygenBar;
+        private Bar healthBar;
+        private Bar foodBar;
+        private Bar waterBar;
+
         private GameObject background;
         private GameObject playerNameText;
-       
+        
         public void CreateVitals(String playerName, int position)
         {
             this.playerName = playerName;
             this.position = position;
                         
-            oxygenBar = cloneCircularBarParent(OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR);
-            healthBar = cloneCircularBarParent(HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR);
-            foodBar = cloneCircularBarParent(FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR);
-            waterBar = cloneCircularBarParent(WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR);
+            oxygenBar = CreateBar(OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR, "s");
+            healthBar = CreateBar(HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR, "%");
+            foodBar = CreateBar(FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR, "%");
+            waterBar = CreateBar(WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR, "%");
                         
-            Canvas canvas = oxygenBar.GetComponentInParent<Canvas>();
-            GameObject componentParent = oxygenBar.transform.parent.gameObject;
-            Quaternion rotation = oxygenBar.transform.localRotation;
+            Canvas canvas = oxygenBar.GameObject.GetComponentInParent<Canvas>();
+            GameObject componentParent = oxygenBar.GameObject.transform.parent.gameObject;
+            Quaternion rotation = oxygenBar.GameObject.transform.localRotation;
 
             CreateBackground(canvas, componentParent, rotation);
             CreatePlayerNameText();
             SetNewPosition(position);
         }
 
-        private GameObject cloneCircularBarParent(Color color, Color borderColor)
+        private Bar CreateBar(Color color, Color borderColor, String smoothedValueUnit)
         {
             uGUI_HealthBar healthBar = (uGUI_HealthBar)FindObjectOfType(typeof(uGUI_HealthBar));
 
@@ -65,17 +81,15 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             //Not sure why this is needed, but if a initial transform is not set 
             //then it will be in a weird, inconsistent state.
-            SetBarPostion(cloned, new Vector2(0, 0), canvas);
+            SetBarPostion(cloned.gameObject, new Vector2(0, 0), canvas);
 
             uGUI_CircularBar newBar = cloned.GetComponentInChildren<uGUI_CircularBar>();
             newBar.texture = healthBar.bar.texture;
             newBar.overlay = healthBar.bar.overlay;
             newBar.color = color;
             newBar.borderColor = borderColor;
-
-            setBarAmount(cloned, 100);
-
-            return cloned;
+            
+            return new Bar(cloned, new SmoothedValue(100, 100, 100, 100), smoothedValueUnit);
         }
 
         private void CreateBackground(Canvas canvas, GameObject parent, Quaternion rotation)
@@ -116,63 +130,87 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             return Sprite.Create(circleSquare, new Rect(0, 0, circleSquare.width, circleSquare.height), new Vector2(0, 0), 100);
         }
 
-        public void SetOxygen(float oxygen, float maxOxygen)
+        public void SetOxygen(float oxygen, float maxOxygen, float smoothTime = 0.1f)
         {
-            setBarAmount(oxygenBar, oxygen, maxOxygen);
+            oxygenBar.SmoothedValue.TargetValue = oxygen;
+            oxygenBar.SmoothedValue.MaxValue = maxOxygen;
+            oxygenBar.SmoothedValue.SmoothTime = smoothTime;
         }
 
-        public void SetHealth(float health)
+        public void SetHealth(float health, float smoothTime = 0.1f)
         {
-            setBarAmount(healthBar, health);
+            healthBar.SmoothedValue.TargetValue = health;
+            healthBar.SmoothedValue.SmoothTime = smoothTime;
         }
 
-        public void SetFood(float food)
+        public void SetFood(float food, float smoothTime = 0.1f)
         {
-            setBarAmount(foodBar, food);
+            foodBar.SmoothedValue.TargetValue = food;
+            foodBar.SmoothedValue.SmoothTime = smoothTime;
         }
 
-        public void SetWater(float water)
+        public void SetWater(float water, float smoothTime = 0.1f)
         {
-            setBarAmount(waterBar, water);
+            waterBar.SmoothedValue.TargetValue = water;
+            waterBar.SmoothedValue.SmoothTime = smoothTime;
+        }       
+
+        public void LateUpdate()
+        {
+            UpdateSmoothValue(oxygenBar);
+            UpdateSmoothValue(healthBar);
+            UpdateSmoothValue(foodBar);
+            UpdateSmoothValue(waterBar);
         }
 
-        private void setBarAmount(GameObject barGameObject, float amount, float max = 100.0f)
+        private void UpdateSmoothValue(Bar bar)
         {
-            uGUI_CircularBar bar = barGameObject.GetComponentInChildren<uGUI_CircularBar>();
-            bar.value = amount / max;
+            if (bar != null)
+            {
+                float vel = 0;
+                SmoothedValue smoothedValue = bar.SmoothedValue;
+                smoothedValue.CurrentValue = Mathf.SmoothDamp(smoothedValue.CurrentValue, smoothedValue.TargetValue, ref vel, smoothedValue.SmoothTime);
+                setBarAmount(bar, smoothedValue.CurrentValue, smoothedValue.MaxValue);
+            }
+        }
+
+        private void setBarAmount(Bar bar, float amount, float max)
+        {
+            uGUI_CircularBar circularBar = bar.GameObject.GetComponentInChildren<uGUI_CircularBar>();
+            circularBar.value = amount / max;
 
             int rounded = Mathf.RoundToInt(amount);
 
-            Text text = barGameObject.GetComponentInChildren<Text>();
-            text.text = ((int)rounded).ToString();
+            Text text = bar.GameObject.GetComponentInChildren<Text>();
+            text.text = ((int)rounded).ToString() + bar.ValueUnit;
         }
 
         public void SetNewPosition(int newPosition)
         {
-            Canvas canvas = healthBar.GetComponentInParent<Canvas>();
-            SetBarPostion(oxygenBar, OXYGEN_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(healthBar, HEALTH_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(foodBar, FOOD_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(waterBar, WATER_BAR_POSITION_OFFSET, canvas);
+            Canvas canvas = healthBar.GameObject.GetComponentInParent<Canvas>();
+            SetBarPostion(oxygenBar.GameObject, OXYGEN_BAR_POSITION_OFFSET, canvas);
+            SetBarPostion(healthBar.GameObject, HEALTH_BAR_POSITION_OFFSET, canvas);
+            SetBarPostion(foodBar.GameObject, FOOD_BAR_POSITION_OFFSET, canvas);
+            SetBarPostion(waterBar.GameObject, WATER_BAR_POSITION_OFFSET, canvas);
 
             GUIText gUIText = playerNameText.GetComponent<GUIText>();
             gUIText.transform.position = new Vector3(0.91f, 0.90f - ((position - 1) * 0.15f), 1f);
         }
 
-        private void SetBarPostion(GameObject bar, Vector2 positionOffset, Canvas canvas)
+        private void SetBarPostion(GameObject barGameObject, Vector2 positionOffset, Canvas canvas)
         {
             Vector2 screenPosition = new Vector2(Screen.width - positionOffset.x, Screen.height - (positionOffset.y * position));
             Vector2 worldPosition;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
-            bar.transform.position = canvas.transform.TransformPoint(worldPosition);
+            barGameObject.transform.position = canvas.transform.TransformPoint(worldPosition);
         }
 
         void OnDestroy()
         {
-            Destroy(oxygenBar);
-            Destroy(healthBar);
-            Destroy(foodBar);
-            Destroy(waterBar);
+            Destroy(oxygenBar.GameObject);
+            Destroy(healthBar.GameObject);
+            Destroy(foodBar.GameObject);
+            Destroy(waterBar.GameObject);
             Destroy(background);
             Destroy(playerNameText);
         }

@@ -95,6 +95,7 @@
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
+    <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\ChatKeyBindingAction.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
