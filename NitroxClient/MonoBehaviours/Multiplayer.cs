@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.HUD;
 using NitroxClient.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
@@ -27,6 +28,7 @@ namespace NitroxClient.MonoBehaviours
         private static bool hasLoadedMonoBehaviors;
 
         private static PlayerManager remotePlayerManager = new PlayerManager();
+        private static PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
@@ -34,6 +36,7 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
         {
             { typeof(PlayerManager), remotePlayerManager },
+            { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
             { typeof(PacketSender), PacketSender }
         };
 
@@ -55,6 +58,7 @@ namespace NitroxClient.MonoBehaviours
             ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             this.gameObject.AddComponent<PlayerMovement>();
+            this.gameObject.AddComponent<PlayerStatsBroadcaster>();
 
             main = this;
         }

@@ -6,7 +6,7 @@ namespace NitroxClient
 {
     public class DebugUtils
     {
-        public static void DumpGameObject(GameObject gameObject, string indent)
+        public static void DumpGameObject(GameObject gameObject, string indent = "")
         {
             Console.WriteLine("{0}+{1}", indent, gameObject.name);
 
@@ -21,7 +21,7 @@ namespace NitroxClient
             }
         }
 
-        public static void DumpComponent(Component component, string indent)
+        public static void DumpComponent(Component component, string indent = "")
         {
             Console.WriteLine("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
         }
