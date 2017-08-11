@@ -11,6 +11,8 @@ namespace NitroxClient.GameLogic
         public EquipmentSlots EquipmentSlots { get; private set; }
         public ItemContainers ItemContainers { get; private set; }
         public PlayerAttributes PlayerAttributes { get; private set; }
+        public Power Power { get; private set; }
+        public SimulationOwnership SimulationOwnership { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -21,6 +23,8 @@ namespace NitroxClient.GameLogic
             this.EquipmentSlots = new EquipmentSlots(packetSender);
             this.ItemContainers = new ItemContainers(packetSender);
             this.PlayerAttributes = new PlayerAttributes(packetSender);
+            this.Power = new Power(packetSender);
+            this.SimulationOwnership = new SimulationOwnership(packetSender);
         }
     }
 }

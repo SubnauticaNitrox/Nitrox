@@ -58,6 +58,7 @@
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
+    <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />

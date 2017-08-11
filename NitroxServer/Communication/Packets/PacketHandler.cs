@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets
 
         private DefaultServerPacketProcessor defaultPacketProcessor;
 
-        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper)
+        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
         {
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
 
@@ -25,6 +25,7 @@ namespace NitroxServer.Communication.Packets
             {
                 {typeof(TcpServer), tcpServer },
                 {typeof(TimeKeeper), timeKeeper },
+                {typeof(SimulationOwnership), simulationOwnership }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
