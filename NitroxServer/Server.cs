@@ -8,13 +8,15 @@ namespace NitroxServer
     {
         private TcpServer tcpServer;
         private TimeKeeper timeKeeper;
+        private SimulationOwnership simulationOwnership;
         private PacketHandler packetHandler;
 
         public Server()
         {
             this.timeKeeper = new TimeKeeper();
             this.tcpServer = new TcpServer();
-            this.packetHandler = new PacketHandler(tcpServer, timeKeeper);
+            this.simulationOwnership = new SimulationOwnership();
+            this.packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership);
         }
 
         public void Start()

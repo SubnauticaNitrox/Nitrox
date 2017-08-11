@@ -57,8 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
+    <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\PlayerAttributes.cs" />
+    <Compile Include="GameLogic\Power.cs" />
     <Compile Include="Logger\ClientLogger.cs" />
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MultiplayerButton.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
+    <Compile Include="MonoBehaviours\PowerMonitor.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
