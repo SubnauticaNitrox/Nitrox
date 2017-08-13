@@ -13,6 +13,7 @@ namespace NitroxClient.GameLogic
         public PlayerAttributes PlayerAttributes { get; private set; }
         public Power Power { get; private set; }
         public SimulationOwnership SimulationOwnership { get; private set; }
+        public Crafting Crafting { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -25,6 +26,7 @@ namespace NitroxClient.GameLogic
             this.PlayerAttributes = new PlayerAttributes(packetSender);
             this.Power = new Power(packetSender);
             this.SimulationOwnership = new SimulationOwnership(packetSender);
+            this.Crafting = new Crafting(packetSender);
         }
     }
 }
