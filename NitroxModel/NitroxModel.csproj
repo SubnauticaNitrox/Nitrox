@@ -47,6 +47,8 @@
     <Compile Include="DataStructures\Transform.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\FabricatorItemPickup.cs" />
+    <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\PowerLevelChanged.cs" />

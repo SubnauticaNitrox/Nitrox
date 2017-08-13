@@ -1,6 +1,5 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
