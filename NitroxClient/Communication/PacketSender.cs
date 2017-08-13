@@ -38,7 +38,7 @@ namespace NitroxClient.Communication
             if (opVehicle.IsPresent())
             {
                 VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(PlayerId, ApiHelper.Vector3(location), vehicle.Rotation, vehicle.TechType, vehicle.Guid);
+                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Rotation, vehicle.Velocity, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid);
             }
             else
             {

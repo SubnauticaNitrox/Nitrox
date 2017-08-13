@@ -41,17 +41,47 @@ namespace NitroxClient.MonoBehaviours
         private Optional<VehicleModel> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
+            SubRoot sub = Player.main.GetCurrentSub();
 
-            if (vehicle == null)
+            String guid;
+            Vector3 position;
+            Quaternion rotation;
+            Vector3 velocity;
+            Vector3 angularVelocity;
+            TechType techType;
+
+            if (vehicle != null)
+            {
+                guid = GuidHelper.GetGuid(vehicle.gameObject);
+                position = vehicle.gameObject.transform.position;
+                rotation = vehicle.gameObject.transform.rotation;
+                techType = CraftData.GetTechType(vehicle.gameObject);
+
+                Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();                
+                velocity = rigidbody.velocity;
+                angularVelocity = rigidbody.angularVelocity;
+            }
+            else if(sub != null && Player.main.isPiloting)
+            {
+                guid = GuidHelper.GetGuid(sub.gameObject);
+                position = sub.gameObject.transform.position;
+                rotation = sub.gameObject.transform.rotation;
+                Rigidbody rigidbody = sub.gameObject.GetComponent<Rigidbody>();
+                velocity = rigidbody.velocity;
+                angularVelocity = rigidbody.angularVelocity;
+                techType = TechType.Cyclops;
+            }
+            else
             {
                 return Optional<VehicleModel>.Empty();
             }
-
-            String guid = GuidHelper.GetGuid(vehicle.gameObject);
-            Quaternion rotation = vehicle.gameObject.transform.rotation;
-            TechType techType = CraftData.GetTechType(vehicle.gameObject);
-
-            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType), guid, ApiHelper.Quaternion(rotation));
+            
+            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType), 
+                                                  guid, 
+                                                  ApiHelper.Vector3(position), 
+                                                  ApiHelper.Quaternion(rotation),
+                                                  ApiHelper.Vector3(velocity),
+                                                  ApiHelper.Vector3(angularVelocity));
 
             return Optional<VehicleModel>.Of(model);
         }
