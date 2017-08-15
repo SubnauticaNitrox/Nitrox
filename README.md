@@ -15,9 +15,15 @@ The following milestones have been completed:
 * Player movement
 * Picking up / Dropping item syncing
 * Long-range world syncing
-* Basic base building sync
+* Base building 
+* Furniture building
+* Most furniture interactions (containers / medkit fabricators / chargers / etc)
+* Power management
 * Seamoth & Exosuit Syncing
+* Basic cyclops syncing
 * Rudimentary chat system
+* New HUD for remote players
+* Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 
 ### How can I play this mod?
