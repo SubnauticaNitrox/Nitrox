@@ -8,15 +8,16 @@ namespace NitroxClient.MonoBehaviours
 {
     public class PlayerMovement : MonoBehaviour
     {
+        public const float BROADCAST_INTERVAL = 0.05f;
+
         private float time = 0.0f;
-        public float interpolationPeriod = 0.05f;
 
         public void Update()
         {
             time += Time.deltaTime;
 
             // Only do on a specific cadence to avoid hammering server
-            if (time >= interpolationPeriod)
+            if (time >= BROADCAST_INTERVAL)
             {
                 time = 0;
 

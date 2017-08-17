@@ -1,21 +1,18 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleMovementProcessor : ClientPacketProcessor<VehicleMovement>
     {
-        private const int VEHICLE_POS_CORRECTION_AFTER_N_PACKETS = 60;
-
         private PlayerManager remotePlayerManager;
-        private Dictionary<String, int> correctionCounter = new Dictionary<String, int>(); //TODO: TTL
-
+        
         public VehicleMovementProcessor(PlayerManager remotePlayerManager)
         {
             this.remotePlayerManager = remotePlayerManager;
@@ -25,44 +22,34 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
 
-            Vector3 position = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
-            Quaternion rotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
+            Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
+            Vector3 remoteVelocity = ApiHelper.Vector3(vehicleMovement.Velocity);
+            Quaternion remoteRotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
+            Vector3 remoteAngularVelocity = ApiHelper.Vector3(vehicleMovement.AngularVelocity);
 
             if (opGameObject.IsPresent())
             {
                 GameObject gameObject = opGameObject.Get();
 
-                /*
-                    * For the cyclops, it is too intense for the game to lerp 
-                    * the entire structure every movement packet update.  
-                    * Instead, we try to match the velocity.  Due to floating
-                    * points not being precise, this will skew quickly.  To 
-                    * counter this, apply a correction every n-number of packets.
-                    */
-
-                if(!correctionCounter.ContainsKey(vehicleMovement.Guid))
-                {
-                    correctionCounter.Add(vehicleMovement.Guid, 0);
-                }
-
-                int currentCorrectionCounter = correctionCounter[vehicleMovement.Guid];
-
-                if(currentCorrectionCounter == VEHICLE_POS_CORRECTION_AFTER_N_PACKETS)
-                {
-                    gameObject.transform.position = position;
-                    gameObject.transform.rotation = rotation;
-                }
-
                 Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-                rigidbody.velocity = ApiHelper.Vector3(vehicleMovement.Velocity);
-                rigidbody.angularVelocity = ApiHelper.Vector3(vehicleMovement.AngularVelocity);
+
+                if(rigidbody != null)
+                {
+                    //todo: maybe toggle kinematic if jumping large distances?
+                    rigidbody.velocity = GetVehicleVelocity(remotePosition, remoteVelocity, gameObject);
+                    rigidbody.angularVelocity = GetVehicleAngularVelocity(remoteRotation, remoteAngularVelocity, gameObject);
+                }
+                else
+                {
+                    Console.WriteLine("Vehicle did not have a rigidbody!");
+                }
             }
             else
             {
-                CreateVehicleAt(vehicleMovement.TechType, vehicleMovement.Guid, position, rotation);
+                CreateVehicleAt(vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
             }
         }
-
+        
         private void CreateVehicleAt(String techTypeString, String guid, Vector3 position, Quaternion rotation)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
@@ -107,6 +94,60 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
 
             GuidHelper.SetNewGuid(gameObject, guid);
+        }
+
+        /*
+         * For the cyclops, it is too intense for the game to lerp the entire structure every movement
+         * packet update.  Instead, we try to match the velocity.  Due to floating points not being
+         * precise, this will skew quickly.  To counter this, we apply micro adjustments each packet
+         * to get the simulation back in sync.  The adjustments will increase in size the larger the  
+         * out of sync issue is.
+         */
+        private Vector3 GetVehicleVelocity(Vector3 remotePosition, Vector3 remoteVelocity, GameObject gameObject)
+        {
+            Vector3 difference = (remotePosition - gameObject.transform.position);
+            Vector3 velocityToMakeUpDifference = difference / PlayerMovement.BROADCAST_INTERVAL;
+
+            float distance = Vector3.Distance(remotePosition, gameObject.transform.position);
+            float maxAdjustment = 0.15f;
+
+            if (distance > 10)
+            {
+                maxAdjustment = 1f;
+            }
+            else if (distance > 5)
+            {
+                maxAdjustment = 0.5f;
+            }
+            else if (distance > 1)
+            {
+                maxAdjustment = 0.25f;
+            }
+            else if (distance < 0.1 && remoteVelocity == Vector3.zero) //overcorrections can cause jitter when standing still. 
+            {
+                return Vector3.zero;
+            }
+
+            Vector3 limitedVelocityChange = MathUtil.ClampMagnitude(velocityToMakeUpDifference - remoteVelocity, maxAdjustment, maxAdjustment * -1);
+
+            return remoteVelocity + limitedVelocityChange;
+        }
+
+        private Vector3 GetVehicleAngularVelocity(Quaternion remoteRotation, Vector3 remoteAngularVelocity, GameObject gameObject)
+        {
+            Vector3 difference = new Vector3(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.x, remoteRotation.eulerAngles.x),
+                                             Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, remoteRotation.eulerAngles.y),
+                                             Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.z, remoteRotation.eulerAngles.z));
+
+            if (difference.magnitude < 0.1 && remoteAngularVelocity == Vector3.zero) //overcorrections can cause jitter when standing still. 
+            {
+                return Vector3.zero;
+            }
+
+            Vector3 differenceInRadians = new Vector3(difference.x * Mathf.Deg2Rad,
+                                                      difference.y * Mathf.Deg2Rad,
+                                                      difference.z * Mathf.Deg2Rad);
+            return differenceInRadians;
         }
     }
 }
