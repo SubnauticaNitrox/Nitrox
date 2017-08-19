@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Packets\Processors\CyclopsBeginSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FabricatorItemPickupProcessor.cs" />
