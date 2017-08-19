@@ -17,14 +17,18 @@ namespace NitroxClient.GameLogic
         {
             CyclopsToggleInternalLighting packet = new CyclopsToggleInternalLighting(packetSender.PlayerId, guid, isOn);
             packetSender.Send(packet);
-            Console.WriteLine(packet);
         }
 
         public void ToggleFloodLights(String guid, bool isOn)
         {
             CyclopsToggleFloodLights packet = new CyclopsToggleFloodLights(packetSender.PlayerId, guid, isOn);
             packetSender.Send(packet);
-            Console.WriteLine(packet);
+        }
+
+        public void BeginSilentRunning(String guid)
+        {
+            CyclopsBeginSilentRunning beginSilentRunning = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
+            packetSender.Send(beginSilentRunning);
         }
     }
 }
