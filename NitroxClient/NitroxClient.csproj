@@ -56,11 +56,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FabricatorItemPickupProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FabricatorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
+    <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
