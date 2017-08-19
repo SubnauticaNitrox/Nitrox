@@ -15,6 +15,7 @@ namespace NitroxClient.GameLogic
         public SimulationOwnership SimulationOwnership { get; private set; }
         public Crafting Crafting { get; private set; }
         public Cyclops Cyclops { get; private set; }
+        public Interior Interior { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -29,6 +30,7 @@ namespace NitroxClient.GameLogic
             this.SimulationOwnership = new SimulationOwnership(packetSender);
             this.Crafting = new Crafting(packetSender);
             this.Cyclops = new Cyclops(packetSender);
+            this.Interior = new Interior(packetSender);
         }
     }
 }
