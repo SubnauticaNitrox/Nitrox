@@ -1,10 +1,11 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -52,10 +53,30 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
                 GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
+
+                SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
             }
             else
             {
                 Console.WriteLine("Could not find constructed object!");
+            }
+        }
+
+        private void SetInteractiveChildrenGuids(GameObject constructedObject, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        {
+            foreach(InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
+            {
+                UnityEngine.Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
+
+                if(transform != null)
+                {
+                    GameObject gameObject = transform.gameObject;
+                    GuidHelper.SetNewGuid(gameObject, childIdentifier.Guid);
+                }
+                else
+                {
+                    Console.WriteLine("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
+                }
             }
         }
     }

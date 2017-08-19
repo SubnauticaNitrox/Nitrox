@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />

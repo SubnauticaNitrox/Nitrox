@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic
         public Crafting Crafting { get; private set; }
         public Cyclops Cyclops { get; private set; }
         public Interior Interior { get; private set; }
-        public Constructor Constructor { get; private set; }
+        public MobileVehicleBay MobileVehicleBay { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             this.Crafting = new Crafting(packetSender);
             this.Cyclops = new Cyclops(packetSender);
             this.Interior = new Interior(packetSender);
-            this.Constructor = new Constructor(packetSender);
+            this.MobileVehicleBay = new MobileVehicleBay(packetSender);
         }
     }
 }
