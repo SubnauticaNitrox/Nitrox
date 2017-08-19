@@ -75,9 +75,10 @@ namespace NitroxClient.GameLogic
             }
 
             MovementHelper.MoveGameObject(body, position, PLAYER_TRANSFORM_SMOOTH_PERIOD);
-            MovementHelper.RotateGameObject(playerView, cameraRotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+            MovementHelper.RotateGameObject(playerView, bodyRotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
 
             animationController.AimingRotation = cameraRotation;
+            animationController.UpdatePlayerAnimations = true;
         }
 
         public void Destroy()

@@ -48,6 +48,9 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 CreateVehicleAt(vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
             }
+
+            RemotePlayer remotePlayer = remotePlayerManager[vehicleMovement.PlayerId];
+            remotePlayer.animationController.UpdatePlayerAnimations = false;
         }
         
         private void CreateVehicleAt(String techTypeString, String guid, Vector3 position, Quaternion rotation)

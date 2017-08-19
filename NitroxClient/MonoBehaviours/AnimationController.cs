@@ -11,6 +11,7 @@ namespace NitroxClient.MonoBehaviours
         private const float SMOOTHING_SPEED = 6f;
         public Animator animator;
 
+        public bool UpdatePlayerAnimations { get; set; } = true;
         public Quaternion AimingRotation { get; set; }
 
         private Vector3 lastPosition = Vector3.zero;
@@ -28,32 +29,38 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            foreach (KeyValuePair<string, bool> kvp in animationStatusById)
+            if (UpdatePlayerAnimations)
             {
-                //For whatever reason, attempting to setbool once most of the time won't work
-                //Will investigate soon but this seems to work for now
-                animator.SetBool(kvp.Key, kvp.Value);
+                foreach (KeyValuePair<string, bool> kvp in animationStatusById)
+                {
+                    //For whatever reason, attempting to setbool once most of the time won't work
+                    //Will investigate soon but this seems to work for now
+                    animator.SetBool(kvp.Key, kvp.Value);
+                }
             }
         }
 
         public void FixedUpdate()
         {
-            Vector3 velocity = AimingRotation.GetInverse() * (1 / Time.fixedDeltaTime * (transform.position - lastPosition));
-            lastPosition = transform.position;
-
-            smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, velocity, Vector3.Normalize(velocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
-            SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
-            SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
-            SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
-            SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
-
-            float num = AimingRotation.eulerAngles.x;
-            if (num > 180f)
+            if (UpdatePlayerAnimations)
             {
-                num -= 360f;
+                Vector3 velocity = AimingRotation.GetInverse() * (1 / Time.fixedDeltaTime * (transform.position - lastPosition));
+                lastPosition = transform.position;
+
+                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, velocity, Vector3.Normalize(velocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+                SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
+                SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
+                SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
+                SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
+
+                float num = AimingRotation.eulerAngles.x;
+                if (num > 180f)
+                {
+                    num -= 360f;
+                }
+                num = -num;
+                animator.SetFloat("view_pitch", num);
             }
-            num = -num;
-            animator.SetFloat("view_pitch", num);
         }
 
         public void SetBool(string name, bool value)
