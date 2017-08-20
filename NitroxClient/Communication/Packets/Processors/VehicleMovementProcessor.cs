@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
     public class VehicleMovementProcessor : ClientPacketProcessor<VehicleMovement>
     {
         private PlayerManager remotePlayerManager;
-        
+
         public VehicleMovementProcessor(PlayerManager remotePlayerManager)
         {
             this.remotePlayerManager = remotePlayerManager;
@@ -52,7 +52,7 @@ namespace NitroxClient.Communication.Packets.Processors
             RemotePlayer remotePlayer = remotePlayerManager[vehicleMovement.PlayerId];
             remotePlayer.animationController.UpdatePlayerAnimations = false;
         }
-        
+
         private void CreateVehicleAt(String techTypeString, String guid, Vector3 position, Quaternion rotation)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
@@ -64,14 +64,14 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             TechType techType = opTechType.Get();
-            
+
             if (techType == TechType.Cyclops)
             {
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation));
             }
             else
             {
-                GameObject techPrefab = TechTree.main.GetGamePrefab(techType);
+                GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
 
                 if (techPrefab != null)
                 {

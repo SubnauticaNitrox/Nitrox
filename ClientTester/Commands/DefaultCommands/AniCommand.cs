@@ -18,8 +18,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             if (args.Length < 2)
             {
-                CommandManager.NotEnoughArgumentsMessage(2, Syntax);
-                return;
+                throw new NotEnoughArgumentsException(2);
             }
             AnimChangeState state;
             if (args[1] == "on" || args[1] == "1" || args[1] == "true")

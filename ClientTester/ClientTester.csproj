@@ -62,6 +62,7 @@
     <Compile Include="Commands\DefaultCommands\MoveCommand.cs" />
     <Compile Include="Commands\DefaultCommands\MoveyCommand.cs" />
     <Compile Include="Commands\DefaultCommands\PickupCommand.cs" />
+    <Compile Include="Commands\DefaultCommands\PlayerStatsCommand.cs" />
     <Compile Include="Commands\DefaultCommands\PosCommand.cs" />
     <Compile Include="Commands\NitroxCommand.cs" />
     <Compile Include="MultiplayerClient.cs" />

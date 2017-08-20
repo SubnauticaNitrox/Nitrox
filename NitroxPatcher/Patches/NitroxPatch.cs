@@ -1,5 +1,7 @@
 ﻿using Harmony;
 using NitroxModel.Helper;
+using System;
+using System.Linq;
 using System.Reflection;
 
 namespace NitroxPatcher.Patches
@@ -55,6 +57,16 @@ namespace NitroxPatcher.Patches
             MethodInfo prefix = this.GetType().GetMethod("Prefix");
             Validate.NotNull(prefix, "Prefix cannot be null");
             return new HarmonyMethod(this.GetType(), "Prefix");
+        }
+
+        protected static int GetLocalVariableIndex<T>(MethodBase method)
+        {
+            var matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
+            if (matchingVariables.Length == 0)
+                throw new IndexOutOfRangeException($"{method} does not have a local variable of type {nameof(T)}");
+            if (matchingVariables.Length > 1)
+                throw new IndexOutOfRangeException($"{method} has multiple local variables of type {nameof(T)}");
+            return matchingVariables[0].LocalIndex;
         }
     }
 }

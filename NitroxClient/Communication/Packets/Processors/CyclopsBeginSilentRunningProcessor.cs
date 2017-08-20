@@ -20,15 +20,15 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(packet.Guid);
 
-            if(opCyclops.IsPresent())
+            if (opCyclops.IsPresent())
             {
                 CyclopsSilentRunningAbilityButton ability = opCyclops.Get().GetComponentInChildren<CyclopsSilentRunningAbilityButton>();
-                
-                if(ability != null)
+
+                if (ability != null)
                 {
                     packetSender.AddSuppressedPacketType(typeof(CyclopsBeginSilentRunning));
                     ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                    ability.StartCooldown();
+                    ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
                     packetSender.RemoveSuppressedPacketType(typeof(CyclopsBeginSilentRunning));
                 }
                 else

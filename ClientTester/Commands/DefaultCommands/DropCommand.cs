@@ -17,8 +17,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             if (args.Length < 4)
             {
-                CommandManager.NotEnoughArgumentsMessage(4, Syntax);
-                return;
+                throw new NotEnoughArgumentsException(4);
             }
 
             client.Logic.Item.Dropped(new GameObject(), UWE.Utils.ParseEnum<TechType>(args[0]), CommandManager.GetVectorFromArgs(args, 1));

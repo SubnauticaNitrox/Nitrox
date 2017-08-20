@@ -17,14 +17,15 @@ namespace NitroxPatcher.Patches
             KeyBindingManager keyBindingManager = new KeyBindingManager();
             string serializerFormat = "Input/Binding/{0}/{1}/{2}";
 
-            foreach(GameInput.BindingSet bindingSet in Enum.GetValues(typeof(GameInput.BindingSet)))
+            foreach (GameInput.BindingSet bindingSet in Enum.GetValues(typeof(GameInput.BindingSet)))
             {
                 foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
-                    string binding = (string)ReflectionHelper.ReflectionCall(typeof(GameInput), "GetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet);
+                    Console.WriteLine($"Getting keybinding: {keyBinding.Device}, {keyBinding.Label} ({keyBinding.Button}), {bindingSet}");
+                    string binding = (string)ReflectionHelper.ReflectionCall<GameInput>(null, "GetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet);
                     string name = string.Format(serializerFormat, keyBinding.Device, keyBinding.Button, bindingSet);
 
-                    ReflectionHelper.ReflectionCall(typeof(GameInput), "SetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet), typeof(string) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet, serializer.Serialize(name, binding));
+                    ReflectionHelper.ReflectionCall<GameInput>(null, "SetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet), typeof(string) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet, serializer.Serialize(name, binding));
                 }
             }
         }
