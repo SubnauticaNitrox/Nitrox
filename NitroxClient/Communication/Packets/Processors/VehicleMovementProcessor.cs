@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             this.remotePlayerManager = remotePlayerManager;
         }
-
+        
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
 
-                if(rigidbody != null)
+                if (rigidbody != null)
                 {
                     //todo: maybe toggle kinematic if jumping large distances?
                     rigidbody.velocity = GetVehicleVelocity(remotePosition, remoteVelocity, gameObject);
@@ -138,19 +138,26 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private Vector3 GetVehicleAngularVelocity(Quaternion remoteRotation, Vector3 remoteAngularVelocity, GameObject gameObject)
         {
-            Vector3 difference = new Vector3(Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.x, remoteRotation.eulerAngles.x),
-                                             Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.y, remoteRotation.eulerAngles.y),
-                                             Mathf.DeltaAngle(gameObject.transform.rotation.eulerAngles.z, remoteRotation.eulerAngles.z));
+            Quaternion delta = remoteRotation * Quaternion.Inverse(gameObject.transform.rotation);
 
-            if (difference.magnitude < 0.1 && remoteAngularVelocity == Vector3.zero) //overcorrections can cause jitter when standing still. 
+            float angle; Vector3 axis;
+            delta.ToAngleAxis(out angle, out axis);
+
+            // We get an infinite axis in the event that our rotation is already aligned.
+            if (float.IsInfinity(axis.x))
             {
                 return Vector3.zero;
             }
 
-            Vector3 differenceInRadians = new Vector3(difference.x * Mathf.Deg2Rad,
-                                                      difference.y * Mathf.Deg2Rad,
-                                                      difference.z * Mathf.Deg2Rad);
-            return differenceInRadians;
+            if (angle > 180f)
+            {
+                angle -= 360f;
+            }
+
+            // Here I drop down to 0.9f times the desired movement,
+            // since we'd rather undershoot and ease into the correct angle
+            // than overshoot and oscillate around it in the event of errors.
+            return (0.9f * Mathf.Deg2Rad * angle / PlayerMovement.BROADCAST_INTERVAL) * axis.normalized;            
         }
     }
 }
