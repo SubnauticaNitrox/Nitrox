@@ -17,8 +17,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             if (args.Length < 4)
             {
-                CommandManager.NotEnoughArgumentsMessage(4, Syntax);
-                return;
+                throw new NotEnoughArgumentsException(4);
             }
 
             client.Logic.Item.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");

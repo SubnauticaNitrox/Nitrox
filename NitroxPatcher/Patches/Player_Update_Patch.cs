@@ -15,12 +15,12 @@ namespace NitroxPatcher.Patches
         public static void Postfix(Player __instance)
         {
             KeyBindingManager keyBindingManager = new KeyBindingManager();
-            
-            foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
-            {
-                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall(typeof(GameInput), "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
 
-                if(isButtonDown)
+            foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
+            {
+                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall<GameInput>(null, "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
+
+                if (isButtonDown)
                 {
                     keyBinding.Action.Execute();
                 }
