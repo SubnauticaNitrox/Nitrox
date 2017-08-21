@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
 
             Log.Debug("Building item from constructor with uuid: " + constructorGuid);
 
-            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+            Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
             if (opConstructedObject.IsPresent())
             {

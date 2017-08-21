@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Validate.NotNull(onCraftingBegin);
             onCraftingBegin.Invoke(crafter, new object[] { packet.TechType, packet.Duration }); //TODO: take into account latency for duration   
 
-            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+            Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
             if (opConstructedObject.IsPresent())
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
             {
-                UnityEngine.Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
+                Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
 
                 if (transform != null)
                 {

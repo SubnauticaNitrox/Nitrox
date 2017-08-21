@@ -39,6 +39,7 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleModel> vehicle = GetVehicleModel();
+
                 string subGuid = null;
 
                 SubRoot currentSub = Player.main.GetCurrentSub();

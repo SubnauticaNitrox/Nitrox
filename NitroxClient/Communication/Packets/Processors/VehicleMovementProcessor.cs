@@ -83,6 +83,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void CreateVehicleAt(RemotePlayer player, TechType techType, string guid, Vector3 position, Quaternion rotation)
         {
+            // TODO: Is this duplicate with the vehiclebay code? Because that can spawn vehicles/subs as well.....
+            // And this is just redundant stuff when the vehicle is kinda not existing....
+
             if (techType == TechType.Cyclops)
             {
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(player, go, guid, position, rotation));

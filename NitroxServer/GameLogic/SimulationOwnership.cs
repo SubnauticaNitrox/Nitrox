@@ -4,6 +4,9 @@ namespace NitroxServer.GameLogic
 {
     public class SimulationOwnership
     {
+        // TODO: redistribute upon disconnect
+        // TODO: Also upon connect.
+
         Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
 
         // TODO: redistribute upon disconnect

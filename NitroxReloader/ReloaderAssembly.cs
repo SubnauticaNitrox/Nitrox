@@ -51,11 +51,26 @@ namespace NitroxReloader
                 if (originalMethod == null)
                 {
                     Console.WriteLine("Reloader: Original method not found with parameters {0}", string.Join(", ", paramTypes.Select(typ => typ.ToString()).ToArray()));
-                    continue;
+                    try
+                    {
+                        originalMethod = definingType.GetMethod(method.Name, ALL_BINDINGS);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Reloader: Unable to get method without parameter constraints! " + e);
+                        continue;
+                    }
+                    if (originalMethod == null)
+                    {
+                        Console.WriteLine("Reloader: Also no method found without parameter constraints.");
+                        continue;
+                    }
+                    Console.WriteLine("Reloader: WARNING: Retrieved original method {0} for {1} by ignoring parameters. If you changed the parameters, this usually breaks!", originalMethod, method);
                 }
 
                 IntPtr originalCodeStart = GetMethodStart(originalMethod);
                 IntPtr newCodeStart = GetMethodStart(method);
+
                 if (originalCodeStart == newCodeStart)
                 {
                     Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
