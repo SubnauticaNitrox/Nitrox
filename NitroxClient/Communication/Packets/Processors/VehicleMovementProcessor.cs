@@ -22,10 +22,14 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
 
+            RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
+
             Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.Position);
             Vector3 remoteVelocity = ApiHelper.Vector3(vehicleMovement.Velocity);
             Quaternion remoteRotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
 
+            Vehicle vehicle = null;
+            SubRoot subRoot = null;
             if (opGameObject.IsPresent())
             {
                 GameObject gameObject = opGameObject.Get();
@@ -53,17 +57,22 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     Console.WriteLine("Vehicle did not have a rigidbody!");
                 }
+
+                vehicle = gameObject.GetComponent<Vehicle>();
+                subRoot = gameObject.GetComponent<SubRoot>();
             }
             else
             {
-                CreateVehicleAt(vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
+                CreateVehicleAt(player, vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
             }
+            player.SetVehicle(vehicle);
+            player.SetSubRoot(subRoot);
+            player.SetPilotingChair(subRoot.GetComponentInChildren<PilotingChair>());
 
-            RemotePlayer remotePlayer = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
-            remotePlayer.animationController.UpdatePlayerAnimations = false;
+            player.animationController.UpdatePlayerAnimations = false;
         }
 
-        private void CreateVehicleAt(String techTypeString, String guid, Vector3 position, Quaternion rotation)
+        private void CreateVehicleAt(RemotePlayer player, String techTypeString, String guid, Vector3 position, Quaternion rotation)
         {
             Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
 
@@ -77,7 +86,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(player, go, guid, position, rotation));
             }
             else
             {
@@ -85,7 +94,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation);
+                    OnVehiclePrefabLoaded(player, techPrefab, guid, position, rotation);
                 }
                 else
                 {
@@ -94,7 +103,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation)
+        private void OnVehiclePrefabLoaded(RemotePlayer player, GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -107,6 +116,8 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
 
             GuidHelper.SetNewGuid(gameObject, guid);
+
+            // TODO: Implement cyclops piloting, and simulation of vehicles when they are not being piloted.
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
+    // Shouldn't this class be named after the armscontroller?
     public class AnimationController : MonoBehaviour
     {
         private const float SMOOTHING_SPEED = 4f;
@@ -16,28 +16,10 @@ namespace NitroxClient.MonoBehaviours
         private Vector3 smoothedVelocity = Vector3.zero;
         private float smoothViewPitch;
 
-
-        private Dictionary<string, bool> animationStatusById = new Dictionary<string, bool>()
-        {
-            { "is_underwater", true }
-        };
-
         public void Start()
         {
-            animator = GetComponent<Animator>();
-        }
-
-        public void Update()
-        {
-            if (UpdatePlayerAnimations)
-            {
-                foreach (KeyValuePair<string, bool> kvp in animationStatusById)
-                {
-                    //For whatever reason, attempting to setbool once most of the time won't work
-                    //Will investigate soon but this seems to work for now
-                    animator.SetBool(kvp.Key, kvp.Value);
-                }
-            }
+            animator = gameObject.GetComponent<Animator>();
+            this["is_underwater"] = true;
         }
 
         public void FixedUpdate()
@@ -48,10 +30,10 @@ namespace NitroxClient.MonoBehaviours
 
                 smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
 
-                SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
-                SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
-                SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
-                SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
+                animator.SetFloat("move_speed", smoothedVelocity.magnitude);
+                animator.SetFloat("move_speed_x", smoothedVelocity.x);
+                animator.SetFloat("move_speed_y", smoothedVelocity.y);
+                animator.SetFloat("move_speed_z", smoothedVelocity.z);
 
                 float viewPitch = AimingRotation.eulerAngles.x;
                 if (viewPitch > 180f)
@@ -64,9 +46,10 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void SetBool(string name, bool value)
+        public bool this[string name]
         {
-            animationStatusById[name] = value;
+            get { return animator.GetBool(name); }
+            set { animator.SetBool(name, value); }
         }
     }
 }

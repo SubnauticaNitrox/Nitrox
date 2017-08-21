@@ -23,6 +23,16 @@ namespace NitroxClient.MonoBehaviours
 
                 Vector3 currentPosition = Player.main.transform.position;
                 Vector3 playerVelocity = Player.main.playerController.velocity;
+
+                //if (Player.main.groundMotor.IsGrounded())
+                ////if (Player.main.playerController.activeController == Player.main.groundMotor && Player.main.groundMotor.IsGrounded())
+                //{
+                //    playerVelocity.y = 0f;
+                //}
+
+                // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
+                // WARN: Using camera rotation may be dangerous, when the drone is used for instance (but then movement packets shouldn't be sent either so it's not even relevant...)
+
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
