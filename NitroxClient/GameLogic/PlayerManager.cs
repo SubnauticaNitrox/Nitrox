@@ -1,4 +1,4 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.Util;
 using System.Collections.Generic;
 
 namespace NitroxClient.GameLogic
@@ -7,30 +7,23 @@ namespace NitroxClient.GameLogic
     {
         private readonly Dictionary<string, RemotePlayer> playersById = new Dictionary<string, RemotePlayer>();
 
-        public RemotePlayer this[string playerId]
-        {
-            get
-            {
-                return FindPlayer(playerId);
-            }
-            set
-            {
-                if (value == null)
-                {
-                    RemovePlayer(playerId);
-                }
-                else
-                {
-                    playersById[playerId] = value;
-                }
-            }
-        }
-
-        public RemotePlayer FindPlayer(string playerId, bool createPlayer = false)
+        public Optional<RemotePlayer> Find(string playerId)
         {
             RemotePlayer player;
 
-            if (!playersById.TryGetValue(playerId, out player) && createPlayer)
+            if (playersById.TryGetValue(playerId, out player))
+            {
+                return Optional<RemotePlayer>.Of(player);
+            }
+
+            return Optional<RemotePlayer>.Empty();
+        }
+
+        public RemotePlayer FindOrCreate(string playerId)
+        {
+            RemotePlayer player;
+
+            if (!playersById.TryGetValue(playerId, out player))
             {
                 player = playersById[playerId] = new RemotePlayer(playerId);
             }
@@ -38,26 +31,19 @@ namespace NitroxClient.GameLogic
             return player;
         }
 
-        public void ForPlayer(string playerId, Action<RemotePlayer> action, bool createPlayer = false)
-        {
-            var player = FindPlayer(playerId, createPlayer);
-
-            if (player != null)
-            {
-                action(player);
-            }
-        }
-
         public void RemovePlayer(string playerId)
         {
-            RemotePlayer remotePlayer = playersById[playerId];
-            remotePlayer.Destroy();
-            playersById.Remove(playerId);
+            var opPlayer = Find(playerId);
+            if (opPlayer.IsPresent())
+            {
+                opPlayer.Get().Destroy();
+                playersById.Remove(playerId);
+            }
         }
 
         public void RemoveAllPlayers()
         {
-            foreach (String playerId in playersById.Keys)
+            foreach (string playerId in playersById.Keys)
             {
                 RemovePlayer(playerId);
             }
