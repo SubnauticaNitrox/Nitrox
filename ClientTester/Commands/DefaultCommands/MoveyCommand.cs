@@ -18,8 +18,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             if (args.Length < 1)
             {
-                CommandManager.NotEnoughArgumentsMessage(1, Syntax);
-                return;
+                throw new NotEnoughArgumentsException(1);
             }
 
             client.clientPos.y = float.Parse(args[0]);

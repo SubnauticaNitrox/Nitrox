@@ -22,6 +22,7 @@ namespace ClientTester.Commands
             RegisterCommand(new PickupCommand());
             RegisterCommand(new PosCommand());
             RegisterCommand(new HelpCommand(commands));
+            RegisterCommand(new PlayerStatsCommand());
         }
 
         public void RegisterCommand(NitroxCommand command)
@@ -38,13 +39,19 @@ namespace ClientTester.Commands
             NitroxCommand selectedCommand = commands.Where(c => c.Name.ToLower() == commandArray[0].ToLower()).FirstOrDefault();
             if (selectedCommand != null)
             {
-                selectedCommand.Execute(client, commandArray.Skip(1).ToArray());
+                try
+                {
+                    selectedCommand.Execute(client, commandArray.Skip(1).ToArray());
+                }
+                catch (InvalidArgumentException e)
+                {
+                    Console.WriteLine(e.Message + ": " + selectedCommand.Syntax);
+                }
+                catch (NotEnoughArgumentsException e)
+                {
+                    Console.WriteLine($"This command takes {e.ArgCount} arguments: " + selectedCommand.Syntax);
+                }
             }
-        }
-
-        public static void NotEnoughArgumentsMessage(int argCount, string syntax)
-        {
-            Console.WriteLine($"This command takes {argCount} arguments: " + syntax);
         }
 
         public static Vector3 GetVectorFromArgs(String[] args, int pos)
@@ -56,5 +63,22 @@ namespace ClientTester.Commands
         {
             return Quaternion.Euler(float.Parse(args[pos]), float.Parse(args[pos + 1]), float.Parse(args[pos + 2]));
         }
+    }
+
+    public class InvalidArgumentException : Exception
+    {
+        public InvalidArgumentException(string message) : base(message)
+        {
+        }
+    }
+
+    public class NotEnoughArgumentsException : Exception
+    {
+        public NotEnoughArgumentsException(int argCount)
+        {
+            ArgCount = argCount;
+        }
+
+        public int ArgCount { get; }
     }
 }

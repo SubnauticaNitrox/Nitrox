@@ -26,7 +26,6 @@ namespace NitroxPatcher.Patches
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;
-
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
                     /*
@@ -34,7 +33,7 @@ namespace NitroxPatcher.Patches
                      */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, 5); // May change if new locals get introduced in HandleInput()
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<Constructable>(original));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }

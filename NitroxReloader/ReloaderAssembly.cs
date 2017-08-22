@@ -36,7 +36,8 @@ namespace NitroxReloader
 
                 var paramTypes = method.GetParameters().Select(pi => pi.ParameterType).ToArray();
 
-                MethodInfo originalMethod = definingType.GetMethod(method.Name, paramTypes);
+                MethodInfo originalMethod = definingType.GetMethod(method.Name, allBindings, null, paramTypes, null);
+
                 if (originalMethod == null)
                 {
                     Console.WriteLine("Reloader: Original method not found with parameters {0}", string.Join(", ", paramTypes.Select(typ => typ.ToString()).ToArray()));

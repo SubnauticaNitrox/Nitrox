@@ -14,10 +14,10 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(CrafterLogic);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryPickup", BindingFlags.Public | BindingFlags.Instance);
-        
+
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
-        public static readonly object INJECTION_OPERAND = typeof(CrafterLogic).GetField("numCrafted", BindingFlags.Public | BindingFlags.Instance);
-        
+        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("numCrafted", BindingFlags.Public | BindingFlags.Instance);
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPCODE, "Opcode can not be null");
@@ -40,8 +40,8 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Crafting", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_3);
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<TechType>(original));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
                 }
             }
         }

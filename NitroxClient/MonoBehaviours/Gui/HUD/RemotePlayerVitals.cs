@@ -1,4 +1,5 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+using NitroxModel.Helper;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -45,17 +46,17 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private GameObject background;
         private GameObject playerNameText;
-        
+
         public void CreateVitals(String playerName, int position)
         {
             this.playerName = playerName;
             this.position = position;
-                        
+
             oxygenBar = CreateBar(OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR, "s");
             healthBar = CreateBar(HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR, "%");
             foodBar = CreateBar(FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR, "%");
             waterBar = CreateBar(WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR, "%");
-                        
+
             Canvas canvas = oxygenBar.GameObject.GetComponentInParent<Canvas>();
             GameObject componentParent = oxygenBar.GameObject.transform.parent.gameObject;
             Quaternion rotation = oxygenBar.GameObject.transform.localRotation;
@@ -67,12 +68,20 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private Bar CreateBar(Color color, Color borderColor, String smoothedValueUnit)
         {
-            uGUI_HealthBar healthBar = (uGUI_HealthBar)FindObjectOfType(typeof(uGUI_HealthBar));
+            uGUI_HealthBar healthBar = FindObjectOfType<uGUI_HealthBar>();
+
+            if (healthBar == null)
+            {
+                Console.WriteLine("healthBar does nto exist. Are you playing on creative?");
+                // TODO: clean this up, now it generates many NRE's.
+                // Also make sure it works when the world changes back to survival
+                return null;
+            }
 
             GameObject cloned = Instantiate(healthBar.gameObject);
             cloned.transform.SetParent(healthBar.gameObject.transform.parent.transform);
             Destroy(cloned.GetComponent<uGUI_HealthBar>());
-            
+
             cloned.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             cloned.transform.localRotation = healthBar.gameObject.transform.localRotation;
             cloned.transform.Find("Icon").localRotation = Quaternion.Euler(0f, 180, 0f);
@@ -88,7 +97,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             newBar.overlay = healthBar.bar.overlay;
             newBar.color = color;
             newBar.borderColor = borderColor;
-            
+
             return new Bar(cloned, new SmoothedValue(100, 100, 100, 100), smoothedValueUnit);
         }
 
@@ -112,19 +121,22 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private void CreatePlayerNameText()
         {
             playerNameText = new GameObject();
-            GUIText gUIText = playerNameText.AddComponent<GUIText>();
-            playerNameText.AddComponent(typeof(GUITextShadow));
-            gUIText.name = "RemotePlayer" + playerName;
-            gUIText.alignment = TextAlignment.Center;
-            gUIText.fontSize = 18;
-            gUIText.text = playerName;
-            playerNameText.layer = ErrorMessage.main.gameObject.layer;
-            playerNameText.transform.parent = ErrorMessage.main.transform.parent.transform;
+            GUIText GUIText = playerNameText.AddComponent<GUIText>();
+            playerNameText.AddComponent<GUITextShadow>();
+            GUIText.name = "RemotePlayer" + playerName;
+            GUIText.alignment = TextAlignment.Center;
+            GUIText.fontSize = 18;
+            GUIText.text = playerName;
+            ErrorMessage em = (ErrorMessage)ReflectionHelper.ReflectionGet<ErrorMessage>(null, "main", false, true);
+            playerNameText.layer = em.gameObject.layer;
+            playerNameText.layer = em.gameObject.layer;
+            // em does not have a parent anymore on latest stable, so the stats position is incorrect.
+            playerNameText.transform.parent = em.transform;//.parent.transform;
         }
 
         private Sprite GetPlayerBackgroundSprite()
         {
-            byte[] FileData = Properties.Resources.playerBackgroundImage;            
+            byte[] FileData = Properties.Resources.playerBackgroundImage;
             Texture2D circleSquare = new Texture2D(2, 2, TextureFormat.ARGB32, false);
             circleSquare.LoadImage(FileData);
             return Sprite.Create(circleSquare, new Rect(0, 0, circleSquare.width, circleSquare.height), new Vector2(0, 0), 100);
@@ -153,7 +165,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         {
             waterBar.SmoothedValue.TargetValue = water;
             waterBar.SmoothedValue.SmoothTime = smoothTime;
-        }       
+        }
 
         public void LateUpdate()
         {

@@ -9,11 +9,11 @@ namespace NitroxPatcher.Patches
     public class CyclopsSilentRunningAbilityButton_StartCooldown_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(CyclopsSilentRunningAbilityButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("StartCooldown", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TurnOnSilentRunning", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
-            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);   
+            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             Multiplayer.Logic.Cyclops.BeginSilentRunning(guid);
         }
 
