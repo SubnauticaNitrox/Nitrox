@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {
-    public class CyclopsSilentRunningAbilityButton_StartCooldown_Patch : NitroxPatch
+    public class CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(CyclopsSilentRunningAbilityButton);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TurnOnSilentRunning", BindingFlags.NonPublic | BindingFlags.Instance);

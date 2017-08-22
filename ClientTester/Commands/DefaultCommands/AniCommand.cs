@@ -1,7 +1,4 @@
 ﻿using NitroxClient.MonoBehaviours;
-using System;
-using System.Linq;
-using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
 {
@@ -16,11 +13,10 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            if (args.Length < 2)
-            {
-                throw new NotEnoughArgumentsException(2);
-            }
+            assertMinimumArgs(args, 2);
+
             AnimChangeState state;
+
             if (args[1] == "on" || args[1] == "1" || args[1] == "true")
             {
                 state = AnimChangeState.On;
@@ -33,6 +29,7 @@ namespace ClientTester.Commands.DefaultCommands
             {
                 state = AnimChangeState.Unset;
             }
+
             client.PacketSender.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
         }
     }

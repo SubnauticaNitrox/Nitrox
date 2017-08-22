@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
 {
@@ -15,10 +13,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            if (args.Length < 4)
-            {
-                throw new NotEnoughArgumentsException(4);
-            }
+            assertMinimumArgs(args, 4);
 
             client.Logic.Item.Dropped(new GameObject(), UWE.Utils.ParseEnum<TechType>(args[0]), CommandManager.GetVectorFromArgs(args, 1));
         }

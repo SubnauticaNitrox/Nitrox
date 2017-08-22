@@ -15,10 +15,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            if (args.Length < 1)
-            {
-                throw new NotEnoughArgumentsException(1);
-            }
+            assertMinimumArgs(args, 1);
 
             var numericArgs = args
                 .Skip(1)

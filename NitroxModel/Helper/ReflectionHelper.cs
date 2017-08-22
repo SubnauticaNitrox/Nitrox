@@ -9,7 +9,7 @@ namespace NitroxModel.Helper
         // TODO log bindingFlags as well in Validate.NotNull calls.
         public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
         {
-            Validate.Istrue(o != null ^ isStatic);
+            Validate.IsTrue(o != null ^ isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags);
@@ -19,7 +19,7 @@ namespace NitroxModel.Helper
 
         public static object ReflectionCall<T>(this T o, string methodName, Type[] types, bool isPublic = false, bool isStatic = false, params object[] args)
         {
-            Validate.Istrue(o != null ^ isStatic);
+            Validate.IsTrue(o != null ^ isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags, null, types, null);
@@ -29,7 +29,7 @@ namespace NitroxModel.Helper
 
         public static object ReflectionGet<T>(this T o, string fieldName, bool isPublic = false, bool isStatic = false)
         {
-            Validate.Istrue(o != null ^ isStatic);
+            Validate.IsTrue(o != null ^ isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
@@ -39,7 +39,7 @@ namespace NitroxModel.Helper
 
         public static void ReflectionSet<T>(this T o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
         {
-            Validate.Istrue(o != null ^ isStatic);
+            Validate.IsTrue(o != null ^ isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
