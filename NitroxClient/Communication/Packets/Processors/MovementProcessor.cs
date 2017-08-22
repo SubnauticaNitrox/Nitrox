@@ -15,7 +15,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Movement movement)
         {
-            remotePlayerManager.ForPlayer(movement.PlayerId, p => p.UpdatePosition(ApiHelper.Vector3(movement.PlayerPosition), ApiHelper.Quaternion(movement.BodyRotation), ApiHelper.Quaternion(movement.CameraRotation), movement.SubGuid), true);
+            remotePlayerManager
+                .FindOrCreate(movement.PlayerId)
+                .UpdatePosition(
+                    ApiHelper.Vector3(movement.PlayerPosition),
+                    ApiHelper.Quaternion(movement.BodyRotation),
+                    ApiHelper.Quaternion(movement.CameraRotation),
+                    movement.SubGuid);
         }
     }
 }
