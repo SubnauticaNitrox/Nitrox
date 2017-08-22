@@ -1,62 +1,56 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
         // Public calls are useful for reflected, inaccessible objects.
-        public static object ReflectionCall(this object o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
+        // TODO log bindingFlags as well in Validate.NotNull calls.
+        public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
         {
+            Validate.Istrue(o != null ^ isStatic);
+            Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            MethodInfo methodInfo = o.GetType().GetMethod(methodName, bindingFlags);
-            Validate.NotNull(methodInfo, $"Class \"{o.GetType().Name}\" does not have a method called \"{methodName}\".");
+            MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags);
+            Validate.NotNull(methodInfo, $"Class \"{t.Name}\" does not have a method called \"{methodName}\".");
             return methodInfo.Invoke(o, args);
         }
 
-        public static object ReflectionCall(Type type, string methodName, Type[] types, bool isPublic = false, bool isStatic = false, params object[] args)
+        public static object ReflectionCall<T>(this T o, string methodName, Type[] types, bool isPublic = false, bool isStatic = false, params object[] args)
         {
+            Validate.Istrue(o != null ^ isStatic);
+            Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            MethodInfo methodInfo = type.GetMethod(methodName, bindingFlags, null, types, null);
-            Validate.NotNull(methodInfo, $"Class \"{type.Name}\" does not have a method called \"{methodName}\".");
-            return methodInfo.Invoke(null, args);
+            MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags, null, types, null);
+            Validate.NotNull(methodInfo, $"Class \"{t.Name}\" does not have a method called \"{methodName}\".");
+            return methodInfo.Invoke(o, args);
         }
 
-        public static object ReflectionGet(this object o, string fieldName, bool isPublic = false, bool isStatic = false)
+        public static object ReflectionGet<T>(this T o, string fieldName, bool isPublic = false, bool isStatic = false)
         {
+            Validate.Istrue(o != null ^ isStatic);
+            Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            FieldInfo fieldInfo = o.GetType().GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{o.GetType().Name}\" does not have a field called \"{fieldName}\".");
+            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
+            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
             return fieldInfo.GetValue(o);
         }
 
-        public static void ReflectionSet(this object o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
+        public static void ReflectionSet<T>(this T o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
         {
+            Validate.Istrue(o != null ^ isStatic);
+            Type t = isStatic ? typeof(T) : o.GetType();
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            FieldInfo fieldInfo = o.GetType().GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{o.GetType().Name}\" does not have a field called \"{fieldName}\".");
+            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
+            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
             fieldInfo.SetValue(o, value);
         }
 
         private static BindingFlags GetBindingFlagsFromMethodQualifiers(bool isPublic, bool isStatic)
         {
-            BindingFlags bindingFlags = System.Reflection.BindingFlags.NonPublic;
-            if (isPublic)
-            {
-                bindingFlags = System.Reflection.BindingFlags.Public;
-            }
-
-            if (isStatic)
-            {
-                bindingFlags = bindingFlags | System.Reflection.BindingFlags.Static;
-            }
-            else
-            {
-                bindingFlags = bindingFlags | System.Reflection.BindingFlags.Instance;
-            }
+            BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;
+            bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
 
             return bindingFlags;
         }
