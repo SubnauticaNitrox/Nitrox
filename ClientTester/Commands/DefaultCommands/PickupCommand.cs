@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using UnityEngine;
-
-namespace ClientTester.Commands.DefaultCommands
+﻿namespace ClientTester.Commands.DefaultCommands
 {
     public class PickupCommand : NitroxCommand
     {
@@ -15,10 +11,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            if (args.Length < 4)
-            {
-                throw new NotEnoughArgumentsException(4);
-            }
+            assertMinimumArgs(args, 4);
 
             client.Logic.Item.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }

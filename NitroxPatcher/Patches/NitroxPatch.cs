@@ -61,11 +61,13 @@ namespace NitroxPatcher.Patches
 
         protected static int GetLocalVariableIndex<T>(MethodBase method)
         {
-            var matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
-            if (matchingVariables.Length == 0)
-                throw new IndexOutOfRangeException($"{method} does not have a local variable of type {nameof(T)}");
-            if (matchingVariables.Length > 1)
-                throw new IndexOutOfRangeException($"{method} has multiple local variables of type {nameof(T)}");
+            LocalVariableInfo[] matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
+
+            if (matchingVariables.Length != 1)
+            {
+                throw new ArgumentException($"{method} has {matchingVariables.Length} local variables of type {nameof(T)}");
+            }
+
             return matchingVariables[0].LocalIndex;
         }
     }

@@ -55,7 +55,7 @@
   <ItemGroup>
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
-    <Compile Include="Patches\CyclopsSilentRunningAbilityButton_StartCooldown_Patch.cs" />
+    <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
     <Compile Include="Patches\CrafterLogic_TryPickup_Patch.cs" />

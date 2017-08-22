@@ -20,7 +20,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void Istrue(bool b)
+        public static void IsTrue(bool b)
         {
             if (!b)
             {
@@ -28,7 +28,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void Istrue(bool b, String message)
+        public static void IsTrue(bool b, String message)
         {
             if (!b)
             {
