@@ -20,16 +20,17 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
 
-            if(opGameObject.IsPresent())
+            if (opGameObject.IsPresent())
             {
                 Openable openable = opGameObject.Get().GetComponent<Openable>();
 
                 if (openable != null)
                 {
-                    packetSender.AddSuppressedPacketType(typeof(OpenableStateChanged));
-                    openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
-                    packetSender.RemoveSuppressedPacketType(typeof(OpenableStateChanged));
-                } 
+                    using (packetSender.Suppress<OpenableStateChanged>())
+                    {
+                        openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
+                    }
+                }
                 else
                 {
                     Console.WriteLine("Gameobject did not have a corresponding openable to change state!");

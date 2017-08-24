@@ -20,15 +20,16 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(lightingPacket.Guid);
 
-            if(opCyclops.IsPresent())
+            if (opCyclops.IsPresent())
             {
                 CyclopsLightingPanel lighting = opCyclops.Get().GetComponentInChildren<CyclopsLightingPanel>();
-                
-                if(lighting.floodlightsOn != lightingPacket.IsOn)
+
+                if (lighting.floodlightsOn != lightingPacket.IsOn)
                 {
-                    packetSender.AddSuppressedPacketType(typeof(CyclopsToggleFloodLights));
-                    lighting.ToggleFloodlights();
-                    packetSender.RemoveSuppressedPacketType(typeof(CyclopsToggleFloodLights));
+                    using (packetSender.Suppress<CyclopsToggleFloodLights>())
+                    {
+                        lighting.ToggleFloodlights();
+                    }
                 }
             }
             else

@@ -22,15 +22,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(amountChanged.Guid);
 
-            if(opGameObject.IsPresent())
+            if (opGameObject.IsPresent())
             {
                 GameObject constructing = opGameObject.Get();
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = amountChanged.ConstructionAmount;
-                
-                packetSender.AddSuppressedPacketType(typeof(ConstructionAmountChanged));
-                constructable.Construct();
-                packetSender.RemoveSuppressedPacketType(typeof(ConstructionAmountChanged));
+
+                using (packetSender.Suppress<ConstructionAmountChanged>())
+                {
+                    constructable.Construct();
+                }
             }
         }
     }
