@@ -26,10 +26,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (ability != null)
                 {
-                    packetSender.AddSuppressedPacketType(typeof(CyclopsBeginSilentRunning));
-                    ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                    ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
-                    packetSender.RemoveSuppressedPacketType(typeof(CyclopsBeginSilentRunning));
+                    using (packetSender.Suppress<CyclopsBeginSilentRunning>())
+                    {
+                        ability.subRoot.BroadcastMessage("RigForSilentRunning");
+                        ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
+                    }
                 }
                 else
                 {
