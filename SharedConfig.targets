@@ -27,10 +27,10 @@
     <SubnauticaManaged>$(SubnauticaDir)\Subnautica_Data\Managed</SubnauticaManaged>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration) == 'Debug' And $(OutputType) == 'Library'">
+  <PropertyGroup Condition="$(Configuration) == 'Debug' and $(OutputType) == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">
     <OutputPath>$(SolutionDir)\bin\Debug\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration) == 'Release' And $(OutputType) == 'Library'">
+  <PropertyGroup Condition="$(Configuration) == 'Release' and $(OutputType) == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">
     <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
   </PropertyGroup>
 
