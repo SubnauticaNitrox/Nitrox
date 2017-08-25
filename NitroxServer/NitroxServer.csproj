@@ -49,6 +49,9 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
+    <Compile Include="Communication\Packets\Processors\WorldSending\AskBatchCellProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\WorldSending\ChangeBatchCellProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\WorldSending\Chunk.cs" />
     <Compile Include="Communication\PlayerConnection.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />

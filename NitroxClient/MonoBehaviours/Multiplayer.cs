@@ -6,6 +6,7 @@ using NitroxClient.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Packets.WorldSending;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -151,6 +152,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
+                PacketSender.Send(new AskBatchCell(PacketSender.PlayerId, false, NitroxModel.DataStructures.Int3.zero));
                 ClientLogger.IngameMessage("Connected to server");
             }
             else

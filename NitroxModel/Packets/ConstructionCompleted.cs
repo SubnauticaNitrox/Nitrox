@@ -17,6 +17,7 @@ namespace NitroxModel.Packets
         {
             this.Guid = guid;
             this.NewBaseCreatedGuid = newBaseCreatedGuid;
+            this.PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

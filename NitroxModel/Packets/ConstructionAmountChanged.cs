@@ -13,6 +13,7 @@ namespace NitroxModel.Packets
         {
             this.Guid = guid;
             this.ConstructionAmount = constructionAmount;
+            this.PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

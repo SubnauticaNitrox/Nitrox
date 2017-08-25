@@ -26,6 +26,16 @@ namespace NitroxClient
             return new Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
 
+        public static NitroxModel.DataStructures.Int3 Int3(Int3 int3)
+        {
+            return new NitroxModel.DataStructures.Int3(int3.x, int3.y, int3.z);
+        }
+
+        public static Int3 Int3(NitroxModel.DataStructures.Int3 int3)
+        {
+            return new Int3(int3.X, int3.Y, int3.Z);
+        }
+
         public static String TechType(TechType techType)
         {
             return Enum.GetName(typeof(TechType), techType);

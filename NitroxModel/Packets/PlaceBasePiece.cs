@@ -22,6 +22,7 @@ namespace NitroxModel.Packets
             this.TechType = techType;
             this.Camera = camera;
             this.ParentBaseGuid = parentBaseGuid;
+            this.PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

@@ -30,6 +30,9 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
+    <Reference Include="ICSharpCode.SharpZipLib">
+      <HintPath>.\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\Optional.cs" />
@@ -46,6 +50,7 @@
     <Compile Include="DataStructures\Quaternion.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
     <Compile Include="DataStructures\Transform.cs" />
+    <Compile Include="DataStructures\Tuple.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
@@ -75,6 +80,15 @@
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
+    <Compile Include="Packets\WorldSending\AskBatchCell.cs" />
+    <Compile Include="Packets\WorldSending\AskGlobalRoot.cs" />
+    <Compile Include="Packets\WorldSending\AskWorldEvent.cs" />
+    <Compile Include="Packets\WorldSending\ChangeBatchCell.cs" />
+    <Compile Include="Packets\WorldSending\ChangeGlobalRoot.cs" />
+    <Compile Include="Packets\WorldSending\ChangeWorldEvent.cs" />
+    <Compile Include="Packets\WorldSending\RecieveBatchCell.cs" />
+    <Compile Include="Packets\WorldSending\RecieveGlobalRoot.cs" />
+    <Compile Include="Packets\WorldSending\RecieveWorldEvent.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\TimedQueue.cs" />
     <Compile Include="DataStructures\Vector3.cs" />
@@ -91,7 +105,9 @@
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PlayerActionPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\BSDiff.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -9,6 +9,7 @@
     <ItemGroup>
       <CompiledAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
       <CompiledAssemblies Include="$(OutputPath)\0Harmony.dll" />
+      <CompiledAssemblies Include="$(OutputPath)\ICSharpCode.SharpZipLib.dll" />
     </ItemGroup>
     <Message Text="Copying library files to: $(SubnauticaManaged)" />
     <Message Text="@(CompiledAssemblies)" />

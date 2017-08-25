@@ -11,6 +11,7 @@ namespace NitroxModel.Packets
         public DeconstructionBegin(String playerId, Vector3 itemPosition, String guid) : base(playerId, itemPosition)
         {
             this.Guid = guid;
+            this.PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

@@ -1,5 +1,9 @@
 ﻿using NitroxModel.Helper;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
@@ -26,10 +30,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
             username = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 25, 500, 50), username);
-            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Add server"))
+            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Join"))
             {
                 StartCoroutine(JoinServerWait(serverIp));
                 showingUsername = false;
+            }
+            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 75, 500, 50), "Cancel"))
+            {
+                Destroy(gameObject);
             }
         }
 
