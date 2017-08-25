@@ -27,7 +27,8 @@ The following milestones have been completed:
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 
 ### How can I play this mod?
-Until a stable version is released, it is not recommended for casual play.  Please be patient as we work to build a great enhancement for the game.
+This mod is still in it's early stages of development, and a public, easy to install version has not been released yet. Those who are keen to try can follow the guide on the wiki. This requires compilation of the mod, and injecting it into Subnautica; not suited for the faint-hearted.
+Until a stable version is released, this mod is not recommended for casual play.  Please be patient as we work to build a great enhancement for the game.
 
 ### How can I contribute?
 Simply submit a pull request.  Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the Subnautica Modders Discord channel.
