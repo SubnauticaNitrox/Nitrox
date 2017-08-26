@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -18,14 +17,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
         {
-            Log.Debug(ownershipRequest);
-
             if (simulationOwnership.TryToAcquire(ownershipRequest.Guid, player))
             {
                 // TODO: Distribute ownership in the `SimulationOwnership` class.
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
-                Log.Debug("Sending: " + simulationOwnershipChange);
             }
         }
     }

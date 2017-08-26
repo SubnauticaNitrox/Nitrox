@@ -29,6 +29,7 @@ namespace NitroxClient.GameLogic
         {
             if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
+                // TODO: Add a timeout to requestedguids, because the server will not send anything back when a request is denied (or maybe we should). This means the current player can never even try to change ownership of the item until someone else changed it.
                 SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid);
                 packetSender.Send(ownershipRequest);
                 requestedGuids.Add(guid);
