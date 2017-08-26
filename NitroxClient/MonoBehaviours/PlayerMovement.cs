@@ -12,13 +12,17 @@ namespace NitroxClient.MonoBehaviours
     {
         public const float BROADCAST_INTERVAL = 0.05f;
         private PlayerLogic playerBroadcaster;
+        private SimulationOwnership simulationOwnership;
 
         private float time;
 
         public void Awake()
         {
             playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+            simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
         }
+
+        private Optional<VehicleModel> previousVehicle = Optional<VehicleModel>.Empty();
 
         public void Update()
         {
@@ -38,18 +42,44 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleModel> vehicle = GetVehicleModel();
+                Optional<VehicleModel> opVehicle = GetVehicleModel();
 
                 string subGuid = null;
 
+                // TODO: Perhaps check if the sub is a cyclops or a base... Bases don't need movementupdates ;)
                 SubRoot currentSub = Player.main.GetCurrentSub();
+
+                // TODO: Check the logic here, with vehicle and currentSub potentially overlapping.
 
                 if (currentSub != null)
                 {
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                playerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
+                // TODO: Patch this into the player enter/exit functions instead, and hook it into the simulationownershipframework (that is, claim control before letting the player enter, and also let go of it correctly). For now, this is just for testing:
+                if (opVehicle.IsPresent())
+                {
+                    VehicleModel vehicle = opVehicle.Get();
+
+                    // While it's highly unlikely (or maybe even impossible), ownership is not given up here if the player goes from one vehicle to the other.
+                    // Doesn't matter for now, this is just temp testing code.
+                    previousVehicle = opVehicle;
+
+                    // If ownership was already claimed, the player should not even be able to enter the vehicle and reach the code here. This is just a final check.
+                    if (!simulationOwnership.HasOwnership(vehicle.Guid))
+                    {
+                        simulationOwnership.TryToRequestOwnership(vehicle.Guid);
+                        // Unset for now, until ownership is received.
+                        opVehicle = Optional<VehicleModel>.Empty();
+                    }
+                }
+                else if (previousVehicle.IsPresent())
+                {
+                    // TODO: Need a way to get rid of ownership.
+                    //simulationOwnership.ReleaseOwnership();
+                    previousVehicle = Optional<VehicleModel>.Empty();
+                }
+                playerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, opVehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 
@@ -79,7 +109,7 @@ namespace NitroxClient.MonoBehaviours
                 velocity = rigidbody.velocity;
                 angularVelocity = rigidbody.angularVelocity;
 
-                // Required because vehicle is either a SeaMoth or an Exosuit, both types which can't see the fields either.
+                // Required because vehicle is either a SeaMoth or an Exosuit, and these fields are defined privately in Vehicle.
                 steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
                 steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
 

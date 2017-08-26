@@ -21,12 +21,7 @@ namespace NitroxClient.GameLogic
         {
             string owningPlayerId;
 
-            if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
-            {
-                return owningPlayerId == muliplayerSession.Reservation.PlayerId;
-            }
-
-            return false;
+            return ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId) && owningPlayerId == muliplayerSession.Reservation.PlayerId;
         }
 
         public void TryToRequestOwnership(string guid)
@@ -41,6 +36,7 @@ namespace NitroxClient.GameLogic
 
         public void AddOwnedGuid(string guid, string playerId)
         {
+            requestedGuids.Remove(guid);
             ownedGuidsToPlayer[guid] = playerId;
         }
     }

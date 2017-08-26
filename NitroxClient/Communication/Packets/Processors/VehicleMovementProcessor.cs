@@ -83,8 +83,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void CreateVehicleAt(RemotePlayer player, TechType techType, string guid, Vector3 position, Quaternion rotation)
         {
-            // TODO: Is this duplicate with the vehiclebay code? Because that can spawn vehicles/subs as well.....
-            // And this is just redundant stuff when the vehicle is kinda not existing....
+            // TODO: Is this duplicate with the constructor code? That should handle the spawn of vehicles, and this is just redundancy.
+            // If we ever decide to remove it, the TechType field in VehicleMovement can be deprecated as well (at least at the time of writing this comment).
 
             if (techType == TechType.Cyclops)
             {

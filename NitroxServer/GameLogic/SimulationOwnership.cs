@@ -19,7 +19,8 @@ namespace NitroxServer.GameLogic
 
                 if (guidsByPlayer.TryGetValue(guid, out owningPlayer))
                 {
-                    return (owningPlayer == player);
+                    // Ownership can only be taken if no-one else has it.
+                    return owningPlayer == player;
                 }
 
                 guidsByPlayer[guid] = player;
