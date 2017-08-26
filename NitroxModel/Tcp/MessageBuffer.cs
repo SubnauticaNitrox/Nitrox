@@ -49,7 +49,7 @@ namespace NitroxModel.Tcp
                 }
                 else
                 {
-                    CurrentPacketLength = BitConverter.ToInt16(ReceivingBuffer, 0);
+                    CurrentPacketLength = BitConverter.ToInt32(ReceivingBuffer, 0);
                     headerOffset = HEADER_BYTE_SIZE;
                 }
                 nextPacketHeaderBytesRead = 0;
