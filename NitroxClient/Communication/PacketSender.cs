@@ -1,12 +1,10 @@
-﻿using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
-using UnityEngine;
 using System.Collections.Generic;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using UnityEngine;
 
 namespace NitroxClient.Communication
 {
@@ -47,7 +45,7 @@ namespace NitroxClient.Communication
 
             Send(movement);
         }
-        
+
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
         {
             AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerId, (int)type, (int)state);
@@ -70,14 +68,9 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void AddSuppressedPacketType(Type type)
+        public PacketSuppression<T> Suppress<T>()
         {
-            suppressedPacketsTypes.Add(type);
-        }
-
-        public void RemoveSuppressedPacketType(Type type)
-        {
-            suppressedPacketsTypes.Remove(type);
+            return new PacketSuppression<T>(suppressedPacketsTypes);
         }
     }
 }

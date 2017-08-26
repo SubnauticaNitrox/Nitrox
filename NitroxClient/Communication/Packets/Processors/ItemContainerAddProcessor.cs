@@ -26,17 +26,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
 
-                if(opContainer.IsPresent())
+                if (opContainer.IsPresent())
                 {
                     ItemsContainer container = opContainer.Get();
                     GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
                     Pickupable pickupable = item.GetComponent<Pickupable>();
-                    
-                    if(pickupable != null)
+
+                    if (pickupable != null)
                     {
-                        packetSender.AddSuppressedPacketType(typeof(ItemContainerAdd));
-                        container.UnsafeAdd(new InventoryItem(pickupable));
-                        packetSender.RemoveSuppressedPacketType(typeof(ItemContainerAdd));
+                        using (packetSender.Suppress<ItemContainerAdd>())
+                        {
+                            container.UnsafeAdd(new InventoryItem(pickupable));
+                        }
                     }
                     else
                     {
