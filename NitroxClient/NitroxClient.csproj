@@ -63,6 +63,7 @@
     <Compile Include="Communication\Packets\Processors\FabricatorItemPickupProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FabricatorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ReceiveBatchCellProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="GameLogic\ChunkSerializer.cs" />

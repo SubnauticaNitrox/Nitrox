@@ -53,7 +53,7 @@ namespace NitroxClient.Communication
         {
             Connection connection = (Connection)ar.AsyncState;
 
-            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
+            foreach (Packet packet in connection.GetPacketsFromReceivedData(ar))
             {
                 packetReceiver.PacketReceived(packet);                
             }

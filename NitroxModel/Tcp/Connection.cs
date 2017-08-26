@@ -52,7 +52,7 @@ namespace NitroxModel.Tcp
             }
         }
 
-        public IEnumerable<Packet> GetPacketsFromRecievedData(IAsyncResult ar)
+        public IEnumerable<Packet> GetPacketsFromReceivedData(IAsyncResult ar)
         {
             int bytesRead = 0;
             try

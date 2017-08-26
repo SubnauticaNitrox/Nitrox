@@ -46,7 +46,7 @@ namespace NitroxServer.Communication
         {
             PlayerConnection connection = (PlayerConnection)ar.AsyncState;
             
-            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
+            foreach(Packet packet in connection.GetPacketsFromReceivedData(ar))
             {
                 try
                 {

@@ -21,6 +21,7 @@ namespace NitroxClient.GameLogic
         public void SendChunkSave(Int3 chunkPos)
         {
             if (!sendChunks) return;
+            ErrorMessage.AddMessage("Sending " + chunkPos.ToString());
 
             string originalPath = $"{PAXTerrainController.main.dataDirPath}\\CellsCache\\baked-batch-cells-{chunkPos.x}-{chunkPos.y}-{chunkPos.z}.bin";
             string currentPath = CellManager.GetCacheBatchCellsPath(LargeWorldStreamer.main.tmpPathPrefix, chunkPos);

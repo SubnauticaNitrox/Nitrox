@@ -5,7 +5,8 @@ using System.Text;
 
 namespace NitroxModel.Packets.WorldSending
 {
-    class RecieveWorldEvent
+    public class SavedBatchCell : AuthenticatedPacket
     {
+        public SavedBatchCell(string playerId) : base(playerId) {}
     }
 }

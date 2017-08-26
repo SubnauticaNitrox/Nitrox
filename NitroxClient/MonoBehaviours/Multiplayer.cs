@@ -56,6 +56,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+            DevConsole.RegisterConsoleCommand(this, "downloadchunks", false);
             ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             this.gameObject.AddComponent<PlayerMovement>();
@@ -71,7 +72,7 @@ namespace NitroxClient.MonoBehaviours
                 ProcessPackets();
             }
         }
-
+        
         public void ProcessPackets()
         {
             Queue<Packet> packets = chunkAwarePacketReceiver.GetReceivedPackets();
@@ -145,6 +146,12 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void OnConsoleCommand_downloadchunks()
+        {
+            ClientLogger.IngameMessage("Chunk downloading started. Please be patient.");
+            PacketSender.Send(new AskBatchCell(PacketSender.PlayerId, true, NitroxModel.DataStructures.Int3.zero));
+        }
+
         public void StartMultiplayer(String ipAddress)
         {
             client.Start(ipAddress);
@@ -152,7 +159,6 @@ namespace NitroxClient.MonoBehaviours
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
-                PacketSender.Send(new AskBatchCell(PacketSender.PlayerId, false, NitroxModel.DataStructures.Int3.zero));
                 ClientLogger.IngameMessage("Connected to server");
             }
             else

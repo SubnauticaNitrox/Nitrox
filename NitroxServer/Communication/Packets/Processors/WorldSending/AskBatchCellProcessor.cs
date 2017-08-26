@@ -2,6 +2,7 @@
 using NitroxModel.Packets;
 using NitroxModel.Packets.WorldSending;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -33,29 +34,23 @@ namespace NitroxServer.Communication.Packets.Processors.WorldSending
 
         public void ProcessFromQueue(Player player)
         {
-            Queue<Chunk> batchQueue;
-            if (!batchQueues.ContainsKey(player.Id))
+            lock (player.chunkQueues)
             {
-                batchQueue = new Queue<Chunk>();
-                batchQueues.Add(player.Id, batchQueue);
-                foreach (string file in Directory.GetFiles(folderName + "\\"))
+                Queue<Chunk> batchQueue = player.chunkQueues;
+                if (batchQueue.Count == 0)
                 {
-                    string[] chunkName = Path.GetFileNameWithoutExtension(file).Split('-');
-                    Int3 chunkCoords = new Int3(int.Parse(chunkName[2]), int.Parse(chunkName[3]), int.Parse(chunkName[4]));
-                    byte[] data = File.ReadAllBytes(file);
-                    batchQueue.Enqueue(new Chunk(chunkCoords, data));
+                    foreach (string file in Directory.GetFiles(folderName + "\\"))
+                    {
+                        string[] chunkName = Path.GetFileNameWithoutExtension(file).Split('-');
+                        Int3 chunkCoords = new Int3(int.Parse(chunkName[2]), int.Parse(chunkName[3]), int.Parse(chunkName[4]));
+                        byte[] data = File.ReadAllBytes(file);
+                        batchQueue.Enqueue(new Chunk(chunkCoords, data));
+                    }
                 }
-            }
-            else
-            {
-                batchQueue = batchQueues[player.Id];
-            }
-            RecieveBatchCell chunkPacket = new RecieveBatchCell(player.Id, batchQueue.Peek().chunkData, batchQueue.Peek().chunkCoord, batchQueue.Count > 1);
-            batchQueue.Dequeue();
-            tcpServer.SendPacketToPlayer(chunkPacket, player);
-            if (batchQueue.Count == 0)
-            {
-                batchQueues.Remove(player.Id);
+
+                ReceiveBatchCell chunkPacket = new ReceiveBatchCell(player.Id, batchQueue.Peek().chunkData, batchQueue.Peek().chunkCoord, batchQueue.Count > 1);
+                batchQueue.Dequeue();
+                tcpServer.SendPacketToPlayer(chunkPacket, player);
             }
         }
 
@@ -66,7 +61,7 @@ namespace NitroxServer.Communication.Packets.Processors.WorldSending
             string file = Path.Combine(folderName, fileName);
             byte[] data = File.ReadAllBytes(file);
 
-            RecieveBatchCell chunkPacket = new RecieveBatchCell(player.Id, data, packet.ChunkLocation, false);
+            ReceiveBatchCell chunkPacket = new ReceiveBatchCell(player.Id, data, packet.ChunkLocation, false);
             tcpServer.SendPacketToPlayer(chunkPacket, player);
         }
     }
