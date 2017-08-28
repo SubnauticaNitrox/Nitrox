@@ -139,6 +139,7 @@
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />
+    <Compile Include="Packets\VehicleDocking.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
