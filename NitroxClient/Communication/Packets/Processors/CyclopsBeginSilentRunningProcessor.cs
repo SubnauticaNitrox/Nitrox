@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -40,7 +40,7 @@ namespace NitroxClient.Communication.Packets.Processors
             else
             {
                 Console.WriteLine("Could not find cyclops with guid " + packet.Guid + " to begin silent running.");
-}
+            }
         }
     }
 }
