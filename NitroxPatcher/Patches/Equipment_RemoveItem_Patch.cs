@@ -1,12 +1,10 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -19,8 +17,6 @@ namespace NitroxPatcher.Patches
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            Validate.NotNull(INJECTION_OPCODE);
-
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;

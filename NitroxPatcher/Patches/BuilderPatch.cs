@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
@@ -21,14 +20,12 @@ namespace NitroxPatcher.Patches
 
         public static readonly OpCode PLACE_FURNITURE_INJECTION_OPCODE = OpCodes.Call;
         public static readonly object PLACE_FURNITURE_INJECTION_OPERAND = typeof(SkyEnvironmentChanged).GetMethod("Send", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(Component) }, null);
-        
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            Validate.NotNull(PLACE_BASE_INJECTION_OPCODE);
             Validate.NotNull(PLACE_BASE_INJECTION_OPERAND);
-            Validate.NotNull(PLACE_FURNITURE_INJECTION_OPCODE);
             Validate.NotNull(PLACE_FURNITURE_INJECTION_OPERAND);
-            
+
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;
@@ -64,7 +61,7 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceFurniture", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(TechType), typeof(Vector3), typeof(Quaternion) }, null));
-                }                
+                }
             }
         }
 

@@ -3,14 +3,9 @@
 namespace NitroxModel.DataStructures.Util
 {
     [Serializable]
-    public class Optional<T>
+    public struct Optional<T>
     {
         private T value;
-
-        private Optional()
-        {
-
-        }
 
         private Optional(T value)
         {
@@ -26,7 +21,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null)
             {
-                throw new InvalidOperationException("Value cannot be null");
+                throw new ArgumentNullException("Value cannot be null");
             }
 
             return new Optional<T>(value);
@@ -67,6 +62,23 @@ namespace NitroxModel.DataStructures.Util
             return elseValue;
         }
 
+        // TODO: Discuss whether these functions should be in Validate (as .NotNull overload or .NotEmpty).
+        public void AssertPresent()
+        {
+            if (IsEmpty())
+            {
+                throw new OptionalEmptyException<T>();
+            }
+        }
+
+        public void AssertPresent(string message)
+        {
+            if (IsEmpty())
+            {
+                throw new OptionalEmptyException<T>(message);
+            }
+        }
+
         public override string ToString()
         {
             if (IsEmpty())
@@ -75,6 +87,17 @@ namespace NitroxModel.DataStructures.Util
             }
 
             return "Optional[" + Get().ToString() + "]";
+        }
+    }
+
+    public sealed class OptionalEmptyException<T> : Exception
+    {
+        public OptionalEmptyException() : base($"Optional <{nameof(T)}> is empty.")
+        {
+        }
+
+        public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t" + message)
+        {
         }
     }
 }
