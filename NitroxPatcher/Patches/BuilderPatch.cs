@@ -40,9 +40,9 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(BaseGhost).GetMethod("get_TargetBase"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceBasePiece", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(ConstructableBase), typeof(Base), typeof(TechType), typeof(Quaternion) }, null));
                 }
 
@@ -54,12 +54,12 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_2);
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("ghostModel", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("ghostModel", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(GameObject).GetMethod("get_transform"));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Builder).GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceFurniture", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(GameObject), typeof(TechType), typeof(Vector3), typeof(Quaternion) }, null));
                 }
             }

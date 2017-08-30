@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
-        public static readonly object INJECTION_OPERAND = typeof(ArmsController).GetField("pda", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("pda", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
@@ -30,7 +30,7 @@ namespace NitroxPatcher.Patches
                      */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldnull);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(ArmsController).GetMethod("Reconfigure", BindingFlags.NonPublic | BindingFlags.Instance));
+                    yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("Reconfigure", BindingFlags.NonPublic | BindingFlags.Instance));
                 }
             }
         }

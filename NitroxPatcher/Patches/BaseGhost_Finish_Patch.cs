@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Finish", BindingFlags.Public | BindingFlags.Instance);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
-        public static readonly object INJECTION_OPERAND = typeof(BaseGhost).GetField("targetBase", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("targetBase", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
