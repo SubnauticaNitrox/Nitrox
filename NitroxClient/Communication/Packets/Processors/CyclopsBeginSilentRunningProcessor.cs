@@ -31,14 +31,16 @@ namespace NitroxClient.Communication.Packets.Processors
                         ability.subRoot.BroadcastMessage("RigForSilentRunning");
                         ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
                     }
-                } else
+                }
+                else
                 {
                     Console.WriteLine("Could not begin silent running because CyclopsSilentRunningAbilityButton was not found on the cyclops " + packet.Guid);
                 }
-            } else
+            }
+            else
             {
                 Console.WriteLine("Could not find cyclops with guid " + packet.Guid + " to begin silent running.");
-            }
+}
         }
     }
 }
