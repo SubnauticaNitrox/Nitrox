@@ -11,8 +11,6 @@ namespace NitroxClient.GameLogic
 {
     public class RemotePlayer
     {
-        private const float PLAYER_TRANSFORM_SMOOTH_PERIOD = 0.05f;
-
         public readonly GameObject body;
         public readonly GameObject playerView;
         public readonly AnimationController animationController;
@@ -74,8 +72,8 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            MovementHelper.MoveGameObject(body, position, PLAYER_TRANSFORM_SMOOTH_PERIOD);
-            MovementHelper.RotateGameObject(playerView, bodyRotation, PLAYER_TRANSFORM_SMOOTH_PERIOD);
+            MovementHelper.MoveGameObject(body, position, PlayerMovement.BROADCAST_INTERVAL);
+            MovementHelper.RotateGameObject(playerView, bodyRotation, PlayerMovement.BROADCAST_INTERVAL);
 
             animationController.AimingRotation = cameraRotation;
             animationController.UpdatePlayerAnimations = true;
