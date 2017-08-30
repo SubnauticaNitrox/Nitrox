@@ -11,25 +11,29 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private PacketSender packetSender;
 
-        public CyclopsActivateHornProcessor(PacketSender packetSender) {
+        public CyclopsActivateHornProcessor(PacketSender packetSender)
+        {
             this.packetSender = packetSender;
         }
 
-        public override void Process(CyclopsActivateHorn packet) {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(packet.Guid);
+        public override void Process(CyclopsActivateHorn hornPacket)
+        {
+            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(hornPacket.Guid);
 
-            if (opCyclops.IsPresent()) {
+            if (opCyclops.IsPresent())
+            {
                 CyclopsHornControl horn = opCyclops.Get().GetComponentInChildren<CyclopsHornControl>();
 
-                if (horn != null) {
-                    using (packetSender.Suppress<CyclopsActivateHorn>()) {
-                        Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
-                    }
-                } else {
-                    Console.WriteLine("Could not begin silent running because CyclopsHornButton was not found on the cyclops " + packet.Guid);
+                if (horn != null)
+                {
+                    Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
+                } else
+                {
+                    Console.WriteLine("Could not activate the horn because CyclopsHornControl was not found on the cyclops " + hornPacket.Guid);
                 }
-            } else {
-                Console.WriteLine("Could not find cyclops with guid " + packet.Guid + " to activate horn.");
+            } else
+            {
+                Console.WriteLine("Could not find cyclops with guid " + hornPacket.Guid + " to activate horn.");
             }
         }
     }
