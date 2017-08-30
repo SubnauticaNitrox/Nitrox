@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsActivateShield shieldPacket)
         {
             Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(shieldPacket.Guid);
-
+            
             if (opCyclops.IsPresent())
             {
                 CyclopsShieldButton shield = opCyclops.Get().GetComponentInChildren<CyclopsShieldButton>();
@@ -30,11 +30,13 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         shield.OnClick();
                     }
-                } else
+                }
+                else
                 {
                     Console.WriteLine("Could not activate shield because CyclopsShieldButton was not found on the cyclops " + shieldPacket.Guid);
                 }
-            } else
+            }
+            else
             {
                 Console.WriteLine("Could not find cyclops with guid " + shieldPacket.Guid + " to activate shield.");
             }

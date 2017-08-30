@@ -27,11 +27,13 @@ namespace NitroxClient.Communication.Packets.Processors
                 if (horn != null)
                 {
                     Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
-                } else
+                }
+                else
                 {
                     Console.WriteLine("Could not activate the horn because CyclopsHornControl was not found on the cyclops " + hornPacket.Guid);
                 }
-            } else
+            }
+            else
             {
                 Console.WriteLine("Could not find cyclops with guid " + hornPacket.Guid + " to activate horn.");
             }
