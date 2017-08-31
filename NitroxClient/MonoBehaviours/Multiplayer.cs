@@ -57,9 +57,6 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
             ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
-            this.gameObject.AddComponent<PlayerMovement>();
-            this.gameObject.AddComponent<PlayerStatsBroadcaster>();
-
             main = this;
         }
 
@@ -173,6 +170,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 this.gameObject.AddComponent<Chat>();
                 this.gameObject.AddComponent<PlayerMovement>();
+                this.gameObject.AddComponent<PlayerStatsBroadcaster>();
                 this.gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
