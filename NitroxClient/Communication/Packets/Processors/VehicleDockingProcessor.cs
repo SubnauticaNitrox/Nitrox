@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -10,25 +11,14 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class VehicleDockingProcessor : ClientPacketProcessor<VehicleDocking>
     {
-        // TODO: Properly analyze and consider redundancy:
-        // A VehicleMovementPacket means:
-        // In case of a Vehicle (SeaMoth/Exosuit) that it exists, it's undocked (add this check in the fixedupdate sender?) and the player is inside.
-        // For a Cyclops it needs to exist and the player should be in the PilotingChair.
+        private PlayerManager remotePlayerManager;
 
-        // So the final question is: what do we do with such kind of redundancies? If there are specialized packets for things, then we can either do nothing or add the redundant checks anyway, just in case. Or we can get rid of the specialized packets, and do it all in the other packetprocessors, but this will burden the class and logic. This should probably be determined case-by-case, at some point a decision should just be made and if it turns out it doesn't work or isn't obvious enough, it can always be refactored.
+        public VehicleDockingProcessor(PlayerManager remotePlayerManager)
+        {
+            this.remotePlayerManager = remotePlayerManager;
+        }
 
-        /*
-        44.89321 VehicleDockingBay.set_dockedVehicle: SeaMoth(Clone) (SeaMoth)
-        52.02565 GUIHand.Send
-        52.02607 DockedVehicleHandTarget.OnPlayerCinematicModeStart
-        52.0261 VehicleDockingBay.set_dockedVehicle: SeaMoth(Clone) (SeaMoth)
-        52.02763 VehicleDockingBay.OnUndockingStart
-        Cinematicmode ended!UndockCinematic(PlayerCinematicController)
-        56.99169 PlayerCinematicController.OnPlayerCinematicModeEnd
-        56.9919 Vehicle.OnUndockingComplete
-        56.99794 VehicleDockingBay.OnUndockingComplete
-        56.99816 VehicleDockingBay.set_dockedVehicle:
-        */
+        // TODO: Properly analyze and consider redundancy with VehicleMovement packets, as these mean (in case of a Seamoth/ExoSuit) that they are undocked.
 
         public override void Process(VehicleDocking packet)
         {
@@ -37,9 +27,10 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<GameObject> opSubRoot = GuidHelper.GetObjectFrom(packet.SubRootGuid);
             Validate.IsPresent(opSubRoot, "No SubRoot found for: " + packet.SubRootGuid);
 
-            var subRoot = opSubRoot.Get();
+            var subRootGameObj = opSubRoot.Get();
+            var subRoot = subRootGameObj.GetComponent<SubRoot>();
 
-            var vdb = subRoot.GetComponentInChildren<VehicleDockingBay>();
+            var vdb = subRootGameObj.GetComponentInChildren<VehicleDockingBay>();
             Validate.NotNull(vdb, "VehicleDockingBay is not in subroot children!");
 
             Optional<GameObject> opVehicle = GuidHelper.GetObjectFrom(packet.VehicleGuid);
@@ -47,12 +38,24 @@ namespace NitroxClient.Communication.Packets.Processors
 
             var vehicle = opVehicle.Get().GetComponent<Vehicle>();
 
+            var opPlayer = remotePlayerManager.Find(packet.PlayerId);
+            Validate.IsPresent(opPlayer);
+
+            var player = opPlayer.Get();
+
             switch (packet.DockingAction)
             {
                 case DockingAction.Docking:
                     vdb.DockVehicle(vehicle);
+
+                    player.SetVehicle(null);
+                    player.SetSubRoot(subRoot);
                     break;
                 case DockingAction.UndockingInitiate:
+                    // TODO: Figure out at which stage this should happen.
+                    player.SetSubRoot(null);
+                    player.SetVehicle(vehicle);
+
                     // For some reason the undocking sequence in DockedVehicleHandTarget.OnPlayerCinematicModeStart starts off with docking
                     vdb.DockVehicle(vehicle);
                     // Then OnUndockingStart is fired from DockedVehicleHandTarget.OnStartCinematicMode.
@@ -66,8 +69,10 @@ namespace NitroxClient.Communication.Packets.Processors
                     vehicle.docked = false;
                     // DVHT.OnPlayerCinematicModeEnd:
                     vdb.OnUndockingComplete(null);
-
-                    // TODO: Disconnect RemotePlayer from sub, when ParentChange gets deprecated?
+                    // Done by DVHT.OnPlayerCinematicModeEnd -> Vehicle.OnUndockingComplete (but this also does things to the Player, so it's not called directly):
+                    vehicle.docked = false;
+                    player.SetSubRoot(null);
+                    player.SetVehicle(vehicle);
                     break;
             }
         }

@@ -33,6 +33,9 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
 
+                // Some older testcode uses ownershipchange packets to move the player in and out, instead of relying on movement packets.
+                // A refactor on vehicle movement is needed anyway since the server will be controlling and sycing this when no player is in the pilotingseat.
+
                 Vector3 currentPosition = Player.main.transform.position;
                 Vector3 playerVelocity = Player.main.playerController.velocity;
 

@@ -59,17 +59,25 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddOwnedGuid(string guid, Optional<string> playerId)
+        public void AddOwnedGuid(string guid, Optional<string> opPlayerId)
         {
-            // If a requested guid exists, remove it. Doesn't matter if we received ownership or not.
-            requestedGuids.Remove(guid);
-
-            if (playerId.IsPresent())
+            if (opPlayerId.IsPresent())
             {
-                ownedGuidsToPlayer[guid] = playerId.Get();
+                string playerId = ownedGuidsToPlayer[guid] = opPlayerId.Get();
+
+                Action onReceiveOwnership;
+                if (requestedGuids.TryGetValue(guid, out onReceiveOwnership))
+                {
+                    requestedGuids.Remove(guid);
+                    if (playerId == muliplayerSession.Reservation.PlayerId)
+                    {
+                        onReceiveOwnership();
+                    }
+                }
             }
             else
             {
+                requestedGuids.Remove(guid);
                 ownedGuidsToPlayer.Remove(guid);
             }
         }

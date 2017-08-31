@@ -23,12 +23,7 @@ namespace NitroxClient.GameLogic.Helper
 
             UniqueIdentifier uniqueIdentifier;
 
-            if (!UniqueIdentifier.TryGetIdentifier(guid, out uniqueIdentifier))
-            {
-                return Optional<GameObject>.Empty();
-            }
-
-            if (uniqueIdentifier == null)
+            if (!UniqueIdentifier.TryGetIdentifier(guid, out uniqueIdentifier) || uniqueIdentifier == null)
             {
                 return Optional<GameObject>.Empty();
             }
@@ -41,6 +36,11 @@ namespace NitroxClient.GameLogic.Helper
             return GetUniqueIdentifier(gameObject).Id;
         }
 
+        public static string GetGuid(Component component)
+        {
+            return GetGuid(component.gameObject);
+        }
+
         public static void SetNewGuid(GameObject gameObject, string guid)
         {
             GetUniqueIdentifier(gameObject).Id = guid;
@@ -48,14 +48,7 @@ namespace NitroxClient.GameLogic.Helper
 
         private static UniqueIdentifier GetUniqueIdentifier(GameObject gameObject)
         {
-            UniqueIdentifier uniqueIdentifier = gameObject.GetComponent<UniqueIdentifier>();
-
-            if (uniqueIdentifier == null)
-            {
-                uniqueIdentifier = gameObject.AddComponent<PrefabIdentifier>();
-            }
-
-            return uniqueIdentifier;
+            return gameObject.EnsureComponent<UniqueIdentifier>();
         }
     }
 }

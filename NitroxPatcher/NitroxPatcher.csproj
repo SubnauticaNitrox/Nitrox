@@ -42,6 +42,9 @@
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +59,8 @@
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
     <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
+    <Compile Include="Patches\CinematicModeTrigger_DockedVehicleHandTarget_Patch.cs" />
+    <Compile Include="Patches\CinematicModeTrigger_Generic_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
@@ -73,6 +78,9 @@
     <Compile Include="Patches\CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
+    <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
+    <Compile Include="Patches\DockedVehicleHandTarget_OnHandHover_Patch.cs" />
+    <Compile Include="Patches\DockedVehicleHandTarget_OnPlayerCinematicModeEnd_Patch.cs" />
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
@@ -81,6 +89,9 @@
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
+    <Compile Include="Patches\IHandTarget_Generic_Patch.cs" />
+    <Compile Include="Patches\IHandTarget_PilotingChair_Patch.cs" />
+    <Compile Include="Patches\IHandTarget_Vehicle_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
@@ -91,16 +102,15 @@
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
+    <Compile Include="Patches\PilotingChair_ReleaseBy_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\TelemetryReporting_SendPlayerDeathEvent_Patch.cs" />
     <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
+    <Compile Include="Patches\Vehicle_OnPilotModeEnd_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
-    <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
-    <Compile Include="Patches\DockedVehicleHandTarget_OnHandHover_Patch.cs" />
-    <Compile Include="Patches\DockedVehicleHandTarget_OnPlayerCinematicModeEnd_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
