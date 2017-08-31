@@ -30,5 +30,16 @@ namespace NitroxClient.GameLogic
             CyclopsBeginSilentRunning beginSilentRunning = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
             packetSender.Send(beginSilentRunning);
         }
+
+        public void ActivateHorn(String guid)
+        {
+            CyclopsActivateHorn packet = new CyclopsActivateHorn(packetSender.PlayerId, guid);
+            packetSender.Send(packet);
+        }
+        public void ActivateShield(String guid)
+        {
+            CyclopsActivateShield packet = new CyclopsActivateShield(packetSender.PlayerId, guid);
+            packetSender.Send(packet);
+        }
     }
 }
