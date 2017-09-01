@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures.Util
 
         public static Optional<T> Of(T value)
         {
-            if (value == null)
+            if (value.Equals(default(T)))
             {
                 throw new ArgumentNullException("Value cannot be null");
             }
@@ -34,7 +34,7 @@ namespace NitroxModel.DataStructures.Util
 
         public T Get()
         {
-            if (value == null)
+            if (IsEmpty())
             {
                 throw new InvalidOperationException("Optional did not have a value");
             }
@@ -44,17 +44,17 @@ namespace NitroxModel.DataStructures.Util
 
         public bool IsPresent()
         {
-            return value != null;
+            return !IsEmpty();
         }
 
         public bool IsEmpty()
         {
-            return value == null;
+            return value == null || value.Equals(default(T));
         }
 
         public T OrElse(T elseValue)
         {
-            if (value != null)
+            if (IsPresent())
             {
                 return value;
             }
