@@ -68,6 +68,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
+    <Compile Include="GameLogic\Chunks.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Interior.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />

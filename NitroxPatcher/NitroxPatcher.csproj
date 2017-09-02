@@ -55,8 +55,13 @@
   <ItemGroup>
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
+    <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
+    <Compile Include="Patches\Server\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\Server\WaterSurfaceOnCamera_OnPostRender_Patch.cs" />
+    <Compile Include="Patches\Server\WaterBiomeManager_RasterizeAtmosphereVolumes_Patch.cs" />
+    <Compile Include="Patches\Server\MainMenuPlayerName_Start_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
@@ -107,6 +112,10 @@
     <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

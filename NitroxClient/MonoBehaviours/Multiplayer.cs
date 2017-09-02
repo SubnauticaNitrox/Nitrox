@@ -23,7 +23,7 @@ namespace NitroxClient.MonoBehaviours
         private static ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
         private static TcpClient client = new TcpClient(chunkAwarePacketReceiver);
         public static PacketSender PacketSender = new PacketSender(client);
-        public static Logic Logic = new Logic(PacketSender);
+        public static Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
@@ -67,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (client != null && client.IsConnected())
             {
-                ProcessPackets();
+                ProcessPackets();                
             }
         }
 
@@ -176,31 +176,6 @@ namespace NitroxClient.MonoBehaviours
                 this.gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
-        }
-
-        public static void AddChunk(Vector3 chunk, MonoBehaviour mb)
-        {
-            if (chunk != null && loadedChunks != null && mb != null)
-            {
-                mb.StartCoroutine(WaitAndAddChunk(chunk));
-            }
-        }
-
-        public static void RemoveChunk(VoxelandChunk chunk)
-        {
-            if (chunk?.transform != null && loadedChunks != null)
-            {
-                Int3 owningChunk = ApiHelper.Int3(chunk.transform.position);
-                loadedChunks.RemoveChunk(owningChunk);
-            }
-        }
-
-        private static IEnumerator WaitAndAddChunk(Vector3 chunk)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-            loadedChunks.AddChunk(owningChunk);
-            chunkAwarePacketReceiver.ChunkLoaded(owningChunk);
         }
     }
 }

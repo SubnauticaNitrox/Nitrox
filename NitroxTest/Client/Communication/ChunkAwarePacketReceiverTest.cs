@@ -32,7 +32,7 @@ namespace NitroxTest.Client.Communication
             loadedChunk = loadedChunks.GetChunk(loadedActionPosition);
             unloadedChunk = loadedChunks.GetChunk(unloadedActionPosition);
 
-            loadedChunks.AddChunk(loadedChunk);
+            loadedChunks.Add(loadedChunk);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace NitroxTest.Client.Communication
             Packet packet2 = new TestNonActionPacket(playerId);
             packetReceiver.PacketReceived(packet2);
 
-            loadedChunks.AddChunk(unloadedChunk);
+            loadedChunks.Add(unloadedChunk);
             packetReceiver.ChunkLoaded(unloadedChunk);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();

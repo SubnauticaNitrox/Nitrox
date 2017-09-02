@@ -17,7 +17,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(ClipMapManager_ShowEntities_Patch.INJECTION_OPCODE, null));
 
             IEnumerable<CodeInstruction> result = ClipMapManager_ShowEntities_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(108, result.Count());
+            Assert.AreEqual(110, result.Count());
         }
 
         [TestMethod]

@@ -26,7 +26,7 @@ namespace NitroxTest.Patcher.Patches
         {
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(Equipment_RemoveItem_Patch.TARGET_METHOD);
 
-            IEnumerable<CodeInstruction> result = ClipMapManager_ShowEntities_Patch.Transpiler(Equipment_RemoveItem_Patch.TARGET_METHOD, beforeInstructions);
+            IEnumerable<CodeInstruction> result = Equipment_RemoveItem_Patch.Transpiler(Equipment_RemoveItem_Patch.TARGET_METHOD, beforeInstructions);
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());
         }

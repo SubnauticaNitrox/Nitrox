@@ -6,6 +6,8 @@ namespace NitroxServer
 {
     public class Server
     {
+        public static Logic Logic { get; private set; }
+
         private TcpServer tcpServer;
         private TimeKeeper timeKeeper;
         private SimulationOwnership simulationOwnership;
@@ -17,6 +19,8 @@ namespace NitroxServer
             this.tcpServer = new TcpServer();
             this.simulationOwnership = new SimulationOwnership();
             this.packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership);
+
+            Logic = new Logic(tcpServer);
         }
 
         public void Start()

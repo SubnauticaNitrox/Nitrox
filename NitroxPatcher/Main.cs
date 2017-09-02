@@ -18,9 +18,18 @@ namespace NitroxPatcher
 
             HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
 
+            string serverNameSpace = "NitroxPatcher.Patches.Server";
+            bool serverPatching = (Array.IndexOf(Environment.GetCommandLineArgs(), "-server") >= 0);
+
+            Console.WriteLine("[NITROX] Applying " + ((serverPatching) ? "server" : "client") + " patches");
+
             Assembly.GetExecutingAssembly()
                 .GetTypes()
-                .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) &&
+                            p.IsClass &&
+                            !p.IsAbstract &&
+                            ((p.Namespace == serverNameSpace && serverPatching) || (!serverPatching && p.Namespace != serverNameSpace))
+                      )
                 .Select(Activator.CreateInstance)
                 .Cast<NitroxPatch>()
                 .ToList()

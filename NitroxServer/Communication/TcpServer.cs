@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
+using UnityEngine;
 
 namespace NitroxServer.Communication
 {
@@ -150,6 +151,20 @@ namespace NitroxServer.Communication
                 foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
                 {
                     if (connectWithPlayer.Key != sendingPlayer && connectWithPlayer.Value.Open)
+                    {
+                        connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    }
+                }
+            }
+        }
+
+        public void SendPacketToPlayersInChunk(Packet packet, Int3 chunk)
+        {
+            lock (connectionsByPlayer)
+            {
+                foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
+                {
+                    if(connectWithPlayer.Key.HasChunkLoaded(chunk))
                     {
                         connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
                     }

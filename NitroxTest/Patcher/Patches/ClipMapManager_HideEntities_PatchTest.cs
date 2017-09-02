@@ -18,7 +18,7 @@ namespace NitroxTest.Patcher.Patches
 
             IEnumerable<CodeInstruction> result = ClipMapManager_HideEntities_Patch.Transpiler(null, instructions);
 
-            Assert.AreEqual(instructions.Count + 3, result.Count());
+            Assert.AreEqual(instructions.Count + 5, result.Count());
         }
 
         [TestMethod]
@@ -30,7 +30,7 @@ namespace NitroxTest.Patcher.Patches
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());
             // 3 instructions are added for every ret, currently there are two.
-            Assert.AreEqual(beforeInstructions.Count + 6, result.Count());
+            Assert.AreEqual(beforeInstructions.Count + 10, result.Count());
         }
     }
 }

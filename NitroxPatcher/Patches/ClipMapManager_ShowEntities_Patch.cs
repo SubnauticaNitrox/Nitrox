@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using System;
 using System.Collections.Generic;
@@ -24,13 +25,15 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.AddChunk(this.chunk.transform.position, this.mgr);
                      */
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Chunks", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_chunk"));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_transform"));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Transform).GetMethod("get_position"));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_mgr"));
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("AddChunk", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(Vector3), typeof(MonoBehaviour) }, null));
+                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Chunks).GetMethod("AddChunk"));
                 }
 
                 yield return instruction;
