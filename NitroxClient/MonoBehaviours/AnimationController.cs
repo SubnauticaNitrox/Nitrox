@@ -1,21 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class AnimationController : MonoBehaviour
     {
-        private const float SMOOTHING_SPEED = 6f;
-        public Animator animator;
+        private const float SMOOTHING_SPEED = 4f;
+        private Animator animator;
 
         public bool UpdatePlayerAnimations { get; set; } = true;
         public Quaternion AimingRotation { get; set; }
+        public Vector3 Velocity { get; set; }
+        public Quaternion BodyRotation { get; set; }
 
-        private Vector3 lastPosition = Vector3.zero;
         private Vector3 smoothedVelocity = Vector3.zero;
+        private float smoothViewPitch;
+
 
         private Dictionary<string, bool> animationStatusById = new Dictionary<string, bool>()
         {
@@ -24,7 +24,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Start()
         {
-            animator = gameObject.GetComponent<Animator>();
+            animator = GetComponent<Animator>();
         }
 
         public void Update()
@@ -44,22 +44,23 @@ namespace NitroxClient.MonoBehaviours
         {
             if (UpdatePlayerAnimations)
             {
-                Vector3 velocity = AimingRotation.GetInverse() * (1 / Time.fixedDeltaTime * (transform.position - lastPosition));
-                lastPosition = transform.position;
+                Vector3 rotationCorrectedVelocity = gameObject.transform.rotation.GetInverse() * Velocity;
 
-                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, velocity, Vector3.Normalize(velocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
+
                 SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
                 SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
                 SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
                 SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
 
-                float num = AimingRotation.eulerAngles.x;
-                if (num > 180f)
+                float viewPitch = AimingRotation.eulerAngles.x;
+                if (viewPitch > 180f)
                 {
-                    num -= 360f;
+                    viewPitch -= 360f;
                 }
-                num = -num;
-                animator.SetFloat("view_pitch", num);
+                viewPitch = -viewPitch;
+                smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
+                animator.SetFloat("view_pitch", smoothViewPitch);
             }
         }
 

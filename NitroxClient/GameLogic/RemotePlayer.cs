@@ -14,6 +14,7 @@ namespace NitroxClient.GameLogic
         public readonly GameObject body;
         public readonly GameObject playerView;
         public readonly AnimationController animationController;
+        public readonly Rigidbody rigidBody;
 
         public string PlayerId { get; private set; }
 
@@ -26,6 +27,8 @@ namespace NitroxClient.GameLogic
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+            rigidBody = body.AddComponent<Rigidbody>();
 
             //Get player
             playerView = body.transform.Find("player_view").gameObject;
@@ -54,7 +57,7 @@ namespace NitroxClient.GameLogic
             ErrorMessage.AddMessage($"{playerId} joined the game.");
         }
 
-        public void UpdatePosition(Vector3 position, Quaternion bodyRotation, Quaternion cameraRotation, Optional<string> opSubGuid)
+        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> opSubGuid)
         {
             body.SetActive(true);
             if (opSubGuid.IsPresent())
@@ -72,10 +75,10 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            MovementHelper.MoveGameObject(body, position, PlayerMovement.BROADCAST_INTERVAL);
-            MovementHelper.RotateGameObject(playerView, bodyRotation, PlayerMovement.BROADCAST_INTERVAL);
+            rigidBody.velocity = animationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, body, PlayerMovement.BROADCAST_INTERVAL);
+            rigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, body, PlayerMovement.BROADCAST_INTERVAL);
 
-            animationController.AimingRotation = cameraRotation;
+            animationController.AimingRotation = aimingRotation;
             animationController.UpdatePlayerAnimations = true;
         }
 

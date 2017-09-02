@@ -17,15 +17,14 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             this.remotePlayerManager = remotePlayerManager;
         }
-        
+
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
 
-            Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.PlayerPosition);
+            Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.Position);
             Vector3 remoteVelocity = ApiHelper.Vector3(vehicleMovement.Velocity);
             Quaternion remoteRotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
-            Vector3 remoteAngularVelocity = ApiHelper.Vector3(vehicleMovement.AngularVelocity);
 
             if (opGameObject.IsPresent())
             {
@@ -36,8 +35,19 @@ namespace NitroxClient.Communication.Packets.Processors
                 if (rigidbody != null)
                 {
                     //todo: maybe toggle kinematic if jumping large distances?
-                    rigidbody.velocity = GetVehicleVelocity(remotePosition, remoteVelocity, gameObject);
-                    rigidbody.angularVelocity = GetVehicleAngularVelocity(remoteRotation, remoteAngularVelocity, gameObject);
+
+                    /*
+                     * For the cyclops, it is too intense for the game to lerp the entire structure every movement
+                     * packet update.  Instead, we try to match the velocity.  Due to floating points not being
+                     * precise, this will skew quickly.  To counter this, we apply micro adjustments each packet
+                     * to get the simulation back in sync.  The adjustments will increase in size the larger the
+                     * out of sync issue is.
+                     *
+                     * Besides, this causes the movement of the Cyclops, vehicles and player to be very fluid.
+                     */
+
+                    rigidbody.velocity = MovementHelper.GetCorrectedVelocity(remotePosition, remoteVelocity, gameObject, PlayerMovement.BROADCAST_INTERVAL);
+                    rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(remoteRotation, gameObject, PlayerMovement.BROADCAST_INTERVAL);
                 }
                 else
                 {
@@ -97,67 +107,6 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
 
             GuidHelper.SetNewGuid(gameObject, guid);
-        }
-
-        /*
-         * For the cyclops, it is too intense for the game to lerp the entire structure every movement
-         * packet update.  Instead, we try to match the velocity.  Due to floating points not being
-         * precise, this will skew quickly.  To counter this, we apply micro adjustments each packet
-         * to get the simulation back in sync.  The adjustments will increase in size the larger the  
-         * out of sync issue is.
-         */
-        private Vector3 GetVehicleVelocity(Vector3 remotePosition, Vector3 remoteVelocity, GameObject gameObject)
-        {
-            Vector3 difference = (remotePosition - gameObject.transform.position);
-            Vector3 velocityToMakeUpDifference = difference / PlayerMovement.BROADCAST_INTERVAL;
-
-            float distance = Vector3.Distance(remotePosition, gameObject.transform.position);
-            float maxAdjustment = 0.15f;
-
-            if (distance > 10)
-            {
-                maxAdjustment = 1f;
-            }
-            else if (distance > 5)
-            {
-                maxAdjustment = 0.5f;
-            }
-            else if (distance > 1)
-            {
-                maxAdjustment = 0.25f;
-            }
-            else if (distance < 0.1 && remoteVelocity == Vector3.zero) //overcorrections can cause jitter when standing still. 
-            {
-                return Vector3.zero;
-            }
-
-            Vector3 limitedVelocityChange = MathUtil.ClampMagnitude(velocityToMakeUpDifference - remoteVelocity, maxAdjustment, maxAdjustment * -1);
-
-            return remoteVelocity + limitedVelocityChange;
-        }
-
-        private Vector3 GetVehicleAngularVelocity(Quaternion remoteRotation, Vector3 remoteAngularVelocity, GameObject gameObject)
-        {
-            Quaternion delta = remoteRotation * Quaternion.Inverse(gameObject.transform.rotation);
-
-            float angle; Vector3 axis;
-            delta.ToAngleAxis(out angle, out axis);
-
-            // We get an infinite axis in the event that our rotation is already aligned.
-            if (float.IsInfinity(axis.x))
-            {
-                return Vector3.zero;
-            }
-
-            if (angle > 180f)
-            {
-                angle -= 360f;
-            }
-
-            // Here I drop down to 0.9f times the desired movement,
-            // since we'd rather undershoot and ease into the correct angle
-            // than overshoot and oscillate around it in the event of errors.
-            return (0.9f * Mathf.Deg2Rad * angle / PlayerMovement.BROADCAST_INTERVAL) * axis.normalized;            
         }
     }
 }
