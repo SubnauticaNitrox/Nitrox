@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -24,19 +23,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Debug($"{Time.realtimeSinceStartup} received docking packet:\n\t{packet}");
 
-            Optional<GameObject> opSubRoot = GuidHelper.GetObjectFrom(packet.SubRootGuid);
-            Validate.IsPresent(opSubRoot, "No SubRoot found for: " + packet.SubRootGuid);
+            var subRoot = GuidHelper.RequireObjectFrom(packet.SubRootGuid).GetComponent<SubRoot>();
 
-            var subRootGameObj = opSubRoot.Get();
-            var subRoot = subRootGameObj.GetComponent<SubRoot>();
-
-            var vdb = subRootGameObj.GetComponentInChildren<VehicleDockingBay>();
+            var vdb = subRoot.GetComponentInChildren<VehicleDockingBay>();
             Validate.NotNull(vdb, "VehicleDockingBay is not in subroot children!");
 
-            Optional<GameObject> opVehicle = GuidHelper.GetObjectFrom(packet.VehicleGuid);
-            Validate.IsPresent(opVehicle, "No Vehicle found for: " + packet.VehicleGuid);
-
-            var vehicle = opVehicle.Get().GetComponent<Vehicle>();
+            var vehicle = GuidHelper.RequireObjectFrom(packet.VehicleGuid).GetComponent<Vehicle>();
 
             var opPlayer = remotePlayerManager.Find(packet.PlayerId);
             Validate.IsPresent(opPlayer);
@@ -46,6 +38,11 @@ namespace NitroxClient.Communication.Packets.Processors
             switch (packet.DockingAction)
             {
                 case DockingAction.Docking:
+                    // TODO: Actually send some docking packages.
+                    // TODO: Make the server authorative over the docking procedure, including doors and animation starts, instead of relying on the position only - hoping that all clients do the same thing.
+                    // TODO: Make someone (server) authorative over openables anyway, or do something with exclusivity to prevent desyncs.
+                    // TODO: Check what the basegame does when moving the Cyclops over an unpiloted Vehicle.
+                    // TODO: What should happen when a player is in the launchbay when a Vehcile tries to dock? Probably deny the docking, and display some message. Give the player in the launchbay a nice message telling that they are in the way.
                     vdb.DockVehicle(vehicle);
 
                     player.SetVehicle(null);

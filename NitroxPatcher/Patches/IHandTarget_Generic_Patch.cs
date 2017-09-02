@@ -67,6 +67,7 @@ namespace NitroxPatcher.Patches.Client
             {
                 string guid = opGuid.Get();
 
+                // TODO: Move the logic of acquiring ownership and retrying into a helper for use in other cases?
                 if (simulationOwnership.HasOwnership(guid))
                 {
                     Log.Debug($"Already have ownership over {nameof(T)}: {guid}");
