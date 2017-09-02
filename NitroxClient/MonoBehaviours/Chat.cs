@@ -1,10 +1,14 @@
-﻿using System;
+﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.MonoBehaviours.Gui.Chat;
+using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class Chat : MonoBehaviour
     {
+        private PlayerChatManager chatManager = new PlayerChatManager();
+
         public void Awake()
         {
             DevConsole.RegisterConsoleCommand(this, "chat", true);
@@ -23,7 +27,7 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 Multiplayer.Logic.Chat.SendChatMessage(text);
-                ErrorMessage.AddMessage("Me: " + text);
+                chatManager.WriteMessage("You: " + text);
             }
         }
     }
