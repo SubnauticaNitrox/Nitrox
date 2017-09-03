@@ -11,6 +11,7 @@ namespace NitroxServer.GameLogic
 
         private List<EscapePodModel> escapePods;
         private Dictionary<String, EscapePodModel> escapePodsByPlayerId;
+        private object podNotFullLock = new object();
         private EscapePodModel podNotFullYet;
 
         public EscapePodManager()
@@ -22,15 +23,18 @@ namespace NitroxServer.GameLogic
 
         public void AssignPlayerToEscapePod(String playerId)
         {
-            lock(escapePodsByPlayerId)
+            lock (escapePodsByPlayerId)
             {
-                if(escapePodsByPlayerId.ContainsKey(playerId))
+                if (escapePodsByPlayerId.ContainsKey(playerId))
                 {
                     return;
                 }
             }
 
-            lock (podNotFullYet)
+            // Lock on a different object, because we may assign to podNotFullYet,
+            // causing all kinds of shenanigans because C# locks the object contained by it,
+            // not the field itself.
+            lock (podNotFullLock)
             {
                 if (podNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
                 {
@@ -50,9 +54,9 @@ namespace NitroxServer.GameLogic
         {
             lock (escapePods)
             {
-                int totalEscapePods = escapePods.Count; 
+                int totalEscapePods = escapePods.Count;
 
-                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods, 
+                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods,
                                                               new NitroxModel.DataStructures.Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
                                                               "escapePodFab" + totalEscapePods,
                                                               "escapePodMedFab" + totalEscapePods,
