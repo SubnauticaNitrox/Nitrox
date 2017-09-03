@@ -6,9 +6,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
 {
     public class ChatKeyBindingAction : KeyBindingAction
     {
+        PlayerChatManager chatManager = new PlayerChatManager();
+
         public override void Execute()
         {
-            PlayerChatManager chatManager = new PlayerChatManager();
             chatManager.ShowChat();
         }
     }
