@@ -10,13 +10,19 @@ namespace NitroxModel.Packets
     {
         public TechType TechType { get { return serializableTechType.TechType; } }
         public String Guid { get; }
+        public float SteeringWheelYaw { get; }
+        public float SteeringWheelPitch { get; }
 
         private SerializableTechType serializableTechType;
 
-        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, TechType techType, String guid) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
+        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, TechType techType, String guid, float steeringWheelYaw, float steeringWheelPitch) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
         {
             this.Guid = guid;
             this.serializableTechType = new SerializableTechType(techType);
+
+            this.SteeringWheelYaw = steeringWheelYaw;
+            this.SteeringWheelPitch = steeringWheelPitch;
+
             this.PlayerMustBeInRangeToReceive = false;
         }
 

@@ -10,19 +10,25 @@ namespace NitroxModel.DataStructures.ServerModel
         public Vector3 Position { get { return serializablePosition.ToVector3(); } }
         public Quaternion Rotation { get { return serializableRotation.ToQuaternion(); } }
         public Vector3 Velocity { get { return serializableVelocity.ToVector3(); } }
+        public float SteeringWheelYaw { get; }
+        public float SteeringWheelPitch { get; }
 
         private SerializableVector3 serializablePosition;
         private SerializableQuaternion serializableRotation;
         private SerializableVector3 serializableVelocity;
         private SerializableTechType serializableTechType;
 
-        public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity)
+        public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity, float steeringWheelYaw, float steeringWheelPitch)
         {
             this.serializableTechType = new SerializableTechType(techType);
             this.Guid = guid;
+
             this.serializablePosition = SerializableVector3.from(position);
             this.serializableRotation = SerializableQuaternion.from(rotation);
             this.serializableVelocity = SerializableVector3.from(velocity);
+
+            this.SteeringWheelYaw = steeringWheelYaw;
+            this.SteeringWheelPitch = steeringWheelPitch;
         }
     }
 }

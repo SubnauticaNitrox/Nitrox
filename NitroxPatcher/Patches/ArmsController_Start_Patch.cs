@@ -15,6 +15,8 @@ namespace NitroxPatcher.Patches
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Stfld;
         public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetField("pda", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        // TODO: This could be converted to a Postfix, as the pda assignment is the last operation.
+
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
