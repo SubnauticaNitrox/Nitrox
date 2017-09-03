@@ -23,9 +23,9 @@ namespace NitroxServer.GameLogic
 
         public void AssignPlayerToEscapePod(String playerId)
         {
-            lock(escapePodsByPlayerId)
+            lock (escapePodsByPlayerId)
             {
-                if(escapePodsByPlayerId.ContainsKey(playerId))
+                if (escapePodsByPlayerId.ContainsKey(playerId))
                 {
                     return;
                 }
@@ -52,14 +52,14 @@ namespace NitroxServer.GameLogic
         {
             lock (escapePods)
             {
-                int totalEscapePods = escapePods.Count; 
+                int totalEscapePods = escapePods.Count;
 
-                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods, 
+                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods,
                                                               new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
                                                               "escapePodFab" + totalEscapePods,
                                                               "escapePodMedFab" + totalEscapePods,
                                                               "escapePodStorageFab" + totalEscapePods,
-                                                              "escapePodRadioFab" + totalEscapePods);               
+                                                              "escapePodRadioFab" + totalEscapePods);
                 escapePods.Add(escapePod);
 
                 return escapePod;
