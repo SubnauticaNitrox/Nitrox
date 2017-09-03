@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
     class PlayerChat : MonoBehaviour
     {
-        private const int LINE_CHAR_LIMIT = 40;
+        private const int LINE_CHAR_LIMIT = 80;
         private const int MESSAGE_LIMIT = 6;
         private const float CHAT_VISIBILITY_TIME_LENGTH = 7f;
 
@@ -17,7 +17,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private Coroutine timer;
         private List<String> messages;
 
-        public PlayerChat()
+        protected void Awake()
         {
             SetupChatMessagesComponent();
 
@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.name = "ChatText";
             chatText.alignment = TextAlignment.Left;
             chatText.fontSize = 18;
-            chatText.transform.position = new Vector3(0.05f, .5f, 1f); ;
+            chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
             ErrorMessage em = (ErrorMessage)ReflectionHelper.ReflectionGet<ErrorMessage>(null, "main", false, true);
             chatEntry.layer = em.gameObject.layer;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxClient.GameLogic.ChatUI;
+using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
@@ -7,7 +8,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
     {
         public override void Execute()
         {
-            Console.WriteLine("Chat Key Press!!!");
+            PlayerChatManager chatManager = new PlayerChatManager();
+            chatManager.ShowChat();
         }
     }
 }

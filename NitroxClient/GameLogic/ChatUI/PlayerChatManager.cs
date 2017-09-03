@@ -9,16 +9,30 @@ namespace NitroxClient.GameLogic.ChatUI
 {
     class PlayerChatManager
     {
-        private PlayerChat chatEntry;
+        private static PlayerChat chat;
+        private static PlayerChatEntry chatEntry;
+
+        public PlayerChatManager()
+        {
+            if(chat == null)
+            {
+                chat = new GameObject().AddComponent<PlayerChat>();
+            }
+            
+            if(chatEntry == null)
+            {
+                chatEntry = new GameObject().AddComponent<PlayerChatEntry>();
+            }
+        }
         
         public void WriteMessage(String message)
         {
-            if(chatEntry == null)
-            {
-                chatEntry = new GameObject().AddComponent<PlayerChat>();
-            }
+            chat.WriteMessage(message);
+        }
 
-            chatEntry.WriteMessage(message);
+        public void ShowChat()
+        {
+            chatEntry.Show(this);
         }
     }
 }

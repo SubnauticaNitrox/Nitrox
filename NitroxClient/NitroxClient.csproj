@@ -115,6 +115,7 @@
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
     <Compile Include="MathUtil.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
