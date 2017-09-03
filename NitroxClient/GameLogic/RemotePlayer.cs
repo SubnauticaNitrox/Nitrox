@@ -32,6 +32,7 @@ namespace NitroxClient.GameLogic
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
+
             rigidBody = body.AddComponent<Rigidbody>();
             rigidBody.useGravity = false;
 
@@ -66,7 +67,7 @@ namespace NitroxClient.GameLogic
         {
             if (!keepWorldTransform)
             {
-                UWE.Utils.ZeroTransform(body.transform);
+                UWE.Utils.ZeroTransform(body);
             }
 
             body.transform.SetParent(transform, false);
@@ -97,6 +98,7 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
             SetSubRoot(subRoot);
@@ -114,27 +116,28 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                if (newPilotingChair != null)
+                if (PilotingChair != null)
                 {
-                    Attach(newPilotingChair.sittingPosition.transform);
+                    Attach(PilotingChair.sittingPosition.transform);
                 }
                 else
                 {
+                    Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
                 }
-                rigidBody.isKinematic = animationController["cyclops_steering"] = newPilotingChair != null;
+                rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
         }
 
-        public void SetSubRoot(SubRoot subRoot)
+        public void SetSubRoot(SubRoot newSubRoot)
         {
-            if (SubRoot != subRoot)
+            if (SubRoot != newSubRoot)
             {
-                SubRoot = subRoot;
-                
-                if (subRoot != null)
+                SubRoot = newSubRoot;
+
+                if (SubRoot != null)
                 {
-                    Attach(subRoot.transform, true);
+                    Attach(SubRoot.transform, true);
                 }
                 else
                 {
@@ -152,6 +155,7 @@ namespace NitroxClient.GameLogic
                 Vehicle = newVehicle;
 
                 rigidBody.isKinematic = (Vehicle != null);
+
                 if (Vehicle != null)
                 {
                     Attach(Vehicle.playerPosition.transform);
