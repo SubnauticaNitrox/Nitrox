@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NitroxClient.GameLogic.ChatUI;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -29,6 +30,7 @@ namespace NitroxClient.MonoBehaviours
 
         private static PlayerManager remotePlayerManager = new PlayerManager();
         private static PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
+        private static PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
@@ -37,6 +39,7 @@ namespace NitroxClient.MonoBehaviours
         {
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
+            { typeof(PlayerChatManager), remotePlayerChatManager },
             { typeof(PacketSender), PacketSender }
         };
 
