@@ -67,7 +67,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             player.SetVehicle(vehicle);
             player.SetSubRoot(subRoot);
-            player.SetPilotingChair(subRoot.GetComponentInChildren<PilotingChair>());
+            player.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
 
             player.animationController.UpdatePlayerAnimations = false;
         }
