@@ -1,9 +1,10 @@
 ﻿using Harmony;
 using NitroxPatcher.Patches;
+using NitroxReloader;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using NitroxReloader;
 
 namespace NitroxPatcher
 {
@@ -41,6 +42,14 @@ namespace NitroxPatcher
 
             Console.WriteLine("[NITROX] Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
+            InitializeReloader(serverPatching);
+
+            DevConsole.disableConsole = false;
+        }
+
+        [Conditional("DEBUG")]
+        private static void InitializeReloader(bool serverPatching)
+        {
             Console.WriteLine("[NITROX] Initializing reloader...");
 
             // Whitelist needs to be split, as both game instances load all four libraries
@@ -56,8 +65,6 @@ namespace NitroxPatcher
             }
 
             Console.WriteLine("[NITROX] Reloader initialized");
-
-            DevConsole.disableConsole = false;
         }
     }
 }
