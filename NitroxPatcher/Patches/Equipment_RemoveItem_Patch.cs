@@ -1,12 +1,10 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -19,8 +17,6 @@ namespace NitroxPatcher.Patches
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            Validate.NotNull(INJECTION_OPCODE);
-
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;
@@ -35,7 +31,7 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(InventoryItem).GetMethod("get_item", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Equipment).GetMethod("get_owner", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_owner", BindingFlags.Public | BindingFlags.Instance));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(EquipmentSlots).GetMethod("Unequip", BindingFlags.Public | BindingFlags.Instance));
                 }
