@@ -111,6 +111,7 @@
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
+    <Compile Include="MonoBehaviours\CyclopsExtensions.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />

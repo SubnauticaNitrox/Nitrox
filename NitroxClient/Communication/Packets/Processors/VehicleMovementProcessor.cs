@@ -74,20 +74,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (subRoot != null)
                 {
-                    var scr = gameObject.GetComponent<SubControl>();
-                    if (scr != null)
+                    var ce = subRoot.gameObject.EnsureComponent<CyclopsExtensions>();
+                    ce.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
+                    if (vehicleMovement.AppliedThrottle)
                     {
-                        scr.ReflectionSet("steeringWheelYaw", vehicleMovement.SteeringWheelYaw);
-                        scr.ReflectionSet("steeringWheelPitch", vehicleMovement.SteeringWheelPitch);
-
-                        // TODO: Sync throttle FX (screw for instance)
-                        //if (vehicleMovement.AppliedThrottle)
-                        //{
-                        //    ISubThrottleHandler subThrottleHandler = this.throttleHandlers[i];
-                        //    subThrottleHandler.OnSubAppliedThrottle();
-                        //}
-
-                        // TODO: Sync steering FX (ISubTurnHandler)  
+                        ce.ApplyThrottle();
                     }
                     player.animationController.SetFloat("cyclops_yaw", vehicleMovement.SteeringWheelYaw);
                     player.animationController.SetFloat("cyclops_pitch", vehicleMovement.SteeringWheelPitch);

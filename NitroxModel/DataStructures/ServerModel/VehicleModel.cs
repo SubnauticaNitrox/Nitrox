@@ -12,13 +12,14 @@ namespace NitroxModel.DataStructures.ServerModel
         public Vector3 Velocity { get { return serializableVelocity.ToVector3(); } }
         public float SteeringWheelYaw { get; }
         public float SteeringWheelPitch { get; }
+        public bool AppliedThrottle { get; }
 
         private SerializableVector3 serializablePosition;
         private SerializableQuaternion serializableRotation;
         private SerializableVector3 serializableVelocity;
         private SerializableTechType serializableTechType;
 
-        public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity, float steeringWheelYaw, float steeringWheelPitch)
+        public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
             this.serializableTechType = new SerializableTechType(techType);
             this.Guid = guid;
@@ -29,6 +30,7 @@ namespace NitroxModel.DataStructures.ServerModel
 
             this.SteeringWheelYaw = steeringWheelYaw;
             this.SteeringWheelPitch = steeringWheelPitch;
+            this.AppliedThrottle = appliedThrottle;
         }
     }
 }

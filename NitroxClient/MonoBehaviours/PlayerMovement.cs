@@ -63,6 +63,7 @@ namespace NitroxClient.MonoBehaviours
             Vector3 angularVelocity;
             TechType techType;
             float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
+            bool appliedThrottle = false;
 
             if (vehicle != null)
             {
@@ -78,6 +79,8 @@ namespace NitroxClient.MonoBehaviours
                 // Required because vehicle is either a SeaMoth or an Exosuit, both types which can't see the fields either.
                 steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
                 steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
+
+                // TODO: Check if Vehicles have such a thing as well.
             }
             else if (sub != null && Player.main.isPiloting)
             {
@@ -92,6 +95,7 @@ namespace NitroxClient.MonoBehaviours
                 var scr = sub.GetComponent<SubControl>();
                 steeringWheelYaw = (float)scr.ReflectionGet("steeringWheelYaw");
                 steeringWheelPitch = (float)scr.ReflectionGet("steeringWheelPitch");
+                appliedThrottle = scr.appliedThrottle && (bool)scr.ReflectionGet("canAccel");
             }
             else
             {
@@ -104,7 +108,8 @@ namespace NitroxClient.MonoBehaviours
                                                   rotation,
                                                   velocity,
                                                   steeringWheelYaw,
-                                                  steeringWheelPitch);
+                                                  steeringWheelPitch,
+                                                  appliedThrottle);
 
             return Optional<VehicleModel>.Of(model);
         }
