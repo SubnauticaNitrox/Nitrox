@@ -49,7 +49,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             if (chatManager != null && chatMessage.Length > 0)
             {
                 Multiplayer.Logic.Chat.SendChatMessage(chatMessage);
-                chatManager.WriteMessage("You: " + chatMessage);
+                chatManager.WriteMessage("Me: " + chatMessage);
             }
         }
         
