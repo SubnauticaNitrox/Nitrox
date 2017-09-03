@@ -9,64 +9,98 @@ namespace NitroxModel.Helper
         // TODO log bindingFlags as well in Validate.NotNull calls.
         public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
         {
-            Validate.IsTrue(o != null ^ isStatic);
+            ValidateStatic(o, isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
-            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags);
-            Validate.NotNull(methodInfo, $"Class \"{t.Name}\" does not have a method called \"{methodName}\".");
+            MethodInfo methodInfo = GetMethod(t, methodName, isPublic, isStatic);
             return methodInfo.Invoke(o, args);
         }
 
         public static object ReflectionCall<T>(this T o, string methodName, Type[] types, bool isPublic = false, bool isStatic = false, params object[] args)
         {
-            Validate.IsTrue(o != null ^ isStatic);
+            ValidateStatic(o, isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
-            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            MethodInfo methodInfo = t.GetMethod(methodName, bindingFlags, null, types, null);
-            Validate.NotNull(methodInfo, $"Class \"{t.Name}\" does not have a method called \"{methodName}\".");
+            MethodInfo methodInfo = GetMethod(t, methodName, isPublic, isStatic, types);
             return methodInfo.Invoke(o, args);
         }
 
         public static object ReflectionGet<T>(this T o, string fieldName, bool isPublic = false, bool isStatic = false)
         {
-            Validate.IsTrue(o != null ^ isStatic);
+            ValidateStatic(o, isStatic);
             Type t = isStatic ? typeof(T) : o.GetType();
-            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            FieldInfo fieldInfo = GetField(t, fieldName, isPublic, isStatic);
             return fieldInfo.GetValue(o);
         }
 
-        public static void ReflectionSet<T>(this T o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
+        public static object ReflectionGet(this object o, FieldInfo fieldInfo)
         {
-            Validate.IsTrue(o != null ^ isStatic);
-            Type t = isStatic ? typeof(T) : o.GetType();
-            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
-            fieldInfo.SetValue(o, value);
+            Validate.NotNull(fieldInfo, $"Field cannot be null!");
+            return fieldInfo.GetValue(o);
         }
 
         public static object ReflectionGet<T, T2>(this T2 o, string fieldName, bool isPublic = false, bool isStatic = false)
             where T2 : T
         {
-            Validate.IsTrue(o != null ^ isStatic);
+            ValidateStatic(o, isStatic);
             Type t = typeof(T);
-            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
-            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            FieldInfo fieldInfo = GetField(t, fieldName, isPublic, isStatic);
             return fieldInfo.GetValue(o);
+        }
+
+        public static void ReflectionSet<T>(this T o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
+        {
+            ValidateStatic(o, isStatic);
+            Type t = isStatic ? typeof(T) : o.GetType();
+            FieldInfo fieldInfo = GetField(t, fieldName, isPublic, isStatic);
+            fieldInfo.SetValue(o, value);
+        }
+
+        public static void ReflectionSet(this object o, FieldInfo fieldInfo, object value)
+        {
+            Validate.NotNull(fieldInfo, $"Field cannot be null!");
+            fieldInfo.SetValue(o, value);
         }
 
         public static void ReflectionSet<T, T2>(this T2 o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
             where T2 : T
         {
-            Validate.IsTrue(o != null ^ isStatic);
+            ValidateStatic(o, isStatic);
             Type t = typeof(T);
+            FieldInfo fieldInfo = GetField(t, fieldName, isPublic, isStatic);
+            fieldInfo.SetValue(o, value);
+        }
+
+        public static MethodInfo GetMethod<T>(string methodName, bool isPublic = false, bool isStatic = false, params Type[] types)
+        {
+            return GetMethod(typeof(T), methodName, isPublic, isStatic, types);
+        }
+
+        private static MethodInfo GetMethod(this Type t, string methodName, bool isPublic = false, bool isStatic = false, params Type[] types)
+        {
+            MethodInfo methodInfo;
+            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
+            if (types != null && types.Length > 0)
+            {
+                methodInfo = t.GetMethod(methodName, bindingFlags, null, types, null);
+            }
+            else
+            {
+                methodInfo = t.GetMethod(methodName, bindingFlags);
+            }
+            Validate.NotNull(methodInfo, $"Type \"{t.Name}\" does not have a method called \"{methodName}\".");
+            return methodInfo;
+        }
+
+        public static FieldInfo GetField<T>(string fieldName, bool isPublic = false, bool isStatic = false)
+        {
+            return GetField(typeof(T), fieldName, isPublic, isStatic);
+        }
+
+        private static FieldInfo GetField(this Type t, string fieldName, bool isPublic = false, bool isStatic = false)
+        {
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
-            fieldInfo.SetValue(o, value);
+            Validate.NotNull(fieldInfo, $"Type \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            return fieldInfo;
         }
 
         private static BindingFlags GetBindingFlagsFromMethodQualifiers(bool isPublic, bool isStatic)
@@ -75,6 +109,19 @@ namespace NitroxModel.Helper
             bindingFlags |= isStatic ? BindingFlags.Static : BindingFlags.Instance;
 
             return bindingFlags;
+        }
+
+        private static void ValidateStatic(object o, bool isStatic)
+        {
+            //Validate.IsTrue(o != null ^ isStatic, $"If isStatic is false, o must be non-null, or if isStatic is true, o must be null.");
+            if (o == null && !isStatic)
+            {
+                throw new ArgumentException("Object can't be null when isStatic is false!");
+            }
+            else if (o != null && isStatic)
+            {
+                throw new ArgumentException("Object must be be null when isStatic is true!");
+            }
         }
     }
 }
