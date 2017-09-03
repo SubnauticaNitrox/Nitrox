@@ -29,18 +29,18 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Quaternion bodyRotation, Quaternion cameraRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
+        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
         {
             Movement movement;
 
             if (opVehicle.IsPresent())
             {
                 VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Rotation, vehicle.Velocity, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid);
+                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.TechType, vehicle.Guid);
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(cameraRotation), opSubGuid);
+                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Vector3(velocity), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(aimingRotation), opSubGuid);
             }
 
             Send(movement);
