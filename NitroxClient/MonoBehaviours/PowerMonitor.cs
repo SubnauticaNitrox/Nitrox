@@ -40,17 +40,17 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PropulsionCannon).GetMethod("OnShoot", BindingFlags.Public | BindingFlags.Instance), false },
             { typeof(PowerLevelChangedProcessor).GetMethod("Process", BindingFlags.Public | BindingFlags.Instance), false },
         };
-        
+
         private float runningDelta = 0;
         private float elapsedTime = 0;
         public float interpolationPeriod = 4.00f;
-        
+
         public void ChargeChanged(float amount, GameObject gameObject)
         {
             if (CameFromActivePowerEvent())
             {
                 runningDelta += amount;
-            }            
+            }
         }
 
         /**
@@ -60,14 +60,14 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             elapsedTime += Time.deltaTime;
-            
-            if (elapsedTime >= interpolationPeriod || 
+
+            if (elapsedTime >= interpolationPeriod ||
                 runningDelta > POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET ||
                 runningDelta < POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET)
             {
                 elapsedTime = 0;
 
-                if(runningDelta != 0)
+                if (runningDelta != 0)
                 {
                     String guid = GuidHelper.GetGuid(this.gameObject);
                     Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
@@ -75,21 +75,21 @@ namespace NitroxClient.MonoBehaviours
                 }
             }
         }
-        
+
         private bool CameFromActivePowerEvent()
         {
-            StackFrame stackFrame = new StackFrame(4, true);
+            StackFrame stackFrame = new StackFrame(5, true);
             MethodBase method = stackFrame.GetMethod();
-            
-            if(isActiveFlagByWhiteListedEnergyInterfaceCallers.ContainsKey(method))
+
+            if (isActiveFlagByWhiteListedEnergyInterfaceCallers.ContainsKey(method))
             {
                 return isActiveFlagByWhiteListedEnergyInterfaceCallers[method];
             }
             else
             {
-                Console.WriteLine("Could not find a whitelisted power method for " + method + " - it might be newly introduced!");
+                Console.WriteLine("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+                Console.WriteLine(new StackTrace());
             }
-
             return true;
         }
     }
