@@ -80,7 +80,14 @@ namespace NitroxClient.MonoBehaviours
                 steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
                 steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
 
-                // TODO: Check if Vehicles have such a thing as well.
+                // Vehicles (or the SeaMoth at least) do not have special throttle animations. Instead, these animations are always playing because the player can't even see them (unlike the cyclops which has cameras).
+                // So, we need to hack in and try to figure out when thrust needs to be applied.
+                if (vehicle && AvatarInputHandler.main.IsEnabled())
+                {
+                    bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
+                    // TODO: Check the movement axes, and try to do it on rotation as well (because the thruster is gimballed/vectored).
+                    appliedThrottle = (vehicle.moveOnLand || flag) && GameInput.GetMoveDirection().sqrMagnitude > .1f;
+                }
             }
             else if (sub != null && Player.main.isPiloting)
             {

@@ -70,6 +70,20 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelYaw", vehicleMovement.SteeringWheelYaw);
                     vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelPitch", vehicleMovement.SteeringWheelPitch);
+                    var seamoth = vehicle as SeaMoth;
+                    var exosuit = vehicle as Exosuit;
+
+                    if (seamoth)
+                    {
+                        if (vehicleMovement.AppliedThrottle && !seamoth.bubbles.isPlaying)
+                        {
+                            seamoth.bubbles.Play();
+                        }
+                        else if (!vehicleMovement.AppliedThrottle && !seamoth.bubbles.isStopped)
+                        {
+                            seamoth.bubbles.Stop();
+                        }
+                    }
                 }
 
                 if (subRoot != null)

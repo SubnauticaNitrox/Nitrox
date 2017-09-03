@@ -155,7 +155,11 @@ namespace NitroxClient.GameLogic
         {
             if (Vehicle != newVehicle)
             {
-                (newVehicle ? newVehicle : Vehicle)?.mainAnimator.SetBool("player_in", newVehicle != null);
+                var existing = newVehicle ?? Vehicle;
+                existing?.mainAnimator.SetBool("player_in", newVehicle != null);
+
+                var seamoth = existing as SeaMoth;
+                var exosuit = existing as Exosuit;
 
                 Vehicle = newVehicle;
 
@@ -170,10 +174,10 @@ namespace NitroxClient.GameLogic
                 {
                     Detach();
                     armsController.SetWorldIKTarget(null, null);
+                    seamoth?.bubbles.Stop();
                 }
-
-                animationController["in_seamoth"] = Vehicle is SeaMoth;
-                animationController["in_exosuit"] = animationController["using_mechsuit"] = Vehicle is Exosuit;
+                animationController["in_seamoth"] = seamoth;
+                animationController["in_exosuit"] = animationController["using_mechsuit"] = exosuit;
             }
         }
 
