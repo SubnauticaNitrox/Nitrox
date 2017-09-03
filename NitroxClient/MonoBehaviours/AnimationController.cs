@@ -1,4 +1,6 @@
 using UnityEngine;
+using RootMotion.FinalIK;
+using System;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -13,12 +15,19 @@ namespace NitroxClient.MonoBehaviours
         public Vector3 Velocity { get; set; }
         public Quaternion BodyRotation { get; set; }
 
+        //public FullBodyBipedIK ik;
+        //private ArmAiming leftAim, rightAim;
+
         private Vector3 smoothedVelocity = Vector3.zero;
         private float smoothViewPitch;
 
         public void Start()
         {
-            animator = gameObject.GetComponent<Animator>();
+            //leftAim.FindAimer(gameObject, null);
+            animator = GetComponent<Animator>();
+            //ik = GetComponent<FullBodyBipedIK>();
+
+            //TODO: FindAimer
             this["is_underwater"] = true;
         }
 
@@ -51,5 +60,49 @@ namespace NitroxClient.MonoBehaviours
             get { return animator.GetBool(name); }
             set { animator.SetBool(name, value); }
         }
+
+        internal void SetFloat(string name, float value)
+        {
+            animator.SetFloat(name, value);
+        }
+
+        //private class ArmAiming
+        //{
+        //    public void FindAimer(GameObject ikObj, Transform aimedXform)
+        //    {
+        //        // TODO: check where this comes from...
+        //        foreach (AimIK aimIK in ikObj.GetComponentsInChildren<AimIK>())
+        //        {
+        //            if (aimIK.solver.transform == aimedXform)
+        //            {
+        //                if (aimer != null)
+        //                {
+        //                    UWE.Utils.LogReport("Found multiple AimIK components on " + ikObj.GetFullHierarchyPath() + " that manipulate the transform " + aimedXform.gameObject.GetFullHierarchyPath(), null);
+        //                }
+        //                else
+        //                {
+        //                    aimer = aimIK;
+        //                }
+        //            }
+        //        }
+        //        if (aimer == null)
+        //        {
+        //            UWE.Utils.LogReport("Could not find AimIK comp on " + ikObj.GetFullHierarchyPath() + " for transform " + aimedXform.gameObject.GetFullHierarchyPath(), null);
+        //        }
+        //    }
+
+        //    public void Update(float smoothTime)
+        //    {
+        //        if (aimer == null)
+        //        {
+        //            return;
+        //        }
+        //        aimer.solver.IKPositionWeight = Mathf.SmoothDamp(aimer.solver.IKPositionWeight, (!shouldAim) ? 0f : 1f, ref weightVelocity, smoothTime);
+        //    }
+
+        //    public AimIK aimer;
+        //    public bool shouldAim;
+        //    private float weightVelocity;
+        //}
     }
 }

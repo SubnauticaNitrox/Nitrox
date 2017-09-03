@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.remotePlayerManager = remotePlayerManager;
         }
 
+        [NitroxReloader.ReloadableMethod]
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
@@ -52,6 +54,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     rigidbody.velocity = MovementHelper.GetCorrectedVelocity(remotePosition, remoteVelocity, gameObject, PlayerMovement.BROADCAST_INTERVAL);
                     rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(remoteRotation, gameObject, PlayerMovement.BROADCAST_INTERVAL);
+
                 }
                 else
                 {
@@ -60,6 +63,35 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
+
+                // TODO: Throw all these values through a smoothing function?
+                // TODO: This requires a place to store them. Special table by guid and fieldname? Or a MonoBehaviour just for this?
+                if (vehicle != null)
+                {
+                    vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelYaw", vehicleMovement.SteeringWheelYaw);
+                    vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelPitch", vehicleMovement.SteeringWheelPitch);
+                }
+
+                if (subRoot != null)
+                {
+                    var scr = gameObject.GetComponent<SubControl>();
+                    if (scr != null)
+                    {
+                        scr.ReflectionSet("steeringWheelYaw", vehicleMovement.SteeringWheelYaw);
+                        scr.ReflectionSet("steeringWheelPitch", vehicleMovement.SteeringWheelPitch);
+
+                        // TODO: Sync throttle FX (screw for instance)
+                        //if (vehicleMovement.AppliedThrottle)
+                        //{
+                        //    ISubThrottleHandler subThrottleHandler = this.throttleHandlers[i];
+                        //    subThrottleHandler.OnSubAppliedThrottle();
+                        //}
+
+                        // TODO: Sync steering FX (ISubTurnHandler)  
+                    }
+                    player.animationController.SetFloat("cyclops_yaw", vehicleMovement.SteeringWheelYaw);
+                    player.animationController.SetFloat("cyclops_pitch", vehicleMovement.SteeringWheelPitch);
+                }
             }
             else
             {
@@ -67,7 +99,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             player.SetVehicle(vehicle);
             player.SetSubRoot(subRoot);
-            player.SetPilotingChair(subRoot.GetComponentInChildren<PilotingChair>());
+            player.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
 
             player.animationController.UpdatePlayerAnimations = false;
         }

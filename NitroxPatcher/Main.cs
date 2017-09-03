@@ -1,9 +1,10 @@
 ﻿using Harmony;
 using NitroxPatcher.Patches;
+using NitroxReloader;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using NitroxReloader;
 
 namespace NitroxPatcher
 {
@@ -31,13 +32,17 @@ namespace NitroxPatcher
                 });
 
             Console.WriteLine("[NITROX] Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+            InitializeReloader();
+        }
 
+        [Conditional("DEBUG")]
+        private static void InitializeReloader()
+        {
             Console.WriteLine("[NITROX] Initializing reloader...");
 
             new Reloader();
 
             Console.WriteLine("[NITROX] Reloader initialized");
-
             DevConsole.disableConsole = false;
         }
     }

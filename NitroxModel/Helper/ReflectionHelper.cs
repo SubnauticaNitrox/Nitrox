@@ -47,6 +47,28 @@ namespace NitroxModel.Helper
             fieldInfo.SetValue(o, value);
         }
 
+        public static object ReflectionGet<T, T2>(this T2 o, string fieldName, bool isPublic = false, bool isStatic = false)
+            where T2 : T
+        {
+            Validate.IsTrue(o != null ^ isStatic);
+            Type t = typeof(T);
+            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
+            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
+            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            return fieldInfo.GetValue(o);
+        }
+
+        public static void ReflectionSet<T, T2>(this T2 o, string fieldName, object value, bool isPublic = false, bool isStatic = false)
+            where T2 : T
+        {
+            Validate.IsTrue(o != null ^ isStatic);
+            Type t = typeof(T);
+            BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
+            FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
+            Validate.NotNull(fieldInfo, $"Class \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            fieldInfo.SetValue(o, value);
+        }
+
         private static BindingFlags GetBindingFlagsFromMethodQualifiers(bool isPublic, bool isStatic)
         {
             BindingFlags bindingFlags = isPublic ? BindingFlags.Public : BindingFlags.NonPublic;

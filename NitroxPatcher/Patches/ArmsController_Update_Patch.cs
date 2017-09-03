@@ -9,7 +9,7 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(ArmsController);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         public static bool Prefix(ArmsController __instance)
         {
             if (__instance.smoothSpeed == 0)

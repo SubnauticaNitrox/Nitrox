@@ -14,6 +14,7 @@ namespace NitroxClient.GameLogic
         public readonly GameObject body;
         public readonly GameObject playerView;
         public readonly AnimationController animationController;
+        public readonly ArmsController armsController;
         public readonly Rigidbody rigidBody;
 
         public Vehicle Vehicle { get; private set; }
@@ -31,6 +32,8 @@ namespace NitroxClient.GameLogic
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+            armsController = body.AddComponent<ArmsController>();
 
             rigidBody = body.AddComponent<Rigidbody>();
             rigidBody.useGravity = false;
@@ -65,7 +68,9 @@ namespace NitroxClient.GameLogic
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
             if (!keepWorldTransform)
-                UWE.Utils.ZeroTransform(body.transform);
+            {
+                UWE.Utils.ZeroTransform(body);
+            }
 
             body.transform.SetParent(transform, false);
         }
@@ -95,6 +100,7 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
             SetSubRoot(subRoot);
@@ -112,28 +118,33 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                if (newPilotingChair != null)
+                if (PilotingChair != null)
                 {
-                    Attach(newPilotingChair.sittingPosition.transform);
+                    Attach(PilotingChair.sittingPosition.transform);
+                    // TODO: Figure out why these targets cause NRE's just before the return in ArmsController_Update_Patch.
+                    //armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
                 }
                 else
                 {
+                    Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
+                    //armsController.SetWorldIKTarget(null, null);
                 }
-                rigidBody.isKinematic = animationController["cyclops_steering"] = newPilotingChair != null;
+                rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
         }
 
-        public void SetSubRoot(SubRoot subRoot)
+        public void SetSubRoot(SubRoot newSubRoot)
         {
-            if (SubRoot != SubRoot)
+            if (SubRoot != newSubRoot)
             {
-                SubRoot = SubRoot;
+                SubRoot = newSubRoot;
 
-                if (subRoot != null)
+                if (SubRoot != null)
                 {
-                    Attach(subRoot.transform, true);
+                    Attach(SubRoot.transform, true);
                 }
+                else
                 {
                     Detach();
                 }
@@ -148,14 +159,17 @@ namespace NitroxClient.GameLogic
 
                 Vehicle = newVehicle;
 
-                rigidBody.isKinematic = Vehicle != null;
+                rigidBody.isKinematic = (Vehicle != null);
+
                 if (Vehicle != null)
                 {
                     Attach(Vehicle.playerPosition.transform);
+                    //armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
                 }
                 else
                 {
                     Detach();
+                    //armsController.SetWorldIKTarget(null, null);
                 }
 
                 animationController["in_seamoth"] = Vehicle is SeaMoth;
