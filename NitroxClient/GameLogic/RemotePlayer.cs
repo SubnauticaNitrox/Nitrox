@@ -14,6 +14,7 @@ namespace NitroxClient.GameLogic
         public readonly GameObject body;
         public readonly GameObject playerView;
         public readonly AnimationController animationController;
+        public readonly ArmsController armsController;
         public readonly Rigidbody rigidBody;
 
         public Vehicle Vehicle { get; private set; }
@@ -32,6 +33,7 @@ namespace NitroxClient.GameLogic
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
+            armsController = body.AddComponent<ArmsController>();
 
             rigidBody = body.AddComponent<Rigidbody>();
             rigidBody.useGravity = false;
@@ -119,11 +121,14 @@ namespace NitroxClient.GameLogic
                 if (PilotingChair != null)
                 {
                     Attach(PilotingChair.sittingPosition.transform);
+                    // TODO: Figure out why these targets cause NRE's just before the return in ArmsController_Update_Patch.
+                    //armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
                 }
                 else
                 {
                     Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
+                    //armsController.SetWorldIKTarget(null, null);
                 }
                 rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
@@ -159,10 +164,12 @@ namespace NitroxClient.GameLogic
                 if (Vehicle != null)
                 {
                     Attach(Vehicle.playerPosition.transform);
+                    //armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
                 }
                 else
                 {
                     Detach();
+                    //armsController.SetWorldIKTarget(null, null);
                 }
 
                 animationController["in_seamoth"] = Vehicle is SeaMoth;

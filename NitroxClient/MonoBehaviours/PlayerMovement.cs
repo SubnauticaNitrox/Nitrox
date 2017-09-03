@@ -1,7 +1,9 @@
 ﻿using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using System;
+using System.Reflection;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -61,6 +63,7 @@ namespace NitroxClient.MonoBehaviours
             Vector3 velocity;
             Vector3 angularVelocity;
             TechType techType;
+            float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
 
             if (vehicle != null)
             {
@@ -72,16 +75,24 @@ namespace NitroxClient.MonoBehaviours
                 Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();
                 velocity = rigidbody.velocity;
                 angularVelocity = rigidbody.angularVelocity;
+
+                // Required because vehicle is either a SeaMoth or an Exosuit, both types which can't see the fields either.
+                steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
+                steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
             }
             else if (sub != null && Player.main.isPiloting)
             {
                 guid = GuidHelper.GetGuid(sub.gameObject);
                 position = sub.gameObject.transform.position;
                 rotation = sub.gameObject.transform.rotation;
-                Rigidbody rigidbody = sub.gameObject.GetComponent<Rigidbody>();
+                Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
                 velocity = rigidbody.velocity;
                 angularVelocity = rigidbody.angularVelocity;
                 techType = TechType.Cyclops;
+
+                var scr = sub.GetComponent<SubControl>();
+                steeringWheelYaw = (float)scr.ReflectionGet("steeringWheelYaw");
+                steeringWheelPitch = (float)scr.ReflectionGet("steeringWheelPitch");
             }
             else
             {
@@ -92,7 +103,9 @@ namespace NitroxClient.MonoBehaviours
                                                   guid,
                                                   ApiHelper.Vector3(position),
                                                   ApiHelper.Quaternion(rotation),
-                                                  ApiHelper.Vector3(velocity));
+                                                  ApiHelper.Vector3(velocity),
+                                                  steeringWheelYaw,
+                                                  steeringWheelPitch);
 
             return Optional<VehicleModel>.Of(model);
         }
