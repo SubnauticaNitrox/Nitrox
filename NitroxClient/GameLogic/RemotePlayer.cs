@@ -65,7 +65,9 @@ namespace NitroxClient.GameLogic
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
             if (!keepWorldTransform)
+            {
                 UWE.Utils.ZeroTransform(body.transform);
+            }
 
             body.transform.SetParent(transform, false);
         }
@@ -126,14 +128,15 @@ namespace NitroxClient.GameLogic
 
         public void SetSubRoot(SubRoot subRoot)
         {
-            if (SubRoot != SubRoot)
+            if (SubRoot != subRoot)
             {
-                SubRoot = SubRoot;
-
+                SubRoot = subRoot;
+                
                 if (subRoot != null)
                 {
                     Attach(subRoot.transform, true);
                 }
+                else
                 {
                     Detach();
                 }
@@ -148,7 +151,7 @@ namespace NitroxClient.GameLogic
 
                 Vehicle = newVehicle;
 
-                rigidBody.isKinematic = Vehicle != null;
+                rigidBody.isKinematic = (Vehicle != null);
                 if (Vehicle != null)
                 {
                     Attach(Vehicle.playerPosition.transform);
