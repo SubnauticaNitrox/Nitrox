@@ -64,6 +64,7 @@
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
+    <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />

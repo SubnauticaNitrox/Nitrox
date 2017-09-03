@@ -50,6 +50,7 @@
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\PlayerConnection.cs" />
+    <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="Communication\TcpServer.cs" />
