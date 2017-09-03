@@ -1,6 +1,4 @@
 using UnityEngine;
-using RootMotion.FinalIK;
-using System;
 
 namespace NitroxClient.MonoBehaviours
 {

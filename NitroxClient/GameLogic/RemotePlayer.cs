@@ -33,7 +33,6 @@ namespace NitroxClient.GameLogic
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
-            armsController = body.AddComponent<ArmsController>();
 
             rigidBody = body.AddComponent<Rigidbody>();
             rigidBody.useGravity = false;
@@ -42,7 +41,8 @@ namespace NitroxClient.GameLogic
             playerView = body.transform.Find("player_view").gameObject;
 
             //Move variables to keep player animations from mirroring and for identification
-            playerView.GetComponent<ArmsController>().smoothSpeed = 0;
+            armsController = playerView.GetComponent<ArmsController>();
+            armsController.smoothSpeed = 0;
 
             //Sets a new language value
             Language language = Language.main;
@@ -122,13 +122,13 @@ namespace NitroxClient.GameLogic
                 {
                     Attach(PilotingChair.sittingPosition.transform);
                     // TODO: Figure out why these targets cause NRE's just before the return in ArmsController_Update_Patch.
-                    //armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
+                    armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
                 }
                 else
                 {
                     Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
-                    //armsController.SetWorldIKTarget(null, null);
+                    armsController.SetWorldIKTarget(null, null);
                 }
                 rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
@@ -164,12 +164,12 @@ namespace NitroxClient.GameLogic
                 if (Vehicle != null)
                 {
                     Attach(Vehicle.playerPosition.transform);
-                    //armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
+                    armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
                 }
                 else
                 {
                     Detach();
-                    //armsController.SetWorldIKTarget(null, null);
+                    armsController.SetWorldIKTarget(null, null);
                 }
 
                 animationController["in_seamoth"] = Vehicle is SeaMoth;
