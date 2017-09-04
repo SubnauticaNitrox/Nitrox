@@ -90,6 +90,7 @@
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />

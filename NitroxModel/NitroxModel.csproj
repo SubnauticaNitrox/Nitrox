@@ -99,6 +99,7 @@
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
+    <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\SerializableVector3.cs" />

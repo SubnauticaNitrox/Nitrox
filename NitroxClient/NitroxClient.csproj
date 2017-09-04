@@ -71,6 +71,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="GameLogic\Chunks.cs" />
+    <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Interior.cs" />
