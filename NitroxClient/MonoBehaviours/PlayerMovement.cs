@@ -22,8 +22,19 @@ namespace NitroxClient.MonoBehaviours
                 time = 0;
 
                 Vector3 currentPosition = Player.main.transform.position;
+                Vector3 playerVelocity = Player.main.playerController.velocity;
+
+                //if (Player.main.groundMotor.IsGrounded())
+                ////if (Player.main.playerController.activeController == Player.main.groundMotor && Player.main.groundMotor.IsGrounded())
+                //{
+                //    playerVelocity.y = 0f;
+                //}
+
+                // IDEA: possibly only CameraRotation is of interest, because bodyrotation is extracted from that.
+                // WARN: Using camera rotation may be dangerous, when the drone is used for instance (but then movement packets shouldn't be sent either so it's not even relevant...)
+
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
-                Quaternion cameraRotation = MainCameraControl.main.transform.rotation;
+                Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleModel> vehicle = GetVehicleModel();
                 String subGuid = null;
@@ -35,7 +46,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, bodyRotation, cameraRotation, vehicle, Optional<String>.OfNullable(subGuid));
+                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<String>.OfNullable(subGuid));
             }
         }
 
@@ -58,11 +69,11 @@ namespace NitroxClient.MonoBehaviours
                 rotation = vehicle.gameObject.transform.rotation;
                 techType = CraftData.GetTechType(vehicle.gameObject);
 
-                Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();                
+                Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();
                 velocity = rigidbody.velocity;
                 angularVelocity = rigidbody.angularVelocity;
             }
-            else if(sub != null && Player.main.isPiloting)
+            else if (sub != null && Player.main.isPiloting)
             {
                 guid = GuidHelper.GetGuid(sub.gameObject);
                 position = sub.gameObject.transform.position;
@@ -76,13 +87,12 @@ namespace NitroxClient.MonoBehaviours
             {
                 return Optional<VehicleModel>.Empty();
             }
-            
-            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType), 
-                                                  guid, 
-                                                  ApiHelper.Vector3(position), 
+
+            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType),
+                                                  guid,
+                                                  ApiHelper.Vector3(position),
                                                   ApiHelper.Quaternion(rotation),
-                                                  ApiHelper.Vector3(velocity),
-                                                  ApiHelper.Vector3(angularVelocity));
+                                                  ApiHelper.Vector3(velocity));
 
             return Optional<VehicleModel>.Of(model);
         }

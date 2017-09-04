@@ -20,7 +20,6 @@ namespace NitroxPatcher.Patches
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            Validate.NotNull(INJECTION_OPCODE, "Opcode can not be null");
             Validate.NotNull(INJECTION_OPERAND, "Operand can not be null");
 
             bool injected = false;

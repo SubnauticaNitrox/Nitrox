@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\Optional.cs" />
@@ -49,6 +50,7 @@
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\CyclopsChangeName.cs" />
+    <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />

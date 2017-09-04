@@ -48,5 +48,49 @@ namespace NitroxTest.Model
             Optional<String> op = Optional<String>.Empty();
             Assert.AreEqual(true, op.IsEmpty());
         }
+
+        // Test functionality with value (non-nullable) types.
+
+        [TestMethod]
+        public void OptionalValueTypeGet()
+        {
+            Optional<int> op = Optional<int>.Of(1);
+            Assert.AreEqual(1, op.Get());
+        }
+
+        [TestMethod]
+        public void OptionalValueTypeIsPresent()
+        {
+            Optional<int> op = Optional<int>.Of(1);
+            Assert.AreEqual(true, op.IsPresent());
+        }
+
+        [TestMethod]
+        public void OptionalValueTypeIsNotPresent()
+        {
+            Optional<int> op = Optional<int>.Empty();
+            Assert.AreEqual(false, op.IsPresent());
+        }
+
+        [TestMethod]
+        public void OptionalValueTypeOrElseValidValue()
+        {
+            Optional<int> op = Optional<int>.Of(1);
+            Assert.AreEqual(1, op.OrElse(2));
+        }
+
+        [TestMethod]
+        public void OptionalValueTypeOrElseNoValue()
+        {
+            Optional<int> op = Optional<int>.Empty();
+            Assert.AreEqual(1, op.OrElse(1));
+        }
+
+        [TestMethod]
+        public void OptionalValueTypeEmpty()
+        {
+            Optional<int> op = Optional<int>.Empty();
+            Assert.AreEqual(true, op.IsEmpty());
+        }
     }
 }

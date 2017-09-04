@@ -1,14 +1,23 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.Logger;
 using NitroxModel.Packets;
+using System;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
+    class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
     {
+        private PlayerChatManager chatManager;
+
+        public ChatMessageProcessor(PlayerChatManager chatManager)
+        {
+            this.chatManager = chatManager;
+        }
+
         public override void Process(ChatMessage message)
         {
-            ClientLogger.IngameMessage(message.PlayerId + ": " + message.Text);
+            this.chatManager.WriteMessage(message.PlayerId + ": " + message.Text);
         }
     }
 }

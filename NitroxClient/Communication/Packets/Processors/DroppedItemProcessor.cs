@@ -17,8 +17,8 @@ namespace NitroxClient.Communication.Packets.Processors
             gameObject.transform.position = ApiHelper.Vector3(drop.ItemPosition);
 
             Pickupable pickupable = gameObject.GetComponent<Pickupable>();
-                                   
-            if(drop.WaterParkGuid.IsPresent())
+
+            if (drop.WaterParkGuid.IsPresent())
             {
                 AssignToWaterPark(drop.WaterParkGuid.Get(), pickupable);
             }
