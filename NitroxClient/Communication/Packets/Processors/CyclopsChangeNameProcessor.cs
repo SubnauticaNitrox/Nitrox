@@ -26,6 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opCyclops.IsPresent())
             {
                 subname.SetName(namePacket.Name);
+                opCyclops.Get().GetComponentInChildren<CyclopsNameScreenProxy>().subNameInput.inputField.text = namePacket.Name;
             }
             else
             {
