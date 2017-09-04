@@ -62,6 +62,7 @@
     <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
     <Compile Include="Patches\CellManager_ShowEntities_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
+    <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
     <Compile Include="Patches\Server\Creature_ChooseBestAction_Patch.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
-    <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />

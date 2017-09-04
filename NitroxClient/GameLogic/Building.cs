@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
         {
             this.packetSender = packetSender;
         }
-        
+
         public void PlaceBasePiece(ConstructableBase constructableBase, Base targetBase, TechType techType, Quaternion quaternion)
         {
             if (!Builder.isPlacing) //prevent possible echoing
@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera, techType, Optional<String>.OfNullable(parentBaseGuid));
             packetSender.Send(placedBasePiece);
         }
-        
+
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
         {
             if (!Builder.isPlacing) //prevent possible echoing
@@ -44,13 +44,20 @@ namespace NitroxClient.GameLogic
             }
 
             String guid = GuidHelper.GetGuid(gameObject);
-            String subGuid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
+
+            Optional<String> subGuid = Optional<String>.Empty();
+            var sub = Player.main.currentSub;
+            if (sub != null)
+            {
+                subGuid = Optional<String>.Of(GuidHelper.GetGuid(sub.gameObject));
+            }
+
             Transform camera = Camera.main.transform;
 
             PlaceFurniture placedFurniture = new PlaceFurniture(packetSender.PlayerId, guid, subGuid, itemPosition, quaternion, camera, techType);
             packetSender.Send(placedFurniture);
         }
-        
+
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
         {
             timeSinceLastConstructionChangeEvent += Time.deltaTime;
@@ -71,7 +78,7 @@ namespace NitroxClient.GameLogic
                 packetSender.Send(amountChanged);
             }
         }
-       
+
         public void ConstructionComplete(GameObject gameObject)
         {
             Optional<String> newlyConstructedBaseGuid = Optional<String>.Empty();
