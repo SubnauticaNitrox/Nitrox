@@ -34,9 +34,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.fontSize = 18;
             chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
-            ErrorMessage em = (ErrorMessage)ReflectionHelper.ReflectionGet<ErrorMessage>(null, "main", false, true);
-            chatEntry.layer = em.gameObject.layer;
-            chatEntry.transform.parent = em.transform;
         }
 
         // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous messages for CHAT_VISIBILITY_TIME_LENGTH seconds
