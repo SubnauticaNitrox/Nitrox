@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[CyclopsActivateShield PlayerId: " + PlayerId + " Guid: " + Guid + " Name: " + Name + "]";
+            return "[CyclopsChangeName PlayerId: " + PlayerId + " Guid: " + Guid + " Name: " + Name + "]";
         }
     }
 }

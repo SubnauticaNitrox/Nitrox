@@ -15,9 +15,11 @@ namespace NitroxPatcher.Patches
         public static void Postfix(SubNameInput __instance)
         {
             SubName subname = (SubName)__instance.ReflectionGet("target");
-
-            String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
-            Multiplayer.Logic.Cyclops.ChangeName(guid, subname.GetName());
+            if (subname != null)
+            {
+                String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
+                Multiplayer.Logic.Cyclops.ChangeName(guid, subname.GetName());
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)
