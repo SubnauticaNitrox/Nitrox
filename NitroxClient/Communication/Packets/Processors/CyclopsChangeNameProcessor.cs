@@ -20,7 +20,6 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsChangeName namePacket)
         {
             Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(namePacket.Guid);
-
             SubName subname = (SubName)opCyclops.Get().GetComponentInChildren<CyclopsNameScreenProxy>().subNameInput.ReflectionGet("target"); ;
 
             if (opCyclops.IsPresent())

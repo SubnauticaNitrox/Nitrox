@@ -18,7 +18,6 @@ namespace NitroxPatcher.Patches
 
             String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
             Multiplayer.Logic.Cyclops.ChangeName(guid, subname.GetName());
-
         }
 
         public override void Patch(HarmonyInstance harmony)
