@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(SubNameInput __instance)
         {
             SubName subname = (SubName)__instance.ReflectionGet("target");
-            if (subname != null)
+            if (subname != null && Player.main.GetCurrentSub() != null)
             {
                 String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
                 Multiplayer.Logic.Cyclops.ChangeName(guid, subname.GetName());
