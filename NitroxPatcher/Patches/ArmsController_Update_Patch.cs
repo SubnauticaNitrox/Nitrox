@@ -21,7 +21,6 @@ namespace NitroxPatcher.Patches
         private static readonly MethodInfo armAimingUpdate = ArmAiming.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
         private static readonly MethodInfo updateHandIKWeights = TARGET_CLASS.GetMethod("UpdateHandIKWeights", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        [NitroxReloader.ReloadableMethod]
         public static bool Prefix(ArmsController __instance)
         {
             if (__instance.smoothSpeed == 0)

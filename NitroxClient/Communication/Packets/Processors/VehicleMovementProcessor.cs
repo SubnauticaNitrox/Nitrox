@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -12,14 +11,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleMovementProcessor : ClientPacketProcessor<VehicleMovement>
     {
-        private PlayerManager remotePlayerManager;
+        private readonly PlayerManager remotePlayerManager;
 
         public VehicleMovementProcessor(PlayerManager remotePlayerManager)
         {
             this.remotePlayerManager = remotePlayerManager;
         }
 
-        [NitroxReloader.ReloadableMethod]
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
@@ -64,38 +62,29 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
 
-                // TODO: Throw all these values through a smoothing function?
-                // TODO: This requires a place to store them. Special table by guid and fieldname? Or a MonoBehaviour just for this?
                 if (vehicle != null)
                 {
-                    vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelYaw", vehicleMovement.SteeringWheelYaw);
-                    vehicle.ReflectionSet<Vehicle, Vehicle>("steeringWheelPitch", vehicleMovement.SteeringWheelPitch);
                     var seamoth = vehicle as SeaMoth;
                     var exosuit = vehicle as Exosuit;
 
                     if (seamoth)
                     {
-                        if (vehicleMovement.AppliedThrottle && !seamoth.bubbles.isPlaying)
-                        {
-                            seamoth.bubbles.Play();
-                        }
-                        else if (!vehicleMovement.AppliedThrottle && !seamoth.bubbles.isStopped)
-                        {
-                            seamoth.bubbles.Stop();
-                        }
+                        var mpSeaMoth = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                        mpSeaMoth.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
+                        mpSeaMoth.SetThrottle(vehicleMovement.AppliedThrottle);
                     }
+
+                    // TODO: Implement this for the Exosuit as well.
                 }
 
                 if (subRoot != null)
                 {
-                    var ce = subRoot.gameObject.EnsureComponent<CyclopsExtensions>();
-                    ce.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
+                    var mpCyclops = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                    mpCyclops.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
                     if (vehicleMovement.AppliedThrottle)
                     {
-                        ce.ApplyThrottle();
+                        mpCyclops.ApplyThrottle();
                     }
-                    player.animationController.SetFloat("cyclops_yaw", vehicleMovement.SteeringWheelYaw);
-                    player.animationController.SetFloat("cyclops_pitch", vehicleMovement.SteeringWheelPitch);
                 }
             }
             else

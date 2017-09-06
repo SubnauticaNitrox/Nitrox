@@ -137,6 +137,16 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
+                var existing = newSubRoot ?? SubRoot;
+                if (existing)
+                {
+                    var mpCyclops = existing.GetComponent<MultiplayerCyclops>();
+                    if (mpCyclops != null)
+                    {
+                        mpCyclops.CurrentPlayer = newSubRoot == null ? null : this;
+                    }
+                }
+
                 SubRoot = newSubRoot;
 
                 if (SubRoot != null)

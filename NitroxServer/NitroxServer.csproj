@@ -84,7 +84,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
@@ -96,7 +96,7 @@
     <Folder Include="GameLogic\Threading\Actions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
