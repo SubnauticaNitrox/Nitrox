@@ -152,6 +152,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SmoothRotation.cs" />
+    <Compile Include="SmoothVector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">

@@ -114,6 +114,7 @@ namespace NitroxClient.MonoBehaviours
                                                   position,
                                                   rotation,
                                                   velocity,
+                                                  angularVelocity,
                                                   steeringWheelYaw,
                                                   steeringWheelPitch,
                                                   appliedThrottle);

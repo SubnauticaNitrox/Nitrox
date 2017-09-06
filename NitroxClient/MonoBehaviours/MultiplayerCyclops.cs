@@ -10,17 +10,19 @@ namespace NitroxClient.MonoBehaviours
         private ISubThrottleHandler[] subThrottleHandlers;
         private float previousAbsYaw = 0f;
 
-        public RemotePlayer CurrentPlayer { get; set; }
+        internal RemotePlayer CurrentPlayer { get; set; }
 
-        private void Start()
+        protected override void Start()
         {
             steeringControl = GetComponent<SubControl>();
             subTurnHandlers = (ISubTurnHandler[])steeringControl.ReflectionGet("turnHandlers");
             subThrottleHandlers = (ISubThrottleHandler[])steeringControl.ReflectionGet("throttleHandlers");
+            base.Start();
         }
 
         protected override void FixedUpdate()
         {
+            base.FixedUpdate();
             if (CurrentPlayer != null)
             {
                 // These values are set by the game code, but they do not seem to have any impact on animations.
@@ -29,7 +31,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public override void SetSteeringWheel(float yaw, float pitch)
+        internal override void SetSteeringWheel(float yaw, float pitch)
         {
             base.SetSteeringWheel(yaw, pitch);
 
@@ -43,9 +45,12 @@ namespace NitroxClient.MonoBehaviours
             previousAbsYaw = yaw;
         }
 
-        public void ApplyThrottle()
+        internal override void SetThrottle(bool isOn)
         {
-            subThrottleHandlers?.ForEach(throttleHandlers => throttleHandlers.OnSubAppliedThrottle());
+            if (isOn)
+            {
+                subThrottleHandlers?.ForEach(throttleHandlers => throttleHandlers.OnSubAppliedThrottle());
+            }
         }
     }
 }

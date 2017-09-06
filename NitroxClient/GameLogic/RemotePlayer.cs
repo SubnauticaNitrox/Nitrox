@@ -67,12 +67,12 @@ namespace NitroxClient.GameLogic
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
+            body.transform.parent = transform;
+
             if (!keepWorldTransform)
             {
                 UWE.Utils.ZeroTransform(body);
             }
-
-            body.transform.SetParent(transform, false);
         }
 
         public void Detach()
@@ -106,7 +106,7 @@ namespace NitroxClient.GameLogic
             SetSubRoot(subRoot);
 
             rigidBody.velocity = animationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, body, PlayerMovement.BROADCAST_INTERVAL);
-            rigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, body, PlayerMovement.BROADCAST_INTERVAL);
+            rigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, body, PlayerMovement.BROADCAST_INTERVAL);
 
             animationController.AimingRotation = aimingRotation;
             animationController.UpdatePlayerAnimations = true;
@@ -137,6 +137,7 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
+                Console.WriteLine("Next subroot: {0}");
                 var existing = newSubRoot ?? SubRoot;
                 if (existing)
                 {
@@ -176,7 +177,7 @@ namespace NitroxClient.GameLogic
 
                 if (Vehicle != null)
                 {
-                    Attach(Vehicle.playerPosition.transform);
+                    Attach(Vehicle.playerPosition.transform, true);
                     armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
                 }
                 else

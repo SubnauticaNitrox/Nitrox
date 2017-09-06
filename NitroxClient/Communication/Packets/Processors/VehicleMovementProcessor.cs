@@ -27,6 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Vector3 remotePosition = vehicleMovement.Position;
             Vector3 remoteVelocity = vehicleMovement.Velocity;
             Quaternion remoteRotation = vehicleMovement.BodyRotation;
+            Vector3 angularVelocity = vehicleMovement.AngularVelocity;
 
             Vehicle vehicle = null;
             SubRoot subRoot = null;
@@ -34,33 +35,10 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject gameObject = opGameObject.Get();
 
-                Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-
-                if (rigidbody != null)
-                {
-                    //todo: maybe toggle kinematic if jumping large distances?
-
-                    /*
-                     * For the cyclops, it is too intense for the game to lerp the entire structure every movement
-                     * packet update.  Instead, we try to match the velocity.  Due to floating points not being
-                     * precise, this will skew quickly.  To counter this, we apply micro adjustments each packet
-                     * to get the simulation back in sync.  The adjustments will increase in size the larger the
-                     * out of sync issue is.
-                     *
-                     * Besides, this causes the movement of the Cyclops, vehicles and player to be very fluid.
-                     */
-
-                    rigidbody.velocity = MovementHelper.GetCorrectedVelocity(remotePosition, remoteVelocity, gameObject, PlayerMovement.BROADCAST_INTERVAL);
-                    rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(remoteRotation, gameObject, PlayerMovement.BROADCAST_INTERVAL);
-
-                }
-                else
-                {
-                    Console.WriteLine("Vehicle did not have a rigidbody!");
-                }
-
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
+
+                MultiplayerVehicleControl mvc = null;
 
                 if (vehicle != null)
                 {
@@ -69,22 +47,24 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (seamoth)
                     {
-                        var mpSeaMoth = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
-                        mpSeaMoth.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
-                        mpSeaMoth.SetThrottle(vehicleMovement.AppliedThrottle);
+                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
                     }
-
-                    // TODO: Implement this for the Exosuit as well.
+                    else if (exosuit)
+                    {
+                        // TODO: Implement this for the Exosuit as well.
+                    }
                 }
 
                 if (subRoot != null)
                 {
-                    var mpCyclops = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-                    mpCyclops.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
-                    if (vehicleMovement.AppliedThrottle)
-                    {
-                        mpCyclops.ApplyThrottle();
-                    }
+                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                }
+
+                if (mvc != null)
+                {
+                    mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
+                    mvc.SetThrottle(vehicleMovement.AppliedThrottle);
+                    mvc.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
                 }
             }
             else
