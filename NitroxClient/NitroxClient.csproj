@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\PacketSuppression.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />

@@ -49,6 +49,7 @@
     <Compile Include="DataStructures\Transform.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\CyclopsChangeName.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />

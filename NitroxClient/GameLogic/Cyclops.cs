@@ -36,9 +36,16 @@ namespace NitroxClient.GameLogic
             CyclopsActivateHorn packet = new CyclopsActivateHorn(packetSender.PlayerId, guid);
             packetSender.Send(packet);
         }
+
         public void ActivateShield(String guid)
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(packetSender.PlayerId, guid);
+            packetSender.Send(packet);
+        }
+
+        public void ChangeName(String guid, string name)
+        {
+            CyclopsChangeName packet = new CyclopsChangeName(packetSender.PlayerId, guid, name);
             packetSender.Send(packet);
         }
     }
