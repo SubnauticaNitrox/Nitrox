@@ -121,7 +121,6 @@ namespace NitroxClient.GameLogic
                 if (PilotingChair != null)
                 {
                     Attach(PilotingChair.sittingPosition.transform);
-                    // TODO: Figure out why these targets cause NRE's just before the return in ArmsController_Update_Patch.
                     armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
                 }
                 else
@@ -158,8 +157,8 @@ namespace NitroxClient.GameLogic
                 var existing = newVehicle ?? Vehicle;
                 existing?.mainAnimator.SetBool("player_in", newVehicle != null);
 
-                var seamoth = existing as SeaMoth;
-                var exosuit = existing as Exosuit;
+                var existingSeamoth = existing as SeaMoth;
+                var existingExosuit = existing as Exosuit;
 
                 Vehicle = newVehicle;
 
@@ -174,10 +173,10 @@ namespace NitroxClient.GameLogic
                 {
                     Detach();
                     armsController.SetWorldIKTarget(null, null);
-                    seamoth?.bubbles.Stop();
+                    existingSeamoth?.bubbles.Stop();
                 }
-                animationController["in_seamoth"] = seamoth;
-                animationController["in_exosuit"] = animationController["using_mechsuit"] = exosuit;
+                animationController["in_seamoth"] = Vehicle is SeaMoth;
+                animationController["in_exosuit"] = animationController["using_mechsuit"] = Vehicle is Exosuit;
             }
         }
 
