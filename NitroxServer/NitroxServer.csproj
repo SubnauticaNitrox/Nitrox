@@ -67,6 +67,7 @@
     <Compile Include="ConsoleWindow.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Logic.cs" />
+    <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="Communication\TcpServer.cs" />

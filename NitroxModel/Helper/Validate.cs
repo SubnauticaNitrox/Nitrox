@@ -4,7 +4,10 @@ namespace NitroxModel.Helper
 {
     public class Validate
     {
-        public static void NotNull(Object o)
+        public static void NotNull<T>(T o)
+            // Prevent non-nullable valuetypes from getting boxed to object.
+            // In other words: Error when trying to assert non-null on something that can't be null in the first place.
+            where T : class
         {
             if (o == null)
             {
@@ -12,7 +15,8 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void NotNull(Object o, String message)
+        public static void NotNull<T>(T o, String message)
+            where T : class
         {
             if (o == null)
             {

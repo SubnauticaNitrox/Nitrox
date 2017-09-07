@@ -10,9 +10,9 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Deconstruct");
-        
+
         public static readonly OpCode CONSTRUCTION_COMPLETE_INJECTION_OPCODE = OpCodes.Callvirt;
-        public static readonly object CONSTRUCTION_COMPLETE_INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly object CONSTRUCTION_COMPLETE_INJECTION_OPERAND = TARGET_CLASS.GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(Constructable __instance)
         {

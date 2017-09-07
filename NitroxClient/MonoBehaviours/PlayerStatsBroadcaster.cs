@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -17,15 +16,15 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
 
-                Survival survivial = Player.main.GetComponent<Survival>();
+                Survival survival = Player.main.GetComponent<Survival>();
 
-                if (survivial != null)
+                if (survival != null && !survival.freezeStats && GameModeConsoleCommands.main && GameModeConsoleCommands.main.GetSurvivalEnabled())
                 {
                     float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
                     float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
                     float health = Player.main.liveMixin.health;
-                    float food = survivial.food;
-                    float water = survivial.water;
+                    float food = survival.food;
+                    float water = survival.water;
 
                     Multiplayer.Logic.PlayerAttributes.BroadcastPlayerStats(oxygen, maxOxygen, health, food, water);
                 }

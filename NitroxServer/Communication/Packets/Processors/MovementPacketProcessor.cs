@@ -1,6 +1,5 @@
 ﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using System;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -12,10 +11,10 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             this.tcpServer = tcpServer;
         }
-        
+
         public override void Process(Movement packet, Player player)
         {
-            player.Position = packet.PlayerPosition;
+            player.Position = packet.Position;
             tcpServer.SendPacketToOtherPlayers(packet, player);
         }
     }

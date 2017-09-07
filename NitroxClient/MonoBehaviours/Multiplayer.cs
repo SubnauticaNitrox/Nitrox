@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using NitroxClient.GameLogic.ChatUI;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -29,6 +30,7 @@ namespace NitroxClient.MonoBehaviours
 
         private static PlayerManager remotePlayerManager = new PlayerManager();
         private static PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
+        private static PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
@@ -37,6 +39,7 @@ namespace NitroxClient.MonoBehaviours
         {
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
+            { typeof(PlayerChatManager), remotePlayerChatManager },
             { typeof(PacketSender), PacketSender }
         };
 
@@ -56,9 +59,6 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
             ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
-
-            this.gameObject.AddComponent<PlayerMovement>();
-            this.gameObject.AddComponent<PlayerStatsBroadcaster>();
 
             main = this;
         }
@@ -173,6 +173,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 this.gameObject.AddComponent<Chat>();
                 this.gameObject.AddComponent<PlayerMovement>();
+                this.gameObject.AddComponent<PlayerStatsBroadcaster>();
                 this.gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
