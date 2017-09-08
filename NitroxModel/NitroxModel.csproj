@@ -53,6 +53,7 @@
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
+    <Compile Include="Packets\PlayerDeathEvent.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />

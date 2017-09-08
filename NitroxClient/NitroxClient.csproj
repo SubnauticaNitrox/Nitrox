@@ -61,6 +61,7 @@
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsBeginSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
+    <Compile Include="GameLogic\PlayerDeath.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\PlayerAttributes.cs" />
     <Compile Include="GameLogic\Power.cs" />

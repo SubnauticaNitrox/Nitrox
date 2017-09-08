@@ -17,6 +17,7 @@ namespace NitroxClient.GameLogic
         public Cyclops Cyclops { get; private set; }
         public Interior Interior { get; private set; }
         public MobileVehicleBay MobileVehicleBay { get; private set; }
+        public PlayerDeath PlayerDeath { get; private set; }
 
         public Logic(PacketSender packetSender)
         {
@@ -33,6 +34,7 @@ namespace NitroxClient.GameLogic
             this.Cyclops = new Cyclops(packetSender);
             this.Interior = new Interior(packetSender);
             this.MobileVehicleBay = new MobileVehicleBay(packetSender);
+            this.PlayerDeath = new PlayerDeath(packetSender);
         }
     }
 }
