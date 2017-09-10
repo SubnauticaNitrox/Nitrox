@@ -40,7 +40,7 @@ namespace NitroxClient.Communication
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Vector3(velocity), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(aimingRotation), opSubGuid);
+                movement = new Movement(PlayerId, location, velocity, bodyRotation, aimingRotation, opSubGuid);
             }
 
             Send(movement);

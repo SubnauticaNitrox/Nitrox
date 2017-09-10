@@ -30,12 +30,28 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
+    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NitroxPatcher\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
@@ -44,10 +60,11 @@
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="DataStructures\Quaternion.cs" />
+    <Compile Include="DataStructures\SerializableQuaternion.cs" />
+    <Compile Include="DataStructures\SerializableTechType.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
-    <Compile Include="DataStructures\Transform.cs" />
-    <Compile Include="DataStructures\Int3.cs" />
+    <Compile Include="DataStructures\SerializableTransform.cs" />
+    <Compile Include="DataStructures\SerializableInt3.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
@@ -85,7 +102,7 @@
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
     <Compile Include="DataStructures\TimedQueue.cs" />
-    <Compile Include="DataStructures\Vector3.cs" />
+    <Compile Include="DataStructures\SerializableVector3.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\ChatMessage.cs" />

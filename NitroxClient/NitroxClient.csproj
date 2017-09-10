@@ -149,7 +149,6 @@
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ApiHelper.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

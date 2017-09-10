@@ -14,7 +14,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(DroppedItem drop)
         {
             GameObject gameObject = SerializationHelper.GetGameObject(drop.Bytes);
-            gameObject.transform.position = ApiHelper.Vector3(drop.ItemPosition);
+            gameObject.transform.position = drop.ItemPosition;
 
             Pickupable pickupable = gameObject.GetComponent<Pickupable>();
 
@@ -65,18 +65,8 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void ExecuteDropItemAction(String techTypeString, GameObject gameObject)
+        private void ExecuteDropItemAction(TechType techType, GameObject gameObject)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
-
-            if (opTechType.IsEmpty())
-            {
-                Console.WriteLine("Attempted to drop unknown tech type: " + techTypeString);
-                return;
-            }
-
-            TechType techType = opTechType.Get();
-
             Console.WriteLine("Performing drop action for tech type: " + techType);
 
             ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);

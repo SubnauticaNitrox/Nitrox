@@ -3,6 +3,7 @@ using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace NitroxTest.Model.Packets
 {
@@ -21,8 +22,7 @@ namespace NitroxTest.Model.Packets
             visitedTypes.Add(t);
 
             // Recursively check all properties and fields, because IsSerializable only checks if the current type is a primitive or has the [Serializable] attribute.
-            t.GetProperties().Select(tt => tt.PropertyType).ToList().ForEach(IsSerializable);
-            t.GetFields().Select(tt => tt.FieldType).ToList().ForEach(IsSerializable);
+            t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Select(tt => tt.FieldType).ToList().ForEach(IsSerializable);
         }
 
         [TestMethod]

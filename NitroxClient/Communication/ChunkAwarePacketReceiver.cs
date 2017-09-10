@@ -58,7 +58,7 @@ namespace NitroxClient.Communication
                 {
                     return false;
                 }
-
+                
                 Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
 
                 if (!loadedChunks.Contains(actionChunk))

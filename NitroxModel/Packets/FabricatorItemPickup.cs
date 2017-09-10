@@ -1,17 +1,20 @@
-﻿using System;
+﻿using NitroxModel.DataStructures;
+using System;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class FabricatorItemPickup : AuthenticatedPacket
     {
-        public String FabricatorGuid { get; protected set; }
-        public String TechType { get; protected set; }
+        public String FabricatorGuid { get; }
+        public TechType TechType { get { return serializableTechType.TechType; } }
 
-        public FabricatorItemPickup(String playerId, String fabricatorGuid, String techType) : base(playerId)
+        private SerializableTechType serializableTechType;
+
+        public FabricatorItemPickup(String playerId, String fabricatorGuid, TechType techType) : base(playerId)
         {
             this.FabricatorGuid = fabricatorGuid;
-            this.TechType = techType;
+            this.serializableTechType = new SerializableTechType(techType);
         }
 
         public override string ToString()

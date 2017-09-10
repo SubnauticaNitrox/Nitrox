@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient;
 using NitroxClient.Communication;
 using NitroxModel.Packets;
 using NitroxTest.Model;
@@ -7,6 +6,7 @@ using System;
 using NitroxClient.Map;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using UnityEngine;
 
 namespace NitroxTest.Client.Communication
 {

@@ -16,25 +16,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlaceFurniture placeFurniturePacket)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(placeFurniturePacket.TechType);
-
-            if (opTechType.IsPresent())
+            if(otherPlayerCamera == null)
             {
-                TechType techType = opTechType.Get();
-
-                if(otherPlayerCamera == null)
-                {
-                    otherPlayerCamera = new GameObject();
-                }
-
-                ApiHelper.SetTransform(otherPlayerCamera.transform, placeFurniturePacket.Camera);
-
-                ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), otherPlayerCamera.transform, techType);
+                otherPlayerCamera = new GameObject();
             }
-            else
-            {
-                Console.WriteLine("Could not identify tech type for " + placeFurniturePacket.TechType);
-            }
+
+            placeFurniturePacket.CopyCameraTransform(otherPlayerCamera.transform);
+                
+            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, otherPlayerCamera.transform, placeFurniturePacket.TechType);
         }
         
         public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)

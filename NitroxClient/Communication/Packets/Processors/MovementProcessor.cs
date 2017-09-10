@@ -17,12 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             remotePlayerManager
                 .FindOrCreate(movement.PlayerId)
-                .UpdatePosition(
-                    ApiHelper.Vector3(movement.Position),
-                    ApiHelper.Vector3(movement.Velocity),
-                    ApiHelper.Quaternion(movement.BodyRotation),
-                    ApiHelper.Quaternion(movement.AimingRotation),
-                    movement.SubGuid);
+                .UpdatePosition(movement.Position,
+                                movement.Velocity,
+                                movement.BodyRotation,
+                                movement.AimingRotation,
+                                movement.SubGuid);
         }
     }
 }

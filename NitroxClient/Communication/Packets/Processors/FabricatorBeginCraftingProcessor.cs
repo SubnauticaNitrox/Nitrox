@@ -35,22 +35,13 @@ namespace NitroxClient.Communication.Packets.Processors
                 Console.WriteLine("Game object did not have a Fabricator component!");
                 return;
             }
-
-            Optional<TechType> opTechType = ApiHelper.TechType(packet.TechType);
-
-            if (opTechType.IsEmpty())
-            {
-                Console.WriteLine("Trying to build unknown tech type: " + packet.TechType + " - ignoring.");
-                return;
-            }
-
-            TechType techType = opTechType.Get();
+            
             float buildDuration = packet.Duration + 0.2f; // small increase to prevent this player from swiping item from remote player
 
             FieldInfo logic = typeof(Crafter).GetField("_logic", BindingFlags.Instance | BindingFlags.NonPublic);
             CrafterLogic crafterLogic = (CrafterLogic)logic.GetValue(fabricator);
             
-            crafterLogic.Craft(techType, buildDuration);
+            crafterLogic.Craft(packet.TechType, buildDuration);
         }
     }
 }

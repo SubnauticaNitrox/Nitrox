@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
                 List<InteractiveChildObjectIdentifier> childIdentifiers = ExtractGuidsOfInteractiveChildren(constructedObject);
                 String constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
 
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(packetSender.PlayerId, constructorGuid, constructedObjectGuid, ApiHelper.TechType(techType), duration, childIdentifiers);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(packetSender.PlayerId, constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
                 packetSender.Send(beginCrafting);
             }
             else

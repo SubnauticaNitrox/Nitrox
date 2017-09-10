@@ -40,8 +40,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (model.AssignedPlayers.Contains(packetSender.PlayerId))
                 {
-                    EscapePod.main.transform.position = ApiHelper.Vector3(model.Location);
-                    EscapePod.main.playerSpawn.position = ApiHelper.Vector3(model.Location) + playerSpawnRelativeToEscapePodPosition;
+                    EscapePod.main.transform.position = model.Location;
+                    EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
 
                     Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
 
@@ -94,7 +94,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
             }
 
-            escapePod.transform.position = ApiHelper.Vector3(model.Location);
+            escapePod.transform.position = model.Location;
 
             StorageContainer storageContainer = escapePod.GetComponentInChildren<StorageContainer>();
             Validate.NotNull(storageContainer, "StorageContainer can not be null");

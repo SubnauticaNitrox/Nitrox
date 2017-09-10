@@ -34,18 +34,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 Console.WriteLine("Trying to build " + packet.TechType + " but we did not have a corresponding constructorInput - how did that happen?");
                 return;
             }
-
-            Optional<TechType> opTechType = ApiHelper.TechType(packet.TechType);
-
-            if(opTechType.IsEmpty())
-            {
-                Console.WriteLine("Trying to build unknown tech type: " + packet.TechType + " - ignoring.");
-                return;
-            }
-            
+                        
             MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(onCraftingBegin);
-            onCraftingBegin.Invoke(crafter, new object[] { opTechType.Get(), packet.Duration }); //TODO: take into account latency for duration   
+            onCraftingBegin.Invoke(crafter, new object[] { packet.TechType, packet.Duration }); //TODO: take into account latency for duration   
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 

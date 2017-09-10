@@ -1,18 +1,21 @@
-﻿using System;
+﻿using NitroxModel.DataStructures;
+using System;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class FabricatorBeginCrafting : AuthenticatedPacket
     {
-        public String FabricatorGuid { get; protected set; }
-        public String TechType { get; protected set; }
-        public float Duration { get; protected set; }
+        public String FabricatorGuid { get; }
+        public TechType TechType { get { return serializableTechType.TechType; } }
+        public float Duration { get; }
 
-        public FabricatorBeginCrafting(String playerId, String fabricatorGuid, String techType, float duration) : base(playerId)
+        private SerializableTechType serializableTechType;
+
+        public FabricatorBeginCrafting(String playerId, String fabricatorGuid, TechType techType, float duration) : base(playerId)
         {
             this.FabricatorGuid = fabricatorGuid;
-            this.TechType = techType;
+            this.serializableTechType = new SerializableTechType(techType);
             this.Duration = duration;
         }
 

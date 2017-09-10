@@ -7,18 +7,19 @@ namespace NitroxModel.Packets
 {
     [Serializable]
     public abstract class Packet
-    {        
+    {
+        private static BinaryFormatter serializer = new BinaryFormatter();
+
         public byte[] SerializeWithHeaderData()
         {
             byte[] packetData;
-            BinaryFormatter bf = new BinaryFormatter();
 
             using (MemoryStream ms = new MemoryStream())
             {
                 //place holder for size, will be filled in later... allows us
                 //to avoid doing a byte array merge... zomg premature optimization
                 ms.Write(new Byte[MessageBuffer.HEADER_BYTE_SIZE], 0, MessageBuffer.HEADER_BYTE_SIZE);
-                bf.Serialize(ms, this);
+                serializer.Serialize(ms, this);
                 packetData = ms.ToArray();
             }
 

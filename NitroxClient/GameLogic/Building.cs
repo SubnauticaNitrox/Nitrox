@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             Vector3 itemPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
 
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), ApiHelper.TechType(techType), Optional<String>.OfNullable(parentBaseGuid));
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera, techType, Optional<String>.OfNullable(parentBaseGuid));
             packetSender.Send(placedBasePiece);
         }
         
@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic
             String subGuid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
             Transform camera = Camera.main.transform;
 
-            PlaceFurniture placedFurniture = new PlaceFurniture(packetSender.PlayerId, guid, subGuid, ApiHelper.Vector3(itemPosition), ApiHelper.Quaternion(quaternion), ApiHelper.Transform(camera), ApiHelper.TechType(techType));
+            PlaceFurniture placedFurniture = new PlaceFurniture(packetSender.PlayerId, guid, subGuid, itemPosition, quaternion, camera, techType);
             packetSender.Send(placedFurniture);
         }
         
@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
 
             if (amount < 0.95f) // Construction complete event handled by function below
             {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid, amount);
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(packetSender.PlayerId, itemPosition, guid, amount);
                 packetSender.Send(amountChanged);
             }
         }
@@ -86,7 +86,7 @@ namespace NitroxClient.GameLogic
             Vector3 itemPosition = gameObject.transform.position;
             String guid = GuidHelper.GetGuid(gameObject);
 
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid, newlyConstructedBaseGuid);
+            ConstructionCompleted constructionCompleted = new ConstructionCompleted(packetSender.PlayerId, itemPosition, guid, newlyConstructedBaseGuid);
             packetSender.Send(constructionCompleted);
         }
 
@@ -95,7 +95,7 @@ namespace NitroxClient.GameLogic
             Vector3 itemPosition = gameObject.transform.position;
             String guid = GuidHelper.GetGuid(gameObject);
 
-            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid);
+            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(packetSender.PlayerId, itemPosition, guid);
             packetSender.Send(deconstructionBegin);
         }
 
@@ -104,7 +104,7 @@ namespace NitroxClient.GameLogic
             Vector3 itemPosition = gameObject.transform.position;
             String guid = GuidHelper.GetGuid(gameObject);
 
-            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(packetSender.PlayerId, ApiHelper.Vector3(itemPosition), guid);
+            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(packetSender.PlayerId, itemPosition, guid);
             packetSender.Send(deconstructionCompleted);
         }
     }

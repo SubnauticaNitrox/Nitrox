@@ -1,22 +1,28 @@
 ﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.DataStructures.ServerModel
 {
     public class VehicleModel
     {
-        public String TechType { get; set; }
+        public TechType TechType { get { return serializableTechType.TechType; } }
         public String Guid { get; set; }
-        public Vector3 Position { get; set; }
-        public Quaternion Rotation { get; set; }
-        public Vector3 Velocity { get; set; }
+        public Vector3 Position { get { return serializablePosition.ToVector3(); } }
+        public Quaternion Rotation { get { return serializableRotation.ToQuaternion(); } }
+        public Vector3 Velocity { get { return serializableVelocity.ToVector3(); } }
 
-        public VehicleModel(String techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity)
+        private SerializableVector3 serializablePosition;
+        private SerializableQuaternion serializableRotation;
+        private SerializableVector3 serializableVelocity;
+        private SerializableTechType serializableTechType;
+
+        public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity)
         {
-            this.TechType = techType;
+            this.serializableTechType = new SerializableTechType(techType);
             this.Guid = guid;
-            this.Position = position;
-            this.Rotation = rotation;
-            this.Velocity = velocity;
+            this.serializablePosition = SerializableVector3.from(position);
+            this.serializableRotation = SerializableQuaternion.from(rotation);
+            this.serializableVelocity = SerializableVector3.from(velocity);
         }
     }
 }

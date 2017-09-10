@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic
 {
@@ -53,7 +54,7 @@ namespace NitroxServer.GameLogic
                 int totalEscapePods = escapePods.Count; 
 
                 EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods, 
-                                                              new NitroxModel.DataStructures.Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
+                                                              new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
                                                               "escapePodFab" + totalEscapePods,
                                                               "escapePodMedFab" + totalEscapePods,
                                                               "escapePodStorageFab" + totalEscapePods,

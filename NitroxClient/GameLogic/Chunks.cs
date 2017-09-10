@@ -17,8 +17,8 @@ namespace NitroxClient.GameLogic
         private bool chunksPendingSync = false;
         private float timeWhenChunksBecameOutOfSync;
 
-        private HashSet<NitroxModel.DataStructures.Int3> added = new HashSet<NitroxModel.DataStructures.Int3>();
-        private HashSet<NitroxModel.DataStructures.Int3> removed = new HashSet<NitroxModel.DataStructures.Int3>();
+        private HashSet<Int3> added = new HashSet<Int3>();
+        private HashSet<Int3> removed = new HashSet<Int3>();
 
         public Chunks(PacketSender packetSender, LoadedChunks loadedChunks, ChunkAwarePacketReceiver chunkAwarePacketReceiver)
         {
@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
             if (!loadedChunks.Contains(owningChunk))
             {
                 loadedChunks.Add(owningChunk);
-                added.Add(ApiHelper.Int3(owningChunk));
+                added.Add(owningChunk);
                 chunkAwarePacketReceiver.ChunkLoaded(owningChunk);
             }
         }
@@ -53,12 +53,12 @@ namespace NitroxClient.GameLogic
         {
             if (chunk?.transform != null && loadedChunks != null)
             {
-                Int3 owningChunk = ApiHelper.Int3(chunk.transform.position);
+                Int3 owningChunk = new Int3((int)chunk.transform.position.x, (int)chunk.transform.position.y, (int)chunk.transform.position.z);
 
                 if (loadedChunks.Contains(owningChunk))
                 {
                     loadedChunks.Remove(owningChunk);
-                    removed.Add(ApiHelper.Int3(owningChunk));
+                    removed.Add(owningChunk);
                     markChunksReadyForSync(mb, 0);
                 }
             }

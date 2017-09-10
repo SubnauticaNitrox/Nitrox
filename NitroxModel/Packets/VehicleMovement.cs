@@ -1,19 +1,22 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public String TechType { get; }
+        public TechType TechType { get { return serializableTechType.TechType; } }
         public String Guid { get; }
 
-        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, String techType, String guid) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
+        private SerializableTechType serializableTechType;
+
+        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, TechType techType, String guid) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
         {
             this.Guid = guid;
-            this.TechType = techType;
+            this.serializableTechType = new SerializableTechType(techType);
             this.PlayerMustBeInRangeToReceive = false;
         }
 

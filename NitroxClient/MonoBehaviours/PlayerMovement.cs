@@ -88,11 +88,7 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleModel>.Empty();
             }
 
-            VehicleModel model = new VehicleModel(Enum.GetName(typeof(TechType), techType),
-                                                  guid,
-                                                  ApiHelper.Vector3(position),
-                                                  ApiHelper.Quaternion(rotation),
-                                                  ApiHelper.Vector3(velocity));
+            VehicleModel model = new VehicleModel(techType, guid, position, rotation, velocity);
 
             return Optional<VehicleModel>.Of(model);
         }

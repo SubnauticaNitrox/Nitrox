@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxClient.Map
 {
@@ -10,9 +10,9 @@ namespace NitroxClient.Map
 
         public Int3 GetChunk(Vector3 position)
         {
-            return new Int3((int)Math.Floor(position.X / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(position.Y / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(position.Z / CHUNK_SIZE) * CHUNK_SIZE);
+            return new Int3((int)Math.Floor(position.x / CHUNK_SIZE) * CHUNK_SIZE,
+                            (int)Math.Floor(position.y / CHUNK_SIZE) * CHUNK_SIZE,
+                            (int)Math.Floor(position.z / CHUNK_SIZE) * CHUNK_SIZE);
         }
     }
 }

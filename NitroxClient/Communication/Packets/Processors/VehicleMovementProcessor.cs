@@ -24,9 +24,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
             RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
 
-            Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.Position);
-            Vector3 remoteVelocity = ApiHelper.Vector3(vehicleMovement.Velocity);
-            Quaternion remoteRotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
+            Vector3 remotePosition = vehicleMovement.Position;
+            Vector3 remoteVelocity = vehicleMovement.Velocity;
+            Quaternion remoteRotation = vehicleMovement.BodyRotation;
 
             Vehicle vehicle = null;
             SubRoot subRoot = null;
@@ -72,18 +72,8 @@ namespace NitroxClient.Communication.Packets.Processors
             player.animationController.UpdatePlayerAnimations = false;
         }
 
-        private void CreateVehicleAt(RemotePlayer player, String techTypeString, String guid, Vector3 position, Quaternion rotation)
+        private void CreateVehicleAt(RemotePlayer player, TechType techType, String guid, Vector3 position, Quaternion rotation)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
-
-            if (opTechType.IsEmpty())
-            {
-                Console.WriteLine("Unknown tech type: " + techTypeString);
-                return;
-            }
-
-            TechType techType = opTechType.Get();
-
             if (techType == TechType.Cyclops)
             {
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(player, go, guid, position, rotation));

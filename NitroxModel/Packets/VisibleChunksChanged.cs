@@ -7,20 +7,34 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VisibleChunksChanged : AuthenticatedPacket
     {
-        public HashSet<Int3> Added { get; private set; }
-        public HashSet<Int3> Removed { get; private set; }
+        public List<SerializableInt3> Added { get; }
+        public List<SerializableInt3> Removed { get; }
 
         public VisibleChunksChanged(String playerId, HashSet<Int3> added, HashSet<Int3> removed) : base(playerId)
         {
-            this.Added = added;
-            this.Removed = removed;
+            //convert to list as hashsets have issues serializing in mono
+            List<SerializableInt3> addedChunks = new List<SerializableInt3>();
+            List<SerializableInt3> removedChunks = new List<SerializableInt3>();
+
+            foreach(Int3 addedChunk in added)
+            {
+                addedChunks.Add(SerializableInt3.from(addedChunk));
+            }
+
+            foreach (Int3 removedChunk in removed)
+            {
+                removedChunks.Add(SerializableInt3.from(removedChunk));
+            }
+
+            this.Added = addedChunks;
+            this.Removed = removedChunks;
         }
 
         public override string ToString()
         {
             String toString = "[ChunkLoaded Chunks: Added: | ";
 
-            foreach(Int3 chunk in Added)
+            foreach(SerializableInt3 chunk in Added)
             {
                 toString += chunk + " ";
             }
@@ -28,7 +42,7 @@ namespace NitroxModel.Packets
             toString += " | Removed: |";
 
 
-            foreach (Int3 chunk in Removed)
+            foreach (SerializableInt3 chunk in Removed)
             {
                 toString += chunk + " ";
             }

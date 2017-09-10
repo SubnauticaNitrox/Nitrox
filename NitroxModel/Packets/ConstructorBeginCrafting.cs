@@ -9,15 +9,17 @@ namespace NitroxModel.Packets
     {
         public String ConstructorGuid { get; protected set; }
         public String ConstructedItemGuid { get; protected set; }
-        public String TechType { get; protected set; }
+        public TechType TechType { get { return serializableTechType.TechType; } }
         public float Duration { get; protected set; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; private set; }
 
-        public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, String techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
+        private SerializableTechType serializableTechType;
+
+        public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
         {
             this.ConstructorGuid = constructorGuid;
             this.ConstructedItemGuid = constructedItemGuid;
-            this.TechType = techType;
+            this.serializableTechType = new SerializableTechType(techType);
             this.Duration = duration;
             this.InteractiveChildIdentifiers = interactiveChildIdentifiers;
         }
