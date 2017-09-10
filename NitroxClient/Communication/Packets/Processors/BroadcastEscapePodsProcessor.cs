@@ -4,9 +4,9 @@ using NitroxModel.DataStructures.GameLogic;
 using System;
 using UnityEngine;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
 using System.Collections;
+using NitroxModel.Helper.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

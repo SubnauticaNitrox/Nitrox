@@ -1,10 +1,10 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
 using System.Reflection;
+using NitroxModel.Helper.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

@@ -58,9 +58,7 @@ namespace NitroxServer.GameLogic
                                                               "escapePodFab" + totalEscapePods,
                                                               "escapePodMedFab" + totalEscapePods,
                                                               "escapePodStorageFab" + totalEscapePods,
-                                                              "escapePodRadioFab" + totalEscapePods);
-
-
+                                                              "escapePodRadioFab" + totalEscapePods);               
                 escapePods.Add(escapePod);
 
                 return escapePod;

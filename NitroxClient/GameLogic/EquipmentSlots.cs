@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication;
-using NitroxClient.GameLogic.Helper;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;

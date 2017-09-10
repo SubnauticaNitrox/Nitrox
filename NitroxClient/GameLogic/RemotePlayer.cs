@@ -1,8 +1,8 @@
 ﻿using LitJson;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using System;
 using UnityEngine;
 using Object = UnityEngine.Object;

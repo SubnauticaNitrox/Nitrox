@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Helper
+namespace NitroxModel.Helper.GameLogic
 {
     public static class GuidHelper
     {

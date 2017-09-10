@@ -109,14 +109,8 @@
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
-    <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
-    <Compile Include="GameLogic\Helper\GuidHelper.cs" />
-    <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
-    <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
-    <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
-    <Compile Include="MathUtil.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />
@@ -128,7 +122,6 @@
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
-    <Compile Include="DebugUtils.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />

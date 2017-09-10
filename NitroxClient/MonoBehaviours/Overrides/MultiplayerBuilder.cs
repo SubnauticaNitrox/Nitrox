@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UWE;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 

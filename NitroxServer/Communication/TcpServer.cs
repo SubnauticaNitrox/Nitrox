@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
-using UnityEngine;
 
 namespace NitroxServer.Communication
 {

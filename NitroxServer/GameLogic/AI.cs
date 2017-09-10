@@ -21,8 +21,8 @@ namespace NitroxServer.GameLogic
             CreatureActionChanged actionChanged = new CreatureActionChanged(newAction.GetType().ToString());
 
             Int3 int3 = new Int3((int)Math.Floor(creaturePosition.x / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(creaturePosition.y / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(creaturePosition.z / CHUNK_SIZE) * CHUNK_SIZE);
+                                 (int)Math.Floor(creaturePosition.y / CHUNK_SIZE) * CHUNK_SIZE,
+                                 (int)Math.Floor(creaturePosition.z / CHUNK_SIZE) * CHUNK_SIZE);
 
             tcpServer.SendPacketToPlayersInChunk(actionChanged, int3);
         }

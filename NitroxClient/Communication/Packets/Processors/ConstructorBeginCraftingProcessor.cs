@@ -1,14 +1,14 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using static NitroxModel.Helper.GameLogic.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

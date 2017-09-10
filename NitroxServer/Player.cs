@@ -7,7 +7,7 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public String Id { get; private set; }
+        public String Id { get; }
         public Vector3 Position { get; set; }
 
         private HashSet<Int3> visibleChunks;

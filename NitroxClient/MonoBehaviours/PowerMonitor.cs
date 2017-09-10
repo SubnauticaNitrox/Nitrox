@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper.GameLogic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

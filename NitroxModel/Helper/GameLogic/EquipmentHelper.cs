@@ -2,7 +2,7 @@
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Helper
+namespace NitroxModel.Helper.GameLogic
 {
     public class EquipmentHelper
     {
