@@ -21,10 +21,6 @@ namespace NitroxPatcher.Patches
                 String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
                 Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, colorDataHSB, colorDataColor);
             }
-            else
-            {
-                ErrorMessage.AddMessage("Could not find EventData or CurrentSub from Main-Player to change color");
-            }
         }
 
         public override void Patch(HarmonyInstance harmony)
