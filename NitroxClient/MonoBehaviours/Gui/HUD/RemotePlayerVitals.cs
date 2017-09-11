@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             {
                 Console.WriteLine("healthBar does not exist. Are you playing on creative?");
                 // TODO: clean this up, now it generates many NRE's.
-                // Also make sure it works when the world changes back to survival
+                // Also make sure it works when the world changes back to survival.
                 return null;
             }
 

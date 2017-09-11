@@ -18,9 +18,10 @@ namespace NitroxClient.Communication.Packets.Processors
             remotePlayerManager
                 .FindOrCreate(movement.PlayerId)
                 .UpdatePosition(
-                    ApiHelper.Vector3(movement.PlayerPosition),
+                    ApiHelper.Vector3(movement.Position),
+                    ApiHelper.Vector3(movement.Velocity),
                     ApiHelper.Quaternion(movement.BodyRotation),
-                    ApiHelper.Quaternion(movement.CameraRotation),
+                    ApiHelper.Quaternion(movement.AimingRotation),
                     movement.SubGuid);
         }
     }

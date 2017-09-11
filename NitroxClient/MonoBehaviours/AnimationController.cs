@@ -1,71 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
+    // Shouldn't this class be named after the armscontroller?
     public class AnimationController : MonoBehaviour
     {
-        private const float SMOOTHING_SPEED = 6f;
-        public Animator animator;
+        private const float SMOOTHING_SPEED = 4f;
+        private Animator animator;
 
         public bool UpdatePlayerAnimations { get; set; } = true;
         public Quaternion AimingRotation { get; set; }
+        public Vector3 Velocity { get; set; }
+        public Quaternion BodyRotation { get; set; }
 
-        private Vector3 lastPosition = Vector3.zero;
         private Vector3 smoothedVelocity = Vector3.zero;
-
-        private Dictionary<string, bool> animationStatusById = new Dictionary<string, bool>()
-        {
-            { "is_underwater", true }
-        };
+        private float smoothViewPitch;
 
         public void Start()
         {
             animator = gameObject.GetComponent<Animator>();
-        }
-
-        public void Update()
-        {
-            if (UpdatePlayerAnimations)
-            {
-                foreach (KeyValuePair<string, bool> kvp in animationStatusById)
-                {
-                    //For whatever reason, attempting to setbool once most of the time won't work
-                    //Will investigate soon but this seems to work for now
-                    animator.SetBool(kvp.Key, kvp.Value);
-                }
-            }
+            this["is_underwater"] = true;
         }
 
         public void FixedUpdate()
         {
             if (UpdatePlayerAnimations)
             {
-                Vector3 velocity = AimingRotation.GetInverse() * (1 / Time.fixedDeltaTime * (transform.position - lastPosition));
-                lastPosition = transform.position;
+                Vector3 rotationCorrectedVelocity = gameObject.transform.rotation.GetInverse() * Velocity;
 
-                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, velocity, Vector3.Normalize(velocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
-                SafeAnimator.SetFloat(animator, "move_speed", smoothedVelocity.magnitude);
-                SafeAnimator.SetFloat(animator, "move_speed_x", smoothedVelocity.x);
-                SafeAnimator.SetFloat(animator, "move_speed_y", smoothedVelocity.y);
-                SafeAnimator.SetFloat(animator, "move_speed_z", smoothedVelocity.z);
+                smoothedVelocity = UWE.Utils.SlerpVector(smoothedVelocity, rotationCorrectedVelocity, Vector3.Normalize(rotationCorrectedVelocity - smoothedVelocity) * SMOOTHING_SPEED * Time.fixedDeltaTime);
 
-                float num = AimingRotation.eulerAngles.x;
-                if (num > 180f)
+                animator.SetFloat("move_speed", smoothedVelocity.magnitude);
+                animator.SetFloat("move_speed_x", smoothedVelocity.x);
+                animator.SetFloat("move_speed_y", smoothedVelocity.y);
+                animator.SetFloat("move_speed_z", smoothedVelocity.z);
+
+                float viewPitch = AimingRotation.eulerAngles.x;
+                if (viewPitch > 180f)
                 {
-                    num -= 360f;
+                    viewPitch -= 360f;
                 }
-                num = -num;
-                animator.SetFloat("view_pitch", num);
+                viewPitch = -viewPitch;
+                smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
+                animator.SetFloat("view_pitch", smoothViewPitch);
             }
         }
 
-        public void SetBool(string name, bool value)
+        public bool this[string name]
         {
-            animationStatusById[name] = value;
+            get { return animator.GetBool(name); }
+            set { animator.SetBool(name, value); }
         }
     }
 }
