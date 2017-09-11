@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using System;
 
@@ -46,6 +47,12 @@ namespace NitroxClient.GameLogic
         public void ChangeName(String guid, string name)
         {
             CyclopsChangeName packet = new CyclopsChangeName(packetSender.PlayerId, guid, name);
+            packetSender.Send(packet);
+        }
+
+        public void ChangeColor(String guid, int index, Vector3 hsb, Color color)
+        {
+            CyclopsChangeColor packet = new CyclopsChangeColor(packetSender.PlayerId, index, guid, hsb, color);
             packetSender.Send(packet);
         }
     }
