@@ -12,12 +12,12 @@ namespace NitroxClient.MonoBehaviours
 
         internal RemotePlayer CurrentPlayer { get; set; }
 
-        protected override void Start()
+        protected override void Awake()
         {
             steeringControl = GetComponent<SubControl>();
             subTurnHandlers = (ISubTurnHandler[])steeringControl.ReflectionGet("turnHandlers");
             subThrottleHandlers = (ISubThrottleHandler[])steeringControl.ReflectionGet("throttleHandlers");
-            base.Start();
+            base.Awake();
         }
 
         protected override void FixedUpdate()
@@ -37,7 +37,7 @@ namespace NitroxClient.MonoBehaviours
 
             ShipSide useShipSide = yaw > 0 ? ShipSide.Port : ShipSide.Starboard;
             yaw = Mathf.Abs(yaw);
-            if (yaw >= previousAbsYaw)
+            if (yaw > .1f && yaw >= previousAbsYaw)
             {
                 subTurnHandlers?.ForEach(turnHandler => turnHandler.OnSubTurn(useShipSide));
             }

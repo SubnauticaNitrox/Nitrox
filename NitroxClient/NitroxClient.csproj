@@ -137,6 +137,7 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MultiplayerButton.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
+    <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
     <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />

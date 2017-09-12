@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours
         protected SmoothRotation smoothRotation;
         protected SmoothVector smoothAngularVelocity;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             rigidbody = gameObject.GetComponent<Rigidbody>();
             // For now, we assume the set position and rotation is equal to the server one.
@@ -42,6 +42,7 @@ namespace NitroxClient.MonoBehaviours
 
         internal void SetPositionVelocityRotation(Vector3 remotePosition, Vector3 remoteVelocity, Quaternion remoteRotation, Vector3 remoteAngularVelocity)
         {
+            gameObject.SetActive(true);
             smoothPosition.Target = remotePosition;
             smoothVelocity.Target = remoteVelocity;
             smoothRotation.Target = remoteRotation;

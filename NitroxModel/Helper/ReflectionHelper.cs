@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace NitroxModel.Helper
@@ -6,7 +7,6 @@ namespace NitroxModel.Helper
     public static class ReflectionHelper
     {
         // Public calls are useful for reflected, inaccessible objects.
-        // TODO log bindingFlags as well in Validate.NotNull calls.
         public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
         {
             ValidateStatic(o, isStatic);
@@ -81,12 +81,13 @@ namespace NitroxModel.Helper
             if (types != null && types.Length > 0)
             {
                 methodInfo = t.GetMethod(methodName, bindingFlags, null, types, null);
+                Validate.NotNull(methodInfo, $"Type \"{t.Name}\" does not have a method called \"{methodName}\", with bindingFlags {bindingFlags} and types {string.Join(", ", types.Select(typ => typ.ToString()).ToArray())}.");
             }
             else
             {
                 methodInfo = t.GetMethod(methodName, bindingFlags);
+                Validate.NotNull(methodInfo, $"Type \"{t.Name}\" does not have a method called \"{methodName}\" with bindingFlags {bindingFlags}.");
             }
-            Validate.NotNull(methodInfo, $"Type \"{t.Name}\" does not have a method called \"{methodName}\".");
             return methodInfo;
         }
 
@@ -99,7 +100,7 @@ namespace NitroxModel.Helper
         {
             BindingFlags bindingFlags = GetBindingFlagsFromMethodQualifiers(isPublic, isStatic);
             FieldInfo fieldInfo = t.GetField(fieldName, bindingFlags);
-            Validate.NotNull(fieldInfo, $"Type \"{t.Name}\" does not have a field called \"{fieldName}\".");
+            Validate.NotNull(fieldInfo, $"Type \"{t.Name}\" does not have a field called \"{fieldName}\" with bindingFlags {bindingFlags}.");
             return fieldInfo;
         }
 

@@ -51,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                     else if (exosuit)
                     {
-                        // TODO: Implement this for the Exosuit as well.
+                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
                     }
                 }
 
@@ -112,8 +112,6 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
 
             GuidHelper.SetNewGuid(gameObject, guid);
-
-            // TODO: Implement cyclops piloting, and simulation of vehicles when they are not being piloted.
         }
     }
 }

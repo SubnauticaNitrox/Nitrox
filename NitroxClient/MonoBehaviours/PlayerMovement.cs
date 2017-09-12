@@ -84,9 +84,19 @@ namespace NitroxClient.MonoBehaviours
                 // So, we need to hack in and try to figure out when thrust needs to be applied.
                 if (vehicle && AvatarInputHandler.main.IsEnabled())
                 {
-                    bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
-                    // TODO: Check the movement axes, and try to do it on rotation as well (because the thruster is gimballed/vectored).
-                    appliedThrottle = (vehicle.moveOnLand || flag) && GameInput.GetMoveDirection().sqrMagnitude > .1f;
+                    if (techType == TechType.Seamoth)
+                    {
+                        bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
+                        appliedThrottle = flag && GameInput.GetMoveDirection().sqrMagnitude > .1f;
+                    }
+                    else if (techType == TechType.Exosuit)
+                    {
+                        var exosuit = vehicle as Exosuit;
+                        if (exosuit)
+                        {
+                            appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (bool)exosuit.ReflectionGet("thrustPower");
+                        }
+                    }
                 }
             }
             else if (sub != null && Player.main.isPiloting)

@@ -177,7 +177,7 @@ namespace NitroxClient.GameLogic
 
                 if (Vehicle != null)
                 {
-                    Attach(Vehicle.playerPosition.transform, true);
+                    Attach(Vehicle.playerPosition.transform);
                     armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
                 }
                 else

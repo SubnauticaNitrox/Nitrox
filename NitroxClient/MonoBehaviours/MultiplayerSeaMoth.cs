@@ -5,10 +5,10 @@
         private bool lastThrottle = false;
         private SeaMoth seamoth;
 
-        protected override void Start()
+        protected override void Awake()
         {
             steeringControl = seamoth = GetComponent<SeaMoth>();
-            base.Start();
+            base.Awake();
         }
 
         internal override void SetThrottle(bool isOn)
