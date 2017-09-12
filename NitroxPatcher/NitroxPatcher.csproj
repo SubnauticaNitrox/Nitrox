@@ -55,7 +55,12 @@
   <ItemGroup>
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
+    <Compile Include="Patches\CellManager_HideEntities_Patch.cs" />
     <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\Server\CellManager_HideEntities_Patch.cs" />
+    <Compile Include="Patches\Server\LargeWorldStreamer_TryUnloadBatch_Patch.cs" />
+    <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
+    <Compile Include="Patches\CellManager_ShowEntities_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
@@ -91,8 +96,6 @@
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Patches\ClipMapManager_HideEntities_Patch.cs" />
-    <Compile Include="Patches\ClipMapManager_ShowEntities_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />
     <Compile Include="Patches\uGUI_MainMenu_Start_Patch.cs" />

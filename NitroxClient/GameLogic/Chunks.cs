@@ -27,49 +27,48 @@ namespace NitroxClient.GameLogic
             this.chunkAwarePacketReceiver = chunkAwarePacketReceiver;
         }
         
-        public void AddChunk(Vector3 chunk, MonoBehaviour mb)
+        public void ChunksLoaded(Int3.Bounds batchBounds)
         {
-            if (chunk != null && loadedChunks != null && mb != null)
-            {
-                Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-                mb.StartCoroutine(WaitAndAddChunk(owningChunk, mb));
-                markChunksReadyForSync(mb, 0.5f);                
-            }
+            LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchBounds));
+            markChunksReadyForSync(0.5f);  
         }
         
-        private IEnumerator WaitAndAddChunk(Int3 owningChunk, MonoBehaviour mb)
+        private IEnumerator WaitAndAddChunk(Int3.Bounds batchBounds)
         {
             yield return new WaitForSeconds(0.5f);
 
-            if (!loadedChunks.Contains(owningChunk))
+            foreach(Int3 batch in batchBounds)
             {
-                loadedChunks.Add(owningChunk);
-                added.Add(owningChunk);
-                chunkAwarePacketReceiver.ChunkLoaded(owningChunk);
-            }
-        }
-
-        public void RemoveChunk(VoxelandChunk chunk, MonoBehaviour mb)
-        {
-            if (chunk?.transform != null && loadedChunks != null)
-            {
-                Int3 owningChunk = new Int3((int)chunk.transform.position.x, (int)chunk.transform.position.y, (int)chunk.transform.position.z);
-
-                if (loadedChunks.Contains(owningChunk))
+                if (!loadedChunks.Contains(batch))
                 {
-                    loadedChunks.Remove(owningChunk);
-                    removed.Add(owningChunk);
-                    markChunksReadyForSync(mb, 0);
+                    Console.WriteLine("loaded chunk: " + batch);
+                    loadedChunks.Add(batch);
+                    added.Add(batch);
+                    chunkAwarePacketReceiver.ChunkLoaded(batch);
                 }
             }
         }
 
-        private void markChunksReadyForSync(MonoBehaviour mb, float delay)
+        public void ChunksUnloaded(Int3.Bounds batchBounds)
+        {
+            foreach (Int3 batch in batchBounds)
+            {
+                if (loadedChunks.Contains(batch))
+                {
+                    Console.WriteLine("unloaded chunk: " + batch);
+                    loadedChunks.Remove(batch);
+                    removed.Add(batch);
+                    markChunksReadyForSync(0);
+                }
+            }            
+        }
+
+        private void markChunksReadyForSync(float delay)
         {
             if (chunksPendingSync == false)
             {
                 timeWhenChunksBecameOutOfSync = Time.time;
-                mb.StartCoroutine(WaitAndSyncChunks(delay));
+                LargeWorldStreamer.main.StartCoroutine(WaitAndSyncChunks(delay));
                 chunksPendingSync = true;
             }
         }

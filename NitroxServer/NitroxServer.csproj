@@ -69,6 +69,10 @@
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
+    <Compile Include="GameLogic\Threading\Actions\UnloadChunkAction.cs" />
+    <Compile Include="GameLogic\Threading\Actions\LoadChunkAction.cs" />
+    <Compile Include="GameLogic\Threading\IGameAction.cs" />
+    <Compile Include="GameLogic\Threading\GameActionManager.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="Player.cs" />

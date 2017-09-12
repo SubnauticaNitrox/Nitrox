@@ -78,8 +78,6 @@
     <Compile Include="Patcher\Patches\BuilderTool_HandleInput_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
     <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
-    <Compile Include="Patcher\Patches\ClipMapManager_HideEntities_PatchTest.cs" />
-    <Compile Include="Patcher\Patches\ClipMapManager_ShowEntities_PatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
     <Compile Include="Patcher\Test\PatchTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

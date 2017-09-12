@@ -26,9 +26,6 @@ namespace NitroxPatcher.Patches.Server
             button.saveGame = possibleSlotNames[0];
             button.gameMode = possibleSlotGameModes[0];
             button.Load();
-
-            NitroxServer.Server server = new NitroxServer.Server();
-            server.Start();
         }
         
         public override void Patch(HarmonyInstance harmony)
