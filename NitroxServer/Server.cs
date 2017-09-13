@@ -2,15 +2,14 @@
 using NitroxServer.Communication;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Monobehaviours;
 using NitroxServer.GameLogic.Threading;
-using System;
 using UnityEngine;
 
 namespace NitroxServer
 {
     public class Server : MonoBehaviour
     {
-        public static bool ALLOW_MAP_CLIPPING = false;
         public static Logic Logic { get; private set; }
 
         private TcpServer tcpServer;
@@ -18,6 +17,7 @@ namespace NitroxServer
         private SimulationOwnership simulationOwnership;
         private PacketHandler packetHandler;
         private GameActionManager gameActionManager;
+        private ChunkManager chunkManager;
 
         public Server()
         {
@@ -25,7 +25,8 @@ namespace NitroxServer
             this.tcpServer = new TcpServer();
             this.simulationOwnership = new SimulationOwnership();
             this.gameActionManager = new GameActionManager();
-            this.packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership, gameActionManager);
+            this.chunkManager = new ChunkManager();
+            this.packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership, gameActionManager, chunkManager);
 
             Logic = new Logic(tcpServer);
         }
@@ -33,6 +34,8 @@ namespace NitroxServer
         public void Awake()
         {
             tcpServer.Start(packetHandler);
+            ChunkLoader chunkLoader = this.gameObject.AddComponent<ChunkLoader>();
+            chunkLoader.chunkManager = chunkManager;
         }
 
         public void Update()

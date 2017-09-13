@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using NitroxServer.GameLogic.Monobehaviours;
 using System;
 using System.Reflection;
 
@@ -11,7 +12,7 @@ namespace NitroxPatcher.Patches.Server
 
         public static bool Prefix()
         {
-            return NitroxServer.Server.ALLOW_MAP_CLIPPING;
+            return ChunkLoader.ALLOW_MAP_CLIPPING;
         }        
 
         public override void Patch(HarmonyInstance harmony)

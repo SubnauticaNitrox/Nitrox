@@ -66,11 +66,11 @@
     <Compile Include="Communication\PlayerConnection.cs" />
     <Compile Include="ConsoleWindow.cs" />
     <Compile Include="GameLogic\AI.cs" />
+    <Compile Include="GameLogic\ChunkManager.cs" />
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\Monobehaviours\ChunkLoader.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
-    <Compile Include="GameLogic\Threading\Actions\UnloadChunkAction.cs" />
-    <Compile Include="GameLogic\Threading\Actions\LoadChunkAction.cs" />
     <Compile Include="GameLogic\Threading\IGameAction.cs" />
     <Compile Include="GameLogic\Threading\GameActionManager.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
@@ -87,6 +87,9 @@
       <Project>{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="GameLogic\Threading\Actions\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

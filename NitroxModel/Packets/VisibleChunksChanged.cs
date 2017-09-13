@@ -7,8 +7,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VisibleChunksChanged : AuthenticatedPacket
     {
-        public List<SerializableInt3> Added { get; }
-        public List<SerializableInt3> Removed { get; }
+        public HashSet<Int3> Added { get {  return convertAddedChunks(); } }
+        public HashSet<Int3> Removed { get { return convertRemovedChunks(); } }
+
+        private List<SerializableInt3> serializableAdded;
+        private List<SerializableInt3> serializableRemoved;
 
         public VisibleChunksChanged(String playerId, HashSet<Int3> added, HashSet<Int3> removed) : base(playerId)
         {
@@ -26,15 +29,15 @@ namespace NitroxModel.Packets
                 removedChunks.Add(SerializableInt3.from(removedChunk));
             }
 
-            this.Added = addedChunks;
-            this.Removed = removedChunks;
+            this.serializableAdded = addedChunks;
+            this.serializableRemoved = removedChunks;
         }
 
         public override string ToString()
         {
             String toString = "[ChunkLoaded Chunks: Added: | ";
 
-            foreach(SerializableInt3 chunk in Added)
+            foreach(SerializableInt3 chunk in serializableAdded)
             {
                 toString += chunk + " ";
             }
@@ -42,12 +45,36 @@ namespace NitroxModel.Packets
             toString += " | Removed: |";
 
 
-            foreach (SerializableInt3 chunk in Removed)
+            foreach (SerializableInt3 chunk in serializableRemoved)
             {
                 toString += chunk + " ";
             }
 
             return toString + "| ]";
+        }
+
+        private HashSet<Int3> convertAddedChunks()
+        {
+            HashSet<Int3> added = new HashSet<Int3>();
+            
+            foreach (SerializableInt3 addedChunk in serializableAdded)
+            {
+                added.Add(addedChunk.toInt3());
+            }
+
+            return added;
+        }
+
+        private HashSet<Int3> convertRemovedChunks()
+        {
+            HashSet<Int3> removed = new HashSet<Int3>();
+
+            foreach (SerializableInt3 removedChunk in serializableRemoved)
+            {
+                removed.Add(removedChunk.toInt3());
+            }
+
+            return removed;
         }
     }
 }

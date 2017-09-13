@@ -1,9 +1,7 @@
 ﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Threading;
-using NitroxServer.GameLogic.Threading.Actions;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -11,35 +9,29 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private TcpServer tcpServer;
         private GameActionManager gameActionManager;
+        private ChunkManager chunkManager;
 
-        public VisibleChunksChangedProcessor(TcpServer tcpServer, GameActionManager gameActionManager)
+        public VisibleChunksChangedProcessor(TcpServer tcpServer, GameActionManager gameActionManager, ChunkManager chunkManager)
         {
             this.tcpServer = tcpServer;
             this.gameActionManager = gameActionManager;
+            this.chunkManager = chunkManager;
         }
         
         public override void Process(VisibleChunksChanged packet, Player player)
         {
-            HashSet<Int3> add = new HashSet<Int3>();
-
-            foreach(var modelInt3 in packet.Added)
+            player.AddChunks(packet.Added);
+            player.RemoveChunks(packet.Removed);
+            
+            foreach(Int3 chunk in packet.Added)
             {
-                Int3 chunk = new Int3(modelInt3.X, modelInt3.Y, modelInt3.Z);
-                add.Add(chunk);
-                gameActionManager.add(new LoadChunkAction(chunk));
+                chunkManager.PlayerEnteredChunk(chunk);
             }
-
-            HashSet<Int3> removed = new HashSet<Int3>();
-
-            foreach (var modelInt3 in packet.Removed)
+            
+            foreach (Int3 chunk in packet.Removed)
             {
-                Int3 chunk = new Int3(modelInt3.X, modelInt3.Y, modelInt3.Z);
-                add.Add(chunk);
-                gameActionManager.add(new UnloadChunkAction(chunk));
+                chunkManager.PlayerLeftChunk(chunk);
             }
-
-            player.AddChunks(add);
-            player.RemoveChunks(removed);
         }
     }
 }
