@@ -25,7 +25,6 @@ namespace NitroxServer.GameLogic.Threading.Actions
             Int3.Bounds int3b = new Int3.Bounds(startBlocks, endBlocks);
 
             LargeWorldStreamer.main.ReflectionCall("TryUnloadBatch", false, false, batch);
-            LargeWorldStreamer.main.LoadBatch(batch);
 
             LargeWorldStreamer.main.cellManager.HideEntities(int3b, 0);
             LargeWorldStreamer.main.cellManager.HideEntities(int3b, 1);
