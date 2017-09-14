@@ -59,6 +59,7 @@
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeColorProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />

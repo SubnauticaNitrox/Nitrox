@@ -32,6 +32,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void TogglEngineState(String guid, bool isOn, bool isStarting)
+        {
+            CyclopsToggleEngineState packet = new CyclopsToggleEngineState(packetSender.PlayerId, guid, isOn, isStarting);
+            packetSender.Send(packet);
+        }
+
         public void ActivateHorn(String guid)
         {
             CyclopsActivateHorn packet = new CyclopsActivateHorn(packetSender.PlayerId, guid);
