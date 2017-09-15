@@ -23,19 +23,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (opCyclops.IsPresent())
             {
-                CyclopsNameScreenProxy ScreenProxy = opCyclops.Get().GetComponentInChildren<CyclopsNameScreenProxy>();
+                CyclopsNameScreenProxy screenProxy = opCyclops.Get().GetComponentInChildren<CyclopsNameScreenProxy>();
 
-                if (ScreenProxy != null)
+                if (screenProxy != null)
                 {
-                    SubName subname = (SubName)ScreenProxy.subNameInput.ReflectionGet("target");
+                    SubName subname = (SubName)screenProxy.subNameInput.ReflectionGet("target");
 
                     if (subname != null)
                     {
                         Vector3 hsb = new Vector3(colorPacket.HSB.X, colorPacket.HSB.Y, colorPacket.HSB.Z);
                         Color color = new Color(colorPacket.Color.R, colorPacket.Color.G, colorPacket.Color.B, colorPacket.Color.A);
                         subname.SetColor(colorPacket.Index, hsb, color);
-                        ScreenProxy.subNameInput.ReflectionCall("SetColor", false, false, new object[] { colorPacket.Index, color });
-
+                        screenProxy.subNameInput.ReflectionCall("SetColor", false, false, new object[] { colorPacket.Index, color });
                     }
                     else
                     {
