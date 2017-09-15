@@ -31,8 +31,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (subname != null)
                     {
-                        Vector3 hsb = new Vector3(colorPacket.HSB.X, colorPacket.HSB.Y, colorPacket.HSB.Z);
-                        Color color = new Color(colorPacket.Color.R, colorPacket.Color.G, colorPacket.Color.B, colorPacket.Color.A);
+                        Vector3 hsb = ApiHelper.Vector3(colorPacket.HSB);
+                        Color color = ApiHelper.Color(colorPacket.Color);
                         subname.SetColor(colorPacket.Index, hsb, color);
                         screenProxy.subNameInput.ReflectionCall("SetColor", false, false, new object[] { colorPacket.Index, color });
                     }

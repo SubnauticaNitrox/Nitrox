@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using System;
 using System.Reflection;
+using NitroxClient;
 
 namespace NitroxPatcher.Patches
 {
@@ -16,24 +17,15 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(SubNameInput __instance)
         {
-            int index = __instance.SelectedColorIndex;
-            SubName subname = (SubName)__instance.ReflectionGet("target");
-            if (Player.main.GetCurrentSub() != null && subname != null)
-            {
-                SubNameInput.ColorData[] colorData = __instance.colorData;
-                if (colorData != null && index < colorData.Length)
-                {
-                    UnityEngine.Color color = colorData[index].image.color;
-                    UnityEngine.Vector3 hsb = subname.GetColor(index);
-                    Color colorDataColor = new Color(color.r, color.g, color.b, color.a);
-                    Vector3 colorDataHSB = new Vector3(hsb.x, hsb.y, hsb.z);
-                    String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
-                    Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, colorDataHSB, colorDataColor);
-                }
-            }
+            DoFix(__instance);
         }
 
         public static void Prefix(SubNameInput __instance)
+        {
+            DoFix(__instance);
+        }
+
+        public static void DoFix(SubNameInput __instance)
         {
             int index = __instance.SelectedColorIndex;
             SubName subname = (SubName)__instance.ReflectionGet("target");
@@ -42,10 +34,8 @@ namespace NitroxPatcher.Patches
                 SubNameInput.ColorData[] colorData = __instance.colorData;
                 if (colorData != null && index < colorData.Length)
                 {
-                    UnityEngine.Color color = colorData[index].image.color;
-                    UnityEngine.Vector3 hsb = subname.GetColor(index);
-                    Color colorDataColor = new Color(color.r, color.g, color.b, color.a);
-                    Vector3 colorDataHSB = new Vector3(hsb.x, hsb.y, hsb.z);
+                    Color colorDataColor = ApiHelper.Color(colorData[index].image.color);
+                    Vector3 colorDataHSB = ApiHelper.Vector3(subname.GetColor(index));
                     String guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
                     Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, colorDataHSB, colorDataColor);
                 }

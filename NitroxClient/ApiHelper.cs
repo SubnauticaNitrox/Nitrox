@@ -16,6 +16,16 @@ namespace NitroxClient
             return new Vector3(vector3.X, vector3.Y, vector3.Z);
         }
 
+        public static NitroxModel.DataStructures.Color Color(Color color)
+        {
+            return new NitroxModel.DataStructures.Color(color.r, color.g, color.b, color.a);
+        }
+
+        public static Color Color(NitroxModel.DataStructures.Color color)
+        {
+            return new Color(color.R, color.G, color.B, color.A);
+        }
+
         public static NitroxModel.DataStructures.Quaternion Quaternion(Quaternion quaternion)
         {
             return new NitroxModel.DataStructures.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
