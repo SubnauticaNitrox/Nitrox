@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace NitroxPatcher
 {
-    class Main
+    public static class Main
     {
         public static void Execute()
         {
@@ -50,21 +50,17 @@ namespace NitroxPatcher
         [Conditional("DEBUG")]
         private static void InitializeReloader(bool serverPatching)
         {
-            Console.WriteLine("[NITROX] Initializing reloader...");
-
             // Whitelist needs to be split, as both game instances load all four libraries
             // (because this patcher references both server and client, so no matter what instance we are on,
             //  AppDomain.CurrentDomain.GetAssemblies() returns both).
             if (serverPatching)
             {
-                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
+                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
             }
             else
             {
-                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
+                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
             }
-
-            Console.WriteLine("[NITROX] Reloader initialized");
         }
     }
 }

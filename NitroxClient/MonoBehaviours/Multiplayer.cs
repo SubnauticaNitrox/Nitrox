@@ -1,16 +1,17 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxReloader;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NitroxClient.GameLogic.ChatUI;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -65,6 +66,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
+            Reloader.ReloadAssemblies();
             if (client != null && client.IsConnected())
             {
                 ProcessPackets();                
