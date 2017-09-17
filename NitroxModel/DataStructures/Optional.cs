@@ -62,23 +62,6 @@ namespace NitroxModel.DataStructures.Util
             return elseValue;
         }
 
-        // TODO: Discuss whether these functions should be in Validate (as .NotNull overload or .NotEmpty).
-        public void AssertPresent()
-        {
-            if (IsEmpty())
-            {
-                throw new OptionalEmptyException<T>();
-            }
-        }
-
-        public void AssertPresent(string message)
-        {
-            if (IsEmpty())
-            {
-                throw new OptionalEmptyException<T>(message);
-            }
-        }
-
         public override string ToString()
         {
             if (IsEmpty())
