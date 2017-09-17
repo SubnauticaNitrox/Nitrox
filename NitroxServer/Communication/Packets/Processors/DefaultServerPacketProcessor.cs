@@ -13,7 +13,8 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(AnimationChangeEvent),
             typeof(Movement),
             typeof(VehicleMovement),
-            typeof(ItemPosition)
+            typeof(ItemPosition),
+            typeof(CyclopsChangeColor)
         };
         
         public DefaultServerPacketProcessor(TcpServer tcpServer)

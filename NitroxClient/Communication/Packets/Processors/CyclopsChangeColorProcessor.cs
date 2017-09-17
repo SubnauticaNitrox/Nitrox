@@ -35,10 +35,11 @@ namespace NitroxClient.Communication.Packets.Processors
                         Color color = ApiHelper.Color(colorPacket.Color);
                         subname.SetColor(colorPacket.Index, hsb, color);
                         screenProxy.subNameInput.ReflectionCall("SetColor", false, false, new object[] { colorPacket.Index, color });
+                        screenProxy.subNameInput.SetSelected(colorPacket.Index);
                     }
                     else
                     {
-                        Console.WriteLine("Could not find SubName in CyclopsNameScreenProxy to change color");
+                        Console.WriteLine("Could not find SubName in SubNameInput to change color");
                     }
                 }
                 else
