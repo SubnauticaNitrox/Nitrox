@@ -32,6 +32,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void ChangeEngineMode(String guid, int mode)
+        {
+            CyclopsChangeEngineMode packet = new CyclopsChangeEngineMode(packetSender.PlayerId, guid, mode);
+            packetSender.Send(packet);
+        }
+
         public void ActivateHorn(String guid)
         {
             CyclopsActivateHorn packet = new CyclopsActivateHorn(packetSender.PlayerId, guid);
