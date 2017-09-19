@@ -79,6 +79,7 @@
     <Compile Include="Packets\CreaturePositionsChanged.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\VisibleChunksChanged.cs" />
+    <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
     <Compile Include="Packets\CyclopsChangeName.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
