@@ -29,22 +29,23 @@ namespace NitroxServer.GameLogic
                 {
                     return;
                 }
-            }
 
-            lock (podNotFullYet)
-            {
                 if (podNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
                 {
                     podNotFullYet = CreateNewEscapePod();
                 }
 
                 podNotFullYet.AssignedPlayers.Add(playerId);
+                escapePodsByPlayerId[playerId] = podNotFullYet;
             }
         }
 
-        public List<EscapePodModel> GetEscapePods()
+        public EscapePodModel[] GetEscapePods()
         {
-            return escapePods;
+            lock (escapePods)
+            {
+                return escapePods.ToArray();
+            }
         }
 
         private EscapePodModel CreateNewEscapePod()
