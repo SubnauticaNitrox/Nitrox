@@ -10,22 +10,14 @@ namespace NitroxReloader
 {
     public class Reloader
     {
-        private static readonly HashSet<string> assemblyWhitelist = new HashSet<string>() {
-            "NitroxModel.dll",
-            "NitroxClient.dll",
-            "NitroxPatcher.dll",
-            "NitroxServer.dll",
-            // The reloader itself should not be allowed to reload, because it 'replaces' the ReloadableMethodAttribute
-            // (as it's a different version of the assembly, that version field is saved in the other assemblies as well)
-            // and suddenly all methods in the new assemblies do not refer to the ReloadableMethodAttribute found in the
-            // current assembly and thus can't be found anymore (unless reloading the reloader first, then getting the
-            // attribute, and then finding all methods that have that exact type as attribute).
-        };
+        private readonly HashSet<string> assemblyWhitelist;
 
-        private Dictionary<string, ReloaderAssembly> reloadableAssemblies;
+        private readonly Dictionary<string, ReloaderAssembly> reloadableAssemblies;
 
-        public Reloader()
+        public Reloader(params string[] whitelist)
         {
+            assemblyWhitelist = new HashSet<string>(whitelist);
+
             reloadableAssemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly =>
             {

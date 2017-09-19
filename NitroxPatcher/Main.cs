@@ -28,7 +28,7 @@ namespace NitroxPatcher
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) &&
                             p.IsClass &&
                             !p.IsAbstract &&
-                            ((p.Namespace == serverNameSpace && serverPatching) || (!serverPatching && p.Namespace != serverNameSpace))
+                            p.Namespace != serverNameSpace ^ serverPatching
                       )
                 .Select(Activator.CreateInstance)
                 .Cast<NitroxPatch>()
@@ -43,7 +43,17 @@ namespace NitroxPatcher
 
             Console.WriteLine("[NITROX] Initializing reloader...");
 
-            new Reloader();
+            // Whitelist needs to be split, as both game instances load all four libraries
+            // (because this patcher references both server and client, so no matter what instance we are on,
+            //  AppDomain.CurrentDomain.GetAssemblies() returns both).
+            if (serverPatching)
+            {
+                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
+            }
+            else
+            {
+                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
+            }
 
             Console.WriteLine("[NITROX] Reloader initialized");
 
