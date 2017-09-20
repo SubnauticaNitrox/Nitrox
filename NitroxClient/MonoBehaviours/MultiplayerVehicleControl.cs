@@ -55,6 +55,14 @@ namespace NitroxClient.MonoBehaviours
             smoothPitch.Target = pitch;
         }
 
+        internal virtual void Enter()
+        {
+        }
+
+        internal virtual void Exit()
+        {
+        }
+
         internal abstract void SetThrottle(bool isOn);
     }
 

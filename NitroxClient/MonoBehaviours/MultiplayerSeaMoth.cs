@@ -11,6 +11,12 @@
             base.Awake();
         }
 
+        internal override void Exit()
+        {
+            seamoth.bubbles.Stop();
+            base.Exit();
+        }
+
         internal override void SetThrottle(bool isOn)
         {
             if (isOn != lastThrottle)

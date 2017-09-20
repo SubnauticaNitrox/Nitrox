@@ -171,21 +171,30 @@ namespace NitroxClient.GameLogic
                 var existingSeamoth = existing as SeaMoth;
                 var existingExosuit = existing as Exosuit;
 
+                MultiplayerVehicleControl<Vehicle> control = existing.GetComponent<MultiplayerVehicleControl<Vehicle>>();
+                Validate.NotNull(control, $"{existing} does not have MultiplayerVehicleControl!");
+
                 Vehicle = newVehicle;
 
-                rigidBody.isKinematic = (Vehicle != null);
+                bool isEntering = Vehicle != null;
 
-                if (Vehicle != null)
+                rigidBody.isKinematic = isEntering;
+
+                if (isEntering)
                 {
                     Attach(Vehicle.playerPosition.transform);
                     armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
+
+                    control?.Enter();
                 }
                 else
                 {
                     Detach();
                     armsController.SetWorldIKTarget(null, null);
-                    existingSeamoth?.bubbles.Stop();
+
+                    control?.Exit();
                 }
+
                 animationController["in_seamoth"] = Vehicle is SeaMoth;
                 animationController["in_exosuit"] = animationController["using_mechsuit"] = Vehicle is Exosuit;
             }

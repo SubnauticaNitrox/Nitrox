@@ -94,7 +94,7 @@ namespace NitroxClient.MonoBehaviours
                         var exosuit = vehicle as Exosuit;
                         if (exosuit)
                         {
-                            appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (bool)exosuit.ReflectionGet("thrustPower");
+                            appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
                         }
                     }
                 }
@@ -109,10 +109,10 @@ namespace NitroxClient.MonoBehaviours
                 angularVelocity = rigidbody.angularVelocity;
                 techType = TechType.Cyclops;
 
-                var scr = sub.GetComponent<SubControl>();
-                steeringWheelYaw = (float)scr.ReflectionGet("steeringWheelYaw");
-                steeringWheelPitch = (float)scr.ReflectionGet("steeringWheelPitch");
-                appliedThrottle = scr.appliedThrottle && (bool)scr.ReflectionGet("canAccel");
+                var subControl = sub.GetComponent<SubControl>();
+                steeringWheelYaw = (float)subControl.ReflectionGet("steeringWheelYaw");
+                steeringWheelPitch = (float)subControl.ReflectionGet("steeringWheelPitch");
+                appliedThrottle = subControl.appliedThrottle && (bool)subControl.ReflectionGet("canAccel");
             }
             else
             {
