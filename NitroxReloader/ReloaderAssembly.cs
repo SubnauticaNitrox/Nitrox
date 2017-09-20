@@ -10,16 +10,25 @@ namespace NitroxReloader
 {
     internal class ReloaderAssembly
     {
+        private static readonly List<ReloaderAssembly> reloadableAssemblies = new List<ReloaderAssembly>();
+
         internal Assembly assembly;
         internal ReloaderAssembly(Assembly a)
         {
             assembly = a;
+            reloadableAssemblies.Add(this);
         }
 
         internal void Reload(string newAssemblyLocation)
         {
             Console.WriteLine("Reloader: Starting reload for " + assembly.FullName);
             var newAssembly = Assembly.Load(File.ReadAllBytes(newAssemblyLocation));
+
+            if (newAssembly.GlobalAssemblyCache)
+            {
+                Console.WriteLine("*** Reloader WARNING: New assembly was loaded from cache! ***\nYour changes will probably not be loaded in! Make sure the version of the new assembly has changed.");
+            }
+
             var reloadableMethods = GetReloadableMethods(newAssembly);
             Console.WriteLine("Reloader: New assembly {0} has {1} reloadable methods.", newAssembly.FullName, reloadableMethods.Count());
             foreach (var method in reloadableMethods)
@@ -34,7 +43,8 @@ namespace NitroxReloader
                     continue;
                 }
 
-                var paramTypes = method.GetParameters().Select(pi => pi.ParameterType).ToArray();
+                // Get the original type, because that's what was used for the original method that has been overwritten.
+                var paramTypes = method.GetParameters().Select(pi => ResolveOriginalType(pi.ParameterType)).ToArray();
 
                 MethodInfo originalMethod = definingType.GetMethod(method.Name, allBindings, null, paramTypes, null);
 
@@ -59,10 +69,22 @@ namespace NitroxReloader
 
         internal string AssemblyName
         {
-            get { return Path.GetFileName(assembly.Location); }
+            get { return GetAssemblyName(assembly); }
         }
 
         #region Utils
+        private static string GetAssemblyName(Assembly a)
+        {
+            var name = Path.GetFileName(a.Location);
+
+            if (string.IsNullOrEmpty(name))
+            {
+                return a.FullName.Split(',')[0] + ".dll";
+            }
+
+            return name;
+        }
+
         private static IEnumerable<MethodInfo> GetReloadableMethods(Assembly a)
         {
             return a.GetTypes()
@@ -76,7 +98,32 @@ namespace NitroxReloader
 
         private static bool IsMarkedReloadable(MethodBase method)
         {
-            return method.GetAttribute<ReloadableMethodAttribute>() != null;
+            return Attribute.IsDefined(method, typeof(ReloadableMethodAttribute));
+        }
+
+        private static Type ResolveOriginalType(Type newType)
+        {
+            // Reloader objects contain references to the initial assemblies that defined all the methods and types.
+            // Checking assemblies through CurrentDomain means all types in reloaded assemblies are included as well.
+            string assemblyName = GetAssemblyName(newType.Assembly);
+            var definingAssembly = reloadableAssemblies
+                .FirstOrDefault(ra => ra.AssemblyName == assemblyName);
+
+            if (definingAssembly == null)
+            {
+                // This type comes from a non-reloadable assembly, so it's always the same.
+                return newType;
+            }
+
+            var originalType = definingAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName == newType.FullName);
+
+            if (originalType == null)
+            {
+                // It's impossible to patch a method with a type that didn't even exist in the original assemblies!
+                throw new ArgumentException($"Reloader: No original type found for {newType}! If you added it in the new (reloaded) assembly, the application needs to be restarted.");
+            }
+
+            return originalType;
         }
 
         private static IntPtr GetMethodStart(MethodBase method)
