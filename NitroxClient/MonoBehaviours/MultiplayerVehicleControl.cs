@@ -57,10 +57,12 @@ namespace NitroxClient.MonoBehaviours
 
         internal virtual void Enter()
         {
+            enabled = true;
         }
 
         internal virtual void Exit()
         {
+            enabled = false;
         }
 
         internal abstract void SetThrottle(bool isOn);

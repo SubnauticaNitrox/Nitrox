@@ -118,16 +118,22 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
+                var mpCyclops = SubRoot?.GetComponent<MultiplayerCyclops>();
+
                 if (PilotingChair != null)
                 {
                     Attach(PilotingChair.sittingPosition.transform);
                     armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
+
+                    mpCyclops?.Enter();
                 }
                 else
                 {
                     Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
                     armsController.SetWorldIKTarget(null, null);
+
+                    mpCyclops?.Exit();
                 }
                 rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
@@ -137,15 +143,12 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
-                Console.WriteLine("Next subroot: {0}");
                 var existing = newSubRoot ?? SubRoot;
-                if (existing)
+
+                var mpCyclops = existing?.GetComponent<MultiplayerCyclops>();
+                if (mpCyclops != null)
                 {
-                    var mpCyclops = existing.GetComponent<MultiplayerCyclops>();
-                    if (mpCyclops != null)
-                    {
-                        mpCyclops.CurrentPlayer = newSubRoot == null ? null : this;
-                    }
+                    mpCyclops.CurrentPlayer = newSubRoot == null ? null : this;
                 }
 
                 SubRoot = newSubRoot;

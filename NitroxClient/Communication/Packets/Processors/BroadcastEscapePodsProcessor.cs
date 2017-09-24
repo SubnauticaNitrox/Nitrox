@@ -1,12 +1,12 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
-using System;
-using UnityEngine;
-using System.Collections.Generic;
 using NitroxModel.Helper;
-using System.Collections;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Packets;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 AssignPlayerToEscapePod(packet);
             }
-            
+
             Player.main.StartCoroutine(SyncEscapePodGuids(packet));
         }
 
@@ -45,9 +45,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
 
-                    if(rigidbody != null)
+                    if (rigidbody != null)
                     {
-                        Console.WriteLine("Freezing rigidbody");
+                        Console.WriteLine("Freezing escape pod rigidbody");
                         rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                     }
                     else
@@ -72,7 +72,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             foreach (EscapePodModel model in packet.EscapePods)
             {
-                if(!escapePodsByGuid.ContainsKey(model.Guid))
+                if (!escapePodsByGuid.ContainsKey(model.Guid))
                 {
                     escapePodsByGuid[model.Guid] = CreateNewEscapePod(model);
                 }
