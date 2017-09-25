@@ -18,18 +18,18 @@ namespace NitroxServer
             this.visibleChunks = new HashSet<Int3>();
         }
 
-        public void AddChunks(HashSet<Int3> chunks)
+        public void AddChunks(IEnumerable<Int3> chunks)
         {
-            lock(visibleChunks)
+            lock (visibleChunks)
             {
-                foreach(Int3 chunk in chunks)
+                foreach (Int3 chunk in chunks)
                 {
                     visibleChunks.Add(chunk);
                 }
             }
         }
 
-        public void RemoveChunks(HashSet<Int3> chunks)
+        public void RemoveChunks(IEnumerable<Int3> chunks)
         {
             lock (visibleChunks)
             {

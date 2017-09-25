@@ -7,8 +7,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VisibleChunksChanged : AuthenticatedPacket
     {
-        public HashSet<Int3> Added { get {  return convertAddedChunks(); } }
-        public HashSet<Int3> Removed { get { return convertRemovedChunks(); } }
+        public IEnumerable<Int3> Added { get { return convertAddedChunks(); } }
+        public IEnumerable<Int3> Removed { get { return convertRemovedChunks(); } }
 
         private List<SerializableInt3> serializableAdded;
         private List<SerializableInt3> serializableRemoved;
@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
             List<SerializableInt3> addedChunks = new List<SerializableInt3>();
             List<SerializableInt3> removedChunks = new List<SerializableInt3>();
 
-            foreach(Int3 addedChunk in added)
+            foreach (Int3 addedChunk in added)
             {
                 addedChunks.Add(SerializableInt3.from(addedChunk));
             }
@@ -37,7 +37,7 @@ namespace NitroxModel.Packets
         {
             String toString = "[ChunkLoaded Chunks: Added: | ";
 
-            foreach(SerializableInt3 chunk in serializableAdded)
+            foreach (SerializableInt3 chunk in serializableAdded)
             {
                 toString += chunk + " ";
             }
@@ -53,28 +53,20 @@ namespace NitroxModel.Packets
             return toString + "| ]";
         }
 
-        private HashSet<Int3> convertAddedChunks()
+        private IEnumerable<Int3> convertAddedChunks()
         {
-            HashSet<Int3> added = new HashSet<Int3>();
-            
             foreach (SerializableInt3 addedChunk in serializableAdded)
             {
-                added.Add(addedChunk.toInt3());
+                yield return addedChunk.toInt3();
             }
-
-            return added;
         }
 
-        private HashSet<Int3> convertRemovedChunks()
+        private IEnumerable<Int3> convertRemovedChunks()
         {
-            HashSet<Int3> removed = new HashSet<Int3>();
-
             foreach (SerializableInt3 removedChunk in serializableRemoved)
             {
-                removed.Add(removedChunk.toInt3());
+                yield return removedChunk.toInt3();
             }
-
-            return removed;
         }
     }
 }
