@@ -16,13 +16,12 @@ namespace NitroxModel.Packets
 
         public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, String guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
         {
-            this.Guid = guid;
             this.TechType = techType;
             this.AngularVelocity = angularVelocity;
+            this.Guid = guid;
 
             this.SteeringWheelYaw = steeringWheelYaw;
             this.SteeringWheelPitch = steeringWheelPitch;
-
             this.AppliedThrottle = appliedThrottle;
 
             this.PlayerMustBeInRangeToReceive = false;
@@ -30,7 +29,13 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleMovement - TechType: " + TechType + " guid: " + Guid + "]\n\t" + base.ToString();
+            return "[VehicleMovement - TechType: " + TechType +
+                " AngularVelocity: " + AngularVelocity +
+                " Guid: " + Guid +
+                " SteeringWheelYaw: " + SteeringWheelYaw +
+                " SteeringWheelPitch: " + SteeringWheelPitch +
+                " AppliedThrottle: " + AppliedThrottle +
+                "]\n\t" + base.ToString();
         }
     }
 }
