@@ -4,6 +4,7 @@ using NitroxModel.Packets;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -26,18 +27,18 @@ namespace NitroxClient.GameLogic
             this.loadedChunks = loadedChunks;
             this.chunkAwarePacketReceiver = chunkAwarePacketReceiver;
         }
-        
+
         public void ChunksLoaded(Int3.Bounds batchBounds)
         {
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchBounds));
-            markChunksReadyForSync(0.5f);  
+            markChunksReadyForSync(0.5f);
         }
-        
+
         private IEnumerator WaitAndAddChunk(Int3.Bounds batchBounds)
         {
             yield return new WaitForSeconds(0.5f);
 
-            foreach(Int3 batch in batchBounds)
+            foreach (Int3 batch in batchBounds)
             {
                 if (!loadedChunks.Contains(batch))
                 {
@@ -60,7 +61,7 @@ namespace NitroxClient.GameLogic
                     removed.Add(batch);
                     markChunksReadyForSync(0);
                 }
-            }            
+            }
         }
 
         private void markChunksReadyForSync(float delay)
@@ -84,7 +85,7 @@ namespace NitroxClient.GameLogic
 
                 if (elapsed >= 0.1)
                 {
-                    VisibleChunksChanged chunksChanged = new VisibleChunksChanged(packetSender.PlayerId, added, removed);
+                    VisibleChunksChanged chunksChanged = new VisibleChunksChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(chunksChanged);
 
                     added.Clear();
@@ -93,10 +94,10 @@ namespace NitroxClient.GameLogic
                     chunksPendingSync = false;
                     yield break;
                 }
-                
+
                 yield return new WaitForSeconds(0.05f);
             }
         }
-        
+
     }
 }

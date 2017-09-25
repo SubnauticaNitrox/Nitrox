@@ -12,18 +12,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceFurnitureProcessor : ClientPacketProcessor<PlaceFurniture>
     {
-        private static GameObject otherPlayerCamera;
-
         public override void Process(PlaceFurniture placeFurniturePacket)
         {
-            if (otherPlayerCamera == null)
-            {
-                otherPlayerCamera = new GameObject();
-            }
-
-            placeFurniturePacket.CopyCameraTransform(otherPlayerCamera.transform);
-
-            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, otherPlayerCamera.transform, placeFurniturePacket.TechType);
+            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, placeFurniturePacket.Camera, placeFurniturePacket.TechType);
         }
 
         public void ConstructItem(String guid, Optional<String> subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
