@@ -14,7 +14,7 @@ namespace NitroxClient.Communication
         private Dictionary<Int3, Queue<Packet>> deferredPacketsByChunk;
         private PriorityQueue<Packet> receivedPackets;
         private LoadedChunks loadedChunks;
-        
+
         public ChunkAwarePacketReceiver(LoadedChunks loadedChunks)
         {
             this.deferredPacketsByChunk = new Dictionary<Int3, Queue<Packet>>();
@@ -27,12 +27,12 @@ namespace NitroxClient.Communication
             lock (receivedPackets)
             {
                 if (!PacketWasDeferred(packet))
-                {                    
+                {
                     receivedPackets.Enqueue(DEFAULT_PACKET_PRIORITY, packet);
                 }
             }
         }
-    
+
         public Queue<Packet> GetReceivedPackets()
         {
             Queue<Packet> packets = new Queue<Packet>();
@@ -41,13 +41,13 @@ namespace NitroxClient.Communication
             {
                 while (receivedPackets.Count > 0)
                 {
-                    packets.Enqueue(receivedPackets.Dequeue());                    
-                }                
+                    packets.Enqueue(receivedPackets.Dequeue());
+                }
             }
 
             return packets;
         }
-        
+
         private bool PacketWasDeferred(Packet packet)
         {
             if (packet is PlayerActionPacket)
@@ -58,7 +58,7 @@ namespace NitroxClient.Communication
                 {
                     return false;
                 }
-                
+
                 Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
 
                 if (!loadedChunks.Contains(actionChunk))
@@ -82,7 +82,7 @@ namespace NitroxClient.Communication
                 }
 
                 deferredPacketsByChunk[chunk].Enqueue(playerAction);
-            }         
+            }
         }
 
         public void ChunkLoaded(Int3 chunk)

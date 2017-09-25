@@ -1,11 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication;
+using NitroxClient.Map;
+using NitroxClient.Map.Fakes;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using System;
-using NitroxClient.Map;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
 using UnityEngine;
 
 namespace NitroxTest.Client.Communication
@@ -22,17 +23,29 @@ namespace NitroxTest.Client.Communication
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
         private Int3 loadedChunk;
         private Int3 unloadedChunk;
+        private IDisposable shimContext;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            loadedChunks = new LoadedChunks();
+            shimContext = ShimsContext.Create();
+            loadedChunks = new ShimLoadedChunks(new LoadedChunks())
+            {
+                GetChunkVector3 = (wsPos) => Int3.Floor(wsPos) / 16
+            };
+
             packetReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            
+
             loadedChunk = loadedChunks.GetChunk(loadedActionPosition);
             unloadedChunk = loadedChunks.GetChunk(unloadedActionPosition);
 
             loadedChunks.Add(loadedChunk);
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            shimContext.Dispose();
         }
 
         [TestMethod]
@@ -77,7 +90,7 @@ namespace NitroxTest.Client.Communication
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);
-            
+
             Packet packet2 = new TestNonActionPacket(playerId);
             packetReceiver.PacketReceived(packet2);
 
