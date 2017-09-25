@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace NitroxTest.Model.Packets
 {
@@ -17,7 +18,18 @@ namespace NitroxTest.Model.Packets
             if (visitedTypes.Contains(t))
                 return;
 
-            Assert.IsTrue(t.IsSerializable, $"Type {t} is not serializable!");
+            if (!t.IsSerializable && !t.IsInterface)
+            {
+                // We have our own surrogates to (de)serialize types that are not marked [Serializable]
+                // This code is very similar to how serializability is checked in:
+                // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
+
+                ISurrogateSelector selector;
+                if (Packet.Serializer.SurrogateSelector.GetSurrogate(t, Packet.Serializer.Context, out selector) == null)
+                {
+                    Assert.Fail($"Type {t} is not serializable!");
+                }
+            }
 
             visitedTypes.Add(t);
 
@@ -32,9 +44,6 @@ namespace NitroxTest.Model.Packets
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(IsSerializable);
-
-            // TODO:
-            // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
         }
     }
 }
