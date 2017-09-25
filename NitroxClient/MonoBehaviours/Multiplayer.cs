@@ -9,7 +9,6 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,17 +20,17 @@ namespace NitroxClient.MonoBehaviours
 
         public static Multiplayer main;
 
-        private static LoadedChunks loadedChunks = new LoadedChunks();
-        private static ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-        private static TcpClient client = new TcpClient(chunkAwarePacketReceiver);
-        public static PacketSender PacketSender = new PacketSender(client);
-        public static Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
+        private static readonly LoadedChunks loadedChunks = new LoadedChunks();
+        private static readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
+        private static readonly TcpClient client = new TcpClient(chunkAwarePacketReceiver);
+        public static readonly PacketSender PacketSender = new PacketSender(client);
+        public static readonly Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
-        private static PlayerManager remotePlayerManager = new PlayerManager();
-        private static PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
-        private static PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
+        private static readonly PlayerManager remotePlayerManager = new PlayerManager();
+        private static readonly PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
+        private static readonly PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
@@ -69,7 +68,7 @@ namespace NitroxClient.MonoBehaviours
             Reloader.ReloadAssemblies();
             if (client != null && client.IsConnected())
             {
-                ProcessPackets();                
+                ProcessPackets();
             }
         }
 
