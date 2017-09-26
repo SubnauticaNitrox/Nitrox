@@ -75,6 +75,7 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SimulationOwnershipReleaseProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\ConnectionAssets.cs" />

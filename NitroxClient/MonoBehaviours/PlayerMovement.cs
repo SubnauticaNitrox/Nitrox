@@ -75,8 +75,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 else if (previousVehicle.IsPresent())
                 {
-                    // TODO: Need a way to get rid of ownership.
-                    //simulationOwnership.ReleaseOwnership();
+                    simulationOwnership.ReleaseOwnership(previousVehicle.Get().Guid);
                     previousVehicle = Optional<VehicleModel>.Empty();
                 }
                 playerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, opVehicle, Optional<string>.OfNullable(subGuid));

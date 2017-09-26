@@ -5,6 +5,8 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class OwnedGuid
     {
+        // FUTURE: Find a more sophisticated way than `IsEntity` to determine the
+        // handler/listener used for an ownership update.
         public bool IsEntity { get; }
         public string Guid { get; }
         public string PlayerId { get; }

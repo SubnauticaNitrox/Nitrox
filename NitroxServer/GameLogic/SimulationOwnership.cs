@@ -34,6 +34,7 @@ namespace NitroxServer.GameLogic
             {
                 Player owningPlayer;
 
+                // Ownership can only be released by the owner itself:
                 if (guidsByPlayer.TryGetValue(guid, out owningPlayer) && owningPlayer == player)
                 {
                     guidsByPlayer.Remove(guid);

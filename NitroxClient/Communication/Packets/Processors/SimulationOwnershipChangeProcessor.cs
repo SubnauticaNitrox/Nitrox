@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     SimulateEntity(ownedGuid);
                 }
 
-                simulationOwnershipManager.AddOwnedGuid(ownedGuid.Guid, ownedGuid.PlayerId);
+                simulationOwnershipManager.AddOwnedGuid(ownedGuid.Guid, Optional<string>.Of(ownedGuid.PlayerId));
             }
         }
 

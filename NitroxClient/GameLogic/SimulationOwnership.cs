@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
@@ -34,10 +35,33 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddOwnedGuid(string guid, string playerId)
+        public void ReleaseOwnership(string guid)
         {
+            string playerId;
+            if (ownedGuidsToPlayer.TryGetValue(guid, out playerId) && playerId == muliplayerSession.Reservation.PlayerId)
+            {
+                SimulationOwnershipRelease ownershipRelease = new SimulationOwnershipRelease(playerId, guid);
+                packetSender.Send(ownershipRelease);
+
+                // This is not strictly necessary, as the server will respond to all players with a relase command (that is, assuming the player has ownership, or more generally: ownership is in sync).
+                AddOwnedGuid(guid, Optional<string>.Empty());
+                ownedGuidsToPlayer.Remove(guid);
+            }
+        }
+
+        public void AddOwnedGuid(string guid, Optional<string> playerId)
+        {
+            // If a requested guid exists, remove it. Doesn't matter if we received ownership or not.
             requestedGuids.Remove(guid);
-            ownedGuidsToPlayer[guid] = playerId;
+
+            if (playerId.IsPresent())
+            {
+                ownedGuidsToPlayer[guid] = playerId.Get();
+            }
+            else
+            {
+                ownedGuidsToPlayer.Remove(guid);
+            }
         }
     }
 }
