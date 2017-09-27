@@ -61,7 +61,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     VehicleModel vehicle = opVehicle.Get();
 
-                    // While it's highly unlikely (or maybe even impossible), ownership is not given up here if the player goes from one vehicle to the other.
+                    // While it's highly unlikely (or even impossible), ownership is not given up here if the player goes from one vehicle to the other.
                     // Doesn't matter for now, this is just temp testing code.
                     previousVehicle = opVehicle;
 
@@ -113,7 +113,7 @@ namespace NitroxClient.MonoBehaviours
                 steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
 
                 // Vehicles (or the SeaMoth at least) do not have special throttle animations. Instead, these animations are always playing because the player can't even see them (unlike the cyclops which has cameras).
-                // So, we need to hack in and try to figure out when thrust needs to be applied.
+                // So, we need to hack in and try to figure out when thrust is applied, so that these animations and (s)fx can be correctly triggered on the other clients.
                 if (vehicle && AvatarInputHandler.main.IsEnabled())
                 {
                     if (techType == TechType.Seamoth)

@@ -36,6 +36,12 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public bool CanClaimOwnership(string guid)
+        {
+            string owner;
+            return !ownedGuidsToPlayer.TryGetValue(guid, out owner) || owner == muliplayerSession.Reservation.PlayerId;
+        }
+
         public void ReleaseOwnership(string guid)
         {
             string playerId;
