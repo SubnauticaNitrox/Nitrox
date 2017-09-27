@@ -7,7 +7,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(CreatureActionChanged packet)
         {
-            throw new System.NotImplementedException();
+            // throw new System.NotImplementedException();
         }
     }
 }

@@ -118,22 +118,25 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                var mpCyclops = SubRoot?.GetComponent<MultiplayerCyclops>();
+                Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
+
+                var mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
 
                 if (PilotingChair != null)
                 {
                     Attach(PilotingChair.sittingPosition.transform);
                     armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
 
-                    mpCyclops?.Enter();
+                    mpCyclops.CurrentPlayer = this;
+                    mpCyclops.Enter();
                 }
                 else
                 {
-                    Validate.NotNull(SubRoot, "Player left PilotingChair but is not in SubRoot!");
                     SetSubRoot(SubRoot);
                     armsController.SetWorldIKTarget(null, null);
 
-                    mpCyclops?.Exit();
+                    mpCyclops.CurrentPlayer = null;
+                    mpCyclops.Exit();
                 }
                 rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
@@ -143,24 +146,16 @@ namespace NitroxClient.GameLogic
         {
             if (SubRoot != newSubRoot)
             {
-                var existing = newSubRoot ?? SubRoot;
-
-                var mpCyclops = existing?.GetComponent<MultiplayerCyclops>();
-                if (mpCyclops != null)
+                if (newSubRoot != null)
                 {
-                    mpCyclops.CurrentPlayer = newSubRoot == null ? null : this;
-                }
-
-                SubRoot = newSubRoot;
-
-                if (SubRoot != null)
-                {
-                    Attach(SubRoot.transform, true);
+                    Attach(newSubRoot.transform, true);
                 }
                 else
                 {
                     Detach();
                 }
+
+                SubRoot = newSubRoot;
             }
         }
 
@@ -168,38 +163,32 @@ namespace NitroxClient.GameLogic
         {
             if (Vehicle != newVehicle)
             {
-                var existing = newVehicle ?? Vehicle;
-                existing?.mainAnimator.SetBool("player_in", newVehicle != null);
-
-                var existingSeamoth = existing as SeaMoth;
-                var existingExosuit = existing as Exosuit;
-
-                MultiplayerVehicleControl<Vehicle> control = existing.GetComponent<MultiplayerVehicleControl<Vehicle>>();
-                Validate.NotNull(control, $"{existing} does not have MultiplayerVehicleControl!");
-
-                Vehicle = newVehicle;
-
-                bool isEntering = Vehicle != null;
-
-                rigidBody.isKinematic = isEntering;
-
-                if (isEntering)
+                if (Vehicle != null)
                 {
-                    Attach(Vehicle.playerPosition.transform);
-                    armsController.SetWorldIKTarget(Vehicle.leftHandPlug, Vehicle.rightHandPlug);
+                    Vehicle.mainAnimator.SetBool("player_in", false);
 
-                    control?.Enter();
-                }
-                else
-                {
                     Detach();
                     armsController.SetWorldIKTarget(null, null);
 
-                    control?.Exit();
+                    Vehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Exit();
                 }
 
-                animationController["in_seamoth"] = Vehicle is SeaMoth;
-                animationController["in_exosuit"] = animationController["using_mechsuit"] = Vehicle is Exosuit;
+                if (newVehicle != null)
+                {
+                    newVehicle.mainAnimator.SetBool("player_in", true);
+
+                    Attach(newVehicle.playerPosition.transform);
+                    armsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
+
+                    newVehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Enter();
+                }
+
+                rigidBody.isKinematic = newVehicle != null;
+
+                Vehicle = newVehicle;
+
+                animationController["in_seamoth"] = newVehicle is SeaMoth;
+                animationController["in_exosuit"] = animationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
 
