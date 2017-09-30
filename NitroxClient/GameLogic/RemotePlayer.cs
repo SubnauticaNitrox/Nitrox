@@ -55,9 +55,8 @@ namespace NitroxClient.GameLogic
             signalBase.name = "signal" + playerId;
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(playerView.transform, false);
-            SignalLabel label = signalBase.GetComponent<SignalLabel>();
             PingInstance ping = signalBase.GetComponent<PingInstance>();
-            label.description = "Signal_" + playerId;
+            ping.SetLabel("Signal_" + playerId);
             ping.pingType = PingType.Signal;
 
             animationController = playerView.AddComponent<AnimationController>();
