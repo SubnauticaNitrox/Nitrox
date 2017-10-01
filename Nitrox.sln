@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
 EndProject
@@ -20,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{BE983E25-24CC-4FC8-9017-61EEC43DD618}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxReloader", "NitroxReloader\NitroxReloader.csproj", "{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony", "Harmony\Harmony\Harmony.csproj", "{69AEE16A-B6E7-4642-8081-3928B32455DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,8 +57,15 @@ Global
 		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B5BA33E-57AF-4427-A2EC-D6945CD24836}
 	EndGlobalSection
 EndGlobal
