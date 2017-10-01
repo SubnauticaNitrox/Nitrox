@@ -1,5 +1,6 @@
 ﻿using NitroxClient.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Helper.Math;
 using System.Reflection;
 using UnityEngine;
 

@@ -114,7 +114,6 @@ namespace NitroxModel.Helper
 
         private static void ValidateStatic(object o, bool isStatic)
         {
-            //Validate.IsTrue(o != null ^ isStatic, $"If isStatic is false, o must be non-null, or if isStatic is true, o must be null.");
             if (o == null && !isStatic)
             {
                 throw new ArgumentException("Object can't be null when isStatic is false!");

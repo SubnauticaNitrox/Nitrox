@@ -40,7 +40,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 MultiplayerVehicleControl mvc = null;
 
-                if (vehicle != null)
+                if (subRoot != null)
+                {
+                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                }
+                else if (vehicle != null)
                 {
                     var seamoth = vehicle as SeaMoth;
                     var exosuit = vehicle as Exosuit;
@@ -53,11 +57,6 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
                     }
-                }
-
-                if (subRoot != null)
-                {
-                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
                 }
 
                 if (mvc != null)
