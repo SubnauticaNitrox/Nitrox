@@ -1,9 +1,7 @@
-﻿using LitJson;
-using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
-using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -44,19 +42,15 @@ namespace NitroxClient.GameLogic
             armsController = playerView.GetComponent<ArmsController>();
             armsController.smoothSpeed = 0;
 
-            //Sets a new language value
-            Language language = Language.main;
-            JsonData data = (JsonData)language.ReflectionGet("strings"); //UM4SN only: JsonData data = language.strings;
-            data["Signal_" + playerId] = "Player " + playerId;
-
             //Sets up a copy from the xSignal template for the signal
             //todo: settings menu to disable this?
             GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + playerId;
+            signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(playerView.transform, false);
             PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Signal_" + playerId);
+            ping.SetLabel("Player " + playerId);
             ping.pingType = PingType.Signal;
 
             animationController = playerView.AddComponent<AnimationController>();
