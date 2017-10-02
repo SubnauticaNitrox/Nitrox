@@ -30,17 +30,14 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="0Harmony, Version=1.0.9.1, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NitroxPatcher\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,10 +45,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\Chunk.cs" />
@@ -61,11 +54,12 @@
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="DataStructures\SerializableQuaternion.cs" />
-    <Compile Include="DataStructures\SerializableTechType.cs" />
+    <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
-    <Compile Include="DataStructures\SerializableTransform.cs" />
-    <Compile Include="DataStructures\SerializableInt3.cs" />
+    <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\TransformSurrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Helper\Unity\DebugUtils.cs" />
     <Compile Include="Helper\GameLogic\EquipmentHelper.cs" />
@@ -74,6 +68,9 @@
     <Compile Include="Helper\Unity\MathUtil.cs" />
     <Compile Include="Helper\GameLogic\SerializationHelper.cs" />
     <Compile Include="Helper\GameLogic\TransientLocalObjectManager.cs" />
+    <Compile Include="Helper\Unity\Math\SmoothParameter.cs" />
+    <Compile Include="Helper\Unity\Math\SmoothRotation.cs" />
+    <Compile Include="Helper\Unity\Math\SmoothVector.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\CreaturePositionsChanged.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
@@ -108,9 +105,10 @@
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
+    <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
+    <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
-    <Compile Include="DataStructures\SerializableVector3.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\ChatMessage.cs" />

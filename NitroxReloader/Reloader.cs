@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -8,14 +9,17 @@ using System.Linq;
 
 namespace NitroxReloader
 {
-    public class Reloader
+    public static class Reloader
     {
-        private readonly HashSet<string> assemblyWhitelist;
+        private static HashSet<string> assemblyWhitelist;
+        private static Dictionary<string, ReloaderAssembly> reloadableAssemblies;
+        private static Queue<string> changedFiles = new Queue<string>();
 
-        private readonly Dictionary<string, ReloaderAssembly> reloadableAssemblies;
-
-        public Reloader(params string[] whitelist)
+        [Conditional("DEBUG")]
+        public static void Initialize(params string[] whitelist)
         {
+            Console.WriteLine("[NITROX] Initializing reloader...");
+
             assemblyWhitelist = new HashSet<string>(whitelist);
 
             reloadableAssemblies = AppDomain.CurrentDomain.GetAssemblies()
@@ -51,24 +55,49 @@ namespace NitroxReloader
             };
             FileSystemEventHandler handler = (s, e) =>
             {
-                try
+                lock (changedFiles)
                 {
-                    var fn = Path.GetFileName(e.Name);
-                    ReloaderAssembly ra;
-                    if (reloadableAssemblies.TryGetValue(fn, out ra))
+                    if (!changedFiles.Contains(e.FullPath))
                     {
-                        ra.Reload(e.FullPath);
+                        changedFiles.Enqueue(e.FullPath);
                     }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine("An exception occured during reload!\n{0}", exc);
                 }
             };
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine("Reloader: Set up to watch " + ReloaderSettings.Path);
+            Console.WriteLine("[NITROX] Reloader set up to watch " + ReloaderSettings.Path);
+        }
+
+        [Conditional("DEBUG")]
+        public static void ReloadAssemblies()
+        {
+            if (changedFiles.Count == 0)
+            {
+                // Prevent unnecessary locking.
+                return;
+            }
+
+            lock (changedFiles)
+            {
+                while (changedFiles.Count > 0)
+                {
+                    string path = changedFiles.Dequeue();
+                    try
+                    {
+                        var fn = Path.GetFileName(path);
+                        ReloaderAssembly ra;
+                        if (reloadableAssemblies.TryGetValue(fn, out ra))
+                        {
+                            ra.Reload(path);
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine("An exception occured during reload!\n{0}", exc);
+                    }
+                }
+            }
         }
     }
 }

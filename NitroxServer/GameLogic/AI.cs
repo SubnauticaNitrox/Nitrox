@@ -22,7 +22,7 @@ namespace NitroxServer.GameLogic
         public void CreatureActionChanged(Vector3 creaturePosition, CreatureAction newAction)
         {
             CreatureActionChanged actionChanged = new CreatureActionChanged(newAction.GetType().ToString());
-
+            
             Int3 batchId = LargeWorldStreamer.main.GetContainingBatch(creaturePosition);
 
             Chunk chunk = new Chunk(batchId, 1); //TODO: what is the right level?  Cascade down maybe?
@@ -55,9 +55,6 @@ namespace NitroxServer.GameLogic
 
                 movedCreaturesGuids.Clear();
             }
-
-            CreaturePositionsChanged creaturePositionsChanged = new CreaturePositionsChanged(creatureGuidsWithTransform);
-            tcpServer.SendPacketToAllPlayers(creaturePositionsChanged);
         }
     }
 }

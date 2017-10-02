@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures.Util;
 using System;
 using UnityEngine;
 
@@ -8,34 +8,25 @@ namespace NitroxModel.Packets
     public class PlaceFurniture : PlayerActionPacket
     {
         public String Guid { get; }
-        public String SubGuid { get; }
-        public Vector3 ItemPosition { get { return serializableItemPosition.ToVector3(); } }
-        public Quaternion Rotation { get { return serializableRotation.ToQuaternion(); } }
-        public TechType TechType { get { return serializableTechType.TechType; } }
+        public Optional<String> SubGuid { get; }
+        public Vector3 ItemPosition { get; }
+        public Quaternion Rotation { get; }
+        public TechType TechType { get; }
+        public Transform Camera { get; }
 
-        private SerializableVector3 serializableItemPosition;
-        private SerializableQuaternion serializableRotation;
-        private SerializableTransform serializableCamera;
-        private SerializableTechType serializableTechType;
-
-        public PlaceFurniture(String playerId, String guid, String subGuid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType) : base(playerId, itemPosition)
+        public PlaceFurniture(String playerId, String guid, Optional<String> subGuid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.SubGuid = subGuid;
-            this.serializableItemPosition = SerializableVector3.From(itemPosition);
-            this.serializableRotation = SerializableQuaternion.From(rotation);
-            this.serializableCamera = SerializableTransform.From(camera);
-            this.serializableTechType = new SerializableTechType(techType);
-        }
-
-        public void CopyCameraTransform(Transform transform)
-        {
-            serializableCamera.SetTransform(transform);
+            this.ItemPosition = itemPosition;
+            this.Rotation = rotation;
+            this.Camera = camera;
+            this.TechType = techType;
         }
 
         public override string ToString()
         {
-            return "[PlaceFurniture - ItemPosition: " + serializableItemPosition + " Guid: " + Guid + " SubGuid: " + SubGuid + " Rotation: " + serializableRotation + " Camera: " + serializableCamera + " TechType: " + TechType + "]";
+            return "[PlaceFurniture - ItemPosition: " + ItemPosition + " Guid: " + Guid + " SubGuid: " + SubGuid + " Rotation: " + Rotation + " Camera: " + Camera + " TechType: " + TechType + "]";
         }
     }
 }

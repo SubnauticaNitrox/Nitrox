@@ -9,17 +9,15 @@ namespace NitroxModel.Packets
     {
         public String ConstructorGuid { get; protected set; }
         public String ConstructedItemGuid { get; protected set; }
-        public TechType TechType { get { return serializableTechType.TechType; } }
+        public TechType TechType { get; }
         public float Duration { get; protected set; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; private set; }
-
-        private SerializableTechType serializableTechType;
 
         public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
         {
             this.ConstructorGuid = constructorGuid;
             this.ConstructedItemGuid = constructedItemGuid;
-            this.serializableTechType = new SerializableTechType(techType);
+            this.TechType = techType;
             this.Duration = duration;
             this.InteractiveChildIdentifiers = interactiveChildIdentifiers;
         }
@@ -28,7 +26,7 @@ namespace NitroxModel.Packets
         {
             String s = "[ConstructorBeginCrafting - ConstructorGuid: " + ConstructorGuid + " ConstructedItemGuid: " + ConstructedItemGuid + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
 
-            foreach(InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
+            foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {
                 s += childIdentifier + " ";
             }

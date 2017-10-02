@@ -63,6 +63,7 @@
     <Compile Include="Patches\Server\SwimBehaviour_SwimToInterval_Patch.cs" />
     <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
+    <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
     <Compile Include="Patches\Server\Creature_ChooseBestAction_Patch.cs" />
@@ -90,12 +91,12 @@
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
-    <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />

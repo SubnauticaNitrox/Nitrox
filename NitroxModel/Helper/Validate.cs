@@ -56,5 +56,21 @@ namespace NitroxModel.Helper
                 throw new ArgumentException(message);
             }
         }
+
+        public static void IsPresent<T>(Optional<T> opt)
+        {
+            if (opt.IsEmpty())
+            {
+                throw new OptionalEmptyException<T>();
+            }
+        }
+
+        public static void IsPresent<T>(Optional<T> opt, String message)
+        {
+            if (opt.IsEmpty())
+            {
+                throw new OptionalEmptyException<T>(message);
+            }
+        }
     }
 }

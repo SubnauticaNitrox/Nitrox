@@ -12,20 +12,11 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceBasePieceProcessor : ClientPacketProcessor<PlaceBasePiece>
     {
-        private GameObject otherPlayerCamera;
-
         public override void Process(PlaceBasePiece basePiecePacket)
         {
-            if (otherPlayerCamera == null)
-            {
-                otherPlayerCamera = new GameObject();
-            }
-
-            basePiecePacket.CopyCameraTransform(otherPlayerCamera.transform);
-                
-            ConstructItem(basePiecePacket.Guid, basePiecePacket.ItemPosition, basePiecePacket.Rotation, otherPlayerCamera.transform, basePiecePacket.TechType, basePiecePacket.ParentBaseGuid);
+            ConstructItem(basePiecePacket.Guid, basePiecePacket.ItemPosition, basePiecePacket.Rotation, basePiecePacket.Camera, basePiecePacket.TechType, basePiecePacket.ParentBaseGuid);
         }
-        
+
         public void ConstructItem(String guid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType, Optional<String> parentBaseGuid)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
@@ -46,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
              */
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
-            startCrafting.Invoke(constructableBase, new object[] { }); 
-        }        
+            startCrafting.Invoke(constructableBase, new object[] { });
+        }
     }
 }

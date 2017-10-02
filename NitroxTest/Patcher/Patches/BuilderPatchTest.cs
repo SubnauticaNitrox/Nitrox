@@ -15,10 +15,10 @@ namespace NitroxTest.Patcher.Patches
         public void Sanity()
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
-            instructions.Add(new CodeInstruction(BuilderPatch.PLACE_BASE_INJECTION_OPCODE, BuilderPatch.PLACE_BASE_INJECTION_OPERAND));
-            instructions.Add(new CodeInstruction(BuilderPatch.PLACE_FURNITURE_INJECTION_OPCODE, BuilderPatch.PLACE_FURNITURE_INJECTION_OPERAND));
+            instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_BASE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_BASE_INJECTION_OPERAND));
+            instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPERAND));
 
-            IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(null, instructions);
+            IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(null, instructions);
             Assert.AreEqual(121, result.Count());
         }
 
@@ -28,7 +28,7 @@ namespace NitroxTest.Patcher.Patches
             MethodInfo targetMethod = AccessTools.Method(typeof(Builder), "TryPlace");
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
-            IEnumerable<CodeInstruction> result = BuilderPatch.Transpiler(targetMethod, beforeInstructions);
+            IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(targetMethod, beforeInstructions);
             Assert.IsTrue(beforeInstructions.Count < result.Count());
         }
     }

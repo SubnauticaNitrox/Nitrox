@@ -1,0 +1,89 @@
+﻿using Harmony;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using UnityEngine;
+
+namespace NitroxPatcher.Patches
+{
+    public class ToggleLights_SetLightsActive_Patch : NitroxPatch
+    {
+        public static readonly Type TARGET_CLASS = typeof(ToggleLights);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetLightsActive", BindingFlags.Public | BindingFlags.Instance);
+
+        private static readonly HashSet<Type> syncedParents = new HashSet<Type>()
+        {
+            typeof(SeaMoth),
+            typeof(Seaglide),
+            typeof(FlashLight),
+            // LEDLight uses ToggleLights, but does not provide a method to toggle them.
+            typeof(LEDLight)
+        };
+
+        public static bool Prefix(ToggleLights __instance, out bool __state)
+        {
+            __state = __instance.lightsActive;
+            return true;
+        }
+
+        public static void Postfix(ToggleLights __instance, bool __state)
+        {
+            if (__state != __instance.lightsActive)
+            {
+                // Find the right gameobject in the hierarchy to sync on:
+                GameObject gameObject = null;
+                foreach (var t in syncedParents)
+                {
+                    if (__instance.GetComponent(t))
+                    {
+                        gameObject = __instance.gameObject;
+                        break;
+                    }
+                    else if (__instance.GetComponentInParent(t))
+                    {
+                        gameObject = __instance.transform.parent.gameObject;
+                        break;
+                    }
+                }
+                if (!gameObject)
+                {
+                    Console.WriteLine("ToggleLights does not have a gameObject to sync on. Is this a new item?");
+                    DebugUtils.DumpComponent(__instance);
+                }
+
+                var guid = GuidHelper.GetGuid(gameObject);
+
+                Multiplayer.PacketSender.Send(new NitroxModel.Packets.ToggleLights(Multiplayer.PacketSender.PlayerId, guid, __instance.lightsActive));
+            }
+        }
+
+        public override void Patch(HarmonyInstance harmony)
+        {
+            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+        }
+
+        public class LightToggleContainer
+        {
+            public readonly Type ComponentType;
+            public readonly bool InParent;
+
+            public LightToggleContainer(Type componentType, bool inParent)
+            {
+                ComponentType = componentType;
+                InParent = inParent;
+            }
+
+            public Component Get(GameObject go)
+            {
+                if (InParent)
+                {
+                    return go.GetComponentInParent(ComponentType);
+                }
+                return go.GetComponent(ComponentType);
+            }
+        }
+    }
+}

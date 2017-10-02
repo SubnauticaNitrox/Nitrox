@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    public class BuilderPatch : NitroxPatch
+    public class Builder_TryPlace_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(Builder);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryPlace");

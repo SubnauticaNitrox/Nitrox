@@ -66,7 +66,7 @@ namespace NitroxServer.GameLogic
                         removedChunks.Add(chunk);
                     }
                 }
-
+                
                 foreach(Chunk chunk in removedChunks)
                 {
                     chunksByPlayerCount.Remove(chunk);
