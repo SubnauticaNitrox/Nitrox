@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using NitroxModel.Helper;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -8,6 +9,8 @@ namespace NitroxPatcher.Patches
 {
     public abstract class NitroxPatch
     {
+        private readonly List<PatchProcessor> activePatches = new List<PatchProcessor>();
+
         public abstract void Patch(HarmonyInstance harmony);
 
         protected void PatchTranspiler(HarmonyInstance harmony, MethodBase targetMethod, string transpilerMethod = "Transpiler")
@@ -43,7 +46,17 @@ namespace NitroxPatcher.Patches
             HarmonyMethod harmonyPostfixMethod = (postfixMethod != null) ? GetHarmonyMethod(postfixMethod) : null;
             HarmonyMethod harmonyTranspilerMethod = (transpilerMethod != null) ? GetHarmonyMethod(transpilerMethod) : null;
 
-            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod);
+            // TODO: Cache these objects anyway to prevent recreating them every time the patches are applied.
+            activePatches.Add(
+                harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod)
+            );
+        }
+
+        public void Restore()
+        {
+            foreach (var patch in activePatches)
+                patch.Restore();
+            activePatches.Clear();
         }
 
         public HarmonyMethod GetHarmonyMethod(string methodName)

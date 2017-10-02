@@ -1,17 +1,6 @@
-﻿using NitroxModel.Helper;
-using NitroxClient.MonoBehaviours;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UWE;
-using NitroxClient.Communication;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -44,7 +33,7 @@ namespace NitroxClient.MonoBehaviours
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
             panel.savedGamesRef = savedGamesRef;
             panel.loadedMultiplayerRef = LoadedMultiplayer;
-            
+
             Destroy(LoadedMultiplayer.GetComponent<MainMenuLoadPanel>());
             LoadedMultiplayer.transform.SetParent(rightSide.transform, false);
             rightSide.groups.Add(LoadedMultiplayer);
