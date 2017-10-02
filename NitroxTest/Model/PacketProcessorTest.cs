@@ -1,5 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.QualityTools.Testing.Fakes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.ChatUI.Fakes;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -18,6 +20,23 @@ namespace NitroxTest.Model
     [TestClass]
     public class PacketProcessorTest
     {
+        IDisposable shimContext;
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            shimContext = ShimsContext.Create();
+
+            // Disable the constructor which tries to add some Components to a GameObject (and causes ECall exceptions).
+            ShimPlayerChatManager.Constructor = v => { };
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            shimContext.Dispose();
+        }
+
         [TestMethod]
         public void ClientPacketProcessorSanity()
         {

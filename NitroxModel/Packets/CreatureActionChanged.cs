@@ -5,7 +5,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CreatureActionChanged : Packet
     {
-        public String NewAction { get; private set; }
+        public String NewAction { get; }
 
         public CreatureActionChanged(String newAction) : base()
         {

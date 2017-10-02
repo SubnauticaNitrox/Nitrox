@@ -5,14 +5,12 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class Chunk
     {
-        public Int3 BatchId { get { return serializableBatchId.toInt3(); } }
+        public Int3 BatchId { get; }
         public int Level { get; }
-
-        public SerializableInt3 serializableBatchId { get; }
-
+        
         public Chunk(Int3 batchId, int level)
         {
-            serializableBatchId = SerializableInt3.from(batchId);
+            BatchId = batchId;
             Level = level;
         }
 
@@ -30,9 +28,9 @@ namespace NitroxModel.DataStructures
             Chunk chunk = (Chunk)obj;
 
             return (chunk.Level == this.Level &&
-                    chunk.serializableBatchId.X == this.serializableBatchId.X &&
-                    chunk.serializableBatchId.Y == this.serializableBatchId.Y &&
-                    chunk.serializableBatchId.Z == this.serializableBatchId.Z);
+                    chunk.BatchId.x == this.BatchId.x &&
+                    chunk.BatchId.y == this.BatchId.y &&
+                    chunk.BatchId.z == this.BatchId.z);
         }
 
         public override int GetHashCode()
@@ -41,9 +39,9 @@ namespace NitroxModel.DataStructures
             {
                 int hash = 269;
                 hash = hash * 23 + Level;
-                hash = hash * 23 + serializableBatchId.X.GetHashCode();
-                hash = hash * 23 + serializableBatchId.Y.GetHashCode();
-                hash = hash * 23 + serializableBatchId.Z.GetHashCode();
+                hash = hash * 23 + BatchId.x.GetHashCode();
+                hash = hash * 23 + BatchId.y.GetHashCode();
+                hash = hash * 23 + BatchId.z.GetHashCode();
                 return hash;
             }
         }

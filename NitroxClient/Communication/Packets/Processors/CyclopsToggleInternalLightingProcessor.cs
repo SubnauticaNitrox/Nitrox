@@ -9,7 +9,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsToggleInternalLightingProcessor : ClientPacketProcessor<CyclopsToggleInternalLighting>
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public CyclopsToggleInternalLightingProcessor(PacketSender packetSender)
         {

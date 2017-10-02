@@ -11,14 +11,19 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(CreaturePositionsChanged creaturePositionsChanged)
         {
-            foreach(String guid in creaturePositionsChanged.Guids)
+            foreach(var guidWithTransform in creaturePositionsChanged.GuidsWithTransform)
             {
+                String guid = guidWithTransform.Key;
+                Transform transform = guidWithTransform.Value;
+
                 Optional<GameObject> creature = GuidHelper.GetObjectFrom(guid);
 
                 if(creature.IsPresent())
                 {
                     Console.WriteLine("Creature " + guid + " Moved!");
-                    creaturePositionsChanged.SetTransform(creature.Get().transform, guid);
+                    creature.Get().transform.position = transform.position;
+                    creature.Get().transform.rotation = transform.rotation;
+                    creature.Get().transform.localScale = transform.localScale;
                 }
             }
         }

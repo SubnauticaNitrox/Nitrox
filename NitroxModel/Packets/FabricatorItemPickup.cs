@@ -1,5 +1,4 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 
 namespace NitroxModel.Packets
 {
@@ -7,14 +6,12 @@ namespace NitroxModel.Packets
     public class FabricatorItemPickup : AuthenticatedPacket
     {
         public String FabricatorGuid { get; }
-        public TechType TechType { get { return serializableTechType.TechType; } }
-
-        private SerializableTechType serializableTechType;
+        public TechType TechType { get; }
 
         public FabricatorItemPickup(String playerId, String fabricatorGuid, TechType techType) : base(playerId)
         {
             this.FabricatorGuid = fabricatorGuid;
-            this.serializableTechType = new SerializableTechType(techType);
+            this.TechType = techType;
         }
 
         public override string ToString()

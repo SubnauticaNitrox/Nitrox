@@ -1,13 +1,14 @@
 ﻿using Harmony;
 using NitroxPatcher.Patches;
+using NitroxReloader;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using NitroxReloader;
 
 namespace NitroxPatcher
 {
-    class Main
+    public static class Main
     {
         public static void Execute()
         {
@@ -41,23 +42,25 @@ namespace NitroxPatcher
 
             Console.WriteLine("[NITROX] Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
-            Console.WriteLine("[NITROX] Initializing reloader...");
+            InitializeReloader(serverPatching);
 
+            DevConsole.disableConsole = false;
+        }
+
+        [Conditional("DEBUG")]
+        private static void InitializeReloader(bool serverPatching)
+        {
             // Whitelist needs to be split, as both game instances load all four libraries
             // (because this patcher references both server and client, so no matter what instance we are on,
             //  AppDomain.CurrentDomain.GetAssemblies() returns both).
             if (serverPatching)
             {
-                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
+                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
             }
             else
             {
-                new Reloader("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
+                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
             }
-
-            Console.WriteLine("[NITROX] Reloader initialized");
-
-            DevConsole.disableConsole = false;
         }
     }
 }

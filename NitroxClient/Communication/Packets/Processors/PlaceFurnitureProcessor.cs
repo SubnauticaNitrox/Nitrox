@@ -12,21 +12,12 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceFurnitureProcessor : ClientPacketProcessor<PlaceFurniture>
     {
-        private static GameObject otherPlayerCamera;
-
         public override void Process(PlaceFurniture placeFurniturePacket)
         {
-            if(otherPlayerCamera == null)
-            {
-                otherPlayerCamera = new GameObject();
-            }
-
-            placeFurniturePacket.CopyCameraTransform(otherPlayerCamera.transform);
-                
-            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, otherPlayerCamera.transform, placeFurniturePacket.TechType);
+            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, placeFurniturePacket.Camera, placeFurniturePacket.TechType);
         }
-        
-        public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
+
+        public void ConstructItem(String guid, Optional<String> subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
@@ -36,21 +27,22 @@ namespace NitroxClient.Communication.Packets.Processors
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
+            SubRoot subRoot = null;
 
-            if (opSub.IsEmpty())
+            if (subGuid.IsPresent())
             {
-                Console.WriteLine("Could not locate sub with guid" + subGuid);
-                return;
+                Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid.Get());
+                if (opSub.IsPresent())
+                {
+                    subRoot = opSub.Get().GetComponent<SubRoot>();
+                }
             }
-
-            SubRoot subRoot = opSub.Get().GetComponent<SubRoot>();
 
             GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
             GuidHelper.SetNewGuid(gameObject, guid);
 
             Constructable constructable = gameObject.GetComponentInParent<Constructable>();
-            Validate.NotNull(constructable);          
+            Validate.NotNull(constructable);
 
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.
@@ -58,6 +50,6 @@ namespace NitroxClient.Communication.Packets.Processors
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
             startCrafting.Invoke(constructable, new object[] { });
-        }        
+        }
     }
 }

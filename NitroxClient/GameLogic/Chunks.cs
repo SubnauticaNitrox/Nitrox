@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic
             this.loadedChunks = loadedChunks;
             this.chunkAwarePacketReceiver = chunkAwarePacketReceiver;
         }
-        
+
         public void ChunkLoaded(Int3 batchId, int level)
         {
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchId, level));
@@ -81,7 +81,7 @@ namespace NitroxClient.GameLogic
 
                 if (elapsed >= 0.1)
                 {
-                    VisibleChunksChanged chunksChanged = new VisibleChunksChanged(packetSender.PlayerId, added, removed);
+                    VisibleChunksChanged chunksChanged = new VisibleChunksChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(chunksChanged);
                     Console.WriteLine(chunksChanged);
 
@@ -91,10 +91,10 @@ namespace NitroxClient.GameLogic
                     chunksPendingSync = false;
                     yield break;
                 }
-                
+
                 yield return new WaitForSeconds(0.05f);
             }
         }
-        
+
     }
 }

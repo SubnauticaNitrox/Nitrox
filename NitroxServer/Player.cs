@@ -19,9 +19,9 @@ namespace NitroxServer
             this.visibleChunks = new HashSet<Chunk>();
         }
 
-        public void AddChunks(List<Chunk> chunks)
+        public void AddChunks(IEnumerable<Chunk> chunks)
         {
-            lock(visibleChunks)
+            lock (visibleChunks)
             {
                 foreach(Chunk chunk in chunks)
                 {
@@ -29,8 +29,8 @@ namespace NitroxServer
                 }
             }
         }
-
-        public void RemoveChunks(List<Chunk> chunks)
+        
+        public void RemoveChunks(IEnumerable<Chunk> chunks)
         {
             lock (visibleChunks)
             {

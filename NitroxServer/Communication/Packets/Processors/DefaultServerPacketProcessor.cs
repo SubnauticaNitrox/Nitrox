@@ -15,7 +15,7 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(VehicleMovement),
             typeof(ItemPosition)
         };
-        
+
         public DefaultServerPacketProcessor(TcpServer tcpServer)
         {
             this.tcpServer = tcpServer;
