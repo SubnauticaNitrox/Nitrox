@@ -22,7 +22,6 @@ namespace NitroxTest.Client.Communication
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
         private Chunk loadedChunk;
         private Chunk unloadedChunk;
-        private IDisposable shimContext;
 
         [TestInitialize]
         public void TestInitialize()
@@ -36,12 +35,6 @@ namespace NitroxTest.Client.Communication
             unloadedChunk = new Chunk(unloadedBatchId, 3);
 
             loadedChunks.Add(loadedChunk);
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            shimContext.Dispose();
         }
 
         [TestMethod]

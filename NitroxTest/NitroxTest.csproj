@@ -37,12 +37,6 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="Microsoft.QualityTools.Testing.Fakes, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="NitroxClient.Fakes">
-      <HintPath>FakesAssemblies\NitroxClient.Fakes.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="0Harmony">
       <HintPath>..\NitroxPatcher\0Harmony.dll</HintPath>
@@ -111,9 +105,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Fakes Include="Fakes\NitroxClient.fakes" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

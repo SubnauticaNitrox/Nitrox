@@ -33,7 +33,7 @@ namespace NitroxModel.Packets.Processors.Abstract
                             {
                                 return v;
                             }
-                            throw new ArgumentException($"Argument value not defined for type {pi.ParameterType}!");
+                            throw new ArgumentException($"Argument value not defined for type {pi.ParameterType}! Used in {proc}");
                         }).ToArray();
 
                     return (PacketProcessor)ctor.Invoke(args);
