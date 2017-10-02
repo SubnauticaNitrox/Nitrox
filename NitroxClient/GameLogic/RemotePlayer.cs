@@ -86,17 +86,8 @@ namespace NitroxClient.GameLogic
             SubRoot subRoot = null;
             if (opSubGuid.IsPresent())
             {
-                string subGuid = opSubGuid.Get();
-                Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
-
-                if (opSub.IsPresent())
-                {
-                    subRoot = opSub.Get().GetComponent<SubRoot>();
-                }
-                else
-                {
-                    Console.WriteLine("Could not find sub for guid: " + subGuid);
-                }
+                var sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
+                subRoot = sub.GetComponent<SubRoot>();
             }
 
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).

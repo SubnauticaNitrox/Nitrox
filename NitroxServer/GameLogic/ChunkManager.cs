@@ -39,7 +39,7 @@ namespace NitroxServer.GameLogic
 
             lock (chunksByPlayerCount)
             {
-                foreach(Chunk chunk in newChunks)
+                foreach (Chunk chunk in newChunks)
                 {
                     if (chunksByPlayerCount.ContainsKey(chunk) && chunksByPlayerCount[chunk] > 0)
                     {
@@ -66,8 +66,8 @@ namespace NitroxServer.GameLogic
                         removedChunks.Add(chunk);
                     }
                 }
-                
-                foreach(Chunk chunk in removedChunks)
+
+                foreach (Chunk chunk in removedChunks)
                 {
                     chunksByPlayerCount.Remove(chunk);
                 }

@@ -88,19 +88,20 @@ namespace NitroxClient.Communication
 
         public void ChunkLoaded(Chunk chunk)
         {
-            if(chunk.Level > DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS)
+            if (chunk.Level > DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS)
             {
                 return;
             }
 
             lock (deferredPacketsByBatchId)
             {
-                if (deferredPacketsByBatchId.ContainsKey(chunk.BatchId))
+                Queue<Packet> deferredPacketBatch;
+                if (deferredPacketsByBatchId.TryGetValue(chunk.BatchId, out deferredPacketBatch))
                 {
-                    while (deferredPacketsByBatchId[chunk.BatchId].Count > 0)
+                    while (deferredPacketBatch.Count > 0)
                     {
                         Console.WriteLine("Found deferred packet... adding it back with high priority.");
-                        Packet packet = deferredPacketsByBatchId[chunk.BatchId].Dequeue();
+                        Packet packet = deferredPacketBatch.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
                 }

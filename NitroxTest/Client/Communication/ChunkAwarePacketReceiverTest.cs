@@ -34,7 +34,7 @@ namespace NitroxTest.Client.Communication
 
             loadedChunk = new Chunk(loadedBatchId, 3);
             unloadedChunk = new Chunk(unloadedBatchId, 3);
-            
+
             loadedChunks.Add(loadedChunk);
         }
 

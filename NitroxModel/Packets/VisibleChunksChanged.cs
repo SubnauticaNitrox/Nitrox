@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures;
 using System;
+using System.Text;
 
 namespace NitroxModel.Packets
 {
@@ -17,21 +18,24 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            String toString = "[ChunkLoaded Chunks: Added: | ";
-            
-            foreach(Chunk chunk in Added)
+            StringBuilder toString = new StringBuilder("[ChunkLoaded Chunks: Added: | ");
+
+            foreach (Chunk chunk in Added)
             {
-                toString += chunk + " ";
+                toString.Append(chunk);
+                toString.Append(' ');
             }
 
-            toString += " | Removed: |";
-                        
+            toString.Append("| Removed: | ");
+
             foreach (Chunk chunk in Removed)
             {
-                toString += chunk + " ";
+                toString.Append(chunk);
+                toString.Append(' ');
             }
 
-            return toString + "| ]";
+            toString.Append("| ]");
+            return toString.ToString();
         }
     }
 }
