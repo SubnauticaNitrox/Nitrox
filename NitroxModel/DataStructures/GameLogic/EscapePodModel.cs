@@ -20,7 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public EscapePodModel(String guid, Vector3 location, String fabricatorGuid, String medicalFabricatorGuid, String storageContainerGuid, String radioGuid) : base()
         {
             this.Guid = guid;
-            this.serializableLocation = SerializableVector3.from(location);
+            this.serializableLocation = SerializableVector3.From(location);
             this.FabricatorGuid = fabricatorGuid;
             this.MedicalFabricatorGuid = medicalFabricatorGuid;
             this.StorageContainerGuid = storageContainerGuid;

@@ -20,9 +20,9 @@ namespace NitroxModel.DataStructures.ServerModel
         {
             this.serializableTechType = new SerializableTechType(techType);
             this.Guid = guid;
-            this.serializablePosition = SerializableVector3.from(position);
-            this.serializableRotation = SerializableQuaternion.from(rotation);
-            this.serializableVelocity = SerializableVector3.from(velocity);
+            this.serializablePosition = SerializableVector3.From(position);
+            this.serializableRotation = SerializableQuaternion.From(rotation);
+            this.serializableVelocity = SerializableVector3.From(velocity);
         }
     }
 }

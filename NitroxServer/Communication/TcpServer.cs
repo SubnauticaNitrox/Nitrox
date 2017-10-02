@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.Communication
 {
@@ -157,7 +158,7 @@ namespace NitroxServer.Communication
             }
         }
 
-        public void SendPacketToPlayersInChunk(Packet packet, Int3 chunk)
+        public void SendPacketToPlayersInChunk(Packet packet, Chunk chunk)
         {
             lock (connectionsByPlayer)
             {

@@ -17,8 +17,8 @@ namespace NitroxModel.Packets
         public ItemPosition(String playerId, String guid, Vector3 position, Quaternion rotation) : base(playerId, position)
         {
             this.Guid = guid;
-            this.serializablePosition = SerializableVector3.from(position);
-            this.serializableRotation = SerializableQuaternion.from(rotation);
+            this.serializablePosition = SerializableVector3.From(position);
+            this.serializableRotation = SerializableQuaternion.From(rotation);
             this.PlayerMustBeInRangeToReceive = false;
         }
 

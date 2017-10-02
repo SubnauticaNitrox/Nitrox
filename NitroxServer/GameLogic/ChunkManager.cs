@@ -1,13 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using NitroxModel.DataStructures;
+using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
 {
     public class ChunkManager
     {
-        private Dictionary<Int3, int> chunksByPlayerCount = new Dictionary<Int3, int>();
-        private HashSet<Int3> newChunks = new HashSet<Int3>();
+        private Dictionary<Chunk, int> chunksByPlayerCount = new Dictionary<Chunk, int>();
+        private HashSet<Chunk> newChunks = new HashSet<Chunk>();
 
-        public void PlayerEnteredChunk(Int3 chunk)
+        public void PlayerEnteredChunk(Chunk chunk)
         {
             lock (chunksByPlayerCount)
             {
@@ -21,7 +22,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void PlayerLeftChunk(Int3 chunk)
+        public void PlayerLeftChunk(Chunk chunk)
         {
             lock (chunksByPlayerCount)
             {
@@ -32,47 +33,47 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public HashSet<Int3> GetChunksToLoad()
+        public HashSet<Chunk> GetAddedChunks()
         {
-            HashSet<Int3> chunksToLoad = new HashSet<Int3>();
+            HashSet<Chunk> addedChunks = new HashSet<Chunk>();
 
             lock (chunksByPlayerCount)
             {
-                foreach(Int3 chunk in newChunks)
+                foreach(Chunk chunk in newChunks)
                 {
                     if (chunksByPlayerCount.ContainsKey(chunk) && chunksByPlayerCount[chunk] > 0)
                     {
-                        chunksToLoad.Add(chunk);
+                        addedChunks.Add(chunk);
                     }
                 }
 
                 newChunks.Clear();
             }
 
-            return chunksToLoad;
+            return addedChunks;
         }
 
-        public HashSet<Int3> GetChunksToUnload()
+        public HashSet<Chunk> GetRemovedChunks()
         {
-            HashSet<Int3> chunksToUnload = new HashSet<Int3>();
+            HashSet<Chunk> removedChunks = new HashSet<Chunk>();
 
             lock (chunksByPlayerCount)
             {
-                foreach (Int3 chunk in chunksByPlayerCount.Keys)
+                foreach (Chunk chunk in chunksByPlayerCount.Keys)
                 {
                     if (chunksByPlayerCount[chunk] <= 0)
                     {
-                        chunksToUnload.Add(chunk);
+                        removedChunks.Add(chunk);
                     }
                 }
 
-                foreach(Int3 chunk in chunksToUnload)
+                foreach(Chunk chunk in removedChunks)
                 {
                     chunksByPlayerCount.Remove(chunk);
                 }
             }
 
-            return chunksToUnload;
+            return removedChunks;
         }
     }
 }

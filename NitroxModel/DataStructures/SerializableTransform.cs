@@ -22,18 +22,18 @@ namespace NitroxModel.DataStructures
             return "[Transform Position: " + Position + " Scale: " + Scale + " Rotation: " + Rotation + "]";
         }
 
-        public void setTransform(Transform transform)
+        public void SetTransform(Transform transform)
         {
             transform.position = Position.ToVector3();
             transform.localScale = Scale.ToVector3();
             transform.rotation = Rotation.ToQuaternion();
         }
 
-        public static SerializableTransform from(Transform transform)
+        public static SerializableTransform From(Transform transform)
         {
-            return new SerializableTransform(SerializableVector3.from(transform.position),
-                                             SerializableVector3.from(transform.localScale),
-                                             SerializableQuaternion.from(transform.rotation));
+            return new SerializableTransform(SerializableVector3.From(transform.position),
+                                             SerializableVector3.From(transform.localScale),
+                                             SerializableQuaternion.From(transform.rotation));
         }
 
     }

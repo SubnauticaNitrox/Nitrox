@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
         {
             this.Guid = guid;
             this.WaterParkGuid = waterParkGuid;
-            this.serializableItemPosition = SerializableVector3.from(itemPosition);
+            this.serializableItemPosition = SerializableVector3.From(itemPosition);
             this.serializableTechType = new SerializableTechType(techType);
             this.Bytes = bytes;
         }

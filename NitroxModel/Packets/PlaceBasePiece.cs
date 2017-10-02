@@ -22,16 +22,16 @@ namespace NitroxModel.Packets
         public PlaceBasePiece(String playerId, String guid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType, Optional<String> parentBaseGuid) : base(playerId, itemPosition)
         {
             this.Guid = guid;
-            this.serializableItemPosition = SerializableVector3.from(itemPosition);
-            this.serializableRotation = SerializableQuaternion.from(rotation);
+            this.serializableItemPosition = SerializableVector3.From(itemPosition);
+            this.serializableRotation = SerializableQuaternion.From(rotation);
             this.serializableTechType = new SerializableTechType(techType);
-            this.serializableCamera = SerializableTransform.from(camera);
+            this.serializableCamera = SerializableTransform.From(camera);
             this.ParentBaseGuid = parentBaseGuid;
         }
 
         public void CopyCameraTransform(Transform transform)
         {
-            serializableCamera.setTransform(transform);
+            serializableCamera.SetTransform(transform);
         }
 
         public override string ToString()

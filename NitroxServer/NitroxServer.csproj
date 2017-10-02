@@ -69,6 +69,7 @@
     <Compile Include="GameLogic\ChunkManager.cs" />
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\Monobehaviours\CreaturePositionBroadcaster.cs" />
     <Compile Include="GameLogic\Monobehaviours\ChunkLoader.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Threading\IGameAction.cs" />

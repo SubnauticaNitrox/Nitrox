@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
 
         public PlayerActionPacket(String playerId, Vector3 eventPosition) : base(playerId)
         {
-            this.SerializedActionPosition = SerializableVector3.from(eventPosition);
+            this.SerializedActionPosition = SerializableVector3.From(eventPosition);
             this.PlayerMustBeInRangeToReceive = true;
         }
 

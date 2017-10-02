@@ -22,15 +22,15 @@ namespace NitroxModel.Packets
         {
             this.Guid = guid;
             this.SubGuid = subGuid;
-            this.serializableItemPosition = SerializableVector3.from(itemPosition);
-            this.serializableRotation = SerializableQuaternion.from(rotation);
-            this.serializableCamera = SerializableTransform.from(camera);
+            this.serializableItemPosition = SerializableVector3.From(itemPosition);
+            this.serializableRotation = SerializableQuaternion.From(rotation);
+            this.serializableCamera = SerializableTransform.From(camera);
             this.serializableTechType = new SerializableTechType(techType);
         }
 
         public void CopyCameraTransform(Transform transform)
         {
-            serializableCamera.setTransform(transform);
+            serializableCamera.SetTransform(transform);
         }
 
         public override string ToString()

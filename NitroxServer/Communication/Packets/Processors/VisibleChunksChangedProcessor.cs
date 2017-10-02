@@ -1,7 +1,9 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Threading;
+using System;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -23,12 +25,12 @@ namespace NitroxServer.Communication.Packets.Processors
             player.AddChunks(packet.Added);
             player.RemoveChunks(packet.Removed);
             
-            foreach(Int3 chunk in packet.Added)
+            foreach(Chunk chunk in packet.Added)
             {
                 chunkManager.PlayerEnteredChunk(chunk);
             }
             
-            foreach (Int3 chunk in packet.Removed)
+            foreach (Chunk chunk in packet.Removed)
             {
                 chunkManager.PlayerLeftChunk(chunk);
             }

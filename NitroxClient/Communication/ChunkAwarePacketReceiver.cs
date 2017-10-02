@@ -11,13 +11,13 @@ namespace NitroxClient.Communication
         private static readonly int EXPIDITED_PACKET_PRIORITY = 999;
         private static readonly int DEFAULT_PACKET_PRIORITY = 1;
 
-        private Dictionary<Int3, Queue<Packet>> deferredPacketsByChunk;
+        private Dictionary<Chunk, Queue<Packet>> deferredPacketsByChunk;
         private PriorityQueue<Packet> receivedPackets;
         private LoadedChunks loadedChunks;
         
         public ChunkAwarePacketReceiver(LoadedChunks loadedChunks)
         {
-            this.deferredPacketsByChunk = new Dictionary<Int3, Queue<Packet>>();
+            this.deferredPacketsByChunk = new Dictionary<Chunk, Queue<Packet>>();
             this.receivedPackets = new PriorityQueue<Packet>();
             this.loadedChunks = loadedChunks;
         }
@@ -59,12 +59,15 @@ namespace NitroxClient.Communication
                     return false;
                 }
                 
-                Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
+                Int3 actionBatchId = LargeWorldStreamer.main.GetContainingBatch(playerAction.ActionPosition);
+                int levelOfDetailToShowAction = 1; //TODO: what is the correct value? cascaing down?
 
-                if (!loadedChunks.Contains(actionChunk))
+                Chunk chunk = new Chunk(actionBatchId, levelOfDetailToShowAction);
+
+                if (!loadedChunks.Contains(chunk))
                 {
-                    Console.WriteLine("Action was deferred, chunk not loaded: " + actionChunk);
-                    AddPacketToDeferredMap(playerAction, actionChunk);
+                    Console.WriteLine("Action was deferred, chunk not loaded: " + chunk);
+                    AddPacketToDeferredMap(playerAction, chunk);
                     return true;
                 }
             }
@@ -72,7 +75,7 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Int3 chunk)
+        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Chunk chunk)
         {
             lock (deferredPacketsByChunk)
             {
@@ -85,7 +88,7 @@ namespace NitroxClient.Communication
             }         
         }
 
-        public void ChunkLoaded(Int3 chunk)
+        public void ChunkLoaded(Chunk chunk)
         {
             lock (deferredPacketsByChunk)
             {

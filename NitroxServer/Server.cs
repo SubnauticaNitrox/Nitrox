@@ -36,6 +36,8 @@ namespace NitroxServer
             tcpServer.Start(packetHandler);
             ChunkLoader chunkLoader = this.gameObject.AddComponent<ChunkLoader>();
             chunkLoader.chunkManager = chunkManager;
+
+            this.gameObject.AddComponent<CreaturePositionBroadcaster>();
         }
 
         public void Update()
@@ -48,5 +50,7 @@ namespace NitroxServer
                 action = gameActionManager.next();
             }
         }
+        
     }
+    
 }

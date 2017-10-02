@@ -1,15 +1,18 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Packets;
 using NitroxServer.Communication;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
 {
     public class AI
     {
-        private int CHUNK_SIZE = 16; //find common place
-
         private TcpServer tcpServer;
+        private HashSet<String> movedCreaturesGuids = new HashSet<String>();
 
         public AI(TcpServer tcpServer)
         {
@@ -20,11 +23,41 @@ namespace NitroxServer.GameLogic
         {
             CreatureActionChanged actionChanged = new CreatureActionChanged(newAction.GetType().ToString());
 
-            Int3 int3 = new Int3((int)Math.Floor(creaturePosition.x / CHUNK_SIZE) * CHUNK_SIZE,
-                                 (int)Math.Floor(creaturePosition.y / CHUNK_SIZE) * CHUNK_SIZE,
-                                 (int)Math.Floor(creaturePosition.z / CHUNK_SIZE) * CHUNK_SIZE);
+            Int3 batchId = LargeWorldStreamer.main.GetContainingBatch(creaturePosition);
 
-            tcpServer.SendPacketToPlayersInChunk(actionChanged, int3);
+            Chunk chunk = new Chunk(batchId, 1); //TODO: what is the right level?  Cascade down maybe?
+            tcpServer.SendPacketToPlayersInChunk(actionChanged, chunk);
+        }
+
+        public void CreatureMoved(String creatureGuid)
+        {
+            lock(movedCreaturesGuids)
+            {
+                movedCreaturesGuids.Add(creatureGuid);
+            }
+        }
+
+        public void BroadcastMovedCreatures()
+        {
+            Dictionary<String, Transform> creatureGuidsWithTransform = new Dictionary<String, Transform>();
+
+            lock(movedCreaturesGuids)
+            {
+                foreach(String creatureGuid in movedCreaturesGuids)
+                {
+                    Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(creatureGuid);
+                    
+                    if(opGameObject.IsPresent())
+                    {
+                        creatureGuidsWithTransform.Add(creatureGuid, opGameObject.Get().transform);
+                    }
+                }
+
+                movedCreaturesGuids.Clear();
+            }
+
+            CreaturePositionsChanged creaturePositionsChanged = new CreaturePositionsChanged(creatureGuidsWithTransform);
+            tcpServer.SendPacketToAllPlayers(creaturePositionsChanged);
         }
     }
 }

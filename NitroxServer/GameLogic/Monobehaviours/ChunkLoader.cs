@@ -1,4 +1,4 @@
-﻿using NitroxModel.Helper;
+﻿using NitroxModel.DataStructures;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,66 +10,65 @@ namespace NitroxServer.GameLogic.Monobehaviours
         public static bool ALLOW_MAP_CLIPPING = false;
 
         public ChunkManager chunkManager { get; set; }
-
+        
+        private Dictionary<Int3, int> levelLoadedForBatch = new Dictionary<Int3, int>();
+        
         private void Update()
         {
             ALLOW_MAP_CLIPPING = true;
-            LoadChunks(chunkManager.GetChunksToLoad());
-            UnloadChunks(chunkManager.GetChunksToUnload());
+            LoadChunks(chunkManager.GetAddedChunks());
+            UnloadChunks(chunkManager.GetRemovedChunks());
             ALLOW_MAP_CLIPPING = false;
         }
 
-        private void LoadChunks(HashSet<Int3> chunks)
+        private void LoadChunks(HashSet<Chunk> addedChunks)
         {
-            foreach(Int3 chunk in chunks)
+            if (LargeWorldStreamer.main.clips != null)
             {
-                Int3 blocksPerBatch = LargeWorldStreamer.main.blocksPerBatch;
+                LargeWorldStreamer.main.clips.debugDisableVisibilityPhase = true;
+            }
 
-                Int3 startBlocks = chunk * blocksPerBatch;
-                Int3 endBlocks = chunk * blocksPerBatch;
+            foreach (Chunk chunk in addedChunks)
+            {
+                bool chunkLoaded = levelLoadedForBatch.ContainsKey(chunk.BatchId);
+                int currentLoadedLevelForChunk = 3;
 
-                Int3.Bounds int3b = new Int3.Bounds(startBlocks, endBlocks);
-
-                Dictionary<Int3, BatchCells> batch2cells = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.ReflectionGet("batch2cells");
-
-                if (!batch2cells.ContainsKey(chunk))
+                if (chunkLoaded)
                 {
-                    LargeWorldStreamer.main.ReflectionCall("TryUnloadBatch", false, false, chunk);
-                    LargeWorldStreamer.main.LoadBatch(chunk);
-
-                    //BatchCells batchCells = new BatchCells(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batch);
-                    //batch2cells.Add(batch, batchCells);
-
-                    LargeWorldStreamer.main.cellManager.ShowEntities(int3b, 0);
-                    LargeWorldStreamer.main.cellManager.ShowEntities(int3b, 1);
-                    LargeWorldStreamer.main.cellManager.ShowEntities(int3b, 2);
-                    LargeWorldStreamer.main.cellManager.ShowEntities(int3b, 3);
+                    currentLoadedLevelForChunk = levelLoadedForBatch[chunk.BatchId];
+                }
+                else
+                {
+                    LargeWorldStreamer.main.LoadBatch(chunk.BatchId);
+                    Console.WriteLine("loaded chunk: " + chunk);
                 }
 
-                Console.WriteLine("Loading chunk: " + chunk);
+                Int3.Bounds int3b = LargeWorldStreamer.main.GetBatchBlockBounds(chunk.BatchId);
+            
+                for (int i = currentLoadedLevelForChunk; i >= chunk.Level; i--)
+                {
+                    LargeWorldStreamer.main.cellManager.ShowEntities(int3b, i);
+                    levelLoadedForBatch[chunk.BatchId] = i;
+                }
             }
         }
-
-        private void UnloadChunks(HashSet<Int3> chunks)
+        
+        private void UnloadChunks(HashSet<Chunk> chunks)
         {
-            foreach (Int3 chunk in chunks)
+            foreach (Chunk chunk in chunks)
             {
-                Int3 blocksPerBatch = LargeWorldStreamer.main.blocksPerBatch;
+                Int3.Bounds int3b = LargeWorldStreamer.main.GetBatchBlockBounds(chunk.BatchId);
+                
+                LargeWorldStreamer.main.cellManager.HideEntities(int3b, chunk.Level);
 
-                Int3 end = chunk;
+                levelLoadedForBatch[chunk.BatchId] = (chunk.Level - 1);
 
-                Int3 startBlocks = chunk * blocksPerBatch;
-                Int3 endBlocks = end * blocksPerBatch;
-
-                Int3.Bounds int3b = new Int3.Bounds(startBlocks, endBlocks);
-
-                LargeWorldStreamer.main.ReflectionCall("TryUnloadBatch", false, false, chunk);
-                /*
-                LargeWorldStreamer.main.cellManager.HideEntities(int3b, 0);
-                LargeWorldStreamer.main.cellManager.HideEntities(int3b, 1);
-                LargeWorldStreamer.main.cellManager.HideEntities(int3b, 2);
-                LargeWorldStreamer.main.cellManager.HideEntities(int3b, 3);*/
-                Console.WriteLine("Unloaded chunk: " + chunk);
+                if (chunk.Level == 3)
+                {
+                    LargeWorldStreamer.main.UnloadBatch(chunk.BatchId);
+                    levelLoadedForBatch.Remove(chunk.BatchId);
+                    Console.WriteLine("Unloaded chunk: " + chunk);
+                }                
             }
         }
     }

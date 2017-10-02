@@ -6,6 +6,13 @@ namespace NitroxModel.Helper.GameLogic
 {
     public static class GuidHelper
     {
+        public static GameObject RequireObjectFrom(String guid)
+        {
+            Optional<GameObject> gameObject = GetObjectFrom(guid);
+            Validate.IsTrue(gameObject.IsPresent(), "Game object required from guid: " + guid);
+            return gameObject.Get();
+        }
+
         // Feature parity of UniqueIdentifierHelper.GetByName() except does not do the verbose logging
         public static Optional<GameObject> GetObjectFrom(String guid)
         {

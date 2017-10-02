@@ -29,7 +29,7 @@ namespace NitroxModel.DataStructures
             return new Quaternion(X, Y, Z, W);
         }
         
-        public static SerializableQuaternion from(Quaternion quaternion)
+        public static SerializableQuaternion From(Quaternion quaternion)
         {
             return new SerializableQuaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
         }

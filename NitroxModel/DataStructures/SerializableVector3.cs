@@ -27,7 +27,7 @@ namespace NitroxModel.DataStructures
             return new Vector3(X, Y, Z);
         }
 
-        public static SerializableVector3 from(Vector3 vector3)
+        public static SerializableVector3 From(Vector3 vector3)
         {
             return new SerializableVector3(vector3.x, vector3.y, vector3.z);
         }

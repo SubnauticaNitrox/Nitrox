@@ -21,10 +21,10 @@ namespace NitroxModel.Packets
 
         public Movement(String playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<String> subGuid) : base(playerId, position)
         {
-            this.serializablePosition = SerializableVector3.from(position);
-            this.serializableVelocity = SerializableVector3.from(velocity);
-            this.serializableBodyRotation = SerializableQuaternion.from(bodyRotation);
-            this.serializableAimingRotation = SerializableQuaternion.from(aimingRotation);
+            this.serializablePosition = SerializableVector3.From(position);
+            this.serializableVelocity = SerializableVector3.From(velocity);
+            this.serializableBodyRotation = SerializableQuaternion.From(bodyRotation);
+            this.serializableAimingRotation = SerializableQuaternion.From(aimingRotation);
             this.SubGuid = subGuid;
             this.PlayerMustBeInRangeToReceive = false;
         }

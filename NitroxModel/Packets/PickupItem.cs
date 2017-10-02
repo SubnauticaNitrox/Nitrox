@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
         {
-            this.serializableItemPosition = SerializableVector3.from(itemPosition);
+            this.serializableItemPosition = SerializableVector3.From(itemPosition);
             this.Guid = guid;
             this.TechType = techType;
         }

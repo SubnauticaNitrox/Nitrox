@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets.Processors.Abstract;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,37 +11,37 @@ namespace NitroxServer
         public String Id { get; }
         public Vector3 Position { get; set; }
 
-        private HashSet<Int3> visibleChunks;
+        private HashSet<Chunk> visibleChunks;
 
         public Player(String id)
         {
             this.Id = id;
-            this.visibleChunks = new HashSet<Int3>();
+            this.visibleChunks = new HashSet<Chunk>();
         }
 
-        public void AddChunks(HashSet<Int3> chunks)
+        public void AddChunks(List<Chunk> chunks)
         {
             lock(visibleChunks)
             {
-                foreach(Int3 chunk in chunks)
+                foreach(Chunk chunk in chunks)
                 {
                     visibleChunks.Add(chunk);
                 }
             }
         }
 
-        public void RemoveChunks(HashSet<Int3> chunks)
+        public void RemoveChunks(List<Chunk> chunks)
         {
             lock (visibleChunks)
             {
-                foreach (Int3 chunk in chunks)
+                foreach (Chunk chunk in chunks)
                 {
                     visibleChunks.Remove(chunk);
                 }
             }
         }
 
-        public bool HasChunkLoaded(Int3 chunk)
+        public bool HasChunkLoaded(Chunk chunk)
         {
             lock (visibleChunks)
             {

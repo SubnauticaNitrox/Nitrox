@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(Player __instance)
-        {
+        {/*
             KeyBindingManager keyBindingManager = new KeyBindingManager();
 
             foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches
                 {
                     keyBinding.Action.Execute();
                 }
-            }
+            }*/
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.Util;
+using System;
 
 namespace NitroxModel.Helper
 {
