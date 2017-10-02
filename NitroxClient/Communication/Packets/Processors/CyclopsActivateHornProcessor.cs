@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -18,24 +17,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsActivateHorn hornPacket)
         {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(hornPacket.Guid);
+            GameObject cyclops = GuidHelper.RequireObjectFrom(hornPacket.Guid);            
+            CyclopsHornControl horn = cyclops.GetComponentInChildren<CyclopsHornControl>();
 
-            if (opCyclops.IsPresent())
+            if (horn != null)
             {
-                CyclopsHornControl horn = opCyclops.Get().GetComponentInChildren<CyclopsHornControl>();
-
-                if (horn != null)
-                {
-                    Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
-                }
-                else
-                {
-                    Console.WriteLine("Could not activate the horn because CyclopsHornControl was not found on the cyclops " + hornPacket.Guid);
-                }
+                Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
             }
             else
             {
-                Console.WriteLine("Could not find cyclops with guid " + hornPacket.Guid + " to activate horn.");
+                Console.WriteLine("Could not activate the horn because CyclopsHornControl was not found on the cyclops " + hornPacket.Guid);
             }
         }
     }

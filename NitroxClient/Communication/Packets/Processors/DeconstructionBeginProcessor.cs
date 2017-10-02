@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -11,25 +10,16 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(DeconstructionBegin packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
+            GameObject deconstructing = GuidHelper.RequireObjectFrom(packet.Guid);
+            Constructable constructable = deconstructing.GetComponent<Constructable>();
 
-            if(opGameObject.IsPresent())
+            if(constructable != null)
             {
-                GameObject deconstructing = opGameObject.Get();
-                Constructable constructable = deconstructing.GetComponent<Constructable>();
-
-                if(constructable != null)
-                {
-                    constructable.SetState(false, false);
-                }
-                else
-                {
-                    Console.WriteLine("Gameobject did not have a valid constructable component!");
-                }
+                constructable.SetState(false, false);
             }
             else
             {
-                Console.WriteLine("Could not find game object to deconstruct: " + packet.Guid);
+                Console.WriteLine("Gameobject did not have a valid constructable component!");
             }
         }
     }

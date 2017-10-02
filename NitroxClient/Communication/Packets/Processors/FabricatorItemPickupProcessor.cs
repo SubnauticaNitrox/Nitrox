@@ -18,15 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorItemPickup packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.FabricatorGuid);
-
-            if (opGameObject.IsEmpty())
-            {
-                Console.WriteLine("Could not find fabricator from guid " + packet.FabricatorGuid);
-                return;
-            }
-
-            GameObject gameObject = opGameObject.Get();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
             CrafterLogic crafterLogic = gameObject.GetComponentInChildren<CrafterLogic>(true);
 
             if (crafterLogic == null)

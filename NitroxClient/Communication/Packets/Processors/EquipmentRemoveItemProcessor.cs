@@ -15,56 +15,37 @@ namespace NitroxClient.Communication.Packets.Processors
         
         public override void Process(EquipmentRemoveItem packet)
         {
-            Optional<GameObject> opOwner = GuidHelper.GetObjectFrom(packet.OwnerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);            
+            Pickupable pickupable = item.GetComponent<Pickupable>();
 
-            if (opOwner.IsPresent())
+            if (pickupable != null)
             {
-                GameObject owner = opOwner.Get();
-                Optional<GameObject> opItem = GuidHelper.GetObjectFrom(packet.ItemGuid);
+                Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
-                if(opItem.IsPresent())
+                if (opEquipment.IsPresent())
                 {
-                    GameObject item = opItem.Get();
+                    Equipment equipment = opEquipment.Get();
 
-                    Pickupable pickupable = item.GetComponent<Pickupable>();
+                    Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                    InventoryItem inventoryItem = itemsBySlot[packet.Slot];
+                    itemsBySlot[packet.Slot] = null;
 
-                    if (pickupable != null)
-                    {
-                        Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
-
-                        if (opEquipment.IsPresent())
-                        {
-                            Equipment equipment = opEquipment.Get();
-
-                            Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                            InventoryItem inventoryItem = itemsBySlot[packet.Slot];
-                            itemsBySlot[packet.Slot] = null;
-
-                            equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
-                            Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                            equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
-                        }
-                        else
-                        {
-                            Console.WriteLine("Could not find equipment type for " + owner.name);
-                        }                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("item did not have a pickupable script attached!");
-                    }
-
-                    UnityEngine.Object.Destroy(item);
+                    equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
+                    Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
+                    equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
                 }
                 else
                 {
-                    Console.WriteLine("Could not find item with guid " + packet.ItemGuid);
-                }
+                    Console.WriteLine("Could not find equipment type for " + owner.name);
+                }                        
             }
             else
             {
-                Console.WriteLine("Could not locate equipment owner with guid: " + packet.OwnerGuid);
+                Console.WriteLine("item did not have a pickupable script attached!");
             }
+
+            UnityEngine.Object.Destroy(item);
         }
     }
 }

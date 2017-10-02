@@ -1,8 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -18,23 +16,15 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleInternalLighting lightingPacket)
         {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(lightingPacket.Guid);
+            GameObject cyclops = GuidHelper.RequireObjectFrom(lightingPacket.Guid);            
+            CyclopsLightingPanel lighting = cyclops.GetComponentInChildren<CyclopsLightingPanel>();
 
-            if (opCyclops.IsPresent())
+            if (lighting.lightingOn != lightingPacket.IsOn)
             {
-                CyclopsLightingPanel lighting = opCyclops.Get().GetComponentInChildren<CyclopsLightingPanel>();
-
-                if (lighting.lightingOn != lightingPacket.IsOn)
+                using (packetSender.Suppress<CyclopsToggleInternalLighting>())
                 {
-                    using (packetSender.Suppress<CyclopsToggleInternalLighting>())
-                    {
-                        lighting.ToggleInternalLighting();
-                    }
+                    lighting.ToggleInternalLighting();
                 }
-            }
-            else
-            {
-                Console.WriteLine("Could not find cyclops with guid " + lightingPacket.Guid + " to change internal lighting");
             }
         }
     }

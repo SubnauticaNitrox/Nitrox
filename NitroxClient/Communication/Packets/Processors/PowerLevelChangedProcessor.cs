@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -12,34 +11,25 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(PowerLevelChanged packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
-
-            if (opGameObject.IsPresent())
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+                        
+            if (packet.PowerType == PowerType.ENERGY_INTERFACE)
             {
-                GameObject gameObject = opGameObject.Get();
+                EnergyInterface energyInterface = gameObject.GetComponent<EnergyInterface>();
 
-                if (packet.PowerType == PowerType.ENERGY_INTERFACE)
+                if(energyInterface != null)
                 {
-                    EnergyInterface energyInterface = gameObject.GetComponent<EnergyInterface>();
-
-                    if(energyInterface != null)
-                    {
-                        energyInterface.ModifyCharge(packet.Amount);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Energy interface was not found on that game object!");
-                    }
+                    energyInterface.ModifyCharge(packet.Amount);
                 }
                 else
                 {
-                    Console.WriteLine("Unsupported packet power type: " + packet.PowerType);
+                    Console.WriteLine("Energy interface was not found on that game object!");
                 }
             }
             else
             {
-                Console.WriteLine("Could not locate game object with guid: " + packet.Guid);
-            }
+                Console.WriteLine("Unsupported packet power type: " + packet.PowerType);
+            }            
         }
         
     }

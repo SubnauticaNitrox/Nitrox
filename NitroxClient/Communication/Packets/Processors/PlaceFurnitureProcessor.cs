@@ -31,11 +31,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (subGuid.IsPresent())
             {
-                Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid.Get());
-                if (opSub.IsPresent())
-                {
-                    subRoot = opSub.Get().GetComponent<SubRoot>();
-                }
+                GameObject sub = GuidHelper.RequireObjectFrom(subGuid.Get());
+                subRoot = sub.GetComponent<SubRoot>();                
             }
 
             GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);

@@ -6,7 +6,7 @@ namespace NitroxModel.DataStructures
     public class Chunk
     {
         public Int3 BatchId { get; }
-        public int Level { get; }
+        public int Level { get; } // 0-3 lower means 'closer to the player' and 'higher level-of-detail'
         
         public Chunk(Int3 batchId, int level)
         {
@@ -23,7 +23,9 @@ namespace NitroxModel.DataStructures
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
+            {
                 return false;
+            }
 
             Chunk chunk = (Chunk)obj;
 

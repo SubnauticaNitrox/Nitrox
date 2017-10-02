@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel.Helper;
 using System;
@@ -12,40 +11,31 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(MedicalCabinetClicked packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);            
+            MedicalCabinet cabinet = gameObject.GetComponent<MedicalCabinet>();
 
-            if(opGameObject.IsPresent())
+            if(cabinet != null)
             {
-                GameObject gameObject = opGameObject.Get();
-                MedicalCabinet cabinet = gameObject.GetComponent<MedicalCabinet>();
+                bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
 
-                if(cabinet != null)
+                cabinet.hasMedKit = packet.HasMedKit;
+                cabinet.timeSpawnMedKit = packet.NextSpawnTime;
+
+                bool isDoorOpen = (bool)cabinet.ReflectionGet("doorOpen");
+                bool doorChangedState = isDoorOpen != packet.DoorOpen;
+
+                if (doorChangedState)
                 {
-                    bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
-
-                    cabinet.hasMedKit = packet.HasMedKit;
-                    cabinet.timeSpawnMedKit = packet.NextSpawnTime;
-
-                    bool isDoorOpen = (bool)cabinet.ReflectionGet("doorOpen");
-                    bool doorChangedState = isDoorOpen != packet.DoorOpen;
-
-                    if (doorChangedState)
-                    {
-                        cabinet.Invoke("ToggleDoorState", 0f);
-                    }
-                    else if (medkitPickedUp)
-                    {
-                        cabinet.Invoke("ToggleDoorState", 1.8f);
-                    }
+                    cabinet.Invoke("ToggleDoorState", 0f);
                 }
-                else
+                else if (medkitPickedUp)
                 {
-                    Console.WriteLine("Guid " + packet.Guid + " did not have a MedicalCabinet script");
+                    cabinet.Invoke("ToggleDoorState", 1.8f);
                 }
             }
             else
             {
-                Console.WriteLine("Could not locate medical cabinet with guid: " + packet.Guid);
+                Console.WriteLine("Guid " + packet.Guid + " did not have a MedicalCabinet script");
             }
         }
     }

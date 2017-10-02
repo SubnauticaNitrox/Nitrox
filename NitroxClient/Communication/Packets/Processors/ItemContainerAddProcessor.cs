@@ -18,40 +18,30 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ItemContainerAdd packet)
         {
-            Optional<GameObject> opOwner = GuidHelper.GetObjectFrom(packet.OwnerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
 
-            if (opOwner.IsPresent())
+            if (opContainer.IsPresent())
             {
-                GameObject owner = opOwner.Get();
+                ItemsContainer container = opContainer.Get();
+                GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
+                Pickupable pickupable = item.GetComponent<Pickupable>();
 
-                Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
-
-                if (opContainer.IsPresent())
+                if (pickupable != null)
                 {
-                    ItemsContainer container = opContainer.Get();
-                    GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
-                    Pickupable pickupable = item.GetComponent<Pickupable>();
-
-                    if (pickupable != null)
+                    using (packetSender.Suppress<ItemContainerAdd>())
                     {
-                        using (packetSender.Suppress<ItemContainerAdd>())
-                        {
-                            container.UnsafeAdd(new InventoryItem(pickupable));
-                        }
-                    }
-                    else
-                    {
-                        Console.WriteLine(item.name + " did not have a corresponding pickupable script!");
+                        container.UnsafeAdd(new InventoryItem(pickupable));
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Could not find container field on object " + owner.name);
+                    Console.WriteLine(item.name + " did not have a corresponding pickupable script!");
                 }
             }
             else
             {
-                Console.WriteLine("Could not find owner with guid: " + packet.OwnerGuid);
+                Console.WriteLine("Could not find container field on object " + owner.name);
             }
         }
     }

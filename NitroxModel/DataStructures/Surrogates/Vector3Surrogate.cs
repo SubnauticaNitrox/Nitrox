@@ -5,19 +5,19 @@ namespace NitroxModel.DataStructures.Surrogates
 {
     public class Vector3Surrogate : SerializationSurrogate<Vector3>
     {
-        protected override void GetObjectData(Vector3 vector, SerializationInfo info)
+        protected override void GetObjectData(Vector3 vector3, SerializationInfo info)
         {
-            info.AddValue("x", vector.x);
-            info.AddValue("y", vector.y);
-            info.AddValue("z", vector.z);
+            info.AddValue("x", vector3.x);
+            info.AddValue("y", vector3.y);
+            info.AddValue("z", vector3.z);
         }
 
-        protected override Vector3 SetObjectData(Vector3 vector, SerializationInfo info)
+        protected override Vector3 SetObjectData(Vector3 vector3, SerializationInfo info)
         {
-            vector.x = info.GetSingle("x");
-            vector.y = info.GetSingle("y");
-            vector.z = info.GetSingle("z");
-            return vector;
+            vector3.x = info.GetSingle("x");
+            vector3.y = info.GetSingle("y");
+            vector3.z = info.GetSingle("z");
+            return vector3;
         }
     }
 }

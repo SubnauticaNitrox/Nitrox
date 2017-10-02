@@ -18,15 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructorBeginCrafting packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.ConstructorGuid);
-
-            if(opGameObject.IsEmpty())
-            {
-                Console.WriteLine("Trying to build " + packet.TechType + " with unmanaged constructor - ignoring.");
-                return;
-            }
-
-            GameObject gameObject = opGameObject.Get();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.ConstructorGuid);
             Crafter crafter = gameObject.GetComponentInChildren<Crafter>(true);
 
             if(crafter == null)

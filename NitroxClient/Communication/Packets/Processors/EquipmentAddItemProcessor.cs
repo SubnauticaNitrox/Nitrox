@@ -18,36 +18,26 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = SerializationHelper.GetGameObject(packet.ItemBytes);
 
             Pickupable pickupable = gameObject.GetComponent<Pickupable>();
-            Optional<GameObject> opOwner = GuidHelper.GetObjectFrom(packet.OwnerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
-            if (opOwner.IsPresent())
+            if(opEquipment.IsPresent())
             {
-                GameObject owner = opOwner.Get();
+                Equipment equipment = opEquipment.Get();
+                InventoryItem inventoryItem = new InventoryItem(pickupable);
+                inventoryItem.container = equipment;
+                inventoryItem.item.Reparent(equipment.tr);
 
-                Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                itemsBySlot[packet.Slot] = inventoryItem;
 
-                if(opEquipment.IsPresent())
-                {
-                    Equipment equipment = opEquipment.Get();
-                    InventoryItem inventoryItem = new InventoryItem(pickupable);
-                    inventoryItem.container = equipment;
-                    inventoryItem.item.Reparent(equipment.tr);
-
-                    Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                    itemsBySlot[packet.Slot] = inventoryItem;
-
-                    equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
-                    Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                    equipment.ReflectionCall("NotifyEquip", false, false, new object[] { packet.Slot, inventoryItem });
-                }
-                else
-                {
-                    Console.WriteLine("Could not find equipment type for " + gameObject.name);
-                }
+                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
+                Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, packet.Slot);
+                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { packet.Slot, inventoryItem });
             }
             else
             {
-                Console.WriteLine("Could not locate equipment owner with guid: " + packet.OwnerGuid);
+                Console.WriteLine("Could not find equipment type for " + gameObject.name);
             }
         }
 

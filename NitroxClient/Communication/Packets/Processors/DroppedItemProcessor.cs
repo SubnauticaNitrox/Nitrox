@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -44,24 +43,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void AssignToWaterPark(String waterParkGuid, Pickupable pickupable)
         {
-            Optional<GameObject> opWaterPark = GuidHelper.GetObjectFrom(waterParkGuid);
+            GameObject waterParkGo = GuidHelper.RequireObjectFrom(waterParkGuid);            
+            WaterPark waterPark = waterParkGo.GetComponent<WaterPark>();
 
-            if (opWaterPark.IsPresent())
+            if (waterPark != null)
             {
-                WaterPark waterPark = opWaterPark.Get().GetComponent<WaterPark>();
-
-                if (waterPark != null)
-                {
-                    waterPark.AddItem(pickupable);
-                }
-                else
-                {
-                    Console.WriteLine("Could not find water park component on that game object");
-                }
+                waterPark.AddItem(pickupable);
             }
             else
             {
-                Console.WriteLine("Could not locate water park with guid: " + waterParkGuid);
+                Console.WriteLine("Could not find water park component on that game object");
             }
         }
 

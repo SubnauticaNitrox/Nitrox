@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -19,15 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorBeginCrafting packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.FabricatorGuid);
-
-            if (opGameObject.IsEmpty())
-            {
-                Console.WriteLine("Could not find fabricator from guid " + packet.FabricatorGuid);
-                return;
-            }
-
-            GameObject gameObject = opGameObject.Get();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
             Fabricator fabricator = gameObject.GetComponentInChildren<Fabricator>(true);
 
             if (fabricator == null)

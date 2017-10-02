@@ -1,5 +1,4 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -18,29 +17,22 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsBeginSilentRunning packet)
         {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(packet.Guid);
+            GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
+            CyclopsSilentRunningAbilityButton ability = cyclops.GetComponentInChildren<CyclopsSilentRunningAbilityButton>();
 
-            if (opCyclops.IsPresent())
+            if (ability != null)
             {
-                CyclopsSilentRunningAbilityButton ability = opCyclops.Get().GetComponentInChildren<CyclopsSilentRunningAbilityButton>();
-
-                if (ability != null)
+                using (packetSender.Suppress<CyclopsBeginSilentRunning>())
                 {
-                    using (packetSender.Suppress<CyclopsBeginSilentRunning>())
-                    {
-                        ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                        ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Could not begin silent running because CyclopsSilentRunningAbilityButton was not found on the cyclops " + packet.Guid);
+                    ability.subRoot.BroadcastMessage("RigForSilentRunning");
+                    ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
                 }
             }
             else
             {
-                Console.WriteLine("Could not find cyclops with guid " + packet.Guid + " to begin silent running.");
+                Console.WriteLine("Could not begin silent running because CyclopsSilentRunningAbilityButton was not found on the cyclops " + packet.Guid);
             }
+
         }
     }
 }
