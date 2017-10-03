@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if(creature.IsPresent())
                 {
-                    Console.WriteLine("Creature " + guid + " Moved!");
+                    Log.Debug("Creature " + guid + " Moved!");
                     creature.Get().transform.position = transform.position;
                     creature.Get().transform.rotation = transform.rotation;
                     creature.Get().transform.localScale = transform.localScale;

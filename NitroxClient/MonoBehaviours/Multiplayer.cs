@@ -3,7 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
-using NitroxClient.Logger;
+using NitroxModel.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -58,7 +58,6 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             main = this;
         }
@@ -87,12 +86,12 @@ namespace NitroxClient.MonoBehaviours
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error processing packet: " + packet + ": " + ex);
+                        Log.Error("Error processing packet: " + packet, ex);
                     }
                 }
                 else
                 {
-                    ClientLogger.Debug("No packet processor for the given type: " + packet.GetType());
+                    Log.Debug("No packet processor for the given type: " + packet.GetType());
                 }
             }
         }
@@ -101,7 +100,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (client.IsConnected())
             {
-                ClientLogger.IngameMessage("Already connected to a server");
+                Log.InGame("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
@@ -119,7 +118,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                ClientLogger.IngameMessage("Command syntax: mplayer USERNAME [SERVERIP]");
+                Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -152,11 +151,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
-                ClientLogger.IngameMessage("Connected to server");
+                Log.InGame("Connected to server");
             }
             else
             {
-                ClientLogger.IngameMessage("Unable to connect to server");
+                Log.InGame("Unable to connect to server");
             }
         }
 

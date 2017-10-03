@@ -13,9 +13,6 @@ namespace NitroxPatcher.Patches
         
         public static bool Prefix(Openable __instance, bool openState, float duration)
         {
-            Console.WriteLine(__instance.gameObject.name);
-            Console.WriteLine(__instance.gameObject.transform.parent.gameObject.name);
-
             if (__instance.isOpen != openState)
             {
                 String guid = GuidHelper.GetGuid(__instance.gameObject);

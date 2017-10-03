@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.Logger;
+using NitroxModel.DataStructures.Util;
 using NitroxServer.Communication;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;

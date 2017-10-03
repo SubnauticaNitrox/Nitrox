@@ -72,6 +72,7 @@
     <Compile Include="Helper\Unity\Math\SmoothParameter.cs" />
     <Compile Include="Helper\Unity\Math\SmoothRotation.cs" />
     <Compile Include="Helper\Unity\Math\SmoothVector.cs" />
+    <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\CreaturePositionsChanged.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />

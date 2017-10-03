@@ -83,7 +83,6 @@
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\PlayerAttributes.cs" />
     <Compile Include="GameLogic\Power.cs" />
-    <Compile Include="Logger\ClientLogger.cs" />
     <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />

@@ -2,6 +2,7 @@
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -45,11 +46,10 @@ namespace NitroxClient.GameLogic
 
             SyncedMultiplayerObject.ApplyTo(gameObject);
 
-            Console.WriteLine("Dropping item with guid: " + guid);
+            Log.Debug("Dropping item with guid: " + guid);
 
             DroppedItem droppedItem = new DroppedItem(packetSender.PlayerId, guid, waterpark, techType, dropPosition, bytes);
             packetSender.Send(droppedItem);
-            Console.WriteLine(droppedItem);
         }
 
         private Optional<String> GetCurrentWaterParkGuid()

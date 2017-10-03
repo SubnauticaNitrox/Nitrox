@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void ExecuteDropItemAction(TechType techType, GameObject gameObject)
         {
-            Console.WriteLine("Performing drop action for tech type: " + techType);
+            Log.Debug("Performing drop action for tech type: " + techType);
 
             ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
             itemDropAction.ProcessDroppedItem(gameObject);

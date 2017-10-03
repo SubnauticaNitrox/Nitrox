@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic
                 {
                     VisibleChunksChanged chunksChanged = new VisibleChunksChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(chunksChanged);
-                    Console.WriteLine(chunksChanged);
+                    Log.Debug(chunksChanged);
 
                     added.Clear();
                     removed.Clear();

@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 using System.Collections.Generic;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -38,7 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not find equipment type for " + gameObject.name);
+                Log.Error("Could not find equipment type for " + gameObject.name);
             }
         }
 

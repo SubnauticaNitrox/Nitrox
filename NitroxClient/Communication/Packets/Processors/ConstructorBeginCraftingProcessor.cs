@@ -3,8 +3,9 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -19,14 +20,8 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(ConstructorBeginCrafting packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.ConstructorGuid);
-            Crafter crafter = gameObject.GetComponentInChildren<Crafter>(true);
-
-            if(crafter == null)
-            {
-                Console.WriteLine("Trying to build " + packet.TechType + " but we did not have a corresponding constructorInput - how did that happen?");
-                return;
-            }
-                        
+            Crafter crafter = gameObject.RequireComponentInChildren<Crafter>(true);
+                                    
             MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(onCraftingBegin);
             onCraftingBegin.Invoke(crafter, new object[] { packet.TechType, packet.Duration }); //TODO: take into account latency for duration   
@@ -42,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not find constructed object!");
+                Log.Error("Could not find constructed object!");
             }
         }
 
@@ -59,7 +54,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Console.WriteLine("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
+                    Log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
                 }
             }
         }

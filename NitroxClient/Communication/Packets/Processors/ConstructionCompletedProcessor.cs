@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Console.WriteLine("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
+            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);            
             Constructable constructable = constructing.GetComponent<Constructable>();
@@ -36,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not assign new base guid as no newly constructed base was found");
+                Log.Error("Could not assign new base guid as no newly constructed base was found");
             }
         }
     }

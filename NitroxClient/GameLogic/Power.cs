@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 
@@ -18,7 +19,7 @@ namespace NitroxClient.GameLogic
         {
             PowerLevelChanged powerChanged = new PowerLevelChanged(packetSender.PlayerId, guid, amount, powerType);
             packetSender.Send(powerChanged);
-            Console.WriteLine(powerChanged);
+            Log.Debug(powerChanged);
         }
     }
 }

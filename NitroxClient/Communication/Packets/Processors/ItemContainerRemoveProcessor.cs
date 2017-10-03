@@ -2,8 +2,8 @@
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -35,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not find container field on object " + owner.name);
+                Log.Error("Could not find container field on object " + owner.name);
             }
         }
     }

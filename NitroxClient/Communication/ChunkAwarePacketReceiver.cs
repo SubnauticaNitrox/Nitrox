@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Map;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 
 namespace NitroxClient.Communication
@@ -64,7 +64,7 @@ namespace NitroxClient.Communication
 
                 if (!loadedChunks.HasChunkWithMinDesiredLevelOfDetail(actionBatchId, DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS))
                 {
-                    Console.WriteLine("Action was deferred, batch not loaded (with required lod): " + actionBatchId);
+                    Log.Debug("Action was deferred, batch not loaded (with required lod): " + actionBatchId);
                     AddPacketToDeferredMap(playerAction, actionBatchId);
                     return true;
                 }
@@ -100,7 +100,7 @@ namespace NitroxClient.Communication
                 {
                     while (deferredPackets.Count > 0)
                     {
-                        Console.WriteLine("Found deferred packet... adding it back with high priority.");
+                        Log.Debug("Found deferred packet... adding it back with high priority.");
                         Packet packet = deferredPackets.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }

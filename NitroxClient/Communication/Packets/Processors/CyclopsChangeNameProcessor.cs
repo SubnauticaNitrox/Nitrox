@@ -2,6 +2,7 @@
 using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -30,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not find SubName via target reflection");
+                Log.Error("Could not find SubName via target reflection");
             } 
         }
     }

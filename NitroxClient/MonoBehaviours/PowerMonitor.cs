@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -87,8 +88,8 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                Console.WriteLine("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
-                Console.WriteLine(new StackTrace());
+                Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+                Log.Error(new StackTrace().ToString());
             }
             return true;
         }

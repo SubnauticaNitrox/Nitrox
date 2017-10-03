@@ -1,6 +1,7 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -62,8 +63,8 @@ namespace NitroxClient.Communication
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessage.AddError($"Error sending {packet}: {ex.Message}");
-                    Console.WriteLine("Error sending packet {0}\n{1}", packet, ex);
+                    Log.InGame($"Error sending {packet}: {ex.Message}");
+                    Log.Error("Error sending packet " + packet, ex);
                 }
             }
         }

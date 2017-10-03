@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
@@ -59,7 +60,7 @@ namespace NitroxServer.Communication.Packets
             }
             else
             {
-                Console.WriteLine("Received invalid, unauthenticated packet: " + packet);
+                Log.Info("Received invalid, unauthenticated packet: " + packet);
             }
         }
     }

@@ -3,8 +3,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not find equipment type for " + owner.name);
+                Log.Error("Could not find equipment type for " + owner.name);
             }                        
 
             UnityEngine.Object.Destroy(item);

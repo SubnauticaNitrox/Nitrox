@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,7 @@ namespace NitroxClient.GameLogic
         {
             String constructorGuid = GuidHelper.GetGuid(constructor);
 
-            Console.WriteLine("Building item from constructor with uuid: " + constructorGuid);
+            Log.Debug("Building item from constructor with uuid: " + constructorGuid);
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
@@ -47,7 +48,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Console.WriteLine("Could not send packet because there wasn't a corresponding constructed object!");
+                Log.Error("Could not send packet because there wasn't a corresponding constructed object!");
             }
         }
 

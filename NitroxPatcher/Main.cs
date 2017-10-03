@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
 using System;
@@ -12,7 +13,8 @@ namespace NitroxPatcher
     {
         public static void Execute()
         {
-            Console.WriteLine("[NITROX] Patching Subnautica...");
+            Log.SetLevel(Log.LogLevel.ConsoleMessages | Log.LogLevel.ConsoleDebug);
+            Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
@@ -22,7 +24,7 @@ namespace NitroxPatcher
             string serverNameSpace = "NitroxPatcher.Patches.Server";
             bool serverPatching = (Array.IndexOf(Environment.GetCommandLineArgs(), "-server") >= 0);
 
-            Console.WriteLine("[NITROX] Applying " + ((serverPatching) ? "server" : "client") + " patches");
+            Log.Info("Applying " + ((serverPatching) ? "server" : "client") + " patches");
 
             Assembly.GetExecutingAssembly()
                 .GetTypes()
@@ -36,11 +38,11 @@ namespace NitroxPatcher
                 .ToList()
                 .ForEach(patch =>
                 {
-                    Console.WriteLine("[NITROX] Applying " + patch.GetType());
+                    Log.Info("Applying " + patch.GetType());
                     patch.Patch(harmony);
                 });
 
-            Console.WriteLine("[NITROX] Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
             InitializeReloader(serverPatching);
 

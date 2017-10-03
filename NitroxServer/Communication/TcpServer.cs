@@ -6,6 +6,7 @@ using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 
 namespace NitroxServer.Communication
 {
@@ -33,7 +34,7 @@ namespace NitroxServer.Communication
 
         public void ClientAccepted(IAsyncResult ar)
         {
-            Console.WriteLine("New client connected");
+            Log.Info("New client connected");
 
             Socket socket = (Socket)ar.AsyncState;
 
@@ -62,7 +63,7 @@ namespace NitroxServer.Communication
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception while processing packet: " + packet + " " + ex);
+                    Log.Info("Exception while processing packet: " + packet + " " + ex);
                 }
             }
 
@@ -83,13 +84,9 @@ namespace NitroxServer.Communication
                 Socket handler = (Socket)ar.AsyncState;
                 int bytesSent = handler.EndSend(ar);
             }
-            catch (SocketException)
-            {
-                Console.WriteLine("Listener: Error sending packet");
-            }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Log.Info("Error sending packet: " + e.ToString());
             }
         }
 
@@ -106,7 +103,7 @@ namespace NitroxServer.Communication
 
                 Disconnect disconnectPacket = new Disconnect(player.Id);
                 SendPacketToAllPlayers(disconnectPacket);
-                Console.WriteLine("Player disconnected: " + player.Id);
+                Log.Info("Player disconnected: " + player.Id);
             }
         }
 

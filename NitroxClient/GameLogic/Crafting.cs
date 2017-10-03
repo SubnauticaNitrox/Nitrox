@@ -3,6 +3,7 @@ using NitroxClient.Communication;
 using NitroxModel.Packets;
 using UnityEngine;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
@@ -28,7 +29,7 @@ namespace NitroxClient.GameLogic
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(packetSender.PlayerId, crafterGuid, techType);
             packetSender.Send(fabricatorItemPickup);
-            Console.WriteLine(fabricatorItemPickup);
+            Log.Debug(fabricatorItemPickup);
         }
     }
 }

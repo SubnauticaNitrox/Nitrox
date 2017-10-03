@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections;
@@ -47,12 +48,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (rigidbody != null)
                     {
-                        Console.WriteLine("Freezing escape pod rigidbody");
+                        Log.Debug("Freezing escape pod rigidbody");
                         rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                     }
                     else
                     {
-                        Console.WriteLine("Escape pod did not have a rigid body!");
+                        Log.Error("Escape pod did not have a rigid body!");
                     }
 
                     Player.main.transform.position = EscapePod.main.playerSpawn.position;

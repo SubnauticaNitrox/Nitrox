@@ -2,6 +2,7 @@
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -50,7 +51,7 @@ namespace NitroxPatcher.Patches
                 }
                 if (!gameObject)
                 {
-                    Console.WriteLine("ToggleLights does not have a gameObject to sync on. Is this a new item?");
+                    Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
                     DebugUtils.DumpComponent(__instance);
                 }
 

@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -21,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
-
+            
             RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
 
             Vector3 remotePosition = vehicleMovement.Position;
@@ -93,7 +94,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Console.WriteLine("No prefab for tech type: " + techType);
+                    Log.Error("No prefab for tech type: " + techType);
                 }
             }
         }

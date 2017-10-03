@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.Surrogates;
+using NitroxModel.Logger;
 using NitroxModel.Tcp;
 using System;
 using System.IO;
@@ -35,7 +36,7 @@ namespace NitroxModel.Packets
                     var surrogatedType = t.BaseType.GetGenericArguments()[0];
                     surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                    Console.WriteLine("Added surrogate {0} for type {1}", surrogate, surrogatedType);
+                    Log.Info("Added surrogate " + surrogate + " for type " + surrogatedType);
                 });
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.

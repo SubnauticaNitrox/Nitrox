@@ -1,5 +1,5 @@
 ﻿using NitroxModel.DataStructures;
-using System;
+using NitroxModel.Logger;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,7 +40,7 @@ namespace NitroxServer.GameLogic.Monobehaviours
                 else
                 {
                     LargeWorldStreamer.main.LoadBatch(chunk.BatchId);
-                    Console.WriteLine("loaded chunk: " + chunk);
+                    Log.Debug("loaded chunk: " + chunk);
                 }
 
                 Int3.Bounds int3b = LargeWorldStreamer.main.GetBatchBlockBounds(chunk.BatchId);
@@ -67,7 +67,7 @@ namespace NitroxServer.GameLogic.Monobehaviours
                 {
                     LargeWorldStreamer.main.UnloadBatch(chunk.BatchId);
                     levelLoadedForBatch.Remove(chunk.BatchId);
-                    Console.WriteLine("Unloaded chunk: " + chunk);
+                    Log.Debug("Unloaded chunk: " + chunk);
                 }                
             }
         }
