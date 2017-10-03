@@ -10,53 +10,47 @@ namespace NitroxPatcher.Patches
     {
         public abstract void Patch(HarmonyInstance harmony);
 
-        public void PatchTranspiler(HarmonyInstance harmony, MethodBase targetMethod)
+        protected void PatchTranspiler(HarmonyInstance harmony, MethodBase targetMethod, string transpilerMethod = "Transpiler")
+        {
+            PatchMultiple(harmony, targetMethod, null, null, transpilerMethod);
+        }
+
+        protected void PatchPrefix(HarmonyInstance harmony, MethodBase targetMethod, string prefixMethod = "Prefix")
+        {
+            PatchMultiple(harmony, targetMethod, null, prefixMethod, null);
+        }
+
+        protected void PatchPostfix(HarmonyInstance harmony, MethodBase targetMethod, string postfixMethod = "Postfix")
+        {
+            PatchMultiple(harmony, targetMethod, postfixMethod, null, null);
+        }
+
+        protected void PatchMultiple(HarmonyInstance harmony, MethodBase targetMethod, bool prefix, bool postfix, bool transpiler)
+        {
+            string prefixMethod = (prefix) ? "Prefix" : null;
+            string postfixMethod = (postfix) ? "Postfix" : null;
+            string transpilerMethod = (transpiler) ? "Transpiler" : null;
+
+            PatchMultiple(harmony, targetMethod, prefixMethod, postfixMethod, transpilerMethod);
+        }
+
+        protected void PatchMultiple(HarmonyInstance harmony, MethodBase targetMethod,
+            string prefixMethod = null, string postfixMethod = null, string transpilerMethod = null)
         {
             Validate.NotNull(targetMethod, "Target method cannot be null");
-            harmony.Patch(targetMethod, null, null, GetTranspilerMethod());
+
+            HarmonyMethod harmonyPrefixMethod = (prefixMethod != null) ? GetHarmonyMethod(prefixMethod) : null;
+            HarmonyMethod harmonyPostfixMethod = (postfixMethod != null) ? GetHarmonyMethod(postfixMethod) : null;
+            HarmonyMethod harmonyTranspilerMethod = (transpilerMethod != null) ? GetHarmonyMethod(transpilerMethod) : null;
+
+            harmony.Patch(targetMethod, harmonyPrefixMethod, harmonyPostfixMethod, harmonyTranspilerMethod);
         }
 
-        public void PatchPrefix(HarmonyInstance harmony, MethodBase targetMethod)
+        public HarmonyMethod GetHarmonyMethod(string methodName)
         {
-            Validate.NotNull(targetMethod, "Target method cannot be null");
-            harmony.Patch(targetMethod, GetPrefixMethod(), null, null);
-        }
-
-        public void PatchPostfix(HarmonyInstance harmony, MethodBase targetMethod)
-        {
-            Validate.NotNull(targetMethod, "Target method cannot be null");
-            harmony.Patch(targetMethod, null, GetPostfixMethod(), null);
-        }
-
-        public void PatchMultiple(HarmonyInstance harmony, MethodBase targetMethod, bool prefix, bool postfix, bool transpiler)
-        {
-            Validate.NotNull(targetMethod, "Target method cannot be null");
-            HarmonyMethod prefixMethod = (prefix) ? GetPrefixMethod() : null;
-            HarmonyMethod postfixMethod = (postfix) ? GetPostfixMethod() : null;
-            HarmonyMethod transpilerMethod = (transpiler) ? GetTranspilerMethod() : null;
-
-            harmony.Patch(targetMethod, prefixMethod, postfixMethod, transpilerMethod);
-        }
-
-        public HarmonyMethod GetTranspilerMethod()
-        {
-            MethodInfo transpiler = this.GetType().GetMethod("Transpiler");
-            Validate.NotNull(transpiler, "Transpiler cannot be null");
-            return new HarmonyMethod(this.GetType(), "Transpiler");
-        }
-
-        public HarmonyMethod GetPostfixMethod()
-        {
-            MethodInfo postfix = this.GetType().GetMethod("Postfix");
-            Validate.NotNull(postfix, "Postfix cannot be null");
-            return new HarmonyMethod(this.GetType(), "Postfix");
-        }
-
-        public HarmonyMethod GetPrefixMethod()
-        {
-            MethodInfo prefix = this.GetType().GetMethod("Prefix");
-            Validate.NotNull(prefix, "Prefix cannot be null");
-            return new HarmonyMethod(this.GetType(), "Prefix");
+            MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            Validate.NotNull(method, $"Patcher: Patch method \"{methodName}\" cannot be found");
+            return new HarmonyMethod(method);
         }
 
         protected static int GetLocalVariableIndex<T>(MethodBase method)

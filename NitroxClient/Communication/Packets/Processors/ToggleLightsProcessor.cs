@@ -14,33 +14,25 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         public override void Process(NitroxModel.Packets.ToggleLights packet)
         {
-            var opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
-            if (opGameObject.IsPresent())
+            var gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            var toggleLights = gameObject.GetComponent<ToggleLights>();
+            if (!toggleLights)
             {
-                var gameObject = opGameObject.Get();
-                var toggleLights = gameObject.GetComponent<ToggleLights>();
-                if (!toggleLights)
+                toggleLights = gameObject.GetComponentInChildren<ToggleLights>();
+            }
+            if (toggleLights)
+            {
+                if (packet.IsOn != toggleLights.GetLightsActive())
                 {
-                    toggleLights = gameObject.GetComponentInChildren<ToggleLights>();
-                }
-                if (toggleLights)
-                {
-                    if (packet.IsOn != toggleLights.GetLightsActive())
+                    using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
                     {
-                        using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
-                        {
-                            toggleLights.SetLightsActive(packet.IsOn);
-                        }
+                        toggleLights.SetLightsActive(packet.IsOn);
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Cannot find ToggleLights in gameObject or children of gameObject " + gameObject);
                 }
             }
             else
             {
-                Console.WriteLine($"ToggleLightsProcessor: Cannot find gameObject with guid {packet.Guid}");
+                Console.WriteLine("Cannot find ToggleLights in gameObject or children of gameObject " + gameObject);
             }
         }
     }

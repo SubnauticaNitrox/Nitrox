@@ -4,14 +4,14 @@ namespace NitroxModel.DataStructures.Surrogates
 {
     public class TechTypeSurrogate : SerializationSurrogate<TechType>
     {
-        protected override void GetObjectData(TechType obj, SerializationInfo info)
+        protected override void GetObjectData(TechType techType, SerializationInfo info)
         {
-            info.AddValue("TechType", (int)obj);
+            info.AddValue("TechType", (int)techType);
         }
 
-        protected override TechType SetObjectData(TechType obj, SerializationInfo info)
+        protected override TechType SetObjectData(TechType techType, SerializationInfo info)
         {
-            return obj = (TechType)info.GetInt32("TechType");
+            return techType = (TechType)info.GetInt32("TechType");
         }
     }
 }

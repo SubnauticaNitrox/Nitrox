@@ -23,13 +23,13 @@ namespace NitroxServer
         {
             lock (visibleChunks)
             {
-                foreach(Chunk chunk in chunks)
+                foreach (Chunk chunk in chunks)
                 {
                     visibleChunks.Add(chunk);
                 }
             }
         }
-        
+
         public void RemoveChunks(IEnumerable<Chunk> chunks)
         {
             lock (visibleChunks)
