@@ -5,14 +5,16 @@ using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
+using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 
 namespace NitroxServer.Communication
 {
     public class TcpServer
     {
-        private PacketHandler packetHandler;        
+        private PacketHandler packetHandler;
         private Dictionary<Player, Connection> connectionsByPlayer;
-                
+
         public TcpServer()
         {
             this.connectionsByPlayer = new Dictionary<Player, Connection>();
@@ -24,7 +26,7 @@ namespace NitroxServer.Communication
 
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
 
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);            
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
             socket.Listen(4000);
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
@@ -32,7 +34,7 @@ namespace NitroxServer.Communication
 
         public void ClientAccepted(IAsyncResult ar)
         {
-            Console.WriteLine("New client connected");
+            Log.Info("New client connected");
 
             Socket socket = (Socket)ar.AsyncState;
 
@@ -45,8 +47,8 @@ namespace NitroxServer.Communication
         public void DataReceived(IAsyncResult ar)
         {
             PlayerConnection connection = (PlayerConnection)ar.AsyncState;
-            
-            foreach(Packet packet in connection.GetPacketsFromRecievedData(ar))
+
+            foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
                 try
                 {
@@ -61,7 +63,7 @@ namespace NitroxServer.Communication
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Exception while processing packet: " + packet + " " + ex);
+                    Log.Info("Exception while processing packet: " + packet + " " + ex);
                 }
             }
 
@@ -79,16 +81,12 @@ namespace NitroxServer.Communication
         {
             try
             {
-                Socket handler = (Socket)ar.AsyncState;                
+                Socket handler = (Socket)ar.AsyncState;
                 int bytesSent = handler.EndSend(ar);
-            }
-            catch (SocketException)
-            {
-                Console.WriteLine("Listener: Error sending packet");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Log.Info("Error sending packet: " + e.ToString());
             }
         }
 
@@ -98,14 +96,14 @@ namespace NitroxServer.Communication
 
             if (player != null)
             {
-                lock(connectionsByPlayer)
+                lock (connectionsByPlayer)
                 {
                     connectionsByPlayer.Remove(player);
                 }
 
                 Disconnect disconnectPacket = new Disconnect(player.Id);
                 SendPacketToAllPlayers(disconnectPacket);
-                Console.WriteLine("Player disconnected: " + player.Id);
+                Log.Info("Player disconnected: " + player.Id);
             }
         }
 
@@ -134,11 +132,11 @@ namespace NitroxServer.Communication
             lock (connectionsByPlayer)
             {
                 foreach (Connection connection in connectionsByPlayer.Values)
-                { 
-                    if(connection.Open)
+                {
+                    if (connection.Open)
                     {
                         connection.SendPacket(packet, new AsyncCallback(SendCompleted));
-                    }                
+                    }
                 }
             }
         }
@@ -150,6 +148,20 @@ namespace NitroxServer.Communication
                 foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
                 {
                     if (connectWithPlayer.Key != sendingPlayer && connectWithPlayer.Value.Open)
+                    {
+                        connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
+                    }
+                }
+            }
+        }
+
+        public void SendPacketToPlayersInChunk(Packet packet, Chunk chunk)
+        {
+            lock (connectionsByPlayer)
+            {
+                foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
+                {
+                    if(connectWithPlayer.Key.HasChunkLoaded(chunk))
                     {
                         connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
                     }

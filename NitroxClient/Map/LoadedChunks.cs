@@ -1,37 +1,50 @@
 ﻿using NitroxModel.DataStructures;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NitroxClient.Map
 {
     public class LoadedChunks
     {
-        private static int CHUNK_SIZE = 16;
+        private HashSet<Chunk> chunks = new HashSet<Chunk>();
 
-        private HashSet<Int3> chunks = new HashSet<Int3>();
-
-        public void AddChunk(Int3 position)
+        public void Add(Chunk chunk)
         {
-            chunks.Add(position);
+            lock (chunks)
+            {
+                chunks.Add(chunk);
+            }
         }
 
-        public void RemoveChunk(Int3 position)
+        public void Remove(Chunk chunk)
         {
-            chunks.Remove(position);
+            lock (chunks)
+            {
+                chunks.Remove(chunk);
+            }
         }
 
-        public bool IsLoadedChunk(Int3 chunk)
+        public bool Contains(Chunk chunk)
         {
-            return chunks.Contains(chunk);
+            lock (chunks)
+            {
+                return chunks.Contains(chunk);
+            }
         }
 
-        public Int3 GetChunk(Vector3 position)
+        public bool HasChunkWithMinDesiredLevelOfDetail(Int3 batchId, int level)
         {
-            return new Int3((int)Math.Floor(position.X / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(position.Y / CHUNK_SIZE) * CHUNK_SIZE,
-                            (int)Math.Floor(position.Z / CHUNK_SIZE) * CHUNK_SIZE);
+            lock (chunks)
+            {
+                foreach (Chunk chunk in chunks)
+                {
+                    if(chunk.BatchId == batchId && chunk.Level <= level)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }

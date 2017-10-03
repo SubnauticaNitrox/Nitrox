@@ -1,15 +1,15 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class MedicalCabinetClicked : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public bool DoorOpen { get; private set; }
-        public bool HasMedKit { get; private set; }
-        public float NextSpawnTime { get; private set; }
+        public String Guid { get; }
+        public bool DoorOpen { get; }
+        public bool HasMedKit { get; }
+        public float NextSpawnTime { get; }
 
         public MedicalCabinetClicked(String playerId, String guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(playerId, actionPosition)
         {

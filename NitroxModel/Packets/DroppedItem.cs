@@ -1,19 +1,19 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class DroppedItem : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public Optional<String> WaterParkGuid { get; private set; }
-        public String TechType { get; private set; }
-        public Vector3 ItemPosition { get; private set; }
-        public byte[] Bytes { get; private set; }
+        public String Guid { get; }
+        public Optional<String> WaterParkGuid { get; }
+        public TechType TechType { get; }
+        public Vector3 ItemPosition { get; }
+        public byte[] Bytes { get; }
 
-        public DroppedItem(String playerId, String guid, Optional<String> waterParkGuid, String techType, Vector3 itemPosition, byte[] bytes) : base(playerId, itemPosition)
+        public DroppedItem(String playerId, String guid, Optional<String> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.WaterParkGuid = waterParkGuid;

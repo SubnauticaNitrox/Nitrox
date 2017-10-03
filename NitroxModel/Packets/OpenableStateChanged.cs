@@ -5,9 +5,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public class OpenableStateChanged : AuthenticatedPacket
     {
-        public String Guid { get; private set; }
-        public bool IsOpen { get; private set; }
-        public float Duration { get; private set; }
+        public String Guid { get; }
+        public bool IsOpen { get; }
+        public float Duration { get; }
 
         public OpenableStateChanged(String playerId, String guid, bool isOpen, float duration) : base(playerId)
         {

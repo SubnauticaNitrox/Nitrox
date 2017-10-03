@@ -1,16 +1,16 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
-using NitroxClient.Logger;
+using NitroxModel.Logger;
 using NitroxClient.Map;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxReloader;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using NitroxClient.GameLogic.ChatUI;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -20,17 +20,17 @@ namespace NitroxClient.MonoBehaviours
 
         public static Multiplayer main;
 
-        private static LoadedChunks loadedChunks = new LoadedChunks();
-        private static ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-        private static TcpClient client = new TcpClient(chunkAwarePacketReceiver);
-        public static PacketSender PacketSender = new PacketSender(client);
-        public static Logic Logic = new Logic(PacketSender);
+        private static readonly LoadedChunks loadedChunks = new LoadedChunks();
+        private static readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
+        private static readonly TcpClient client = new TcpClient(chunkAwarePacketReceiver);
+        public static readonly PacketSender PacketSender = new PacketSender(client);
+        public static readonly Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
-        private static PlayerManager remotePlayerManager = new PlayerManager();
-        private static PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
-        private static PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
+        private static readonly PlayerManager remotePlayerManager = new PlayerManager();
+        private static readonly PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
+        private static readonly PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
 
         public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
 
@@ -58,13 +58,13 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-            ClientLogger.SetLogLevel(ClientLogger.LogLevel.ConsoleMessages | ClientLogger.LogLevel.InGameMessages);
 
             main = this;
         }
 
         public void Update()
         {
+            Reloader.ReloadAssemblies();
             if (client != null && client.IsConnected())
             {
                 ProcessPackets();
@@ -86,12 +86,12 @@ namespace NitroxClient.MonoBehaviours
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("Error processing packet: " + packet + ": " + ex);
+                        Log.Error("Error processing packet: " + packet, ex);
                     }
                 }
                 else
                 {
-                    ClientLogger.Debug("No packet processor for the given type: " + packet.GetType());
+                    Log.Debug("No packet processor for the given type: " + packet.GetType());
                 }
             }
         }
@@ -100,7 +100,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (client.IsConnected())
             {
-                ClientLogger.IngameMessage("Already connected to a server");
+                Log.InGame("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
@@ -118,7 +118,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                ClientLogger.IngameMessage("Command syntax: mplayer USERNAME [SERVERIP]");
+                Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -151,11 +151,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 PacketSender.Active = true;
                 PacketSender.Authenticate();
-                ClientLogger.IngameMessage("Connected to server");
+                Log.InGame("Connected to server");
             }
             else
             {
-                ClientLogger.IngameMessage("Unable to connect to server");
+                Log.InGame("Unable to connect to server");
             }
         }
 
@@ -177,31 +177,6 @@ namespace NitroxClient.MonoBehaviours
                 this.gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
-        }
-
-        public static void AddChunk(Vector3 chunk, MonoBehaviour mb)
-        {
-            if (chunk != null && loadedChunks != null && mb != null)
-            {
-                mb.StartCoroutine(WaitAndAddChunk(chunk));
-            }
-        }
-
-        public static void RemoveChunk(VoxelandChunk chunk)
-        {
-            if (chunk?.transform != null && loadedChunks != null)
-            {
-                Int3 owningChunk = ApiHelper.Int3(chunk.transform.position);
-                loadedChunks.RemoveChunk(owningChunk);
-            }
-        }
-
-        private static IEnumerator WaitAndAddChunk(Vector3 chunk)
-        {
-            yield return new WaitForSeconds(0.5f);
-            Int3 owningChunk = new Int3((int)chunk.x, (int)chunk.y, (int)chunk.z);
-            loadedChunks.AddChunk(owningChunk);
-            chunkAwarePacketReceiver.ChunkLoaded(owningChunk);
         }
     }
 }

@@ -5,8 +5,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsChangeName : AuthenticatedPacket
     {
-        public String Guid { get; private set; }
-        public String Name { get; private set; }
+        public String Guid { get; }
+        public String Name { get; }
 
         public CyclopsChangeName(String playerId, String guid, string name) : base(playerId)
         {

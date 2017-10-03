@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 
@@ -17,7 +18,7 @@ namespace NitroxClient.GameLogic
         {
             OpenableStateChanged stateChange = new OpenableStateChanged(packetSender.PlayerId, guid, isOpen, animationDuration);
             packetSender.Send(stateChange);
-            Console.WriteLine(stateChange);
+            Log.Debug(stateChange);
         }
     }
 }

@@ -5,11 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerStats : AuthenticatedPacket
     {
-        public float Oxygen { get; private set; }
-        public float MaxOxygen { get; private set; }
-        public float Health { get; private set; }
-        public float Food { get; private set; }
-        public float Water { get; private set; }
+        public float Oxygen { get; }
+        public float MaxOxygen { get; }
+        public float Health { get; }
+        public float Food { get; }
+        public float Water { get; }
 
         public PlayerStats(String playerId, float oxygen, float maxOxygen, float health, float food, float water) : base(playerId)
         {

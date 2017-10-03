@@ -1,6 +1,6 @@
 ﻿using NitroxModel.Packets;
 using NitroxModel.Tcp;
-using NitroxClient.Logger;
+using NitroxModel.Logger;
 using NitroxClient.MonoBehaviours;
 using System;
 using System.Net;
@@ -37,7 +37,7 @@ namespace NitroxClient.Communication
             }
             catch (Exception e)
             {
-                ClientLogger.Debug("Unforeseen error when connecting: " + e.GetBaseException());
+                Log.Debug("Unforeseen error when connecting: " + e.GetBaseException());
             }
         }
 
@@ -46,7 +46,7 @@ namespace NitroxClient.Communication
             connection.Close(); // Server will clean up pretty quickly
             Multiplayer.PacketSender.Active = false;
             Multiplayer.RemoveAllOtherPlayers();
-            ClientLogger.IngameMessage("Disconnected from server.");
+            Log.InGame("Disconnected from server.");
         }
         
         private void DataReceived(IAsyncResult ar)
@@ -63,7 +63,7 @@ namespace NitroxClient.Communication
                 connection.BeginReceive(new AsyncCallback(DataReceived));
             } else
             {
-                ClientLogger.Debug("Error reading data from server");
+                Log.Debug("Error reading data from server");
                 Stop();
             }
         }

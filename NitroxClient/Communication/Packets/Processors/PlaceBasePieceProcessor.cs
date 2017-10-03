@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
 using System.Reflection;
@@ -12,31 +12,11 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceBasePieceProcessor : ClientPacketProcessor<PlaceBasePiece>
     {
-        private GameObject otherPlayerCamera;
-
         public override void Process(PlaceBasePiece basePiecePacket)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(basePiecePacket.TechType);
-
-            if (opTechType.IsPresent())
-            {
-                TechType techType = opTechType.Get();
-
-                if (otherPlayerCamera == null)
-                {
-                    otherPlayerCamera = new GameObject();
-                }
-
-                ApiHelper.SetTransform(otherPlayerCamera.transform, basePiecePacket.Camera);
-
-                ConstructItem(basePiecePacket.Guid, ApiHelper.Vector3(basePiecePacket.ItemPosition), ApiHelper.Quaternion(basePiecePacket.Rotation), otherPlayerCamera.transform, techType, basePiecePacket.ParentBaseGuid);
-            }
-            else
-            {
-                Console.WriteLine("Could not identify tech type for " + basePiecePacket.TechType);
-            }
+            ConstructItem(basePiecePacket.Guid, basePiecePacket.ItemPosition, basePiecePacket.Rotation, basePiecePacket.Camera, basePiecePacket.TechType, basePiecePacket.ParentBaseGuid);
         }
-        
+
         public void ConstructItem(String guid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType, Optional<String> parentBaseGuid)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
@@ -57,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
              */
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
-            startCrafting.Invoke(constructableBase, new object[] { }); 
-        }        
+            startCrafting.Invoke(constructableBase, new object[] { });
+        }
     }
 }

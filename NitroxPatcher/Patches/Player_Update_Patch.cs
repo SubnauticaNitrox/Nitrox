@@ -14,6 +14,12 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Player __instance)
         {
+            // TODO: Use proper way to check if input is free, because players can be editing labels etc.
+            if ((bool)((DevConsole)ReflectionHelper.ReflectionGet<DevConsole>(null, "instance", false, true)).ReflectionGet("state"))
+            {
+                return;
+            }
+            
             KeyBindingManager keyBindingManager = new KeyBindingManager();
 
             foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)

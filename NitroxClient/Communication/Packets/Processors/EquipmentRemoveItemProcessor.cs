@@ -1,9 +1,10 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,56 +16,29 @@ namespace NitroxClient.Communication.Packets.Processors
         
         public override void Process(EquipmentRemoveItem packet)
         {
-            Optional<GameObject> opOwner = GuidHelper.GetObjectFrom(packet.OwnerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);            
+            Pickupable pickupable = item.RequireComponent<Pickupable>();            
+            Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
-            if (opOwner.IsPresent())
+            if (opEquipment.IsPresent())
             {
-                GameObject owner = opOwner.Get();
-                Optional<GameObject> opItem = GuidHelper.GetObjectFrom(packet.ItemGuid);
+                Equipment equipment = opEquipment.Get();
 
-                if(opItem.IsPresent())
-                {
-                    GameObject item = opItem.Get();
+                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                InventoryItem inventoryItem = itemsBySlot[packet.Slot];
+                itemsBySlot[packet.Slot] = null;
 
-                    Pickupable pickupable = item.GetComponent<Pickupable>();
-
-                    if (pickupable != null)
-                    {
-                        Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
-
-                        if (opEquipment.IsPresent())
-                        {
-                            Equipment equipment = opEquipment.Get();
-
-                            Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                            InventoryItem inventoryItem = itemsBySlot[packet.Slot];
-                            itemsBySlot[packet.Slot] = null;
-
-                            equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
-                            Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                            equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
-                        }
-                        else
-                        {
-                            Console.WriteLine("Could not find equipment type for " + owner.name);
-                        }                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("item did not have a pickupable script attached!");
-                    }
-
-                    UnityEngine.Object.Destroy(item);
-                }
-                else
-                {
-                    Console.WriteLine("Could not find item with guid " + packet.ItemGuid);
-                }
+                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
+                Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
+                equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
             }
             else
             {
-                Console.WriteLine("Could not locate equipment owner with guid: " + packet.OwnerGuid);
-            }
+                Log.Error("Could not find equipment type for " + owner.name);
+            }                        
+
+            UnityEngine.Object.Destroy(item);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Harmony;
-using NitroxModel.Helper;
 using System;
 using System.Reflection;
 
@@ -9,18 +8,36 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(ArmsController);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
+        // Because this piece of code does a lot with reflection and executes often, prepare the reflection info instead of doing it every call (which is what ReflectionHelper does).
+        // There are plans ongoing to streamline this, probably involving native code generation to get rid of reflection slowness completely. Potential solutions involve Expressions and/or IL generation.
+
+        private static readonly FieldInfo leftAimField = TARGET_CLASS.GetField("leftAim", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo rightAimField = TARGET_CLASS.GetField("rightAim", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo reconfigureWorldTarget = TARGET_CLASS.GetField("reconfigureWorldTarget", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo reconfigure = TARGET_CLASS.GetMethod("Reconfigure", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private static readonly Type ArmAiming = TARGET_CLASS.GetNestedType("ArmAiming", BindingFlags.NonPublic);
+        private static readonly MethodInfo armAimingUpdate = ArmAiming.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
+        private static readonly MethodInfo updateHandIKWeights = TARGET_CLASS.GetMethod("UpdateHandIKWeights", BindingFlags.NonPublic | BindingFlags.Instance);
+
         public static bool Prefix(ArmsController __instance)
         {
             if (__instance.smoothSpeed == 0)
             {
-                Traverse traverse = Traverse.Create(__instance);
-                object leftAim = traverse.Field("leftAim").GetValue();
-                object rightAim = traverse.Field("rightAim").GetValue();
-                leftAim.ReflectionCall("Update", true, false, __instance.ikToggleTime);
-                rightAim.ReflectionCall("Update", true, false, __instance.ikToggleTime);
-                __instance.ReflectionCall("UpdateHandIKWeights");
+                if ((bool)reconfigureWorldTarget.GetValue(__instance))
+                {
+                    reconfigure.Invoke(__instance, new object[] { (PlayerTool)null });
+                    reconfigureWorldTarget.SetValue(__instance, false);
+                }
 
+                object leftAim = leftAimField.GetValue(__instance);
+                object rightAim = rightAimField.GetValue(__instance);
+                var args = new object[] { __instance.ikToggleTime };
+                armAimingUpdate.Invoke(leftAim, args);
+                armAimingUpdate.Invoke(rightAim, args);
+
+                updateHandIKWeights.Invoke(__instance, new object[] { });
                 return false;
             }
             return true;

@@ -1,9 +1,8 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 
@@ -47,7 +46,7 @@ namespace NitroxModel.Tcp
             }
             catch (SocketException se)
             {
-                Console.WriteLine("Error reading data into buffer: " + se.Message);
+                Log.Info("Error reading data into buffer: " + se.Message);
                 Open = false;
             }
         }
@@ -61,7 +60,7 @@ namespace NitroxModel.Tcp
             }
             catch (SocketException)
             {
-                Console.WriteLine("Error reading data from socket");
+                Log.Info("Error reading data from socket");
                 Open = false;
             }
 
@@ -74,7 +73,7 @@ namespace NitroxModel.Tcp
             }
             else
             {
-                Console.WriteLine("No data found from socket, disconnecting");
+                Log.Info("No data found from socket, disconnecting");
                 Open = false;
             }
         }
@@ -90,7 +89,7 @@ namespace NitroxModel.Tcp
                 }
                 catch (SocketException)
                 {
-                    Console.WriteLine("Error sending packet");
+                    Log.Info("Error sending packet");
                     Open = false;
                 }
             }
@@ -106,7 +105,7 @@ namespace NitroxModel.Tcp
             }
             catch (Exception)
             {
-                Console.WriteLine("Error closing socket -- probably already closed");
+                Log.Info("Error closing socket -- probably already closed");
             }
         }
     }
