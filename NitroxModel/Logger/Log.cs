@@ -9,16 +9,17 @@ namespace NitroxModel.Logger
         {
             Disabled = 0,
             InGameMessages = 1,
-            ConsoleMessages = 2,
+            ConsoleInfo = 2,
             ConsoleDebug = 4
         }
+
         private static LogLevel level = LogLevel.Disabled;
 
-        // Set with combination of enum flags -- setLogLevel(LOG_CONSOLE | LOG_ERRORMESSAGE)
-        public static void SetLevel(LogLevel location)
+        // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
+        public static void SetLevel(LogLevel level)
         {
-            Log.level = location;
-            Console.WriteLine("[Nitrox] Log location set to " + Log.level);
+            Log.level = level;
+            Console.WriteLine("[Nitrox] Log level set to " + Log.level);
         }
 
         // For in-game notifications
@@ -30,7 +31,7 @@ namespace NitroxModel.Logger
             }
             Info(msg);
         }
-        
+
         public static void Error(String msg)
         {
             Console.WriteLine("[Nitrox] " + msg);
@@ -43,9 +44,14 @@ namespace NitroxModel.Logger
 
         public static void Info(String msg)
         {
-            if ((level & LogLevel.ConsoleMessages) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
+            Info(msg, new object[0]);
+        }
+
+        public static void Info(String fmt, params Object[] arg)
+        {
+            if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
-                Console.WriteLine("[Nitrox] " + msg);
+                Console.WriteLine("[Nitrox] " + fmt, arg);
             }
         }
 

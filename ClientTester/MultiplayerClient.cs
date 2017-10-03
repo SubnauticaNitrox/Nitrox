@@ -19,7 +19,7 @@ namespace ClientTester
 
         public MultiplayerClient(String playerId)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleMessages | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);

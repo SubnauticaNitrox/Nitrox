@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.Logger;
+using System;
 using System.Text;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace NitroxModel.Helper.Unity
     {
         public static void DumpGameObject(GameObject gameObject, string indent = "")
         {
-            Console.WriteLine("{0}+{1}", indent, gameObject.name);
+            Log.Info("{0}+{1}", indent, gameObject.name);
 
             foreach (Component component in gameObject.GetComponents<Component>())
             {
@@ -23,7 +24,7 @@ namespace NitroxModel.Helper.Unity
 
         public static void DumpComponent(Component component, string indent = "")
         {
-            Console.WriteLine("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
+            Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
         }
 
         public static String ByteArrayToHexString(byte[] bytes)

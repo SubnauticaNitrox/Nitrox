@@ -13,7 +13,7 @@ namespace NitroxPatcher
     {
         public static void Execute()
         {
-            Log.SetLevel(Log.LogLevel.ConsoleMessages | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
