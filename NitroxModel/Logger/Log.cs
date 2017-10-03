@@ -19,7 +19,7 @@ namespace NitroxModel.Logger
         public static void SetLevel(LogLevel level)
         {
             Log.level = level;
-            Console.WriteLine("[Nitrox] Log level set to " + Log.level);
+            Write("Log level set to " + Log.level);
         }
 
         // For in-game notifications
@@ -32,26 +32,31 @@ namespace NitroxModel.Logger
             Info(msg);
         }
 
-        public static void Error(String msg)
+        private static void Write(String fmt, params Object[] arg)
         {
-            Console.WriteLine("[Nitrox] " + msg);
+            Console.WriteLine("[Nitrox] " + fmt, arg);
+        }
+
+        public static void Error(String fmt, params Object[] arg)
+        {
+            Write("E: " + fmt, arg);
         }
 
         public static void Error(String msg, Exception ex)
         {
-            Console.WriteLine("[Nitrox] " + msg + "\n" + ex.ToString());
+            Error(msg + "\n{0}", ex);
         }
 
-        public static void Info(String msg)
+        public static void Warn(String fmt, params Object[] arg)
         {
-            Info(msg, new object[0]);
+            Write("W: " + fmt, arg);
         }
 
         public static void Info(String fmt, params Object[] arg)
         {
             if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
-                Console.WriteLine("[Nitrox] " + fmt, arg);
+                Write("I: " + fmt, arg);
             }
         }
 
@@ -63,11 +68,11 @@ namespace NitroxModel.Logger
 
         // Only for debug prints. Should not be displayed to general user.
         // Should we print the calling method for this for more debug context?
-        public static void Debug(String msg)
+        public static void Debug(String fmt, params Object[] arg)
         {
             if ((level & LogLevel.ConsoleDebug) != 0)
             {
-                Console.WriteLine("[Nitrox] " + msg);
+                Write("D: " + fmt, arg);
             }
         }
 
