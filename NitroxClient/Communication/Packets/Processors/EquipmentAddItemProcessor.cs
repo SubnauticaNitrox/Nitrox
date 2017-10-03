@@ -6,6 +6,7 @@ using UnityEngine;
 using NitroxModel.Helper;
 using System.Collections.Generic;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -17,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = SerializationHelper.GetGameObject(packet.ItemBytes);
 
-            Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+            Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
             GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 

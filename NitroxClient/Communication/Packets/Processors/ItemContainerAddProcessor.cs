@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -25,18 +26,11 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 ItemsContainer container = opContainer.Get();
                 GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
-                Pickupable pickupable = item.GetComponent<Pickupable>();
-
-                if (pickupable != null)
+                Pickupable pickupable = item.RequireComponent<Pickupable>();
+                
+                using (packetSender.Suppress<ItemContainerAdd>())
                 {
-                    using (packetSender.Suppress<ItemContainerAdd>())
-                    {
-                        container.UnsafeAdd(new InventoryItem(pickupable));
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(item.name + " did not have a corresponding pickupable script!");
+                    container.UnsafeAdd(new InventoryItem(pickupable));
                 }
             }
             else

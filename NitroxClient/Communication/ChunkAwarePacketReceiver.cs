@@ -95,13 +95,13 @@ namespace NitroxClient.Communication
 
             lock (deferredPacketsByBatchId)
             {
-                Queue<Packet> deferredPacketBatch;
-                if (deferredPacketsByBatchId.TryGetValue(chunk.BatchId, out deferredPacketBatch))
+                Queue<Packet> deferredPackets;
+                if (deferredPacketsByBatchId.TryGetValue(chunk.BatchId, out deferredPackets))
                 {
-                    while (deferredPacketBatch.Count > 0)
+                    while (deferredPackets.Count > 0)
                     {
                         Console.WriteLine("Found deferred packet... adding it back with high priority.");
-                        Packet packet = deferredPacketBatch.Dequeue();
+                        Packet packet = deferredPackets.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
                 }

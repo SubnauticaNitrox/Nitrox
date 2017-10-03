@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsToggleFloodLights lightingPacket)
         {
             GameObject cyclops = GuidHelper.RequireObjectFrom(lightingPacket.Guid);            
-            CyclopsLightingPanel lighting = cyclops.GetComponentInChildren<CyclopsLightingPanel>();
+            CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
 
             if (lighting.floodlightsOn != lightingPacket.IsOn)
             {

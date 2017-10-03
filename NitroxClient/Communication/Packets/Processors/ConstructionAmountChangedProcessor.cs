@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
@@ -20,18 +19,13 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Console.WriteLine("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.PlayerId + " " + amountChanged.ConstructionAmount);
 
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(amountChanged.Guid);
+            GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);            
+            Constructable constructable = constructing.GetComponent<Constructable>();
+            constructable.constructedAmount = amountChanged.ConstructionAmount;
 
-            if (opGameObject.IsPresent())
+            using (packetSender.Suppress<ConstructionAmountChanged>())
             {
-                GameObject constructing = opGameObject.Get();
-                Constructable constructable = constructing.GetComponent<Constructable>();
-                constructable.constructedAmount = amountChanged.ConstructionAmount;
-
-                using (packetSender.Suppress<ConstructionAmountChanged>())
-                {
-                    constructable.Construct();
-                }
+                constructable.Construct();
             }
         }
     }

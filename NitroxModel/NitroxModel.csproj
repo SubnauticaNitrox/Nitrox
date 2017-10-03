@@ -65,6 +65,7 @@
     <Compile Include="Helper\GameLogic\EquipmentHelper.cs" />
     <Compile Include="Helper\GameLogic\GuidHelper.cs" />
     <Compile Include="Helper\GameLogic\InventoryContainerHelper.cs" />
+    <Compile Include="Helper\Unity\GameObjectHelper.cs" />
     <Compile Include="Helper\Unity\MathUtil.cs" />
     <Compile Include="Helper\GameLogic\SerializationHelper.cs" />
     <Compile Include="Helper\GameLogic\TransientLocalObjectManager.cs" />

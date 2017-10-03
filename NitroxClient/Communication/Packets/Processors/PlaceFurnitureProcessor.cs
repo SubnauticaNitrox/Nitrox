@@ -7,6 +7,7 @@ using NitroxModel.Packets;
 using System;
 using System.Reflection;
 using UnityEngine;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -38,8 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
             GuidHelper.SetNewGuid(gameObject, guid);
 
-            Constructable constructable = gameObject.GetComponentInParent<Constructable>();
-            Validate.NotNull(constructable);
+            Constructable constructable = gameObject.RequireComponentInParent<Constructable>();
 
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.

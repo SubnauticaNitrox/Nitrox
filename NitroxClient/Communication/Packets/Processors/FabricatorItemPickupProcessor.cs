@@ -1,8 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -19,14 +18,8 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(FabricatorItemPickup packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
-            CrafterLogic crafterLogic = gameObject.GetComponentInChildren<CrafterLogic>(true);
-
-            if (crafterLogic == null)
-            {
-                Console.WriteLine("Game object did not have a crafterLogic component!");
-                return;
-            }
-            
+            CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
+                        
             if(crafterLogic.numCrafted > 0)
             {
                 crafterLogic.numCrafted--;

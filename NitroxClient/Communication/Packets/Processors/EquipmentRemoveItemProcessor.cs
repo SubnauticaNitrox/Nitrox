@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -17,33 +18,25 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
             GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);            
-            Pickupable pickupable = item.GetComponent<Pickupable>();
+            Pickupable pickupable = item.RequireComponent<Pickupable>();            
+            Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
-            if (pickupable != null)
+            if (opEquipment.IsPresent())
             {
-                Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+                Equipment equipment = opEquipment.Get();
 
-                if (opEquipment.IsPresent())
-                {
-                    Equipment equipment = opEquipment.Get();
+                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                InventoryItem inventoryItem = itemsBySlot[packet.Slot];
+                itemsBySlot[packet.Slot] = null;
 
-                    Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                    InventoryItem inventoryItem = itemsBySlot[packet.Slot];
-                    itemsBySlot[packet.Slot] = null;
-
-                    equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
-                    Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                    equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
-                }
-                else
-                {
-                    Console.WriteLine("Could not find equipment type for " + owner.name);
-                }                        
+                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), false });
+                Equipment.SendEquipmentEvent(pickupable, UNEQUIP_EVENT_TYPE_ID, owner, packet.Slot);
+                equipment.ReflectionCall("NotifyUnequip", false, false, new object[] { packet.Slot, inventoryItem });
             }
             else
             {
-                Console.WriteLine("item did not have a pickupable script attached!");
-            }
+                Console.WriteLine("Could not find equipment type for " + owner.name);
+            }                        
 
             UnityEngine.Object.Destroy(item);
         }

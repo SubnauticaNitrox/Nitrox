@@ -17,12 +17,12 @@ namespace NitroxPatcher.Patches
 
         protected void PatchPrefix(HarmonyInstance harmony, MethodBase targetMethod, string prefixMethod = "Prefix")
         {
-            PatchMultiple(harmony, targetMethod, null, prefixMethod, null);
+            PatchMultiple(harmony, targetMethod, prefixMethod, null, null);
         }
 
         protected void PatchPostfix(HarmonyInstance harmony, MethodBase targetMethod, string postfixMethod = "Postfix")
         {
-            PatchMultiple(harmony, targetMethod, postfixMethod, null, null);
+            PatchMultiple(harmony, targetMethod, null, postfixMethod, null);
         }
 
         protected void PatchMultiple(HarmonyInstance harmony, MethodBase targetMethod, bool prefix, bool postfix, bool transpiler)

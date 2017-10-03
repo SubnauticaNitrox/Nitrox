@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Helper.GameLogic;
-using System;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -16,23 +16,18 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             var gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
             var toggleLights = gameObject.GetComponent<ToggleLights>();
-            if (!toggleLights)
+
+            if (toggleLights == null)
             {
-                toggleLights = gameObject.GetComponentInChildren<ToggleLights>();
+                toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
             }
-            if (toggleLights)
+
+            if (packet.IsOn != toggleLights.GetLightsActive())
             {
-                if (packet.IsOn != toggleLights.GetLightsActive())
+                using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
                 {
-                    using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
-                    {
-                        toggleLights.SetLightsActive(packet.IsOn);
-                    }
+                    toggleLights.SetLightsActive(packet.IsOn);
                 }
-            }
-            else
-            {
-                Console.WriteLine("Cannot find ToggleLights in gameObject or children of gameObject " + gameObject);
             }
         }
     }

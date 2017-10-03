@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
 using System;
 using System.Collections;
@@ -96,20 +96,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
             escapePod.transform.position = model.Location;
 
-            StorageContainer storageContainer = escapePod.GetComponentInChildren<StorageContainer>();
-            Validate.NotNull(storageContainer, "StorageContainer can not be null");
+            StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
             GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
 
-            MedicalCabinet medicalCabinet = escapePod.GetComponentInChildren<MedicalCabinet>();
-            Validate.NotNull(medicalCabinet, "medicalCabinet can not be null");
+            MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();
             GuidHelper.SetNewGuid(medicalCabinet.gameObject, model.MedicalFabricatorGuid);
 
-            Fabricator fabricator = escapePod.GetComponentInChildren<Fabricator>();
-            Validate.NotNull(fabricator, "fabricator can not be null");
+            Fabricator fabricator = escapePod.RequireComponentInChildren<Fabricator>();
             GuidHelper.SetNewGuid(fabricator.gameObject, model.FabricatorGuid);
 
-            Radio radio = escapePod.GetComponentInChildren<Radio>();
-            Validate.NotNull(radio, "radio can not be null");
+            Radio radio = escapePod.RequireComponentInChildren<Radio>();
             GuidHelper.SetNewGuid(radio.gameObject, model.RadioGuid);
 
             return escapePod;

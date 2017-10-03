@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -29,31 +30,16 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void EnableRigidBody(GameObject gameObject)
         {
-            Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
-
-            if (rigidBody != null)
-            {
-                rigidBody.isKinematic = false;
-            }
-            else
-            {
-                Console.WriteLine("No rigid body!");
-            }
+            Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();            
+            rigidBody.isKinematic = false;
         }
 
         private void AssignToWaterPark(String waterParkGuid, Pickupable pickupable)
         {
             GameObject waterParkGo = GuidHelper.RequireObjectFrom(waterParkGuid);            
-            WaterPark waterPark = waterParkGo.GetComponent<WaterPark>();
-
-            if (waterPark != null)
-            {
-                waterPark.AddItem(pickupable);
-            }
-            else
-            {
-                Console.WriteLine("Could not find water park component on that game object");
-            }
+            WaterPark waterPark = waterParkGo.RequireComponent<WaterPark>();
+            
+            waterPark.AddItem(pickupable);
         }
 
         private void ExecuteDropItemAction(TechType techType, GameObject gameObject)

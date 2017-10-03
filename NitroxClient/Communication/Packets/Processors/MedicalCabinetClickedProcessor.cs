@@ -1,9 +1,9 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 using NitroxModel.Helper;
-using System;
 using UnityEngine;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -12,30 +12,23 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(MedicalCabinetClicked packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);            
-            MedicalCabinet cabinet = gameObject.GetComponent<MedicalCabinet>();
+            MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
+            
+            bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
 
-            if(cabinet != null)
+            cabinet.hasMedKit = packet.HasMedKit;
+            cabinet.timeSpawnMedKit = packet.NextSpawnTime;
+
+            bool isDoorOpen = (bool)cabinet.ReflectionGet("doorOpen");
+            bool doorChangedState = isDoorOpen != packet.DoorOpen;
+
+            if (doorChangedState)
             {
-                bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;
-
-                cabinet.hasMedKit = packet.HasMedKit;
-                cabinet.timeSpawnMedKit = packet.NextSpawnTime;
-
-                bool isDoorOpen = (bool)cabinet.ReflectionGet("doorOpen");
-                bool doorChangedState = isDoorOpen != packet.DoorOpen;
-
-                if (doorChangedState)
-                {
-                    cabinet.Invoke("ToggleDoorState", 0f);
-                }
-                else if (medkitPickedUp)
-                {
-                    cabinet.Invoke("ToggleDoorState", 1.8f);
-                }
+                cabinet.Invoke("ToggleDoorState", 0f);
             }
-            else
+            else if (medkitPickedUp)
             {
-                Console.WriteLine("Guid " + packet.Guid + " did not have a MedicalCabinet script");
+                cabinet.Invoke("ToggleDoorState", 1.8f);
             }
         }
     }

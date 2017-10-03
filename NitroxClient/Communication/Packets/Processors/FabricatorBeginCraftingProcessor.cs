@@ -1,9 +1,9 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 using System.Reflection;
 using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -19,13 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(FabricatorBeginCrafting packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
-            Fabricator fabricator = gameObject.GetComponentInChildren<Fabricator>(true);
-
-            if (fabricator == null)
-            {
-                Console.WriteLine("Game object did not have a Fabricator component!");
-                return;
-            }
+            Fabricator fabricator = gameObject.RequireComponentInChildren<Fabricator>(true);
             
             float buildDuration = packet.Duration + 0.2f; // small increase to prevent this player from swiping item from remote player
 

@@ -13,22 +13,16 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Console.WriteLine("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
 
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(completedPacket.Guid);
+            GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);            
+            Constructable constructable = constructing.GetComponent<Constructable>();
+            constructable.constructedAmount = 1f;
+            constructable.SetState(true, true);
 
-            if(opGameObject.IsPresent())
+            if (completedPacket.NewBaseCreatedGuid.IsPresent())
             {
-                GameObject constructing = opGameObject.Get();
-                
-                Constructable constructable = constructing.GetComponent<Constructable>();
-                constructable.constructedAmount = 1f;
-                constructable.SetState(true, true);
-
-                if (completedPacket.NewBaseCreatedGuid.IsPresent())
-                {
-                    String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
-                    configureNewlyConstructedBase(newBaseGuid);
-                }
-            }
+                String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
+                configureNewlyConstructedBase(newBaseGuid);
+            }            
         }
 
         private void configureNewlyConstructedBase(String newBaseGuid)
