@@ -5,9 +5,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsToggleEngineState : AuthenticatedPacket
     {
-        public String Guid { get; private set; }
-        public bool IsOn { get; set; }
-        public bool IsStarting { get; set; }
+        public String Guid { get; }
+        public bool IsOn { get; }
+        public bool IsStarting { get; }
 
         public CyclopsToggleEngineState(String playerId, String guid, bool isOn, bool isStarting) : base(playerId)
         {
