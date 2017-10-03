@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient;
 using NitroxClient.Communication;
+using NitroxClient.Map;
+using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using System;
-using NitroxClient.Map;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using UnityEngine;
 
 namespace NitroxTest.Client.Communication
 {
@@ -20,19 +20,21 @@ namespace NitroxTest.Client.Communication
         private String playerId = "TestPlayer";
         private Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
-        private Int3 loadedChunk;
-        private Int3 unloadedChunk;
+        private Chunk loadedChunk;
+        private Chunk unloadedChunk;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            loadedChunks = new LoadedChunks();
             packetReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            
-            loadedChunk = loadedChunks.GetChunk(loadedActionPosition);
-            unloadedChunk = loadedChunks.GetChunk(unloadedActionPosition);
 
-            loadedChunks.AddChunk(loadedChunk);
+            Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
+            Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
+
+            loadedChunk = new Chunk(loadedBatchId, 3);
+            unloadedChunk = new Chunk(unloadedBatchId, 3);
+
+            loadedChunks.Add(loadedChunk);
         }
 
         [TestMethod]
@@ -77,11 +79,11 @@ namespace NitroxTest.Client.Communication
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);
-            
+
             Packet packet2 = new TestNonActionPacket(playerId);
             packetReceiver.PacketReceived(packet2);
 
-            loadedChunks.AddChunk(unloadedChunk);
+            loadedChunks.Add(unloadedChunk);
             packetReceiver.ChunkLoaded(unloadedChunk);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();

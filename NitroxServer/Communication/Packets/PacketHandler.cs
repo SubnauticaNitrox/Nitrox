@@ -1,10 +1,12 @@
 ﻿using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Threading;
 using System;
 using System.Collections.Generic;
 
@@ -17,7 +19,7 @@ namespace NitroxServer.Communication.Packets
 
         private DefaultServerPacketProcessor defaultPacketProcessor;
 
-        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
+        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership, GameActionManager gameActionManager, ChunkManager chunkManager)
         {
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
 
@@ -26,7 +28,9 @@ namespace NitroxServer.Communication.Packets
                 {typeof(TcpServer), tcpServer },
                 {typeof(TimeKeeper), timeKeeper },
                 {typeof(SimulationOwnership), simulationOwnership },
-                {typeof(EscapePodManager), new EscapePodManager() }
+                {typeof(EscapePodManager), new EscapePodManager() },
+                {typeof(GameActionManager), gameActionManager },
+                {typeof(ChunkManager), chunkManager }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
@@ -56,7 +60,7 @@ namespace NitroxServer.Communication.Packets
             }
             else
             {
-                Console.WriteLine("Received invalid, unauthenticated packet: " + packet);
+                Log.Info("Received invalid, unauthenticated packet: " + packet);
             }
         }
     }

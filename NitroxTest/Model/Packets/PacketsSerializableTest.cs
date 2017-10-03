@@ -3,6 +3,8 @@ using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace NitroxTest.Model.Packets
 {
@@ -16,17 +18,27 @@ namespace NitroxTest.Model.Packets
             if (visitedTypes.Contains(t))
                 return;
 
-            Assert.IsTrue(t.IsSerializable, $"Type {t} is not serializable!");
+            if (!t.IsSerializable && !t.IsInterface)
+            {
+                // We have our own surrogates to (de)serialize types that are not marked [Serializable]
+                // This code is very similar to how serializability is checked in:
+                // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
+
+                ISurrogateSelector selector;
+                if (Packet.Serializer.SurrogateSelector.GetSurrogate(t, Packet.Serializer.Context, out selector) == null)
+                {
+                    Assert.Fail($"Type {t} is not serializable!");
+                }
+            }
 
             visitedTypes.Add(t);
 
             // Recursively check all properties and fields, because IsSerializable only checks if the current type is a primitive or has the [Serializable] attribute.
-            t.GetProperties().Select(tt => tt.PropertyType).ToList().ForEach(IsSerializable);
-            t.GetFields().Select(tt => tt.FieldType).ToList().ForEach(IsSerializable);
+            t.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Select(tt => tt.FieldType).ForEach(IsSerializable);
         }
 
         [TestMethod]
-        public void TestAllPacketsAreSerializable()
+        public void AllPacketsAreSerializable()
         {
             typeof(Packet).Assembly.GetTypes()
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)

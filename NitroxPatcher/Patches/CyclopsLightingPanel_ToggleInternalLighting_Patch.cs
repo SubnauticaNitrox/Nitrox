@@ -1,6 +1,6 @@
 ﻿using Harmony;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper.GameLogic;
 using System;
 using System.Reflection;
 

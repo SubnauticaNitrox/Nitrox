@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using NitroxModel.Helper.GameLogic;
 using System;
 using UnityEngine;
 
@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours
     {
         private float time = 0.0f;
         private float interpolationPeriod = 0.25f;
-        
+
         public void Update()
         {
             time += Time.deltaTime;
@@ -23,17 +23,12 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion rotation = this.gameObject.transform.rotation;
 
                 Multiplayer.Logic.Item.UpdatePosition(guid, currentPosition, rotation);
-            }            
+            }
         }
 
         public static void ApplyTo(GameObject gameObject)
         {
-            SyncedMultiplayerObject synced = gameObject.GetComponent<SyncedMultiplayerObject>();
-
-            if (synced == null)
-            {
-               gameObject.AddComponent<SyncedMultiplayerObject>();
-            }
+            gameObject.EnsureComponent<SyncedMultiplayerObject>();
         }
     }
 }

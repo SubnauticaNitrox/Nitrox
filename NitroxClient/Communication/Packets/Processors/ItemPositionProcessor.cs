@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if(opItem.IsPresent())
             {
-                MovementHelper.MoveRotateGameObject(opItem.Get(), ApiHelper.Vector3(drop.Position), ApiHelper.Quaternion(drop.Rotation), ITEM_TRANSFORM_SMOOTH_PERIOD);
+                MovementHelper.MoveRotateGameObject(opItem.Get(), drop.Position, drop.Rotation, ITEM_TRANSFORM_SMOOTH_PERIOD);
             }
         }
     }

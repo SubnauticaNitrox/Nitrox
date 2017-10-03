@@ -1,6 +1,7 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
@@ -36,11 +37,11 @@ namespace NitroxClient.Communication
             if (opVehicle.IsPresent())
             {
                 VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.TechType, vehicle.Guid);
+                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid, vehicle.SteeringWheelYaw, vehicle.SteeringWheelPitch, vehicle.AppliedThrottle);
             }
             else
             {
-                movement = new Movement(PlayerId, ApiHelper.Vector3(location), ApiHelper.Vector3(velocity), ApiHelper.Quaternion(bodyRotation), ApiHelper.Quaternion(aimingRotation), opSubGuid);
+                movement = new Movement(PlayerId, location, velocity, bodyRotation, aimingRotation, opSubGuid);
             }
 
             Send(movement);
@@ -62,8 +63,8 @@ namespace NitroxClient.Communication
                 }
                 catch (Exception ex)
                 {
-                    ErrorMessage.AddError($"Error sending {packet}: {ex.Message}");
-                    Console.WriteLine("Error sending packet {0}\n{1}", packet, ex);
+                    Log.InGame($"Error sending {packet}: {ex.Message}");
+                    Log.Error("Error sending packet " + packet, ex);
                 }
             }
         }

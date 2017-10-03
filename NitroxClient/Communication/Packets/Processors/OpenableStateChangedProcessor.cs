@@ -1,8 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -18,27 +17,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(OpenableStateChanged packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.Guid);
-
-            if (opGameObject.IsPresent())
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);            
+            Openable openable = gameObject.RequireComponent<Openable>();
+            
+            using (packetSender.Suppress<OpenableStateChanged>())
             {
-                Openable openable = opGameObject.Get().GetComponent<Openable>();
-
-                if (openable != null)
-                {
-                    using (packetSender.Suppress<OpenableStateChanged>())
-                    {
-                        openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Gameobject did not have a corresponding openable to change state!");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Could not find openable game object with guid: " + packet.Guid);
+                openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
             }
         }
     }

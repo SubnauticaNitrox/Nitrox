@@ -1,19 +1,20 @@
-﻿using NitroxModel.DataStructures;
+﻿using NitroxModel.DataStructures.Util;
 using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PlaceFurniture : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public String SubGuid { get; private set; }
-        public Vector3 ItemPosition { get; private set; }
-        public Quaternion Rotation { get; private set; }
-        public Transform Camera { get; private set; }
-        public String TechType { get; private set; }
+        public String Guid { get; }
+        public Optional<String> SubGuid { get; }
+        public Vector3 ItemPosition { get; }
+        public Quaternion Rotation { get; }
+        public TechType TechType { get; }
+        public Transform Camera { get; }
 
-        public PlaceFurniture(String playerId, String guid, String subGuid, Vector3 itemPosition, Quaternion rotation, Transform camera, String techType) : base(playerId, itemPosition)
+        public PlaceFurniture(String playerId, String guid, Optional<String> subGuid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.SubGuid = subGuid;

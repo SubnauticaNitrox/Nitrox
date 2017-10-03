@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public class BroadcastEscapePods : Packet
     {
-        public List<EscapePodModel> EscapePods { get; private set; }
+        public EscapePodModel[] EscapePods { get; }
 
-        public BroadcastEscapePods(List<EscapePodModel> escapePods) : base()
+        public BroadcastEscapePods(EscapePodModel[] escapePods) : base()
         {
             this.EscapePods = escapePods;
         }

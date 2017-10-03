@@ -1,12 +1,13 @@
 ﻿using NitroxClient.Communication;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using static NitroxModel.Helper.GameLogic.TransientLocalObjectManager;
 
 namespace NitroxClient.GameLogic
 {
@@ -31,7 +32,7 @@ namespace NitroxClient.GameLogic
         {
             String constructorGuid = GuidHelper.GetGuid(constructor);
 
-            Console.WriteLine("Building item from constructor with uuid: " + constructorGuid);
+            Log.Debug("Building item from constructor with uuid: " + constructorGuid);
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
@@ -42,12 +43,12 @@ namespace NitroxClient.GameLogic
                 List<InteractiveChildObjectIdentifier> childIdentifiers = ExtractGuidsOfInteractiveChildren(constructedObject);
                 String constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
 
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(packetSender.PlayerId, constructorGuid, constructedObjectGuid, ApiHelper.TechType(techType), duration, childIdentifiers);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(packetSender.PlayerId, constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
                 packetSender.Send(beginCrafting);
             }
             else
             {
-                Console.WriteLine("Could not send packet because there wasn't a corresponding constructed object!");
+                Log.Error("Could not send packet because there wasn't a corresponding constructed object!");
             }
         }
 

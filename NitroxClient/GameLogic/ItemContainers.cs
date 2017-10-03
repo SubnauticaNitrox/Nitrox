@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication;
-using NitroxClient.GameLogic.Helper;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -21,11 +21,8 @@ namespace NitroxClient.GameLogic
             Vector3 ownerPos = owner.transform.position;
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
             
-            ItemContainerAdd add = new ItemContainerAdd(packetSender.PlayerId, ownerGuid, bytes, ApiHelper.Vector3(ownerPos));
+            ItemContainerAdd add = new ItemContainerAdd(packetSender.PlayerId, ownerGuid, bytes, ownerPos);
             packetSender.Send(add);
-
-            Console.WriteLine(add);
-            Console.WriteLine(DebugUtils.ByteArrayToHexString(bytes));
         }
 
         public void RemoveItem(Pickupable pickupable, GameObject owner)
@@ -34,7 +31,7 @@ namespace NitroxClient.GameLogic
             String ownerGuid = GuidHelper.GetGuid(owner);
             Vector3 ownerPos = owner.transform.position;
 
-            ItemContainerRemove remove = new ItemContainerRemove(packetSender.PlayerId, ownerGuid, itemGuid, ApiHelper.Vector3(ownerPos));
+            ItemContainerRemove remove = new ItemContainerRemove(packetSender.PlayerId, ownerGuid, itemGuid, ownerPos);
             packetSender.Send(remove);
         }
     }

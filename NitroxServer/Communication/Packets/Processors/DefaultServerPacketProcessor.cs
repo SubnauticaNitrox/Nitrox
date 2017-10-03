@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(ItemPosition),
             typeof(CyclopsChangeColor)
         };
-        
+
         public DefaultServerPacketProcessor(TcpServer tcpServer)
         {
             this.tcpServer = tcpServer;
@@ -26,7 +27,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             if (!loggingPacketBlackList.Contains(packet.GetType()))
             {
-                Console.WriteLine("Using default packet processor for: " + packet.ToString() + " and player " + player.Id);
+                Log.Debug("Using default packet processor for: " + packet.ToString() + " and player " + player.Id);
             }
 
             tcpServer.SendPacketToOtherPlayers(packet, player);

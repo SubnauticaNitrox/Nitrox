@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Map;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 
 namespace NitroxClient.Communication
@@ -10,14 +10,15 @@ namespace NitroxClient.Communication
     {
         private static readonly int EXPIDITED_PACKET_PRIORITY = 999;
         private static readonly int DEFAULT_PACKET_PRIORITY = 1;
+        private static readonly int DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS = 1;
 
-        private Dictionary<Int3, Queue<Packet>> deferredPacketsByChunk;
+        private Dictionary<Int3, Queue<Packet>> deferredPacketsByBatchId;
         private PriorityQueue<Packet> receivedPackets;
         private LoadedChunks loadedChunks;
-        
+
         public ChunkAwarePacketReceiver(LoadedChunks loadedChunks)
         {
-            this.deferredPacketsByChunk = new Dictionary<Int3, Queue<Packet>>();
+            this.deferredPacketsByBatchId = new Dictionary<Int3, Queue<Packet>>();
             this.receivedPackets = new PriorityQueue<Packet>();
             this.loadedChunks = loadedChunks;
         }
@@ -27,12 +28,12 @@ namespace NitroxClient.Communication
             lock (receivedPackets)
             {
                 if (!PacketWasDeferred(packet))
-                {                    
+                {
                     receivedPackets.Enqueue(DEFAULT_PACKET_PRIORITY, packet);
                 }
             }
         }
-    
+
         public Queue<Packet> GetReceivedPackets()
         {
             Queue<Packet> packets = new Queue<Packet>();
@@ -41,13 +42,13 @@ namespace NitroxClient.Communication
             {
                 while (receivedPackets.Count > 0)
                 {
-                    packets.Enqueue(receivedPackets.Dequeue());                    
-                }                
+                    packets.Enqueue(receivedPackets.Dequeue());
+                }
             }
 
             return packets;
         }
-        
+
         private bool PacketWasDeferred(Packet packet)
         {
             if (packet is PlayerActionPacket)
@@ -59,12 +60,12 @@ namespace NitroxClient.Communication
                     return false;
                 }
 
-                Int3 actionChunk = loadedChunks.GetChunk(playerAction.ActionPosition);
+                Int3 actionBatchId = LargeWorldStreamer.main.GetContainingBatch(playerAction.ActionPosition);
 
-                if (!loadedChunks.IsLoadedChunk(actionChunk))
+                if (!loadedChunks.HasChunkWithMinDesiredLevelOfDetail(actionBatchId, DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS))
                 {
-                    Console.WriteLine("Action was deferred, chunk not loaded: " + actionChunk);
-                    AddPacketToDeferredMap(playerAction, actionChunk);
+                    Log.Debug("Action was deferred, batch not loaded (with required lod): " + actionBatchId);
+                    AddPacketToDeferredMap(playerAction, actionBatchId);
                     return true;
                 }
             }
@@ -72,29 +73,35 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Int3 chunk)
+        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Int3 batchId)
         {
-            lock (deferredPacketsByChunk)
+            lock (deferredPacketsByBatchId)
             {
-                if (!deferredPacketsByChunk.ContainsKey(chunk))
+                if (!deferredPacketsByBatchId.ContainsKey(batchId))
                 {
-                    deferredPacketsByChunk.Add(chunk, new Queue<Packet>());
+                    deferredPacketsByBatchId.Add(batchId, new Queue<Packet>());
                 }
 
-                deferredPacketsByChunk[chunk].Enqueue(playerAction);
-            }         
+                deferredPacketsByBatchId[batchId].Enqueue(playerAction);
+            }
         }
 
-        public void ChunkLoaded(Int3 chunk)
+        public void ChunkLoaded(Chunk chunk)
         {
-            lock (deferredPacketsByChunk)
+            if (chunk.Level > DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS)
             {
-                if (deferredPacketsByChunk.ContainsKey(chunk))
+                return;
+            }
+
+            lock (deferredPacketsByBatchId)
+            {
+                Queue<Packet> deferredPackets;
+                if (deferredPacketsByBatchId.TryGetValue(chunk.BatchId, out deferredPackets))
                 {
-                    while (deferredPacketsByChunk[chunk].Count > 0)
+                    while (deferredPackets.Count > 0)
                     {
-                        Console.WriteLine("Found deferred packet... adding it back with high priority.");
-                        Packet packet = deferredPacketsByChunk[chunk].Dequeue();
+                        Log.Debug("Found deferred packet... adding it back with high priority.");
+                        Packet packet = deferredPackets.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
                 }

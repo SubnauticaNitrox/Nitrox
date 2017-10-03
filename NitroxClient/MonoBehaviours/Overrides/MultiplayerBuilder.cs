@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UWE;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -102,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             if (MultiplayerBuilder.CreateGhost())
             {
-                Console.WriteLine("Ghost Created!");
+                Log.Debug("Ghost Created!");
             }
             MultiplayerBuilder.canPlace = MultiplayerBuilder.UpdateAllowed();
             Transform expr_58 = MultiplayerBuilder.ghostModel.transform;
@@ -302,7 +302,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 else
                 {
-                    Console.WriteLine("Could not find base component on the given game object");
+                    Log.Error("Could not find base component on the given game object: " + targetBaseGameObject.name);
                 }
             }
 
@@ -396,7 +396,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 text,
                 text2
                 });
-                Console.WriteLine(format, default(Vector3));
             }
         }
 

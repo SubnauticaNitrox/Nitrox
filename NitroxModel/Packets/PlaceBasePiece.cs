@@ -1,20 +1,20 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PlaceBasePiece : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public Vector3 ItemPosition { get; private set; }
-        public Quaternion Rotation { get; private set; }
-        public Transform Camera { get; private set; }
-        public String TechType { get; private set; }
-        public Optional<String> ParentBaseGuid { get; private set; }
+        public String Guid { get; }
+        public Vector3 ItemPosition { get; }
+        public Quaternion Rotation { get; }
+        public TechType TechType { get; }
+        public Optional<String> ParentBaseGuid { get; }
+        public Transform Camera { get; }
 
-        public PlaceBasePiece(String playerId, String guid, Vector3 itemPosition, Quaternion rotation, Transform camera, String techType, Optional<String> parentBaseGuid) : base(playerId, itemPosition)
+        public PlaceBasePiece(String playerId, String guid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType, Optional<String> parentBaseGuid) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.ItemPosition = itemPosition;
@@ -23,7 +23,7 @@ namespace NitroxModel.Packets
             this.Camera = camera;
             this.ParentBaseGuid = parentBaseGuid;
         }
-
+        
         public override string ToString()
         {
             return "[PlaceBasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " Camera: " + Camera + " TechType: " + TechType + " ParentBaseGuid: " + ParentBaseGuid + "]";

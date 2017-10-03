@@ -1,14 +1,14 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PickupItem : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public Vector3 ItemPosition { get; private set; }
-        public String TechType { get; private set; }
+        public String Guid { get; }
+        public Vector3 ItemPosition { get; }
+        public String TechType { get; }
 
         public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
         {

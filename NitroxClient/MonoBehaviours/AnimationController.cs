@@ -18,7 +18,8 @@ namespace NitroxClient.MonoBehaviours
 
         public void Start()
         {
-            animator = gameObject.GetComponent<Animator>();
+            animator = GetComponent<Animator>();
+
             this["is_underwater"] = true;
         }
 
@@ -50,6 +51,11 @@ namespace NitroxClient.MonoBehaviours
         {
             get { return animator.GetBool(name); }
             set { animator.SetBool(name, value); }
+        }
+
+        internal void SetFloat(string name, float value)
+        {
+            animator.SetFloat(name, value);
         }
     }
 }
