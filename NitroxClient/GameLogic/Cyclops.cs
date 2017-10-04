@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication;
-using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using System;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -28,8 +28,8 @@ namespace NitroxClient.GameLogic
 
         public void BeginSilentRunning(String guid)
         {
-            CyclopsBeginSilentRunning beginSilentRunning = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
-            packetSender.Send(beginSilentRunning);
+            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
+            packetSender.Send(packet);
         }
 
         public void ActivateHorn(String guid)

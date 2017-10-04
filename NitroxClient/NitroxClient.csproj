@@ -57,11 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\PacketSuppression.cs" />
-<<<<<<< HEAD
-    <Compile Include="Communication\Packets\Processors\CyclopsChangeColorProcessor.cs" />
-=======
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
->>>>>>> master
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeColorProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />

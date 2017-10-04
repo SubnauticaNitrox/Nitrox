@@ -55,9 +55,7 @@
   <ItemGroup>
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
-<<<<<<< HEAD
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
-=======
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
@@ -65,7 +63,6 @@
     <Compile Include="Patches\Server\LargeWorldStreamer_TryGetWorstBatch_Patch.cs" />
     <Compile Include="Patches\Server\SwimBehaviour_SwimToInterval_Patch.cs" />
     <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
->>>>>>> master
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />

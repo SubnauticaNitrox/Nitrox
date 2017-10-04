@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {

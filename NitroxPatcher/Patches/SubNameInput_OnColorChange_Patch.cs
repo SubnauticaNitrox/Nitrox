@@ -1,11 +1,9 @@
 ﻿using Harmony;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using System;
 using System.Reflection;
-using NitroxClient;
+using NitroxModel.Helper.GameLogic;
 
 namespace NitroxPatcher.Patches
 {
@@ -19,10 +17,8 @@ namespace NitroxPatcher.Patches
             Player player = (Player)__instance.ReflectionGet("player");
             if (player != null)
             {
-                Color color = ApiHelper.Color(eventData.color);
-                Vector3 hsb = ApiHelper.Vector3(eventData.hsb);
                 String guid = GuidHelper.GetGuid(player.GetCurrentSub().gameObject);
-                Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, hsb, color);
+                Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, eventData.hsb, eventData.color);
             }
         }
 
