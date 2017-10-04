@@ -1,8 +1,6 @@
 ﻿using Harmony;
 using NitroxClient.MonoBehaviours;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 
 namespace NitroxPatcher.Patches
@@ -16,14 +14,14 @@ namespace NitroxPatcher.Patches
         {
             PowerMonitor powerMonitor = __instance.gameObject.GetComponent<PowerMonitor>();
 
-            if(powerMonitor == null)
+            if (powerMonitor == null)
             {
                 powerMonitor = __instance.gameObject.AddComponent<PowerMonitor>();
             }
-            
-            powerMonitor.ChargeChanged(__result, powerMonitor.gameObject);            
+
+            powerMonitor.ChargeChanged(__result, powerMonitor.gameObject);
         }
-        
+
         public override void Patch(HarmonyInstance harmony)
         {
             this.PatchPostfix(harmony, TARGET_METHOD);

@@ -1,8 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.Logger;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

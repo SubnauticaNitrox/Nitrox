@@ -1,43 +1,24 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using NitroxModel.Packets;
 using System;
 using System.Reflection;
 using UnityEngine;
+using NitroxModel.Helper.Unity;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceFurnitureProcessor : ClientPacketProcessor<PlaceFurniture>
     {
-        private static GameObject otherPlayerCamera;
-
         public override void Process(PlaceFurniture placeFurniturePacket)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(placeFurniturePacket.TechType);
-
-            if (opTechType.IsPresent())
-            {
-                TechType techType = opTechType.Get();
-
-                if(otherPlayerCamera == null)
-                {
-                    otherPlayerCamera = new GameObject();
-                }
-
-                ApiHelper.SetTransform(otherPlayerCamera.transform, placeFurniturePacket.Camera);
-
-                ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, ApiHelper.Vector3(placeFurniturePacket.ItemPosition), ApiHelper.Quaternion(placeFurniturePacket.Rotation), otherPlayerCamera.transform, techType);
-            }
-            else
-            {
-                Console.WriteLine("Could not identify tech type for " + placeFurniturePacket.TechType);
-            }
+            ConstructItem(placeFurniturePacket.Guid, placeFurniturePacket.SubGuid, placeFurniturePacket.ItemPosition, placeFurniturePacket.Rotation, placeFurniturePacket.Camera, placeFurniturePacket.TechType);
         }
-        
-        public void ConstructItem(String guid, String subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
+
+        public void ConstructItem(String guid, Optional<String> subGuid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType)
         {
             GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
             MultiplayerBuilder.overridePosition = position;
@@ -47,21 +28,18 @@ namespace NitroxClient.Communication.Packets.Processors
             MultiplayerBuilder.placeRotation = rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
+            SubRoot subRoot = null;
 
-            if (opSub.IsEmpty())
+            if (subGuid.IsPresent())
             {
-                Console.WriteLine("Could not locate sub with guid" + subGuid);
-                return;
+                GameObject sub = GuidHelper.RequireObjectFrom(subGuid.Get());
+                subRoot = sub.GetComponent<SubRoot>();                
             }
-
-            SubRoot subRoot = opSub.Get().GetComponent<SubRoot>();
 
             GameObject gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
             GuidHelper.SetNewGuid(gameObject, guid);
 
-            Constructable constructable = gameObject.GetComponentInParent<Constructable>();
-            Validate.NotNull(constructable);          
+            Constructable constructable = gameObject.RequireComponentInParent<Constructable>();
 
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.
@@ -69,6 +47,6 @@ namespace NitroxClient.Communication.Packets.Processors
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
             startCrafting.Invoke(constructable, new object[] { });
-        }        
+        }
     }
 }

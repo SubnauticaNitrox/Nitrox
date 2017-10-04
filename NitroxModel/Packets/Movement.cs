@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {

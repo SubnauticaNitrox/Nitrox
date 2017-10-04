@@ -1,8 +1,9 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleMovementProcessor : ClientPacketProcessor<VehicleMovement>
     {
-        private PlayerManager remotePlayerManager;
+        private readonly PlayerManager remotePlayerManager;
 
         public VehicleMovementProcessor(PlayerManager remotePlayerManager)
         {
@@ -21,12 +22,13 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
-
+            
             RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
 
-            Vector3 remotePosition = ApiHelper.Vector3(vehicleMovement.Position);
-            Vector3 remoteVelocity = ApiHelper.Vector3(vehicleMovement.Velocity);
-            Quaternion remoteRotation = ApiHelper.Quaternion(vehicleMovement.BodyRotation);
+            Vector3 remotePosition = vehicleMovement.Position;
+            Vector3 remoteVelocity = vehicleMovement.Velocity;
+            Quaternion remoteRotation = vehicleMovement.BodyRotation;
+            Vector3 angularVelocity = vehicleMovement.AngularVelocity;
 
             Vehicle vehicle = null;
             SubRoot subRoot = null;
@@ -34,32 +36,36 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject gameObject = opGameObject.Get();
 
-                Rigidbody rigidbody = gameObject.GetComponent<Rigidbody>();
-
-                if (rigidbody != null)
-                {
-                    //todo: maybe toggle kinematic if jumping large distances?
-
-                    /*
-                     * For the cyclops, it is too intense for the game to lerp the entire structure every movement
-                     * packet update.  Instead, we try to match the velocity.  Due to floating points not being
-                     * precise, this will skew quickly.  To counter this, we apply micro adjustments each packet
-                     * to get the simulation back in sync.  The adjustments will increase in size the larger the
-                     * out of sync issue is.
-                     *
-                     * Besides, this causes the movement of the Cyclops, vehicles and player to be very fluid.
-                     */
-
-                    rigidbody.velocity = MovementHelper.GetCorrectedVelocity(remotePosition, remoteVelocity, gameObject, PlayerMovement.BROADCAST_INTERVAL);
-                    rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(remoteRotation, gameObject, PlayerMovement.BROADCAST_INTERVAL);
-                }
-                else
-                {
-                    Console.WriteLine("Vehicle did not have a rigidbody!");
-                }
-
                 vehicle = gameObject.GetComponent<Vehicle>();
                 subRoot = gameObject.GetComponent<SubRoot>();
+
+                MultiplayerVehicleControl mvc = null;
+
+                if (subRoot != null)
+                {
+                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                }
+                else if (vehicle != null)
+                {
+                    var seamoth = vehicle as SeaMoth;
+                    var exosuit = vehicle as Exosuit;
+
+                    if (seamoth)
+                    {
+                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                    }
+                    else if (exosuit)
+                    {
+                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                    }
+                }
+
+                if (mvc != null)
+                {
+                    mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
+                    mvc.SetThrottle(vehicleMovement.AppliedThrottle);
+                    mvc.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
+                }
             }
             else
             {
@@ -67,23 +73,13 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             player.SetVehicle(vehicle);
             player.SetSubRoot(subRoot);
-            player.SetPilotingChair(subRoot.GetComponentInChildren<PilotingChair>());
+            player.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
 
             player.animationController.UpdatePlayerAnimations = false;
         }
 
-        private void CreateVehicleAt(RemotePlayer player, String techTypeString, String guid, Vector3 position, Quaternion rotation)
+        private void CreateVehicleAt(RemotePlayer player, TechType techType, String guid, Vector3 position, Quaternion rotation)
         {
-            Optional<TechType> opTechType = ApiHelper.TechType(techTypeString);
-
-            if (opTechType.IsEmpty())
-            {
-                Console.WriteLine("Unknown tech type: " + techTypeString);
-                return;
-            }
-
-            TechType techType = opTechType.Get();
-
             if (techType == TechType.Cyclops)
             {
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(player, go, guid, position, rotation));
@@ -98,7 +94,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Console.WriteLine("No prefab for tech type: " + techType);
+                    Log.Error("No prefab for tech type: " + techType);
                 }
             }
         }
@@ -116,8 +112,6 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
 
             GuidHelper.SetNewGuid(gameObject, guid);
-
-            // TODO: Implement cyclops piloting, and simulation of vehicles when they are not being piloted.
         }
     }
 }

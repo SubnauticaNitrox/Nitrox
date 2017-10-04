@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructionCompleted : PlayerActionPacket
     { 
-        public String Guid { get; private set; }
-        public Optional<String> NewBaseCreatedGuid { get; private set; }
+        public String Guid { get; }
+        public Optional<String> NewBaseCreatedGuid { get; }
 
         public ConstructionCompleted(String playerId, Vector3 itemPosition, String guid, Optional<String> newBaseCreatedGuid) : base(playerId, itemPosition)
         {

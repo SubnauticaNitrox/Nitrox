@@ -1,11 +1,11 @@
 ﻿using Harmony;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
-using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using static NitroxModel.Helper.GameLogic.TransientLocalObjectManager;
 
 namespace NitroxPatcher.Patches
 {

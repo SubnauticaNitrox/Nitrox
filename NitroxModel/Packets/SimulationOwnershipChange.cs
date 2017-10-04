@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SimulationOwnershipChange : Packet
     {
-        public List<OwnedGuid> OwnedGuids { get; private set; }
+        public List<OwnedGuid> OwnedGuids { get; }
         
         public SimulationOwnershipChange(String guid, String owningPlayerId) : base()
         {

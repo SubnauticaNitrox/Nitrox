@@ -5,8 +5,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsToggleInternalLighting : AuthenticatedPacket
     {
-        public String Guid { get; private set; }
-        public bool IsOn { get; private set; }
+        public String Guid { get; }
+        public bool IsOn { get; }
 
         public CyclopsToggleInternalLighting(String playerId, String guid, bool isOn) : base(playerId)
         {

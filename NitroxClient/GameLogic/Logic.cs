@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxClient.Map;
 
 namespace NitroxClient.GameLogic
 {
@@ -18,8 +19,9 @@ namespace NitroxClient.GameLogic
         public Interior Interior { get; private set; }
         public MobileVehicleBay MobileVehicleBay { get; private set; }
         public PlayerDeath PlayerDeath { get; private set; }
+        public Chunks Chunks { get; private set; }
 
-        public Logic(PacketSender packetSender)
+        public Logic(PacketSender packetSender, LoadedChunks loadedChunks, ChunkAwarePacketReceiver chunkAwarePacketReceiver)
         {
             this.Building = new Building(packetSender);
             this.Chat = new Chat(packetSender);
@@ -35,6 +37,7 @@ namespace NitroxClient.GameLogic
             this.Interior = new Interior(packetSender);
             this.MobileVehicleBay = new MobileVehicleBay(packetSender);
             this.PlayerDeath = new PlayerDeath(packetSender);
+            this.Chunks = new Chunks(packetSender, loadedChunks, chunkAwarePacketReceiver);
         }
     }
 }

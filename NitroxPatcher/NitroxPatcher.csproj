@@ -56,9 +56,21 @@
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\TelemetryReporting_SendPlayerDeathEvent_Patch.cs" />
+    <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
+    <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\Server\CellManager_HideEntities_Patch.cs" />
+    <Compile Include="Patches\Server\LargeWorldStreamer_TryGetWorstBatch_Patch.cs" />
+    <Compile Include="Patches\Server\SwimBehaviour_SwimToInterval_Patch.cs" />
+    <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
+    <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
+    <Compile Include="Patches\Server\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\Server\WaterSurfaceOnCamera_OnPostRender_Patch.cs" />
+    <Compile Include="Patches\Server\WaterBiomeManager_RasterizeAtmosphereVolumes_Patch.cs" />
+    <Compile Include="Patches\Server\MainMenuPlayerName_Start_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
@@ -80,15 +92,13 @@
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
-    <Compile Include="Patches\BuilderPatch.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Patches\ClipMapManager_HideEntities_Patch.cs" />
-    <Compile Include="Patches\ClipMapManager_ShowEntities_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />
     <Compile Include="Patches\uGUI_MainMenu_Start_Patch.cs" />
@@ -110,6 +120,10 @@
     <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

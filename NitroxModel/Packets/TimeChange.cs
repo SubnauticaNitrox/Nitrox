@@ -5,7 +5,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class TimeChange : Packet
     {
-        public float CurrentTime { get; private set; }
+        public float CurrentTime { get; }
 
         public TimeChange(float currentTime) : base()
         {

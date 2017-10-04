@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using UnityEngine;
@@ -11,24 +12,18 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Console.WriteLine("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
+            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
 
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(completedPacket.Guid);
+            GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);            
+            Constructable constructable = constructing.GetComponent<Constructable>();
+            constructable.constructedAmount = 1f;
+            constructable.SetState(true, true);
 
-            if(opGameObject.IsPresent())
+            if (completedPacket.NewBaseCreatedGuid.IsPresent())
             {
-                GameObject constructing = opGameObject.Get();
-                
-                Constructable constructable = constructing.GetComponent<Constructable>();
-                constructable.constructedAmount = 1f;
-                constructable.SetState(true, true);
-
-                if (completedPacket.NewBaseCreatedGuid.IsPresent())
-                {
-                    String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
-                    configureNewlyConstructedBase(newBaseGuid);
-                }
-            }
+                String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
+                configureNewlyConstructedBase(newBaseGuid);
+            }            
         }
 
         private void configureNewlyConstructedBase(String newBaseGuid)
@@ -42,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Console.WriteLine("Could not assign new base guid as no newly constructed base was found");
+                Log.Error("Could not assign new base guid as no newly constructed base was found");
             }
         }
     }

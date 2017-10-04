@@ -1,12 +1,12 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class DeconstructionCompleted : PlayerActionPacket
     { 
-        public String Guid { get; private set; }
+        public String Guid { get; }
 
         public DeconstructionCompleted(String playerId, Vector3 itemPosition, String guid) : base(playerId, itemPosition)
         {

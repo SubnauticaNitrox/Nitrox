@@ -1,12 +1,13 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 using System;
-using UnityEngine;
-using System.Collections.Generic;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Helper;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -30,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 AssignPlayerToEscapePod(packet);
             }
-            
+
             Player.main.StartCoroutine(SyncEscapePodGuids(packet));
         }
 
@@ -40,19 +41,19 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (model.AssignedPlayers.Contains(packetSender.PlayerId))
                 {
-                    EscapePod.main.transform.position = ApiHelper.Vector3(model.Location);
-                    EscapePod.main.playerSpawn.position = ApiHelper.Vector3(model.Location) + playerSpawnRelativeToEscapePodPosition;
+                    EscapePod.main.transform.position = model.Location;
+                    EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
 
                     Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
 
-                    if(rigidbody != null)
+                    if (rigidbody != null)
                     {
-                        Console.WriteLine("Freezing rigidbody");
+                        Log.Debug("Freezing escape pod rigidbody");
                         rigidbody.constraints = RigidbodyConstraints.FreezeAll;
                     }
                     else
                     {
-                        Console.WriteLine("Escape pod did not have a rigid body!");
+                        Log.Error("Escape pod did not have a rigid body!");
                     }
 
                     Player.main.transform.position = EscapePod.main.playerSpawn.position;
@@ -72,7 +73,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             foreach (EscapePodModel model in packet.EscapePods)
             {
-                if(!escapePodsByGuid.ContainsKey(model.Guid))
+                if (!escapePodsByGuid.ContainsKey(model.Guid))
                 {
                     escapePodsByGuid[model.Guid] = CreateNewEscapePod(model);
                 }
@@ -94,22 +95,18 @@ namespace NitroxClient.Communication.Packets.Processors
                 escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
             }
 
-            escapePod.transform.position = ApiHelper.Vector3(model.Location);
+            escapePod.transform.position = model.Location;
 
-            StorageContainer storageContainer = escapePod.GetComponentInChildren<StorageContainer>();
-            Validate.NotNull(storageContainer, "StorageContainer can not be null");
+            StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
             GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
 
-            MedicalCabinet medicalCabinet = escapePod.GetComponentInChildren<MedicalCabinet>();
-            Validate.NotNull(medicalCabinet, "medicalCabinet can not be null");
+            MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();
             GuidHelper.SetNewGuid(medicalCabinet.gameObject, model.MedicalFabricatorGuid);
 
-            Fabricator fabricator = escapePod.GetComponentInChildren<Fabricator>();
-            Validate.NotNull(fabricator, "fabricator can not be null");
+            Fabricator fabricator = escapePod.RequireComponentInChildren<Fabricator>();
             GuidHelper.SetNewGuid(fabricator.gameObject, model.FabricatorGuid);
 
-            Radio radio = escapePod.GetComponentInChildren<Radio>();
-            Validate.NotNull(radio, "radio can not be null");
+            Radio radio = escapePod.RequireComponentInChildren<Radio>();
             GuidHelper.SetNewGuid(radio.gameObject, model.RadioGuid);
 
             return escapePod;

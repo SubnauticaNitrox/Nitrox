@@ -1,9 +1,7 @@
-﻿using LitJson;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using System;
+using NitroxModel.Helper.GameLogic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -14,6 +12,7 @@ namespace NitroxClient.GameLogic
         public readonly GameObject body;
         public readonly GameObject playerView;
         public readonly AnimationController animationController;
+        public readonly ArmsController armsController;
         public readonly Rigidbody rigidBody;
 
         public Vehicle Vehicle { get; private set; }
@@ -32,6 +31,7 @@ namespace NitroxClient.GameLogic
             body = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
 
+
             rigidBody = body.AddComponent<Rigidbody>();
             rigidBody.useGravity = false;
 
@@ -39,22 +39,18 @@ namespace NitroxClient.GameLogic
             playerView = body.transform.Find("player_view").gameObject;
 
             //Move variables to keep player animations from mirroring and for identification
-            playerView.GetComponent<ArmsController>().smoothSpeed = 0;
-
-            //Sets a new language value
-            Language language = Language.main;
-            JsonData data = (JsonData)language.ReflectionGet("strings"); //UM4SN only: JsonData data = language.strings;
-            data["Signal_" + playerId] = "Player " + playerId;
+            armsController = playerView.GetComponent<ArmsController>();
+            armsController.smoothSpeed = 0;
 
             //Sets up a copy from the xSignal template for the signal
             //todo: settings menu to disable this?
             GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + playerId;
+            signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(playerView.transform, false);
-            SignalLabel label = signalBase.GetComponent<SignalLabel>();
             PingInstance ping = signalBase.GetComponent<PingInstance>();
-            label.description = "Signal_" + playerId;
+            ping.SetLabel("Player " + playerId);
             ping.pingType = PingType.Signal;
 
             animationController = playerView.AddComponent<AnimationController>();
@@ -64,12 +60,12 @@ namespace NitroxClient.GameLogic
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
+            body.transform.parent = transform;
+
             if (!keepWorldTransform)
             {
-                UWE.Utils.ZeroTransform(body.transform);
+                UWE.Utils.ZeroTransform(body);
             }
-
-            body.transform.SetParent(transform, false);
         }
 
         public void Detach()
@@ -84,25 +80,17 @@ namespace NitroxClient.GameLogic
             SubRoot subRoot = null;
             if (opSubGuid.IsPresent())
             {
-                string subGuid = opSubGuid.Get();
-                Optional<GameObject> opSub = GuidHelper.GetObjectFrom(subGuid);
-
-                if (opSub.IsPresent())
-                {
-                    subRoot = opSub.Get().GetComponent<SubRoot>();
-                }
-                else
-                {
-                    Console.WriteLine("Could not find sub for guid: " + subGuid);
-                }
+                var sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
+                subRoot = sub.GetComponent<SubRoot>();
             }
 
+            // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
             SetSubRoot(subRoot);
 
             rigidBody.velocity = animationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, body, PlayerMovement.BROADCAST_INTERVAL);
-            rigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, body, PlayerMovement.BROADCAST_INTERVAL);
+            rigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, body, PlayerMovement.BROADCAST_INTERVAL);
 
             animationController.AimingRotation = aimingRotation;
             animationController.UpdatePlayerAnimations = true;
@@ -114,32 +102,44 @@ namespace NitroxClient.GameLogic
             {
                 PilotingChair = newPilotingChair;
 
-                if (newPilotingChair != null)
+                Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
+
+                var mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+
+                if (PilotingChair != null)
                 {
-                    Attach(newPilotingChair.sittingPosition.transform);
+                    Attach(PilotingChair.sittingPosition.transform);
+                    armsController.SetWorldIKTarget(PilotingChair.leftHandPlug, PilotingChair.rightHandPlug);
+
+                    mpCyclops.CurrentPlayer = this;
+                    mpCyclops.Enter();
                 }
                 else
                 {
                     SetSubRoot(SubRoot);
+                    armsController.SetWorldIKTarget(null, null);
+
+                    mpCyclops.CurrentPlayer = null;
+                    mpCyclops.Exit();
                 }
-                rigidBody.isKinematic = animationController["cyclops_steering"] = newPilotingChair != null;
+                rigidBody.isKinematic = animationController["cyclops_steering"] = (newPilotingChair != null);
             }
         }
 
-        public void SetSubRoot(SubRoot subRoot)
+        public void SetSubRoot(SubRoot newSubRoot)
         {
-            if (SubRoot != subRoot)
+            if (SubRoot != newSubRoot)
             {
-                SubRoot = subRoot;
-                
-                if (subRoot != null)
+                if (newSubRoot != null)
                 {
-                    Attach(subRoot.transform, true);
+                    Attach(newSubRoot.transform, true);
                 }
                 else
                 {
                     Detach();
                 }
+
+                SubRoot = newSubRoot;
             }
         }
 
@@ -147,22 +147,32 @@ namespace NitroxClient.GameLogic
         {
             if (Vehicle != newVehicle)
             {
-                (newVehicle ? newVehicle : Vehicle)?.mainAnimator.SetBool("player_in", newVehicle != null);
+                if (Vehicle != null)
+                {
+                    Vehicle.mainAnimator.SetBool("player_in", false);
+
+                    Detach();
+                    armsController.SetWorldIKTarget(null, null);
+
+                    Vehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Exit();
+                }
+
+                if (newVehicle != null)
+                {
+                    newVehicle.mainAnimator.SetBool("player_in", true);
+
+                    Attach(newVehicle.playerPosition.transform);
+                    armsController.SetWorldIKTarget(newVehicle.leftHandPlug, newVehicle.rightHandPlug);
+
+                    newVehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Enter();
+                }
+
+                rigidBody.isKinematic = newVehicle != null;
 
                 Vehicle = newVehicle;
 
-                rigidBody.isKinematic = (Vehicle != null);
-                if (Vehicle != null)
-                {
-                    Attach(Vehicle.playerPosition.transform);
-                }
-                else
-                {
-                    Detach();
-                }
-
-                animationController["in_seamoth"] = Vehicle is SeaMoth;
-                animationController["in_exosuit"] = animationController["using_mechsuit"] = Vehicle is Exosuit;
+                animationController["in_seamoth"] = newVehicle is SeaMoth;
+                animationController["in_exosuit"] = animationController["using_mechsuit"] = newVehicle is Exosuit;
             }
         }
 

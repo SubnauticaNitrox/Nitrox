@@ -1,14 +1,14 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class EquipmentAddItem : PlayerActionPacket
     {
-        public String OwnerGuid { get; private set; }
-        public String Slot { get; private set; }
-        public byte[] ItemBytes { get; private set; }
+        public String OwnerGuid { get; }
+        public String Slot { get; }
+        public byte[] ItemBytes { get; }
 
         public EquipmentAddItem(String playerId, String ownerGuid, String slot, byte[] itemBytes, Vector3 ownerPosition) : base(playerId, ownerPosition)
         {

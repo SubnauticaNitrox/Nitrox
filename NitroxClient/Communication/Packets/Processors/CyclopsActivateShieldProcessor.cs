@@ -1,8 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -18,27 +17,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsActivateShield shieldPacket)
         {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(shieldPacket.Guid);
+            GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);            
+            CyclopsShieldButton shield = cyclops.RequireComponentInChildren<CyclopsShieldButton>();
             
-            if (opCyclops.IsPresent())
+            using (packetSender.Suppress<CyclopsActivateShield>())
             {
-                CyclopsShieldButton shield = opCyclops.Get().GetComponentInChildren<CyclopsShieldButton>();
-
-                if (shield != null)
-                {
-                    using (packetSender.Suppress<CyclopsActivateShield>())
-                    {
-                        shield.OnClick();
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Could not activate shield because CyclopsShieldButton was not found on the cyclops " + shieldPacket.Guid);
-                }
-            }
-            else
-            {
-                Console.WriteLine("Could not find cyclops with guid " + shieldPacket.Guid + " to activate shield.");
+                shield.OnClick();
             }
         }
     }

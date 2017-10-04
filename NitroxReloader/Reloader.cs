@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -8,23 +9,19 @@ using System.Linq;
 
 namespace NitroxReloader
 {
-    public class Reloader
+    public static class Reloader
     {
-        private static readonly HashSet<string> assemblyWhitelist = new HashSet<string>() {
-            "NitroxModel.dll",
-            "NitroxClient.dll",
-            "NitroxPatcher.dll",
-            // The reloader itself should not be allowed to reload, because it 'replaces' the ReloadableMethodAttribute
-            // (as it's a different version of the assembly, that version field is saved in the other assemblies as well)
-            // and suddenly all methods in the new assemblies do not refer to the ReloadableMethodAttribute found in the
-            // current assembly and thus can't be found anymore (unless reloading the reloader first, then getting the
-            // attribute, and then finding all methods that have that exact type as attribute).
-        };
+        private static HashSet<string> assemblyWhitelist;
+        private static Dictionary<string, ReloaderAssembly> reloadableAssemblies;
+        private static Queue<string> changedFiles = new Queue<string>();
 
-        private Dictionary<string, ReloaderAssembly> reloadableAssemblies;
-
-        public Reloader()
+        [Conditional("DEBUG")]
+        public static void Initialize(params string[] whitelist)
         {
+            Console.WriteLine("[NITROX] Initializing reloader...");
+
+            assemblyWhitelist = new HashSet<string>(whitelist);
+
             reloadableAssemblies = AppDomain.CurrentDomain.GetAssemblies()
             .Where(assembly =>
             {
@@ -58,24 +55,49 @@ namespace NitroxReloader
             };
             FileSystemEventHandler handler = (s, e) =>
             {
-                try
+                lock (changedFiles)
                 {
-                    var fn = Path.GetFileName(e.Name);
-                    ReloaderAssembly ra;
-                    if (reloadableAssemblies.TryGetValue(fn, out ra))
+                    if (!changedFiles.Contains(e.FullPath))
                     {
-                        ra.Reload(e.FullPath);
+                        changedFiles.Enqueue(e.FullPath);
                     }
-                }
-                catch (Exception exc)
-                {
-                    Console.WriteLine("An exception occured during reload!\n{0}", exc);
                 }
             };
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine("Reloader: Set up to watch " + ReloaderSettings.Path);
+            Console.WriteLine("[NITROX] Reloader set up to watch " + ReloaderSettings.Path);
+        }
+
+        [Conditional("DEBUG")]
+        public static void ReloadAssemblies()
+        {
+            if (changedFiles.Count == 0)
+            {
+                // Prevent unnecessary locking.
+                return;
+            }
+
+            lock (changedFiles)
+            {
+                while (changedFiles.Count > 0)
+                {
+                    string path = changedFiles.Dequeue();
+                    try
+                    {
+                        var fn = Path.GetFileName(path);
+                        ReloaderAssembly ra;
+                        if (reloadableAssemblies.TryGetValue(fn, out ra))
+                        {
+                            ra.Reload(path);
+                        }
+                    }
+                    catch (Exception exc)
+                    {
+                        Console.WriteLine("An exception occured during reload!\n{0}", exc);
+                    }
+                }
+            }
         }
     }
 }

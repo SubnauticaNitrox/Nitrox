@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NitroxModel.Tcp
 {
@@ -13,7 +12,7 @@ namespace NitroxModel.Tcp
         public const int HEADER_BYTE_SIZE = 3;
         public const int RECEIVING_BUFFER_SIZE = 8192;
         public const int MESSAGE_CONSTRUCTING_BUFFER_SIZE = 1000000; // 1MB
-        
+
         public byte[] ReceivingBuffer { get; set; }
 
         private byte[] MessageConstructingBuffer;
@@ -23,8 +22,8 @@ namespace NitroxModel.Tcp
         private int nextPacketHeaderBytesRead = 0;
         private byte[] nextPacketHeaderBytes = new byte[4];
 
-        private IFormatter formatter = new BinaryFormatter();
-        
+        private IFormatter formatter = Packet.Serializer;
+
         public MessageBuffer()
         {
             this.ReceivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
@@ -35,11 +34,11 @@ namespace NitroxModel.Tcp
         {
             int headerOffset = 0;
 
-            if(ReadingHeaderData(receivedDataLength))
+            if (ReadingHeaderData(receivedDataLength))
             {
-                if(nextPacketHeaderBytesRead != 0)
+                if (nextPacketHeaderBytesRead != 0)
                 {
-                    for(int i = nextPacketHeaderBytesRead; i < HEADER_BYTE_SIZE; i++)
+                    for (int i = nextPacketHeaderBytesRead; i < HEADER_BYTE_SIZE; i++)
                     {
                         nextPacketHeaderBytes[i] = ReceivingBuffer[i - nextPacketHeaderBytesRead];
                     }
@@ -75,7 +74,7 @@ namespace NitroxModel.Tcp
                     // Check to see if this message contains the header for the next message
                     for (int nextPacketHeaderIndex = 1; nextPacketHeaderIndex <= HEADER_BYTE_SIZE; nextPacketHeaderIndex++)
                     {
-                        if((nextPacketHeaderIndex + i) < receivedDataLength)
+                        if ((nextPacketHeaderIndex + i) < receivedDataLength)
                         {
                             nextPacketHeaderBytes[nextPacketHeaderIndex - 1] = ReceivingBuffer[i + nextPacketHeaderIndex];
                             nextPacketHeaderBytesRead++;
@@ -101,10 +100,10 @@ namespace NitroxModel.Tcp
                 {
                     throw new Exception("First piece of message must contain a " + HEADER_BYTE_SIZE + " byte message size");
                 }
-                
+
                 return true;
             }
-            
+
             return false;
         }
     }

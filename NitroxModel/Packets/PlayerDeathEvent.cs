@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures;
+﻿using UnityEngine;
 using System;
 
 namespace NitroxModel.Packets

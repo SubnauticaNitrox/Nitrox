@@ -2,6 +2,7 @@
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using System;
 using System.Reflection;
 
@@ -21,7 +22,7 @@ namespace NitroxPatcher.Patches
             {
                 foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
-                    Console.WriteLine($"Getting keybinding: {keyBinding.Device}, {keyBinding.Label} ({keyBinding.Button}), {bindingSet}");
+                    Log.Debug($"Getting keybinding: {keyBinding.Device}, {keyBinding.Label} ({keyBinding.Button}), {bindingSet}");
                     string binding = (string)ReflectionHelper.ReflectionCall<GameInput>(null, "GetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet);
                     string name = string.Format(serializerFormat, keyBinding.Device, keyBinding.Button, bindingSet);
 

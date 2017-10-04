@@ -1,13 +1,13 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructionAmountChanged : PlayerActionPacket
     {
-        public String Guid { get; private set; }
-        public float ConstructionAmount { get; private set; }
+        public String Guid { get; }
+        public float ConstructionAmount { get; }
         
         public ConstructionAmountChanged(String playerId, Vector3 itemPosition, String guid, float constructionAmount) : base(playerId, itemPosition)
         {
