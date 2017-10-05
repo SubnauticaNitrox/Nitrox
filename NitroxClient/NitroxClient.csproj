@@ -62,10 +62,6 @@
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsChangeColorProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
@@ -79,6 +75,7 @@
     <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
