@@ -1,9 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
+using NitroxModel.Helper.Unity;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -19,37 +18,38 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsChangeEngineMode motorPacket)
         {
-            Optional<GameObject> opCyclops = GuidHelper.GetObjectFrom(motorPacket.Guid);
+            GameObject cyclops = GuidHelper.RequireObjectFrom(motorPacket.Guid);
+            CyclopsHelmHUDManager hud = cyclops.RequireComponentInChildren<CyclopsHelmHUDManager>();
+            CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
+            CyclopsMotorModeButton[] motorModeButtons = cyclops.RequireComponentsInChildren<CyclopsMotorModeButton>();
 
-            if (opCyclops.IsPresent())
+            if (motorPacket.Mode != motorMode.cyclopsMotorMode)
             {
-                CyclopsMotorMode motorMode = opCyclops.Get().GetComponentInChildren<CyclopsMotorMode>();
-                CyclopsMotorModeButton[] motorModeButtons = opCyclops.Get().GetComponentsInChildren<CyclopsMotorModeButton>();
-
-                if (motorMode != null & motorModeButtons != null)
+                foreach (CyclopsMotorModeButton motorModeButton in motorModeButtons)
                 {
-                    if ((CyclopsMotorMode.CyclopsMotorModes)motorPacket.Mode != motorMode.cyclopsMotorMode)
+                    if (Player.main.currentSub == (SubRoot)motorModeButton.ReflectionGet("subRoot"))
                     {
-                        using (packetSender.Suppress<CyclopsChangeEngineMode>())
+                        motorModeButton.SetCyclopsMotorMode((CyclopsMotorMode.CyclopsMotorModes)motorPacket.Mode);
+                    }
+                    else
+                    {
+                        if (motorPacket.Mode == motorModeButton.motorModeIndex)
                         {
-                            foreach (CyclopsMotorModeButton motorModeButton in motorModeButtons)
-                            {
-                                if (Player.main.currentSub == (SubRoot) motorModeButton.ReflectionGet("subRoot"))
-                                {
-                                    motorModeButton.SetCyclopsMotorMode((CyclopsMotorMode.CyclopsMotorModes)motorPacket.Mode);
-                                }
-                            }
+                            motorMode.cyclopsMotorMode = motorPacket.Mode;
+                            float num = motorMode.motorModeSpeeds[(int)motorMode.cyclopsMotorMode];
+                            motorMode.subController.BaseForwardAccel = num;
+                            motorMode.subController.BaseVerticalAccel = num;
+                            motorMode.subController.NewSpeed((int)motorMode.cyclopsMotorMode);
+                            motorMode.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
+                            motorModeButton.image.sprite = motorModeButton.activeSprite;
+                        }
+                        else
+                        {
+                            motorModeButton.image.sprite = motorModeButton.inactiveSprite;
                         }
                     }
                 }
-                else
-                {
-                    Console.WriteLine("Could not find CyclopsMotorMode or CyclopsMotorModeButton to change Motormode");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Could not find cyclops with guid " + motorPacket.Guid + " to change Motormode");
+
             }
         }
     }

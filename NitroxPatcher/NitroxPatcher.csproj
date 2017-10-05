@@ -68,7 +68,7 @@
     <Compile Include="Patches\Server\WaterSurfaceOnCamera_OnPostRender_Patch.cs" />
     <Compile Include="Patches\Server\WaterBiomeManager_RasterizeAtmosphereVolumes_Patch.cs" />
     <Compile Include="Patches\Server\MainMenuPlayerName_Start_Patch.cs" />
-    <Compile Include="Patches\Client\CyclopsMotorMode_ChangeCyclopsMotorMode_Patch.cs" />
+    <Compile Include="Patches\Client\CyclopsMotorModeButton_OnClick_Patch.cs" />
     <Compile Include="Patches\Client\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\Client\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
     <Compile Include="Patches\Client\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
