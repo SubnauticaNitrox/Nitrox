@@ -1,9 +1,9 @@
 ﻿using Harmony;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
+using NitroxModel.Helper.GameLogic;
 using System;
 using System.Reflection;
-using NitroxModel.Helper.GameLogic;
 
 namespace NitroxPatcher.Patches
 {
