@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace NitroxModel.Logger
 {
@@ -44,7 +45,7 @@ namespace NitroxModel.Logger
 
         public static void Error(String msg, Exception ex)
         {
-            Error(msg + "\n{0}", ex);
+            Error(msg + "\n{0}", (object)ex);
         }
 
         public static void Warn(String fmt, params Object[] arg)
@@ -80,6 +81,16 @@ namespace NitroxModel.Logger
         {
             String msg = (o == null) ? "null" : o.ToString();
             Debug(msg);
+        }
+
+        public static void Trace(String fmt, params Object[] arg)
+        {
+            Trace(string.Format(fmt, arg));
+        }
+
+        public static void Trace(String str = "")
+        {
+            Write("T: {0}:\n{1}", str, new StackTrace(1));
         }
     }
 }
