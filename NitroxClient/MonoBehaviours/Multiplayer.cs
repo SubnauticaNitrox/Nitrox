@@ -3,8 +3,8 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
-using NitroxModel.Logger;
 using NitroxClient.Map;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
@@ -19,6 +19,8 @@ namespace NitroxClient.MonoBehaviours
         private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
 
         public static Multiplayer main;
+
+        public static event Action OnBeforeMultiplayerStart;
 
         private static readonly LoadedChunks loadedChunks = new LoadedChunks();
         private static readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
@@ -104,17 +106,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else if (n?.data?.Count > 0)
             {
-                PacketSender.PlayerId = (string)n.data[0];
-
-                String ip = DEFAULT_IP_ADDRESS;
-
-                if (n.data.Count >= 2)
-                {
-                    ip = (string)n.data[1];
-                }
-
-                StartMultiplayer(ip);
-                InitMonoBehaviours();
+                StartMultiplayer(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
             }
             else
             {
@@ -142,6 +134,15 @@ namespace NitroxClient.MonoBehaviours
                     Player.main.OnPlayerPositionCheat();
                 }
             }
+        }
+
+        public void StartMultiplayer(string ipAddress, string playerName)
+        {
+            OnBeforeMultiplayerStart();
+
+            PacketSender.PlayerId = playerName;
+            StartMultiplayer(ipAddress);
+            InitMonoBehaviours();
         }
 
         public void StartMultiplayer(String ipAddress)

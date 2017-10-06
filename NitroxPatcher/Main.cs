@@ -59,9 +59,7 @@ namespace NitroxPatcher
 
                 patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Client").ToArray();
 
-                // TODO: Implement this a bit neater...
-                // While keeping in mind that NitroxClient cannot have a reference to NitroxPatcher, due to circular dependencies.
-                NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServer.OnMultiplayerStarted += Apply;
+                NitroxClient.MonoBehaviours.Multiplayer.OnBeforeMultiplayerStart += Apply;
             }
             else
             {
