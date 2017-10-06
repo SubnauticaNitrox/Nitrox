@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleInternalLighting lightingPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(lightingPacket.Guid);            
+            GameObject cyclops = GuidHelper.RequireObjectFrom(lightingPacket.Guid);
             CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
 
             if (lighting.lightingOn != lightingPacket.IsOn)

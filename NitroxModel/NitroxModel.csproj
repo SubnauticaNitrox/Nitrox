@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Chunk.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Helper\Unity\Math\SmoothVector.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
+    <Compile Include="Packets\CyclopsChangeColor.cs" />
     <Compile Include="Packets\CreaturePositionsChanged.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\VisibleChunksChanged.cs" />

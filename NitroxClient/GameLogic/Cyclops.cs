@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Packets;
 using System;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -27,8 +28,8 @@ namespace NitroxClient.GameLogic
 
         public void BeginSilentRunning(String guid)
         {
-            CyclopsBeginSilentRunning beginSilentRunning = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
-            packetSender.Send(beginSilentRunning);
+            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
+            packetSender.Send(packet);
         }
 
         public void ActivateHorn(String guid)
@@ -46,6 +47,12 @@ namespace NitroxClient.GameLogic
         public void ChangeName(String guid, string name)
         {
             CyclopsChangeName packet = new CyclopsChangeName(packetSender.PlayerId, guid, name);
+            packetSender.Send(packet);
+        }
+
+        public void ChangeColor(String guid, int index, Vector3 hsb, Color color)
+        {
+            CyclopsChangeColor packet = new CyclopsChangeColor(packetSender.PlayerId, index, guid, hsb, color);
             packetSender.Send(packet);
         }
     }
