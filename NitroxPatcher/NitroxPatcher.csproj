@@ -87,8 +87,8 @@
     <Compile Include="Patches\Client\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\Client\Player_Update_Patch.cs" />
     <Compile Include="Patches\Client\GameSettings_SerializeInputSettings_Patch.cs" />
-    <Compile Include="Patches\Client\GameInput_Initialize_Patch.cs" />
-    <Compile Include="Patches\Client\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\ClientBase\GameInput_Initialize_Patch.cs" />
+    <Compile Include="Patches\ClientBase\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Client\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Client\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\Client\NitroxPatch.cs" />

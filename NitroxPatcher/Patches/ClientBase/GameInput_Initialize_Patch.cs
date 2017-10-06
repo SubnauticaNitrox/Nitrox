@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace NitroxPatcher.Patches.Client
+namespace NitroxPatcher.Patches.ClientBase
 {
     public class GameInput_Initialize_Patch : NitroxPatch
     {

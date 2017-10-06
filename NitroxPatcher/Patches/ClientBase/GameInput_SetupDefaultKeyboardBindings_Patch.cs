@@ -5,7 +5,7 @@ using NitroxModel.Helper;
 using System;
 using System.Reflection;
 
-namespace NitroxPatcher.Patches.Client
+namespace NitroxPatcher.Patches.ClientBase
 {
     public class GameInput_SetupDefaultKeyboardBindings_Patch : NitroxPatch
     {
