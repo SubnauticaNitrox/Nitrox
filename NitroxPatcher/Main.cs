@@ -22,7 +22,7 @@ namespace NitroxPatcher
 
             if (patches != null)
             {
-                Log.Info("[NITROX] Warning: patches have already been detected! Call Apply or Restore instead.");
+                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace NitroxPatcher
 
                 splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.ClientBase").ForEach(p =>
                 {
-                    Log.Info("[NITROX] Applying base patch " + p.GetType());
+                    Log.Info("Applying base patch " + p.GetType());
                     p.Patch(harmony);
                 });
 
@@ -83,7 +83,7 @@ namespace NitroxPatcher
 
             patches.ForEach(patch =>
             {
-                Log.Info("[NITROX] Applying " + patch.GetType());
+                Log.Info("Applying " + patch.GetType());
                 patch.Patch(harmony);
             });
 
@@ -99,7 +99,7 @@ namespace NitroxPatcher
 
             patches.ForEach(patch =>
             {
-                Log.Info("[NITROX] Restoring " + patch.GetType());
+                Log.Info("Restoring " + patch.GetType());
                 patch.Restore();
             });
 
