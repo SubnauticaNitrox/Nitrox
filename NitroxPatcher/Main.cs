@@ -4,7 +4,6 @@ using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -13,8 +12,9 @@ namespace NitroxPatcher
 {
     public static class Main
     {
-        private static List<NitroxPatch> patches;
+        private static NitroxPatch[] patches;
         private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
+        private static bool isApplied;
 
         public static void Execute()
         {
@@ -37,7 +37,7 @@ namespace NitroxPatcher
 
             Log.Info("Applying " + ((serverPatching) ? "server" : "client") + " patches");
 
-            patches = Assembly.GetExecutingAssembly()
+            var discoveredPatches = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) &&
                             p.IsClass &&
@@ -45,10 +45,29 @@ namespace NitroxPatcher
                             p.Namespace != serverNameSpace ^ serverPatching
                       )
                 .Select(Activator.CreateInstance)
-                .Cast<NitroxPatch>()
-                .ToList();
+                .Cast<NitroxPatch>();
 
-            Apply();
+            if (!serverPatching)
+            {
+                var splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
+
+                splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.ClientBase").ForEach(p =>
+                {
+                    Log.Info("[NITROX] Applying base patch " + p.GetType());
+                    p.Patch(harmony);
+                });
+
+                patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Client").ToArray();
+
+                // TODO: Implement this a bit neater...
+                // While keeping in mind that NitroxClient cannot have a reference to NitroxPatcher, due to circular dependencies.
+                NitroxClient.MonoBehaviours.Gui.MainMenu.JoinServer.OnMultiplayerStarted += Apply;
+            }
+            else
+            {
+                patches = discoveredPatches.ToArray();
+                Apply();
+            }
 
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
@@ -59,22 +78,34 @@ namespace NitroxPatcher
 
         public static void Apply()
         {
+            Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
+
+            if (isApplied)
+                return;
+
             patches.ForEach(patch =>
             {
                 Log.Info("[NITROX] Applying " + patch.GetType());
                 patch.Patch(harmony);
             });
+
+            isApplied = true;
         }
 
         public static void Restore()
         {
-            Validate.NotNull(patches, "No patches have been applied yet!");
+            Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
+
+            if (!isApplied)
+                return;
 
             patches.ForEach(patch =>
             {
                 Log.Info("[NITROX] Restoring " + patch.GetType());
                 patch.Restore();
             });
+
+            isApplied = false;
         }
 
         [Conditional("DEBUG")]

@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Helper;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showingUsername = true;
         }
 
+        public static event Action OnMultiplayerStarted;
+
         public void OnGUI()
         {
             if (!showingUsername)
@@ -28,6 +31,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             username = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 25, 500, 50), username);
             if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Add server"))
             {
+                // TODO: Move this logic somewhere else:
+                OnMultiplayerStarted();
+
                 StartCoroutine(JoinServerWait(serverIp));
                 showingUsername = false;
             }
