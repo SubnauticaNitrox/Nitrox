@@ -4,7 +4,6 @@ using NitroxModel.Helper.GameLogic;
 using NitroxModel.Helper.Unity;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -21,18 +20,21 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsChangeName namePacket)
         {
             GameObject cyclops = GuidHelper.RequireObjectFrom(namePacket.Guid);
-            CyclopsNameScreenProxy ScreenProxy = cyclops.RequireComponentInChildren<CyclopsNameScreenProxy>();            
+            CyclopsNameScreenProxy ScreenProxy = cyclops.RequireComponentInChildren<CyclopsNameScreenProxy>();
             SubName subname = (SubName)ScreenProxy.subNameInput.ReflectionGet("target");
 
             if (subname != null)
             {
-                subname.SetName(namePacket.Name);
-                ScreenProxy.subNameInput.inputField.text = namePacket.Name;
+                using (packetSender.Suppress<CyclopsChangeName>())
+                {
+                    subname.SetName(namePacket.Name);
+                    ScreenProxy.subNameInput.inputField.text = namePacket.Name;
+                }
             }
             else
             {
                 Log.Error("Could not find SubName via target reflection");
-            } 
+            }
         }
     }
 }

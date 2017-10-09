@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Helper;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -41,9 +42,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.PacketSender.PlayerId = username;
-            Multiplayer.main.StartMultiplayer(serverIp);
-            Multiplayer.main.InitMonoBehaviours();
+            Multiplayer.main.StartMultiplayer(serverIp, username);
             Destroy(gameObject);
         }
     }
