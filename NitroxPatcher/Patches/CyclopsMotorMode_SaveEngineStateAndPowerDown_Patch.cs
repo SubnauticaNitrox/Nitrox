@@ -3,7 +3,7 @@ using NitroxModel.Helper;
 using System;
 using System.Reflection;
 
-namespace NitroxPatcher.Patches
+namespace NitroxPatcher.Patches.Client
 {
     public class CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch : NitroxPatch
     {

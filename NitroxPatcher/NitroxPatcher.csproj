@@ -62,9 +62,11 @@
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\CrafterLogic_TryPickup_Patch.cs" />
     <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\CyclopsHelmHUDManager_Patch.cs" />
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
+    <Compile Include="Patches\CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\CyclopsMotorModeButton_OnClick_Patch.cs" />

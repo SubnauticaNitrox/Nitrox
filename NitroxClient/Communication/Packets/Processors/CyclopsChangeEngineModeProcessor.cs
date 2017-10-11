@@ -23,6 +23,8 @@ namespace NitroxClient.Communication.Packets.Processors
             CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
             CyclopsMotorModeButton[] motorModeButtons = cyclops.GetComponentsInChildren<CyclopsMotorModeButton>();
 
+            Validate.IsTrue(motorModeButtons.Length > 0, "Cyclops does not have any motormode buttons!");
+
             if (motorPacket.Mode != motorMode.cyclopsMotorMode)
             {
                 foreach (CyclopsMotorModeButton motorModeButton in motorModeButtons)
@@ -49,7 +51,6 @@ namespace NitroxClient.Communication.Packets.Processors
                         }
                     }
                 }
-
             }
         }
     }
