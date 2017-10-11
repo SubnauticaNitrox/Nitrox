@@ -21,7 +21,9 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = GuidHelper.RequireObjectFrom(motorPacket.Guid);
             CyclopsHelmHUDManager hud = cyclops.RequireComponentInChildren<CyclopsHelmHUDManager>();
             CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
-            CyclopsMotorModeButton[] motorModeButtons = cyclops.RequireComponentsInChildren<CyclopsMotorModeButton>();
+            CyclopsMotorModeButton[] motorModeButtons = cyclops.GetComponentsInChildren<CyclopsMotorModeButton>();
+
+            Validate.IsTrue(motorModeButtons.Length > 0, "Cyclops does not have any motormode buttons!");
 
             if (motorPacket.Mode != motorMode.cyclopsMotorMode)
             {

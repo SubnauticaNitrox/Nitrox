@@ -28,22 +28,6 @@ namespace NitroxModel.Helper.Unity
             return component;
         }
 
-        public static T[] RequireComponentsInChildren<T>(this GameObject o) where T : class
-        {
-            T[] component = o.GetComponentsInChildren<T>();
-            Validate.NotNull<T[]>(component, o.name + " did not have a component of type " + typeof(T) + " in its children");
-
-            return component;
-        }
-
-        public static T[] RequireComponentsInChildren<T>(this GameObject o, bool includeInactive) where T : class
-        {
-            T[] component = o.GetComponentsInChildren<T>(includeInactive);
-            Validate.NotNull<T[]>(component, o.name + " did not have a component of type " + typeof(T) + " in its children");
-
-            return component;
-        }
-
         public static T RequireComponentInParent<T>(this GameObject o) where T : class
         {
             T component = o.GetComponentInParent<T>();
