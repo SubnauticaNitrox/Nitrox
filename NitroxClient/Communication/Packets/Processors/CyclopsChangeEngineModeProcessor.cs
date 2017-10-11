@@ -37,13 +37,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         if (motorPacket.Mode == motorModeButton.motorModeIndex)
                         {
-                            motorMode.cyclopsMotorMode = motorPacket.Mode;
-                            float num = motorMode.motorModeSpeeds[(int)motorMode.cyclopsMotorMode];
-                            motorMode.subController.BaseForwardAccel = num;
-                            motorMode.subController.BaseVerticalAccel = num;
-                            motorMode.subController.NewSpeed((int)motorMode.cyclopsMotorMode);
-                            motorMode.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
                             motorModeButton.image.sprite = motorModeButton.activeSprite;
+                            motorModeButton.SendMessageUpwards("ChangeCyclopsMotorMode", motorModeButton.motorModeIndex, SendMessageOptions.RequireReceiver);
                         }
                         else
                         {
