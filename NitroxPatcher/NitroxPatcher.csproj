@@ -67,7 +67,7 @@
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
-    <Compile Include="Patches\CyclopsMotorMode_OnClick_Patch.cs" />
+    <Compile Include="Patches\CyclopsMotorModeButton_OnClick_Patch.cs" />
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
