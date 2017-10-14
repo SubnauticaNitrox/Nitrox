@@ -349,7 +349,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 UnityEngine.Object.Destroy(MultiplayerBuilder.ghostModel);
             }
-            componentInParent3.SetIsInside(flag | flag2);
+            componentInParent3.SetIsInside(flag || flag2);
             SkyEnvironmentChanged.Send(gameObject, currentSub);
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
@@ -364,39 +364,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
         // Token: 0x06002B9E RID: 11166 RVA: 0x001043C0 File Offset: 0x001025C0
         public static void ShowRotationControlsHint()
         {
-            GameInput.Device primaryDevice = GameInput.GetPrimaryDevice();
-            int numBindingSets = GameInput.GetNumBindingSets();
-            string text = string.Empty;
-            string text2 = string.Empty;
-            for (int i = 0; i < numBindingSets; i++)
-            {
-                string binding = GameInput.GetBinding(primaryDevice, MultiplayerBuilder.buttonRotateCW, (GameInput.BindingSet)i);
-                if (!string.IsNullOrEmpty(binding))
-                {
-                    if (text.Length > 0)
-                    {
-                        text += ", ";
-                    }
-                    text += Language.main.Get(binding);
-                }
-                string binding2 = GameInput.GetBinding(primaryDevice, MultiplayerBuilder.buttonRotateCCW, (GameInput.BindingSet)i);
-                if (!string.IsNullOrEmpty(binding2))
-                {
-                    if (text2.Length > 0)
-                    {
-                        text2 += ", ";
-                    }
-                    text2 += Language.main.Get(binding2);
-                }
-            }
-            if (text.Length > 0 || text2.Length > 0)
-            {
-                string format = Language.main.GetFormat("GhostRotateInputHint", new object[]
-                {
-                text,
-                text2
-                });
-            }
+            string format = Language.main.GetFormat<string, string>("GhostRotateInputHint", uGUI.FormatButton(Builder.buttonRotateCW, true, ", "), uGUI.FormatButton(Builder.buttonRotateCCW, true, ", "));
+            ErrorMessage.AddError(format);
         }
 
         // Token: 0x06002B9F RID: 11167 RVA: 0x001044D0 File Offset: 0x001026D0
@@ -499,10 +468,10 @@ namespace NitroxClient.MonoBehaviours.Overrides
         public static void GetOverlappedColliders(Vector3 position, Quaternion rotation, Vector3 extents, List<Collider> results)
         {
             results.Clear();
-            Collider[] array = Physics.OverlapBox(position, extents, rotation, -1, QueryTriggerInteraction.Collide);
-            for (int i = 0; i < array.Length; i++)
+            int num = UWE.Utils.OverlapBoxIntoSharedBuffer(position, extents, rotation, -1, QueryTriggerInteraction.Collide);
+            for (int i = 0; i < num; i++)
             {
-                Collider collider = array[i];
+                Collider collider = UWE.Utils.sharedColliderBuffer[i];
                 GameObject gameObject = collider.gameObject;
                 if (!collider.isTrigger || gameObject.layer == LayerID.Useable)
                 {
@@ -800,24 +769,31 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             else
             {
-                switch (MultiplayerBuilder.GetSurfaceType(hit.normal))
+                SurfaceType surfaceType = MultiplayerBuilder.GetSurfaceType(hit.normal);
+                if (surfaceType != SurfaceType.Wall)
                 {
-                    case SurfaceType.Ground:
-                        vector2 = hit.normal;
-                        vector = -aimTransform.forward;
-                        vector.y -= Vector3.Dot(vector, vector2);
-                        vector.Normalize();
-                        break;
-                    case SurfaceType.Wall:
-                        vector = hit.normal;
-                        vector2 = Vector3.up;
-                        break;
-                    case SurfaceType.Ceiling:
+                    if (surfaceType != SurfaceType.Ceiling)
+                    {
+                        if (surfaceType == SurfaceType.Ground)
+                        {
+                            vector2 = hit.normal;
+                            vector = -aimTransform.forward;
+                            vector.y -= Vector3.Dot(vector, vector2);
+                            vector.Normalize();
+                        }
+                    }
+                    else
+                    {
                         vector = hit.normal;
                         vector2 = -aimTransform.forward;
                         vector2.y -= Vector3.Dot(vector2, vector);
                         vector2.Normalize();
-                        break;
+                    }
+                }
+                else
+                {
+                    vector = hit.normal;
+                    vector2 = Vector3.up;
                 }
             }
             position = hit.point;
