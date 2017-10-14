@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
 
             Transform camera = Camera.main.transform;
 
-            PlaceFurniture placedFurniture = new PlaceFurniture(packetSender.PlayerId, guid, subGuid, itemPosition, quaternion, camera, techType);
+            PlaceFurniture placedFurniture = new PlaceFurniture(packetSender.PlayerId, guid, subGuid, itemPosition, quaternion, camera.position, camera.rotation, techType);
             packetSender.Send(placedFurniture);
         }
 

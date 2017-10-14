@@ -63,7 +63,6 @@
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CreaturePositionsChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsBeginSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />

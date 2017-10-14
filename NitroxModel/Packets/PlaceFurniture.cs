@@ -12,21 +12,23 @@ namespace NitroxModel.Packets
         public Vector3 ItemPosition { get; }
         public Quaternion Rotation { get; }
         public TechType TechType { get; }
-        public Transform Camera { get; }
+        public Vector3 CameraPosition { get; }
+        public Quaternion CameraRotation { get; }
 
-        public PlaceFurniture(String playerId, String guid, Optional<String> subGuid, Vector3 itemPosition, Quaternion rotation, Transform camera, TechType techType) : base(playerId, itemPosition)
+        public PlaceFurniture(String playerId, String guid, Optional<String> subGuid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType) : base(playerId, itemPosition)
         {
             this.Guid = guid;
             this.SubGuid = subGuid;
             this.ItemPosition = itemPosition;
             this.Rotation = rotation;
-            this.Camera = camera;
+            this.CameraPosition = cameraPosition;
+            this.CameraRotation = cameraRotation;
             this.TechType = techType;
         }
 
         public override string ToString()
         {
-            return "[PlaceFurniture - ItemPosition: " + ItemPosition + " Guid: " + Guid + " SubGuid: " + SubGuid + " Rotation: " + Rotation + " Camera: " + Camera + " TechType: " + TechType + "]";
+            return "[PlaceFurniture - ItemPosition: " + ItemPosition + " Guid: " + Guid + " SubGuid: " + SubGuid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + "]";
         }
     }
 }
