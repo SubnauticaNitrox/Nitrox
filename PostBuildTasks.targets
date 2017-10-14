@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--If the current project has a library as output, copy it to the SN managed dir-->
+  <Target Name="Deploy" AfterTargets="Build" Condition="$(OutputType) == 'Library' and $(TestProjectType) != 'UnitTest'">
+    <Message Text="Copying $(AssemblyName).dll to $(SubnauticaManaged)" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).dll" DestinationFolder="$(SubnauticaManaged)" Retries="0" ContinueOnError="true" />
+  </Target>
+</Project>
