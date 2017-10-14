@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NitroxModel.Logger;
+using System;
 
 namespace NitroxServer
 {
@@ -6,6 +7,8 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+
             try
             {
                 Server server = new Server();
@@ -13,7 +16,7 @@ namespace NitroxServer
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Log.Error(e.ToString());
             }
 
             while (true)

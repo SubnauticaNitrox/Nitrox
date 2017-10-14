@@ -3,7 +3,7 @@ using NitroxClient.MonoBehaviours;
 using System;
 using System.Reflection;
 
-namespace NitroxPatcher.Patches
+namespace NitroxPatcher.Patches.Persistent
 {
     public class SpawnConsoleCommand_Patch : NitroxPatch
     {

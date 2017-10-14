@@ -41,9 +41,9 @@ namespace NitroxPatcher
             
             var splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
 
-            splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ForEach(p =>
+            splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Persistent").ForEach(p =>
             {
-                Log.Info("Applying base patch " + p.GetType());
+                Log.Info("Applying persistent patch " + p.GetType());
                 p.Patch(harmony);
             });
 

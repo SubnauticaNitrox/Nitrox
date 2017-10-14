@@ -4,7 +4,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace NitroxPatcher.Patches
+namespace NitroxPatcher.Patches.Persistent
 {
     public class uGUI_MainMenu_Start_Patch : NitroxPatch
     {

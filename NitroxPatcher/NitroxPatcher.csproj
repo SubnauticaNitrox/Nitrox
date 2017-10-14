@@ -79,8 +79,8 @@
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
-    <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
-    <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
+    <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
@@ -89,8 +89,8 @@
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
-    <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />
-    <Compile Include="Patches\uGUI_MainMenu_Start_Patch.cs" />
+    <Compile Include="Patches\Persistent\SpawnConsoleCommand_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_MainMenu_Start_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>

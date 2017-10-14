@@ -1,4 +1,5 @@
-﻿using NitroxServer.Communication;
+﻿using NitroxModel.Logger;
+using NitroxServer.Communication;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
 
@@ -21,6 +22,7 @@ namespace NitroxServer
 
         public void Start()
         {
+            Log.Info("Starting Nitrox Server");
             tcpServer.Start(packetHandler);
         }
     }    
