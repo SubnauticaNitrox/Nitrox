@@ -114,10 +114,6 @@
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
-      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
-      <Name>NitroxServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
