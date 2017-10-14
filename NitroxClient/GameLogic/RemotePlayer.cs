@@ -1,7 +1,7 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Helper.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

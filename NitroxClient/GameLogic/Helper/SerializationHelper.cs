@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace NitroxModel.Helper.GameLogic
+namespace NitroxClient.GameLogic.Helper
 {
     public class SerializationHelper
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxModel.Helper.Unity
+namespace NitroxClient.Unity.Helper
 {
     public class MathUtil
     {

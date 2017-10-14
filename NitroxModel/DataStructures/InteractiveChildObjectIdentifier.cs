@@ -16,7 +16,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return "[DependantObjectIdentifier - Guid: " + Guid + " GameObjectNamePath: " + GameObjectNamePath + "]";
+            return "[InteractiveChildObjectIdentifier - Guid: " + Guid + " GameObjectNamePath: " + GameObjectNamePath + "]";
         }
     }
 }

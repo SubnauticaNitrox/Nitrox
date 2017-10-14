@@ -1,7 +1,7 @@
 ﻿using NitroxModel.DataStructures.Util;
 using System.Collections.Generic;
 
-namespace NitroxModel.Helper.GameLogic
+namespace NitroxClient.GameLogic.Helper
 {
     /**
      * Class used for temporarily storing variables local to patched methods.  Certain circumstances require that these

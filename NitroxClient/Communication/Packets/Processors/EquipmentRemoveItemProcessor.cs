@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System.Collections.Generic;

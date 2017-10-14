@@ -2,7 +2,7 @@
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Helper.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Packets;
 using System;
 using System.Reflection;

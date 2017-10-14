@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxModel.Helper.Math
+namespace NitroxClient.Unity.Smoothing
 {
     public class SmoothParameter
     {

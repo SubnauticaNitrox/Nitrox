@@ -1,13 +1,13 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static NitroxModel.Helper.GameLogic.TransientLocalObjectManager;
+using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.GameLogic
 {

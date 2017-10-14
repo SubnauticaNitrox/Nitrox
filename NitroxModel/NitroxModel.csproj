@@ -61,17 +61,6 @@
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
-    <Compile Include="Helper\Unity\DebugUtils.cs" />
-    <Compile Include="Helper\GameLogic\EquipmentHelper.cs" />
-    <Compile Include="Helper\GameLogic\GuidHelper.cs" />
-    <Compile Include="Helper\GameLogic\InventoryContainerHelper.cs" />
-    <Compile Include="Helper\Unity\GameObjectHelper.cs" />
-    <Compile Include="Helper\Unity\MathUtil.cs" />
-    <Compile Include="Helper\GameLogic\SerializationHelper.cs" />
-    <Compile Include="Helper\GameLogic\TransientLocalObjectManager.cs" />
-    <Compile Include="Helper\Unity\Math\SmoothParameter.cs" />
-    <Compile Include="Helper\Unity\Math\SmoothRotation.cs" />
-    <Compile Include="Helper\Unity\Math\SmoothVector.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\CyclopsChangeColor.cs" />
@@ -125,9 +114,7 @@
     <Compile Include="Packets\PlayerActionPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameLogic\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

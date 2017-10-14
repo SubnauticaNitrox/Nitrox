@@ -3,7 +3,7 @@ using NitroxModel.Packets;
 using NitroxModel.Helper;
 using System;
 using UnityEngine;
-using NitroxModel.Helper.GameLogic;
+using NitroxClient.GameLogic.Helper;
 
 namespace NitroxClient.GameLogic
 {

@@ -1,8 +1,9 @@
 ﻿using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using System;
 using UnityEngine;
 
-namespace NitroxModel.Helper.GameLogic
+namespace NitroxClient.GameLogic.Helper
 {
     public static class GuidHelper
     {

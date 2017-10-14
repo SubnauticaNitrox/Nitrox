@@ -5,8 +5,8 @@ using System;
 using UnityEngine;
 using NitroxModel.Helper;
 using System.Collections.Generic;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.Packets.Processors

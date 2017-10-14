@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;

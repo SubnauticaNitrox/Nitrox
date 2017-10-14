@@ -1,7 +1,7 @@
 ﻿using Harmony;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using System;
 using System.Collections.Generic;

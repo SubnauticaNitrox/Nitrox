@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using NitroxModel.Helper;
+using UnityEngine;
 
-namespace NitroxModel.Helper.Unity
+namespace NitroxClient.Unity.Helper
 {
     public static class GameObjectHelper
     {

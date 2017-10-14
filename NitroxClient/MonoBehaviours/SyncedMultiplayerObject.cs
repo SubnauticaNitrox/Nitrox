@@ -1,4 +1,4 @@
-﻿using NitroxModel.Helper.GameLogic;
+﻿using NitroxClient.GameLogic.Helper;
 using System;
 using UnityEngine;
 

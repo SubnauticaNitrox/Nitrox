@@ -77,6 +77,11 @@
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
+    <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
+    <Compile Include="GameLogic\Helper\GuidHelper.cs" />
+    <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
+    <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
+    <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Interior.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
@@ -154,6 +159,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Unity\Helper\DebugUtils.cs" />
+    <Compile Include="Unity\Helper\GameObjectHelper.cs" />
+    <Compile Include="Unity\Helper\MathUtil.cs" />
+    <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
+    <Compile Include="Unity\Smoothing\SmoothRotation.cs" />
+    <Compile Include="Unity\Smoothing\SmoothVector.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">

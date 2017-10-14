@@ -1,4 +1,4 @@
-﻿using NitroxModel.Helper.Unity;
+﻿using NitroxClient.Unity.Helper;
 using System;
 using UnityEngine;
 

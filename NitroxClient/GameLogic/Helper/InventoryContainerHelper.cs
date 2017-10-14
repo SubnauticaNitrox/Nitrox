@@ -1,7 +1,7 @@
 ﻿using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
-namespace NitroxModel.Helper.GameLogic
+namespace NitroxClient.GameLogic.Helper
 {
     public class InventoryContainerHelper
     {

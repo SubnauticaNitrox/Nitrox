@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace NitroxModel.Helper.Unity
+namespace NitroxClient.Unity.Helper
 {
     public class DebugUtils
     {
