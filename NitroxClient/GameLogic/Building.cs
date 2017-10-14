@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             Vector3 itemPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
 
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera, techType, Optional<String>.OfNullable(parentBaseGuid));
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera.position, camera.rotation, techType, Optional<String>.OfNullable(parentBaseGuid));
             packetSender.Send(placedBasePiece);
         }
 

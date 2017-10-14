@@ -6,7 +6,6 @@ using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Threading;
 using System;
 using System.Collections.Generic;
 
@@ -19,7 +18,7 @@ namespace NitroxServer.Communication.Packets
 
         private DefaultServerPacketProcessor defaultPacketProcessor;
 
-        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership, GameActionManager gameActionManager, ChunkManager chunkManager)
+        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
         {
             this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
 
@@ -28,9 +27,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(TcpServer), tcpServer },
                 {typeof(TimeKeeper), timeKeeper },
                 {typeof(SimulationOwnership), simulationOwnership },
-                {typeof(EscapePodManager), new EscapePodManager() },
-                {typeof(GameActionManager), gameActionManager },
-                {typeof(ChunkManager), chunkManager }
+                {typeof(EscapePodManager), new EscapePodManager() }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));

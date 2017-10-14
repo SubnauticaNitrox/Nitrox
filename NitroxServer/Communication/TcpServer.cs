@@ -155,20 +155,6 @@ namespace NitroxServer.Communication
             }
         }
 
-        public void SendPacketToPlayersInChunk(Packet packet, Chunk chunk)
-        {
-            lock (connectionsByPlayer)
-            {
-                foreach (KeyValuePair<Player, Connection> connectWithPlayer in connectionsByPlayer)
-                {
-                    if(connectWithPlayer.Key.HasChunkLoaded(chunk))
-                    {
-                        connectWithPlayer.Value.SendPacket(packet, new AsyncCallback(SendCompleted));
-                    }
-                }
-            }
-        }
-
         public void PlayerAuthenticated(Player player, PlayerConnection connection)
         {
             connection.Player = player;

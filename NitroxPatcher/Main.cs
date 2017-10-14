@@ -30,47 +30,29 @@ namespace NitroxPatcher
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
-
-
-            string serverNameSpace = "NitroxPatcher.Patches.Server";
-            bool serverPatching = (Array.IndexOf(Environment.GetCommandLineArgs(), "-server") >= 0);
-
-            Log.Info("Applying " + ((serverPatching) ? "server" : "client") + " patches");
-
+                        
             var discoveredPatches = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) &&
-                            p.IsClass &&
-                            !p.IsAbstract &&
-                            p.Namespace != serverNameSpace ^ serverPatching
+                            p.IsClass && !p.IsAbstract
                       )
                 .Select(Activator.CreateInstance)
                 .Cast<NitroxPatch>();
+            
+            var splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
 
-            if (!serverPatching)
+            splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ForEach(p =>
             {
-                var splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
+                Log.Info("Applying base patch " + p.GetType());
+                p.Patch(harmony);
+            });
 
-                splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.ClientBase").ForEach(p =>
-                {
-                    Log.Info("Applying base patch " + p.GetType());
-                    p.Patch(harmony);
-                });
+            patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ToArray();
 
-                patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Client").ToArray();
-
-                NitroxClient.MonoBehaviours.Multiplayer.OnBeforeMultiplayerStart += Apply;
-            }
-            else
-            {
-                patches = discoveredPatches.ToArray();
-                Apply();
-            }
+            NitroxClient.MonoBehaviours.Multiplayer.OnBeforeMultiplayerStart += Apply;
 
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
-
-            InitializeReloader(serverPatching);
-
+            
             DevConsole.disableConsole = false;
         }
 

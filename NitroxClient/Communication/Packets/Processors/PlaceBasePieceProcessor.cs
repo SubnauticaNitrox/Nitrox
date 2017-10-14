@@ -12,25 +12,22 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlaceBasePieceProcessor : ClientPacketProcessor<PlaceBasePiece>
     {
-        public override void Process(PlaceBasePiece basePiecePacket)
+        public override void Process(PlaceBasePiece packet)
         {
-            ConstructItem(basePiecePacket.Guid, basePiecePacket.ItemPosition, basePiecePacket.Rotation, basePiecePacket.Camera, basePiecePacket.TechType, basePiecePacket.ParentBaseGuid);
-        }
-
-        public void ConstructItem(String guid, Vector3 position, Quaternion rotation, Transform cameraTransform, TechType techType, Optional<String> parentBaseGuid)
-        {
-            GameObject buildPrefab = CraftData.GetBuildPrefab(techType);
-            MultiplayerBuilder.overridePosition = position;
-            MultiplayerBuilder.overrideQuaternion = rotation;
-            MultiplayerBuilder.overrideTransform = cameraTransform;
-            MultiplayerBuilder.placePosition = position;
-            MultiplayerBuilder.placeRotation = rotation;
+            GameObject buildPrefab = CraftData.GetBuildPrefab(packet.TechType);
+            MultiplayerBuilder.overridePosition = packet.ItemPosition;
+            MultiplayerBuilder.overrideQuaternion = packet.Rotation;
+            MultiplayerBuilder.overrideTransform = new GameObject().transform;
+            MultiplayerBuilder.overrideTransform.position = packet.CameraPosition;
+            MultiplayerBuilder.overrideTransform.rotation = packet.CameraRotation;
+            MultiplayerBuilder.placePosition = packet.ItemPosition;
+            MultiplayerBuilder.placeRotation = packet.Rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            Optional<GameObject> parentBase = (parentBaseGuid.IsPresent()) ? GuidHelper.GetObjectFrom(parentBaseGuid.Get()) : Optional<GameObject>.Empty();
+            Optional<GameObject> parentBase = (packet.ParentBaseGuid.IsPresent()) ? GuidHelper.GetObjectFrom(packet.ParentBaseGuid.Get()) : Optional<GameObject>.Empty();
 
             ConstructableBase constructableBase = MultiplayerBuilder.TryPlaceBase(parentBase);
-            GuidHelper.SetNewGuid(constructableBase.gameObject, guid);
+            GuidHelper.SetNewGuid(constructableBase.gameObject, packet.Guid);
 
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.

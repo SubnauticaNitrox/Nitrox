@@ -1,6 +1,6 @@
 ﻿using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxPatcher.Patches.Client;
+using NitroxPatcher.Patches;
 using NitroxTest.Patcher.Test;
 using System.Collections.Generic;
 using System.Linq;

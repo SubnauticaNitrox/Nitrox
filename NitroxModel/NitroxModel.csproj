@@ -59,7 +59,6 @@
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\TransformSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Helper\Unity\DebugUtils.cs" />
