@@ -16,6 +16,7 @@ namespace NitroxServer.Serialization
             model = TypeModel.Create();
             RegisterAssemblyClasses("Assembly-CSharp");
             RegisterAssemblyClasses("Assembly-CSharp-firstpass");
+            RegisterHardCodedTypes();
         }
 
         public T Deserialize<T>(Stream stream)
@@ -28,6 +29,11 @@ namespace NitroxServer.Serialization
         public void Deserialize(Stream stream, object o, Type t)
         {
             model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
+        }
+
+        private void RegisterHardCodedTypes()
+        {
+            model.Add(typeof(UnityEngine.Light), true);
         }
 
         private void RegisterAssemblyClasses(String assemblyName)
