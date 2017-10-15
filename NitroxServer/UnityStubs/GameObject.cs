@@ -28,5 +28,25 @@ namespace NitroxServer.UnityStubs
         {
             components.Add(componentType, component);
         }
+
+        public object GetComponent(Type type)
+        {
+            if (components.ContainsKey(type))
+            {
+                return components[type];
+            }
+
+            return null;
+        }
+
+        public T GetComponent<T>()
+        {
+            if(components.ContainsKey(typeof(T)))
+            {
+                return (T)components[typeof(T)];
+            }
+
+            return default(T);
+        }
     }
 }
