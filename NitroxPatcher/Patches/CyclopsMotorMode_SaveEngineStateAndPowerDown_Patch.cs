@@ -12,6 +12,7 @@ namespace NitroxPatcher.Patches.Client
 
         public static bool Prefix(CyclopsMotorMode __instance)
         {
+            //SN disable the engine if the player leave the cyclops. So this must be avoided.
             __instance.ReflectionSet("engineOnOldState", __instance.engineOn);
             return false;
         }
