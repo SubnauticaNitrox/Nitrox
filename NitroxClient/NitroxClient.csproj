@@ -75,6 +75,7 @@
     <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />

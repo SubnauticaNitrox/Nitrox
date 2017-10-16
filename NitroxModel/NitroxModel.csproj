@@ -80,6 +80,7 @@
     <Compile Include="Packets\CyclopsChangeName.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
+    <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
     <Compile Include="Packets\Disconnect.cs" />
