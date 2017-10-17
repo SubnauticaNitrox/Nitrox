@@ -5,7 +5,7 @@ namespace NitroxServer.UnityStubs
 {
     public class GameObject
     {
-        public bool IsActive { get; }        
+        public bool IsActive { get; }
         public int Layer { get; }
         public string Tag { get; }
         public string Id { get; }
@@ -31,9 +31,10 @@ namespace NitroxServer.UnityStubs
 
         public object GetComponent(Type type)
         {
-            if (components.ContainsKey(type))
+            object res;
+            if (components.TryGetValue(type, out res))
             {
-                return components[type];
+                return res;
             }
 
             return null;
@@ -41,9 +42,10 @@ namespace NitroxServer.UnityStubs
 
         public T GetComponent<T>()
         {
-            if(components.ContainsKey(typeof(T)))
+            object res;
+            if (components.TryGetValue(typeof(T), out res))
             {
-                return (T)components[typeof(T)];
+                return (T)res;
             }
 
             return default(T);

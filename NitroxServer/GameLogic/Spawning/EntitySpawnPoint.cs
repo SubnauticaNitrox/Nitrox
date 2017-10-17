@@ -17,11 +17,13 @@ namespace NitroxServer.GameLogic.Spawning
 
         public static EntitySpawnPoint From(Int3 batchId, GameObject go, CellManager.CellHeader cellHeader)
         {
-            EntitySpawnPoint esp = new EntitySpawnPoint();
-            esp.Level = cellHeader.level;
-            esp.ClassId = go.ClassId;
-            esp.BatchId = batchId;
-            esp.CellId = cellHeader.cellId;
+            EntitySpawnPoint esp = new EntitySpawnPoint
+            {
+                Level = cellHeader.level,
+                ClassId = go.ClassId,
+                BatchId = batchId,
+                CellId = cellHeader.cellId
+            };
 
             EntitySlot entitySlot = go.GetComponent<EntitySlot>();
 
