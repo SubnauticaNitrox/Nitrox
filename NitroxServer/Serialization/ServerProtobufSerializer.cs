@@ -34,6 +34,9 @@ namespace NitroxServer.Serialization
         private void RegisterHardCodedTypes()
         {
             model.Add(typeof(UnityEngine.Light), true);
+            model.Add(typeof(UnityEngine.BoxCollider), true);
+            model.Add(typeof(UnityEngine.SphereCollider), true);
+            model.Add(typeof(UnityEngine.MeshCollider), true);
         }
 
         private void RegisterAssemblyClasses(String assemblyName)
