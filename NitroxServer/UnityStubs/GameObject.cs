@@ -48,5 +48,10 @@ namespace NitroxServer.UnityStubs
 
             return default(T);
         }
+
+        public bool HasComponent<T>()
+        {
+            return components.ContainsKey(typeof(T));
+        }
     }
 }
