@@ -85,7 +85,7 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            using (Stream stream = FileUtils.ReadFile(fileName))
+            using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
 
@@ -125,22 +125,14 @@ namespace NitroxServer.Serialization
 
                 Type type = null;
 
-                if (surrogateTypes.ContainsKey(componentHeader.TypeName))
+                if (!surrogateTypes.TryGetValue(componentHeader.TypeName, out type))
                 {
-                    type = surrogateTypes[componentHeader.TypeName];
+                    type = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType(componentHeader.TypeName))
+                        .FirstOrDefault(t => t != null);
                 }
-                else
-                {
-                    foreach (System.Reflection.Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
-                    {
-                        type = assembly.GetType(componentHeader.TypeName);
 
-                        if (type != null)
-                        {
-                            break;
-                        }
-                    }
-                }
+                Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
 
                 object component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);

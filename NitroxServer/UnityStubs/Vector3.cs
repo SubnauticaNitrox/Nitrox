@@ -16,7 +16,6 @@ namespace NitroxServer.UnityStubs
 
         public Vector3()
         {
-
         }
 
         public Vector3(float x, float y, float z)
