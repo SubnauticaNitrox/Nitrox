@@ -70,6 +70,7 @@
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
@@ -113,10 +114,6 @@
     <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
-      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
-      <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

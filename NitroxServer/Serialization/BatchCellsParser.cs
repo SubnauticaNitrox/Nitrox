@@ -6,6 +6,7 @@ using NitroxServer.UnityStubs;
 using NitroxModel.Logger;
 using System.Threading.Tasks;
 using System.Linq;
+using NitroxServer.GameLogic.Spawning;
 
 namespace NitroxServer.Serialization
 {
@@ -13,10 +14,13 @@ namespace NitroxServer.Serialization
      * Parses the files in build18 in the format of batch-cells-x-y-z-slot-type.bin
      * These files contain serialized GameObjects with EntitySlot components. These
      * represent areas that entities (creatures, objects) can spawn within the world.
+     * This class consolidates the gameObject, entitySlot, and cellHeader data to
+     * create EntitySpawnPoint objects.
      */
     class BatchCellsParser
     {
-        private readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
+        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
+        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
 
         private ServerProtobufSerializer serializer;
         private Dictionary<String, Type> surrogateTypes = new Dictionary<string, Type>();
@@ -30,11 +34,11 @@ namespace NitroxServer.Serialization
             surrogateTypes.Add("UnityEngine.Quaternion", typeof(Quaternion));
         }
 
-        public Dictionary<Int3, List<GameObject>> GetGameObjectsByBatchId()
+        public Dictionary<Int3, List<EntitySpawnPoint>> GetEntitySpawnPointsByBatchId()
         {
             Log.Info("Loading batch data...");
 
-            Dictionary<Int3, List<GameObject>> gameObjectsByBatchId = new Dictionary<Int3, List<GameObject>>();
+            Dictionary<Int3, List<EntitySpawnPoint>> entitySpawnPointsByBatchId = new Dictionary<Int3, List<EntitySpawnPoint>>();
 
             Parallel.ForEach(Enumerable.Range(0, MAP_DIMENSIONS.x), x =>
             {
@@ -44,11 +48,11 @@ namespace NitroxServer.Serialization
                     {
                         Int3 batchId = new Int3(x, y, z);
 
-                        List<GameObject> gameObjects = ParseGameObjects(batchId);
+                        List<EntitySpawnPoint> entitySpawnPoints = ParseBatchData(batchId);
 
-                        lock (gameObjectsByBatchId)
+                        lock (entitySpawnPointsByBatchId)
                         {
-                            gameObjectsByBatchId.Add(batchId, gameObjects);
+                            entitySpawnPointsByBatchId.Add(batchId, entitySpawnPoints);
                         }
                     }
                 }
@@ -56,31 +60,30 @@ namespace NitroxServer.Serialization
 
             Log.Info("Batch data loaded!");
 
-            return gameObjectsByBatchId;
+            return entitySpawnPointsByBatchId;
         }
 
-        public List<GameObject> ParseGameObjects(Int3 batchId)
+        public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
-            List<GameObject> allGameObjects = new List<GameObject>();
-            Dictionary<String, GameObject> gameObjectsByClassId = new Dictionary<String, GameObject>();
+            List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             
-            ParseFile(batchId, "", "loot-slots", allGameObjects, gameObjectsByClassId);
-            ParseFile(batchId, "", "creature-slots", allGameObjects, gameObjectsByClassId);
-            //ParseFile(batchId, @"Generated\", "slots", allGameObjects, gameObjectsByClassId);  // Very expensive to load
-            ParseFile(batchId, "", "loot", allGameObjects, gameObjectsByClassId);
-            ParseFile(batchId, "", "creatures", allGameObjects, gameObjectsByClassId);
-            ParseFile(batchId, "", "other", allGameObjects, gameObjectsByClassId);
+            ParseFile(batchId, "", "loot-slots", spawnPoints);
+            ParseFile(batchId, "", "creature-slots", spawnPoints);
+            //ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
+            ParseFile(batchId, "", "loot", spawnPoints);
+            ParseFile(batchId, "", "creatures", spawnPoints);
+            ParseFile(batchId, "", "other", spawnPoints);
 
-            return allGameObjects;
+            return spawnPoints;
         }
 
-        public void ParseFile(Int3 batchId, String pathPrefix, String suffix, List<GameObject> allGameObjects, Dictionary<String, GameObject> gameObjectsByClassId)
+        public void ParseFile(Int3 batchId, String pathPrefix, String suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            String fileName = pathPrefix + "batch-cells-" + batchId .x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
+            String path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
+            String fileName = path + pathPrefix + "batch-cells-" + batchId .x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
 
             if(!File.Exists(fileName))
             {
-                Log.Info(fileName + " was not found!");
                 return;
             }
 
@@ -95,35 +98,23 @@ namespace NitroxServer.Serialization
 
                     for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
                     {
-                        DeserializeGameObject(stream, allGameObjects, gameObjectsByClassId);
+                        GameObject gameObject = DeserializeGameObject(stream);
+
+                        EntitySpawnPoint esp = EntitySpawnPoint.From(batchId, gameObject, cellHeader);
+                        spawnPoints.Add(esp);
                     }
                 }
             }
         }
 
-        private void DeserializeGameObject(Stream stream, List<GameObject> allGameObjects, Dictionary<String, GameObject> gameObjectsByClassId)
+        private GameObject DeserializeGameObject(Stream stream)
         {
             ProtobufSerializer.GameObjectData goData = serializer.Deserialize<ProtobufSerializer.GameObjectData>(stream);
 
-            GameObject gameObject;
-
-            if (goData.CreateEmptyObject || !gameObjectsByClassId.ContainsKey(goData.ClassId))
-            {
-                gameObject = new GameObject(goData);
-
-                if (goData.ClassId != null)
-                {
-                    gameObjectsByClassId[goData.ClassId] = gameObject;
-                }
-
-                allGameObjects.Add(gameObject);
-            }
-            else
-            {
-                gameObject = gameObjectsByClassId[goData.ClassId];
-            }
-
+            GameObject gameObject = new GameObject(goData);
             DeserializeComponents(stream, gameObject);
+
+            return gameObject;
         }
 
         private void DeserializeComponents(Stream stream, GameObject gameObject)
@@ -168,5 +159,5 @@ namespace NitroxServer.Serialization
                 }
             }
         }
-    }    
+    }
 }

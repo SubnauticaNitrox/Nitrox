@@ -55,6 +55,7 @@
     <Compile Include="DataStructures\OwnedGuid.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
+    <Compile Include="DataStructures\GameLogic\SpawnedEntity.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
+    <Compile Include="Packets\SpawnEntities.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
