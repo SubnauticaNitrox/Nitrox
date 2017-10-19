@@ -12,7 +12,7 @@ namespace NitroxServer.UnityStubs
         public string ClassId { get; }
         public string Parent { get; }
 
-        private Dictionary<Type, object> components = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> components = new Dictionary<Type, object>();
 
         public GameObject(ProtobufSerializer.GameObjectData goData)
         {
@@ -42,13 +42,7 @@ namespace NitroxServer.UnityStubs
 
         public T GetComponent<T>()
         {
-            object res;
-            if (components.TryGetValue(typeof(T), out res))
-            {
-                return (T)res;
-            }
-
-            return default(T);
+            return (T)GetComponent(typeof(T));
         }
 
         public bool HasComponent<T>()

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -93,7 +92,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

@@ -15,7 +15,7 @@ namespace NitroxServer.GameLogic
         private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
 
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
-        private readonly List<EntitySpawnPoint> entitySpawnPoints;
+        private readonly IEnumerable<EntitySpawnPoint> entitySpawnPoints;
         private readonly LootDistributionData lootDistributionData;
 
         public EntitySpawner()
