@@ -17,6 +17,7 @@ namespace NitroxServer.GameLogic.Spawning
 
         public static EntitySpawnPoint From(Int3 batchId, GameObject go, CellManager.CellHeader cellHeader)
         {
+            // Why is this not a constructor?
             EntitySpawnPoint esp = new EntitySpawnPoint
             {
                 Level = cellHeader.level,

@@ -22,7 +22,9 @@ namespace ClientTester.Commands.DefaultCommands
             Console.WriteLine("Mouse is now attached. Press any key to exit");
             Timer mouseTimer = new Timer();
             mouseTimer.Elapsed += delegate
-            { MouseTimerTick(client); };
+            {
+                MouseTimerTick(client);
+            };
             mouseTimer.Interval = 50;
             mouseTimer.Start();
             Console.ReadKey();

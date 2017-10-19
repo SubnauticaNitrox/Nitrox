@@ -20,6 +20,9 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
+        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
+        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
+
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -77,6 +80,7 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
+            // This isn't always gonna work.
             string path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
             string fileName = path + pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
 
