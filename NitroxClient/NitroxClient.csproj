@@ -79,6 +79,7 @@
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SpawnEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />

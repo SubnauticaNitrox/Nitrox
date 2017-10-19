@@ -73,10 +73,10 @@
     <Compile Include="Communication\Packets\Processors\VisibleChunksChangedProcessor.cs" />
     <Compile Include="Communication\PlayerConnection.cs" />
     <Compile Include="Communication\TcpServer.cs" />
-    <Compile Include="GameLogic\Spawning\SpawnedEntity.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
+    <Compile Include="GameLogic\Spawning\EntitySpawnPoint.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
