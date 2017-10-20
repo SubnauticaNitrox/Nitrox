@@ -48,7 +48,7 @@ namespace NitroxServer.GameLogic
                 List<EntitySpawnPoint> entitySpawnPoints = entitySpawnPointsWithBatchId.Value;
 
                 entitiesByBatchId[batchId] = new List<SpawnedEntity>();
-
+                
                 foreach (EntitySpawnPoint spawnPoint in entitySpawnPoints)
                 {
                     LootDistributionData.DstData dstData;
@@ -76,16 +76,15 @@ namespace NitroxServer.GameLogic
                     if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.ContainsKey(selectedPrefab.classId))
                     {
                         WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[selectedPrefab.classId];
-
-                        if (worldEntityInfo.techType != TechType.None) //TODO: we should research why they have tech type nones in the loot distribution.
+                        
+                        for(int i = 0; i < selectedPrefab.count; i++)
                         {
                             SpawnedEntity spawnedEntity = new SpawnedEntity(spawnPoint.Position,
                                                                             worldEntityInfo.techType,
-                                                                            Guid.NewGuid().ToString(),
-                                                                            spawnPoint.CanSpawnCreature);
+                                                                            Guid.NewGuid().ToString());
                             entitiesByBatchId[batchId].Add(spawnedEntity);
-                        }
-                    }                    
+                        }                        
+                    }
                 }
             }
         }

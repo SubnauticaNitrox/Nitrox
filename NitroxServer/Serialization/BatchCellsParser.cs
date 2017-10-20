@@ -146,17 +146,8 @@ namespace NitroxServer.Serialization
 
                 var component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);
-
-                if (gameObject.GetComponent(type) == null)
-                {
-                    gameObject.AddComponent(component, type);
-                }
-                else
-                {
-                    // this happens for most things that have (goData.CreateEmptyObject = false)
-                    // why do they have two transforms for the same game object???  It this an issue?
-                    //Log.Info("GameObject(" + gameObject.Id + ") already has component of type " + type);
-                }
+                
+                gameObject.AddComponent(component, type);
             }
         }
     }
