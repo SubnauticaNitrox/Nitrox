@@ -1,5 +1,4 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.Chat;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.ChatUI
@@ -22,9 +21,9 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
-        public void WriteMessage(string message)
+        public void WriteMessage(string message, Color color)
         {
-            chat.WriteMessage(message);
+            chat.WriteMessage(message, color);
         }
 
         public void ShowChat()

@@ -167,6 +167,9 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
+    <Compile Include="MonoBehaviours\Gui\Settings\SettingsOptions.cs" />
+    <Compile Include="MonoBehaviours\Gui\Settings\uGUI_Binding_Nitrox.cs" />
+    <Compile Include="MonoBehaviours\Gui\Settings\SettingsManager.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />

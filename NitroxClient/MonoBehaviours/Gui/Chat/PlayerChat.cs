@@ -13,13 +13,16 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject chatEntry;
         private GUIText chatText;
         private Coroutine timer;
+
         private List<string> messages;
+        private Dictionary<string, string> colors;
 
         protected void Awake()
         {
             SetupChatMessagesComponent();
 
             messages = new List<string>();
+            colors = new Dictionary<string, string>();
         }
 
         private void SetupChatMessagesComponent()
@@ -32,18 +35,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.fontSize = 18;
             chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
+            chatText.richText = true;
         }
 
-        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous messages for CHAT_VISIBILITY_TIME_LENGTH seconds
-        public void WriteMessage(string message)
+        public void WriteMessage(string message, Color color)
         {
             if (timer != null)
             {
                 // cancel hiding chat messages because a new one was recently posted
                 StopCoroutine(timer);
             }
-
-            AddChatMessage(SanitizeMessage(message));
+            AddChatMessage(SanitizeMessage(message), color);
             BuildChatText();
 
             chatText.enabled = true;
@@ -51,14 +53,16 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             timer = StartCoroutine(DeactivateChat());
         }
 
-        private void AddChatMessage(string sanitizedChatMessage)
+        private void AddChatMessage(string sanitizedChatMessage, Color color)
         {
             if (messages.Count == MESSAGE_LIMIT)
             {
+                colors.Remove(messages[0]);
                 messages.RemoveAt(0);
             }
 
             messages.Add(sanitizedChatMessage);
+            colors.Add(sanitizedChatMessage, ColorUtility.ToHtmlStringRGB(color));
         }
 
         private void BuildChatText()
@@ -70,8 +74,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 {
                     chatText.text += "\n";
                 }
-
-                chatText.text += message;
+                string color;
+                if (!colors.TryGetValue(message, out color))
+                {
+                    color = "000000";
+                }
+                chatText.text += " <color=#" + color + ">" + message + "</color>";
             }
         }
 

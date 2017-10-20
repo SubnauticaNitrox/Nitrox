@@ -1,9 +1,10 @@
 ﻿using Harmony;
-using NitroxClient.MonoBehaviours.Gui.Input;
-using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
+using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.MonoBehaviours.Gui.Settings;
 using NitroxModel.Helper;
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -20,15 +21,13 @@ namespace NitroxPatcher.Patches
                 return;
             }
 
-            KeyBindingManager keyBindingManager = new KeyBindingManager();
-
-            foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
+            string keyBinding = SettingsManager.GetKey_Chat();
+            if (keyBinding != "" || keyBinding != null || keyBinding != " ")
             {
-                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall<GameInput>(null, "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
-
-                if (isButtonDown)
+                if (Input.GetKeyDown(keyBinding.ToLower()))
                 {
-                    keyBinding.Action.Execute();
+                    PlayerChatManager chatManager = new PlayerChatManager();
+                    chatManager.ShowChat();
                 }
             }
         }

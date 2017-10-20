@@ -81,7 +81,8 @@
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
-    <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_OptionsPanel_AddTabs_Patch.cs" />
+    <Compile Include="Patches\Persistent\GameSettings_SerializeSettings_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
@@ -96,7 +97,6 @@
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
-    <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
