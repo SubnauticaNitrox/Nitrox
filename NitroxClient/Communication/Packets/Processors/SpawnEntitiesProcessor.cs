@@ -1,13 +1,12 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.HUD;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -21,13 +20,18 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if(!alreadySpawnedGuids.Contains(entity.Guid))
                 {
-                    GameObject techPrefab = CraftData.GetPrefabForTechType(entity.TechType);
-                    GameObject gameObject = (GameObject)UnityEngine.Object.Instantiate(techPrefab, entity.Position, Quaternion.FromToRotation(Vector3.up, Vector3.up));
-                    GuidHelper.SetNewGuid(gameObject, entity.Guid);
-                    gameObject.SetActive(true);
+                    if (entity.TechType != TechType.None)
+                    {
+                        GameObject gameObject = CraftData.InstantiateFromPrefab(entity.TechType);
+                        gameObject.transform.position = entity.Position;
+                        GuidHelper.SetNewGuid(gameObject, entity.Guid);
+                        gameObject.SetActive(true);
+
+                        alreadySpawnedGuids.Add(entity.Guid);
+                        Log.Info("Received spawned entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
+                    }
 
                     alreadySpawnedGuids.Add(entity.Guid);
-                    Log.Info("Received spawned entity: " + entity.Guid + " at " + entity.Position);
                 }
             }
         }

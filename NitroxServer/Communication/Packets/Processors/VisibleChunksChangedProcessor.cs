@@ -27,9 +27,13 @@ namespace NitroxServer.Communication.Packets.Processors
             foreach (Chunk visibleChunk in packet.Added)
             {
                 List<SpawnedEntity> entities = entitySpawner.GetEntitiesByBatchId(visibleChunk.BatchId);
-                SpawnEntities spawnEntities = new SpawnEntities(entities);
-                tcpServer.SendPacketToPlayer(spawnEntities, player);
-                Console.WriteLine(spawnEntities);
+
+                if(entities.Count > 0)
+                {
+                    SpawnEntities spawnEntities = new SpawnEntities(entities);
+                    tcpServer.SendPacketToPlayer(spawnEntities, player);
+                    Console.WriteLine(spawnEntities);
+                }
             }
         }
     }
