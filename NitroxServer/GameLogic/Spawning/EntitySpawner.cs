@@ -57,19 +57,35 @@ namespace NitroxServer.GameLogic
                         continue;
                     }
 
-                    float rollingProbability = 0;
-                    double randomNumber = random.NextDouble();
+                    float rollingProbabilityDensity = 0;
 
                     PrefabData selectedPrefab = null;
 
                     foreach (var prefab in dstData.prefabs)
                     {
-                        float num1 = prefab.probability / spawnPoint.Density;
-                        rollingProbability += num1;
+                        float probabilityDensity = prefab.probability / spawnPoint.Density;
+                        rollingProbabilityDensity += probabilityDensity;
+                    }
 
-                        if (rollingProbability >= randomNumber)
+                    if (rollingProbabilityDensity > 0)
+                    {
+                        double randomNumber = random.NextDouble();
+                        double rollingProbability = 0;
+
+                        if (rollingProbabilityDensity > 1f)
                         {
-                            selectedPrefab = prefab;
+                            randomNumber *= rollingProbabilityDensity;
+                        }
+
+                        foreach (var prefab in dstData.prefabs)
+                        {
+                            float probabilityDensity = prefab.probability / spawnPoint.Density;
+                            rollingProbability += probabilityDensity;
+                            if (rollingProbability >= randomNumber)
+                            {
+                                selectedPrefab = prefab;
+                                break;
+                            }
                         }
                     }
 
