@@ -26,7 +26,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             foreach (Chunk visibleChunk in packet.Added)
             {
-                List<SpawnedEntity> entities = entitySpawner.GetEntitiesByBatchId(visibleChunk.BatchId);
+                Int3 absoluteCellId = EntityCellHelper.GetAbsoluteCellId(visibleChunk.BatchId, visibleChunk.CellId);
+                List<SpawnedEntity> entities = entitySpawner.GetEntitiesByAbsoluteCellId(absoluteCellId);
 
                 if(entities.Count > 0)
                 {

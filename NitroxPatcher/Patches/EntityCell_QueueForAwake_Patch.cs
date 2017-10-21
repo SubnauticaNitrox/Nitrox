@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
         
         public static bool Prefix(EntityCell __instance)
         {
-            Multiplayer.Logic.Chunks.ChunkLoaded(__instance.BatchId, __instance.Level);
+            Multiplayer.Logic.Chunks.ChunkLoaded(__instance.BatchId, __instance.CellId, __instance.Level);
 
             return true;
         }
