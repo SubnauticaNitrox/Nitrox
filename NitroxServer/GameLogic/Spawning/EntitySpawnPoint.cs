@@ -6,6 +6,8 @@ namespace NitroxServer.GameLogic.Spawning
 {
     public class EntitySpawnPoint
     {
+        public Int3 BatchId { get; private set; }
+        public Int3 CellId { get; private set; }
         public UnityEngine.Vector3 Position { get; private set; }        
         public int Level { get; private set; }
         public String ClassId { get; private set; }
@@ -19,6 +21,8 @@ namespace NitroxServer.GameLogic.Spawning
             EntitySpawnPoint esp = new EntitySpawnPoint();
             esp.Level = cellHeader.level;
             esp.ClassId = go.ClassId;
+            esp.BatchId = batchId;
+            esp.CellId = cellHeader.cellId;
 
             EntitySlot entitySlot = go.GetComponent<EntitySlot>();
 

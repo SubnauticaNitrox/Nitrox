@@ -22,6 +22,7 @@ namespace NitroxTest.Client.Communication
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
         private Chunk loadedChunk;
         private Chunk unloadedChunk;
+        private Int3 cellId = Int3.zero;
 
         [TestInitialize]
         public void TestInitialize()
@@ -31,8 +32,8 @@ namespace NitroxTest.Client.Communication
             Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
             Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
 
-            loadedChunk = new Chunk(loadedBatchId, 3);
-            unloadedChunk = new Chunk(unloadedBatchId, 3);
+            loadedChunk = new Chunk(loadedBatchId, cellId, 3);
+            unloadedChunk = new Chunk(unloadedBatchId, cellId, 3);
 
             loadedChunks.Add(loadedChunk);
         }

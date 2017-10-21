@@ -28,17 +28,17 @@ namespace NitroxClient.GameLogic
             this.chunkAwarePacketReceiver = chunkAwarePacketReceiver;
         }
 
-        public void ChunkLoaded(Int3 batchId, int level)
+        public void ChunkLoaded(Int3 batchId, Int3 cellId, int level)
         {
-            LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchId, level));
-            markChunksReadyForSync(0.5f);  
+            LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchId, cellId, level));
+            markChunksReadyForSync(0.5f);
         }
         
-        private IEnumerator WaitAndAddChunk(Int3 batchId, int level)
+        private IEnumerator WaitAndAddChunk(Int3 batchId, Int3 cellId, int level)
         {
             yield return new WaitForSeconds(0.5f);
             
-            Chunk chunk = new Chunk(batchId, level);
+            Chunk chunk = new Chunk(batchId, cellId, level);
 
             if (!loadedChunks.Contains(chunk))
             {
@@ -48,9 +48,9 @@ namespace NitroxClient.GameLogic
             }            
         }
 
-        public void ChunkUnloaded(Int3 batchId, int level)
+        public void ChunkUnloaded(Int3 batchId, Int3 cellId, int level)
         {
-            Chunk chunk = new Chunk(batchId, level);
+            Chunk chunk = new Chunk(batchId, cellId, level);
 
             if (loadedChunks.Contains(chunk))
             {
