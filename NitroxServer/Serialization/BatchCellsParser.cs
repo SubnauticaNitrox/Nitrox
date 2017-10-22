@@ -38,11 +38,11 @@ namespace NitroxServer.Serialization
 
             List<EntitySpawnPoint> entitySpawnPoints = new List<EntitySpawnPoint>();
 
-            Parallel.ForEach(Enumerable.Range(1, Map.DIMENSIONS.x), x =>
+            Parallel.ForEach(Enumerable.Range(1, Map.DIMENSIONS_IN_BATCHES.x), x =>
             {
-                for (int y = 1; y <= Map.DIMENSIONS.y; y++)
+                for (int y = 1; y <= Map.DIMENSIONS_IN_BATCHES.y; y++)
                 {
-                    for (int z = 1; z <= Map.DIMENSIONS.z; z++)
+                    for (int z = 1; z <= Map.DIMENSIONS_IN_BATCHES.z; z++)
                     {
                         Int3 batchId = new Int3(x, y, z);
 
