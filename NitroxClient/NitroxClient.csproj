@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\ChunkAwarePacketReceiver.cs" />
+    <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Client.cs" />
     <Compile Include="Communication\PacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
@@ -102,7 +102,7 @@
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
-    <Compile Include="GameLogic\Chunks.cs" />
+    <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
-    <Compile Include="Map\LoadedChunks.cs" />
+    <Compile Include="Map\VisibleChunks.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />

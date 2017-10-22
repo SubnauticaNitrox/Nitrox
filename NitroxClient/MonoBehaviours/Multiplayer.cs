@@ -22,11 +22,11 @@ namespace NitroxClient.MonoBehaviours
 
         public static event Action OnBeforeMultiplayerStart;
 
-        private static readonly LoadedChunks loadedChunks = new LoadedChunks();
-        private static readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-        private static readonly TcpClient client = new TcpClient(chunkAwarePacketReceiver);
+        private static readonly VisibleCells visibleCells = new VisibleCells();
+        private static readonly DeferringPacketReceiver packetReceiver = new DeferringPacketReceiver(visibleCells);
+        private static readonly TcpClient client = new TcpClient(packetReceiver);
         public static readonly PacketSender PacketSender = new PacketSender(client);
-        public static readonly Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
+        public static readonly Logic Logic = new Logic(PacketSender, visibleCells, packetReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
@@ -75,7 +75,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            Queue<Packet> packets = chunkAwarePacketReceiver.GetReceivedPackets();
+            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {

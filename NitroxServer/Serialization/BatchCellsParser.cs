@@ -7,6 +7,7 @@ using NitroxModel.Logger;
 using System.Threading.Tasks;
 using System.Linq;
 using NitroxServer.GameLogic.Spawning;
+using NitroxModel.Helper;
 
 namespace NitroxServer.Serialization
 {
@@ -19,9 +20,6 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
-        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
-
         private ServerProtobufSerializer serializer;
         private Dictionary<String, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -34,25 +32,25 @@ namespace NitroxServer.Serialization
             surrogateTypes.Add("UnityEngine.Quaternion", typeof(Quaternion));
         }
 
-        public Dictionary<Int3, List<EntitySpawnPoint>> GetEntitySpawnPointsByBatchId()
+        public List<EntitySpawnPoint> GetEntitySpawnPoints()
         {
             Log.Info("Loading batch data...");
 
-            Dictionary<Int3, List<EntitySpawnPoint>> entitySpawnPointsByBatchId = new Dictionary<Int3, List<EntitySpawnPoint>>();
+            List<EntitySpawnPoint> entitySpawnPoints = new List<EntitySpawnPoint>();
 
-            Parallel.ForEach(Enumerable.Range(0, MAP_DIMENSIONS.x), x =>
+            Parallel.ForEach(Enumerable.Range(1, Map.DIMENSIONS.x), x =>
             {
-                for (int y = 0; y <= MAP_DIMENSIONS.y; y++)
+                for (int y = 1; y <= Map.DIMENSIONS.y; y++)
                 {
-                    for (int z = 0; z <= MAP_DIMENSIONS.z; z++)
+                    for (int z = 1; z <= Map.DIMENSIONS.z; z++)
                     {
                         Int3 batchId = new Int3(x, y, z);
 
-                        List<EntitySpawnPoint> entitySpawnPoints = ParseBatchData(batchId);
+                        List<EntitySpawnPoint> batchSpawnPoints = ParseBatchData(batchId);
 
-                        lock (entitySpawnPointsByBatchId)
+                        lock (entitySpawnPoints)
                         {
-                            entitySpawnPointsByBatchId.Add(batchId, entitySpawnPoints);
+                            entitySpawnPoints.AddRange(batchSpawnPoints);
                         }
                     }
                 }
@@ -60,7 +58,7 @@ namespace NitroxServer.Serialization
 
             Log.Info("Batch data loaded!");
 
-            return entitySpawnPointsByBatchId;
+            return entitySpawnPoints;
         }
 
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
@@ -69,7 +67,7 @@ namespace NitroxServer.Serialization
             
             ParseFile(batchId, "", "loot-slots", spawnPoints);
             ParseFile(batchId, "", "creature-slots", spawnPoints);
-            //ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
+            ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
             ParseFile(batchId, "", "loot", spawnPoints);
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);

@@ -8,26 +8,25 @@ using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    class VisibleChunksChangedProcessor : AuthenticatedPacketProcessor<VisibleChunksChanged>
+    class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
         private TcpServer tcpServer;
         private EntitySpawner entitySpawner;
 
-        public VisibleChunksChangedProcessor(TcpServer tcpServer, EntitySpawner entitySpawner)
+        public CellVisibilityChangedProcessor(TcpServer tcpServer, EntitySpawner entitySpawner)
         {
             this.tcpServer = tcpServer;
             this.entitySpawner = entitySpawner;
         }
         
-        public override void Process(VisibleChunksChanged packet, Player player)
+        public override void Process(CellVisibilityChanged packet, Player player)
         {
-            player.AddChunks(packet.Added);
-            player.RemoveChunks(packet.Removed);
+            player.AddCells(packet.Added);
+            player.RemoveCells(packet.Removed);
 
-            foreach (Chunk visibleChunk in packet.Added)
+            foreach (VisibleCell visibleCell in packet.Added)
             {
-                Int3 absoluteCellId = EntityCellHelper.GetAbsoluteCellId(visibleChunk.BatchId, visibleChunk.CellId);
-                List<SpawnedEntity> entities = entitySpawner.GetEntitiesByAbsoluteCellId(absoluteCellId);
+                List<SpawnedEntity> entities = entitySpawner.GetEntitiesByAbsoluteCell(visibleCell.AbsoluteCellEntity);
 
                 if(entities.Count > 0)
                 {

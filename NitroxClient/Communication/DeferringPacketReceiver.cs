@@ -6,21 +6,21 @@ using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
-    public class ChunkAwarePacketReceiver
+    public class DeferringPacketReceiver
     {
         private static readonly int EXPIDITED_PACKET_PRIORITY = 999;
         private static readonly int DEFAULT_PACKET_PRIORITY = 1;
-        private static readonly int DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS = 1;
+        private static readonly int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
-        private Dictionary<Int3, Queue<Packet>> deferredPacketsByBatchId;
+        private Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell;
         private PriorityQueue<Packet> receivedPackets;
-        private LoadedChunks loadedChunks;
+        private VisibleCells visibleCells;
 
-        public ChunkAwarePacketReceiver(LoadedChunks loadedChunks)
+        public DeferringPacketReceiver(VisibleCells visibleCells)
         {
-            this.deferredPacketsByBatchId = new Dictionary<Int3, Queue<Packet>>();
+            this.deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
             this.receivedPackets = new PriorityQueue<Packet>();
-            this.loadedChunks = loadedChunks;
+            this.visibleCells = visibleCells;
         }
 
         public void PacketReceived(Packet packet)
@@ -59,13 +59,26 @@ namespace NitroxClient.Communication
                 {
                     return false;
                 }
+                
+                AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition);
 
-                Int3 actionBatchId = LargeWorldStreamer.main.GetContainingBatch(playerAction.ActionPosition);
+                bool cellLoaded = false;
 
-                if (!loadedChunks.HasChunkWithMinDesiredLevelOfDetail(actionBatchId, DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS))
+                for(int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
                 {
-                    Log.Debug("Action was deferred, batch not loaded (with required lod): " + actionBatchId);
-                    AddPacketToDeferredMap(playerAction, actionBatchId);
+                    VisibleCell visibleCell = new VisibleCell(cell, level);
+
+                    if (visibleCells.HasVisibleCell(visibleCell))
+                    {
+                        cellLoaded = true;
+                        break;
+                    }
+                }
+
+                if(!cellLoaded)
+                {
+                    Log.Debug("Action was deferred, cell not loaded (with required lod): " + cell);
+                    AddPacketToDeferredMap(playerAction, cell);
                     return true;
                 }
             }
@@ -73,30 +86,30 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, Int3 batchId)
+        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, AbsoluteEntityCell cell)
         {
-            lock (deferredPacketsByBatchId)
+            lock (deferredPacketsByAbsoluteCell)
             {
-                if (!deferredPacketsByBatchId.ContainsKey(batchId))
+                if (!deferredPacketsByAbsoluteCell.ContainsKey(cell))
                 {
-                    deferredPacketsByBatchId.Add(batchId, new Queue<Packet>());
+                    deferredPacketsByAbsoluteCell.Add(cell, new Queue<Packet>());
                 }
 
-                deferredPacketsByBatchId[batchId].Enqueue(playerAction);
+                deferredPacketsByAbsoluteCell[cell].Enqueue(playerAction);
             }
         }
 
-        public void ChunkLoaded(Chunk chunk)
+        public void CellLoaded(VisibleCell visibleCell)
         {
-            if (chunk.Level > DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS)
+            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
             {
                 return;
             }
 
-            lock (deferredPacketsByBatchId)
+            lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
-                if (deferredPacketsByBatchId.TryGetValue(chunk.BatchId, out deferredPackets))
+                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell.AbsoluteCellEntity, out deferredPackets))
                 {
                     while (deferredPackets.Count > 0)
                     {

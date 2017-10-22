@@ -11,41 +11,41 @@ namespace NitroxServer
         public String Id { get; }
         public Vector3 Position { get; set; }
 
-        private HashSet<Chunk> visibleChunks;
+        private HashSet<VisibleCell> visibleCells;
 
         public Player(String id)
         {
             this.Id = id;
-            this.visibleChunks = new HashSet<Chunk>();
+            this.visibleCells = new HashSet<VisibleCell>();
         }
 
-        public void AddChunks(IEnumerable<Chunk> chunks)
+        public void AddCells(IEnumerable<VisibleCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (VisibleCell cell in cells)
                 {
-                    visibleChunks.Add(chunk);
+                    visibleCells.Add(cell);
                 }
             }
         }
 
-        public void RemoveChunks(IEnumerable<Chunk> chunks)
+        public void RemoveCells(IEnumerable<VisibleCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (VisibleCell cell in cells)
                 {
-                    visibleChunks.Remove(chunk);
+                    visibleCells.Remove(cell);
                 }
             }
         }
 
-        public bool HasChunkLoaded(Chunk chunk)
+        public bool HasCellLoaded(VisibleCell cell)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                return visibleChunks.Contains(chunk);
+                return visibleCells.Contains(cell);
             }
         }
     }

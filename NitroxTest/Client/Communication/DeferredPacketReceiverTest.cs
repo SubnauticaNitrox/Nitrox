@@ -11,31 +11,31 @@ using UnityEngine;
 namespace NitroxTest.Client.Communication
 {
     [TestClass]
-    public class ChunkAwarePacketReceiverTest
+    public class DeferredPacketReceiverTest
     {
-        private LoadedChunks loadedChunks;
-        private ChunkAwarePacketReceiver packetReceiver;
+        private VisibleCells visibleCells;
+        private DeferringPacketReceiver packetReceiver;
 
         // Test Data
         private String playerId = "TestPlayer";
         private Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
-        private Chunk loadedChunk;
-        private Chunk unloadedChunk;
+        private VisibleCell loadedCell;
+        private VisibleCell unloadedCell;
         private Int3 cellId = Int3.zero;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new ChunkAwarePacketReceiver(loadedChunks);
+            packetReceiver = new DeferringPacketReceiver(visibleCells);
 
             Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
             Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
 
-            loadedChunk = new Chunk(loadedBatchId, cellId, 3);
-            unloadedChunk = new Chunk(unloadedBatchId, cellId, 3);
+            loadedCell = new VisibleCell(loadedBatchId, cellId, 3);
+            unloadedCell = new VisibleCell(unloadedBatchId, cellId, 3);
 
-            loadedChunks.Add(loadedChunk);
+            visibleCells.Add(loadedCell);
         }
 
         [TestMethod]
@@ -51,7 +51,7 @@ namespace NitroxTest.Client.Communication
         }
 
         [TestMethod]
-        public void ActionPacketInLoadedChunk()
+        public void ActionPacketInLoadedCell()
         {
             Packet packet = new TestActionPacket(playerId, loadedActionPosition);
             packetReceiver.PacketReceived(packet);
@@ -63,7 +63,7 @@ namespace NitroxTest.Client.Communication
         }
 
         [TestMethod]
-        public void ActionPacketInUnloadedChunk()
+        public void ActionPacketInUnloadedCell()
         {
             Packet packet = new TestActionPacket(playerId, unloadedActionPosition);
             packetReceiver.PacketReceived(packet);
@@ -84,8 +84,8 @@ namespace NitroxTest.Client.Communication
             Packet packet2 = new TestNonActionPacket(playerId);
             packetReceiver.PacketReceived(packet2);
 
-            loadedChunks.Add(unloadedChunk);
-            packetReceiver.ChunkLoaded(unloadedChunk);
+            visibleCells.Add(unloadedCell);
+            packetReceiver.CellLoaded(unloadedCell);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
