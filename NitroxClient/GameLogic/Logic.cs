@@ -18,9 +18,9 @@ namespace NitroxClient.GameLogic
         public Cyclops Cyclops { get; private set; }
         public Interior Interior { get; private set; }
         public MobileVehicleBay MobileVehicleBay { get; private set; }
-        public Chunks Chunks { get; private set; }
+        public Terrain Terrain { get; private set; }
 
-        public Logic(PacketSender packetSender, LoadedChunks loadedChunks, ChunkAwarePacketReceiver chunkAwarePacketReceiver)
+        public Logic(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
             this.Building = new Building(packetSender);
             this.Chat = new Chat(packetSender);
@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
             this.Cyclops = new Cyclops(packetSender);
             this.Interior = new Interior(packetSender);
             this.MobileVehicleBay = new MobileVehicleBay(packetSender);
-            this.Chunks = new Chunks(packetSender, loadedChunks, chunkAwarePacketReceiver);
+            this.Terrain = new Terrain(packetSender, visibleCells, packetReceiver);
         }
     }
 }

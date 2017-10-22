@@ -5,12 +5,12 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class VisibleChunksChanged : AuthenticatedPacket
+    public class CellVisibilityChanged : AuthenticatedPacket
     {
-        public Chunk[] Added { get; }
-        public Chunk[] Removed { get; }
+        public VisibleCell[] Added { get; }
+        public VisibleCell[] Removed { get; }
 
-        public VisibleChunksChanged(String playerId, Chunk[] added, Chunk[] removed) : base(playerId)
+        public CellVisibilityChanged(String playerId, VisibleCell[] added, VisibleCell[] removed) : base(playerId)
         {
             Added = added;
             Removed = removed;
@@ -18,19 +18,19 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            StringBuilder toString = new StringBuilder("[ChunkLoaded Chunks: Added: | ");
+            StringBuilder toString = new StringBuilder("[CellVisibilityChanged | Added: ");
 
-            foreach (Chunk chunk in Added)
+            foreach (VisibleCell visibleCell in Added)
             {
-                toString.Append(chunk);
+                toString.Append(visibleCell);
                 toString.Append(' ');
             }
 
-            toString.Append("| Removed: | ");
+            toString.Append("| Removed: ");
 
-            foreach (Chunk chunk in Removed)
+            foreach (VisibleCell visibleCell in Removed)
             {
-                toString.Append(chunk);
+                toString.Append(visibleCell);
                 toString.Append(' ');
             }
 

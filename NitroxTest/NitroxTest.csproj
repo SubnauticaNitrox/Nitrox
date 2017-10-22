@@ -63,7 +63,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Client\Communication\ChunkAwarePacketReceiverTest.cs" />
+    <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />

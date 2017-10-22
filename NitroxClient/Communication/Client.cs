@@ -10,11 +10,11 @@ namespace NitroxClient.Communication
 {
     public class TcpClient
     {
-        private ChunkAwarePacketReceiver packetReceiver;
+        private DeferringPacketReceiver packetReceiver;
         private const int port = 11000;
         private Connection connection;
         
-        public TcpClient(ChunkAwarePacketReceiver packetManager)
+        public TcpClient(DeferringPacketReceiver packetManager)
         {
             this.packetReceiver = packetManager;
         }

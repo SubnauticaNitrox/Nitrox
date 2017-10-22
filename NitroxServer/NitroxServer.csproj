@@ -70,10 +70,9 @@
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VisibleChunksChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\PlayerConnection.cs" />
     <Compile Include="Communication\TcpServer.cs" />
-    <Compile Include="GameLogic\Helper\EntityCellHelper.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />

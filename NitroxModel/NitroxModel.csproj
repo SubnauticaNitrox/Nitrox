@@ -47,7 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\Chunk.cs" />
+    <Compile Include="DataStructures\AbsoluteEntityCell.cs" />
+    <Compile Include="DataStructures\VisibleCell.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
+    <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />

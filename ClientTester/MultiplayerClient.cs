@@ -13,19 +13,19 @@ namespace ClientTester
         public Logic Logic { get; private set; }
         public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
         
-        LoadedChunks loadedChunks;
-        ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+        VisibleCells visibleCells;
+        DeferringPacketReceiver packetReceiver;
         TcpClient client;
 
         public MultiplayerClient(String playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
-            loadedChunks = new LoadedChunks();
-            chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-            client = new TcpClient(chunkAwarePacketReceiver);
+            visibleCells = new VisibleCells();
+            packetReceiver = new DeferringPacketReceiver(visibleCells);
+            client = new TcpClient(packetReceiver);
             PacketSender = new PacketSender(client);
             PacketSender.PlayerId = playerId;
-            Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
+            Logic = new Logic(PacketSender, visibleCells, packetReceiver);
         }
 
         public void Start(String ip)

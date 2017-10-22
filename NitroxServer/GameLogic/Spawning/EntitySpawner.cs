@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
@@ -12,7 +13,7 @@ namespace NitroxServer.GameLogic
 {
     public class EntitySpawner
     {
-        private Dictionary<Int3, List<SpawnedEntity>> entitiesByAbsoluteCellId;
+        private Dictionary<AbsoluteEntityCell, List<SpawnedEntity>> entitiesByAbsoluteCell;
 
         private Dictionary<String, WorldEntityInfo> worldEntitiesByClassId;
         private List<EntitySpawnPoint> entitySpawnPoints;
@@ -32,11 +33,11 @@ namespace NitroxServer.GameLogic
             SpawnEntities();
         }
 
-        public List<SpawnedEntity> GetEntitiesByAbsoluteCellId(Int3 absoluteCellId)
+        public List<SpawnedEntity> GetEntitiesByAbsoluteCell(AbsoluteEntityCell absoluteCell)
         {
             List<SpawnedEntity> entities;
 
-            if (entitiesByAbsoluteCellId.TryGetValue(absoluteCellId, out entities))
+            if (entitiesByAbsoluteCell.TryGetValue(absoluteCell, out entities))
             {
                 return entities;
             }
@@ -47,7 +48,7 @@ namespace NitroxServer.GameLogic
         private void SpawnEntities()
         {
             Log.Info("Spawning entities...");
-            entitiesByAbsoluteCellId = new Dictionary<Int3, List<SpawnedEntity>>();
+            entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<SpawnedEntity>>();
             Random random = new Random();
 
             foreach (EntitySpawnPoint entitySpawnPoint in entitySpawnPoints)
@@ -101,14 +102,14 @@ namespace NitroxServer.GameLogic
                                                                         Guid.NewGuid().ToString(),
                                                                         Optional<String>.Empty());
 
-                        Int3 absoluteCellId = EntityCellHelper.GetAbsoluteCellId(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);
+                        AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);
 
-                        if(!entitiesByAbsoluteCellId.ContainsKey(absoluteCellId))
+                        if(!entitiesByAbsoluteCell.ContainsKey(absoluteCellId))
                         {
-                            entitiesByAbsoluteCellId[absoluteCellId] = new List<SpawnedEntity>();
+                            entitiesByAbsoluteCell[absoluteCellId] = new List<SpawnedEntity>();
                         }
 
-                        entitiesByAbsoluteCellId[absoluteCellId].Add(spawnedEntity);
+                        entitiesByAbsoluteCell[absoluteCellId].Add(spawnedEntity);
                     }                        
                 }                
             }
