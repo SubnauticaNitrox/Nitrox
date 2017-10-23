@@ -5,6 +5,7 @@ namespace NitroxClient.GameLogic
 {
     public class Logic
     {
+        public AI AI { get; private set; }
         public Building Building { get; private set; }
         public Chat Chat { get; private set; }
         public MedkitFabricator MedkitFabricator { get; private set; }
@@ -22,6 +23,7 @@ namespace NitroxClient.GameLogic
 
         public Logic(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
+            this.AI = new AI(packetSender);
             this.Building = new Building(packetSender);
             this.Chat = new Chat(packetSender);
             this.MedkitFabricator = new MedkitFabricator(packetSender);

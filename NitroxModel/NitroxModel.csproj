@@ -48,6 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\AbsoluteEntityCell.cs" />
+    <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
+    <Compile Include="DataStructures\GameLogic\Creatures\Actions\SwimToPoint.cs" />
+    <Compile Include="DataStructures\GameLogic\Creatures\Actions\SwimToPointAction.cs" />
     <Compile Include="DataStructures\VisibleCell.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
@@ -112,7 +115,7 @@
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
-    <Compile Include="Packets\VisibleChunksChanged.cs" />
+    <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />

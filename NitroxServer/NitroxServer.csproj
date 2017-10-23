@@ -73,6 +73,7 @@
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\PlayerConnection.cs" />
     <Compile Include="Communication\TcpServer.cs" />
+    <Compile Include="GameLogic\EntityManager.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
