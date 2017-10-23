@@ -33,16 +33,9 @@ namespace NitroxServer.GameLogic
             SpawnEntities();
         }
 
-        public List<SpawnedEntity> GetEntitiesByAbsoluteCell(AbsoluteEntityCell absoluteCell)
+        public Dictionary<AbsoluteEntityCell, List<SpawnedEntity>> GetEntitiesByAbsoluteCell()
         {
-            List<SpawnedEntity> entities;
-
-            if (entitiesByAbsoluteCell.TryGetValue(absoluteCell, out entities))
-            {
-                return entities;
-            }
-
-            return new List<SpawnedEntity>();
+            return entitiesByAbsoluteCell;
         }
 
         private void SpawnEntities()
@@ -100,6 +93,7 @@ namespace NitroxServer.GameLogic
                         SpawnedEntity spawnedEntity = new SpawnedEntity(entitySpawnPoint.Position,
                                                                         worldEntityInfo.techType,
                                                                         Guid.NewGuid().ToString(),
+                                                                        (int)worldEntityInfo.cellLevel,
                                                                         Optional<String>.Empty());
 
                         AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);

@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(TimeKeeper), timeKeeper },
                 {typeof(SimulationOwnership), simulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
-                {typeof(EntitySpawner), new EntitySpawner() }
+                {typeof(EntityManager), new EntityManager(new EntitySpawner()) }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));

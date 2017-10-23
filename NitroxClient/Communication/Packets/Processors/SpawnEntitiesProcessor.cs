@@ -1,12 +1,12 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UWE;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -33,6 +33,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     alreadySpawnedGuids.Add(entity.Guid);
                 }
+
+                Multiplayer.Logic.SimulationOwnership.AddOwnedGuid(entity.Guid, entity.SimulatingPlayerId.Get());
             }
         }
     }

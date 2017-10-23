@@ -1,5 +1,4 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
+﻿using NitroxModel.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -11,12 +10,12 @@ namespace NitroxServer.Communication.Packets.Processors
     class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
         private TcpServer tcpServer;
-        private EntitySpawner entitySpawner;
+        private EntityManager entityManager;
 
-        public CellVisibilityChangedProcessor(TcpServer tcpServer, EntitySpawner entitySpawner)
+        public CellVisibilityChangedProcessor(TcpServer tcpServer, EntityManager entityManager)
         {
             this.tcpServer = tcpServer;
-            this.entitySpawner = entitySpawner;
+            this.entityManager = entityManager;
         }
         
         public override void Process(CellVisibilityChanged packet, Player player)
@@ -24,16 +23,16 @@ namespace NitroxServer.Communication.Packets.Processors
             player.AddCells(packet.Added);
             player.RemoveCells(packet.Removed);
 
-            foreach (VisibleCell visibleCell in packet.Added)
-            {
-                List<SpawnedEntity> entities = entitySpawner.GetEntitiesByAbsoluteCell(visibleCell.AbsoluteCellEntity);
+            entityManager.AllowEntitySimulationFor(player.Id, packet.Added);
+            entityManager.RevokeEntitySimulationFor(player.Id, packet.Removed);
 
-                if(entities.Count > 0)
-                {
-                    SpawnEntities spawnEntities = new SpawnEntities(entities);
-                    tcpServer.SendPacketToPlayer(spawnEntities, player);
-                    Console.WriteLine(spawnEntities);
-                }
+            List<SpawnedEntity> entities = entityManager.GetVisibleEntities(packet.Added);
+            
+            if (entities.Count > 0)
+            {
+                SpawnEntities spawnEntities = new SpawnEntities(entities);
+                tcpServer.SendPacketToPlayer(spawnEntities, player);
+                Console.WriteLine(spawnEntities);
             }
         }
     }

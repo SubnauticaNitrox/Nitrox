@@ -10,19 +10,21 @@ namespace NitroxModel.GameLogic
         public Vector3 Position { get; }
         public TechType TechType { get; }
         public String Guid { get; }
-        public Optional<String> ControllingPlayerId { get; }
+        public int Level { get; }
+        public Optional<String> SimulatingPlayerId { get; set; }
 
-        public SpawnedEntity(Vector3 position, TechType techType, String guid, Optional<String> controllingPlayerId)
+        public SpawnedEntity(Vector3 position, TechType techType, String guid, int level, Optional<String> controllingPlayerId)
         {
             this.Position = position;
             this.TechType = techType;
             this.Guid = guid;
-            this.ControllingPlayerId = controllingPlayerId;
+            this.Level = level;
+            this.SimulatingPlayerId = controllingPlayerId;
         }
 
         public override string ToString()
         {
-            return "[SpawnedEntity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " ControllingPlayerId: " + ControllingPlayerId + " ]";
+            return "[SpawnedEntity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " SimulatingPlayerId: " + SimulatingPlayerId + " ]";
         }
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="GameLogic\Building.cs" />
+    <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\Terrain.cs" />

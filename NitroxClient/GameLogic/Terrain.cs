@@ -83,7 +83,6 @@ namespace NitroxClient.GameLogic
                 {
                     CellVisibilityChanged cellsChanged = new CellVisibilityChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(cellsChanged);
-                    Log.Debug(cellsChanged);
 
                     added.Clear();
                     removed.Clear();
