@@ -25,8 +25,8 @@ namespace NitroxClient.MonoBehaviours
                     text += word + " ";
                 }
 
-                Multiplayer.Logic.Chat.SendChatMessage(text, SettingsManager.GetColor());
-                chatManager.WriteMessage("Me: " + text, SettingsManager.GetColor());
+                Multiplayer.Logic.Chat.SendChatMessage(text, SettingsManager.PlayerColor);
+                chatManager.WriteMessage("Me: " + text, SettingsManager.PlayerColor);
             }
         }
     }

@@ -18,5 +18,11 @@ namespace NitroxClient.GameLogic
             ChatMessage message = new ChatMessage(packetSender.PlayerId, text, color);
             packetSender.Send(message);
         }
+
+        public void SendPlayerJoin(string text, Color color)
+        {
+            PlayerJoin packet = new PlayerJoin(packetSender.PlayerId, color);
+            packetSender.Send(packet);
+        }
     }
 }

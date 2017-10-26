@@ -14,15 +14,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GUIText chatText;
         private Coroutine timer;
 
-        private List<string> messages;
-        private Dictionary<string, string> colors;
+        private List<ChatMessage> messages;
 
         protected void Awake()
         {
             SetupChatMessagesComponent();
 
-            messages = new List<string>();
-            colors = new Dictionary<string, string>();
+            messages = new List<ChatMessage>();
         }
 
         private void SetupChatMessagesComponent()
@@ -57,29 +55,22 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (messages.Count == MESSAGE_LIMIT)
             {
-                colors.Remove(messages[0]);
                 messages.RemoveAt(0);
             }
 
-            messages.Add(sanitizedChatMessage);
-            colors.Add(sanitizedChatMessage, ColorUtility.ToHtmlStringRGB(color));
+            messages.Add(new ChatMessage(sanitizedChatMessage, color));
         }
 
         private void BuildChatText()
         {
             chatText.text = "";
-            foreach (string message in messages)
+            foreach (ChatMessage message in messages)
             {
                 if (chatText.text.Length > 0)
                 {
                     chatText.text += "\n";
                 }
-                string color;
-                if (!colors.TryGetValue(message, out color))
-                {
-                    color = "000000";
-                }
-                chatText.text += " <color=#" + color + ">" + message + "</color>";
+                chatText.text += " <color=#" + ColorUtility.ToHtmlStringRGB(message.Color) + ">" + message.Text + "</color>";
             }
         }
 
@@ -100,6 +91,18 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             yield return new WaitForSeconds(CHAT_VISIBILITY_TIME_LENGTH);
             chatText.enabled = false;
             timer = null;
+        }
+
+        public class ChatMessage
+        {
+            public string Text;
+            public Color Color;
+
+            public ChatMessage(string text, Color color)
+            {
+                Text = text;
+                Color = color;
+            }
         }
     }
 }

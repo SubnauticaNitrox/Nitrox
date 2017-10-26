@@ -18,11 +18,11 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args.Length >= 2)
             {
-                client.Logic.Chat.SendChatMessage(string.Join(" ", args), SettingsManager.GetColor()); //does not support double spaces!
+                client.Logic.Chat.SendChatMessage(string.Join(" ", args), SettingsManager.PlayerColor); //does not support double spaces!
             }
             else
             {
-                client.Logic.Chat.SendChatMessage(args[0], SettingsManager.GetColor());
+                client.Logic.Chat.SendChatMessage(args[0], SettingsManager.PlayerColor);
             }
         }
     }

@@ -1,5 +1,5 @@
 ﻿using Harmony;
-using NitroxClient.MonoBehaviours.Gui.Settings;
+using NitroxClient.MonoBehaviours;
 using System;
 using System.Reflection;
 using UnityEngine.Events;
@@ -14,16 +14,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(uGUI_OptionsPanel __instance)
         {
-            SettingsOptions settingsOptions = new SettingsOptions();
-
-            int tabIndex = __instance.AddTab("Multiplayer");
-            settingsOptions.AddInputFieldOption(tabIndex, "Name", "Enter Name", SettingsManager.GetName(), __instance, new UnityAction<string>(SettingsManager.SetName));
-            settingsOptions.AddKeybindOption(tabIndex, "Chat", SettingsManager.GetKey_Chat(), __instance, new UnityAction<string>(SettingsManager.SetKey_Chat));
-            __instance.AddHeading(tabIndex, "Player color");
-            __instance.AddSliderOption(tabIndex, "Red", SettingsManager.GetColorR(), 0, new UnityAction<float>(SettingsManager.SetColorR));
-            __instance.AddSliderOption(tabIndex, "Green", SettingsManager.GetColorG(), 0, new UnityAction<float>(SettingsManager.SetColorG));
-            __instance.AddSliderOption(tabIndex, "Blue", SettingsManager.GetColorB(), 0, new UnityAction<float>(SettingsManager.SetColorB));
-            settingsOptions.AddColorImage(tabIndex, "Color", SettingsManager.GetColor_Image(), __instance);
+            __instance.gameObject.AddComponent<MultiplayerSettings>();
         }
 
         public override void Patch(HarmonyInstance harmony)

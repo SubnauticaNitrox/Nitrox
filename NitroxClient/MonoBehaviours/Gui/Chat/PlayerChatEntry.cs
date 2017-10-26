@@ -49,8 +49,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chatManager != null && chatMessage.Length > 0)
             {
-                Multiplayer.Logic.Chat.SendChatMessage(chatMessage, SettingsManager.GetColor());
-                chatManager.WriteMessage("Me: " + chatMessage, SettingsManager.GetColor());
+                Multiplayer.Logic.Chat.SendChatMessage(chatMessage, SettingsManager.PlayerColor);
+                chatManager.WriteMessage("Me: " + chatMessage, SettingsManager.PlayerColor);
             }
         }
 
