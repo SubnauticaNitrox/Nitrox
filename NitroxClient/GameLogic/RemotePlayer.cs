@@ -80,7 +80,7 @@ namespace NitroxClient.GameLogic
             SubRoot subRoot = null;
             if (opSubGuid.IsPresent())
             {
-                var sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
+                GameObject sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
                 subRoot = sub.GetComponent<SubRoot>();
             }
 
@@ -104,7 +104,7 @@ namespace NitroxClient.GameLogic
 
                 Validate.NotNull(SubRoot, "Player changed PilotingChair but is not in SubRoot!");
 
-                var mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
+                MultiplayerCyclops mpCyclops = SubRoot.GetComponent<MultiplayerCyclops>();
 
                 if (PilotingChair != null)
                 {

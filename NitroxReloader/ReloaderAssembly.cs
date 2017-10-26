@@ -22,21 +22,21 @@ namespace NitroxReloader
         internal void Reload(string newAssemblyLocation)
         {
             Console.WriteLine("Reloader: Starting reload for " + assembly.FullName);
-            var newAssembly = Assembly.Load(File.ReadAllBytes(newAssemblyLocation));
+            Assembly newAssembly = Assembly.Load(File.ReadAllBytes(newAssemblyLocation));
 
             if (newAssembly.GlobalAssemblyCache)
             {
                 Console.WriteLine("*** Reloader WARNING: New assembly was loaded from cache! ***\nYour changes will probably not be loaded in! Make sure the version of the new assembly has changed.");
             }
 
-            var reloadableMethods = GetReloadableMethods(newAssembly);
+            IEnumerable<MethodInfo> reloadableMethods = GetReloadableMethods(newAssembly);
             Console.WriteLine("Reloader: New assembly {0} has {1} reloadable methods.", newAssembly.FullName, reloadableMethods.Count());
-            foreach (var method in reloadableMethods)
+            foreach (MethodInfo method in reloadableMethods)
             {
-                var key = QualifiedName(method);
+                string key = QualifiedName(method);
                 Console.WriteLine("Reloader: Patching " + key);
 
-                var definingType = assembly.GetTypes().FirstOrDefault(t => t.FullName == method.DeclaringType.FullName);
+                Type definingType = assembly.GetTypes().FirstOrDefault(t => t.FullName == method.DeclaringType.FullName);
                 if (definingType == null)
                 {
                     Console.WriteLine("Reloader: Type {0} not found in original assembly", method.DeclaringType.FullName);
@@ -44,7 +44,7 @@ namespace NitroxReloader
                 }
 
                 // Get the original type, because that's what was used for the original method that has been overwritten.
-                var paramTypes = method.GetParameters().Select(pi => ResolveOriginalType(pi.ParameterType)).ToArray();
+                Type[] paramTypes = method.GetParameters().Select(pi => ResolveOriginalType(pi.ParameterType)).ToArray();
 
                 MethodInfo originalMethod = definingType.GetMethod(method.Name, allBindings, null, paramTypes, null);
 
@@ -54,8 +54,8 @@ namespace NitroxReloader
                     continue;
                 }
 
-                var originalCodeStart = GetMethodStart(originalMethod);
-                var newCodeStart = GetMethodStart(method);
+                IntPtr originalCodeStart = GetMethodStart(originalMethod);
+                IntPtr newCodeStart = GetMethodStart(method);
                 if (originalCodeStart == newCodeStart)
                 {
                     Console.WriteLine("Reloader: Methods are identical! (Not emitting jump, that causes an infinite loop)");
@@ -75,7 +75,7 @@ namespace NitroxReloader
         #region Utils
         private static string GetAssemblyName(Assembly a)
         {
-            var name = Path.GetFileName(a.Location);
+            string name = Path.GetFileName(a.Location);
 
             if (string.IsNullOrEmpty(name))
             {
@@ -106,7 +106,7 @@ namespace NitroxReloader
             // Reloader objects contain references to the initial assemblies that defined all the methods and types.
             // Checking assemblies through CurrentDomain means all types in reloaded assemblies are included as well.
             string assemblyName = GetAssemblyName(newType.Assembly);
-            var definingAssembly = reloadableAssemblies
+            ReloaderAssembly definingAssembly = reloadableAssemblies
                 .FirstOrDefault(ra => ra.AssemblyName == assemblyName);
 
             if (definingAssembly == null)
@@ -115,7 +115,7 @@ namespace NitroxReloader
                 return newType;
             }
 
-            var originalType = definingAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName == newType.FullName);
+            Type originalType = definingAssembly.assembly.GetTypes().FirstOrDefault(t => t.FullName == newType.FullName);
 
             if (originalType == null)
             {
@@ -128,7 +128,7 @@ namespace NitroxReloader
 
         private static IntPtr GetMethodStart(MethodBase method)
         {
-            var handle = GetRuntimeMethodHandle(method);
+            RuntimeMethodHandle handle = GetRuntimeMethodHandle(method);
             RuntimeHelpers.PrepareMethod(handle);
             return handle.GetFunctionPointer();
         }
@@ -156,26 +156,26 @@ namespace NitroxReloader
             if (method is DynamicMethod)
             {
                 Console.WriteLine($"Reloader: {method} Is a dynamic method!");
-                var nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
+                BindingFlags nonPublicInstance = BindingFlags.NonPublic | BindingFlags.Instance;
 
                 // DynamicMethod actually generates its m_methodHandle on-the-fly and therefore
                 // we should call GetMethodDescriptor to force it to be created.
 
-                var m_GetMethodDescriptor = typeof(DynamicMethod).GetMethod("GetMethodDescriptor", nonPublicInstance);
+                MethodInfo m_GetMethodDescriptor = typeof(DynamicMethod).GetMethod("GetMethodDescriptor", nonPublicInstance);
                 if (m_GetMethodDescriptor != null)
                 {
                     return (RuntimeMethodHandle)m_GetMethodDescriptor.Invoke(method, new object[0]);
                 }
 
                 // .Net Core
-                var f_m_method = typeof(DynamicMethod).GetField("m_method", nonPublicInstance);
+                FieldInfo f_m_method = typeof(DynamicMethod).GetField("m_method", nonPublicInstance);
                 if (f_m_method != null)
                 {
                     return (RuntimeMethodHandle)f_m_method.GetValue(method);
                 }
 
                 // Mono
-                var f_mhandle = typeof(DynamicMethod).GetField("mhandle", nonPublicInstance);
+                FieldInfo f_mhandle = typeof(DynamicMethod).GetField("mhandle", nonPublicInstance);
                 return (RuntimeMethodHandle)f_mhandle.GetValue(method);
             }
 

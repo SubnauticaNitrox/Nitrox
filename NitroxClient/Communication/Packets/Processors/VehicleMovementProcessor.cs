@@ -1,11 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(VehicleMovement vehicleMovement)
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
-            
+
             RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
 
             Vector3 remotePosition = vehicleMovement.Position;
@@ -47,8 +47,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else if (vehicle != null)
                 {
-                    var seamoth = vehicle as SeaMoth;
-                    var exosuit = vehicle as Exosuit;
+                    SeaMoth seamoth = vehicle as SeaMoth;
+                    Exosuit exosuit = vehicle as Exosuit;
 
                     if (seamoth)
                     {

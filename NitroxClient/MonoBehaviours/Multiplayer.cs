@@ -1,15 +1,16 @@
-﻿using NitroxClient.Communication;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.Map;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -127,7 +128,7 @@ namespace NitroxClient.MonoBehaviours
             if (n?.data?.Count > 0)
             {
                 string otherPlayerId = (string)n.data[0];
-                var opPlayer = remotePlayerManager.Find(otherPlayerId);
+                Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(otherPlayerId);
                 if (opPlayer.IsPresent())
                 {
                     Player.main.SetPosition(opPlayer.Get().body.transform.position);

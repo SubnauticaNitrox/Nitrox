@@ -1,8 +1,8 @@
-﻿using NitroxClient.Communication;
-using NitroxModel.DataStructures.Util;
+﻿using System;
+using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
             String guid = GuidHelper.GetGuid(gameObject);
 
             Optional<String> subGuid = Optional<String>.Empty();
-            var sub = Player.main.currentSub;
+            SubRoot sub = Player.main.currentSub;
             if (sub != null)
             {
                 subGuid = Optional<String>.Of(GuidHelper.GetGuid(sub.gameObject));
