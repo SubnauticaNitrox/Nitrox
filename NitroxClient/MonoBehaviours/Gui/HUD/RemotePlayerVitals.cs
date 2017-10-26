@@ -1,5 +1,6 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,7 +17,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Color FOOD_BAR_BORDER_COLOR = new Color(0.957f, 0.914f, 0.251f, 1.0f);
         private static readonly Color WATER_BAR_COLOR = new Color(0.212f, 0.663f, 0.855f, 1.0f);
         private static readonly Color WATER_BAR_BORDER_COLOR = new Color(0.227f, 0.949f, 0.969f, 1.0f);
-
+        
         private static readonly Vector2 OXYGEN_BAR_POSITION_OFFSET = new Vector2(200, 160);
         private static readonly Vector2 HEALTH_BAR_POSITION_OFFSET = new Vector2(150, 160);
         private static readonly Vector2 FOOD_BAR_POSITION_OFFSET = new Vector2(100, 160);
@@ -43,6 +44,9 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private Bar healthBar;
         private Bar foodBar;
         private Bar waterBar;
+
+        private GameObject playerPing;
+        private int pingId;
 
         private GameObject background;
         private GameObject playerNameText;
@@ -132,6 +136,22 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             playerNameText.layer = em.gameObject.layer;
             // em does not have a parent anymore on latest stable, so the stats position is incorrect.
             playerNameText.transform.parent = em.transform;//.parent.transform;
+            GameObject signalBase = Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
+            signalBase.name = "signal " + playerName;
+            signalBase.transform.position = Player.main.transform.position;
+            
+            PingInstance ping = signalBase.GetComponent<PingInstance>();
+            ping.visible = false;
+            ping.name = playerName;
+
+            ping.pingType = PingType.None;
+            ping.displayPingInManager = true;
+            ping.maxDist = 0.01f;
+            ping.minDist = 0f;
+
+            pingId = PingManager.Register(ping);
+
+            playerPing = signalBase;
         }
 
         private Sprite GetPlayerBackgroundSprite()
@@ -211,10 +231,10 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private void SetBarPostion(GameObject barGameObject, Vector2 positionOffset, Canvas canvas)
         {
-            Vector2 screenPosition = new Vector2(Screen.width - positionOffset.x, Screen.height - (positionOffset.y * position));
-            Vector2 worldPosition;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
-            barGameObject.transform.position = canvas.transform.TransformPoint(worldPosition);
+            //Vector2 screenPosition = new Vector2(Screen.width - positionOffset.x, Screen.height - (positionOffset.y * position));
+            //Vector2 worldPosition;
+            //RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
+            barGameObject.transform.position = Camera.main.WorldToScreenPoint(PingManager.Get(pingId).transform.position) + new Vector3(positionOffset.x, positionOffset.y);
         }
 
         void OnDestroy()
@@ -228,3 +248,4 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         }
     }
 }
+
