@@ -1,7 +1,7 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public string PlayerId { get; private set; }
+        public string PlayerId { get; }
 
         public RemotePlayer(string playerId)
         {
