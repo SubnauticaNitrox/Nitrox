@@ -12,9 +12,9 @@ namespace NitroxModel.Packets
 
         public EquipmentAddItem(String playerId, String ownerGuid, String slot, byte[] itemBytes, Vector3 ownerPosition) : base(playerId, ownerPosition)
         {
-            this.OwnerGuid = ownerGuid;
-            this.Slot = slot;
-            this.ItemBytes = itemBytes;
+            OwnerGuid = ownerGuid;
+            Slot = slot;
+            ItemBytes = itemBytes;
         }
 
         public override string ToString()

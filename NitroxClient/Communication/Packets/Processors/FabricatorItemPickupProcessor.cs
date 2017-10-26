@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class FabricatorItemPickupProcessor : ClientPacketProcessor<FabricatorItemPickup>
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public FabricatorItemPickupProcessor(PacketSender packetSender)
         {

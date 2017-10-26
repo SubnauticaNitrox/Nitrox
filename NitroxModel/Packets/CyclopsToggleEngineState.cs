@@ -11,9 +11,9 @@ namespace NitroxModel.Packets
 
         public CyclopsToggleEngineState(String playerId, String guid, bool isOn, bool isStarting) : base(playerId)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
-            this.IsStarting = isStarting;
+            Guid = guid;
+            IsOn = isOn;
+            IsStarting = isStarting;
         }
 
         public override string ToString()

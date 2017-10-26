@@ -7,7 +7,7 @@ namespace NitroxClient.GameLogic
 {
     public class Cyclops
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Cyclops(PacketSender packetSender)
         {

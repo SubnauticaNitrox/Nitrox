@@ -11,8 +11,8 @@ namespace NitroxModel.Packets
 
         public ItemContainerAdd(String playerId, String ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(playerId, ownerPositon)
         {
-            this.OwnerGuid = ownerGuid;
-            this.ItemData = itemData;
+            OwnerGuid = ownerGuid;
+            ItemData = itemData;
         }
 
         public override string ToString()

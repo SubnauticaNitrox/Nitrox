@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic
 {
     public class Crafting
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Crafting(PacketSender packetSender)
         {

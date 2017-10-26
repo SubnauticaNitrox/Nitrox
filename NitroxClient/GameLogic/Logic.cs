@@ -5,37 +5,37 @@ namespace NitroxClient.GameLogic
 {
     public class Logic
     {
-        public Building Building { get; private set; }
-        public Chat Chat { get; private set; }
-        public MedkitFabricator MedkitFabricator { get; private set; }
-        public Item Item { get; private set; }
-        public EquipmentSlots EquipmentSlots { get; private set; }
-        public ItemContainers ItemContainers { get; private set; }
-        public PlayerAttributes PlayerAttributes { get; private set; }
-        public Power Power { get; private set; }
-        public SimulationOwnership SimulationOwnership { get; private set; }
-        public Crafting Crafting { get; private set; }
-        public Cyclops Cyclops { get; private set; }
-        public Interior Interior { get; private set; }
-        public MobileVehicleBay MobileVehicleBay { get; private set; }
-        public Chunks Chunks { get; private set; }
+        public Building Building { get; }
+        public Chat Chat { get; }
+        public MedkitFabricator MedkitFabricator { get; }
+        public Item Item { get; }
+        public EquipmentSlots EquipmentSlots { get; }
+        public ItemContainers ItemContainers { get; }
+        public PlayerAttributes PlayerAttributes { get; }
+        public Power Power { get; }
+        public SimulationOwnership SimulationOwnership { get; }
+        public Crafting Crafting { get; }
+        public Cyclops Cyclops { get; }
+        public Interior Interior { get; }
+        public MobileVehicleBay MobileVehicleBay { get; }
+        public Chunks Chunks { get; }
 
         public Logic(PacketSender packetSender, LoadedChunks loadedChunks, ChunkAwarePacketReceiver chunkAwarePacketReceiver)
         {
-            this.Building = new Building(packetSender);
-            this.Chat = new Chat(packetSender);
-            this.MedkitFabricator = new MedkitFabricator(packetSender);
-            this.Item = new Item(packetSender);
-            this.EquipmentSlots = new EquipmentSlots(packetSender);
-            this.ItemContainers = new ItemContainers(packetSender);
-            this.PlayerAttributes = new PlayerAttributes(packetSender);
-            this.Power = new Power(packetSender);
-            this.SimulationOwnership = new SimulationOwnership(packetSender);
-            this.Crafting = new Crafting(packetSender);
-            this.Cyclops = new Cyclops(packetSender);
-            this.Interior = new Interior(packetSender);
-            this.MobileVehicleBay = new MobileVehicleBay(packetSender);
-            this.Chunks = new Chunks(packetSender, loadedChunks, chunkAwarePacketReceiver);
+            Building = new Building(packetSender);
+            Chat = new Chat(packetSender);
+            MedkitFabricator = new MedkitFabricator(packetSender);
+            Item = new Item(packetSender);
+            EquipmentSlots = new EquipmentSlots(packetSender);
+            ItemContainers = new ItemContainers(packetSender);
+            PlayerAttributes = new PlayerAttributes(packetSender);
+            Power = new Power(packetSender);
+            SimulationOwnership = new SimulationOwnership(packetSender);
+            Crafting = new Crafting(packetSender);
+            Cyclops = new Cyclops(packetSender);
+            Interior = new Interior(packetSender);
+            MobileVehicleBay = new MobileVehicleBay(packetSender);
+            Chunks = new Chunks(packetSender, loadedChunks, chunkAwarePacketReceiver);
         }
     }
 }

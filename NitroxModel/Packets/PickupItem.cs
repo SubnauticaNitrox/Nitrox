@@ -12,9 +12,9 @@ namespace NitroxModel.Packets
 
         public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
         {
-            this.ItemPosition = itemPosition;
-            this.Guid = guid;
-            this.TechType = techType;
+            ItemPosition = itemPosition;
+            Guid = guid;
+            TechType = techType;
         }
 
         public override string ToString()

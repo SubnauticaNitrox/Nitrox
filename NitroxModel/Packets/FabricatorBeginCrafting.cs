@@ -11,9 +11,9 @@ namespace NitroxModel.Packets
 
         public FabricatorBeginCrafting(String playerId, String fabricatorGuid, TechType techType, float duration) : base(playerId)
         {
-            this.FabricatorGuid = fabricatorGuid;
-            this.TechType = techType;
-            this.Duration = duration;
+            FabricatorGuid = fabricatorGuid;
+            TechType = techType;
+            Duration = duration;
         }
 
         public override string ToString()

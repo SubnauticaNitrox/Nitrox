@@ -10,7 +10,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ItemContainerAddProcessor : ClientPacketProcessor<ItemContainerAdd>
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public ItemContainerAddProcessor(PacketSender packetSender)
         {

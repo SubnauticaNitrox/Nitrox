@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
 
         public AuthenticatedPacket(String playerId)
         {
-            this.PlayerId = playerId;
+            PlayerId = playerId;
         }
     }
 }

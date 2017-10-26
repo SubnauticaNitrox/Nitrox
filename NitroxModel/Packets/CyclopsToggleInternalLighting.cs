@@ -10,10 +10,10 @@ namespace NitroxModel.Packets
 
         public CyclopsToggleInternalLighting(String playerId, String guid, bool isOn) : base(playerId)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
+            Guid = guid;
+            IsOn = isOn;
         }
-        
+
         public override string ToString()
         {
             return "[CyclopsToggleInternalLighting PlayerId: " + PlayerId + " Guid: " + Guid + " IsOn: " + IsOn + "]";

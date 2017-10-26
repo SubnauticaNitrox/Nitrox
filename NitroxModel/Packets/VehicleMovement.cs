@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxModel.Packets
@@ -16,15 +16,15 @@ namespace NitroxModel.Packets
 
         public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, String guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
         {
-            this.TechType = techType;
-            this.AngularVelocity = angularVelocity;
-            this.Guid = guid;
+            TechType = techType;
+            AngularVelocity = angularVelocity;
+            Guid = guid;
 
-            this.SteeringWheelYaw = steeringWheelYaw;
-            this.SteeringWheelPitch = steeringWheelPitch;
-            this.AppliedThrottle = appliedThrottle;
+            SteeringWheelYaw = steeringWheelYaw;
+            SteeringWheelPitch = steeringWheelPitch;
+            AppliedThrottle = appliedThrottle;
 
-            this.PlayerMustBeInRangeToReceive = false;
+            PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

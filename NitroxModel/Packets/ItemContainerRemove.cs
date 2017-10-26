@@ -11,8 +11,8 @@ namespace NitroxModel.Packets
 
         public ItemContainerRemove(String playerId, String ownerGuid, String itemGuid, Vector3 ownerPositon) : base(playerId, ownerPositon)
         {
-            this.OwnerGuid = ownerGuid;
-            this.ItemGuid = itemGuid;
+            OwnerGuid = ownerGuid;
+            ItemGuid = itemGuid;
         }
 
         public override string ToString()

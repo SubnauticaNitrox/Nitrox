@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic
 {
     public class ItemContainers
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public ItemContainers(PacketSender packetSender)
         {

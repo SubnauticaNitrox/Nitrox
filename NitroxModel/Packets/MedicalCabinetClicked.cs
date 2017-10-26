@@ -13,10 +13,10 @@ namespace NitroxModel.Packets
 
         public MedicalCabinetClicked(String playerId, String guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(playerId, actionPosition)
         {
-            this.Guid = guid;
-            this.DoorOpen = doorOpen;
-            this.HasMedKit = hasMedKit;
-            this.NextSpawnTime = nextSpawnTime;
+            Guid = guid;
+            DoorOpen = doorOpen;
+            HasMedKit = hasMedKit;
+            NextSpawnTime = nextSpawnTime;
         }
 
         public override string ToString()

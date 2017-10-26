@@ -1,10 +1,10 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication
@@ -14,14 +14,13 @@ namespace NitroxClient.Communication
         public bool Active { get; set; }
         public String PlayerId { get; set; }
 
-        private TcpClient client;
-        private HashSet<Type> suppressedPacketsTypes;
+        private readonly TcpClient client;
+        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
         public PacketSender(TcpClient client)
         {
             this.client = client;
-            this.Active = false;
-            this.suppressedPacketsTypes = new HashSet<Type>();
+            Active = false;
         }
 
         public void Authenticate()

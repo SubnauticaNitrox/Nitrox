@@ -1,7 +1,7 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+﻿using System;
+using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,15 +28,15 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private class Bar
         {
-            public GameObject GameObject;
-            public SmoothedValue SmoothedValue;
-            public String ValueUnit;
+            public readonly GameObject GameObject;
+            public readonly SmoothedValue SmoothedValue;
+            public readonly String ValueUnit;
 
             public Bar(GameObject gameObject, SmoothedValue smoothedValue, String valueUnit)
             {
-                this.GameObject = gameObject;
-                this.SmoothedValue = smoothedValue;
-                this.ValueUnit = valueUnit;
+                GameObject = gameObject;
+                SmoothedValue = smoothedValue;
+                ValueUnit = valueUnit;
             }
         }
 

@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
 
         public CyclopsBeginSilentRunning(String playerId, String guid) : base(playerId)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()

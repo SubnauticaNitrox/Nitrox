@@ -10,8 +10,8 @@ namespace NitroxModel.Packets
 
         public CyclopsChangeName(String playerId, String guid, string name) : base(playerId)
         {
-            this.Guid = guid;
-            this.Name = name;
+            Guid = guid;
+            Name = name;
         }
 
         public override string ToString()

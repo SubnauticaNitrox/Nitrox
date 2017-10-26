@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
 
         public SimulationOwnershipRequest(String playerId, String guid) : base(playerId)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()

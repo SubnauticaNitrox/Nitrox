@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

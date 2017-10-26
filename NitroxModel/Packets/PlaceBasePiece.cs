@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxModel.Packets
@@ -17,15 +17,15 @@ namespace NitroxModel.Packets
 
         public PlaceBasePiece(String playerId, String guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<String> parentBaseGuid) : base(playerId, itemPosition)
         {
-            this.Guid = guid;
-            this.ItemPosition = itemPosition;
-            this.Rotation = rotation;
-            this.TechType = techType;
-            this.CameraPosition = cameraPosition;
-            this.CameraRotation = cameraRotation;
-            this.ParentBaseGuid = parentBaseGuid;
+            Guid = guid;
+            ItemPosition = itemPosition;
+            Rotation = rotation;
+            TechType = techType;
+            CameraPosition = cameraPosition;
+            CameraRotation = cameraRotation;
+            ParentBaseGuid = parentBaseGuid;
         }
-        
+
         public override string ToString()
         {
             return "[PlaceBasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentBaseGuid: " + ParentBaseGuid + "]";

@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
 namespace NitroxModel.Packets
@@ -15,11 +15,11 @@ namespace NitroxModel.Packets
 
         public DroppedItem(String playerId, String guid, Optional<String> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(playerId, itemPosition)
         {
-            this.Guid = guid;
-            this.WaterParkGuid = waterParkGuid;
-            this.ItemPosition = itemPosition;
-            this.TechType = techType;
-            this.Bytes = bytes;
+            Guid = guid;
+            WaterParkGuid = waterParkGuid;
+            ItemPosition = itemPosition;
+            TechType = techType;
+            Bytes = bytes;
         }
 
         public override string ToString()

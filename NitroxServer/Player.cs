@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
+using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 
 namespace NitroxServer
@@ -11,12 +11,11 @@ namespace NitroxServer
         public String Id { get; }
         public Vector3 Position { get; set; }
 
-        private HashSet<Chunk> visibleChunks;
+        private readonly HashSet<Chunk> visibleChunks = new HashSet<Chunk>();
 
         public Player(String id)
         {
-            this.Id = id;
-            this.visibleChunks = new HashSet<Chunk>();
+            Id = id;
         }
 
         public void AddChunks(IEnumerable<Chunk> chunks)

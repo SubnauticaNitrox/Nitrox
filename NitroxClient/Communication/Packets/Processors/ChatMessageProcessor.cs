@@ -6,7 +6,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
     {
-        private PlayerChatManager chatManager;
+        private readonly PlayerChatManager chatManager;
 
         public ChatMessageProcessor(PlayerChatManager chatManager)
         {
@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
-            this.chatManager.WriteMessage(message.PlayerId + ": " + message.Text);
+            chatManager.WriteMessage(message.PlayerId + ": " + message.Text);
         }
     }
 }

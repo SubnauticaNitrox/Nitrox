@@ -1,28 +1,26 @@
-﻿using NitroxClient.Communication;
-using NitroxModel.Packets;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxClient.Communication;
+using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        private PacketSender packetSender;
-        private Dictionary<String, String> ownedGuidsToPlayer;
-        private HashSet<String> requestedGuids;
+        private readonly PacketSender packetSender;
+        private readonly Dictionary<String, String> ownedGuidsToPlayer = new Dictionary<String, String>();
+        private readonly HashSet<String> requestedGuids = new HashSet<String>();
 
         public SimulationOwnership(PacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.ownedGuidsToPlayer = new Dictionary<String, String>();
-            this.requestedGuids = new HashSet<String>();
         }
-         
+
         public bool HasOwnership(String guid)
         {
             String owningPlayerId;
 
-            if(ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
+            if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
             {
                 return owningPlayerId == packetSender.PlayerId;
             }
@@ -32,12 +30,12 @@ namespace NitroxClient.GameLogic
 
         public void TryToRequestOwnership(String guid)
         {
-            if(!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
+            if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
                 SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(packetSender.PlayerId, guid);
                 packetSender.Send(ownershipRequest);
                 requestedGuids.Add(guid);
-            }            
+            }
         }
 
         public void AddOwnedGuid(String guid, String playerId)

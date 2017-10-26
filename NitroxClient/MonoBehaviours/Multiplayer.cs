@@ -173,10 +173,10 @@ namespace NitroxClient.MonoBehaviours
         {
             if (!hasLoadedMonoBehaviors)
             {
-                this.gameObject.AddComponent<Chat>();
-                this.gameObject.AddComponent<PlayerMovement>();
-                this.gameObject.AddComponent<PlayerStatsBroadcaster>();
-                this.gameObject.AddComponent<AnimationSender>();
+                gameObject.AddComponent<Chat>();
+                gameObject.AddComponent<PlayerMovement>();
+                gameObject.AddComponent<PlayerStatsBroadcaster>();
+                gameObject.AddComponent<AnimationSender>();
                 hasLoadedMonoBehaviors = true;
             }
         }

@@ -10,8 +10,8 @@ namespace NitroxModel.Packets
 
         public CyclopsChangeEngineMode(String playerId, String guid, CyclopsMotorMode.CyclopsMotorModes mode) : base(playerId)
         {
-            this.Guid = guid;
-            this.Mode = mode;
+            Guid = guid;
+            Mode = mode;
         }
 
         public override string ToString()

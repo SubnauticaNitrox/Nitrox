@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
 
         public ChatMessage(String playerId, String text) : base(playerId)
         {
-            this.Text = text;
+            Text = text;
         }
     }
 }

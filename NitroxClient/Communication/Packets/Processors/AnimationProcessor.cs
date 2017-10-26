@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class AnimationProcessor : ClientPacketProcessor<AnimationChangeEvent>
     {
-        private PlayerManager remotePlayerManager;
+        private readonly PlayerManager remotePlayerManager;
 
         public AnimationProcessor(PlayerManager remotePlayerManager)
         {

@@ -13,10 +13,10 @@ namespace NitroxModel.Packets
 
         public ItemPosition(String playerId, String guid, Vector3 position, Quaternion rotation) : base(playerId, position)
         {
-            this.Guid = guid;
-            this.Position = position;
-            this.Rotation = rotation;
-            this.PlayerMustBeInRangeToReceive = false;
+            Guid = guid;
+            Position = position;
+            Rotation = rotation;
+            PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

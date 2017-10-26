@@ -1,24 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Collections.Generic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
-using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 
 namespace NitroxServer.Communication
 {
     public class TcpServer
     {
         private PacketHandler packetHandler;
-        private Dictionary<Player, Connection> connectionsByPlayer;
-
-        public TcpServer()
-        {
-            this.connectionsByPlayer = new Dictionary<Player, Connection>();
-        }
+        private readonly Dictionary<Player, Connection> connectionsByPlayer = new Dictionary<Player, Connection>();
 
         public void Start(PacketHandler packetHandler)
         {

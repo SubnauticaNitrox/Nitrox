@@ -1,25 +1,25 @@
-﻿using NitroxClient.Communication;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Chunks
     {
-        private PacketSender packetSender;
-        private LoadedChunks loadedChunks;
-        private ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+        private readonly PacketSender packetSender;
+        private readonly LoadedChunks loadedChunks;
+        private readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+
+        private readonly List<Chunk> added = new List<Chunk>();
+        private readonly List<Chunk> removed = new List<Chunk>();
 
         private bool chunksPendingSync = false;
         private float timeWhenChunksBecameOutOfSync;
-
-        private List<Chunk> added = new List<Chunk>();
-        private List<Chunk> removed = new List<Chunk>();
 
         public Chunks(PacketSender packetSender, LoadedChunks loadedChunks, ChunkAwarePacketReceiver chunkAwarePacketReceiver)
         {
@@ -31,13 +31,13 @@ namespace NitroxClient.GameLogic
         public void ChunkLoaded(Int3 batchId, int level)
         {
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddChunk(batchId, level));
-            markChunksReadyForSync(0.5f);  
+            markChunksReadyForSync(0.5f);
         }
-        
+
         private IEnumerator WaitAndAddChunk(Int3 batchId, int level)
         {
             yield return new WaitForSeconds(0.5f);
-            
+
             Chunk chunk = new Chunk(batchId, level);
 
             if (!loadedChunks.Contains(chunk))
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
                 loadedChunks.Add(chunk);
                 added.Add(chunk);
                 chunkAwarePacketReceiver.ChunkLoaded(chunk);
-            }            
+            }
         }
 
         public void ChunkUnloaded(Int3 batchId, int level)
@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic
                 loadedChunks.Remove(chunk);
                 removed.Add(chunk);
                 markChunksReadyForSync(0);
-            }     
+            }
         }
 
         private void markChunksReadyForSync(float delay)

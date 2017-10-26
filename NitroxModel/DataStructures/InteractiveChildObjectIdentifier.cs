@@ -10,8 +10,8 @@ namespace NitroxModel.DataStructures
 
         public InteractiveChildObjectIdentifier(String guid, String gameObjectNamePath)
         {
-            this.Guid = guid;
-            this.GameObjectNamePath = gameObjectNamePath;
+            Guid = guid;
+            GameObjectNamePath = gameObjectNamePath;
         }
 
         public override string ToString()

@@ -8,11 +8,11 @@ namespace NitroxModel.Packets
     {
         public String Guid { get; }
         public float ConstructionAmount { get; }
-        
+
         public ConstructionAmountChanged(String playerId, Vector3 itemPosition, String guid, float constructionAmount) : base(playerId, itemPosition)
         {
-            this.Guid = guid;
-            this.ConstructionAmount = constructionAmount;
+            Guid = guid;
+            ConstructionAmount = constructionAmount;
         }
 
         public override string ToString()

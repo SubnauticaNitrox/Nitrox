@@ -1,25 +1,25 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructorBeginCrafting : AuthenticatedPacket
     {
-        public String ConstructorGuid { get; protected set; }
-        public String ConstructedItemGuid { get; protected set; }
+        public String ConstructorGuid { get; }
+        public String ConstructedItemGuid { get; }
         public TechType TechType { get; }
-        public float Duration { get; protected set; }
-        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; private set; }
+        public float Duration { get; }
+        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
         public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
         {
-            this.ConstructorGuid = constructorGuid;
-            this.ConstructedItemGuid = constructedItemGuid;
-            this.TechType = techType;
-            this.Duration = duration;
-            this.InteractiveChildIdentifiers = interactiveChildIdentifiers;
+            ConstructorGuid = constructorGuid;
+            ConstructedItemGuid = constructedItemGuid;
+            TechType = techType;
+            Duration = duration;
+            InteractiveChildIdentifiers = interactiveChildIdentifiers;
         }
 
         public override string ToString()

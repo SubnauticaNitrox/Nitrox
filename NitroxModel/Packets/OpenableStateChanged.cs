@@ -11,9 +11,9 @@ namespace NitroxModel.Packets
 
         public OpenableStateChanged(String playerId, String guid, bool isOpen, float duration) : base(playerId)
         {
-            this.Guid = guid;
-            this.IsOpen = isOpen;
-            this.Duration = duration;
+            Guid = guid;
+            IsOpen = isOpen;
+            Duration = duration;
         }
 
         public override string ToString()

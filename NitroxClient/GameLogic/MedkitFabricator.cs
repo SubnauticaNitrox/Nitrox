@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic
 {
     public class MedkitFabricator
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public MedkitFabricator(PacketSender packetSender)
         {

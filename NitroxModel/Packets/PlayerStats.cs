@@ -13,11 +13,11 @@ namespace NitroxModel.Packets
 
         public PlayerStats(String playerId, float oxygen, float maxOxygen, float health, float food, float water) : base(playerId)
         {
-            this.Oxygen = oxygen;
-            this.MaxOxygen = maxOxygen;
-            this.Health = health;
-            this.Food = food;
-            this.Water = water;
+            Oxygen = oxygen;
+            MaxOxygen = maxOxygen;
+            Health = health;
+            Food = food;
+            Water = water;
         }
 
         public override string ToString()

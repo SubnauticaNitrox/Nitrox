@@ -7,7 +7,7 @@ namespace NitroxClient.GameLogic
 {
     public class Interior
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Interior(PacketSender packetSender)
         {

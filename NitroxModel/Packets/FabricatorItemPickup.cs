@@ -10,8 +10,8 @@ namespace NitroxModel.Packets
 
         public FabricatorItemPickup(String playerId, String fabricatorGuid, TechType techType) : base(playerId)
         {
-            this.FabricatorGuid = fabricatorGuid;
-            this.TechType = techType;
+            FabricatorGuid = fabricatorGuid;
+            TechType = techType;
         }
 
         public override string ToString()

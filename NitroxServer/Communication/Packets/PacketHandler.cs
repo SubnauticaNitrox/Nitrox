@@ -13,14 +13,14 @@ namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
-        private Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
-        private Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
 
-        private DefaultServerPacketProcessor defaultPacketProcessor;
+        private readonly DefaultServerPacketProcessor defaultPacketProcessor;
 
         public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
         {
-            this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
+            defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
 
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {

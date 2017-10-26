@@ -1,6 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -11,14 +10,14 @@ namespace NitroxModel.Packets
 
         public BroadcastEscapePods(EscapePodModel[] escapePods) : base()
         {
-            this.EscapePods = escapePods;
+            EscapePods = escapePods;
         }
 
         public override string ToString()
         {
             String toString = "[BroadcastEscapePods ";
-                
-            foreach(EscapePodModel model in EscapePods)
+
+            foreach (EscapePodModel model in EscapePods)
             {
                 toString += model + " ";
             }

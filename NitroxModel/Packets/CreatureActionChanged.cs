@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
 
         public CreatureActionChanged(String newAction) : base()
         {
-            this.NewAction = newAction;
+            NewAction = newAction;
         }
     }
 }

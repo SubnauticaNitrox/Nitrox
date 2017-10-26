@@ -1,5 +1,4 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Helper;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
@@ -10,7 +9,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsChangeColorProcessor : ClientPacketProcessor<CyclopsChangeColor>
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public CyclopsChangeColorProcessor(PacketSender packetSender)
         {

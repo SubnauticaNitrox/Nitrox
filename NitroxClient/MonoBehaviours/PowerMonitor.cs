@@ -1,11 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours
 
                 if (runningDelta != 0)
                 {
-                    String guid = GuidHelper.GetGuid(this.gameObject);
+                    String guid = GuidHelper.GetGuid(gameObject);
                     Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }

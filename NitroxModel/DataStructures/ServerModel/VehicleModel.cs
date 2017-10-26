@@ -17,17 +17,17 @@ namespace NitroxModel.DataStructures.ServerModel
 
         public VehicleModel(TechType techType, String guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
-            this.TechType = techType;
-            this.Guid = guid;
+            TechType = techType;
+            Guid = guid;
 
-            this.Position = position;
-            this.Rotation = rotation;
-            this.Velocity = velocity;
-            this.AngularVelocity = angularVelocity;
+            Position = position;
+            Rotation = rotation;
+            Velocity = velocity;
+            AngularVelocity = angularVelocity;
 
-            this.SteeringWheelYaw = steeringWheelYaw;
-            this.SteeringWheelPitch = steeringWheelPitch;
-            this.AppliedThrottle = appliedThrottle;
+            SteeringWheelYaw = steeringWheelYaw;
+            SteeringWheelPitch = steeringWheelPitch;
+            AppliedThrottle = appliedThrottle;
         }
     }
 }

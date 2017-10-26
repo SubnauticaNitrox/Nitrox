@@ -1,16 +1,16 @@
-﻿using ClientTester.Commands.DefaultCommands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ClientTester.Commands.DefaultCommands;
 using UnityEngine;
 
 namespace ClientTester.Commands
 {
     public class CommandManager
     {
-        List<NitroxCommand> commands = new List<NitroxCommand>();
-        MultiplayerClient client;
+        private readonly List<NitroxCommand> commands = new List<NitroxCommand>();
+        private readonly MultiplayerClient client;
         public CommandManager(MultiplayerClient client)
         {
             this.client = client;

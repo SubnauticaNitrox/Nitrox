@@ -11,8 +11,8 @@ namespace NitroxModel.Packets
 
         public PlayerActionPacket(String playerId, Vector3 eventPosition) : base(playerId)
         {
-            this.ActionPosition = eventPosition;
-            this.PlayerMustBeInRangeToReceive = true;
+            ActionPosition = eventPosition;
+            PlayerMustBeInRangeToReceive = true;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using NitroxClient.Map;
+﻿using System.Collections.Generic;
+using NitroxClient.Map;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
@@ -12,14 +12,12 @@ namespace NitroxClient.Communication
         private static readonly int DEFAULT_PACKET_PRIORITY = 1;
         private static readonly int DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS = 1;
 
-        private Dictionary<Int3, Queue<Packet>> deferredPacketsByBatchId;
-        private PriorityQueue<Packet> receivedPackets;
-        private LoadedChunks loadedChunks;
+        private readonly Dictionary<Int3, Queue<Packet>> deferredPacketsByBatchId = new Dictionary<Int3, Queue<Packet>>();
+        private readonly PriorityQueue<Packet> receivedPackets = new PriorityQueue<Packet>();
+        private readonly LoadedChunks loadedChunks;
 
         public ChunkAwarePacketReceiver(LoadedChunks loadedChunks)
         {
-            this.deferredPacketsByBatchId = new Dictionary<Int3, Queue<Packet>>();
-            this.receivedPackets = new PriorityQueue<Packet>();
             this.loadedChunks = loadedChunks;
         }
 

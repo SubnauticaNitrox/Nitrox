@@ -1,11 +1,11 @@
-﻿using NitroxClient.Communication;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.Communication;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -13,9 +13,9 @@ namespace NitroxClient.GameLogic
 {
     public class MobileVehicleBay
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
-        private List<Type> interactiveChildTypes = new List<Type>() // we must sync guids of these types when creating vehicles (mainly cyclops)
+        private readonly List<Type> interactiveChildTypes = new List<Type>() // we must sync guids of these types when creating vehicles (mainly cyclops)
         {
             { typeof(Openable) },
             { typeof(CyclopsLocker) },
@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic
         {
             this.packetSender = packetSender;
         }
-        
+
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
         {
             String constructorGuid = GuidHelper.GetGuid(constructor);
