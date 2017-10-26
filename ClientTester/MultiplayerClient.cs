@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.Communication;
+﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Logger;
@@ -17,7 +16,7 @@ namespace ClientTester
         private readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver;
         private readonly TcpClient client;
 
-        public MultiplayerClient(String playerId)
+        public MultiplayerClient(string playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             loadedChunks = new LoadedChunks();
@@ -28,7 +27,7 @@ namespace ClientTester
             Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
         }
 
-        public void Start(String ip)
+        public void Start(string ip)
         {
             client.Start(ip);
             if (client.IsConnected())

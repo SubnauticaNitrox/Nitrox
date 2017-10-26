@@ -17,7 +17,7 @@ namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
-        private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
+        private static readonly string DEFAULT_IP_ADDRESS = "127.0.0.1";
 
         public static Multiplayer main;
 
@@ -146,7 +146,7 @@ namespace NitroxClient.MonoBehaviours
             InitMonoBehaviours();
         }
 
-        public void StartMultiplayer(String ipAddress)
+        public void StartMultiplayer(string ipAddress)
         {
             client.Start(ipAddress);
             if (client.IsConnected())

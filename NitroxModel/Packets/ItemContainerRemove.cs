@@ -6,10 +6,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ItemContainerRemove : PlayerActionPacket
     {
-        public String OwnerGuid { get; }
-        public String ItemGuid { get; }
+        public string OwnerGuid { get; }
+        public string ItemGuid { get; }
 
-        public ItemContainerRemove(String playerId, String ownerGuid, String itemGuid, Vector3 ownerPositon) : base(playerId, ownerPositon)
+        public ItemContainerRemove(string playerId, string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(playerId, ownerPositon)
         {
             OwnerGuid = ownerGuid;
             ItemGuid = itemGuid;

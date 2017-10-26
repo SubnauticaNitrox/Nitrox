@@ -12,7 +12,7 @@ namespace NitroxClient.Communication
     public class PacketSender
     {
         public bool Active { get; set; }
-        public String PlayerId { get; set; }
+        public string PlayerId { get; set; }
 
         private readonly TcpClient client;
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
@@ -29,7 +29,7 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
+        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<string> opSubGuid)
         {
             Movement movement;
 

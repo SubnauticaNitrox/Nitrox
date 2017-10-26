@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleModel> vehicle = GetVehicleModel();
-                String subGuid = null;
+                string subGuid = null;
 
                 SubRoot currentSub = Player.main.GetCurrentSub();
 
@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<String>.OfNullable(subGuid));
+                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 
@@ -50,7 +50,7 @@ namespace NitroxClient.MonoBehaviours
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
 
-            String guid;
+            string guid;
             Vector3 position;
             Quaternion rotation;
             Vector3 velocity;

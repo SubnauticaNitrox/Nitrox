@@ -5,10 +5,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsChangeEngineMode : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public CyclopsMotorMode.CyclopsMotorModes Mode { get; }
 
-        public CyclopsChangeEngineMode(String playerId, String guid, CyclopsMotorMode.CyclopsMotorModes mode) : base(playerId)
+        public CyclopsChangeEngineMode(string playerId, string guid, CyclopsMotorMode.CyclopsMotorModes mode) : base(playerId)
         {
             Guid = guid;
             Mode = mode;

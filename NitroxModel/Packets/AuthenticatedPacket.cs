@@ -5,9 +5,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public abstract class AuthenticatedPacket : Packet
     {
-        public String PlayerId { get; }
+        public string PlayerId { get; }
 
-        public AuthenticatedPacket(String playerId)
+        public AuthenticatedPacket(string playerId)
         {
             PlayerId = playerId;
         }

@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches
         {
             if (__state != __instance.floodlightsOn)
             {
-                String guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
+                string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
                 Multiplayer.Logic.Cyclops.ToggleFloodLights(guid, __instance.floodlightsOn);
             }
         }

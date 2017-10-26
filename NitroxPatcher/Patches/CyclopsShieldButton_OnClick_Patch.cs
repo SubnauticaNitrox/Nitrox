@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsShieldButton __instance)
         {
-            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
+            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             Multiplayer.Logic.Cyclops.ActivateShield(guid);
         }
 

@@ -27,12 +27,12 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            String guid = GuidHelper.GetGuid(constructableBase.gameObject);
-            String parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
+            string guid = GuidHelper.GetGuid(constructableBase.gameObject);
+            string parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
             Vector3 itemPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
 
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera.position, camera.rotation, techType, Optional<String>.OfNullable(parentBaseGuid));
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(packetSender.PlayerId, guid, itemPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid));
             packetSender.Send(placedBasePiece);
         }
 
@@ -43,13 +43,13 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
 
-            Optional<String> subGuid = Optional<String>.Empty();
+            Optional<string> subGuid = Optional<string>.Empty();
             SubRoot sub = Player.main.currentSub;
             if (sub != null)
             {
-                subGuid = Optional<String>.Of(GuidHelper.GetGuid(sub.gameObject));
+                subGuid = Optional<string>.Of(GuidHelper.GetGuid(sub.gameObject));
             }
 
             Transform camera = Camera.main.transform;
@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
             timeSinceLastConstructionChangeEvent = 0.0f;
 
             Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
 
             if (amount < 0.95f) // Construction complete event handled by function below
             {
@@ -81,17 +81,17 @@ namespace NitroxClient.GameLogic
 
         public void ConstructionComplete(GameObject gameObject)
         {
-            Optional<String> newlyConstructedBaseGuid = Optional<String>.Empty();
+            Optional<string> newlyConstructedBaseGuid = Optional<string>.Empty();
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             if (opConstructedBase.IsPresent())
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Get();
-                newlyConstructedBaseGuid = Optional<String>.Of(GuidHelper.GetGuid(constructedBase));
+                newlyConstructedBaseGuid = Optional<string>.Of(GuidHelper.GetGuid(constructedBase));
             }
 
             Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(packetSender.PlayerId, itemPosition, guid, newlyConstructedBaseGuid);
             packetSender.Send(constructionCompleted);
@@ -100,7 +100,7 @@ namespace NitroxClient.GameLogic
         public void DeconstructionBegin(GameObject gameObject)
         {
             Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
 
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(packetSender.PlayerId, itemPosition, guid);
             packetSender.Send(deconstructionBegin);
@@ -109,7 +109,7 @@ namespace NitroxClient.GameLogic
         public void DeconstructionComplete(GameObject gameObject)
         {
             Vector3 itemPosition = gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(packetSender.PlayerId, itemPosition, guid);
             packetSender.Send(deconstructionCompleted);

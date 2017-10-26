@@ -78,7 +78,7 @@ namespace NitroxClient.Communication.Packets.Processors
             player.animationController.UpdatePlayerAnimations = false;
         }
 
-        private void CreateVehicleAt(RemotePlayer player, TechType techType, String guid, Vector3 position, Quaternion rotation)
+        private void CreateVehicleAt(RemotePlayer player, TechType techType, string guid, Vector3 position, Quaternion rotation)
         {
             if (techType == TechType.Cyclops)
             {

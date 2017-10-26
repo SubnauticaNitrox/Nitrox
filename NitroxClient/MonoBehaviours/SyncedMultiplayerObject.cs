@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -18,7 +17,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
 
-                String guid = GuidHelper.GetGuid(gameObject);
+                string guid = GuidHelper.GetGuid(gameObject);
                 Vector3 currentPosition = gameObject.transform.position;
                 Quaternion rotation = gameObject.transform.rotation;
 

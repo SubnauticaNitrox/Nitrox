@@ -6,9 +6,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public class DeconstructionBegin : PlayerActionPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public DeconstructionBegin(String playerId, Vector3 itemPosition, String guid) : base(playerId, itemPosition)
+        public DeconstructionBegin(string playerId, Vector3 itemPosition, string guid) : base(playerId, itemPosition)
         {
             Guid = guid;
         }

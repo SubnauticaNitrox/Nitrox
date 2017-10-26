@@ -5,10 +5,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ToggleLights : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public bool IsOn { get; }
 
-        public ToggleLights(String playerId, String guid, bool isOn) : base(playerId)
+        public ToggleLights(string playerId, string guid, bool isOn) : base(playerId)
         {
             Guid = guid;
             IsOn = isOn;

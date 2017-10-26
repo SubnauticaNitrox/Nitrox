@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxModel.Packets;
 
@@ -8,17 +7,17 @@ namespace NitroxClient.GameLogic
     public class SimulationOwnership
     {
         private readonly PacketSender packetSender;
-        private readonly Dictionary<String, String> ownedGuidsToPlayer = new Dictionary<String, String>();
-        private readonly HashSet<String> requestedGuids = new HashSet<String>();
+        private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
+        private readonly HashSet<string> requestedGuids = new HashSet<string>();
 
         public SimulationOwnership(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public bool HasOwnership(String guid)
+        public bool HasOwnership(string guid)
         {
-            String owningPlayerId;
+            string owningPlayerId;
 
             if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
             {
@@ -28,7 +27,7 @@ namespace NitroxClient.GameLogic
             return false;
         }
 
-        public void TryToRequestOwnership(String guid)
+        public void TryToRequestOwnership(string guid)
         {
             if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
@@ -38,7 +37,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddOwnedGuid(String guid, String playerId)
+        public void AddOwnedGuid(string guid, string playerId)
         {
             ownedGuidsToPlayer[guid] = playerId;
         }

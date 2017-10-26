@@ -7,15 +7,15 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlaceBasePiece : PlayerActionPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public Vector3 ItemPosition { get; }
         public Quaternion Rotation { get; }
         public TechType TechType { get; }
-        public Optional<String> ParentBaseGuid { get; }
+        public Optional<string> ParentBaseGuid { get; }
         public Vector3 CameraPosition { get; }
         public Quaternion CameraRotation { get; }
 
-        public PlaceBasePiece(String playerId, String guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<String> parentBaseGuid) : base(playerId, itemPosition)
+        public PlaceBasePiece(string playerId, string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentBaseGuid) : base(playerId, itemPosition)
         {
             Guid = guid;
             ItemPosition = itemPosition;

@@ -7,13 +7,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ConstructorBeginCrafting : AuthenticatedPacket
     {
-        public String ConstructorGuid { get; }
-        public String ConstructedItemGuid { get; }
+        public string ConstructorGuid { get; }
+        public string ConstructedItemGuid { get; }
         public TechType TechType { get; }
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
-        public ConstructorBeginCrafting(String playerId, String constructorGuid, String constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
+        public ConstructorBeginCrafting(string playerId, string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
         {
             ConstructorGuid = constructorGuid;
             ConstructedItemGuid = constructedItemGuid;
@@ -24,7 +24,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            String s = "[ConstructorBeginCrafting - ConstructorGuid: " + ConstructorGuid + " ConstructedItemGuid: " + ConstructedItemGuid + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
+            string s = "[ConstructorBeginCrafting - ConstructorGuid: " + ConstructorGuid + " ConstructedItemGuid: " + ConstructedItemGuid + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
 
             foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {

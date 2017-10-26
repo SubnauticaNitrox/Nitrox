@@ -19,7 +19,7 @@ namespace NitroxClient.Communication
             packetReceiver = packetManager;
         }
 
-        public void Start(String ip)
+        public void Start(string ip)
         {
             try
             {

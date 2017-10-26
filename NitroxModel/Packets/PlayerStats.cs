@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         public float Food { get; }
         public float Water { get; }
 
-        public PlayerStats(String playerId, float oxygen, float maxOxygen, float health, float food, float water) : base(playerId)
+        public PlayerStats(string playerId, float oxygen, float maxOxygen, float health, float food, float water) : base(playerId)
         {
             Oxygen = oxygen;
             MaxOxygen = maxOxygen;

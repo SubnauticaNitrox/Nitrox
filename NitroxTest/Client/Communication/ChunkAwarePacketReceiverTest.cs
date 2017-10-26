@@ -17,7 +17,7 @@ namespace NitroxTest.Client.Communication
         private ChunkAwarePacketReceiver packetReceiver;
 
         // Test Data
-        private String playerId = "TestPlayer";
+        private string playerId = "TestPlayer";
         private Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
         private Chunk loadedChunk;

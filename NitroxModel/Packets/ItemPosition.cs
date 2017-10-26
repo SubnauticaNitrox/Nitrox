@@ -9,9 +9,9 @@ namespace NitroxModel.Packets
         public Vector3 Position { get; }
         public Quaternion Rotation { get; }
 
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public ItemPosition(String playerId, String guid, Vector3 position, Quaternion rotation) : base(playerId, position)
+        public ItemPosition(string playerId, string guid, Vector3 position, Quaternion rotation) : base(playerId, position)
         {
             Guid = guid;
             Position = position;

@@ -24,7 +24,7 @@ namespace NitroxTest.Model.Tcp
         [TestMethod]
         public void SinglePacket()
         {
-            String playerId = "player1";
+            string playerId = "player1";
             AuthenticatedPacket packet = new TestNonActionPacket(playerId);
 
             int length = WritePacketToReceivedBuffer(packet, 0);

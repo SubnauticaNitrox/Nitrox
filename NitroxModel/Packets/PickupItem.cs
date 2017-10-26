@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PickupItem : PlayerActionPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public Vector3 ItemPosition { get; }
-        public String TechType { get; }
+        public string TechType { get; }
 
-        public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
+        public PickupItem(string playerId, Vector3 itemPosition, string guid, string techType) : base(playerId, itemPosition)
         {
             ItemPosition = itemPosition;
             Guid = guid;

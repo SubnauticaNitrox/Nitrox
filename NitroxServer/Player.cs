@@ -8,12 +8,12 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public String Id { get; }
+        public string Id { get; }
         public Vector3 Position { get; set; }
 
         private readonly HashSet<Chunk> visibleChunks = new HashSet<Chunk>();
 
-        public Player(String id)
+        public Player(string id)
         {
             Id = id;
         }

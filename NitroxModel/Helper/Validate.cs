@@ -16,7 +16,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void NotNull<T>(T o, String message)
+        public static void NotNull<T>(T o, string message)
             where T : class
         {
             if (o == null)
@@ -33,7 +33,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsTrue(bool b, String message)
+        public static void IsTrue(bool b, string message)
         {
             if (!b)
             {
@@ -49,7 +49,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsFalse(bool b, String message)
+        public static void IsFalse(bool b, string message)
         {
             if (b)
             {
@@ -65,7 +65,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt, String message)
+        public static void IsPresent<T>(Optional<T> opt, string message)
         {
             if (opt.IsEmpty())
             {

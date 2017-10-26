@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
         {
-            String constructorGuid = GuidHelper.GetGuid(constructor);
+            string constructorGuid = GuidHelper.GetGuid(constructor);
 
             Log.Debug("Building item from constructor with uuid: " + constructorGuid);
 
@@ -41,7 +41,7 @@ namespace NitroxClient.GameLogic
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = ExtractGuidsOfInteractiveChildren(constructedObject);
-                String constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
+                string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
 
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(packetSender.PlayerId, constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
                 packetSender.Send(beginCrafting);
@@ -56,7 +56,7 @@ namespace NitroxClient.GameLogic
         {
             List<InteractiveChildObjectIdentifier> ids = new List<InteractiveChildObjectIdentifier>();
 
-            String constructedObjectsName = constructedObject.GetFullName() + "/";
+            string constructedObjectsName = constructedObject.GetFullName() + "/";
 
             foreach (Type type in interactiveChildTypes)
             {
@@ -64,9 +64,9 @@ namespace NitroxClient.GameLogic
 
                 foreach (Component component in components)
                 {
-                    String guid = GuidHelper.GetGuid(component.gameObject);
-                    String componentName = component.gameObject.GetFullName();
-                    String relativePathName = componentName.Replace(constructedObjectsName, "");
+                    string guid = GuidHelper.GetGuid(component.gameObject);
+                    string componentName = component.gameObject.GetFullName();
+                    string relativePathName = componentName.Replace(constructedObjectsName, "");
 
                     ids.Add(new InteractiveChildObjectIdentifier(guid, relativePathName));
                 }

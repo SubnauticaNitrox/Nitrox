@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            String toString = "[BroadcastEscapePods ";
+            string toString = "[BroadcastEscapePods ";
 
             foreach (EscapePodModel model in EscapePods)
             {

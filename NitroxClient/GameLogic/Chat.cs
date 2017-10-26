@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void SendChatMessage(String text)
+        public void SendChatMessage(string text)
         {
             ChatMessage message = new ChatMessage(packetSender.PlayerId, text);
             packetSender.Send(message);

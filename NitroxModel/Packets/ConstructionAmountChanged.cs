@@ -6,10 +6,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ConstructionAmountChanged : PlayerActionPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public float ConstructionAmount { get; }
 
-        public ConstructionAmountChanged(String playerId, Vector3 itemPosition, String guid, float constructionAmount) : base(playerId, itemPosition)
+        public ConstructionAmountChanged(string playerId, Vector3 itemPosition, string guid, float constructionAmount) : base(playerId, itemPosition)
         {
             Guid = guid;
             ConstructionAmount = constructionAmount;

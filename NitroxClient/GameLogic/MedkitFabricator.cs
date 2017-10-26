@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
         public void Clicked(MedicalCabinet medicalCabinet)
         {
             Vector3 actionPosition = medicalCabinet.gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(medicalCabinet.gameObject);
+            string guid = GuidHelper.GetGuid(medicalCabinet.gameObject);
             bool doorOpen = (bool)medicalCabinet.ReflectionGet("doorOpen");
 
             MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(packetSender.PlayerId, guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);

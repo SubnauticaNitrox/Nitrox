@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours
 
                 if (runningDelta != 0)
                 {
-                    String guid = GuidHelper.GetGuid(gameObject);
+                    string guid = GuidHelper.GetGuid(gameObject);
                     Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }

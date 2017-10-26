@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic
         private const int ESCAPE_POD_X_OFFSET = 40;
 
         private readonly List<EscapePodModel> escapePods = new List<EscapePodModel>();
-        private readonly Dictionary<String, EscapePodModel> escapePodsByPlayerId = new Dictionary<String, EscapePodModel>();
+        private readonly Dictionary<string, EscapePodModel> escapePodsByPlayerId = new Dictionary<string, EscapePodModel>();
         private EscapePodModel podNotFullYet;
 
         public EscapePodManager()
@@ -19,7 +19,7 @@ namespace NitroxServer.GameLogic
             podNotFullYet = CreateNewEscapePod();
         }
 
-        public void AssignPlayerToEscapePod(String playerId)
+        public void AssignPlayerToEscapePod(string playerId)
         {
             lock (escapePodsByPlayerId)
             {

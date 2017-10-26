@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EquipmentAddItem : PlayerActionPacket
     {
-        public String OwnerGuid { get; }
-        public String Slot { get; }
+        public string OwnerGuid { get; }
+        public string Slot { get; }
         public byte[] ItemBytes { get; }
 
-        public EquipmentAddItem(String playerId, String ownerGuid, String slot, byte[] itemBytes, Vector3 ownerPosition) : base(playerId, ownerPosition)
+        public EquipmentAddItem(string playerId, string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(playerId, ownerPosition)
         {
             OwnerGuid = ownerGuid;
             Slot = slot;

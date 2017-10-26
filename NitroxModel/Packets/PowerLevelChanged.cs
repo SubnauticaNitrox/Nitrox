@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PowerLevelChanged : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public float Amount { get; }
         public PowerType PowerType { get; }
 
-        public PowerLevelChanged(String playerId, String guid, float amount, PowerType powerType) : base(playerId)
+        public PowerLevelChanged(string playerId, string guid, float amount, PowerType powerType) : base(playerId)
         {
             Guid = guid;
             Amount = amount;

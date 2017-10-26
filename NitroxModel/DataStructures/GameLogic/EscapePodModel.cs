@@ -7,15 +7,15 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public class EscapePodModel
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public Vector3 Location { get; }
-        public String FabricatorGuid { get; }
-        public String MedicalFabricatorGuid { get; }
-        public String StorageContainerGuid { get; }
-        public String RadioGuid { get; }
-        public List<String> AssignedPlayers { get; } = new List<String>();
+        public string FabricatorGuid { get; }
+        public string MedicalFabricatorGuid { get; }
+        public string StorageContainerGuid { get; }
+        public string RadioGuid { get; }
+        public List<string> AssignedPlayers { get; } = new List<string>();
 
-        public EscapePodModel(String guid, Vector3 location, String fabricatorGuid, String medicalFabricatorGuid, String storageContainerGuid, String radioGuid) : base()
+        public EscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid) : base()
         {
             Guid = guid;
             Location = location;
@@ -27,9 +27,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            String toString = "[EscapePodModel - Guid: " + Guid + " Location:" + Location + " FabricatorGuid: " + FabricatorGuid + " MedicalFabricatorGuid: " + MedicalFabricatorGuid + " StorageContainerGuid: " + StorageContainerGuid + " RadioGuid: " + RadioGuid + " AssignedPlayers: {";
+            string toString = "[EscapePodModel - Guid: " + Guid + " Location:" + Location + " FabricatorGuid: " + FabricatorGuid + " MedicalFabricatorGuid: " + MedicalFabricatorGuid + " StorageContainerGuid: " + StorageContainerGuid + " RadioGuid: " + RadioGuid + " AssignedPlayers: {";
 
-            foreach (String playerId in AssignedPlayers)
+            foreach (string playerId in AssignedPlayers)
             {
                 toString += playerId + " ";
             }

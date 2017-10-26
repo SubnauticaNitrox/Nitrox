@@ -17,9 +17,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private readonly PacketSender packetSender;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
-        private readonly Dictionary<String, GameObject> escapePodsByGuid = new Dictionary<String, GameObject>();
+        private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
-        private String myEscapePodGuid;
+        private string myEscapePodGuid;
 
         public BroadcastEscapePodsProcessor(PacketSender packetSender)
         {

@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches
             Player player = (Player)__instance.ReflectionGet("player");
             if (player != null)
             {
-                String guid = GuidHelper.GetGuid(player.GetCurrentSub().gameObject);
+                string guid = GuidHelper.GetGuid(player.GetCurrentSub().gameObject);
                 Multiplayer.Logic.Cyclops.ChangeColor(guid, __instance.SelectedColorIndex, eventData.hsb, eventData.color);
             }
         }

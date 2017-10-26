@@ -40,7 +40,7 @@ namespace ClientTester.Commands.DefaultCommands
                 float velY = curY - lastY;
                 Vector3 velocity = new Vector3(velX / 10f, 0, velY / 10f);
                 client.clientPos += velocity;
-                client.PacketSender.UpdatePlayerLocation(client.clientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<String>.Empty());
+                client.PacketSender.UpdatePlayerLocation(client.clientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
             }
             lastX = curX;
             lastY = curY;

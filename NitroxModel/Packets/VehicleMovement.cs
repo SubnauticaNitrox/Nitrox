@@ -9,12 +9,12 @@ namespace NitroxModel.Packets
     {
         public TechType TechType { get; }
         public Vector3 AngularVelocity { get; }
-        public String Guid { get; }
+        public string Guid { get; }
         public float SteeringWheelYaw { get; }
         public float SteeringWheelPitch { get; }
         public bool AppliedThrottle { get; }
 
-        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, String guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
+        public VehicleMovement(string playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, string guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<string>.Empty())
         {
             TechType = techType;
             AngularVelocity = angularVelocity;

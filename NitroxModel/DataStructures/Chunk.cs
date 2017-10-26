@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures
             return "[Chunk " + BatchId + " " + Level + "]";
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())

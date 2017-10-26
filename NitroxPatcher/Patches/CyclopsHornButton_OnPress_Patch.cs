@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsHornButton __instance)
         {
-            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
+            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             Multiplayer.Logic.Cyclops.ActivateHorn(guid);
         }
 
