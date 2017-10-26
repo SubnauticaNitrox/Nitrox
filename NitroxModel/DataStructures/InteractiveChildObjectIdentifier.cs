@@ -5,8 +5,8 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class InteractiveChildObjectIdentifier
     {
-        public String Guid { get; private set; }
-        public String GameObjectNamePath { get; private set; }
+        public String Guid { get; }
+        public String GameObjectNamePath { get; }
 
         public InteractiveChildObjectIdentifier(String guid, String gameObjectNamePath)
         {
