@@ -12,10 +12,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(GameSettings.ISerializer serializer)
         {
-            SettingsManager.Name = (serializer.Serialize("Multiplayer/Name", SettingsManager.GetName()));
-            SettingsManager.SetPlayerColorR(serializer.Serialize("Multiplayer/colorRed", SettingsManager.PlayerColor.r));
-            SettingsManager.SetPlayerColorG(serializer.Serialize("Multiplayer/colorGreen", SettingsManager.PlayerColor.g));
-            SettingsManager.SetPlayerColorB(serializer.Serialize("Multiplayer/colorBlue", SettingsManager.PlayerColor.b));
+            SettingsManager.SerializeSettings(serializer);
         }
 
         public override void Patch(HarmonyInstance harmony)

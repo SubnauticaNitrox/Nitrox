@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -63,15 +64,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void BuildChatText()
         {
-            chatText.text = "";
-            foreach (ChatMessage message in messages)
-            {
-                if (chatText.text.Length > 0)
-                {
-                    chatText.text += "\n";
-                }
-                chatText.text += " <color=#" + ColorUtility.ToHtmlStringRGB(message.Color) + ">" + message.Text + "</color>";
-            }
+            chatText.text = string.Join("\n", messages.Select(m => "<color=#" + ColorUtility.ToHtmlStringRGB(m.Color) + ">" + m.Text + "</color>").ToArray());
         }
 
         private string SanitizeMessage(string message)
@@ -95,7 +88,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public class ChatMessage
         {
-            public string Text;
+            public readonly string Text;
             public Color Color;
 
             public ChatMessage(string text, Color color)

@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours
             OptionsPanel = gameObject.RequireComponent<uGUI_OptionsPanel>();
 
             TabIndex = OptionsPanel.AddTab("Multiplayer");
-            AddInputFieldOption("Name", "Enter Name", SettingsManager.GetName(), new UnityAction<string>(newName => SettingsManager.Name= newName));
+            AddInputFieldOption("Name", "Enter Name", SettingsManager.Name, new UnityAction<string>(newName => SettingsManager.Name = newName));
             OptionsPanel.AddHeading(TabIndex, "Player color");
             OptionsPanel.AddSliderOption(TabIndex, "Red", SettingsManager.PlayerColor.r, 0, new UnityAction<float>(SettingsManager.SetPlayerColorR));
             OptionsPanel.AddSliderOption(TabIndex, "Green", SettingsManager.PlayerColor.g, 0, new UnityAction<float>(SettingsManager.SetPlayerColorG));
@@ -27,16 +27,14 @@ namespace NitroxClient.MonoBehaviours
 
         public void AddInputFieldOption(string label, string placeholder, string value, UnityAction<string> callback = null)
         {
-            GameObject input_field = Instantiate(OptionsPanel.keyRedemptionPrefab.FindChild("InputField"));
-            GameObject gameObject = OptionsPanel.AddItem(TabIndex, InstantiateOptionsRoot(input_field, new Vector3(750, -30, 0), "uGUI_InputFieldOption", label));
+            GameObject gameObject = OptionsPanel.AddItem(TabIndex, InstantiateOptionsRoot(Instantiate(OptionsPanel.keyRedemptionPrefab.FindChild("InputField")), new Vector3(750, -30, 0), 200, "uGUI_InputFieldOption", label));
+            InputField inputField = gameObject.RequireComponentInChildren<InputField>();
 
-            InputField componentInChildren = gameObject.RequireComponentInChildren<InputField>();
-
-            componentInChildren.text = value;
-            componentInChildren.GetComponentsInChildren<Text>()[0].text = placeholder;
+            inputField.text = value;
+            inputField.GetComponentInChildren<Text>().text = placeholder;
             if (callback != null)
             {
-                componentInChildren.onValueChanged.AddListener(callback);
+                inputField.onValueChanged.AddListener(callback);
             }
         }
 
@@ -51,23 +49,25 @@ namespace NitroxClient.MonoBehaviours
             image.type = Image.Type.Sliced;
             image.color = value;
 
-            GameObject gameObject = OptionsPanel.AddItem(TabIndex, InstantiateOptionsRoot(image.gameObject, new Vector3(235, 0, 0), "uGUI_ColorImage", label));
+            GameObject gameObject = OptionsPanel.AddItem(TabIndex, InstantiateOptionsRoot(image.gameObject, new Vector3(235, 0, 0), 50, "uGUI_ColorImage", label));
             SettingsManager.ColorImage = gameObject.RequireComponentInChildren<Image>();
         }
 
-        GameObject InstantiateOptionsRoot(GameObject child, Vector3 childPos, string name, string label)
+        GameObject InstantiateOptionsRoot(GameObject child, Vector3 childPos, int inGameMenuPosX, string name, string label)
         {
-            GameObject root = new GameObject {
-                name = name
-            };
-            LayoutElement layout = root.AddComponent<LayoutElement>();
-            layout.minHeight = 60;
-            layout.preferredWidth = -1;
-            layout.preferredHeight = 60;
-
-            child.transform.localPosition = childPos;
-
+            GameObject root = Instantiate(OptionsPanel.toggleOptionPrefab);
             GameObject caption = Instantiate(OptionsPanel.bindingOptionPrefab.FindChild("Caption"));
+            DestroyImmediate(root.GetComponentInChildren<Toggle>().gameObject);
+
+            if (Player.main != null)
+            {
+                childPos.x = childPos.x - inGameMenuPosX;
+                RectTransform rect = child.GetComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x - inGameMenuPosX / 2, rect.sizeDelta.y);
+            }
+            child.transform.localPosition = childPos;
+            root.name = name;
+
             caption.GetComponent<Text>().text = label;
             child.transform.SetParent(caption.transform, false);
             caption.transform.SetParent(root.transform, false);

@@ -8,7 +8,6 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.Util;
-using NitroxClient.MonoBehaviours.Gui.Settings;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;

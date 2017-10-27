@@ -24,14 +24,12 @@ namespace NitroxPatcher.Patches
 
             foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
             {
-                //Throws errors in the output_log
+                bool isButtonDown = (bool)ReflectionHelper.ReflectionCall<GameInput>(null, "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
 
-                //bool isButtonDown = (bool)ReflectionHelper.ReflectionCall<GameInput>(null, "GetButtonDown", new Type[] { typeof(GameInput.Button) }, true, true, keyBinding.Button);
-
-                //if (isButtonDown)
-                //{
-                //    keyBinding.Action.Execute();
-                //}
+                if (isButtonDown)
+                {
+                    keyBinding.Action.Execute();
+                }
             }
         }
 
