@@ -18,10 +18,13 @@ namespace NitroxClient.GameLogic
         {
             SerializableCreatureAction creatureAction = null;
 
+            /*
+            Example for next implementation:
+
             if (newAction.GetType() == typeof(SwimToPoint))
             {
                 creatureAction = new SwimToPointAction(((SwimToPoint)newAction).Target);
-            }
+            }*/
 
             if(creatureAction != null)
             {

@@ -13,13 +13,13 @@ namespace NitroxModel.GameLogic
         public int Level { get; }
         public Optional<String> SimulatingPlayerId { get; set; }
 
-        public SpawnedEntity(Vector3 position, TechType techType, String guid, int level, Optional<String> controllingPlayerId)
+        public SpawnedEntity(Vector3 position, TechType techType, String guid, int level, Optional<String> simulatingPlayerId)
         {
             this.Position = position;
             this.TechType = techType;
             this.Guid = guid;
             this.Level = level;
-            this.SimulatingPlayerId = controllingPlayerId;
+            this.SimulatingPlayerId = simulatingPlayerId;
         }
 
         public override string ToString()
