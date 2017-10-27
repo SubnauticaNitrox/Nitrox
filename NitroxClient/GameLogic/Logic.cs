@@ -8,6 +8,7 @@ namespace NitroxClient.GameLogic
         public AI AI { get; private set; }
         public Building Building { get; private set; }
         public Chat Chat { get; private set; }
+        public Entities Entities { get; private set; }
         public MedkitFabricator MedkitFabricator { get; private set; }
         public Item Item { get; private set; }
         public EquipmentSlots EquipmentSlots { get; private set; }
@@ -26,6 +27,7 @@ namespace NitroxClient.GameLogic
             this.AI = new AI(packetSender);
             this.Building = new Building(packetSender);
             this.Chat = new Chat(packetSender);
+            this.Entities = new Entities(packetSender);
             this.MedkitFabricator = new MedkitFabricator(packetSender);
             this.Item = new Item(packetSender);
             this.EquipmentSlots = new EquipmentSlots(packetSender);

@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches
                 return true;
             }
 
-            CreatureActionChangedProcessor.ActionByGuid.TryGetValue(guid, out __result);
+           // CreatureActionChangedProcessor.ActionByGuid.TryGetValue(guid, out __result);
 
             return false;
         }
@@ -38,20 +38,7 @@ namespace NitroxPatcher.Patches
             {
                 if(previousAction != __result)
                 {
-                    SwimToPoint swimToPoint = __instance.gameObject.GetComponent<SwimToPoint>();
-
-                    if (!swimToPoint)
-                    {
-                        swimToPoint = __instance.gameObject.AddComponent<SwimToPoint>();
-                    }
-                    
-                    if(__result != swimToPoint)
-                    {
-                        swimToPoint.AssignRandomTarget();
-                        Multiplayer.Logic.AI.CreatureActionChanged(guid, swimToPoint);
-                    }
-
-                    __result = swimToPoint;
+                   // Multiplayer.Logic.AI.CreatureActionChanged(guid, __result);                   
                 }
             }
         }

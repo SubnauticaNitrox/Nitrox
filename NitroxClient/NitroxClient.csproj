@@ -63,6 +63,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedProcessor.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
@@ -132,6 +134,7 @@
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
+    <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\HUD\RemotePlayerVitals.cs" />
