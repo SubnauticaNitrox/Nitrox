@@ -1,18 +1,12 @@
-﻿using NitroxModel.DataStructures.ServerModel;
-using NitroxModel.DataStructures.Util;
+﻿using System;
 using ClientTester.Commands;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Timers;
 using UnityEngine;
 
 namespace ClientTester
 {
     class Program
     {
-        private static readonly string DEFAULT_IP_ADDRESS = "127.0.0.1";
+        private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
 
         private static Vector3 clientPos = new Vector3(-50f, -2f, -38f);
 

@@ -22,8 +22,8 @@ namespace NitroxClient.MonoBehaviours
      */
     public class PowerMonitor : MonoBehaviour
     {
-        private static readonly int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
-        private static readonly int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
+        private const int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
+        private const int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
 
         /**
          * Since the code base does not differentiate between active and passive 
@@ -44,7 +44,7 @@ namespace NitroxClient.MonoBehaviours
 
         private float runningDelta = 0;
         private float elapsedTime = 0;
-        public float interpolationPeriod = 4.00f;
+        private float interpolationPeriod = 4.00f;
 
         public void ChargeChanged(float amount, GameObject gameObject)
         {

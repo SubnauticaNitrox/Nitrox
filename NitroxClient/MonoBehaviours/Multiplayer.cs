@@ -17,9 +17,9 @@ namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
-        private static readonly string DEFAULT_IP_ADDRESS = "127.0.0.1";
+        private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
 
-        public static Multiplayer main;
+        public static Multiplayer Main;
 
         public static event Action OnBeforeMultiplayerStart;
 
@@ -35,10 +35,10 @@ namespace NitroxClient.MonoBehaviours
         private static readonly PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
         private static readonly PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
 
-        public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
+        public static Dictionary<Type, PacketProcessor> PacketProcessorsByType;
 
         // List of arguments that can be used in a processor:
-        private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
+        private static Dictionary<Type, object> processorArguments = new Dictionary<Type, object>
         {
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
@@ -48,7 +48,7 @@ namespace NitroxClient.MonoBehaviours
 
         static Multiplayer()
         {
-            packetProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
+            PacketProcessorsByType = PacketProcessor.GetProcessors(processorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
         }
 
         public static void RemoveAllOtherPlayers()
@@ -62,7 +62,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
 
-            main = this;
+            Main = this;
         }
 
         public void Update()
@@ -80,11 +80,11 @@ namespace NitroxClient.MonoBehaviours
 
             foreach (Packet packet in packets)
             {
-                if (packetProcessorsByType.ContainsKey(packet.GetType()))
+                if (PacketProcessorsByType.ContainsKey(packet.GetType()))
                 {
                     try
                     {
-                        PacketProcessor processor = packetProcessorsByType[packet.GetType()];
+                        PacketProcessor processor = PacketProcessorsByType[packet.GetType()];
                         processor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)

@@ -76,3 +76,45 @@ csharp_prefer_braces = true:error # Wrap everything in braces.
 
 # Put `using System.` on top
 dotnet_sort_system_directives_first = true
+
+# Symbols for naming conventions
+dotnet_naming_symbols.public_fields.applicable_kinds           = field
+dotnet_naming_symbols.public_fields.applicable_accessibilities = public
+#, protected, internal, protected_internal
+
+dotnet_naming_symbols.all_const.applicable_kinds           = *
+dotnet_naming_symbols.all_const.applicable_accessibilities = *
+dotnet_naming_symbols.all_const.required_modifiers         = const
+
+dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+dotnet_naming_symbols.types.applicable_kinds           = class, struct, interface, enum, namespace, type_parameter
+dotnet_naming_symbols.types.applicable_accessibilities = *
+
+dotnet_naming_symbols.parameters.applicable_kinds = parameter
+
+# Styles for naming conventions
+dotnet_naming_style.publicfield_and_properties_and_methods_style.capitalization = pascal_case
+
+dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+dotnet_naming_style.all_const_style.capitalization = all_upper
+dotnet_naming_style.all_const_style.word_separator = _
+
+# Naming conventions
+dotnet_naming_rule.all_const.symbols  = all_const
+dotnet_naming_rule.all_const.style    = all_const_style
+dotnet_naming_rule.all_const.severity = warning
+
+dotnet_naming_rule.private_fields.symbols  = private_fields
+dotnet_naming_rule.private_fields.style    = camel_case_style
+dotnet_naming_rule.private_fields.severity = warning
+
+dotnet_naming_rule.parameters.symbols  = parameters
+dotnet_naming_rule.parameters.style    = camel_case_style
+dotnet_naming_rule.parameters.severity = warning
+
+dotnet_naming_rule.uses_pascal_case.symbols  = public_fields, types
+dotnet_naming_rule.uses_pascal_case.style    = publicfield_and_properties_and_methods_style
+dotnet_naming_rule.uses_pascal_case.severity = warning

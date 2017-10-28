@@ -15,6 +15,7 @@ namespace NitroxModel.Packets
     {
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
+        public static readonly BinaryFormatter Serializer;
 
         static Packet()
         {
@@ -42,8 +43,6 @@ namespace NitroxModel.Packets
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
-
-        public static readonly BinaryFormatter Serializer = null;
 
         public byte[] SerializeWithHeaderData()
         {

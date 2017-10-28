@@ -65,6 +65,7 @@ namespace ClientTester.Commands
         }
     }
 
+    [Serializable]
     public class InvalidArgumentException : Exception
     {
         public InvalidArgumentException(string message) : base(message)
@@ -72,6 +73,7 @@ namespace ClientTester.Commands
         }
     }
 
+    [Serializable]
     public class NotEnoughArgumentsException : Exception
     {
         public NotEnoughArgumentsException(int argCount)

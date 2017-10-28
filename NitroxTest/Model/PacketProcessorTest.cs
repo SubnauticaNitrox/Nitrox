@@ -53,9 +53,9 @@ namespace NitroxTest.Model
             // Note that there are less constraints; this test is mostly to ensure that someone doesn't derive from PacketProcessor but from ClientPacketProcessor (otherwise the Packet type can't be determined at runtime).
             // The RuntimeDetectsAllPacketProcessors test below shows which processors have not been detected.
 
-            Assert.AreEqual(processors.Count(), Multiplayer.packetProcessorsByType.Count,
+            Assert.AreEqual(processors.Count(), Multiplayer.PacketProcessorsByType.Count,
                 "Not all ClientPacketProcessors have been discovered by the runtime code " +
-                $"({Multiplayer.packetProcessorsByType.Count} out of {processors.Count()}). " +
+                $"({Multiplayer.PacketProcessorsByType.Count} out of {processors.Count()}). " +
                 "Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor " +
                 "(and will hence not be detected).");
         }
@@ -63,7 +63,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void RuntimeDetectsAllClientPacketProcessors()
         {
-            HashSet<Type> runtimeProcessors = new HashSet<Type>(Multiplayer.packetProcessorsByType.Select(p => p.Value.GetType()));
+            HashSet<Type> runtimeProcessors = new HashSet<Type>(Multiplayer.PacketProcessorsByType.Select(p => p.Value.GetType()));
             // Check if every PacketProcessor has been detected:
             typeof(Multiplayer).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
@@ -143,7 +143,7 @@ namespace NitroxTest.Model
             HashSet<Type> packetTypes = new HashSet<Type>(
                 authenticatedPacketProcessorsByType
                 .Concat(unauthenticatedPacketProcessorsByType)
-                .Concat(Multiplayer.packetProcessorsByType)
+                .Concat(Multiplayer.PacketProcessorsByType)
                 .Select(kvp => kvp.Key));
 
             typeof(Packet).Assembly.GetTypes()

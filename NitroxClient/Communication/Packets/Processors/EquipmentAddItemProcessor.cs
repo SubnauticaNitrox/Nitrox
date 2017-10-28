@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class EquipmentAddItemProcessor : ClientPacketProcessor<EquipmentAddItem>
     {
-        public static readonly int EQUIP_EVENT_TYPE_ID = 0;
+        public const int EQUIP_EVENT_TYPE_ID = 0;
 
         public override void Process(EquipmentAddItem packet)
         {

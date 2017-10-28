@@ -12,7 +12,7 @@ namespace NitroxReloader
     {
         private static readonly List<ReloaderAssembly> reloadableAssemblies = new List<ReloaderAssembly>();
 
-        internal Assembly assembly;
+        private Assembly assembly;
         internal ReloaderAssembly(Assembly a)
         {
             assembly = a;
@@ -46,7 +46,7 @@ namespace NitroxReloader
                 // Get the original type, because that's what was used for the original method that has been overwritten.
                 Type[] paramTypes = method.GetParameters().Select(pi => ResolveOriginalType(pi.ParameterType)).ToArray();
 
-                MethodInfo originalMethod = definingType.GetMethod(method.Name, allBindings, null, paramTypes, null);
+                MethodInfo originalMethod = definingType.GetMethod(method.Name, ALL_BINDINGS, null, paramTypes, null);
 
                 if (originalMethod == null)
                 {
@@ -88,7 +88,7 @@ namespace NitroxReloader
         private static IEnumerable<MethodInfo> GetReloadableMethods(Assembly a)
         {
             return a.GetTypes()
-                .SelectMany(type => type.GetMethods(allBindings))
+                .SelectMany(type => type.GetMethods(ALL_BINDINGS))
                 .Where(IsMarkedReloadable);
         }
         private static string QualifiedName(MethodBase method)
@@ -182,7 +182,7 @@ namespace NitroxReloader
             return method.MethodHandle;
         }
 
-        private const BindingFlags allBindings =
+        private const BindingFlags ALL_BINDINGS =
             BindingFlags.Public
             | BindingFlags.NonPublic
             | BindingFlags.Instance

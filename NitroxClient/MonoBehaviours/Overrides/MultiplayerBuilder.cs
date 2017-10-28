@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#pragma warning disable // Disable all warnings for copied file
+
+using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -1001,3 +1003,4 @@ namespace NitroxClient.MonoBehaviours.Overrides
     }
 
 }
+#pragma warning restore // Re-enable all warnings for copied file

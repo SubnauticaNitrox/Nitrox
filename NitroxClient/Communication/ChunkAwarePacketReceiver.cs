@@ -8,9 +8,9 @@ namespace NitroxClient.Communication
 {
     public class ChunkAwarePacketReceiver
     {
-        private static readonly int EXPIDITED_PACKET_PRIORITY = 999;
-        private static readonly int DEFAULT_PACKET_PRIORITY = 1;
-        private static readonly int DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS = 1;
+        private const int EXPIDITED_PACKET_PRIORITY = 999;
+        private const int DEFAULT_PACKET_PRIORITY = 1;
+        private const int DESIRED_CHUNK_MIN_LOD_FOR_ACTIONS = 1;
 
         private readonly Dictionary<Int3, Queue<Packet>> deferredPacketsByBatchId = new Dictionary<Int3, Queue<Packet>>();
         private readonly PriorityQueue<Packet> receivedPackets = new PriorityQueue<Packet>();

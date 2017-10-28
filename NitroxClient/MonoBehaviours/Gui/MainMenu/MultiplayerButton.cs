@@ -31,8 +31,8 @@ namespace NitroxClient.MonoBehaviours
             Destroy(LoadedMultiplayer.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject);
 
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
-            panel.savedGamesRef = savedGamesRef;
-            panel.loadedMultiplayerRef = LoadedMultiplayer;
+            panel.SavedGamesRef = savedGamesRef;
+            panel.LoadedMultiplayerRef = LoadedMultiplayer;
 
             Destroy(LoadedMultiplayer.GetComponent<MainMenuLoadPanel>());
             LoadedMultiplayer.transform.SetParent(rightSide.transform, false);
