@@ -22,8 +22,7 @@ namespace ClientTester
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client);
-            PacketSender.PlayerId = playerId;
+            PacketSender = new PacketSender(client, playerId);
             Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
         }
 

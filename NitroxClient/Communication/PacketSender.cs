@@ -17,9 +17,10 @@ namespace NitroxClient.Communication
         private readonly TcpClient client;
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
-        public PacketSender(TcpClient client)
+        public PacketSender(TcpClient client, string playerId = null)
         {
             this.client = client;
+            PlayerId = playerId;
             Active = false;
         }
 
