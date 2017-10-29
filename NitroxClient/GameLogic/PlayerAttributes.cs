@@ -5,7 +5,7 @@ namespace NitroxClient.GameLogic
 {
     public class PlayerAttributes
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public PlayerAttributes(PacketSender packetSender)
         {

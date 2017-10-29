@@ -2,8 +2,8 @@
 {
     public class DefaultKeyBinding
     {
-        public string Binding { get; private set; }
-        public GameInput.BindingSet BindingSet { get; private set; }
+        public string Binding { get; }
+        public GameInput.BindingSet BindingSet { get; }
 
         public DefaultKeyBinding(string defaultBinding, GameInput.BindingSet defaultBindingSet)
         {

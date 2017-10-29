@@ -1,9 +1,9 @@
-﻿using NitroxModel.Packets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using NitroxModel.Packets;
 
 namespace NitroxModel.Tcp
 {
@@ -13,22 +13,16 @@ namespace NitroxModel.Tcp
         public const int RECEIVING_BUFFER_SIZE = 8192;
         public const int MESSAGE_CONSTRUCTING_BUFFER_SIZE = 1000000; // 1MB
 
-        public byte[] ReceivingBuffer { get; set; }
+        public byte[] ReceivingBuffer { get; set; } = new byte[RECEIVING_BUFFER_SIZE];
 
-        private byte[] MessageConstructingBuffer;
+        private readonly byte[] MessageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
         private int MessageConstructingBufferPointer = 0;
         private int CurrentPacketLength = 0;
 
         private int nextPacketHeaderBytesRead = 0;
-        private byte[] nextPacketHeaderBytes = new byte[4];
+        private readonly byte[] nextPacketHeaderBytes = new byte[4];
 
         private IFormatter formatter = Packet.Serializer;
-
-        public MessageBuffer()
-        {
-            this.ReceivingBuffer = new byte[RECEIVING_BUFFER_SIZE];
-            this.MessageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
-        }
 
         public IEnumerable<Packet> GetReceivedPackets(int receivedDataLength)
         {

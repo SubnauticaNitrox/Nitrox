@@ -5,7 +5,7 @@ namespace NitroxClient.Communication
 {
     public class PacketSuppression<T> : IDisposable
     {
-        private HashSet<Type> suppressedPacketsTypes;
+        private readonly HashSet<Type> suppressedPacketsTypes;
 
         public PacketSuppression(HashSet<Type> suppressedPacketsTypes)
         {

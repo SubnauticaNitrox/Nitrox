@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
-        public void WriteMessage(String message)
+        public void WriteMessage(string message)
         {
             chat.WriteMessage(message);
         }

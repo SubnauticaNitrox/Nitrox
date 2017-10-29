@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic
 {
@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic
 
         public void RemovePlayer(string playerId)
         {
-            var opPlayer = Find(playerId);
+            Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.IsPresent())
             {
                 opPlayer.Get().Destroy();

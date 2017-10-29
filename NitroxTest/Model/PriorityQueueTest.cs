@@ -10,7 +10,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void SameOrder()
         {
-            PriorityQueue<String> queue = new PriorityQueue<String>();
+            PriorityQueue<string> queue = new PriorityQueue<string>();
             queue.Enqueue(0, "First");
             queue.Enqueue(0, "Second");
             queue.Enqueue(0, "Third");
@@ -23,7 +23,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void DifferentOrder()
         {
-            PriorityQueue<String> queue = new PriorityQueue<String>();
+            PriorityQueue<string> queue = new PriorityQueue<string>();
             queue.Enqueue(3, "First");
             queue.Enqueue(2, "Second");
             queue.Enqueue(1, "Third");
@@ -36,7 +36,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void SomeAreSameOrder()
         {
-            PriorityQueue<String> queue = new PriorityQueue<String>();
+            PriorityQueue<string> queue = new PriorityQueue<string>();
             queue.Enqueue(2, "First");
             queue.Enqueue(2, "Second");
             queue.Enqueue(0, "Third");
@@ -49,7 +49,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void PrioritySanity()
         {
-            PriorityQueue<String> queue = new PriorityQueue<String>();
+            PriorityQueue<string> queue = new PriorityQueue<string>();
             queue.Enqueue(2, "Second");
             queue.Enqueue(3, "First");
             queue.Enqueue(1, "Third");
@@ -62,7 +62,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void CountSanity()
         {
-            PriorityQueue<String> queue = new PriorityQueue<String>();
+            PriorityQueue<string> queue = new PriorityQueue<string>();
             queue.Enqueue(2, "Second");
             queue.Enqueue(3, "First");
             queue.Enqueue(1, "Third");

@@ -5,11 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SimulationOwnershipRequest : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public SimulationOwnershipRequest(String playerId, String guid) : base(playerId)
+        public SimulationOwnershipRequest(string playerId, string guid) : base(playerId)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()

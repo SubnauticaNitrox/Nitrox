@@ -42,7 +42,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.main.StartMultiplayer(serverIp, username);
+            Multiplayer.Main.StartMultiplayer(serverIp, username);
             Destroy(gameObject);
         }
     }

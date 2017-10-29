@@ -5,11 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsBeginSilentRunning : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public CyclopsBeginSilentRunning(String playerId, String guid) : base(playerId)
+        public CyclopsBeginSilentRunning(string playerId, string guid) : base(playerId)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()

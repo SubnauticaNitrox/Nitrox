@@ -5,15 +5,15 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsToggleEngineState : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public bool IsOn { get; }
         public bool IsStarting { get; }
 
-        public CyclopsToggleEngineState(String playerId, String guid, bool isOn, bool isStarting) : base(playerId)
+        public CyclopsToggleEngineState(string playerId, string guid, bool isOn, bool isStarting) : base(playerId)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
-            this.IsStarting = isStarting;
+            Guid = guid;
+            IsOn = isOn;
+            IsStarting = isStarting;
         }
 
         public override string ToString()

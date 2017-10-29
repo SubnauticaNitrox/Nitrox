@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.ServerModel;
+﻿using System;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleModel> vehicle = GetVehicleModel();
-                String subGuid = null;
+                string subGuid = null;
 
                 SubRoot currentSub = Player.main.GetCurrentSub();
 
@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<String>.OfNullable(subGuid));
+                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 
@@ -50,7 +50,7 @@ namespace NitroxClient.MonoBehaviours
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
 
-            String guid;
+            string guid;
             Vector3 position;
             Quaternion rotation;
             Vector3 velocity;
@@ -86,7 +86,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                     else if (techType == TechType.Exosuit)
                     {
-                        var exosuit = vehicle as Exosuit;
+                        Exosuit exosuit = vehicle as Exosuit;
                         if (exosuit)
                         {
                             appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
@@ -104,7 +104,7 @@ namespace NitroxClient.MonoBehaviours
                 angularVelocity = rigidbody.angularVelocity;
                 techType = TechType.Cyclops;
 
-                var subControl = sub.GetComponent<SubControl>();
+                SubControl subControl = sub.GetComponent<SubControl>();
                 steeringWheelYaw = (float)subControl.ReflectionGet("steeringWheelYaw");
                 steeringWheelPitch = (float)subControl.ReflectionGet("steeringWheelPitch");
                 appliedThrottle = subControl.appliedThrottle && (bool)subControl.ReflectionGet("canAccel");
