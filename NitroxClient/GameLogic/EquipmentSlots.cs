@@ -8,16 +8,16 @@ namespace NitroxClient.GameLogic
 {
     public class EquipmentSlots
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public EquipmentSlots(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void Equip(Pickupable pickupable, GameObject owner, String slot)
+        public void Equip(Pickupable pickupable, GameObject owner, string slot)
         {
-            String ownerGuid = GuidHelper.GetGuid(owner);
+            string ownerGuid = GuidHelper.GetGuid(owner);
             Vector3 ownerPos = owner.transform.position;
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
             
@@ -25,10 +25,10 @@ namespace NitroxClient.GameLogic
             packetSender.Send(equip);
         }
 
-        public void Unequip(Pickupable pickupable, GameObject owner, String slot)
+        public void Unequip(Pickupable pickupable, GameObject owner, string slot)
         {
-            String itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            String ownerGuid = GuidHelper.GetGuid(owner);
+            string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
+            string ownerGuid = GuidHelper.GetGuid(owner);
             Vector3 ownerPos = owner.transform.position;
 
             EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(packetSender.PlayerId, ownerGuid, slot, itemGuid, ownerPos);

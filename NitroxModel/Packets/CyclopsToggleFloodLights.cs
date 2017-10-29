@@ -5,13 +5,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CyclopsToggleFloodLights : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public bool IsOn { get; }
 
-        public CyclopsToggleFloodLights(String playerId, String guid, bool isOn) : base(playerId)
+        public CyclopsToggleFloodLights(string playerId, string guid, bool isOn) : base(playerId)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
+            Guid = guid;
+            IsOn = isOn;
         }
 
         public override string ToString()

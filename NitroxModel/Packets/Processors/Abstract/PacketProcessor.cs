@@ -17,7 +17,7 @@ namespace NitroxModel.Packets.Processors.Abstract
                 .Where(additionalConstraints)
                 .ToDictionary(proc => proc.BaseType.GetGenericArguments()[0], proc =>
                 {
-                    var ctors = proc.GetConstructors();
+                    ConstructorInfo[] ctors = proc.GetConstructors();
                     if (ctors.Length > 1)
                     {
                         throw new NotSupportedException($"{proc.Name} has more than one constructor!");

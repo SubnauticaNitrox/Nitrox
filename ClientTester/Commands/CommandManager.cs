@@ -1,16 +1,16 @@
-﻿using ClientTester.Commands.DefaultCommands;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ClientTester.Commands.DefaultCommands;
 using UnityEngine;
 
 namespace ClientTester.Commands
 {
     public class CommandManager
     {
-        List<NitroxCommand> commands = new List<NitroxCommand>();
-        MultiplayerClient client;
+        private readonly List<NitroxCommand> commands = new List<NitroxCommand>();
+        private readonly MultiplayerClient client;
         public CommandManager(MultiplayerClient client)
         {
             this.client = client;
@@ -32,7 +32,7 @@ namespace ClientTester.Commands
 
         public void TakeCommand(string command)
         {
-            String[] commandArray = Regex.Matches(command, @"[\""].+?[\""]|[^ ]+")
+            string[] commandArray = Regex.Matches(command, @"[\""].+?[\""]|[^ ]+")
                 .Cast<Match>()
                 .Select(m => m.Value)
                 .ToArray();
@@ -54,17 +54,18 @@ namespace ClientTester.Commands
             }
         }
 
-        public static Vector3 GetVectorFromArgs(String[] args, int pos)
+        public static Vector3 GetVectorFromArgs(string[] args, int pos)
         {
             return new Vector3(float.Parse(args[pos]), float.Parse(args[pos + 1]), float.Parse(args[pos + 2]));
         }
 
-        public static Quaternion GetQuaternionFromArgs(String[] args, int pos)
+        public static Quaternion GetQuaternionFromArgs(string[] args, int pos)
         {
             return Quaternion.Euler(float.Parse(args[pos]), float.Parse(args[pos + 1]), float.Parse(args[pos + 2]));
         }
     }
 
+    [Serializable]
     public class InvalidArgumentException : Exception
     {
         public InvalidArgumentException(string message) : base(message)
@@ -72,6 +73,7 @@ namespace ClientTester.Commands
         }
     }
 
+    [Serializable]
     public class NotEnoughArgumentsException : Exception
     {
         public NotEnoughArgumentsException(int argCount)

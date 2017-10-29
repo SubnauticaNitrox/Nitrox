@@ -1,12 +1,13 @@
-﻿using Harmony;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using Harmony;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 
 namespace NitroxPatcher
 {
@@ -30,16 +31,16 @@ namespace NitroxPatcher
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
-                        
-            var discoveredPatches = Assembly.GetExecutingAssembly()
+
+            IEnumerable<NitroxPatch> discoveredPatches = Assembly.GetExecutingAssembly()
                 .GetTypes()
                 .Where(p => typeof(NitroxPatch).IsAssignableFrom(p) &&
                             p.IsClass && !p.IsAbstract
                       )
                 .Select(Activator.CreateInstance)
                 .Cast<NitroxPatch>();
-            
-            var splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
+
+            IEnumerable<IGrouping<string, NitroxPatch>> splittedPatches = discoveredPatches.GroupBy(p => p.GetType().Namespace);
 
             splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Persistent").ForEach(p =>
             {
@@ -52,7 +53,7 @@ namespace NitroxPatcher
             NitroxClient.MonoBehaviours.Multiplayer.OnBeforeMultiplayerStart += Apply;
 
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
-            
+
             DevConsole.disableConsole = false;
         }
 

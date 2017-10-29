@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public Chunk[] Added { get; }
         public Chunk[] Removed { get; }
 
-        public VisibleChunksChanged(String playerId, Chunk[] added, Chunk[] removed) : base(playerId)
+        public VisibleChunksChanged(string playerId, Chunk[] added, Chunk[] removed) : base(playerId)
         {
             Added = added;
             Removed = removed;

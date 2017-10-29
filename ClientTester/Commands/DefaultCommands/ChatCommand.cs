@@ -17,7 +17,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args.Length >= 2)
             {
-                client.Logic.Chat.SendChatMessage(String.Join(" ", args)); //does not support double spaces!
+                client.Logic.Chat.SendChatMessage(string.Join(" ", args)); //does not support double spaces!
             }
             else
             {

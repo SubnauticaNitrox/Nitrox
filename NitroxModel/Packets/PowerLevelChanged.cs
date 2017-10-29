@@ -1,20 +1,20 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PowerLevelChanged : AuthenticatedPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public float Amount { get; }
         public PowerType PowerType { get; }
 
-        public PowerLevelChanged(String playerId, String guid, float amount, PowerType powerType) : base(playerId)
+        public PowerLevelChanged(string playerId, string guid, float amount, PowerType powerType) : base(playerId)
         {
-            this.Guid = guid;
-            this.Amount = amount;
-            this.PowerType = powerType;
+            Guid = guid;
+            Amount = amount;
+            PowerType = powerType;
         }
 
         public override string ToString()

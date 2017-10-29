@@ -1,11 +1,11 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -36,7 +36,7 @@ namespace NitroxPatcher.Patches
             {
                 // Find the right gameobject in the hierarchy to sync on:
                 GameObject gameObject = null;
-                foreach (var t in syncedParents)
+                foreach (Type t in syncedParents)
                 {
                     if (__instance.GetComponent(t))
                     {
@@ -55,7 +55,7 @@ namespace NitroxPatcher.Patches
                     DebugUtils.DumpComponent(__instance);
                 }
 
-                var guid = GuidHelper.GetGuid(gameObject);
+                string guid = GuidHelper.GetGuid(gameObject);
 
                 Multiplayer.PacketSender.Send(new NitroxModel.Packets.ToggleLights(Multiplayer.PacketSender.PlayerId, guid, __instance.lightsActive));
             }
@@ -63,7 +63,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
 
         public class LightToggleContainer

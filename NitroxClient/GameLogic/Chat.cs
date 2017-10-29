@@ -6,14 +6,14 @@ namespace NitroxClient.GameLogic
 {
     public class Chat
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Chat(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void SendChatMessage(String text)
+        public void SendChatMessage(string text)
         {
             ChatMessage message = new ChatMessage(packetSender.PlayerId, text);
             packetSender.Send(message);

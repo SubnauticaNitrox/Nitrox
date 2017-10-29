@@ -21,12 +21,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (completedPacket.NewBaseCreatedGuid.IsPresent())
             {
-                String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
+                string newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
                 configureNewlyConstructedBase(newBaseGuid);
             }            
         }
 
-        private void configureNewlyConstructedBase(String newBaseGuid)
+        private void configureNewlyConstructedBase(string newBaseGuid)
         {
             Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 

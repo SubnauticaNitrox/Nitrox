@@ -20,7 +20,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             float y = client.clientPos.y;
             client.clientPos.y = float.Parse(args[0]);
-            client.PacketSender.UpdatePlayerLocation(client.clientPos, new Vector3(0, client.clientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<String>.Empty());
+            client.PacketSender.UpdatePlayerLocation(client.clientPos, new Vector3(0, client.clientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
         }
     }
 }

@@ -5,6 +5,6 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Disconnect : AuthenticatedPacket
     {
-        public Disconnect(String playerId) : base(playerId) {}
+        public Disconnect(string playerId) : base(playerId) {}
     }
 }

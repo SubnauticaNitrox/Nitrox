@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         {
             if (__instance.isOpen != openState)
             {
-                String guid = GuidHelper.GetGuid(__instance.gameObject);
+                string guid = GuidHelper.GetGuid(__instance.gameObject);
                 Multiplayer.Logic.Interior.OpenableStateChanged(guid, openState, duration);
             }
 
@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPrefix(harmony, TARGET_METHOD);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

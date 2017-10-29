@@ -6,7 +6,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class MovementProcessor : ClientPacketProcessor<Movement>
     {
-        private PlayerManager remotePlayerManager;
+        private readonly PlayerManager remotePlayerManager;
 
         public MovementProcessor(PlayerManager remotePlayerManager)
         {

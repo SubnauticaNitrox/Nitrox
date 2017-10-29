@@ -1,7 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,20 +22,20 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Vector2 FOOD_BAR_POSITION_OFFSET = new Vector2(100, 160);
         private static readonly Vector2 WATER_BAR_POSITION_OFFSET = new Vector2(50, 160);
 
-        public String playerName;
+        public string playerName;
         public int position;
 
         private class Bar
         {
-            public GameObject GameObject;
-            public SmoothedValue SmoothedValue;
-            public String ValueUnit;
+            public readonly GameObject GameObject;
+            public readonly SmoothedValue SmoothedValue;
+            public readonly string ValueUnit;
 
-            public Bar(GameObject gameObject, SmoothedValue smoothedValue, String valueUnit)
+            public Bar(GameObject gameObject, SmoothedValue smoothedValue, string valueUnit)
             {
-                this.GameObject = gameObject;
-                this.SmoothedValue = smoothedValue;
-                this.ValueUnit = valueUnit;
+                GameObject = gameObject;
+                SmoothedValue = smoothedValue;
+                ValueUnit = valueUnit;
             }
         }
 
@@ -48,7 +47,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private GameObject background;
         private GameObject playerNameText;
 
-        public void CreateVitals(String playerName, int position)
+        public void CreateVitals(string playerName, int position)
         {
             this.playerName = playerName;
             this.position = position;
@@ -67,7 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             SetNewPosition(position);
         }
 
-        private Bar CreateBar(Color color, Color borderColor, String smoothedValueUnit)
+        private Bar CreateBar(Color color, Color borderColor, string smoothedValueUnit)
         {
             uGUI_HealthBar healthBar = FindObjectOfType<uGUI_HealthBar>();
 

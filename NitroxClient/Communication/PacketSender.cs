@@ -1,10 +1,10 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication
@@ -12,16 +12,16 @@ namespace NitroxClient.Communication
     public class PacketSender
     {
         public bool Active { get; set; }
-        public String PlayerId { get; set; }
+        public string PlayerId { get; set; }
 
-        private TcpClient client;
-        private HashSet<Type> suppressedPacketsTypes;
+        private readonly TcpClient client;
+        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
 
-        public PacketSender(TcpClient client)
+        public PacketSender(TcpClient client, string playerId = null)
         {
             this.client = client;
-            this.Active = false;
-            this.suppressedPacketsTypes = new HashSet<Type>();
+            PlayerId = playerId;
+            Active = false;
         }
 
         public void Authenticate()
@@ -30,7 +30,7 @@ namespace NitroxClient.Communication
             Send(auth);
         }
 
-        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<String> opSubGuid)
+        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<string> opSubGuid)
         {
             Movement movement;
 

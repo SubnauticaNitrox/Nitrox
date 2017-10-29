@@ -1,6 +1,6 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
 
 namespace NitroxPatcher.Patches
 {
@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches
 
                 object leftAim = leftAimField.GetValue(__instance);
                 object rightAim = rightAimField.GetValue(__instance);
-                var args = new object[] { __instance.ikToggleTime };
+                object[] args = new object[] { __instance.ikToggleTime };
                 armAimingUpdate.Invoke(leftAim, args);
                 armAimingUpdate.Invoke(rightAim, args);
 
@@ -45,7 +45,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPrefix(harmony, TARGET_METHOD);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

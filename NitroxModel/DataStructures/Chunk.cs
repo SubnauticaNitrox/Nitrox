@@ -7,7 +7,7 @@ namespace NitroxModel.DataStructures
     {
         public Int3 BatchId { get; }
         public int Level { get; } // 0-3 lower means 'closer to the player' and 'higher level-of-detail'
-        
+
         public Chunk(Int3 batchId, int level)
         {
             BatchId = batchId;
@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures
             return "[Chunk " + BatchId + " " + Level + "]";
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -29,10 +29,10 @@ namespace NitroxModel.DataStructures
 
             Chunk chunk = (Chunk)obj;
 
-            return (chunk.Level == this.Level &&
-                    chunk.BatchId.x == this.BatchId.x &&
-                    chunk.BatchId.y == this.BatchId.y &&
-                    chunk.BatchId.z == this.BatchId.z);
+            return (chunk.Level == Level &&
+                    chunk.BatchId.x == BatchId.x &&
+                    chunk.BatchId.y == BatchId.y &&
+                    chunk.BatchId.z == BatchId.z);
         }
 
         public override int GetHashCode()

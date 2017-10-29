@@ -1,6 +1,7 @@
-﻿using NitroxModel.Packets;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Packets;
 
 namespace ClientTester.Commands.DefaultCommands
 {
@@ -17,7 +18,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             assertMinimumArgs(args, 1);
 
-            var numericArgs = args
+            IEnumerable<object> numericArgs = args
                 .Skip(1)
                 .Select(x =>
                 {

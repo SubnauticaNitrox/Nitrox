@@ -9,10 +9,10 @@ namespace NitroxModel.Packets
         public Vector3 ActionPosition { get; }
         public bool PlayerMustBeInRangeToReceive { get; protected set; }
 
-        public PlayerActionPacket(String playerId, Vector3 eventPosition) : base(playerId)
+        public PlayerActionPacket(string playerId, Vector3 eventPosition) : base(playerId)
         {
-            this.ActionPosition = eventPosition;
-            this.PlayerMustBeInRangeToReceive = true;
+            ActionPosition = eventPosition;
+            PlayerMustBeInRangeToReceive = true;
         }
     }
 }

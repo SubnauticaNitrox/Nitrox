@@ -1,4 +1,6 @@
-﻿using NitroxModel.Helper;
+﻿using System;
+using System.Collections.Generic;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -6,23 +8,21 @@ using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
-        private Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
-        private Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
 
-        private DefaultServerPacketProcessor defaultPacketProcessor;
+        private readonly DefaultServerPacketProcessor defaultPacketProcessor;
 
         public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
         {
-            this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
+            defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
 
-            var ProcessorArguments = new Dictionary<Type, object>
+            Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {
                 {typeof(TcpServer), tcpServer },
                 {typeof(TimeKeeper), timeKeeper },

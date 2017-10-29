@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     {
         public float CurrentTime { get; }
 
-        public TimeChange(float currentTime) : base()
+        public TimeChange(float currentTime)
         {
-            this.CurrentTime = currentTime;
+            CurrentTime = currentTime;
         }
     }
 }

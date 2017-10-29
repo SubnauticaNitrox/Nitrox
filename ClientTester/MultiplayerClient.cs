@@ -1,34 +1,32 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic;
-using NitroxModel.Logger;
 using NitroxClient.Map;
-using System;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public PacketSender PacketSender { get; private set; }
-        public Logic Logic { get; private set; }
+        public PacketSender PacketSender { get; }
+        public Logic Logic { get; }
         public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
-        
-        LoadedChunks loadedChunks;
-        ChunkAwarePacketReceiver chunkAwarePacketReceiver;
-        TcpClient client;
 
-        public MultiplayerClient(String playerId)
+        private readonly LoadedChunks loadedChunks;
+        private readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver;
+        private readonly TcpClient client;
+
+        public MultiplayerClient(string playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             loadedChunks = new LoadedChunks();
             chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
             client = new TcpClient(chunkAwarePacketReceiver);
-            PacketSender = new PacketSender(client);
-            PacketSender.PlayerId = playerId;
+            PacketSender = new PacketSender(client, playerId);
             Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
         }
 
-        public void Start(String ip)
+        public void Start(string ip)
         {
             client.Start(ip);
             if (client.IsConnected())

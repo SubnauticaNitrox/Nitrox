@@ -7,7 +7,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
     {
-        private PlayerVitalsManager vitalsManager;
+        private readonly PlayerVitalsManager vitalsManager;
 
         public PlayerStatsProcessor(PlayerVitalsManager vitalsManager)
         {

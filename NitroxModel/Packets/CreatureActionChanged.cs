@@ -5,11 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CreatureActionChanged : Packet
     {
-        public String NewAction { get; }
+        public string NewAction { get; }
 
-        public CreatureActionChanged(String newAction) : base()
+        public CreatureActionChanged(string newAction) : base()
         {
-            this.NewAction = newAction;
+            NewAction = newAction;
         }
     }
 }

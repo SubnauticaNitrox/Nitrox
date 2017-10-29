@@ -5,7 +5,7 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class HelpCommand : NitroxCommand
     {
-        List<NitroxCommand> commands;
+        private readonly List<NitroxCommand> commands;
         public HelpCommand(List<NitroxCommand> commands)
         {
             this.commands = commands;

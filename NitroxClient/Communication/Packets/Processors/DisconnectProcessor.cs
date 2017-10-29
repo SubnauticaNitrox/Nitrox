@@ -8,8 +8,8 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class DisconnectProcessor : ClientPacketProcessor<Disconnect>
     {
-        private PlayerManager remotePlayerManager;
-        private PlayerVitalsManager vitalsManager;
+        private readonly PlayerManager remotePlayerManager;
+        private readonly PlayerVitalsManager vitalsManager;
 
         public DisconnectProcessor(PlayerManager remotePlayerManager, PlayerVitalsManager vitalsManager)
         {

@@ -5,13 +5,13 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class InteractiveChildObjectIdentifier
     {
-        public String Guid { get; private set; }
-        public String GameObjectNamePath { get; private set; }
+        public string Guid { get; }
+        public string GameObjectNamePath { get; }
 
-        public InteractiveChildObjectIdentifier(String guid, String gameObjectNamePath)
+        public InteractiveChildObjectIdentifier(string guid, string gameObjectNamePath)
         {
-            this.Guid = guid;
-            this.GameObjectNamePath = gameObjectNamePath;
+            Guid = guid;
+            GameObjectNamePath = gameObjectNamePath;
         }
 
         public override string ToString()

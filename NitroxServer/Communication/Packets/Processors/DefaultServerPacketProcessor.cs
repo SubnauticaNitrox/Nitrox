@@ -1,16 +1,16 @@
-﻿using NitroxModel.Logger;
+﻿using System;
+using System.Collections.Generic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<AuthenticatedPacket>
     {
-        private TcpServer tcpServer;
+        private readonly TcpServer tcpServer;
 
-        private HashSet<Type> loggingPacketBlackList = new HashSet<Type> {
+        private readonly HashSet<Type> loggingPacketBlackList = new HashSet<Type> {
             typeof(AnimationChangeEvent),
             typeof(Movement),
             typeof(VehicleMovement),

@@ -1,11 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -22,8 +22,8 @@ namespace NitroxClient.MonoBehaviours
      */
     public class PowerMonitor : MonoBehaviour
     {
-        private static readonly int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
-        private static readonly int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
+        private const int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
+        private const int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
 
         /**
          * Since the code base does not differentiate between active and passive 
@@ -44,7 +44,7 @@ namespace NitroxClient.MonoBehaviours
 
         private float runningDelta = 0;
         private float elapsedTime = 0;
-        public float interpolationPeriod = 4.00f;
+        private float interpolationPeriod = 4.00f;
 
         public void ChargeChanged(float amount, GameObject gameObject)
         {
@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours
 
                 if (runningDelta != 0)
                 {
-                    String guid = GuidHelper.GetGuid(this.gameObject);
+                    string guid = GuidHelper.GetGuid(gameObject);
                     Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }

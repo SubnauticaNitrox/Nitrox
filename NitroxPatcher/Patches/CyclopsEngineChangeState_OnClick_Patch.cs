@@ -14,13 +14,13 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsEngineChangeState __instance)
         {
-            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
+            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             Multiplayer.Logic.Cyclops.ToggleEngineState(guid, __instance.motorMode.engineOn, (bool)__instance.ReflectionGet("startEngine"));
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }
