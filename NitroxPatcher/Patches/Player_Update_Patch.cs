@@ -35,7 +35,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

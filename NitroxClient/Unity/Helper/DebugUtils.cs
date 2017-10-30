@@ -27,7 +27,7 @@ namespace NitroxClient.Unity.Helper
             Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
         }
 
-        public static String ByteArrayToHexString(byte[] bytes)
+        public static string ByteArrayToHexString(byte[] bytes)
         {
             StringBuilder hex = new StringBuilder(bytes.Length * 2);
 

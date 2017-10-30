@@ -73,6 +73,7 @@ namespace NitroxModel.DataStructures.Util
         }
     }
 
+    [Serializable]
     public sealed class OptionalEmptyException<T> : Exception
     {
         public OptionalEmptyException() : base($"Optional <{nameof(T)}> is empty.")

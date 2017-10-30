@@ -6,9 +6,9 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class AuthenticatePacketProcessor : UnauthenticatedPacketProcessor<Authenticate>
     {
-        private TcpServer tcpServer;
-        private TimeKeeper timeKeeper;
-        private EscapePodManager escapePodManager;
+        private readonly TcpServer tcpServer;
+        private readonly TimeKeeper timeKeeper;
+        private readonly EscapePodManager escapePodManager;
 
         public AuthenticatePacketProcessor(TcpServer tcpServer, TimeKeeper timeKeeper, EscapePodManager escapePodManager)
         {

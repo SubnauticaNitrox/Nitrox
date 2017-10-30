@@ -1,23 +1,22 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic;
-using NitroxModel.Logger;
 using NitroxClient.Map;
-using System;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public PacketSender PacketSender { get; private set; }
-        public Logic Logic { get; private set; }
+        public PacketSender PacketSender { get; }
+        public Logic Logic { get; }
         public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
-        
-        VisibleCells visibleCells;
-        DeferringPacketReceiver packetReceiver;
-        TcpClient client;
 
-        public MultiplayerClient(String playerId)
+        private readonly VisibleCells visibleCells;
+        private readonly DeferringPacketReceiver packetReceiver;
+        private readonly TcpClient client;
+
+        public MultiplayerClient(string playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             visibleCells = new VisibleCells();
@@ -28,7 +27,7 @@ namespace ClientTester
             Logic = new Logic(PacketSender, visibleCells, packetReceiver);
         }
 
-        public void Start(String ip)
+        public void Start(string ip)
         {
             client.Start(ip);
             if (client.IsConnected())

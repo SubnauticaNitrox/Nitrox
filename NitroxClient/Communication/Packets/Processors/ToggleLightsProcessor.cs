@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -14,8 +15,8 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         public override void Process(NitroxModel.Packets.ToggleLights packet)
         {
-            var gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
-            var toggleLights = gameObject.GetComponent<ToggleLights>();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
 
             if (toggleLights == null)
             {

@@ -1,19 +1,19 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
+using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public String Id { get; }
+        public string Id { get; }
         public Vector3 Position { get; set; }
+        
+        private readonly HashSet<VisibleCell> visibleCells;
 
-        private HashSet<VisibleCell> visibleCells;
-
-        public Player(String id)
+        public Player(string id)
         {
             this.Id = id;
             this.visibleCells = new HashSet<VisibleCell>();

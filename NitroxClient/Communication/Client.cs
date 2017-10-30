@@ -1,25 +1,25 @@
-﻿using NitroxModel.Packets;
-using NitroxModel.Tcp;
-using NitroxModel.Logger;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxModel.Tcp;
 
 namespace NitroxClient.Communication
 {
     public class TcpClient
     {
-        private DeferringPacketReceiver packetReceiver;
+        private readonly DeferringPacketReceiver packetReceiver;
         private const int port = 11000;
         private Connection connection;
         
         public TcpClient(DeferringPacketReceiver packetManager)
         {
-            this.packetReceiver = packetManager;
+            packetReceiver = packetManager;
         }
 
-        public void Start(String ip)
+        public void Start(string ip)
         {
             try
             {
@@ -48,20 +48,21 @@ namespace NitroxClient.Communication
             Multiplayer.RemoveAllOtherPlayers();
             Log.InGame("Disconnected from server.");
         }
-        
+
         private void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
 
             foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                packetReceiver.PacketReceived(packet);                
+                packetReceiver.PacketReceived(packet);
             }
 
             if (connection.Open)
             {
                 connection.BeginReceive(new AsyncCallback(DataReceived));
-            } else
+            }
+            else
             {
                 Log.Debug("Error reading data from server");
                 Stop();

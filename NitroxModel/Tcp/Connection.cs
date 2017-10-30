@@ -1,25 +1,23 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 
 namespace NitroxModel.Tcp
 {
     public class Connection : IProcessorContext
     {
-        private Socket Socket;
-        private MessageBuffer MessageBuffer;
-        public bool Open { get; private set; }
+        private readonly Socket Socket;
+        private readonly MessageBuffer MessageBuffer = new MessageBuffer();
+        public bool Open { get; private set; } = true;
         public bool Authenticated { get; set; }
 
         public Connection(Socket socket)
         {
-            this.Socket = socket;
-            this.MessageBuffer = new MessageBuffer();
-            this.Open = true;
+            Socket = socket;
         }
 
         public void Connect(IPEndPoint remoteEP)
@@ -37,7 +35,7 @@ namespace NitroxModel.Tcp
                 Open = false;
             }
         }
-        
+
         public void BeginReceive(AsyncCallback callback)
         {
             try
@@ -66,7 +64,7 @@ namespace NitroxModel.Tcp
 
             if (bytesRead > 0)
             {
-                foreach(Packet packet in MessageBuffer.GetReceivedPackets(bytesRead))
+                foreach (Packet packet in MessageBuffer.GetReceivedPackets(bytesRead))
                 {
                     yield return packet;
                 }

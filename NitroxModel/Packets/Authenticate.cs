@@ -5,13 +5,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Authenticate : Packet
     {
-        public String PlayerId { get; }
-        public String User { get; }
-        public String Password { get; }
+        public string PlayerId { get; }
+        public string User { get; }
+        public string Password { get; }
 
-        public Authenticate(String playerId)
+        public Authenticate(string playerId)
         {
-            this.PlayerId = playerId;
+            PlayerId = playerId;
         }
     }
 }

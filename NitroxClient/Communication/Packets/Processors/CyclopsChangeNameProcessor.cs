@@ -1,16 +1,16 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Helper;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsChangeNameProcessor : ClientPacketProcessor<CyclopsChangeName>
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public CyclopsChangeNameProcessor(PacketSender packetSender)
         {

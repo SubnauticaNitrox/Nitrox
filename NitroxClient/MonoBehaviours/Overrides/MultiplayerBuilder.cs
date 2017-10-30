@@ -1,10 +1,11 @@
-﻿using System;
+﻿#pragma warning disable // Disable all warnings for copied file
+
 using System.Collections.Generic;
-using UnityEngine;
-using UWE;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using UnityEngine;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -290,12 +291,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             component.transform.position = overridePosition;
             component.transform.rotation = overrideQuaternion;
 
-            if(opTargetBaseGameObject.IsPresent())
+            if (opTargetBaseGameObject.IsPresent())
             {
                 GameObject targetBaseGameObject = opTargetBaseGameObject.Get();
                 Base targetBase = targetBaseGameObject.GetComponent<Base>();
 
-                if(targetBase != null)
+                if (targetBase != null)
                 {
                     component.ReflectionSet("targetBase", targetBase);
                     componentInParent.transform.SetParent(targetBase.transform, true);
@@ -309,7 +310,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             componentInParent.SetState(false, true);
 
             component.GhostBase.transform.position = overridePosition;
-            
+
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
@@ -353,7 +354,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             SkyEnvironmentChanged.Send(gameObject, currentSub);
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
-            
+
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
@@ -1002,3 +1003,4 @@ namespace NitroxClient.MonoBehaviours.Overrides
     }
 
 }
+#pragma warning restore // Re-enable all warnings for copied file

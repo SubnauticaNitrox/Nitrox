@@ -5,7 +5,7 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     class MovementPacketProcessor : AuthenticatedPacketProcessor<Movement>
     {
-        private TcpServer tcpServer;
+        private readonly TcpServer tcpServer;
 
         public MovementPacketProcessor(TcpServer tcpServer)
         {

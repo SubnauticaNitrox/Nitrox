@@ -8,14 +8,14 @@ namespace NitroxClient.GameLogic
 {
     public class Power
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Power(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void ChargeChanged(String guid, float amount, PowerType powerType)
+        public void ChargeChanged(string guid, float amount, PowerType powerType)
         {
             PowerLevelChanged powerChanged = new PowerLevelChanged(packetSender.PlayerId, guid, amount, powerType);
             packetSender.Send(powerChanged);

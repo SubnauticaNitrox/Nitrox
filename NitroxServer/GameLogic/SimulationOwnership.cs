@@ -6,11 +6,11 @@ namespace NitroxServer.GameLogic
 {
     public class SimulationOwnership
     {
-        Dictionary<String, Player> guidsByPlayer = new Dictionary<String, Player>();
+        Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
         
         //TODO: redistribute upon disconnect
 
-        public bool TryToAquireOwnership(String guid, Player player)
+        public bool TryToAquireOwnership(string guid, Player player)
         {
             lock(guidsByPlayer)
             {

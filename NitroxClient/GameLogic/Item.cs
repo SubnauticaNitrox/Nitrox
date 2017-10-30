@@ -11,28 +11,28 @@ namespace NitroxClient.GameLogic
 {
     public class Item
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Item(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void UpdatePosition(String guid, Vector3 location, Quaternion rotation)
+        public void UpdatePosition(string guid, Vector3 location, Quaternion rotation)
         {
             ItemPosition itemPosition = new ItemPosition(packetSender.PlayerId, guid, location, rotation);
             packetSender.Send(itemPosition);
         }
 
-        public void PickedUp(GameObject gameObject, String techType)
+        public void PickedUp(GameObject gameObject, string techType)
         {
-            String guid = GuidHelper.GetGuid(gameObject);
+            string guid = GuidHelper.GetGuid(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
 
             PickedUp(itemPosition, guid, techType);
         }
 
-        public void PickedUp(Vector3 itemPosition, String guid, String techType)
+        public void PickedUp(Vector3 itemPosition, string guid, string techType)
         {
             PickupItem pickupItem = new PickupItem(packetSender.PlayerId, itemPosition, guid, techType);
             packetSender.Send(pickupItem);
@@ -40,8 +40,8 @@ namespace NitroxClient.GameLogic
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
-            Optional<String> waterpark = GetCurrentWaterParkGuid();            
-            String guid = GuidHelper.GetGuid(gameObject);
+            Optional<string> waterpark = GetCurrentWaterParkGuid();            
+            string guid = GuidHelper.GetGuid(gameObject);
             byte[] bytes = SerializationHelper.GetBytes(gameObject);
 
             SyncedMultiplayerObject.ApplyTo(gameObject);
@@ -52,7 +52,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(droppedItem);
         }
 
-        private Optional<String> GetCurrentWaterParkGuid()
+        private Optional<string> GetCurrentWaterParkGuid()
         {
             Player player = Utils.GetLocalPlayer().GetComponent<Player>();
 
@@ -62,12 +62,12 @@ namespace NitroxClient.GameLogic
 
                 if (currentWaterPark != null)
                 {
-                    String waterParkGuid = GuidHelper.GetGuid(currentWaterPark.gameObject);
-                    return Optional<String>.Of(waterParkGuid);
+                    string waterParkGuid = GuidHelper.GetGuid(currentWaterPark.gameObject);
+                    return Optional<string>.Of(waterParkGuid);
                 }
             }
 
-            return Optional<String>.Empty();
+            return Optional<string>.Empty();
         }
     }
 }

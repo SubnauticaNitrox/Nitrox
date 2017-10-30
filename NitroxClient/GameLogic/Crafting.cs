@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic
 {
     public class Crafting
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Crafting(PacketSender packetSender)
         {
@@ -18,14 +18,14 @@ namespace NitroxClient.GameLogic
 
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
-            String crafterGuid = GuidHelper.GetGuid(crafter);
+            string crafterGuid = GuidHelper.GetGuid(crafter);
             FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(packetSender.PlayerId, crafterGuid, techType, duration);
             packetSender.Send(fabricatorBeginCrafting);
         }
 
         public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
         {
-            String crafterGuid = GuidHelper.GetGuid(gameObject);
+            string crafterGuid = GuidHelper.GetGuid(gameObject);
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(packetSender.PlayerId, crafterGuid, techType);
             packetSender.Send(fabricatorItemPickup);

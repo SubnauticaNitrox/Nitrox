@@ -73,7 +73,9 @@
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsBeginSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeColorProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeNameProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
@@ -130,7 +132,7 @@
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
-    <Compile Include="Map\VisibleChunks.cs" />
+    <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />

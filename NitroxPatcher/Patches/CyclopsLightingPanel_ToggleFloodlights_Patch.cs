@@ -21,14 +21,14 @@ namespace NitroxPatcher.Patches
         {
             if (__state != __instance.floodlightsOn)
             {
-                String guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
+                string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
                 Multiplayer.Logic.Cyclops.ToggleFloodLights(guid, __instance.floodlightsOn);
             }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

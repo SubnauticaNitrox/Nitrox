@@ -6,14 +6,14 @@ namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructionCompleted : PlayerActionPacket
-    { 
-        public String Guid { get; }
-        public Optional<String> NewBaseCreatedGuid { get; }
+    {
+        public string Guid { get; }
+        public Optional<string> NewBaseCreatedGuid { get; }
 
-        public ConstructionCompleted(String playerId, Vector3 itemPosition, String guid, Optional<String> newBaseCreatedGuid) : base(playerId, itemPosition)
+        public ConstructionCompleted(string playerId, Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(playerId, itemPosition)
         {
-            this.Guid = guid;
-            this.NewBaseCreatedGuid = newBaseCreatedGuid;
+            Guid = guid;
+            NewBaseCreatedGuid = newBaseCreatedGuid;
         }
 
         public override string ToString()

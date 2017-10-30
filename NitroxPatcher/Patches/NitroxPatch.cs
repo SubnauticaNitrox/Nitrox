@@ -1,9 +1,9 @@
-﻿using Harmony;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Harmony;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
@@ -54,7 +54,7 @@ namespace NitroxPatcher.Patches
 
         public void Restore()
         {
-            foreach (var patch in activePatches)
+            foreach (PatchProcessor patch in activePatches)
                 patch.Restore();
             activePatches.Clear();
         }

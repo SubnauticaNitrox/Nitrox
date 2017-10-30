@@ -18,11 +18,11 @@ namespace NitroxClient.MonoBehaviours
         {
             if (n != null && n.data != null && n.data.Count > 0)
             {
-                String text = "";
+                string text = "";
 
                 for(int i = 0; i < n.data.Count; i++)
                 {
-                    String word = n.data[i].ToString();
+                    string word = n.data[i].ToString();
                     text += word + " ";
                 }
 
