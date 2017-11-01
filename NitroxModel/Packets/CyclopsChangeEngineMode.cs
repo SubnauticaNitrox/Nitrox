@@ -3,12 +3,12 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CyclopsChangeEngineMode : AuthenticatedPacket
+    public class CyclopsChangeEngineMode : Packet
     {
         public string Guid { get; }
         public CyclopsMotorMode.CyclopsMotorModes Mode { get; }
 
-        public CyclopsChangeEngineMode(string playerId, string guid, CyclopsMotorMode.CyclopsMotorModes mode) : base(playerId)
+        public CyclopsChangeEngineMode(string guid, CyclopsMotorMode.CyclopsMotorModes mode)
         {
             Guid = guid;
             Mode = mode;
@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[CyclopsChangeEngineMode PlayerId: " + PlayerId + " Guid: " + Guid + " Mode: " + Mode + "]";
+            return "[CyclopsChangeEngineMode Guid: " + Guid + " Mode: " + Mode + "]";
         }
     }
 }

@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic
 
         public void ChargeChanged(string guid, float amount, PowerType powerType)
         {
-            PowerLevelChanged powerChanged = new PowerLevelChanged(packetSender.PlayerId, guid, amount, powerType);
+            PowerLevelChanged powerChanged = new PowerLevelChanged(guid, amount, powerType);
             packetSender.Send(powerChanged);
             Log.Debug(powerChanged);
         }

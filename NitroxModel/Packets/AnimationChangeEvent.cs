@@ -3,13 +3,15 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class AnimationChangeEvent : AuthenticatedPacket
+    public class AnimationChangeEvent : Packet
     {
+        public string PlayerId { get; }
         public int Type { get; }
         public int State { get; }
 
-        public AnimationChangeEvent(string playerId, int type, int state) : base(playerId)
+        public AnimationChangeEvent(string playerId, int type, int state)
         {
+            PlayerId = playerId;
             Type = type;
             State = state;
         }

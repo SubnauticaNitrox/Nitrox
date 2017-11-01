@@ -101,7 +101,7 @@ namespace NitroxTest.Model
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            PacketHandler ph = new PacketHandler(new TcpServer(), new TimeKeeper(), new SimulationOwnership());
+            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             int both = authenticatedPacketProcessorsByType.Count + unauthenticatedPacketProcessorsByType.Count;
@@ -115,7 +115,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void RuntimeDetectsAllServerPacketProcessors()
         {
-            PacketHandler ph = new PacketHandler(new TcpServer(), new TimeKeeper(), new SimulationOwnership());
+            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
 
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
@@ -135,7 +135,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void AllPacketsAreHandled()
         {
-            PacketHandler ph = new PacketHandler(new TcpServer(), new TimeKeeper(), new SimulationOwnership());
+            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
 
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);

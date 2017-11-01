@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -6,28 +7,26 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class AuthenticatePacketProcessor : UnauthenticatedPacketProcessor<Authenticate>
     {
-        private readonly TcpServer tcpServer;
         private readonly TimeKeeper timeKeeper;
         private readonly EscapePodManager escapePodManager;
+        private readonly PlayerManager playerManager;
 
-        public AuthenticatePacketProcessor(TcpServer tcpServer, TimeKeeper timeKeeper, EscapePodManager escapePodManager)
+        public AuthenticatePacketProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager, PlayerManager playerManager)
         {
-            this.tcpServer = tcpServer;
             this.timeKeeper = timeKeeper;
             this.escapePodManager = escapePodManager;
+            this.playerManager = playerManager;
         }
 
-        public override void Process(Authenticate packet, PlayerConnection connection)
+        public override void Process(Authenticate packet, Connection connection)
         {
-            Player player = new Player(packet.PlayerId);
+            Player player = playerManager.PlayerAuthenticated(connection, packet.PlayerId);            
+            player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
-            tcpServer.PlayerAuthenticated(player, connection);
-            tcpServer.SendPacketToPlayer(new TimeChange(timeKeeper.GetCurrentTime()), player);
-
-            escapePodManager.AssignPlayerToEscapePod(packet.PlayerId);
+            escapePodManager.AssignPlayerToEscapePod(player.Id);
 
             BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(escapePodManager.GetEscapePods());
-            tcpServer.SendPacketToAllPlayers(broadcastEscapePods);
+            playerManager.SendPacketToAllPlayers(broadcastEscapePods);
         }
     }
 }

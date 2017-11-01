@@ -5,13 +5,15 @@ using System.Text;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CellVisibilityChanged : AuthenticatedPacket
+    public class CellVisibilityChanged : Packet
     {
+        public string PlayerId { get; }
         public VisibleCell[] Added { get; }
         public VisibleCell[] Removed { get; }
 
-        public CellVisibilityChanged(String playerId, VisibleCell[] added, VisibleCell[] removed) : base(playerId)
+        public CellVisibilityChanged(String playerId, VisibleCell[] added, VisibleCell[] removed)
         {
+            PlayerId = playerId;
             Added = added;
             Removed = removed;
         }
@@ -34,7 +36,10 @@ namespace NitroxModel.Packets
                 toString.Append(' ');
             }
 
-            toString.Append("| ]");
+            toString.Append("| PlayerId: ");
+            toString.Append(PlayerId);
+            toString.Append("]");
+
             return toString.ToString();
         }
     }

@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTransforms(Dictionary<String, GameObject> gameObjectsByGuid)
         {
-            EntityTransformUpdates update = new EntityTransformUpdates(packetSender.PlayerId);
+            EntityTransformUpdates update = new EntityTransformUpdates();
 
             foreach(KeyValuePair<String, GameObject> gameObjectWithGuid in gameObjectsByGuid)
             {

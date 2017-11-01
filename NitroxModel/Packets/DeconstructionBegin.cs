@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[DeconstructionBegin( - playerId: " + PlayerId + " Guid: " + Guid + "]";
+            return "[DeconstructionBegin playerId: " + PlayerId + " Guid: " + Guid + "]";
         }
     }
 }
