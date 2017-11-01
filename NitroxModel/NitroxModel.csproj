@@ -79,9 +79,7 @@
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
-    <Compile Include="Packets\CyclopsChangeColor.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
-    <Compile Include="Packets\CyclopsChangeName.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
@@ -114,8 +112,10 @@
     <Compile Include="Packets\SpawnEntities.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
+    <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
+    <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
