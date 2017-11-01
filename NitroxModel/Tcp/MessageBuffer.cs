@@ -15,9 +15,9 @@ namespace NitroxModel.Tcp
 
         public byte[] ReceivingBuffer { get; set; } = new byte[RECEIVING_BUFFER_SIZE];
 
-        private readonly byte[] MessageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
-        private int MessageConstructingBufferPointer = 0;
-        private int CurrentPacketLength = 0;
+        private readonly byte[] messageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
+        private int messageConstructingBufferPointer = 0;
+        private int currentPacketLength = 0;
 
         private int nextPacketHeaderBytesRead = 0;
         private readonly byte[] nextPacketHeaderBytes = new byte[4];
@@ -37,12 +37,12 @@ namespace NitroxModel.Tcp
                         nextPacketHeaderBytes[i] = ReceivingBuffer[i - nextPacketHeaderBytesRead];
                     }
 
-                    CurrentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
+                    currentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
                     headerOffset = HEADER_BYTE_SIZE - nextPacketHeaderBytesRead;
                 }
                 else
                 {
-                    CurrentPacketLength = BitConverter.ToInt32(ReceivingBuffer, 0);
+                    currentPacketLength = BitConverter.ToInt32(ReceivingBuffer, 0);
                     headerOffset = HEADER_BYTE_SIZE;
                 }
                 nextPacketHeaderBytesRead = 0;
@@ -50,19 +50,19 @@ namespace NitroxModel.Tcp
 
             for (int i = headerOffset; i < receivedDataLength; i++)
             {
-                MessageConstructingBuffer[MessageConstructingBufferPointer] = ReceivingBuffer[i];
-                MessageConstructingBufferPointer++;
+                messageConstructingBuffer[messageConstructingBufferPointer] = ReceivingBuffer[i];
+                messageConstructingBufferPointer++;
 
-                if (CurrentPacketLength == MessageConstructingBufferPointer)
+                if (currentPacketLength == messageConstructingBufferPointer)
                 {
                     //deserialize this packet and add it to our queue of received packets
-                    using (Stream stream = new MemoryStream(MessageConstructingBuffer.Take(CurrentPacketLength).ToArray()))
+                    using (Stream stream = new MemoryStream(messageConstructingBuffer.Take(currentPacketLength).ToArray()))
                     {
                         yield return (Packet)formatter.Deserialize(stream);
                     }
 
-                    CurrentPacketLength = 0;
-                    MessageConstructingBufferPointer = 0;
+                    currentPacketLength = 0;
+                    messageConstructingBufferPointer = 0;
                     nextPacketHeaderBytesRead = 0;
 
                     // Check to see if this message contains the header for the next message
@@ -79,7 +79,7 @@ namespace NitroxModel.Tcp
 
                     if (nextPacketHeaderBytesRead == HEADER_BYTE_SIZE)
                     {
-                        CurrentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
+                        currentPacketLength = BitConverter.ToInt32(nextPacketHeaderBytes, 0);
                         nextPacketHeaderBytesRead = 0;
                     }
                 }
@@ -88,7 +88,7 @@ namespace NitroxModel.Tcp
 
         private bool ReadingHeaderData(int receivedDataLength)
         {
-            if (CurrentPacketLength == 0)
+            if (currentPacketLength == 0)
             {
                 if (receivedDataLength < HEADER_BYTE_SIZE)
                 {

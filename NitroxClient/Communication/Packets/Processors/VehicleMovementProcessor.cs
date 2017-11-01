@@ -75,7 +75,7 @@ namespace NitroxClient.Communication.Packets.Processors
             player.SetSubRoot(subRoot);
             player.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
 
-            player.animationController.UpdatePlayerAnimations = false;
+            player.AnimationController.UpdatePlayerAnimations = false;
         }
 
         private void CreateVehicleAt(RemotePlayer player, TechType techType, string guid, Vector3 position, Quaternion rotation)

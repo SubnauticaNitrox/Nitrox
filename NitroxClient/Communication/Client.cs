@@ -11,9 +11,9 @@ namespace NitroxClient.Communication
     public class TcpClient
     {
         private readonly DeferringPacketReceiver packetReceiver;
-        private const int port = 11000;
+        private const int PORT = 11000;
         private Connection connection;
-        
+
         public TcpClient(DeferringPacketReceiver packetManager)
         {
             packetReceiver = packetManager;
@@ -24,7 +24,7 @@ namespace NitroxClient.Communication
             try
             {
                 IPAddress ipAddress = IPAddress.Parse(ip);
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+                IPEndPoint remoteEP = new IPEndPoint(ipAddress, PORT);
 
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 connection = new Connection(socket);

@@ -7,8 +7,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EntityTransformUpdates : Packet
     {
-        public List<EntityTransformUpdate> Updates { get; } 
-        
+        public List<EntityTransformUpdate> Updates { get; }
+
         public EntityTransformUpdates()
         {
             Updates = new List<EntityTransformUpdate>();
@@ -28,7 +28,7 @@ namespace NitroxModel.Packets
         {
             string toString = "";
 
-            foreach(EntityTransformUpdate update in Updates)
+            foreach (EntityTransformUpdate update in Updates)
             {
                 toString += update + " ";
             }

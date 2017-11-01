@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.GameLogic
 {

@@ -131,7 +131,7 @@ namespace NitroxClient.MonoBehaviours
                 Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(otherPlayerId);
                 if (opPlayer.IsPresent())
                 {
-                    Player.main.SetPosition(opPlayer.Get().body.transform.position);
+                    Player.main.SetPosition(opPlayer.Get().Body.transform.position);
                     Player.main.OnPlayerPositionCheat();
                 }
             }

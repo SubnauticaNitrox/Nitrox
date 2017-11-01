@@ -14,17 +14,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private bool chatEnabled = false;
         private string chatMessage = "";
         private PlayerChatManager chatManager;
-        
+
         public void OnGUI()
         {
-            if(chatEnabled)
+            if (chatEnabled)
             {
                 SetGUIStyle();
                 GUI.SetNextControlName(GUI_CHAT_NAME);
                 chatMessage = GUI.TextField(new Rect(INPUT_MARGIN, Screen.height - INPUT_HEIGHT - INPUT_MARGIN, INPUT_WIDTH, INPUT_HEIGHT), chatMessage, CHAR_LIMIT);
                 GUI.FocusControl(GUI_CHAT_NAME);
 
-                if (Event.current.isKey && Event.current.keyCode == KeyCode.Return) 
+                if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
                     SendMessage();
                     Hide();
@@ -52,7 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 chatManager.WriteMessage("Me: " + chatMessage);
             }
         }
-        
+
         public void Show(PlayerChatManager currentChatManager)
         {
             chatManager = currentChatManager;

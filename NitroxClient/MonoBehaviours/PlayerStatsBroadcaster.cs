@@ -5,14 +5,14 @@ namespace NitroxClient.MonoBehaviours
     public class PlayerStatsBroadcaster : MonoBehaviour
     {
         private float time = 0.0f;
-        public float interpolationPeriod = 4.00f;
+        private const float INTERPOLATION_PERIOD = 4.00f;
 
         public void Update()
         {
             time += Time.deltaTime;
 
             // Only do on a specific cadence to avoid hammering server
-            if (time >= interpolationPeriod)
+            if (time >= INTERPOLATION_PERIOD)
             {
                 time = 0;
 

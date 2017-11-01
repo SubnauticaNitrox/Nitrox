@@ -1,6 +1,4 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.MonoBehaviours.Gui.Chat;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -20,7 +18,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 string text = "";
 
-                for(int i = 0; i < n.data.Count; i++)
+                for (int i = 0; i < n.data.Count; i++)
                 {
                     string word = n.data[i].ToString();
                     text += word + " ";
