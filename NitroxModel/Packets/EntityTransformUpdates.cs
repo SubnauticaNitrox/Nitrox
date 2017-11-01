@@ -5,15 +5,10 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EntityTransformUpdates : AuthenticatedPacket
+    public class EntityTransformUpdates : Packet
     {
-        public List<EntityTransformUpdate> Updates { get; }
-
-        public EntityTransformUpdates(String playerId) : base(playerId)
-        {
-            Updates = new List<EntityTransformUpdate>();
-        }
-
+        public List<EntityTransformUpdate> Updates { get; } = new List<EntityTransformUpdate>();
+        
         public void AddUpdate(string guid, Vector3 position, Quaternion rotation)
         {
             Updates.Add(new EntityTransformUpdate(guid, position, rotation));

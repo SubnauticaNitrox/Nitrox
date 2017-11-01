@@ -7,20 +7,22 @@ namespace NitroxServer
 {
     public class Server
     {
-        private readonly TcpServer tcpServer = new TcpServer();
-        private readonly TimeKeeper timeKeeper = new TimeKeeper();
-        private readonly SimulationOwnership simulationOwnership = new SimulationOwnership();
-        private readonly PacketHandler packetHandler;
+        private readonly TcpServer tcpServer;
 
         public Server()
         {
-            packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership);
+            TimeKeeper timeKeeper = new TimeKeeper();
+            SimulationOwnership simulationOwnership = new SimulationOwnership();
+            PlayerManager playerManager = new PlayerManager();
+            PacketHandler packetHandler = new PacketHandler(playerManager, timeKeeper, simulationOwnership);
+
+            tcpServer = new TcpServer(packetHandler, playerManager);
         }
 
         public void Start()
         {
             Log.Info("Starting Nitrox Server");
-            tcpServer.Start(packetHandler);
+            tcpServer.Start();
         }
     }
 }

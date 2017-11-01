@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
+using NitroxModel.Tcp;
+using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Packets;
 
 namespace NitroxServer
 {
@@ -10,13 +11,15 @@ namespace NitroxServer
     {
         public string Id { get; }
         public Vector3 Position { get; set; }
-        
+
+        private readonly Connection connection;
         private readonly HashSet<VisibleCell> visibleCells;
 
-        public Player(string id)
+        public Player(string id, Connection connection)
         {
             this.Id = id;
             this.visibleCells = new HashSet<VisibleCell>();
+            this.connection = connection;
         }
 
         public void AddCells(IEnumerable<VisibleCell> cells)
@@ -46,6 +49,14 @@ namespace NitroxServer
             lock (visibleCells)
             {
                 return visibleCells.Contains(cell);
+            }
+        }
+
+        public void SendPacket(Packet packet)
+        {
+            if (connection.Open)
+            {
+                connection.SendPacket(packet, null);
             }
         }
     }

@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
 
             if(creatureAction != null)
             {
-                CreatureActionChanged actionChanged = new CreatureActionChanged(guid, creatureAction, packetSender.PlayerId);
+                CreatureActionChanged actionChanged = new CreatureActionChanged(guid, creatureAction);
                 packetSender.Send(actionChanged);
             }
         } 

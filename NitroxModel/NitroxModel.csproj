@@ -70,7 +70,6 @@
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\Authenticate.cs" />
-    <Compile Include="Packets\AuthenticatedPacket.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />

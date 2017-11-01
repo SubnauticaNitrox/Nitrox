@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<AuthenticatedPacket>
+    public class DefaultServerPacketProcessor : AuthenticatedPacketProcessor<Packet>
     {
-        private readonly TcpServer tcpServer;
+        private readonly PlayerManager playerManager;
 
         private readonly HashSet<Type> loggingPacketBlackList = new HashSet<Type> {
             typeof(AnimationChangeEvent),
@@ -18,19 +19,19 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(CyclopsChangeColor)
         };
 
-        public DefaultServerPacketProcessor(TcpServer tcpServer)
+        public DefaultServerPacketProcessor(PlayerManager playerManager)
         {
-            this.tcpServer = tcpServer;
+            this.playerManager = playerManager;
         }
 
-        public override void Process(AuthenticatedPacket packet, Player player)
+        public override void Process(Packet packet, Player player)
         {
             if (!loggingPacketBlackList.Contains(packet.GetType()))
             {
                 Log.Debug("Using default packet processor for: " + packet.ToString() + " and player " + player.Id);
             }
 
-            tcpServer.SendPacketToOtherPlayers(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

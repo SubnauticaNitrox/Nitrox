@@ -57,7 +57,7 @@ namespace NitroxPatcher.Patches
 
                 string guid = GuidHelper.GetGuid(gameObject);
 
-                Multiplayer.PacketSender.Send(new NitroxModel.Packets.ToggleLights(Multiplayer.PacketSender.PlayerId, guid, __instance.lightsActive));
+                Multiplayer.PacketSender.Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
             }
         }
 

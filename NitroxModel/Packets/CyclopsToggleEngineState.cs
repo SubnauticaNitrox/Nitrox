@@ -3,13 +3,13 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CyclopsToggleEngineState : AuthenticatedPacket
+    public class CyclopsToggleEngineState : Packet
     {
         public string Guid { get; }
         public bool IsOn { get; }
         public bool IsStarting { get; }
 
-        public CyclopsToggleEngineState(string playerId, string guid, bool isOn, bool isStarting) : base(playerId)
+        public CyclopsToggleEngineState(string guid, bool isOn, bool isStarting)
         {
             Guid = guid;
             IsOn = isOn;
@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[CyclopsToggleEngineState PlayerId: " + PlayerId + " Guid: " + Guid + " IsOn: " + IsOn + " IsStarting: " + IsStarting + "]";
+            return "[CyclopsToggleEngineState Guid: " + Guid + " IsOn: " + IsOn + " IsStarting: " + IsStarting + "]";
         }
     }
 }

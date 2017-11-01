@@ -3,13 +3,13 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class FabricatorBeginCrafting : AuthenticatedPacket
+    public class FabricatorBeginCrafting : Packet
     {
         public string FabricatorGuid { get; }
         public TechType TechType { get; }
         public float Duration { get; }
 
-        public FabricatorBeginCrafting(string playerId, string fabricatorGuid, TechType techType, float duration) : base(playerId)
+        public FabricatorBeginCrafting(string fabricatorGuid, TechType techType, float duration)
         {
             FabricatorGuid = fabricatorGuid;
             TechType = techType;

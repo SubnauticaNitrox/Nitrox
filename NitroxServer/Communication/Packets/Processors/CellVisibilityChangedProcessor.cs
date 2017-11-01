@@ -9,12 +9,10 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
-        private TcpServer tcpServer;
-        private EntityManager entityManager;
+        private readonly EntityManager entityManager;
 
-        public CellVisibilityChangedProcessor(TcpServer tcpServer, EntityManager entityManager)
+        public CellVisibilityChangedProcessor(EntityManager entityManager)
         {
-            this.tcpServer = tcpServer;
             this.entityManager = entityManager;
         }
         
@@ -31,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
             if (entities.Count > 0)
             {
                 SpawnEntities spawnEntities = new SpawnEntities(entities);
-                tcpServer.SendPacketToPlayer(spawnEntities, player);
+                player.SendPacket(spawnEntities);
                 Console.WriteLine(spawnEntities);
             }
         }

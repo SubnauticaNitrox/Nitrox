@@ -5,7 +5,7 @@ using NitroxModel.DataStructures;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructorBeginCrafting : AuthenticatedPacket
+    public class ConstructorBeginCrafting : Packet
     {
         public string ConstructorGuid { get; }
         public string ConstructedItemGuid { get; }
@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
-        public ConstructorBeginCrafting(string playerId, string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers) : base(playerId)
+        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
             ConstructorGuid = constructorGuid;
             ConstructedItemGuid = constructedItemGuid;

@@ -7,12 +7,12 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     class SimulationOwnershipRequestProcessor : AuthenticatedPacketProcessor<SimulationOwnershipRequest>
     {
-        private readonly TcpServer tcpServer;
+        private readonly PlayerManager playerManager;
         private readonly SimulationOwnership simulationOwnership;
 
-        public SimulationOwnershipRequestProcessor(TcpServer tcpServer, SimulationOwnership simulationOwnership)
+        public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnership simulationOwnership)
         {
-            this.tcpServer = tcpServer;
+            this.playerManager = playerManager;
             this.simulationOwnership = simulationOwnership;
         }
 
@@ -23,7 +23,7 @@ namespace NitroxServer.Communication.Packets.Processors
             if (simulationOwnership.TryToAquireOwnership(ownershipRequest.Guid, player))
             {
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id);
-                tcpServer.SendPacketToAllPlayers(simulationOwnershipChange);
+                playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
                 Log.Debug("Sending: " + simulationOwnershipChange);
             }
         }
