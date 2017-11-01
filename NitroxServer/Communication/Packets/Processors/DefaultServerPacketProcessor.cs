@@ -16,7 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(Movement),
             typeof(VehicleMovement),
             typeof(ItemPosition),
-            typeof(CyclopsChangeColor)
+            typeof(VehicleColorChange)
         };
 
         public DefaultServerPacketProcessor(PlayerManager playerManager)

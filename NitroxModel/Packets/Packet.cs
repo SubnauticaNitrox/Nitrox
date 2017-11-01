@@ -37,7 +37,7 @@ namespace NitroxModel.Packets
                     Type surrogatedType = t.BaseType.GetGenericArguments()[0];
                     surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                    Log.Info("Added surrogate " + surrogate + " for type " + surrogatedType);
+                    Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
                 });
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
