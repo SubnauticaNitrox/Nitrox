@@ -5,12 +5,12 @@ namespace NitroxServer.GameLogic
     public class SimulationOwnership
     {
         Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
-        
+
         //TODO: redistribute upon disconnect
 
-        public bool TryToAquireOwnership(string guid, Player player)
+        public bool TryToAcquire(string guid, Player player)
         {
-            lock(guidsByPlayer)
+            lock (guidsByPlayer)
             {
                 Player owningPlayer;
 
@@ -32,7 +32,7 @@ namespace NitroxServer.GameLogic
 
                 if (guidsByPlayer.TryGetValue(guid, out owningPlayer) && owningPlayer == player)
                 {
-                    guidsByPlayer[guid] = null;
+                    guidsByPlayer.Remove(guid);
                     return true;
                 }
 

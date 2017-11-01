@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 using System.Text;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         public VisibleCell[] Added { get; }
         public VisibleCell[] Removed { get; }
 
-        public CellVisibilityChanged(String playerId, VisibleCell[] added, VisibleCell[] removed)
+        public CellVisibilityChanged(string playerId, VisibleCell[] added, VisibleCell[] removed)
         {
             PlayerId = playerId;
             Added = added;

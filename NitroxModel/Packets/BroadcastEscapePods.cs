@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
     {
         public EscapePodModel[] EscapePods { get; }
 
-        public BroadcastEscapePods(EscapePodModel[] escapePods) : base()
+        public BroadcastEscapePods(EscapePodModel[] escapePods)
         {
             EscapePods = escapePods;
         }

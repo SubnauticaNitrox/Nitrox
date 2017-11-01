@@ -1,5 +1,5 @@
-﻿using NitroxModel.Helper;
-using System;
+﻿using System;
+using NitroxModel.Helper;
 
 namespace NitroxModel.DataStructures
 {
@@ -39,7 +39,7 @@ namespace NitroxModel.DataStructures
             return "[AbsoluteEntityCell Position: " + Position + " BatchId: " + BatchId + " CellId: " + CellId + " ]";
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -49,12 +49,12 @@ namespace NitroxModel.DataStructures
 
             AbsoluteEntityCell cell = (AbsoluteEntityCell)obj;
 
-            return (cell.BatchId.x == this.BatchId.x &&
-                    cell.BatchId.y == this.BatchId.y &&
-                    cell.BatchId.z == this.BatchId.z &&
-                    cell.CellId.x == this.CellId.x &&
-                    cell.CellId.y == this.CellId.y &&
-                    cell.CellId.z == this.CellId.z);
+            return (cell.BatchId.x == BatchId.x &&
+                    cell.BatchId.y == BatchId.y &&
+                    cell.BatchId.z == BatchId.z &&
+                    cell.CellId.x == CellId.x &&
+                    cell.CellId.y == CellId.y &&
+                    cell.CellId.z == CellId.z);
         }
 
         public override int GetHashCode()

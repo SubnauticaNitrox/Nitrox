@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="DataStructures\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
-    <Compile Include="DataStructures\VisibleCell.cs" />
+    <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
@@ -57,20 +57,22 @@
     <Compile Include="DataStructures\OwnedGuid.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
-    <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
-    <Compile Include="Helper\ReflectionHelper.cs" />
+    <Compile Include="DataStructures\VisibleCell.cs" />
     <Compile Include="Helper\Map.cs" />
+    <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
+    <Compile Include="Packets\CellEntities.cs" />
+    <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
@@ -109,12 +111,10 @@
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
-    <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
-    <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />

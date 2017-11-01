@@ -1,25 +1,24 @@
-﻿using NitroxClient.Communication;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Entities
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public Entities(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void BroadcastTransforms(Dictionary<String, GameObject> gameObjectsByGuid)
+        public void BroadcastTransforms(Dictionary<string, GameObject> gameObjectsByGuid)
         {
             EntityTransformUpdates update = new EntityTransformUpdates();
 
-            foreach(KeyValuePair<String, GameObject> gameObjectWithGuid in gameObjectsByGuid)
+            foreach (KeyValuePair<string, GameObject> gameObjectWithGuid in gameObjectsByGuid)
             {
                 GameObject go = gameObjectWithGuid.Value;
 

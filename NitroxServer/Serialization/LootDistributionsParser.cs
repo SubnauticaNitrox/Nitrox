@@ -1,7 +1,7 @@
-﻿using LitJson;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using LitJson;
 
 namespace NitroxServer.Serialization
 {
@@ -15,14 +15,14 @@ namespace NitroxServer.Serialization
          */
         public LootDistributionData GetLootDistributionData()
         {
-            String path = Path.GetFullPath(Path.Combine(Path.GetFullPath("."), @"..\..\..\raw\"));
-            String file = path + "EntityDistributions.json";
+            string path = Path.GetFullPath(Path.Combine(Path.GetFullPath("."), @"..\..\..\raw\"));
+            string file = path + "EntityDistributions.json";
 
-            String json = File.ReadAllText(file);
+            string json = File.ReadAllText(file);
 
             JsonMapper.RegisterImporter<double, float>((double value) => Convert.ToSingle(value));
 
-            Dictionary<string, LootDistributionData.SrcData> result = JsonMapper.ToObject<Dictionary<String, LootDistributionData.SrcData>>(json);
+            Dictionary<string, LootDistributionData.SrcData> result = JsonMapper.ToObject<Dictionary<string, LootDistributionData.SrcData>>(json);
 
             LootDistributionData lootDistributionData = new LootDistributionData();
             lootDistributionData.Initialize(result);

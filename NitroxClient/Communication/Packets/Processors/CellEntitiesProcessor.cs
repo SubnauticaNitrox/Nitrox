@@ -1,19 +1,19 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class CellEntitiesProcessor : ClientPacketProcessor<CellEntities>
     {
-        private PacketSender packetSender;
-        private HashSet<string> alreadySpawnedGuids = new HashSet<string>();
-        
+        private readonly PacketSender packetSender;
+        private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
+
         public CellEntitiesProcessor(PacketSender packetSender)
         {
             this.packetSender = packetSender;
@@ -21,9 +21,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CellEntities packet)
         {
-            foreach(Entity entity in packet.Entities)
+            foreach (Entity entity in packet.Entities)
             {
-                if(!alreadySpawnedGuids.Contains(entity.Guid))
+                if (!alreadySpawnedGuids.Contains(entity.Guid))
                 {
                     SpawnEntity(entity);
                 }

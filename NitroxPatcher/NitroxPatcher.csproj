@@ -76,7 +76,6 @@
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
-    <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
@@ -87,6 +86,7 @@
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
+    <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Persistent\SpawnConsoleCommand_Patch.cs" />
