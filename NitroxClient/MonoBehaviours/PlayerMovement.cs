@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;

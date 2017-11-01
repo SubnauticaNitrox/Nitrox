@@ -1,10 +1,9 @@
 ﻿using NitroxClient.Communication;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -40,7 +39,7 @@ namespace NitroxClient.GameLogic
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
-            Optional<string> waterpark = GetCurrentWaterParkGuid();            
+            Optional<string> waterpark = GetCurrentWaterParkGuid();
             string guid = GuidHelper.GetGuid(gameObject);
             byte[] bytes = SerializationHelper.GetBytes(gameObject);
 
