@@ -1,15 +1,15 @@
-﻿using ProtoBufNet.Meta;
-using System;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using NitroxModel.Logger;
 using ProtoBufNet;
-using System.IO;
+using ProtoBufNet.Meta;
 
 namespace NitroxServer.Serialization
 {
     class ServerProtobufSerializer
     {
-        private RuntimeTypeModel model;
+        private readonly RuntimeTypeModel model;
 
         public ServerProtobufSerializer()
         {
@@ -39,7 +39,7 @@ namespace NitroxServer.Serialization
             model.Add(typeof(UnityEngine.MeshCollider), true);
         }
 
-        private void RegisterAssemblyClasses(String assemblyName)
+        private void RegisterAssemblyClasses(string assemblyName)
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
@@ -57,7 +57,7 @@ namespace NitroxServer.Serialization
         {
             foreach (MemberInfo property in info)
             {
-                foreach (var customAttribute in property.GetCustomAttributes(true))
+                foreach (object customAttribute in property.GetCustomAttributes(true))
                 {
                     if (customAttribute is ProtoBuf.ProtoMemberAttribute)
                     {

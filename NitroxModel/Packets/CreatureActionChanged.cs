@@ -6,13 +6,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CreatureActionChanged : Packet
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public SerializableCreatureAction NewAction { get; }
 
-        public CreatureActionChanged(String guid, SerializableCreatureAction newAction)
+        public CreatureActionChanged(string guid, SerializableCreatureAction newAction)
         {
-            this.Guid = guid;
-            this.NewAction = newAction;
+            Guid = guid;
+            NewAction = newAction;
         }
     }
 }

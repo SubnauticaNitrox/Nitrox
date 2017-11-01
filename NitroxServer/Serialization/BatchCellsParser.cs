@@ -1,13 +1,13 @@
-﻿using System.IO;
-using System;
-using System.Runtime.Serialization;
+﻿using System;
 using System.Collections.Generic;
-using NitroxServer.UnityStubs;
-using NitroxModel.Logger;
-using System.Threading.Tasks;
+using System.IO;
 using System.Linq;
-using NitroxServer.GameLogic.Spawning;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
+using NitroxServer.GameLogic.Spawning;
+using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization
 {
@@ -20,8 +20,8 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        private ServerProtobufSerializer serializer;
-        private Dictionary<String, Type> surrogateTypes = new Dictionary<string, Type>();
+        private readonly ServerProtobufSerializer serializer;
+        private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
         public BatchCellsParser()
         {
@@ -64,7 +64,7 @@ namespace NitroxServer.Serialization
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
-            
+
             ParseFile(batchId, "", "loot-slots", spawnPoints);
             ParseFile(batchId, "", "creature-slots", spawnPoints);
             ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
@@ -75,12 +75,12 @@ namespace NitroxServer.Serialization
             return spawnPoints;
         }
 
-        public void ParseFile(Int3 batchId, String pathPrefix, String suffix, List<EntitySpawnPoint> spawnPoints)
+        public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            String path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
-            String fileName = path + pathPrefix + "batch-cells-" + batchId .x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
+            string path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
+            string fileName = path + pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
 
-            if(!File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
                 return;
             }
@@ -131,7 +131,7 @@ namespace NitroxServer.Serialization
                 }
                 else
                 {
-                    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                    foreach (System.Reflection.Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                     {
                         type = assembly.GetType(componentHeader.TypeName);
 
@@ -142,9 +142,9 @@ namespace NitroxServer.Serialization
                     }
                 }
 
-                var component = FormatterServices.GetUninitializedObject(type);
+                object component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);
-                
+
                 gameObject.AddComponent(component, type);
             }
         }

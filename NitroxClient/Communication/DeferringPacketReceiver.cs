@@ -8,18 +8,16 @@ namespace NitroxClient.Communication
 {
     public class DeferringPacketReceiver
     {
-        private static readonly int EXPIDITED_PACKET_PRIORITY = 999;
-        private static readonly int DEFAULT_PACKET_PRIORITY = 1;
-        private static readonly int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
+        private const int EXPIDITED_PACKET_PRIORITY = 999;
+        private const int DEFAULT_PACKET_PRIORITY = 1;
+        private const int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
-        private Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell;
-        private PriorityQueue<Packet> receivedPackets;
-        private VisibleCells visibleCells;
+        private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
+        private readonly PriorityQueue<Packet> receivedPackets = new PriorityQueue<Packet>();
+        private readonly VisibleCells visibleCells;
 
         public DeferringPacketReceiver(VisibleCells visibleCells)
         {
-            this.deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
-            this.receivedPackets = new PriorityQueue<Packet>();
             this.visibleCells = visibleCells;
         }
 
@@ -59,12 +57,12 @@ namespace NitroxClient.Communication
                 {
                     return false;
                 }
-                
+
                 AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition);
 
                 bool cellLoaded = false;
 
-                for(int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
+                for (int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
                 {
                     VisibleCell visibleCell = new VisibleCell(cell, level);
 
@@ -75,7 +73,7 @@ namespace NitroxClient.Communication
                     }
                 }
 
-                if(!cellLoaded)
+                if (!cellLoaded)
                 {
                     Log.Debug("Action was deferred, cell not loaded (with required lod): " + cell);
                     AddPacketToDeferredMap(playerAction, cell);

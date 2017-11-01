@@ -1,6 +1,6 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPrefix(harmony, TARGET_METHOD);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

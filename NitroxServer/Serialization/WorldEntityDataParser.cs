@@ -15,11 +15,11 @@ namespace NitroxServer.Serialization
          * eventually want to replace this implementation with something that can automatically
          * mine this data from the subnautica resources.assets file.
          */
-        public Dictionary<String, WorldEntityInfo> GetWorldEntitiesByClassId()
+        public Dictionary<string, WorldEntityInfo> GetWorldEntitiesByClassId()
         {
-            Dictionary<String, WorldEntityInfo> worldEntitiesByClassId = new Dictionary<String, WorldEntityInfo>();
-            String path = Path.GetFullPath(Path.Combine(Path.GetFullPath("."), @"..\..\..\"));
-            String file = path + @"\raw\worlddata.txt";
+            Dictionary<string, WorldEntityInfo> worldEntitiesByClassId = new Dictionary<string, WorldEntityInfo>();
+            string path = Path.GetFullPath(Path.Combine(Path.GetFullPath("."), @"..\..\..\"));
+            string file = path + @"\raw\worlddata.txt";
 
             StreamReader reader = File.OpenText(file);
 
@@ -30,7 +30,7 @@ namespace NitroxServer.Serialization
             {
                 string[] items = line.Split(' ');
 
-                switch(counter)
+                switch (counter)
                 {
                     case 0:
                         nextEntityInfo = new WorldEntityInfo();
@@ -46,17 +46,17 @@ namespace NitroxServer.Serialization
                         nextEntityInfo.slotType = (EntitySlot.Type)Enum.Parse(typeof(EntitySlot.Type), items[1]);
                         break;
                     case 4:
-                        nextEntityInfo.prefabZUp = Boolean.Parse(items[1]);
+                        nextEntityInfo.prefabZUp = bool.Parse(items[1]);
                         break;
                     case 5:
                         nextEntityInfo.cellLevel = (LargeWorldEntity.CellLevel)Enum.Parse(typeof(LargeWorldEntity.CellLevel), items[1]);
                         break;
                     case 6:
-                        String[] dimensions = items[1].Split('-');
+                        string[] dimensions = items[1].Split('-');
                         nextEntityInfo.localScale = new UnityEngine.Vector3(float.Parse(dimensions[0]), float.Parse(dimensions[1]), float.Parse(dimensions[2]));
                         break;
                 }
-                
+
                 counter++;
 
                 if (counter == 7)

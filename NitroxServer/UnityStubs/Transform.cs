@@ -16,9 +16,9 @@ namespace NitroxServer.UnityStubs
 
         public Transform(Vector3 position, Vector3 scale, Quaternion rotation)
         {
-            this.Position = position;
-            this.Scale = scale;
-            this.Rotation = rotation;
+            Position = position;
+            Scale = scale;
+            Rotation = rotation;
         }
 
         public override string ToString()
