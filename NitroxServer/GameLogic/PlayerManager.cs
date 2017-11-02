@@ -1,6 +1,7 @@
 ﻿using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NitroxServer.GameLogic
 {
@@ -8,6 +9,14 @@ namespace NitroxServer.GameLogic
     {
         private readonly Dictionary<Connection, Player> playersByConnection = new Dictionary<Connection, Player>();
         
+        public List<Player> GetPlayers()
+        {
+            lock (playersByConnection)
+            {
+                return playersByConnection.Values.ToList();
+            }
+        }
+
         public Player PlayerAuthenticated(Connection connection, string playerId)
         {
             Player player = new Player(playerId, connection);

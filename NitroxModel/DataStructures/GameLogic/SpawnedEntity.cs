@@ -7,7 +7,7 @@ namespace NitroxModel.GameLogic
     [Serializable]
     public class SpawnedEntity
     {
-        public Vector3 Position { get; }
+        public Vector3 Position { get; set; }
         public TechType TechType { get; }
         public String Guid { get; }
         public int Level { get; }
