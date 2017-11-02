@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string Guid { get; }
         public float ConstructionAmount { get; }
 
-        public ConstructionAmountChanged(string playerId, Vector3 itemPosition, string guid, float constructionAmount) : base(playerId, itemPosition)
+        public ConstructionAmountChanged(Vector3 itemPosition, string guid, float constructionAmount) : base(itemPosition)
         {
             Guid = guid;
             ConstructionAmount = constructionAmount;
@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ConstructionAmountChanged( - playerId: " + PlayerId + " Guid:" + Guid + " ConstructionAmount: " + ConstructionAmount + "]";
+            return "[ConstructionAmountChanged Guid:" + Guid + " ConstructionAmount: " + ConstructionAmount + "]";
         }
     }
 }

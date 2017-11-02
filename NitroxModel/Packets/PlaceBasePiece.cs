@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         public Vector3 CameraPosition { get; }
         public Quaternion CameraRotation { get; }
 
-        public PlaceBasePiece(string playerId, string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentBaseGuid) : base(playerId, itemPosition)
+        public PlaceBasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentBaseGuid) : base(itemPosition)
         {
             Guid = guid;
             ItemPosition = itemPosition;

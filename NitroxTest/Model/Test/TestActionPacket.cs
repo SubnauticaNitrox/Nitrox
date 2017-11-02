@@ -7,7 +7,7 @@ namespace NitroxTest.Model
     [Serializable]
     public class TestActionPacket : PlayerActionPacket
     {
-        public TestActionPacket(string playerId, Vector3 eventPosition) : base(playerId, eventPosition)
+        public TestActionPacket(Vector3 eventPosition) : base(eventPosition)
         {
         }
     }

@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public string Guid { get; }
         public Optional<string> NewBaseCreatedGuid { get; }
 
-        public ConstructionCompleted(string playerId, Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(playerId, itemPosition)
+        public ConstructionCompleted(Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(itemPosition)
         {
             Guid = guid;
             NewBaseCreatedGuid = newBaseCreatedGuid;
@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ConstructionCompleted( - playerId: " + PlayerId + " Guid: " + Guid + " NewBaseCreatedGuid: " + NewBaseCreatedGuid + "]";
+            return "[ConstructionCompleted Guid: " + Guid + " NewBaseCreatedGuid: " + NewBaseCreatedGuid + "]";
         }
     }
 }

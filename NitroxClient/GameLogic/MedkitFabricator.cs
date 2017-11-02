@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Packets;
 using NitroxModel.Helper;
-using System;
 using UnityEngine;
 using NitroxClient.GameLogic.Helper;
 
@@ -22,7 +21,7 @@ namespace NitroxClient.GameLogic
             string guid = GuidHelper.GetGuid(medicalCabinet.gameObject);
             bool doorOpen = (bool)medicalCabinet.ReflectionGet("doorOpen");
 
-            MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(packetSender.PlayerId, guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
+            MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
             packetSender.Send(cabinetClicked);
         }
     }

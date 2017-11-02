@@ -52,7 +52,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInLoadedCell()
         {
-            Packet packet = new TestActionPacket(PLAYER_ID, loadedActionPosition);
+            Packet packet = new TestActionPacket(loadedActionPosition);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -64,7 +64,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInUnloadedCell()
         {
-            Packet packet = new TestActionPacket(PLAYER_ID, unloadedActionPosition);
+            Packet packet = new TestActionPacket(unloadedActionPosition);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -75,7 +75,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void PacketPrioritizedAfterBeingDeferred()
         {
-            Packet packet1 = new TestActionPacket(PLAYER_ID, unloadedActionPosition);
+            Packet packet1 = new TestActionPacket(unloadedActionPosition);
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);

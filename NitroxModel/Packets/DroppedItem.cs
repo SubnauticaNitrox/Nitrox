@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public Vector3 ItemPosition { get; }
         public byte[] Bytes { get; }
 
-        public DroppedItem(string playerId, string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(playerId, itemPosition)
+        public DroppedItem(string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(itemPosition)
         {
             Guid = guid;
             WaterParkGuid = waterParkGuid;
@@ -24,7 +24,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[DroppedItem - playerId: " + PlayerId + " guid: " + Guid + " WaterParkGuid: " + WaterParkGuid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
+            return "[DroppedItem - guid: " + Guid + " WaterParkGuid: " + WaterParkGuid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
         }
     }
 }
