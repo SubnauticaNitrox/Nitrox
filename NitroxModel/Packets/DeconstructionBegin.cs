@@ -8,14 +8,14 @@ namespace NitroxModel.Packets
     {
         public string Guid { get; }
 
-        public DeconstructionBegin(string playerId, Vector3 itemPosition, string guid) : base(playerId, itemPosition)
+        public DeconstructionBegin(Vector3 itemPosition, string guid) : base(itemPosition)
         {
             Guid = guid;
         }
 
         public override string ToString()
         {
-            return "[DeconstructionBegin playerId: " + PlayerId + " Guid: " + Guid + "]";
+            return "[DeconstructionBegin Guid: " + Guid + "]";
         }
     }
 }

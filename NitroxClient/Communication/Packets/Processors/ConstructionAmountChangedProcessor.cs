@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructionAmountChanged amountChanged)
         {
-            Log.Debug("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.PlayerId + " " + amountChanged.ConstructionAmount);
+            Log.Debug("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.ConstructionAmount);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);
             Constructable constructable = constructing.GetComponent<Constructable>();

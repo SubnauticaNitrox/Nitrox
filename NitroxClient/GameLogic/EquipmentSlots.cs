@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -21,7 +20,7 @@ namespace NitroxClient.GameLogic
             Vector3 ownerPos = owner.transform.position;
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
             
-            EquipmentAddItem equip = new EquipmentAddItem(packetSender.PlayerId, ownerGuid, slot, bytes, ownerPos);
+            EquipmentAddItem equip = new EquipmentAddItem(ownerGuid, slot, bytes, ownerPos);
             packetSender.Send(equip);
         }
 
@@ -31,7 +30,7 @@ namespace NitroxClient.GameLogic
             string ownerGuid = GuidHelper.GetGuid(owner);
             Vector3 ownerPos = owner.transform.position;
 
-            EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(packetSender.PlayerId, ownerGuid, slot, itemGuid, ownerPos);
+            EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, ownerPos);
             packetSender.Send(removeEquipment);
         }
     }

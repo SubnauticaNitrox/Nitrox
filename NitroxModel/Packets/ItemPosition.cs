@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
 
         public string Guid { get; }
 
-        public ItemPosition(string playerId, string guid, Vector3 position, Quaternion rotation) : base(playerId, position)
+        public ItemPosition(string guid, Vector3 position, Quaternion rotation) : base(position)
         {
             Guid = guid;
             Position = position;
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ItemPosition - playerId: " + PlayerId + " position: " + Position + " Rotation: " + Rotation + " guid: " + Guid + "]";
+            return "[ItemPosition position: " + Position + " Rotation: " + Rotation + " guid: " + Guid + "]";
         }
     }
 }

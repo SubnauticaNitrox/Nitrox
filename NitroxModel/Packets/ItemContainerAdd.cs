@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string OwnerGuid { get; }
         public byte[] ItemData { get; }
 
-        public ItemContainerAdd(string playerId, string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(playerId, ownerPositon)
+        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon)
         {
             OwnerGuid = ownerGuid;
             ItemData = itemData;
@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ItemContainerAdd - playerId: " + PlayerId + " OwnerGuid: " + OwnerGuid + " Total Bytes: " + ItemData.Length + "]";
+            return "[ItemContainerAdd OwnerGuid: " + OwnerGuid + " Total Bytes: " + ItemData.Length + "]";
         }
     }
 }

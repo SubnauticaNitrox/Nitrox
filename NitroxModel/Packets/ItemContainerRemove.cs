@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string OwnerGuid { get; }
         public string ItemGuid { get; }
 
-        public ItemContainerRemove(string playerId, string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(playerId, ownerPositon)
+        public ItemContainerRemove(string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(ownerPositon)
         {
             OwnerGuid = ownerGuid;
             ItemGuid = itemGuid;
@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[ItemContainerRemove - playerId: " + PlayerId + " OwnerGuid: " + OwnerGuid + " ItemGuid: " + ItemGuid + "]";
+            return "[ItemContainerRemove OwnerGuid: " + OwnerGuid + " ItemGuid: " + ItemGuid + "]";
         }
     }
 }

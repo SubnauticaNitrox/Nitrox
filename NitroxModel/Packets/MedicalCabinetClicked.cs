@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         public bool HasMedKit { get; }
         public float NextSpawnTime { get; }
 
-        public MedicalCabinetClicked(string playerId, string guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(playerId, actionPosition)
+        public MedicalCabinetClicked(string guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(actionPosition)
         {
             Guid = guid;
             DoorOpen = doorOpen;
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[MedicalCabinetClicked - playerId: " + PlayerId + " guid: " + Guid + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
+            return "[MedicalCabinetClicked guid: " + Guid + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
         }
     }
 }
