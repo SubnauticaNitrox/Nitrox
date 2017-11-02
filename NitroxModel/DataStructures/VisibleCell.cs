@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.DataStructures
 {
@@ -7,7 +8,13 @@ namespace NitroxModel.DataStructures
     {
         public AbsoluteEntityCell AbsoluteCellEntity { get; }
         public int Level { get; }
-        
+
+        public VisibleCell(Vector3 worldSpace, int level)
+        {
+            AbsoluteCellEntity = new AbsoluteEntityCell(worldSpace);
+            Level = level;
+        }
+
         public VisibleCell(Int3 batchId, Int3 cellId, int level)
         {
             AbsoluteCellEntity = new AbsoluteEntityCell(batchId, cellId);
@@ -25,7 +32,7 @@ namespace NitroxModel.DataStructures
             return "[VisibleCell AbsoluteCellEntity: " + AbsoluteCellEntity.Position + " Level: " + Level + "]";
         }
 
-        public override bool Equals(Object obj)
+        public override bool Equals(System.Object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())

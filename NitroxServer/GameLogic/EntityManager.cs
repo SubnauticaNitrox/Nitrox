@@ -1,21 +1,71 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
+using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic
 {
     public class EntityManager
     {
         private Dictionary<AbsoluteEntityCell, List<SpawnedEntity>> entitiesByAbsoluteCell;
-        private Dictionary<String, SpawnedEntity> entitiesByGuid;
+        private Dictionary<string, SpawnedEntity> entitiesByGuid;
 
         public EntityManager(EntitySpawner entitySpawner)
         {
             entitiesByAbsoluteCell = entitySpawner.GetEntitiesByAbsoluteCell();
             entitiesByGuid = entitiesByAbsoluteCell.Values.SelectMany(l => l).ToDictionary(e => e.Guid, e => e);
+        }
+
+        public SpawnedEntity UpdateEntityPosition(string guid, Vector3 position)
+        {
+            SpawnedEntity entity = GetEntityByGuid(guid);
+            AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
+            AbsoluteEntityCell newCell = new AbsoluteEntityCell(position);
+
+            if(oldCell != newCell)
+            {
+                lock (entitiesByAbsoluteCell)
+                {
+                    List<SpawnedEntity> oldList;
+
+                    if (entitiesByAbsoluteCell.TryGetValue(oldCell, out oldList))
+                    {
+                        oldList.Remove(entity);
+                    }
+
+                    List<SpawnedEntity> newList;
+
+                    if (!entitiesByAbsoluteCell.TryGetValue(newCell, out newList))
+                    {
+                        newList = new List<SpawnedEntity>();
+                        entitiesByAbsoluteCell[newCell] = newList;
+                    }
+
+                    newList.Add(entity);
+                }
+            }
+
+            entity.Position = position;
+
+            return entity;
+        }
+
+        public SpawnedEntity GetEntityByGuid(string guid)
+        {
+            SpawnedEntity entity = null;
+
+            lock (entitiesByGuid)
+            {
+                entitiesByGuid.TryGetValue(guid, out entity);
+            }
+
+            Validate.NotNull(entity);
+
+            return entity;
         }
 
         public List<SpawnedEntity> GetVisibleEntities(VisibleCell[] cells)
@@ -26,13 +76,16 @@ namespace NitroxServer.GameLogic
             {
                 List<SpawnedEntity> cellEntities;
 
-                if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out cellEntities))
+                lock (entitiesByAbsoluteCell)
                 {
-                    foreach (SpawnedEntity entity in cellEntities)
+                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out cellEntities))
                     {
-                        if (cell.Level <= entity.Level)
+                        foreach (SpawnedEntity entity in cellEntities)
                         {
-                            entities.Add(entity);
+                            if (cell.Level <= entity.Level)
+                            {
+                                entities.Add(entity);
+                            }
                         }
                     }
                 }
@@ -47,13 +100,16 @@ namespace NitroxServer.GameLogic
             {
                 List<SpawnedEntity> entities;
 
-                if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                lock (entitiesByAbsoluteCell)
                 {
-                    foreach (SpawnedEntity entity in entities)
+                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
                     {
-                        if (cell.Level <= entity.Level && entity.SimulatingPlayerId.IsEmpty())
+                        foreach (SpawnedEntity entity in entities)
                         {
-                            entity.SimulatingPlayerId = Optional<String>.Of(playerId);
+                            if (cell.Level <= entity.Level && entity.SimulatingPlayerId.IsEmpty())
+                            {
+                                entity.SimulatingPlayerId = Optional<String>.Of(playerId);
+                            }
                         }
                     }
                 }
@@ -66,13 +122,16 @@ namespace NitroxServer.GameLogic
             {
                 List<SpawnedEntity> entities;
 
-                if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                lock (entitiesByAbsoluteCell)
                 {
-                    foreach (SpawnedEntity entity in entities)
+                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
                     {
-                        if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Equals(playerId))
+                        foreach (SpawnedEntity entity in entities)
                         {
-                            entity.SimulatingPlayerId = Optional<String>.Empty();
+                            if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Equals(playerId))
+                            {
+                                entity.SimulatingPlayerId = Optional<String>.Empty();
+                            }
                         }
                     }
                 }
