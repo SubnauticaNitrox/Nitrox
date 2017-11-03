@@ -11,8 +11,8 @@ namespace NitroxServer.GameLogic
 {
     public class EntityManager
     {
-        private Dictionary<AbsoluteEntityCell, List<SpawnedEntity>> entitiesByAbsoluteCell;
-        private Dictionary<string, SpawnedEntity> entitiesByGuid;
+        private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
+        private Dictionary<string, Entity> entitiesByGuid;
 
         public EntityManager(EntitySpawner entitySpawner)
         {
@@ -20,9 +20,9 @@ namespace NitroxServer.GameLogic
             entitiesByGuid = entitiesByAbsoluteCell.Values.SelectMany(l => l).ToDictionary(e => e.Guid, e => e);
         }
 
-        public SpawnedEntity UpdateEntityPosition(string guid, Vector3 position)
+        public Entity UpdateEntityPosition(string guid, Vector3 position)
         {
-            SpawnedEntity entity = GetEntityByGuid(guid);
+            Entity entity = GetEntityByGuid(guid);
             AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
             AbsoluteEntityCell newCell = new AbsoluteEntityCell(position);
 
@@ -30,18 +30,18 @@ namespace NitroxServer.GameLogic
             {
                 lock (entitiesByAbsoluteCell)
                 {
-                    List<SpawnedEntity> oldList;
+                    List<Entity> oldList;
 
                     if (entitiesByAbsoluteCell.TryGetValue(oldCell, out oldList))
                     {
                         oldList.Remove(entity);
                     }
 
-                    List<SpawnedEntity> newList;
+                    List<Entity> newList;
 
                     if (!entitiesByAbsoluteCell.TryGetValue(newCell, out newList))
                     {
-                        newList = new List<SpawnedEntity>();
+                        newList = new List<Entity>();
                         entitiesByAbsoluteCell[newCell] = newList;
                     }
 
@@ -54,9 +54,9 @@ namespace NitroxServer.GameLogic
             return entity;
         }
 
-        public SpawnedEntity GetEntityByGuid(string guid)
+        public Entity GetEntityByGuid(string guid)
         {
-            SpawnedEntity entity = null;
+            Entity entity = null;
 
             lock (entitiesByGuid)
             {
@@ -68,19 +68,19 @@ namespace NitroxServer.GameLogic
             return entity;
         }
 
-        public List<SpawnedEntity> GetVisibleEntities(VisibleCell[] cells)
+        public List<Entity> GetVisibleEntities(VisibleCell[] cells)
         {
-            List<SpawnedEntity> entities = new List<SpawnedEntity>();
+            List<Entity> entities = new List<Entity>();
 
             foreach (VisibleCell cell in cells)
             {
-                List<SpawnedEntity> cellEntities;
+                List<Entity> cellEntities;
 
                 lock (entitiesByAbsoluteCell)
                 {
                     if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out cellEntities))
                     {
-                        foreach (SpawnedEntity entity in cellEntities)
+                        foreach (Entity entity in cellEntities)
                         {
                             if (cell.Level <= entity.Level)
                             {
@@ -98,13 +98,13 @@ namespace NitroxServer.GameLogic
         {
             foreach (VisibleCell cell in added)
             {
-                List<SpawnedEntity> entities;
+                List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
                     if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
                     {
-                        foreach (SpawnedEntity entity in entities)
+                        foreach (Entity entity in entities)
                         {
                             if (cell.Level <= entity.Level && entity.SimulatingPlayerId.IsEmpty())
                             {
@@ -120,13 +120,13 @@ namespace NitroxServer.GameLogic
         {
             foreach (VisibleCell cell in removed)
             {
-                List<SpawnedEntity> entities;
+                List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
                     if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
                     {
-                        foreach (SpawnedEntity entity in entities)
+                        foreach (Entity entity in entities)
                         {
                             if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Equals(playerId))
                             {

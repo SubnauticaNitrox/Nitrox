@@ -5,20 +5,20 @@ using System.Collections.Generic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class SpawnEntities : Packet
+    public class CellEntities : Packet
     {
-        public List<SpawnedEntity> Entities { get; }
+        public List<Entity> Entities { get; }
 
-        public SpawnEntities(List<SpawnedEntity> entities) : base()
+        public CellEntities(List<Entity> entities) : base()
         {
             Entities = entities;
         }
 
         public override string ToString()
         {
-            String toString = "[SpawnEntities ";
+            String toString = "[CellEntities ";
 
-            foreach(SpawnedEntity entity in Entities)
+            foreach(Entity entity in Entities)
             {
                 toString += entity;
             }

@@ -24,13 +24,13 @@ namespace NitroxServer.Communication.Packets.Processors
             entityManager.AllowEntitySimulationFor(player.Id, packet.Added);
             entityManager.RevokeEntitySimulationFor(player.Id, packet.Removed);
 
-            List<SpawnedEntity> entities = entityManager.GetVisibleEntities(packet.Added);
+            List<Entity> entities = entityManager.GetVisibleEntities(packet.Added);
             
             if (entities.Count > 0)
             {
-                SpawnEntities spawnEntities = new SpawnEntities(entities);
-                player.SendPacket(spawnEntities);
-                Console.WriteLine(spawnEntities);
+                CellEntities cellEntities = new CellEntities(entities);
+                player.SendPacket(cellEntities);
+                Console.WriteLine(cellEntities);
             }
         }
     }

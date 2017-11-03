@@ -4,25 +4,24 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class SpawnEntitiesProcessor : ClientPacketProcessor<SpawnEntities>
+    class CellEntitiesProcessor : ClientPacketProcessor<CellEntities>
     {
         private PacketSender packetSender;
-        private HashSet<String> alreadySpawnedGuids = new HashSet<String>();
+        private HashSet<string> alreadySpawnedGuids = new HashSet<string>();
         
-        public SpawnEntitiesProcessor(PacketSender packetSender)
+        public CellEntitiesProcessor(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public override void Process(SpawnEntities packet)
+        public override void Process(CellEntities packet)
         {
-            foreach(SpawnedEntity entity in packet.Entities)
+            foreach(Entity entity in packet.Entities)
             {
                 if(!alreadySpawnedGuids.Contains(entity.Guid))
                 {
@@ -33,15 +32,13 @@ namespace NitroxClient.Communication.Packets.Processors
                         GuidHelper.SetNewGuid(gameObject, entity.Guid);
                         gameObject.SetActive(true);
 
-                        Log.Debug("Received spawned entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
+                        Log.Debug("Received cell entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
 
                         if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Get() == packetSender.PlayerId)
                         {
                             Log.Debug("Simulating positioning of: " + entity.Guid);
                             EntityPositionBroadcaster.WatchEntity(entity.Guid, gameObject);
                         }
-
-                        alreadySpawnedGuids.Add(entity.Guid);
                     }
 
                     alreadySpawnedGuids.Add(entity.Guid);

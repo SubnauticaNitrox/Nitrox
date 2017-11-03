@@ -45,7 +45,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate update in updates)
             {
-                SpawnedEntity entity = entityManager.UpdateEntityPosition(update.Guid, update.Position);
+                Entity entity = entityManager.UpdateEntityPosition(update.Guid, update.Position);
                 VisibleCell visibleCell = new VisibleCell(entity.Position, entity.Level);
 
                 foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
