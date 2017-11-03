@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
 
         public SimulationOwnershipChange(string guid, string owningPlayerId) : base()
         {
-            OwnedGuids.Add(new OwnedGuid(guid, owningPlayerId));
+            OwnedGuids.Add(new OwnedGuid(guid, owningPlayerId, false));
         }
 
         public SimulationOwnershipChange(List<OwnedGuid> ownedGuids) : base()

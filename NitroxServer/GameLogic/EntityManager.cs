@@ -94,7 +94,7 @@ namespace NitroxServer.GameLogic
             return entities;
         }
 
-        public void AllowEntitySimulationFor(String playerId, VisibleCell[] added)
+        public void AssignEntitySimulation(String playerId, VisibleCell[] added)
         {
             foreach (VisibleCell cell in added)
             {
@@ -116,8 +116,10 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void RevokeEntitySimulationFor(String playerId, VisibleCell[] removed)
+        public List<Entity> RevokeEntitySimulationFor(String playerId, VisibleCell[] removed)
         {
+            List<Entity> revokedEntities = new List<Entity>();
+
             foreach (VisibleCell cell in removed)
             {
                 List<Entity> entities;
@@ -128,14 +130,17 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Equals(playerId))
+                            if (entity.Level <= cell.Level && entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Get().Equals(playerId))
                             {
                                 entity.SimulatingPlayerId = Optional<String>.Empty();
+                                revokedEntities.Add(entity);
                             }
                         }
                     }
                 }
             }
+
+            return revokedEntities;
         }
     }
 }
