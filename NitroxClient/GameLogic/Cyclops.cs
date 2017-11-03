@@ -1,7 +1,5 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Packets;
-using System;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -53,18 +51,6 @@ namespace NitroxClient.GameLogic
         public void ActivateShield(string guid)
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(guid);
-            packetSender.Send(packet);
-        }
-
-        public void ChangeName(string guid, string name)
-        {
-            CyclopsChangeName packet = new CyclopsChangeName(guid, name);
-            packetSender.Send(packet);
-        }
-
-        public void ChangeColor(string guid, int index, Vector3 hsb, Color color)
-        {
-            CyclopsChangeColor packet = new CyclopsChangeColor(packetSender.PlayerId, index, guid, hsb, color);
             packetSender.Send(packet);
         }
     }

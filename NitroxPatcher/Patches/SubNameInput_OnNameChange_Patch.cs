@@ -1,9 +1,11 @@
-﻿using Harmony;
+﻿using System;
+using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
-using System;
-using System.Reflection;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -15,10 +17,24 @@ namespace NitroxPatcher.Patches
         public static void Postfix(SubNameInput __instance)
         {
             SubName subname = (SubName)__instance.ReflectionGet("target");
-            if (subname != null && Player.main.GetCurrentSub() != null)
+            if (subname != null)
             {
-                string guid = GuidHelper.GetGuid(Player.main.GetCurrentSub().gameObject);
-                Multiplayer.Logic.Cyclops.ChangeName(guid, subname.GetName());
+                GameObject parentVehicle;
+
+                // This patch works for the vehicles as well as the cyclops; this has to be found for a proper and synced guid.
+                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
+                if (subRoot)
+                {
+                    parentVehicle = subRoot.gameObject;
+                }
+                else
+                {
+                    parentVehicle = subname.GetComponent<Vehicle>().gameObject;
+                }
+
+                string guid = GuidHelper.GetGuid(parentVehicle);
+                VehicleNameChange packet = new VehicleNameChange(guid, subname.GetName());
+                Multiplayer.PacketSender.Send(packet);
             }
         }
 

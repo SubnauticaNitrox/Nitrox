@@ -55,6 +55,7 @@ namespace NitroxPatcher
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
             DevConsole.disableConsole = false;
+            UnityEngine.Application.runInBackground = true;
         }
 
         public static void Apply()
@@ -62,7 +63,9 @@ namespace NitroxPatcher
             Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
 
             if (isApplied)
+            {
                 return;
+            }
 
             patches.ForEach(patch =>
             {
@@ -78,7 +81,9 @@ namespace NitroxPatcher
             Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
 
             if (!isApplied)
+            {
                 return;
+            }
 
             patches.ForEach(patch =>
             {

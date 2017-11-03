@@ -3,12 +3,12 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CyclopsChangeName : Packet
+    public class VehicleNameChange : Packet
     {
         public string Guid { get; }
         public string Name { get; }
 
-        public CyclopsChangeName(string guid, string name)
+        public VehicleNameChange(string guid, string name)
         {
             Guid = guid;
             Name = name;
@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[CyclopsChangeName Guid: " + Guid + " Name: " + Name + "]";
+            return "[VehicleNameChange Guid: " + Guid + " Name: " + Name + "]";
         }
     }
 }
