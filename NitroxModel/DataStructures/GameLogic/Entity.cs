@@ -5,7 +5,7 @@ using NitroxModel.DataStructures.Util;
 namespace NitroxModel.GameLogic
 {
     [Serializable]
-    public class SpawnedEntity
+    public class Entity
     {
         public Vector3 Position { get; set; }
         public TechType TechType { get; }
@@ -13,7 +13,7 @@ namespace NitroxModel.GameLogic
         public int Level { get; }
         public Optional<String> SimulatingPlayerId { get; set; }
 
-        public SpawnedEntity(Vector3 position, TechType techType, String guid, int level, Optional<String> simulatingPlayerId)
+        public Entity(Vector3 position, TechType techType, String guid, int level, Optional<String> simulatingPlayerId)
         {
             this.Position = position;
             this.TechType = techType;
@@ -24,7 +24,7 @@ namespace NitroxModel.GameLogic
 
         public override string ToString()
         {
-            return "[SpawnedEntity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " SimulatingPlayerId: " + SimulatingPlayerId + " ]";
+            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " SimulatingPlayerId: " + SimulatingPlayerId + " ]";
         }
     }
 }
