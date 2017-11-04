@@ -11,11 +11,18 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
     {
+        private readonly PacketSender packetSender;
+
+        public SimulationOwnershipChangeProcessor(PacketSender packetSender)
+        {
+            this.packetSender = packetSender;
+        }
+
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
             foreach(OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
             {
-                if (ownedGuid.IsEntity)
+                if (packetSender.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
                 {
                     SimulateEntity(ownedGuid);
                 }

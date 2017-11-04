@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
@@ -32,11 +31,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     UpdateEntityPosition(entity);
                 }
-
-                if(entity.SimulatingPlayerId.IsPresent())
-                {
-                    Multiplayer.Logic.SimulationOwnership.AddOwnedGuid(entity.Guid, entity.SimulatingPlayerId.Get());
-                }
             }
         }
 
@@ -50,12 +44,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 gameObject.SetActive(true);
 
                 Log.Debug("Received cell entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
-
-                if (entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Get() == packetSender.PlayerId)
-                {
-                    Log.Debug("Simulating positioning of: " + entity.Guid);
-                    EntityPositionBroadcaster.WatchEntity(entity.Guid, gameObject);
-                }
             }
 
             alreadySpawnedGuids.Add(entity.Guid);

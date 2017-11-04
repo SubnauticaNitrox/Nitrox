@@ -11,11 +11,14 @@ namespace NitroxServer.GameLogic
 {
     public class EntityManager
     {
-        private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
-        private Dictionary<string, Entity> entitiesByGuid;
+        private readonly SimulationOwnership simulationOwnership;
+        private readonly Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
+        private readonly Dictionary<string, Entity> entitiesByGuid;
 
-        public EntityManager(EntitySpawner entitySpawner)
+        public EntityManager(EntitySpawner entitySpawner, SimulationOwnership simulationOwnership)
         {
+            this.simulationOwnership = simulationOwnership;
+
             entitiesByAbsoluteCell = entitySpawner.GetEntitiesByAbsoluteCell();
             entitiesByGuid = entitiesByAbsoluteCell.Values.SelectMany(l => l).ToDictionary(e => e.Guid, e => e);
         }
@@ -94,7 +97,7 @@ namespace NitroxServer.GameLogic
             return entities;
         }
 
-        public List<Entity> AssignEntitySimulation(String playerId, VisibleCell[] added)
+        public List<Entity> AssignEntitySimulation(Player player, VisibleCell[] added)
         {
             List<Entity> assignedEntities = new List<Entity>();
 
@@ -108,9 +111,8 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (cell.Level <= entity.Level && entity.SimulatingPlayerId.IsEmpty())
+                            if (cell.Level <= entity.Level && simulationOwnership.TryToAquireOwnership(entity.Guid, player))
                             {
-                                entity.SimulatingPlayerId = Optional<String>.Of(playerId);
                                 assignedEntities.Add(entity);
                             }
                         }
@@ -121,7 +123,7 @@ namespace NitroxServer.GameLogic
             return assignedEntities;
         }
 
-        public List<Entity> RevokeEntitySimulationFor(String playerId, VisibleCell[] removed)
+        public List<Entity> RevokeEntitySimulationFor(Player player, VisibleCell[] removed)
         {
             List<Entity> revokedEntities = new List<Entity>();
 
@@ -135,9 +137,8 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (entity.Level <= cell.Level && entity.SimulatingPlayerId.IsPresent() && entity.SimulatingPlayerId.Get().Equals(playerId))
+                            if (entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
                             {
-                                entity.SimulatingPlayerId = Optional<String>.Empty();
                                 revokedEntities.Add(entity);
                             }
                         }

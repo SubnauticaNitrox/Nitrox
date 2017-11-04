@@ -24,13 +24,13 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             player.AddCells(packet.Added);
             player.RemoveCells(packet.Removed);
+            
+            SendNewlyVisibleEntities(player, packet.Added);
 
             List<OwnedGuid> ownershipChanges = new List<OwnedGuid>();
-            AssignLoadedCellEntitySimulation(player.Id, packet.Added, ownershipChanges);
+            AssignLoadedCellEntitySimulation(player, packet.Added, ownershipChanges);
             ReassignRemovedCellEntitySimulation(player, packet.Removed, ownershipChanges);
             BroadcastSimulationChanges(ownershipChanges);
-
-            SendNewlyVisibleEntities(player, packet.Added);
         }
         
         private void SendNewlyVisibleEntities(Player player, VisibleCell[] visibleCells)
@@ -44,19 +44,19 @@ namespace NitroxServer.Communication.Packets.Processors
             }
         }
 
-        private void AssignLoadedCellEntitySimulation(String playerId, VisibleCell[] addedCells, List<OwnedGuid> ownershipChanges)
+        private void AssignLoadedCellEntitySimulation(Player player, VisibleCell[] addedCells, List<OwnedGuid> ownershipChanges)
         {
-            List<Entity> entities = entityManager.AssignEntitySimulation(playerId, addedCells);
+            List<Entity> entities = entityManager.AssignEntitySimulation(player, addedCells);
 
             foreach (Entity entity in entities)
             {
-                ownershipChanges.Add(new OwnedGuid(entity.Guid, playerId, true));
+                ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
             }
         }
 
         private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, VisibleCell[] removedCells, List<OwnedGuid> ownershipChanges)
         {
-            List<Entity> revokedEntities = entityManager.RevokeEntitySimulationFor(sendingPlayer.Id, removedCells);
+            List<Entity> revokedEntities = entityManager.RevokeEntitySimulationFor(sendingPlayer, removedCells);
             
             foreach (Entity entity in revokedEntities)
             {
