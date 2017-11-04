@@ -19,7 +19,10 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
                 
-                Multiplayer.Logic.Entities.BroadcastTransforms(watchingEntitiesByGuid);
+                if (watchingEntitiesByGuid.Count > 0)
+                {
+                    Multiplayer.Logic.Entities.BroadcastTransforms(watchingEntitiesByGuid);
+                }
             }
         }
 

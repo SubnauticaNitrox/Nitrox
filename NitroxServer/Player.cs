@@ -59,5 +59,28 @@ namespace NitroxServer
                 connection.SendPacket(packet, null);
             }
         }
+
+        public override bool Equals(System.Object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Player player = (Player)obj;
+
+            return (player.Id == this.Id);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 269;
+                hash = hash * 23 + this.Id.GetHashCode();
+                return hash;
+            }
+        }
     }
 }

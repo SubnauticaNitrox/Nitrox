@@ -91,10 +91,9 @@ namespace NitroxServer.GameLogic
                     for(int i = 0; i < selectedPrefab.count; i++)
                     {
                         Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
-                                                                        worldEntityInfo.techType,
-                                                                        Guid.NewGuid().ToString(),
-                                                                        (int)worldEntityInfo.cellLevel,
-                                                                        Optional<String>.Empty());
+                                                          worldEntityInfo.techType,
+                                                          Guid.NewGuid().ToString(),
+                                                          (int)worldEntityInfo.cellLevel);
 
                         AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);
 

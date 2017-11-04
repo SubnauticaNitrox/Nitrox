@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
 {
@@ -18,16 +16,27 @@ namespace NitroxServer.GameLogic
 
                 if (guidsByPlayer.TryGetValue(guid, out owningPlayer))
                 {
-                    if(owningPlayer != player)
-                    {
-                        return false;
-                    }
-
-                    return true;
+                    return (owningPlayer == player);
                 }
 
                 guidsByPlayer[guid] = player;
                 return true;
+            }
+        }
+
+        public bool RevokeIfOwner(string guid, Player player)
+        {
+            lock (guidsByPlayer)
+            {
+                Player owningPlayer;
+
+                if (guidsByPlayer.TryGetValue(guid, out owningPlayer) && owningPlayer == player)
+                {
+                    guidsByPlayer[guid] = null;
+                    return true;
+                }
+
+                return false;
             }
         }
 
