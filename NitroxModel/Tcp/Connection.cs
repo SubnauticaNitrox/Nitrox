@@ -10,22 +10,22 @@ namespace NitroxModel.Tcp
 {
     public class Connection : IProcessorContext
     {
-        private readonly Socket Socket;
-        private readonly MessageBuffer MessageBuffer = new MessageBuffer();
+        private readonly Socket socket;
+        private readonly MessageBuffer messageBuffer = new MessageBuffer();
         public bool Open { get; private set; } = true;
         public bool Authenticated { get; set; }
 
         public Connection(Socket socket)
         {
-            Socket = socket;
+            this.socket = socket;
         }
 
         public void Connect(IPEndPoint remoteEP)
         {
             try
             {
-                Socket.Connect(remoteEP);
-                if (!Socket.Connected)
+                socket.Connect(remoteEP);
+                if (!socket.Connected)
                 {
                     Open = false;
                 }
@@ -40,7 +40,7 @@ namespace NitroxModel.Tcp
         {
             try
             {
-                Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+                socket.BeginReceive(messageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
             }
             catch (SocketException se)
             {
@@ -54,7 +54,7 @@ namespace NitroxModel.Tcp
             int bytesRead = 0;
             try
             {
-                bytesRead = Socket.EndReceive(ar);
+                bytesRead = socket.EndReceive(ar);
             }
             catch (SocketException)
             {
@@ -64,7 +64,7 @@ namespace NitroxModel.Tcp
 
             if (bytesRead > 0)
             {
-                foreach (Packet packet in MessageBuffer.GetReceivedPackets(bytesRead))
+                foreach (Packet packet in messageBuffer.GetReceivedPackets(bytesRead))
                 {
                     yield return packet;
                 }
@@ -83,7 +83,7 @@ namespace NitroxModel.Tcp
                 byte[] packetData = packet.SerializeWithHeaderData();
                 try
                 {
-                    Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+                    socket.BeginSend(packetData, 0, packetData.Length, 0, callback, socket);
                 }
                 catch (SocketException)
                 {
@@ -98,8 +98,8 @@ namespace NitroxModel.Tcp
             Open = false;
             try
             {
-                Socket.Shutdown(SocketShutdown.Both);
-                Socket.Close();
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
             }
             catch (Exception)
             {

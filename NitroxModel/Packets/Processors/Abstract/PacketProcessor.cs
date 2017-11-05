@@ -9,7 +9,7 @@ namespace NitroxModel.Packets.Processors.Abstract
     {
         public abstract void ProcessPacket(Packet packet, IProcessorContext context);
 
-        public static Dictionary<Type, PacketProcessor> GetProcessors(Dictionary<Type, object> ProcessorArguments, Func<Type, bool> additionalConstraints)
+        public static Dictionary<Type, PacketProcessor> GetProcessors(Dictionary<Type, object> processorArguments, Func<Type, bool> additionalConstraints)
         {
             return Assembly.GetCallingAssembly()
                 .GetTypes()
@@ -29,7 +29,7 @@ namespace NitroxModel.Packets.Processors.Abstract
                     object[] args = ctor.GetParameters().Select(pi =>
                         {
                             object v;
-                            if (ProcessorArguments.TryGetValue(pi.ParameterType, out v))
+                            if (processorArguments.TryGetValue(pi.ParameterType, out v))
                             {
                                 return v;
                             }

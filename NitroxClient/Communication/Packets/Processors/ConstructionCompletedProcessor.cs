@@ -3,7 +3,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -22,11 +21,11 @@ namespace NitroxClient.Communication.Packets.Processors
             if (completedPacket.NewBaseCreatedGuid.IsPresent())
             {
                 string newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
-                configureNewlyConstructedBase(newBaseGuid);
+                ConfigureNewlyConstructedBase(newBaseGuid);
             }            
         }
 
-        private void configureNewlyConstructedBase(string newBaseGuid)
+        private void ConfigureNewlyConstructedBase(string newBaseGuid)
         {
             Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 

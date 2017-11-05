@@ -187,8 +187,8 @@ namespace NitroxClient.GameLogic
         {
             switch (type)
             {
-                case AnimChangeType.Underwater:
-                    AnimationController["is_underwater"] = state != AnimChangeState.Off;
+                case AnimChangeType.UNDERWATER:
+                    AnimationController["is_underwater"] = state != AnimChangeState.OFF;
                     break;
             }
         }

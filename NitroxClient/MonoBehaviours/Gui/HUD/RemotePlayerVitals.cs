@@ -22,8 +22,8 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Vector2 FOOD_BAR_POSITION_OFFSET = new Vector2(100, 160);
         private static readonly Vector2 WATER_BAR_POSITION_OFFSET = new Vector2(50, 160);
 
-        public string playerName;
-        public int position;
+        private string playerName;
+        private int position;
 
         private class Bar
         {
@@ -182,11 +182,11 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                 float vel = 0;
                 SmoothedValue smoothedValue = bar.SmoothedValue;
                 smoothedValue.CurrentValue = Mathf.SmoothDamp(smoothedValue.CurrentValue, smoothedValue.TargetValue, ref vel, smoothedValue.SmoothTime);
-                setBarAmount(bar, smoothedValue.CurrentValue, smoothedValue.MaxValue);
+                SetBarAmount(bar, smoothedValue.CurrentValue, smoothedValue.MaxValue);
             }
         }
 
-        private void setBarAmount(Bar bar, float amount, float max)
+        private void SetBarAmount(Bar bar, float amount, float max)
         {
             uGUI_CircularBar circularBar = bar.GameObject.GetComponentInChildren<uGUI_CircularBar>();
             circularBar.value = amount / max;

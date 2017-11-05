@@ -21,12 +21,12 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(EntityTransformUpdates packet, Player simulatingPlayer)
         {
-            Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = initializeVisibleUpdateMapWithOtherPlayers(simulatingPlayer);
+            Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = InitializeVisibleUpdateMapWithOtherPlayers(simulatingPlayer);
             AssignVisibleUpdatesToPlayers(packet.Updates, visibleUpdatesByPlayer);
             SendUpdatesToPlayers(visibleUpdatesByPlayer);
         }
 
-        private Dictionary<Player, List<EntityTransformUpdate>> initializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
+        private Dictionary<Player, List<EntityTransformUpdate>> InitializeVisibleUpdateMapWithOtherPlayers(Player simulatingPlayer)
         {
             Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = new Dictionary<Player, List<EntityTransformUpdate>>();
 
