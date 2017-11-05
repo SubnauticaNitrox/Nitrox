@@ -35,7 +35,7 @@ namespace ClientTester
             {
                 Log.InGame("Connected to server");
                 PacketSender.Active = true;
-                PacketSender.Authenticate();
+                Logic.Player.Authenticate(PacketSender.PlayerId);
             }
             else
             {

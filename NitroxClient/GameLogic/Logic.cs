@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
         public Item Item { get; }
         public EquipmentSlots EquipmentSlots { get; }
         public ItemContainers ItemContainers { get; }
-        public PlayerAttributes PlayerAttributes { get; }
+        public PlayerLogic Player { get; }
         public Power Power { get; }
         public SimulationOwnership SimulationOwnership { get; }
         public Crafting Crafting { get; }
@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             Item = new Item(packetSender);
             EquipmentSlots = new EquipmentSlots(packetSender);
             ItemContainers = new ItemContainers(packetSender);
-            PlayerAttributes = new PlayerAttributes(packetSender);
+            Player = new PlayerLogic(packetSender);
             Power = new Power(packetSender);
             SimulationOwnership = new SimulationOwnership(packetSender);
             Crafting = new Crafting(packetSender);
