@@ -38,9 +38,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     string serverName = lineData.Split('|')[0];
                     string serverIp = lineData.Split('|')[1];
                     int serverIndex = savedGameAreaContent.childCount;
-                    CreateServerButton($"<b>{serverName}</b>\n{serverIp}", delegate
-                    { JoinServer(serverIp); }, delegate
-                    { RemoveServer(serverIndex); });
+                    CreateServerButton(
+                        $"<b>{serverName}</b>\n{serverIp}",
+                        () => JoinServer(serverIp),
+                        () => RemoveServer(serverIndex));
                 }
             }
         }
@@ -73,7 +74,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void JoinServer(string serverIp)
         {
-            new GameObject().AddComponent<JoinServer>().serverIp = serverIp;
+            new GameObject().AddComponent<JoinServer>().ServerIp = serverIp;
         }
 
         public void CreateNewServer()

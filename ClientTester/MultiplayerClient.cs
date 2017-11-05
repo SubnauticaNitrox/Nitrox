@@ -10,7 +10,7 @@ namespace ClientTester
     {
         public PacketSender PacketSender { get; }
         public Logic Logic { get; }
-        public Vector3 clientPos = new Vector3(-50f, -2f, -38f);
+        public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
 
         private readonly VisibleCells visibleCells;
         private readonly DeferringPacketReceiver packetReceiver;
@@ -22,8 +22,7 @@ namespace ClientTester
             visibleCells = new VisibleCells();
             packetReceiver = new DeferringPacketReceiver(visibleCells);
             client = new TcpClient(packetReceiver);
-            PacketSender = new PacketSender(client);
-            PacketSender.PlayerId = playerId;
+            PacketSender = new PacketSender(client, playerId);
             Logic = new Logic(PacketSender, visibleCells, packetReceiver);
         }
 

@@ -1,10 +1,8 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.GameLogic;
 using NitroxModel.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
@@ -29,7 +27,7 @@ namespace NitroxServer.GameLogic
             AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
             AbsoluteEntityCell newCell = new AbsoluteEntityCell(position);
 
-            if(oldCell != newCell)
+            if (oldCell != newCell)
             {
                 lock (entitiesByAbsoluteCell)
                 {
@@ -111,7 +109,7 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (cell.Level <= entity.Level && simulationOwnership.TryToAquireOwnership(entity.Guid, player))
+                            if (cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
                             {
                                 assignedEntities.Add(entity);
                             }

@@ -44,8 +44,7 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="LitJson, Version=1.0.5467.41753, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="LitJson">
       <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
@@ -64,34 +63,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Packets\PacketHandler.cs" />
-    <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AuthenticatePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\EntityManager.cs" />
-    <Compile Include="GameLogic\PlayerManager.cs" />
-    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnPoint.cs" />
+    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\LootDistributionsParser.cs" />
+    <Compile Include="Serialization\ServerProtobufSerializer.cs" />
     <Compile Include="Serialization\WorldEntityDataParser.cs" />
+    <Compile Include="Server.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
     <Compile Include="UnityStubs\Transform.cs" />
     <Compile Include="UnityStubs\Vector3.cs" />
-    <Compile Include="Serialization\ServerProtobufSerializer.cs" />
-    <Compile Include="Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

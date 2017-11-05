@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using UnityEngine;
-using NitroxModel.Tcp;
-using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Tcp;
+using UnityEngine;
 
 namespace NitroxServer
 {
@@ -13,12 +13,11 @@ namespace NitroxServer
         public Vector3 Position { get; set; }
 
         private readonly Connection connection;
-        private readonly HashSet<VisibleCell> visibleCells;
+        private readonly HashSet<VisibleCell> visibleCells = new HashSet<VisibleCell>();
 
         public Player(string id, Connection connection)
         {
-            this.Id = id;
-            this.visibleCells = new HashSet<VisibleCell>();
+            Id = id;
             this.connection = connection;
         }
 
@@ -60,7 +59,7 @@ namespace NitroxServer
             }
         }
 
-        public override bool Equals(System.Object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -70,7 +69,7 @@ namespace NitroxServer
 
             Player player = (Player)obj;
 
-            return (player.Id == this.Id);
+            return (player.Id == Id);
         }
 
         public override int GetHashCode()
@@ -78,7 +77,7 @@ namespace NitroxServer
             unchecked
             {
                 int hash = 269;
-                hash = hash * 23 + this.Id.GetHashCode();
+                hash = hash * 23 + Id.GetHashCode();
                 return hash;
             }
         }

@@ -1,20 +1,19 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.GameLogic.Creatures.Actions;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.GameLogic
 {
     public class AI
     {
-        private PacketSender packetSender;
+        private readonly PacketSender packetSender;
 
         public AI(PacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void CreatureActionChanged(String guid, CreatureAction newAction)
+        public void CreatureActionChanged(string guid, CreatureAction newAction)
         {
             SerializableCreatureAction creatureAction = null;
 
@@ -26,11 +25,11 @@ namespace NitroxClient.GameLogic
                 creatureAction = new SwimToPointAction(((SwimToPoint)newAction).Target);
             }*/
 
-            if(creatureAction != null)
+            if (creatureAction != null)
             {
                 CreatureActionChanged actionChanged = new CreatureActionChanged(guid, creatureAction);
                 packetSender.Send(actionChanged);
             }
-        } 
+        }
     }
 }

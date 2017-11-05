@@ -1,11 +1,11 @@
-﻿using NitroxModel.DataStructures;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.Map
 {
     public class VisibleCells
     {
-        private HashSet<VisibleCell> cells = new HashSet<VisibleCell>();
+        private readonly HashSet<VisibleCell> cells = new HashSet<VisibleCell>();
 
         public void Add(VisibleCell cell)
         {

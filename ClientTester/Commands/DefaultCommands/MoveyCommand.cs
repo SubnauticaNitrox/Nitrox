@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
-using System;
 using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
@@ -18,9 +17,9 @@ namespace ClientTester.Commands.DefaultCommands
         {
             assertMinimumArgs(args, 1);
 
-            float y = client.clientPos.y;
-            client.clientPos.y = float.Parse(args[0]);
-            client.PacketSender.UpdatePlayerLocation(client.clientPos, new Vector3(0, client.clientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
+            float y = client.ClientPos.y;
+            client.ClientPos.y = float.Parse(args[0]);
+            client.PacketSender.UpdatePlayerLocation(client.ClientPos, new Vector3(0, client.ClientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
         }
     }
 }

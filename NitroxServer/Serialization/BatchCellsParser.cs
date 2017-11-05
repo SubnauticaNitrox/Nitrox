@@ -1,13 +1,13 @@
-﻿using System.IO;
-using System;
-using System.Runtime.Serialization;
+﻿using System;
 using System.Collections.Generic;
-using NitroxServer.UnityStubs;
-using NitroxModel.Logger;
-using System.Threading.Tasks;
+using System.IO;
 using System.Linq;
-using NitroxServer.GameLogic.Spawning;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
+using NitroxServer.GameLogic.Spawning;
+using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization
 {
@@ -20,8 +20,11 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        private ServerProtobufSerializer serializer;
-        private Dictionary<String, Type> surrogateTypes = new Dictionary<string, Type>();
+        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
+        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
+
+        private readonly ServerProtobufSerializer serializer;
+        private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
         public BatchCellsParser()
         {
@@ -64,7 +67,7 @@ namespace NitroxServer.Serialization
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
-            
+
             ParseFile(batchId, "", "loot-slots", spawnPoints);
             ParseFile(batchId, "", "creature-slots", spawnPoints);
             ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
@@ -75,17 +78,18 @@ namespace NitroxServer.Serialization
             return spawnPoints;
         }
 
-        public void ParseFile(Int3 batchId, String pathPrefix, String suffix, List<EntitySpawnPoint> spawnPoints)
+        public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            String path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
-            String fileName = path + pathPrefix + "batch-cells-" + batchId .x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
+            // This isn't always gonna work.
+            string path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
+            string fileName = path + pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
 
-            if(!File.Exists(fileName))
+            if (!File.Exists(fileName))
             {
                 return;
             }
 
-            using (Stream stream = FileUtils.ReadFile(fileName))
+            using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
 
@@ -125,26 +129,18 @@ namespace NitroxServer.Serialization
 
                 Type type = null;
 
-                if (surrogateTypes.ContainsKey(componentHeader.TypeName))
+                if (!surrogateTypes.TryGetValue(componentHeader.TypeName, out type))
                 {
-                    type = surrogateTypes[componentHeader.TypeName];
-                }
-                else
-                {
-                    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                    {
-                        type = assembly.GetType(componentHeader.TypeName);
-
-                        if (type != null)
-                        {
-                            break;
-                        }
-                    }
+                    type = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType(componentHeader.TypeName))
+                        .FirstOrDefault(t => t != null);
                 }
 
-                var component = FormatterServices.GetUninitializedObject(type);
+                Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
+
+                object component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);
-                
+
                 gameObject.AddComponent(component, type);
             }
         }

@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
             string ownerGuid = GuidHelper.GetGuid(owner);
             Vector3 ownerPos = owner.transform.position;
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
-            
+
             ItemContainerAdd add = new ItemContainerAdd(ownerGuid, bytes, ownerPos);
             packetSender.Send(add);
         }

@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System;
-using NitroxModel.DataStructures.Util;
+﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.GameLogic
 {
@@ -9,15 +8,14 @@ namespace NitroxModel.GameLogic
     {
         public Vector3 Position { get; set; }
         public TechType TechType { get; }
-        public String Guid { get; }
+        public string Guid { get; }
         public int Level { get; }
-
-        public Entity(Vector3 position, TechType techType, String guid, int level)
+        public Entity(Vector3 position, TechType techType, string guid, int level)
         {
-            this.Position = position;
-            this.TechType = techType;
-            this.Guid = guid;
-            this.Level = level;
+            Position = position;
+            TechType = techType;
+            Guid = guid;
+            Level = level;
         }
 
         public override string ToString()

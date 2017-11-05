@@ -6,19 +6,19 @@ namespace NitroxServer.UnityStubs
     public class Transform
     {
         [ProtoMember(1)]
-        public Vector3 Position { get; private set; }
+        public Vector3 Position { get; }
 
         [ProtoMember(2)]
-        public Vector3 Scale { get; private set; }
+        public Vector3 Scale { get; }
 
         [ProtoMember(3)]
-        public Quaternion Rotation { get; private set; }
+        public Quaternion Rotation { get; }
 
         public Transform(Vector3 position, Vector3 scale, Quaternion rotation)
         {
-            this.Position = position;
-            this.Scale = scale;
-            this.Rotation = rotation;
+            Position = position;
+            Scale = scale;
+            Rotation = rotation;
         }
 
         public override string ToString()

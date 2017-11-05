@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication;
-using NitroxModel.Packets;
-using NitroxModel.Helper;
-using UnityEngine;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.Helper;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {

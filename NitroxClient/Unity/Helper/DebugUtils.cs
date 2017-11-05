@@ -1,6 +1,5 @@
-﻿using NitroxModel.Logger;
-using System;
-using System.Text;
+﻿using System.Text;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper

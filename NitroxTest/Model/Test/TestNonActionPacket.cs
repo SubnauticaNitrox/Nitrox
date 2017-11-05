@@ -1,12 +1,12 @@
-﻿using NitroxModel.Packets;
-using System;
+﻿using System;
+using NitroxModel.Packets;
 
 namespace NitroxTest.Model
 {
     [Serializable]
     public class TestNonActionPacket : Packet
     {
-        public String PlayerId { get; }
+        public string PlayerId { get; }
 
         public TestNonActionPacket(string playerId)
         {

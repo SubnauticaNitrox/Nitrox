@@ -11,7 +11,7 @@ namespace NitroxClient.MonoBehaviours
 
         protected override void Awake()
         {
-            steeringControl = exosuit = GetComponent<Exosuit>();
+            SteeringControl = exosuit = GetComponent<Exosuit>();
             base.Awake();
         }
 

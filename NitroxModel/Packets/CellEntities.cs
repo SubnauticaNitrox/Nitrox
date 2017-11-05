@@ -1,6 +1,6 @@
-﻿using NitroxModel.GameLogic;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxModel.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -9,16 +9,16 @@ namespace NitroxModel.Packets
     {
         public List<Entity> Entities { get; }
 
-        public CellEntities(List<Entity> entities) : base()
+        public CellEntities(List<Entity> entities)
         {
             Entities = entities;
         }
 
         public override string ToString()
         {
-            String toString = "[CellEntities ";
+            string toString = "[CellEntities ";
 
-            foreach(Entity entity in Entities)
+            foreach (Entity entity in Entities)
             {
                 toString += entity;
             }

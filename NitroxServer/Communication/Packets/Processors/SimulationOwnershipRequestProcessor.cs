@@ -20,8 +20,9 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Log.Debug(ownershipRequest);
 
-            if (simulationOwnership.TryToAquireOwnership(ownershipRequest.Guid, player))
+            if (simulationOwnership.TryToAcquire(ownershipRequest.Guid, player))
             {
+                // TODO: Distribute ownership in the `SimulationOwnership` class.
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
                 Log.Debug("Sending: " + simulationOwnershipChange);

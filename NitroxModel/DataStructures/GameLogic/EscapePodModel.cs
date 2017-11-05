@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public string RadioGuid { get; }
         public List<string> AssignedPlayers { get; } = new List<string>();
 
-        public EscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid) : base()
+        public EscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
         {
             Guid = guid;
             Location = location;

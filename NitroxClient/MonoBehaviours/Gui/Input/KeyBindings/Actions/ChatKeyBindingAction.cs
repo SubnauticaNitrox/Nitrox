@@ -1,6 +1,4 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
-using System;
-using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
 {

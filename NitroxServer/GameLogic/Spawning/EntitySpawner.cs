@@ -1,11 +1,10 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+﻿using System;
+using System.Collections.Generic;
+using NitroxModel.DataStructures;
 using NitroxModel.GameLogic;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
-using System;
-using System.Collections.Generic;
 using UWE;
 using static LootDistributionData;
 
@@ -15,9 +14,9 @@ namespace NitroxServer.GameLogic
     {
         private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
 
-        private Dictionary<String, WorldEntityInfo> worldEntitiesByClassId;
-        private List<EntitySpawnPoint> entitySpawnPoints;
-        private LootDistributionData lootDistributionData;
+        private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
+        private readonly IEnumerable<EntitySpawnPoint> entitySpawnPoints;
+        private readonly LootDistributionData lootDistributionData;
 
         public EntitySpawner()
         {
@@ -46,8 +45,8 @@ namespace NitroxServer.GameLogic
 
             foreach (EntitySpawnPoint entitySpawnPoint in entitySpawnPoints)
             {
-                LootDistributionData.DstData dstData;
-                if(!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
+                DstData dstData;
+                if (!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
                 {
                     continue;
                 }
@@ -55,8 +54,8 @@ namespace NitroxServer.GameLogic
                 float rollingProbabilityDensity = 0;
 
                 PrefabData selectedPrefab = null;
-                     
-                foreach (var prefab in dstData.prefabs)
+
+                foreach (PrefabData prefab in dstData.prefabs)
                 {
                     float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                     rollingProbabilityDensity += probabilityDensity;
@@ -72,7 +71,7 @@ namespace NitroxServer.GameLogic
                         randomNumber *= rollingProbabilityDensity;
                     }
 
-                    foreach (var prefab in dstData.prefabs)
+                    foreach (PrefabData prefab in dstData.prefabs)
                     {
                         float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                         rollingProbability += probabilityDensity;
@@ -87,8 +86,8 @@ namespace NitroxServer.GameLogic
                 if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.ContainsKey(selectedPrefab.classId))
                 {
                     WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[selectedPrefab.classId];
-                        
-                    for(int i = 0; i < selectedPrefab.count; i++)
+
+                    for (int i = 0; i < selectedPrefab.count; i++)
                     {
                         Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                                           worldEntityInfo.techType,
@@ -97,14 +96,14 @@ namespace NitroxServer.GameLogic
 
                         AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);
 
-                        if(!entitiesByAbsoluteCell.ContainsKey(absoluteCellId))
+                        if (!entitiesByAbsoluteCell.ContainsKey(absoluteCellId))
                         {
                             entitiesByAbsoluteCell[absoluteCellId] = new List<Entity>();
                         }
 
                         entitiesByAbsoluteCell[absoluteCellId].Add(spawnedEntity);
-                    }                        
-                }                
+                    }
+                }
             }
         }
     }

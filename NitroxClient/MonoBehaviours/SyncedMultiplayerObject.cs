@@ -6,14 +6,14 @@ namespace NitroxClient.MonoBehaviours
     public class SyncedMultiplayerObject : MonoBehaviour
     {
         private float time = 0.0f;
-        private float interpolationPeriod = 0.25f;
+        private const float INTERPOLATION_PERIOD = .25f;
 
         public void Update()
         {
             time += Time.deltaTime;
 
             // Only do on a specific cadence to avoid hammering server
-            if (time >= interpolationPeriod)
+            if (time >= INTERPOLATION_PERIOD)
             {
                 time = 0;
 

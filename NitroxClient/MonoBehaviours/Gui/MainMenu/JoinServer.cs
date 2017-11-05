@@ -1,13 +1,12 @@
-﻿using NitroxModel.Helper;
-using System;
-using System.Collections;
+﻿using System.Collections;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class JoinServer : MonoBehaviour
     {
-        public string serverIp = "";
+        public string ServerIp = "";
         string username = "username";
         bool showingUsername = false;
         public void Awake()
@@ -29,7 +28,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             username = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 25, 500, 50), username);
             if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Add server"))
             {
-                StartCoroutine(JoinServerWait(serverIp));
+                StartCoroutine(JoinServerWait(ServerIp));
                 showingUsername = false;
             }
         }
