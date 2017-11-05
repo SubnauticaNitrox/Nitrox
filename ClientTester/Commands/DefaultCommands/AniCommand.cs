@@ -30,7 +30,7 @@ namespace ClientTester.Commands.DefaultCommands
                 state = AnimChangeState.Unset;
             }
 
-            client.PacketSender.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
+            client.Logic.Player.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
         }
     }
 }

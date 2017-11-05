@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.DataStructures.ServerModel;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication
 {
@@ -22,35 +18,6 @@ namespace NitroxClient.Communication
             this.client = client;
             PlayerId = playerId;
             Active = false;
-        }
-
-        public void Authenticate()
-        {
-            Authenticate auth = new Authenticate(PlayerId);
-            Send(auth);
-        }
-
-        public void UpdatePlayerLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<string> opSubGuid)
-        {
-            Movement movement;
-
-            if (opVehicle.IsPresent())
-            {
-                VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid, vehicle.SteeringWheelYaw, vehicle.SteeringWheelPitch, vehicle.AppliedThrottle);
-            }
-            else
-            {
-                movement = new Movement(PlayerId, location, velocity, bodyRotation, aimingRotation, opSubGuid);
-            }
-
-            Send(movement);
-        }
-
-        public void AnimationChange(AnimChangeType type, AnimChangeState state)
-        {
-            AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerId, (int)type, (int)state);
-            Send(animEvent);
         }
 
         public void Send(Packet packet)

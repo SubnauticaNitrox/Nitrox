@@ -152,7 +152,7 @@ namespace NitroxClient.MonoBehaviours
             if (client.IsConnected())
             {
                 PacketSender.Active = true;
-                PacketSender.Authenticate();
+                Multiplayer.Logic.Player.Authenticate(PacketSender.PlayerId);
                 Log.InGame("Connected to server");
             }
             else

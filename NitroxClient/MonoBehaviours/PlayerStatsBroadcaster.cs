@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours
                     float food = survival.food;
                     float water = survival.water;
 
-                    Multiplayer.Logic.PlayerAttributes.BroadcastPlayerStats(oxygen, maxOxygen, health, food, water);
+                    Multiplayer.Logic.Player.BroadcastStats(oxygen, maxOxygen, health, food, water);
                 }
             }
         }

@@ -40,7 +40,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
+                Multiplayer.Logic.Player.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 

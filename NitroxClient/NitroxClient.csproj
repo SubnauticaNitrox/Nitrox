@@ -126,7 +126,7 @@
     <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
-    <Compile Include="GameLogic\PlayerAttributes.cs" />
+    <Compile Include="GameLogic\PlayerLogic.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
