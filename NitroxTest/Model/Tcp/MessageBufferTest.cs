@@ -46,7 +46,7 @@ namespace NitroxTest.Model.Tcp
         }
 
         [TestMethod]
-        public void receivedPartialPacket()
+        public void ReceivedPartialPacket()
         {
             TestNonActionPacket packet1 = new TestNonActionPacket("Player1");
 
