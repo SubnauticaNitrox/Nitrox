@@ -1,0 +1,926 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 0"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 0"
+        }
+      ],
+      "name": "PPtr<GameObject> m_GameObject"
+    },
+    {
+      "children": [],
+      "name": "UInt8 m_Enabled = 1"
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 1"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 688"
+        }
+      ],
+      "name": "PPtr<MonoScript> m_Script"
+    },
+    {
+      "children": [],
+      "name": "string m_Name = \"ItemGoalData\""
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Scanner\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 523"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Airsack\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2515"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_CookedPeeper\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 4502"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Copper\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 7"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Fins\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 502"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Knife\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 505"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Bleach\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 27"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_CookedGarryfish\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 4504"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_CookedHoverfish\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 4507"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_PurifiedWater\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 4501"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Silver\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 28"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Lubricant\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 62"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Seaglide\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 751"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioGrassy21\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 751"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Builder\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 509"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioShallows22\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 509"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioSecondOfficer\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 752"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioKoosh26\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 761"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Bioreactor\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5528"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioWarper1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2001"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Exo\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2001"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 5"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Observatory\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5518"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 5"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Room\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5500"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 15"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_StasisRifle\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 755"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Seamoth\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2000"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_NuclearReactor\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5529"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 45"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioMushroom24\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5529"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 4"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_FarmingTray\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 1530"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 10"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Bench\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 1525"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Cyclops\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2003"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 30"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Moonpool\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5520"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_WaterPark\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 5525"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Diamond\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 36"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnCraftConstructor\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 752"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnConstructCyclops\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 2003"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnBuildWorkbench\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 1500"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Emperor_Telepathic_Contact2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 4201"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnCraftBattery\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 504"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnCraftComputerChip\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 44"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnCraftTank\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 503"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"OnCraftDoubleTank\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 528"
+            }
+          ],
+          "name": "ItemGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioBloodKelp29\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "TechType techType = 1522"
+            }
+          ],
+          "name": "ItemGoal goals"
+        }
+      ],
+      "name": "Array goals[] (size 42)"
+    }
+  ],
+  "name": null
+}
