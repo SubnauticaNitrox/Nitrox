@@ -1,0 +1,1378 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 0"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 0"
+        }
+      ],
+      "name": "PPtr<GameObject> m_GameObject"
+    },
+    {
+      "children": [],
+      "name": "UInt8 m_Enabled = 1"
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 1"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 392"
+        }
+      ],
+      "name": "PPtr<MonoScript> m_Script"
+    },
+    {
+      "children": [],
+      "name": "string m_Name = \"LocationGoalData\""
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LocationAuroraEntry\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraEntry\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 1155"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 8"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 86"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 50"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LocationAuroraFurtherIn\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraFurtherIn\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 1053"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 38"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 82"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LocationAuroraInterior\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraInterior\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 988"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 31"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 69"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LocationAuroraHallway\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraHallway\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 941"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 10"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 15"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LocationAuroraDriveEntry\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraDriveEntry\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 890"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 2"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -19"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Location AuroraDriveInterior\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"AuroraDriveInterior\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 862"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 0"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 11"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 2"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomePrecursorGunUpper3\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorGunUpper3\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 433"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -3"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 1221"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 15"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Gun_ControlRoom\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorGunControlRoom\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 409"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -73"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 1094"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 15"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomePrecursorGunUpper2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorGunUpper2\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 436"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -3"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 1175"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 7"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LostRiverBase_Log1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorLostRiverBase1\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -277.5"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -822.7"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 264"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 130"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LostRiverBase_Log2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorLostRiverBase2\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -277.5"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -822.7"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 264"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 100"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 10"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LostRiverBase_Log5\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorLostRiverBase5\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -264.25"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -811.2"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 280.57"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LostRiverBase_Log7\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"PrecursorLostRiverBase7\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -273.87"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -811.28"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 287.565"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 10"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 3"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_MoonPool_Log1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 290.68"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1436.34"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -392.92"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 19"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog5\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 204.9"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1609.4"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -538.8"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 50"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 3"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog5\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 407.8"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1608.4"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -314.4"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 50"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 3"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog5\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 417.6"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1574.7"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -550.4"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 30"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 3"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog5\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 494.8"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1594.8"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -463.8"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 50"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomePrecursorGunUpper\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 399"
+                },
+                {
+                  "children": [],
+                  "name": "float y = 4.7"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 1107"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 9"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Antechamber_Log1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 182"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -1442"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -398"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 15"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_JellyCaveEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -725"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -105"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 0"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 80"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_JellyCaveEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -495"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -90"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 15"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 60"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_JellyCaveEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -360"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -110"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -225"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 70"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_JellyCaveEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 130"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -95"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -390"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 75"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_JellyCaveEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 250"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -100"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 290"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 75"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LostRiverEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -1220"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -610"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -325"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 65"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LostRiverEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -1137"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -613"
+                },
+                {
+                  "children": [],
+                  "name": "float z = -446"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 80"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LostRiverEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = -705"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -565"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 1090"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 85"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_LostRiverEntrance\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String location = \"\""
+            },
+            {
+              "children": [
+                {
+                  "children": [],
+                  "name": "float x = 1166"
+                },
+                {
+                  "children": [],
+                  "name": "float y = -410"
+                },
+                {
+                  "children": [],
+                  "name": "float z = 889"
+                }
+              ],
+              "name": "Vector3 position"
+            },
+            {
+              "children": [],
+              "name": "float range = 90"
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "LocationGoal goals"
+        }
+      ],
+      "name": "Array goals[] (size 29)"
+    }
+  ],
+  "name": null
+}
