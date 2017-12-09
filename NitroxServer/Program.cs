@@ -9,15 +9,15 @@ namespace NitroxServer
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
 
-            try
-            {
+            //try
+            //{
                 Server server = new Server();
                 server.Start();
-            }
-            catch (Exception e)
-            {
-                Log.Error(e.ToString());
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    Log.Error(e.ToString());
+            //}
 
             while (true)
             {

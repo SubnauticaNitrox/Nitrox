@@ -165,7 +165,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
                 MaterialExtensions.SetLocalScale(MultiplayerBuilder.renderers);
-                MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.GetIsInSub());
+                MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
             }
@@ -659,7 +659,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
-            if (!Player.main.GetIsInSub())
+            if (!Player.main.IsInSub())
             {
                 GameObject entityRoot = UWE.Utils.GetEntityRoot(MultiplayerBuilder.placementTarget);
                 if (!entityRoot)

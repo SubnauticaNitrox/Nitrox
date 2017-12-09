@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AssetsTools.NET;
+using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.GameLogic;
@@ -7,6 +8,7 @@ using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
+using System.IO;
 
 namespace NitroxServer.GameLogic
 {
@@ -20,16 +22,17 @@ namespace NitroxServer.GameLogic
 
         public EntitySpawner()
         {
-            WorldEntityDataParser worldEntityDataParser = new WorldEntityDataParser();
-            worldEntitiesByClassId = worldEntityDataParser.GetWorldEntitiesByClassId();
+            string lootDistributionString = "";
+            if (GetDataFiles(out lootDistributionString, out worldEntitiesByClassId))
+            {
+                BatchCellsParser BatchCellsParser = new BatchCellsParser();
+                entitySpawnPoints = BatchCellsParser.GetEntitySpawnPoints();
 
-            BatchCellsParser BatchCellsParser = new BatchCellsParser();
-            entitySpawnPoints = BatchCellsParser.GetEntitySpawnPoints();
+                LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
+                lootDistributionData = lootDistributionsParser.GetLootDistributionData(lootDistributionString);
 
-            LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
-            lootDistributionData = lootDistributionsParser.GetLootDistributionData();
-
-            SpawnEntities();
+                SpawnEntities();
+            }
         }
 
         public Dictionary<AbsoluteEntityCell, List<Entity>> GetEntitiesByAbsoluteCell()
@@ -105,6 +108,71 @@ namespace NitroxServer.GameLogic
                     }
                 }
             }
+        }
+
+        private bool GetDataFiles(out string lootDistributions, out Dictionary<string, WorldEntityInfo> worldEntityData)
+        {
+            lootDistributions = "";
+            worldEntityData = new Dictionary<string, WorldEntityInfo>();
+            string resourcesPath = "";
+            AssetsFile resourcesFile;
+            if (File.Exists("../resources.assets"))
+            {
+                resourcesPath = Path.GetFullPath("../resources.assets");
+            }
+            else if (File.Exists("resources.assets"))
+            {
+                resourcesPath = Path.GetFullPath("resources.assets");
+            }
+            else
+            {
+                Log.Error("Could not find resources.assets in parent or current directory.", new FileNotFoundException());
+                return false;
+            }
+
+            using (FileStream resStream = new FileStream(resourcesPath, FileMode.Open))
+            {
+                resourcesFile = new AssetsFile(new AssetsFileReader(resStream));
+                AssetsFileTable resourcesFileTable = new AssetsFileTable(resourcesFile);
+                foreach (AssetFileInfoEx afi in resourcesFileTable.pAssetFileInfo)
+                {
+                    //ids may change in the future!
+                    if (afi.curFileType == 0x31) //TextAsset
+                    {
+                        resourcesFile.reader.Position = afi.absoluteFilePos;
+                        string assetName = resourcesFile.reader.ReadCountStringInt32();
+                        if (assetName == "EntityDistributions")
+                        {
+                            resourcesFile.reader.Align();
+                            lootDistributions = resourcesFile.reader.ReadCountStringInt32().Replace("\\n", "");
+                        }
+                    } else if (afi.curFileType == 0x72) //MonoBehaviour
+                    {
+                        resourcesFile.reader.Position = afi.absoluteFilePos;
+                        resourcesFile.reader.Position += 28;
+                        string assetName = resourcesFile.reader.ReadCountStringInt32();
+                        if (assetName == "WorldEntityData")
+                        {
+                            resourcesFile.reader.Align();
+                            uint size = resourcesFile.reader.ReadUInt32();
+                            WorldEntityInfo wei;
+                            for (int i = 0; i < size; i++)
+                            {
+                                wei = new WorldEntityInfo();
+                                wei.classId = resourcesFile.reader.ReadCountStringInt32();
+                                wei.techType = (TechType)resourcesFile.reader.ReadInt32();
+                                wei.slotType = (EntitySlot.Type)resourcesFile.reader.ReadInt32();
+                                wei.prefabZUp = resourcesFile.reader.ReadBoolean();
+                                resourcesFile.reader.Align();
+                                wei.cellLevel = (LargeWorldEntity.CellLevel)resourcesFile.reader.ReadInt32();
+                                wei.localScale = new UnityEngine.Vector3(resourcesFile.reader.ReadSingle(), resourcesFile.reader.ReadSingle(), resourcesFile.reader.ReadSingle());
+                                worldEntityData.Add(wei.classId, wei);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
         }
     }
 }
