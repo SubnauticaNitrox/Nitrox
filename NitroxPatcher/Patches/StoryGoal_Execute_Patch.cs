@@ -9,10 +9,10 @@ namespace NitroxPatcher.Patches
 {
     public class StoryGoal_Execute_Patch : NitroxPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ConstructorInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("StoryGoal", BindingFlags.Public | BindingFlags.Static);
+        public static readonly Type TARGET_CLASS = typeof(StoryGoal);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
 
-        public static void Prefix(StoryGoal __instance, string key, GoalType goalType)
+        public static void Prefix(string key, GoalType goalType)
         {
             StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
             Multiplayer.PacketSender.Send(packet);
