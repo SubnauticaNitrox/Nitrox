@@ -7,7 +7,7 @@ namespace NitroxClient.MonoBehaviours
         AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
         public void Update()
         {
-            AnimChangeState underwaterState = (AnimChangeState)(Player.main.GetIsUnderwater() ? 1 : 0);
+            AnimChangeState underwaterState = (AnimChangeState)(Player.main.IsUnderwater() ? 1 : 0);
             if (lastUnderwaterState != underwaterState)
             {
                 Multiplayer.Logic.Player.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);

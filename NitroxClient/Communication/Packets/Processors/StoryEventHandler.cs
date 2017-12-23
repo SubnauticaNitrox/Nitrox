@@ -12,6 +12,9 @@ namespace NitroxClient.Communication.Packets.Processors
             switch (packet.StoryEventType)
             {
                 case StoryEventType.PDA:
+                case StoryEventType.Radio:
+                case StoryEventType.Encyclopedia:
+                case StoryEventType.Story:
                     StoryGoal.Execute(packet.Key, (Story.GoalType)packet.StoryEventType);
                     break;
                 case StoryEventType.Extra:
