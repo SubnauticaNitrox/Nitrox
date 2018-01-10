@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 joinPacket.PlayerColor
             };
 
-            //Replace the normal colorOptions with our colorOptions (has one color more iwth the player-color). Set the color of the ping with this Replace it back.
+            //Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
             field.SetValue(null, colorOptions);
             remotePlayerManager.FindOrCreate(joinPacket.PlayerId).Ping.SetColor(0);
             field.SetValue(null, colors);
