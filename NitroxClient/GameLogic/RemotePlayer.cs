@@ -40,7 +40,7 @@ namespace NitroxClient.GameLogic
 
             //Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerView.GetComponent<ArmsController>();
-            ArmsController.smoothSpeedUnderWater = 0;
+            ArmsController.smoothSpeedUnderWater = 0; //not sure if this is correct, I'm still new to programming, if this is wrong feel free to correct
             ArmsController.smoothSpeedAboveWater = 0;
 
             //Sets up a copy from the xSignal template for the signal
