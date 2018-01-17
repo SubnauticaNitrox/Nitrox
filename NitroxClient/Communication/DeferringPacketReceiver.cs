@@ -13,7 +13,7 @@ namespace NitroxClient.Communication
         private const int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
-        private readonly PriorityQueue<Packet> receivedPackets = new PriorityQueue<Packet>();
+        private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();  //sry stole your fix
         private readonly VisibleCells visibleCells;
 
         public DeferringPacketReceiver(VisibleCells visibleCells)
