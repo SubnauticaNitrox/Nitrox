@@ -148,7 +148,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GUI.skin.label.fontSize = 14;
             GUI.skin.label.alignment = TextAnchor.MiddleRight;
             GUI.skin.label.stretchHeight = true;
-            GUI.skin.label.fixedWidth = 60;
+            GUI.skin.label.fixedWidth = 60; //change this when adding new labels that need more space.
 
             GUI.skin.button.fontSize = 14;
             GUI.skin.button.stretchHeight = true;
