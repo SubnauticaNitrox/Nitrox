@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches
         private static readonly FieldInfo reconfigureWorldTarget = TARGET_CLASS.GetField("reconfigureWorldTarget", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo reconfigure = TARGET_CLASS.GetMethod("Reconfigure", BindingFlags.NonPublic | BindingFlags.Instance);
 
-        private static readonly Type armAiming = TARGET_CLASS.GetNestedType("armAiming", BindingFlags.NonPublic);
+        private static readonly Type armAiming = TARGET_CLASS.GetNestedType("ArmAiming", BindingFlags.NonPublic);
         private static readonly MethodInfo armAimingUpdate = armAiming.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
         private static readonly MethodInfo updateHandIKWeights = TARGET_CLASS.GetMethod("UpdateHandIKWeights", BindingFlags.NonPublic | BindingFlags.Instance);
 
