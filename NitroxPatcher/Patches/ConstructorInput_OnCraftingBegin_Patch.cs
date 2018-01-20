@@ -28,11 +28,8 @@ namespace NitroxPatcher.Patches
 
                 if (instruction.opcode.Equals(INJECTION_OPCODE) && instruction.operand.Equals(INJECTION_OPERAND))
                 {
-                    /*
-                     * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT, gameObject);
-                     */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_0); //CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_2); //gameobject localvariable
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(TransientLocalObjectManager).GetMethod("Add", BindingFlags.Static | BindingFlags.Public, null, new Type[] { TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT.GetType(), typeof(object) }, null));
                 }
             }
