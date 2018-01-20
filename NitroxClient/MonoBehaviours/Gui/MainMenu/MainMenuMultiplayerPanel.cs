@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public GameObject SavedGamesRef;
         public GameObject LoadedMultiplayerRef;
 
-        private bool showingAddServer = false;
-        private string serverInput = "server name";
-        private string ipInput = "server ip";
+        private bool shouldFocus;
+        private bool showingAddServer;
+        private string serverInput;
+        private string ipInput;
+        private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
 
         GameObject multiplayerButton;
         Transform savedGameAreaContent;
@@ -29,7 +32,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     sw.WriteLine("local|127.0.0.1");
                 }
             }
-            CreateServerButton("Add a server", CreateNewServer);
+            CreateServerButton("Add a server", ShowAddServerWindow);
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
                 string lineData;
@@ -77,9 +80,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             new GameObject().AddComponent<JoinServer>().ServerIp = serverIp;
         }
 
-        public void CreateNewServer()
+        public void ShowAddServerWindow()
         {
+            serverInput = "local";
+            ipInput = "127.0.0.1";
             showingAddServer = true;
+            shouldFocus = true;
+        }
+
+        public void HideAddServerWindow()
+        {
+            showingAddServer = false;
+            shouldFocus = true;
         }
 
         public void AddServer()
@@ -98,33 +110,100 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(savedGameAreaContent.GetChild(index).gameObject);
         }
 
-        public void HideNewServer()
-        {
-            serverInput = "server name";
-            ipInput = "server ip";
-            showingAddServer = false;
-        }
-
         public void OnGUI()
         {
             if (!showingAddServer)
             {
                 return;
             }
-            serverInput = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 50, 500, 50), serverInput);
-            ipInput = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2, 500, 50), ipInput);
-            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 50, 500, 50), "Add server"))
+
+            addServerWindowRect = GUILayout.Window(0, addServerWindowRect, DoAddServerWindow, "Add server");
+        }
+
+
+        private void OnAddServerButtonClicked()
+        {
+            AddServer();
+            int serverIndex = savedGameAreaContent.childCount;
+            CreateServerButton($"<b>{serverInput}</b>\n{ipInput}", delegate
+            { JoinServer(ipInput); }, delegate
+            { RemoveServer(serverIndex); });
+            HideAddServerWindow();
+        }
+
+        private void OnCancelButtonClicked()
+        {
+            HideAddServerWindow();
+        }
+
+        private void SetGUIStyle()
+        {
+            GUI.skin.textField.fontSize = 14;
+            GUI.skin.textField.richText = false;
+            GUI.skin.textField.alignment = TextAnchor.MiddleLeft;
+            GUI.skin.textField.wordWrap = true;
+            GUI.skin.textField.stretchHeight = true;
+            GUI.skin.textField.padding = new RectOffset(10, 10, 5, 5);
+
+            GUI.skin.label.fontSize = 14;
+            GUI.skin.label.alignment = TextAnchor.MiddleRight;
+            GUI.skin.label.stretchHeight = true;
+            GUI.skin.label.fixedWidth = 60;
+
+            GUI.skin.button.fontSize = 14;
+            GUI.skin.button.stretchHeight = true;
+        }
+
+        private void DoAddServerWindow(int windowId)
+        {
+            Event e = Event.current;
+            if (e.isKey)
             {
-                AddServer();
-                int serverIndex = savedGameAreaContent.childCount;
-                CreateServerButton($"<b>{serverInput}</b>\n{ipInput}", delegate
-                { JoinServer(ipInput); }, delegate
-                { RemoveServer(serverIndex); });
-                HideNewServer();
+                switch (e.keyCode)
+                {
+                    case KeyCode.Return:
+                        OnAddServerButtonClicked();
+                        break;
+                    case KeyCode.Escape:
+                        OnCancelButtonClicked();
+                        break;
+                }
             }
-            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 100, 500, 50), "Cancel"))
+
+            SetGUIStyle();
+            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
             {
-                HideNewServer();
+                using (GUILayout.HorizontalScope h1 = new GUILayout.HorizontalScope())
+                {
+                    GUILayout.Label("Name:");
+                    GUI.SetNextControlName("serverNameField");
+                    //120 so users can't go too crazy.
+                    serverInput = GUILayout.TextField(serverInput, 120);
+                }
+
+                using (GUILayout.HorizontalScope h2 = new GUILayout.HorizontalScope())
+                {
+                    GUILayout.Label("IP:");
+                    GUI.SetNextControlName("serverIpField");
+                    //120 so users can't go too crazy.
+                    ipInput = GUILayout.TextField(ipInput, 120);
+                }
+
+                if (GUILayout.Button("Add server"))
+                {
+                    OnAddServerButtonClicked();
+                }
+
+                if (GUILayout.Button("Cancel"))
+                {
+                    OnCancelButtonClicked();
+                }
+            }
+
+            if (shouldFocus)
+            {
+                GUI.FocusControl("serverNameField");
+                shouldFocus = false;
             }
         }
     }
