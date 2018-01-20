@@ -7,8 +7,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class JoinServer : MonoBehaviour
     {
         public string ServerIp = "";
+        private Rect joinServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         string username = "username";
         bool showingUsername = false;
+
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -25,11 +27,38 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 return;
             }
-            username = GUI.TextField(new Rect(Screen.width / 2 - 250, Screen.height / 2 - 25, 500, 50), username);
-            if (GUI.Button(new Rect(Screen.width / 2 - 250, Screen.height / 2 + 25, 500, 50), "Add server"))
+            joinServerWindowRect = GUILayout.Window(0, joinServerWindowRect, DoJoinServerWindow, "Join server");
+        }
+
+        private void DoJoinServerWindow(int windowId)
+        {
+            Event e = Event.current;
+            if (e.isKey)
             {
-                StartCoroutine(JoinServerWait(ServerIp));
-                showingUsername = false;
+                switch (e.keyCode)
+                {
+                    case KeyCode.Return:
+                        StartCoroutine(JoinServerWait(ServerIp));
+                        showingUsername = false;
+                        break;
+                    case KeyCode.Escape:
+                        showingUsername = false;
+                        break;
+                }
+            }
+
+            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box", GUILayout.ExpandHeight(true)))
+            {
+                username = GUILayout.TextField(username, GUILayout.ExpandHeight(true));
+                if (GUILayout.Button("Join", GUILayout.ExpandHeight(true)))
+                {
+                    StartCoroutine(JoinServerWait(ServerIp));
+                    showingUsername = false;
+                }
+                if (GUILayout.Button("Cancel", GUILayout.ExpandHeight(true)))
+                {
+                    showingUsername = false;
+                }
             }
         }
 
