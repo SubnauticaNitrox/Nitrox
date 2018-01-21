@@ -14,8 +14,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private bool shouldFocus;
         private bool showingAddServer;
-        private string serverInput;
-        private string ipInput;
+        private string serverNameInput;
+        private string serverIpInput;
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
 
         GameObject multiplayerButton;
@@ -27,29 +27,23 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             savedGameAreaContent = LoadedMultiplayerRef.transform.Find("SavedGameArea/SavedGameAreaContent");
             if (!File.Exists(SERVER_LIST_PATH))
             {
-                using (StreamWriter sw = File.CreateText(SERVER_LIST_PATH))
-                {
-                    sw.WriteLine("local|127.0.0.1");
-                }
+                AddServer("local", "127.0.0.1");
             }
-            CreateServerButton("Add a server", ShowAddServerWindow);
+            CreateButton("Add a server", ShowAddServerWindow);
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
-                string lineData;
-                while ((lineData = sr.ReadLine()) != null)
+                string line;
+                while ((line = sr.ReadLine()) != null)
                 {
-                    string serverName = lineData.Split('|')[0];
-                    string serverIp = lineData.Split('|')[1];
-                    int serverIndex = savedGameAreaContent.childCount;
-                    CreateServerButton(
-                        $"<b>{serverName}</b>\n{serverIp}",
-                        () => JoinServer(serverIp),
-                        () => RemoveServer(serverIndex));
+                    string[] lineData = line.Split('|');
+                    string serverName = lineData[0];
+                    string serverIp = lineData[1];
+                    CreateServerButton($"<b>{serverName}</b>\n{serverIp}", serverIp);
                 }
             }
         }
 
-        public void CreateServerButton(string text, UnityEngine.Events.UnityAction clickEvent)
+        public void CreateButton(string text, UnityEngine.Events.UnityAction clickEvent)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
             multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
@@ -59,20 +53,40 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
-        public void CreateServerButton(string text, UnityEngine.Events.UnityAction clickEvent, UnityEngine.Events.UnityAction deleteEvent)
+        public void CreateServerButton(string text, string joinIp)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
+            multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
             multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
             Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(clickEvent);
+            multiplayerButtonButton.onClick.AddListener(() => JoinServer(joinIp));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
-
+            
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
-            deleteButtonButton.onClick.AddListener(deleteEvent);
+            deleteButtonButton.onClick.AddListener(() =>
+            {
+                RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
+                Destroy(multiplayerButtonInst);
+            });
             delete.transform.SetParent(multiplayerButtonInst.transform, false);
+        }
+
+        public void AddServer(string name, string ip)
+        {
+            using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
+            {
+                sw.WriteLine($"{name}|{ip}");
+            }
+        }
+
+        public void RemoveServer(int index)
+        {
+            List<string> serverLines = new List<string>(File.ReadAllLines(SERVER_LIST_PATH));
+            serverLines.RemoveAt(index);
+            File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
         public void JoinServer(string serverIp)
@@ -82,8 +96,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void ShowAddServerWindow()
         {
-            serverInput = "local";
-            ipInput = "127.0.0.1";
+            serverNameInput = "local";
+            serverIpInput = "127.0.0.1";
             showingAddServer = true;
             shouldFocus = true;
         }
@@ -92,22 +106,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             showingAddServer = false;
             shouldFocus = true;
-        }
-
-        public void AddServer()
-        {
-            using (StreamWriter sw = new StreamWriter(SERVER_LIST_PATH, true))
-            {
-                sw.WriteLine($"{serverInput}|{ipInput}");
-            }
-        }
-
-        public void RemoveServer(int index)
-        {
-            List<string> serverLines = new List<string>(File.ReadAllLines(SERVER_LIST_PATH));
-            serverLines.RemoveAt(index - 1);
-            File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
-            Destroy(savedGameAreaContent.GetChild(index).gameObject);
         }
 
         public void OnGUI()
@@ -123,11 +121,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void OnAddServerButtonClicked()
         {
-            AddServer();
-            int serverIndex = savedGameAreaContent.childCount;
-            CreateServerButton($"<b>{serverInput}</b>\n{ipInput}", delegate
-            { JoinServer(ipInput); }, delegate
-            { RemoveServer(serverIndex); });
+            AddServer(serverNameInput, serverIpInput);
+            CreateServerButton($"<b>{serverNameInput}</b>\n{serverIpInput}", serverIpInput);
             HideAddServerWindow();
         }
 
@@ -178,7 +173,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     GUILayout.Label("Name:");
                     GUI.SetNextControlName("serverNameField");
                     //120 so users can't go too crazy.
-                    serverInput = GUILayout.TextField(serverInput, 120);
+                    serverNameInput = GUILayout.TextField(serverNameInput, 120);
                 }
 
                 using (GUILayout.HorizontalScope h2 = new GUILayout.HorizontalScope())
@@ -186,7 +181,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     GUILayout.Label("IP:");
                     GUI.SetNextControlName("serverIpField");
                     //120 so users can't go too crazy.
-                    ipInput = GUILayout.TextField(ipInput, 120);
+                    serverIpInput = GUILayout.TextField(serverIpInput, 120);
                 }
 
                 if (GUILayout.Button("Add server"))
