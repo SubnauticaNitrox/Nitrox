@@ -52,10 +52,19 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             this.playerName = playerName;
             this.position = position;
 
-            oxygenBar = CreateBar(OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR, "s");
-            healthBar = CreateBar(HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR, "%");
-            foodBar = CreateBar(FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR, "%");
-            waterBar = CreateBar(WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR, "%");
+            uGUI_HealthBar originalBar = FindObjectOfType<uGUI_HealthBar>();
+
+            if (originalBar == null)
+            {
+                Log.Warn("uGUI_HealthBar does not exist. Are you playing on creative?");
+                // TODO: Make sure it works when the world changes back to survival.
+                return;
+            }
+
+            oxygenBar = CreateBar(originalBar, OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR, "s");
+            healthBar = CreateBar(originalBar, HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR, "%");
+            foodBar = CreateBar(originalBar, FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR, "%");
+            waterBar = CreateBar(originalBar, WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR, "%");
 
             Canvas canvas = oxygenBar.GameObject.GetComponentInParent<Canvas>();
             GameObject componentParent = oxygenBar.GameObject.transform.parent.gameObject;
@@ -66,35 +75,25 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             SetNewPosition(position);
         }
 
-        private Bar CreateBar(Color color, Color borderColor, string smoothedValueUnit)
+        private Bar CreateBar(uGUI_HealthBar originalBar, Color color, Color borderColor, string smoothedValueUnit)
         {
-            uGUI_HealthBar healthBar = FindObjectOfType<uGUI_HealthBar>();
-
-            if (healthBar == null)
-            {
-                Log.Info("healthBar does not exist. Are you playing on creative?");
-                // TODO: clean this up, now it generates many NRE's.
-                // Also make sure it works when the world changes back to survival.
-                return null;
-            }
-
-            GameObject cloned = Instantiate(healthBar.gameObject);
-            cloned.transform.SetParent(healthBar.gameObject.transform.parent.transform);
+            GameObject cloned = Instantiate(originalBar.gameObject);
+            cloned.transform.SetParent(originalBar.gameObject.transform.parent.transform);
             Destroy(cloned.GetComponent<uGUI_HealthBar>());
 
             cloned.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-            cloned.transform.localRotation = healthBar.gameObject.transform.localRotation;
+            cloned.transform.localRotation = originalBar.gameObject.transform.localRotation;
             cloned.transform.Find("Icon").localRotation = Quaternion.Euler(0f, 180, 0f);
 
-            Canvas canvas = healthBar.gameObject.GetComponentInParent<Canvas>();
+            Canvas canvas = originalBar.gameObject.GetComponentInParent<Canvas>();
 
             //Not sure why this is needed, but if a initial transform is not set 
             //then it will be in a weird, inconsistent state.
             SetBarPostion(cloned.gameObject, new Vector2(0, 0), canvas);
 
             uGUI_CircularBar newBar = cloned.GetComponentInChildren<uGUI_CircularBar>();
-            newBar.texture = healthBar.bar.texture;
-            newBar.overlay = healthBar.bar.overlay;
+            newBar.texture = originalBar.bar.texture;
+            newBar.overlay = originalBar.bar.overlay;
             newBar.color = color;
             newBar.borderColor = borderColor;
 
