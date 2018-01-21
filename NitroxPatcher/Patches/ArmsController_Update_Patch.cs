@@ -27,7 +27,7 @@ namespace NitroxPatcher.Patches
             {
                 if ((bool)reconfigureWorldTarget.GetValue(__instance))
                 {
-                    reconfigure.Invoke(__instance, new object[] { (PlayerTool)null });
+                    reconfigure.Invoke(__instance, new PlayerTool[] { null });
                     reconfigureWorldTarget.SetValue(__instance, false);
                 }
 

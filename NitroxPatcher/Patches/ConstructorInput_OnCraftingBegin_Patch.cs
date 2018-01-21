@@ -1,10 +1,10 @@
-﻿using Harmony;
-using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches
                      * TransientLocalObjectManager.Add(TransientLocalObjectManager.TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT, gameObject);
                      */
                     yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_0);
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<GameObject>(original, 0));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(TransientLocalObjectManager).GetMethod("Add", BindingFlags.Static | BindingFlags.Public, null, new Type[] { TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT.GetType(), typeof(object) }, null));
                 }
             }

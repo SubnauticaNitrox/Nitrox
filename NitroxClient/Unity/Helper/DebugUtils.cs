@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
 {
-    public class DebugUtils
+    public static class DebugUtils
     {
-        public static void DumpGameObject(GameObject gameObject, string indent = "")
+        public static void DumpGameObject(this GameObject gameObject, string indent = "")
         {
             Log.Info("{0}+{1}", indent, gameObject.name);
 
@@ -21,12 +21,12 @@ namespace NitroxClient.Unity.Helper
             }
         }
 
-        public static void DumpComponent(Component component, string indent = "")
+        public static void DumpComponent(this Component component, string indent = "")
         {
-            Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name));
+            Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name + ": " + component.ToString()));
         }
 
-        public static string ByteArrayToHexString(byte[] bytes)
+        public static string ByteArrayToHexString(this byte[] bytes)
         {
             StringBuilder hex = new StringBuilder(bytes.Length * 2);
 
