@@ -55,7 +55,10 @@ namespace NitroxPatcher.Patches
         public void Restore()
         {
             foreach (PatchProcessor patch in activePatches)
+            {
                 patch.Restore();
+            }
+
             activePatches.Clear();
         }
 
@@ -66,9 +69,18 @@ namespace NitroxPatcher.Patches
             return new HarmonyMethod(method);
         }
 
+        private static LocalVariableInfo[] GetMatchingVariables<T>(MethodBase method)
+        {
+            return method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the one and only local variable of type <typeparamref name="T"/>. Throws <see cref="ArgumentException"/> if there is not exactly one local variable of that type.
+        /// </summary>
+        /// <exception cref="ArgumentException" />
         protected static int GetLocalVariableIndex<T>(MethodBase method)
         {
-            LocalVariableInfo[] matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
+            LocalVariableInfo[] matchingVariables = GetMatchingVariables<T>(method);
 
             if (matchingVariables.Length != 1)
             {
@@ -76,6 +88,15 @@ namespace NitroxPatcher.Patches
             }
 
             return matchingVariables[0].LocalIndex;
+        }
+
+        /// <summary>
+        /// Returns the index of the <paramref name="i"/>'th local variable of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <exception cref="IndexOutOfRangeException" />
+        protected static int GetLocalVariableIndex<T>(MethodBase method, int i)
+        {
+            return GetMatchingVariables<T>(method)[i].LocalIndex;
         }
     }
 }

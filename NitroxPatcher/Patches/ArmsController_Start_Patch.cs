@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ArmsController __instance)
         {
-            reconfigure.Invoke(__instance, new object[] { (PlayerTool)null });
+            reconfigure.Invoke(__instance, new PlayerTool[] { null });
         }
 
         public override void Patch(HarmonyInstance harmony)

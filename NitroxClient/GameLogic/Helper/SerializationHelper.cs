@@ -5,13 +5,13 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class SerializationHelper
     {
-        private static ProtobufSerializer serializer;
+        private static ProtobufSerializer Serializer => ProtobufSerializerPool.GetProxy().Value;
 
         public static byte[] GetBytes(GameObject gameObject)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                GetSerializer().SerializeObjectTree(memoryStream, gameObject);
+                Serializer.SerializeObjectTree(memoryStream, gameObject);
                 return memoryStream.ToArray();
             }
         }
@@ -20,18 +20,8 @@ namespace NitroxClient.GameLogic.Helper
         {
             using (MemoryStream memoryStream = new MemoryStream(bytes))
             {
-                return GetSerializer().DeserializeObjectTree(memoryStream, 0);
+                return Serializer.DeserializeObjectTree(memoryStream, 0);
             }
-        }
-
-        private static ProtobufSerializer GetSerializer() // Not directly intialized because it can cause issues in the client tester
-        {
-            if(serializer == null)
-            {
-                serializer = new ProtobufSerializer();
-            }
-
-            return serializer;
         }
     }
 }

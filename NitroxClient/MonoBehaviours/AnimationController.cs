@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours
         private Vector3 smoothedVelocity = Vector3.zero;
         private float smoothViewPitch;
 
-        public void Start()
+        public void Awake()
         {
             animator = GetComponent<Animator>();
 
