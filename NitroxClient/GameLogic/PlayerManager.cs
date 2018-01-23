@@ -81,6 +81,12 @@ namespace NitroxClient.GameLogic
         private GameObject CloneLocalPlayerBodyPrototype()
         {
             return Object.Instantiate(localPlayer.BodyPrototype);
-        }        
+        }
+
+        private void UpdateDiscordRichPresence()
+        {
+            Multiplayer.DiscordRP.Presence.partySize = 1 + GetPlayerCount();
+            Multiplayer.DiscordRP.UpdatePresence();
+        }
     }
 }
