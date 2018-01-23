@@ -7,6 +7,7 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
@@ -28,7 +29,7 @@ namespace NitroxClient.MonoBehaviours
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
-
+        public static DiscordController DiscordRP;
         public bool InitialSyncCompleted;
 
         public void Awake()
@@ -91,6 +92,28 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("Save Request");
             NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
+        }
+        public void OnConsoleCommand_discord(NotificationCenter.Notification n)
+        {
+            if (n?.data?.Count > 0)
+            {
+                if (((string)n.data[0]).ToLower() == "yes")
+                {
+                    DiscordRP.RespondLastJoinRequest(true);
+                }
+                else if (((string)n.data[0]).ToLower() == "no")
+                {
+                    DiscordRP.RespondLastJoinRequest(false);
+                }
+                else
+                {
+                    Log.InGame("Command syntax: discord YES/NO");
+                }
+            }
+            else
+            {
+                Log.InGame("Command syntax: discord YES/NO");
+            }
         }
 
         private void InitializeLocalPlayerState()
@@ -160,6 +183,7 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
             WaitScreen.ShowImmediately();
             Main.StartSession();
+            InitDiscordRichPresence("ip address");
             yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
             WaitScreen.Remove(item);
             SetLoadingComplete();
@@ -172,6 +196,17 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
             waitScreen.ReflectionCall("Hide");
+        }
+
+        private void InitDiscordRichPresence(string ipAddress)
+        {
+            DiscordRP.Presence.state = "In Game";
+            DiscordRP.Presence.partyId = "<Server Name>";
+            DiscordRP.Presence.partySize = 1 + remotePlayerManager.GetPlayerCount();
+            DiscordRP.Presence.partyMax = 42;
+            DiscordRP.Presence.joinSecret = ipAddress;
+            DiscordRP.Presence.instance = false;
+            DiscordRP.UpdatePresence();
         }
     }
 }
