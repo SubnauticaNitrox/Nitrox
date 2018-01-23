@@ -102,6 +102,8 @@
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordController.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
@@ -192,7 +194,11 @@
   <ItemGroup>
     <None Include="Resources\playerBackgroundImage" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="MonoBehaviours\DiscordRP\discord-rpc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

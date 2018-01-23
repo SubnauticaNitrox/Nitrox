@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic
@@ -26,6 +27,7 @@ namespace NitroxClient.GameLogic
             if (!playersById.TryGetValue(playerId, out player))
             {
                 player = playersById[playerId] = new RemotePlayer(playerId);
+                UpdateDiscordRichPresence();
             }
 
             return player;
@@ -47,6 +49,21 @@ namespace NitroxClient.GameLogic
             {
                 RemovePlayer(playerId);
             }
+        }
+
+        public int GetPlayerCount()
+        {
+            if (playersById == null)
+            {
+                return 0;
+            }
+            return playersById.Count;
+        }
+
+        private void UpdateDiscordRichPresence()
+        {
+            Multiplayer.DiscordRP.Presence.partySize = 1 + GetPlayerCount();
+            Multiplayer.DiscordRP.UpdatePresence();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace NitroxClient.Communication
     public class TcpClient
     {
         private readonly DeferringPacketReceiver packetReceiver;
-        private const int PORT = 11000;
+        private const int PORT = 21000;
         private Connection connection;
 
         public TcpClient(DeferringPacketReceiver packetManager)

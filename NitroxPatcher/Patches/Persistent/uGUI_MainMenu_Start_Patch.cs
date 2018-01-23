@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Persistent
@@ -16,6 +17,12 @@ namespace NitroxPatcher.Patches.Persistent
             // If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the patches if applicable.
             Main.Restore();
             new GameObject().AddComponent<MultiplayerButton>();
+            // Starting Discord Rich Presence
+            DiscordController DiscordRP = new GameObject().AddComponent<DiscordController>();
+
+            DiscordRP.Presence.state = "In Menu";
+            DiscordRP.Presence.instance = false;
+            DiscordRP.UpdatePresence();
         }
 
         public override void Patch(HarmonyInstance harmony)

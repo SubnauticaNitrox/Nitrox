@@ -6,6 +6,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.Map;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -22,6 +23,8 @@ namespace NitroxClient.MonoBehaviours
         public static Multiplayer Main;
 
         public static event Action OnBeforeMultiplayerStart;
+
+        public static DiscordController DiscordRP;
 
         private static readonly VisibleCells visibleCells = new VisibleCells();
         private static readonly DeferringPacketReceiver packetReceiver = new DeferringPacketReceiver(visibleCells);
@@ -61,6 +64,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+            DevConsole.RegisterConsoleCommand(this, "discord", false);
 
             Main = this;
         }
@@ -137,13 +141,36 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void OnConsoleCommand_discord(NotificationCenter.Notification n)
+        {
+            if (n?.data?.Count > 0)
+            {
+                if (((string)n.data[0]).ToLower() == "yes")
+                {
+                    DiscordRP.RespondLastJoinRequest(true);
+                }
+                else if (((string)n.data[0]).ToLower() == "no")
+                {
+                    DiscordRP.RespondLastJoinRequest(false);
+                }
+                else
+                {
+                    Log.InGame("Command syntax: discord YES/NO");
+                }
+            }
+            else
+            {
+                Log.InGame("Command syntax: discord YES/NO");
+            }
+        }
+
         public void StartMultiplayer(string ipAddress, string playerName)
         {
             OnBeforeMultiplayerStart();
 
             PacketSender.PlayerId = playerName;
             StartMultiplayer(ipAddress);
-            InitMonoBehaviours();
+            InitMonoBehaviours(ipAddress);
         }
 
         public void StartMultiplayer(string ipAddress)
@@ -169,7 +196,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void InitMonoBehaviours()
+        public void InitMonoBehaviours(string ipAddress)
         {
             if (!hasLoadedMonoBehaviors)
             {
@@ -178,9 +205,22 @@ namespace NitroxClient.MonoBehaviours
                 gameObject.AddComponent<PlayerStatsBroadcaster>();
                 gameObject.AddComponent<AnimationSender>();
                 gameObject.AddComponent<EntityPositionBroadcaster>();
+                DiscordRP = gameObject.AddComponent<DiscordController>();
+                InitDiscordRichPresence(ipAddress);
 
                 hasLoadedMonoBehaviors = true;
             }
+        }
+
+        private void InitDiscordRichPresence(string ipAddress)
+        {
+            DiscordRP.Presence.state = "In Game";
+            DiscordRP.Presence.partyId = "<Server Name>";
+            DiscordRP.Presence.partySize = 1 + remotePlayerManager.GetPlayerCount();
+            DiscordRP.Presence.partyMax = 42;
+            DiscordRP.Presence.joinSecret = ipAddress;
+            DiscordRP.Presence.instance = false;
+            DiscordRP.UpdatePresence();
         }
     }
 }

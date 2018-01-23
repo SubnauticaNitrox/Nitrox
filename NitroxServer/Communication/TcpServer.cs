@@ -22,7 +22,7 @@ namespace NitroxServer.Communication
 
         public void Start()
         {
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 21000);
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
