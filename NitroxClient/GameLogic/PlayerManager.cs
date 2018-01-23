@@ -84,7 +84,6 @@ namespace NitroxClient.GameLogic
             return Object.Instantiate(localPlayer.BodyPrototype);
         }
 
-
         public int GetPlayerCount()
         {
             if (playersById == null)
