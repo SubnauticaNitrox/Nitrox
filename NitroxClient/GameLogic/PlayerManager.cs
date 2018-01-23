@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -64,7 +65,7 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
-
+            UpdateDiscordRichPresence();
             return player;
         }
 
@@ -81,6 +82,12 @@ namespace NitroxClient.GameLogic
         private GameObject CloneLocalPlayerBodyPrototype()
         {
             return Object.Instantiate(localPlayer.BodyPrototype);
-        }        
+        }
+
+        private void UpdateDiscordRichPresence()
+        {
+            Multiplayer.DiscordRP.Presence.partySize = 1 + GetPlayerCount();
+            Multiplayer.DiscordRP.UpdatePresence();
+        }
     }
 }
