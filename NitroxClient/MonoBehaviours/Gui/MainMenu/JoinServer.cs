@@ -15,7 +15,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         Rect joinServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         Rect unableToJoinWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         string username = "username";
-        bool joiningServer = false;
+        public bool JoiningServer = false;
         bool notifyingUnableToJoin = false;
         bool shouldFocus;
 
@@ -28,14 +28,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Start()
         {
-            joiningServer = true;
+            JoiningServer = true;
             notifyingUnableToJoin = false;
             shouldFocus = true;
         }
 
         public void OnGUI()
         {
-            if (joiningServer)
+            if (JoiningServer)
             {
                 joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, RenderJoinServerDialog, "Join server");
             }
@@ -46,7 +46,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IEnumerator NegotiateSession(string serverIp)
+        public IEnumerator NegotiateSession(string serverIp)
         {
             Log.InGame("Negotiating session...");
 
@@ -171,7 +171,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             StartCoroutine(NegotiateSession(ServerIp));
-            joiningServer = false;
+            JoiningServer = false;
         }
 
         private void StopMultiplayerClient()
@@ -182,7 +182,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 multiplayerClient = null;
             }
 
-            joiningServer = false;
+            JoiningServer = false;
         }
 
         private void RenderUnableToJoinDialog(int windowId)
@@ -193,11 +193,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (e.keyCode)
                 {
                     case KeyCode.Return:
-                        joiningServer = true;
+                        JoiningServer = true;
                         notifyingUnableToJoin = false;
                         break;
                     case KeyCode.Escape:
-                        joiningServer = true;
+                        JoiningServer = true;
                         notifyingUnableToJoin = false;
                         break;
                 }
@@ -217,7 +217,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     if (GUILayout.Button("OK"))
                     {
-                        joiningServer = true;
+                        JoiningServer = true;
                         notifyingUnableToJoin = false;
                     }
                 }
