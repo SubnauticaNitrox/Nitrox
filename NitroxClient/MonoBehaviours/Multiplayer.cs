@@ -120,7 +120,6 @@ namespace NitroxClient.MonoBehaviours
 
             // Utilities
             DiscordRP = gameObject.AddComponent<DiscordController>();
-            InitDiscordRichPresence("ipAddress");
         }
 
         public void StopCurrentSession()
@@ -166,6 +165,7 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
             WaitScreen.ShowImmediately();
             Main.StartSession();
+            InitDiscordRichPresence("ip address");
             yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
             WaitScreen.Remove(item);
             SetLoadingComplete();
