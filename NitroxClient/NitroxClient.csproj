@@ -152,6 +152,8 @@
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordController.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
@@ -283,7 +285,11 @@
     <None Include="packages.config" />
     <None Include="Resources\playerBackgroundImage" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="MonoBehaviours\DiscordRP\discord-rpc.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
