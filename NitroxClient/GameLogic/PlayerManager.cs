@@ -84,6 +84,16 @@ namespace NitroxClient.GameLogic
             return Object.Instantiate(localPlayer.BodyPrototype);
         }
 
+
+        public int GetPlayerCount()
+        {
+            if (playersById == null)
+            {
+                return 0;
+            }
+            return playersById.Count;
+        }
+
         private void UpdateDiscordRichPresence()
         {
             Multiplayer.DiscordRP.Presence.partySize = 1 + GetPlayerCount();

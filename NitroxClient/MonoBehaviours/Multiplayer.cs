@@ -194,9 +194,11 @@ namespace NitroxClient.MonoBehaviours
             DiscordRP.Presence.state = "In Game";
             DiscordRP.Presence.partyId = "<Server Name>";
             DiscordRP.Presence.partySize = 1 + remotePlayerManager.GetPlayerCount();
-            DiscordRP.Presence.partyMax = 99;
-            DiscordRP.Presence.joinSecret = ipAddress;
-            DiscordRP.Presence.matchSecret = ipAddress;
+            DiscordRP.Presence.partyMax = 42;
+            if (ipAddress != null)
+            {
+                DiscordRP.Presence.joinSecret = ipAddress;
+            }
             DiscordRP.Presence.instance = false;
             DiscordRP.UpdatePresence();
         }
