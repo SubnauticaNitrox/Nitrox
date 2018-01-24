@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool shouldFocus;
         private bool showingAddServer;
         private string serverNameInput;
-        private string serverIpInput;
+        private string serverHostInput;
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
 
         GameObject multiplayerButton;
@@ -98,7 +98,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void ShowAddServerWindow()
         {
             serverNameInput = "local";
-            serverIpInput = "127.0.0.1";
+            serverHostInput = "127.0.0.1";
             showingAddServer = true;
             shouldFocus = true;
         }
@@ -122,8 +122,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void OnAddServerButtonClicked()
         {
-            AddServer(serverNameInput, serverIpInput);
-            CreateServerButton($"<b>{serverNameInput}</b>\n{serverIpInput}", serverIpInput);
+            AddServer(serverNameInput, serverHostInput);
+            CreateServerButton($"<b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
             HideAddServerWindow();
         }
 
@@ -183,10 +183,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("IP:");
-                        GUI.SetNextControlName("serverIpField");
+                        GUILayout.Label("Host:");
+                        GUI.SetNextControlName("serverHostField");
                         //120 so users can't go too crazy.
-                        serverIpInput = GUILayout.TextField(serverIpInput, 120);
+                        serverHostInput = GUILayout.TextField(serverHostInput, 120);
                     }
 
                     if (GUILayout.Button("Add server"))

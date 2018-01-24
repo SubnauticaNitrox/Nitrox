@@ -52,6 +52,9 @@ namespace NitroxClient.Unity.Helper
             copy.settings.tripleClickSelectsLine = baseSkin.settings.tripleClickSelectsLine;
             copy.settings.selectionColor = baseSkin.settings.selectionColor;
 
+            // TODO: Create identical copy of font.
+            copy.font = baseSkin.font; // Gives a giberish font: copy.font = UnityEngine.Object.Instantiate(baseSkin.font);
+
             return copy;
         }
 
