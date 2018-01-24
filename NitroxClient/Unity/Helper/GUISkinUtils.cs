@@ -21,6 +21,7 @@ namespace NitroxClient.Unity.Helper
             }
             
             GUISkin copy = ScriptableObject.CreateInstance<GUISkin>();
+
             copy.name = name ?? Guid.NewGuid().ToString();
             copy.box = new GUIStyle(baseSkin.box);
             copy.button = new GUIStyle(baseSkin.button);
@@ -44,6 +45,12 @@ namespace NitroxClient.Unity.Helper
             copy.verticalSliderThumb = new GUIStyle(baseSkin.verticalSliderThumb);
             copy.customStyles = baseSkin.customStyles.Select(s => new GUIStyle(s)).ToArray();
             copy.hideFlags = baseSkin.hideFlags;
+
+            copy.settings.cursorColor = baseSkin.settings.cursorColor;
+            copy.settings.cursorFlashSpeed = baseSkin.settings.cursorFlashSpeed;
+            copy.settings.doubleClickSelectsWord = baseSkin.settings.doubleClickSelectsWord;
+            copy.settings.tripleClickSelectsLine = baseSkin.settings.tripleClickSelectsLine;
+            copy.settings.selectionColor = baseSkin.settings.selectionColor;
 
             return copy;
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -115,7 +116,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 return;
             }
 
-            addServerWindowRect = GUILayout.Window(0, addServerWindowRect, DoAddServerWindow, "Add server");
+            addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
         }
 
 
@@ -131,22 +132,25 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             HideAddServerWindow();
         }
 
-        private void SetGUIStyle()
+        private GUISkin GetGUISkin()
         {
-            GUI.skin.textField.fontSize = 14;
-            GUI.skin.textField.richText = false;
-            GUI.skin.textField.alignment = TextAnchor.MiddleLeft;
-            GUI.skin.textField.wordWrap = true;
-            GUI.skin.textField.stretchHeight = true;
-            GUI.skin.textField.padding = new RectOffset(10, 10, 5, 5);
+            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
+            {
+                s.textField.fontSize = 14;
+                s.textField.richText = false;
+                s.textField.alignment = TextAnchor.MiddleLeft;
+                s.textField.wordWrap = true;
+                s.textField.stretchHeight = true;
+                s.textField.padding = new RectOffset(10, 10, 5, 5);
 
-            GUI.skin.label.fontSize = 14;
-            GUI.skin.label.alignment = TextAnchor.MiddleRight;
-            GUI.skin.label.stretchHeight = true;
-            GUI.skin.label.fixedWidth = 60; //change this when adding new labels that need more space.
+                s.label.fontSize = 14;
+                s.label.alignment = TextAnchor.MiddleRight;
+                s.label.stretchHeight = true;
+                s.label.fixedWidth = 80; //change this when adding new labels that need more space.
 
-            GUI.skin.button.fontSize = 14;
-            GUI.skin.button.stretchHeight = true;
+                s.button.fontSize = 14;
+                s.button.stretchHeight = true;
+            });
         }
 
         private void DoAddServerWindow(int windowId)
@@ -165,35 +169,37 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            SetGUIStyle();
-            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
+            GUISkinUtils.SwitchSkin(GetGUISkin(), () =>
             {
-                using (GUILayout.HorizontalScope h1 = new GUILayout.HorizontalScope())
+                using (new GUILayout.VerticalScope("Box"))
                 {
-                    GUILayout.Label("Name:");
-                    GUI.SetNextControlName("serverNameField");
-                    //120 so users can't go too crazy.
-                    serverNameInput = GUILayout.TextField(serverNameInput, 120);
-                }
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.Label("Name:");
+                        GUI.SetNextControlName("serverNameField");
+                        //120 so users can't go too crazy.
+                        serverNameInput = GUILayout.TextField(serverNameInput, 120);
+                    }
 
-                using (GUILayout.HorizontalScope h2 = new GUILayout.HorizontalScope())
-                {
-                    GUILayout.Label("IP:");
-                    GUI.SetNextControlName("serverIpField");
-                    //120 so users can't go too crazy.
-                    serverIpInput = GUILayout.TextField(serverIpInput, 120);
-                }
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.Label("IP:");
+                        GUI.SetNextControlName("serverIpField");
+                        //120 so users can't go too crazy.
+                        serverIpInput = GUILayout.TextField(serverIpInput, 120);
+                    }
 
-                if (GUILayout.Button("Add server"))
-                {
-                    OnAddServerButtonClicked();
-                }
+                    if (GUILayout.Button("Add server"))
+                    {
+                        OnAddServerButtonClicked();
+                    }
 
-                if (GUILayout.Button("Cancel"))
-                {
-                    OnCancelButtonClicked();
+                    if (GUILayout.Button("Cancel"))
+                    {
+                        OnCancelButtonClicked();
+                    }
                 }
-            }
+            });
 
             if (shouldFocus)
             {
