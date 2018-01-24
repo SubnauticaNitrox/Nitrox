@@ -1,11 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Logger;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using NitroxClient.Unity.Helper;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Debugging
 {
@@ -29,7 +22,7 @@ namespace NitroxClient.MonoBehaviours.Debugging
                 case 0:
                     using (new GUILayout.VerticalScope("Box"))
                     {
-                        GUILayout.Label("TODO", "header");
+                        GUILayout.Label("TODO: In/out-coming packets log", "header");
                     }
                     break;
             }
