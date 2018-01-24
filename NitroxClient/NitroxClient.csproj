@@ -137,6 +137,7 @@
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\Debugging\BaseDebugger.cs" />
+    <Compile Include="MonoBehaviours\Debugging\NetworkDebugger.cs" />
     <Compile Include="MonoBehaviours\Debugging\SceneDebugger.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\GUISkinUtils.cs" />
+    <Compile Include="Unity\Helper\GUIStyleUtils.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
     <Compile Include="Unity\Helper\StringUtils.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />

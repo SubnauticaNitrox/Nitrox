@@ -21,7 +21,8 @@ namespace NitroxClient.MonoBehaviours.Debugging
             wereActive = new HashSet<BaseDebugger>();
             Debuggers = new List<BaseDebugger>
             {
-                gameObject.AddComponent<SceneDebugger>()
+                gameObject.AddComponent<SceneDebugger>(),
+                gameObject.AddComponent<NetworkDebugger>()
             };
         }
 
