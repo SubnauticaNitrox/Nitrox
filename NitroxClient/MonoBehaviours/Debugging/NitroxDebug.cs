@@ -1,10 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours.Debugging
 {
@@ -14,9 +9,12 @@ namespace NitroxClient.MonoBehaviours.Debugging
         public List<BaseDebugger> Debuggers;
         private HashSet<BaseDebugger> wereActive;
         private bool isDebugging;
+        private Rect windowRect;
 
         public void Awake()
         {
+            windowRect = new Rect(10, 10, 200, 0);
+
             EnableDebuggerHotkey = KeyCode.F7;
             wereActive = new HashSet<BaseDebugger>();
             Debuggers = new List<BaseDebugger>
@@ -32,19 +30,8 @@ namespace NitroxClient.MonoBehaviours.Debugging
             {
                 return;
             }
-            
-            CheckDebuggerHotkeys(Event.current);
 
-            using (new GUILayout.AreaScope(new Rect(10, 10, 200, 40)))
-            {
-                using (new GUILayout.VerticalScope())
-                {
-                    foreach (BaseDebugger debugger in Debuggers)
-                    {
-                        debugger.enabled = GUILayout.Toggle(debugger.enabled, $"{debugger.DebuggerName} debugger ({debugger.GetHotkeyString()})");
-                    }
-                }
-            }
+            windowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), windowRect, DoWindow, "Nitrox debugging");
         }
 
         public void Update()
@@ -53,21 +40,63 @@ namespace NitroxClient.MonoBehaviours.Debugging
             {
                 ToggleDebugging();
             }
+
+            if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+            {
+                ToggleCursor();
+            }
+
+            CheckDebuggerHotkeys();
         }
 
         public void ToggleDebugging()
         {
             isDebugging = !isDebugging;
-            bool oldCursorState = Cursor.visible;
             if (isDebugging)
             {
-                Cursor.visible = true;
+                UWE.Utils.PushLockCursor(false);
                 ShowDebuggers();
             }
             else
             {
-                Cursor.visible = oldCursorState;
-                HideDebuggers();   
+                UWE.Utils.PopLockCursor();
+                HideDebuggers();
+            }
+        }
+
+        public void ToggleCursor()
+        {
+            UWE.Utils.lockCursor = !UWE.Utils.lockCursor;
+        }
+
+        private void DoWindow(int windowId)
+        {
+            using (new GUILayout.VerticalScope(GUILayout.ExpandHeight(true)))
+            {
+                if (GUILayout.Button("Toggle cursor (CTRL+C)"))
+                {
+                    ToggleCursor();
+                }
+
+                foreach (BaseDebugger debugger in Debuggers)
+                {
+                    debugger.enabled = GUILayout.Toggle(debugger.enabled, $"{debugger.DebuggerName} debugger ({debugger.GetHotkeyString()})");
+                }
+            }
+        }
+
+        private void CheckDebuggerHotkeys()
+        {
+            if (!isDebugging)
+            {
+                return;
+            }
+            foreach (BaseDebugger debugger in Debuggers)
+            {
+                if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
+                {
+                    debugger.enabled = !debugger.enabled;
+                }
             }
         }
 

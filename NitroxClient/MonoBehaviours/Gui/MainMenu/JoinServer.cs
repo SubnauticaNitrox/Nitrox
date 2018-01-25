@@ -35,7 +35,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public IEnumerator JoinServerWait(string serverIp)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618 // Type or member is obsolete
             StartCoroutine(startNewGame);
             //Wait until game starts
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);

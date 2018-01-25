@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,7 +14,9 @@ namespace NitroxClient.MonoBehaviours.Debugging
         private Scene selectedScene;
         private GameObject selectedObject;
         private Vector2 hierarchyScrollPos;
+        private Vector2 gameObjectScrollPos;
         private Color paleGreen = new Color(152, 251, 152);
+        private const int MAX_HIERARCHY_ENTRIES = 100;
 
         public void Awake()
         {
@@ -71,6 +74,35 @@ namespace NitroxClient.MonoBehaviours.Debugging
                     break;
 
                 case 1:
+                    using (new GUILayout.HorizontalScope("Box"))
+                    {
+                        StringBuilder breadcrumBuilder = new StringBuilder();
+                        if (selectedObject != null)
+                        {
+                            Transform parent = selectedObject.transform;
+                            while (parent != null)
+                            {
+                                breadcrumBuilder.Insert(0, '/');
+                                breadcrumBuilder.Insert(0, string.IsNullOrEmpty(parent.name) ? "<no-name>" : parent.name);
+                                parent = parent.parent;
+                            }
+                        }
+                        breadcrumBuilder.Insert(0, "//");
+                        GUILayout.Label(breadcrumBuilder.ToString(), "breadcrum");
+
+                        using (new GUILayout.HorizontalScope("breadcumNav"))
+                        {
+                            if (GUILayout.Button("<<"))
+                            {
+                                selectedObject = null;
+                            }
+                            if (GUILayout.Button("<"))
+                            {
+                                selectedObject = selectedObject?.transform.parent?.gameObject;
+                            }
+                        }
+                    }
+
                     using (new GUILayout.VerticalScope("Box"))
                     {
                         if (selectedScene.IsValid())
@@ -78,7 +110,25 @@ namespace NitroxClient.MonoBehaviours.Debugging
                             using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
                             {
                                 hierarchyScrollPos = scroll.scrollPosition;
-                                GuiRenderTree(selectedScene.GetRootGameObjects().Select(g => g.transform));
+                                List<GameObject> showObjects = new List<GameObject>();
+                                if (selectedObject == null)
+                                {
+                                    showObjects = selectedScene.GetRootGameObjects().ToList();
+                                }
+                                else
+                                {
+                                    foreach (Transform t in selectedObject.transform)
+                                    {
+                                        showObjects.Add(t.gameObject);
+                                    }
+                                }
+                                foreach (GameObject child in showObjects)
+                                {
+                                    if (GUILayout.Button($"{child.name}", "label"))
+                                    {
+                                        selectedObject = child.gameObject;
+                                    }
+                                }
                             }
                         }
                         else
@@ -93,28 +143,35 @@ namespace NitroxClient.MonoBehaviours.Debugging
                     {
                         if (selectedObject)
                         {
-                            GUILayout.Label($"GameObject: {selectedObject.name}", "header");
-
-                            //Add transform interface.
-                            //using (new GUILayout.VerticalScope("Box"))
-                            //{
-                            //    GUILayout.Label("Transform");
-                            //    using (new GUILayout.HorizontalScope())
-                            //    {
-                            //        transformX = GUILayout.TextField(transformX);
-                            //        transformY = GUILayout.TextField(transformY);
-                            //        transformZ = GUILayout.TextField(transformZ);
-                            //        selectedObject.transform.position = new Vector3(float.Parse(transformX), float.Parse(transformY), float.Parse(transformZ));
-                            //    }
-                            //}
-
-                            //Add other component interfaces.
-                            foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
+                            using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(gameObjectScrollPos))
                             {
-                                Type script = behaviour.GetType();
+                                gameObjectScrollPos = scroll.scrollPosition;
+
+                                GUILayout.Label($"GameObject: {selectedObject.name}", "header");
+
+                                //Add transform interface.
                                 using (new GUILayout.VerticalScope("Box"))
                                 {
-                                    GUILayout.Label(script.Name);
+                                    GUILayout.Label("Transform");
+                                    using (new GUILayout.HorizontalScope())
+                                    {
+                                        //TODO: Create a "save" button to save changes instead of realtime editing.
+                                        Vector3 pos = selectedObject.transform.position;
+                                        float.TryParse(GUILayout.TextField(pos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out pos.x);
+                                        float.TryParse(GUILayout.TextField(pos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out pos.y);
+                                        float.TryParse(GUILayout.TextField(pos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out pos.z);
+                                        selectedObject.transform.position = pos;
+                                    }
+                                }
+
+                                //Add other component interfaces.
+                                foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
+                                {
+                                    Type script = behaviour.GetType();
+                                    using (new GUILayout.VerticalScope("Box"))
+                                    {
+                                        GUILayout.Label(script.Name);
+                                    }
                                 }
                             }
                         }
@@ -159,6 +216,18 @@ namespace NitroxClient.MonoBehaviours.Debugging
                 s.fontSize = 24;
                 s.alignment = TextAnchor.MiddleCenter;
                 s.fontStyle = FontStyle.Italic;
+            });
+
+            skin.SetCustomStyle("breadcrum", skin.label, s =>
+            {
+                s.fontSize = 20;
+                s.fontStyle = FontStyle.Bold;
+            });
+
+            skin.SetCustomStyle("breadcumNav", skin.box, s =>
+            {
+                s.stretchWidth = false;
+                s.fixedWidth = 100;
             });
         }
 

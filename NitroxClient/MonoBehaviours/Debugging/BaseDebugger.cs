@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Debugging
@@ -77,9 +76,11 @@ namespace NitroxClient.MonoBehaviours.Debugging
                         OnSetSkinImpl(s);
                     });
                     break;
+
                 case GUISkinCreationOptions.UNITYCOPY:
                     skin = GUISkinUtils.RegisterDerivedOnce(skinName, OnSetSkinImpl);
                     break;
+
                 case GUISkinCreationOptions.DERIVEDCOPY:
                     GUISkin baseSkin = GUISkinUtils.RegisterDerivedOnce("debuggers.default", SetBaseStyle);
                     skin = GUISkinUtils.RegisterDerivedOnce(skinName, OnSetSkinImpl, baseSkin);
@@ -134,7 +135,6 @@ namespace NitroxClient.MonoBehaviours.Debugging
 
         protected virtual void OnSetSkin(GUISkin skin)
         {
-            
         }
 
         public abstract void DoWindow(int windowId);
