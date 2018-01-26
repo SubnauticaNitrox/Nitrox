@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Harmony;
@@ -55,7 +54,10 @@ namespace NitroxPatcher.Patches
         public void Restore()
         {
             foreach (PatchProcessor patch in activePatches)
+            {
                 patch.Restore();
+            }
+
             activePatches.Clear();
         }
 
@@ -66,16 +68,27 @@ namespace NitroxPatcher.Patches
             return new HarmonyMethod(method);
         }
 
+        private static IEnumerable<LocalVariableInfo> GetMatchingVariables<T>(MethodBase method)
+        {
+            return method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T));
+        }
+
+        /// <summary>
+        /// Returns the one and only local variable of type <typeparamref name="T"/>. Throws <see cref="System.InvalidOperationException"/> if there is not exactly one local variable of that type.
+        /// </summary>
+        /// <exception cref="System.InvalidOperationException" />
         protected static int GetLocalVariableIndex<T>(MethodBase method)
         {
-            LocalVariableInfo[] matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
+            return GetMatchingVariables<T>(method).Single().LocalIndex;
+        }
 
-            if (matchingVariables.Length != 1)
-            {
-                throw new ArgumentException($"{method} has {matchingVariables.Length} local variables of type {nameof(T)}");
-            }
-
-            return matchingVariables[0].LocalIndex;
+        /// <summary>
+        /// Returns the index of the <paramref name="i"/>'th local variable of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <exception cref="System.ArgumentOutOfRangeException" />
+        protected static int GetLocalVariableIndex<T>(MethodBase method, int i)
+        {
+            return GetMatchingVariables<T>(method).ElementAt(i).LocalIndex;
         }
     }
 }

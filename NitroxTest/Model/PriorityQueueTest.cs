@@ -1,16 +1,16 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NitroxTest.Model
 {
+    using StringPriorityQueue = NitroxModel.DataStructures.PriorityQueue<string>;
+
     [TestClass]
     public class PriorityQueueTest
     {
         [TestMethod]
         public void SameOrder()
         {
-            PriorityQueue<string> queue = new PriorityQueue<string>();
+            StringPriorityQueue queue = new StringPriorityQueue();
             queue.Enqueue(0, "First");
             queue.Enqueue(0, "Second");
             queue.Enqueue(0, "Third");
@@ -23,7 +23,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void DifferentOrder()
         {
-            PriorityQueue<string> queue = new PriorityQueue<string>();
+            StringPriorityQueue queue = new StringPriorityQueue();
             queue.Enqueue(3, "First");
             queue.Enqueue(2, "Second");
             queue.Enqueue(1, "Third");
@@ -36,7 +36,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void SomeAreSameOrder()
         {
-            PriorityQueue<string> queue = new PriorityQueue<string>();
+            StringPriorityQueue queue = new StringPriorityQueue();
             queue.Enqueue(2, "First");
             queue.Enqueue(2, "Second");
             queue.Enqueue(0, "Third");
@@ -49,7 +49,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void PrioritySanity()
         {
-            PriorityQueue<string> queue = new PriorityQueue<string>();
+            StringPriorityQueue queue = new StringPriorityQueue();
             queue.Enqueue(2, "Second");
             queue.Enqueue(3, "First");
             queue.Enqueue(1, "Third");
@@ -62,7 +62,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void CountSanity()
         {
-            PriorityQueue<string> queue = new PriorityQueue<string>();
+            StringPriorityQueue queue = new StringPriorityQueue();
             queue.Enqueue(2, "Second");
             queue.Enqueue(3, "First");
             queue.Enqueue(1, "Third");
@@ -71,7 +71,7 @@ namespace NitroxTest.Model
 
             queue.Dequeue();
             queue.Dequeue();
-            
+
             Assert.AreEqual(1, queue.Count);
         }
     }

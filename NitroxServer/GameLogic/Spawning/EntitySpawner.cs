@@ -9,6 +9,7 @@ using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
 using System.IO;
+using NitroxModel.Helper;
 
 namespace NitroxServer.GameLogic
 {
@@ -115,8 +116,13 @@ namespace NitroxServer.GameLogic
             lootDistributions = "";
             worldEntityData = new Dictionary<string, WorldEntityInfo>();
             string resourcesPath = "";
+            string gameResourcesPath = Path.Combine(SteamFinder.FindSteamGamePath(264710, "Subnautica"), "Subnautica_Data/resources.assets");
             AssetsFile resourcesFile;
-            if (File.Exists("../resources.assets"))
+            if (File.Exists(gameResourcesPath))
+            {
+                resourcesPath = gameResourcesPath;
+            }
+            else if (File.Exists("../resources.assets"))
             {
                 resourcesPath = Path.GetFullPath("../resources.assets");
             }
@@ -136,7 +142,6 @@ namespace NitroxServer.GameLogic
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(resourcesFile);
                 foreach (AssetFileInfoEx afi in resourcesFileTable.pAssetFileInfo)
                 {
-                    //ids may change in the future!
                     if (afi.curFileType == 0x31) //TextAsset
                     {
                         resourcesFile.reader.Position = afi.absoluteFilePos;
