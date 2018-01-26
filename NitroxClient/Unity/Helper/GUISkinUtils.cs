@@ -87,20 +87,20 @@ namespace NitroxClient.Unity.Helper
         }
 
         /// <summary>
-        /// Switches the active skin until after the <paramref name="onGui"/> action.
+        /// Switches the active skin until after the <paramref name="render"/> action.
         /// </summary>
         /// <param name="skin">Skin to switch to.</param>
-        /// <param name="onGui">Render function to run.</param>
-        public static void RenderWithSkin(GUISkin skin, Action onGui)
+        /// <param name="render">Render function to run.</param>
+        public static void RenderWithSkin(GUISkin skin, Action render)
         {
-            if (onGui == null)
+            if (render == null)
             {
-                throw new ArgumentNullException(nameof(onGui));
+                throw new ArgumentNullException(nameof(render));
             }
 
             GUISkin prevSkin = GUI.skin;
             GUI.skin = skin;
-            onGui();
+            render();
             GUI.skin = prevSkin;
         }
 
