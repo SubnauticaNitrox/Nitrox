@@ -1,9 +1,4 @@
 ﻿using UnityEngine;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxClient.MonoBehaviours.Debugging;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -20,8 +15,8 @@ namespace NitroxClient.MonoBehaviours
         private void CreateDebugger()
         {
             GameObject debugger = new GameObject();
-            debugger.name = "DebuggerManager";
-            debugger.AddComponent<NitroxDebug>();
+            debugger.name = "Debug manager";
+            debugger.AddComponent<NitroxDebugManager>();
             debugger.transform.SetParent(transform);
         }
     }

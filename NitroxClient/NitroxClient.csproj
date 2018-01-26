@@ -102,6 +102,9 @@
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
+    <Compile Include="Debuggers\BaseDebugger.cs" />
+    <Compile Include="Debuggers\NetworkDebugger.cs" />
+    <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
@@ -136,9 +139,6 @@
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
-    <Compile Include="MonoBehaviours\Debugging\BaseDebugger.cs" />
-    <Compile Include="MonoBehaviours\Debugging\NetworkDebugger.cs" />
-    <Compile Include="MonoBehaviours\Debugging\SceneDebugger.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
@@ -158,7 +158,7 @@
     <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
     <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
-    <Compile Include="MonoBehaviours\Debugging\NitroxDebug.cs" />
+    <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
@@ -173,7 +173,6 @@
     <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\GUISkinUtils.cs" />
-    <Compile Include="Unity\Helper\GUIStyleUtils.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
     <Compile Include="Unity\Helper\StringUtils.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />

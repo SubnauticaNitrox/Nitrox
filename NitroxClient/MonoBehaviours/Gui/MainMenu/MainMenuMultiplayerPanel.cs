@@ -169,7 +169,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            GUISkinUtils.SwitchSkin(GetGUISkin(), () =>
+            GUISkinUtils.RenderWithSkin(GetGUISkin(), () =>
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {

@@ -7,24 +7,17 @@ using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace NitroxClient.MonoBehaviours.Debugging
+namespace NitroxClient.Debuggers
 {
     public class SceneDebugger : BaseDebugger
     {
-        private Scene selectedScene;
-        private GameObject selectedObject;
-        private Vector2 hierarchyScrollPos;
         private Vector2 gameObjectScrollPos;
-        private Color paleGreen = new Color(152, 251, 152);
-        private const int MAX_HIERARCHY_ENTRIES = 100;
+        private Vector2 hierarchyScrollPos;
+        private GameObject selectedObject;
+        private Scene selectedScene;
 
-        public void Awake()
+        public SceneDebugger() : base(400, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
-            Hotkey = KeyCode.S;
-            HotkeyControlRequired = true;
-            WindowRect.width = 400;
-            SkinCreationOptions = GUISkinCreationOptions.DERIVEDCOPY;
-
             Tabs.AddRange(new[]
             {
                 "Scenes",
@@ -33,12 +26,66 @@ namespace NitroxClient.MonoBehaviours.Debugging
             });
         }
 
-        public override void DoWindow(int windowId)
+        private enum TabTypes
         {
-            switch (ActiveTab)
+            SCENES,
+            HIERARCHY,
+            GAMEOBJECT
+        }
+
+        protected override void OnSetSkin(GUISkin skin)
+        {
+            base.OnSetSkin(skin);
+
+            skin.SetCustomStyle("sceneLoaded", skin.label, s =>
+            {
+                s.normal = new GUIStyleState()
+                {
+                    textColor = Color.green
+                };
+                s.fontStyle = FontStyle.Bold;
+            });
+
+            skin.SetCustomStyle("loadScene", skin.button, s =>
+            {
+                s.fixedWidth = 60;
+            });
+
+            skin.SetCustomStyle("mainScene", skin.label, s =>
+            {
+                s.margin = new RectOffset(2, 10, 10, 10);
+                s.alignment = TextAnchor.MiddleLeft;
+                s.fontSize = 20;
+            });
+
+            skin.SetCustomStyle("fillMessage", skin.label, s =>
+            {
+                s.stretchWidth = true;
+                s.stretchHeight = true;
+                s.fontSize = 24;
+                s.alignment = TextAnchor.MiddleCenter;
+                s.fontStyle = FontStyle.Italic;
+            });
+
+            skin.SetCustomStyle("breadcrumb", skin.label, s =>
+            {
+                s.fontSize = 20;
+                s.fontStyle = FontStyle.Bold;
+            });
+
+            skin.SetCustomStyle("breadcrumbNav", skin.box, s =>
+            {
+                s.stretchWidth = false;
+                s.fixedWidth = 100;
+            });
+        }
+
+        protected override void Render(int windowId)
+        {
+            switch ((TabTypes)ActiveTab)
             {
                 default:
-                case 0:
+                case TabTypes.SCENES:
                     Scene scene = SceneManager.GetActiveScene();
                     using (new GUILayout.VerticalScope("Box"))
                     {
@@ -73,24 +120,24 @@ namespace NitroxClient.MonoBehaviours.Debugging
                     }
                     break;
 
-                case 1:
+                case TabTypes.HIERARCHY:
                     using (new GUILayout.HorizontalScope("Box"))
                     {
-                        StringBuilder breadcrumBuilder = new StringBuilder();
+                        StringBuilder breadcrumbBuilder = new StringBuilder();
                         if (selectedObject != null)
                         {
                             Transform parent = selectedObject.transform;
                             while (parent != null)
                             {
-                                breadcrumBuilder.Insert(0, '/');
-                                breadcrumBuilder.Insert(0, string.IsNullOrEmpty(parent.name) ? "<no-name>" : parent.name);
+                                breadcrumbBuilder.Insert(0, '/');
+                                breadcrumbBuilder.Insert(0, string.IsNullOrEmpty(parent.name) ? "<no-name>" : parent.name);
                                 parent = parent.parent;
                             }
                         }
-                        breadcrumBuilder.Insert(0, "//");
-                        GUILayout.Label(breadcrumBuilder.ToString(), "breadcrum");
+                        breadcrumbBuilder.Insert(0, "//");
+                        GUILayout.Label(breadcrumbBuilder.ToString(), "breadcrumb");
 
-                        using (new GUILayout.HorizontalScope("breadcumNav"))
+                        using (new GUILayout.HorizontalScope("breadcrumbNav"))
                         {
                             if (GUILayout.Button("<<"))
                             {
@@ -138,7 +185,7 @@ namespace NitroxClient.MonoBehaviours.Debugging
                     }
                     break;
 
-                case 2:
+                case TabTypes.GAMEOBJECT:
                     using (new GUILayout.VerticalScope("Box"))
                     {
                         if (selectedObject)
@@ -181,72 +228,6 @@ namespace NitroxClient.MonoBehaviours.Debugging
                         }
                     }
                     break;
-            }
-        }
-
-        protected override void OnSetSkin(GUISkin skin)
-        {
-            base.OnSetSkin(skin);
-
-            skin.SetCustomStyle("sceneLoaded", skin.label, s =>
-            {
-                s.normal = new GUIStyleState()
-                {
-                    textColor = Color.green
-                };
-                s.fontStyle = FontStyle.Bold;
-            });
-
-            skin.SetCustomStyle("loadScene", skin.button, s =>
-            {
-                s.fixedWidth = 60;
-            });
-
-            skin.SetCustomStyle("mainScene", skin.label, s =>
-            {
-                s.margin = new RectOffset(2, 10, 10, 10);
-                s.alignment = TextAnchor.MiddleLeft;
-                s.fontSize = 20;
-            });
-
-            skin.SetCustomStyle("fillMessage", skin.label, s =>
-            {
-                s.stretchWidth = true;
-                s.stretchHeight = true;
-                s.fontSize = 24;
-                s.alignment = TextAnchor.MiddleCenter;
-                s.fontStyle = FontStyle.Italic;
-            });
-
-            skin.SetCustomStyle("breadcrum", skin.label, s =>
-            {
-                s.fontSize = 20;
-                s.fontStyle = FontStyle.Bold;
-            });
-
-            skin.SetCustomStyle("breadcumNav", skin.box, s =>
-            {
-                s.stretchWidth = false;
-                s.fixedWidth = 100;
-            });
-        }
-
-        private void GuiRenderTree(IEnumerable<Transform> objects, int level = 0)
-        {
-            foreach (Transform t in objects)
-            {
-                if (GUILayout.Button($"{(t.gameObject == selectedObject ? ">>" : "")}{new string(' ', level * 4)}{t.name}", "label"))
-                {
-                    selectedObject = t.gameObject;
-                    ActiveTab = 2;
-                }
-
-                List<Transform> transforms = new List<Transform>();
-                foreach (Transform child in t)
-                {
-                    transforms.Add(child);
-                }
-                GuiRenderTree(transforms, level + 1);
             }
         }
     }

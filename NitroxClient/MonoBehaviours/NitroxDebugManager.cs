@@ -1,26 +1,23 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.Debuggers;
 using UnityEngine;
 
-namespace NitroxClient.MonoBehaviours.Debugging
+namespace NitroxClient.MonoBehaviours
 {
-    public class NitroxDebug : MonoBehaviour
+    public class NitroxDebugManager : MonoBehaviour
     {
-        public KeyCode EnableDebuggerHotkey;
-        public List<BaseDebugger> Debuggers;
-        private HashSet<BaseDebugger> wereActive;
+        public readonly KeyCode EnableDebuggerHotkey = KeyCode.F7;
+        public readonly List<BaseDebugger> Debuggers;
+        private readonly HashSet<BaseDebugger> prevActiveDebuggers = new HashSet<BaseDebugger>();
         private bool isDebugging;
         private Rect windowRect;
 
-        public void Awake()
+        private NitroxDebugManager()
         {
-            windowRect = new Rect(10, 10, 200, 0);
-
-            EnableDebuggerHotkey = KeyCode.F7;
-            wereActive = new HashSet<BaseDebugger>();
             Debuggers = new List<BaseDebugger>
             {
-                gameObject.AddComponent<SceneDebugger>(),
-                gameObject.AddComponent<NetworkDebugger>()
+                new SceneDebugger(),
+                new NetworkDebugger()
             };
         }
 
@@ -31,7 +28,14 @@ namespace NitroxClient.MonoBehaviours.Debugging
                 return;
             }
 
+            // Main window to display all available debuggers.
             windowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), windowRect, DoWindow, "Nitrox debugging");
+
+            // Render debugger windows if they are enabled.
+            foreach (BaseDebugger debugger in Debuggers)
+            {
+                debugger.OnGUI();
+            }
         }
 
         public void Update()
@@ -80,7 +84,8 @@ namespace NitroxClient.MonoBehaviours.Debugging
 
                 foreach (BaseDebugger debugger in Debuggers)
                 {
-                    debugger.enabled = GUILayout.Toggle(debugger.enabled, $"{debugger.DebuggerName} debugger ({debugger.GetHotkeyString()})");
+                    string hotkeyString = debugger.GetHotkeyString();
+                    debugger.Enabled = GUILayout.Toggle(debugger.Enabled, $"{debugger.DebuggerName} debugger{(!string.IsNullOrEmpty(hotkeyString) ? $" ({hotkeyString})" : "")}");
                 }
             }
         }
@@ -95,23 +100,7 @@ namespace NitroxClient.MonoBehaviours.Debugging
             {
                 if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
                 {
-                    debugger.enabled = !debugger.enabled;
-                }
-            }
-        }
-
-        private void CheckDebuggerHotkeys(Event e)
-        {
-            if (!e.isKey || e.type != EventType.KeyDown)
-            {
-                return;
-            }
-
-            foreach (BaseDebugger debugger in Debuggers)
-            {
-                if (e.keyCode == debugger.Hotkey && e.control == debugger.HotkeyControlRequired && e.shift == debugger.HotkeyShiftRequired && e.alt == debugger.HotkeyAltRequired)
-                {
-                    debugger.enabled = !debugger.enabled;
+                    debugger.Enabled = !debugger.Enabled;
                 }
             }
         }
@@ -120,21 +109,21 @@ namespace NitroxClient.MonoBehaviours.Debugging
         {
             foreach (BaseDebugger debugger in GetComponents<BaseDebugger>())
             {
-                if (debugger.enabled)
+                if (debugger.Enabled)
                 {
-                    wereActive.Add(debugger);
+                    prevActiveDebuggers.Add(debugger);
                 }
-                debugger.enabled = false;
+                debugger.Enabled = false;
             }
         }
 
         private void ShowDebuggers()
         {
-            foreach (BaseDebugger debugger in wereActive)
+            foreach (BaseDebugger debugger in prevActiveDebuggers)
             {
-                debugger.enabled = true;
+                debugger.Enabled = true;
             }
-            wereActive.Clear();
+            prevActiveDebuggers.Clear();
         }
     }
 }

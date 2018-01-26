@@ -32,5 +32,19 @@ namespace NitroxClient.Unity.Helper
             }
             return value.Length <= maxChars ? value : appendix + value.Substring(value.Length - maxChars, maxChars);
         }
+
+        public static string ByteArrayToHexString(this byte[] bytes)
+        {
+            StringBuilder hex = new StringBuilder(bytes.Length * 2);
+
+            foreach (byte b in bytes)
+            {
+                hex.Append("0x");
+                hex.Append(b.ToString("X2"));
+                hex.Append(" ");
+            }
+
+            return hex.ToString();
+        }
     }
 }

@@ -1,7 +1,7 @@
-﻿using NitroxModel.Logger;
-using System.Linq;
+﻿using NitroxModel.Helper;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
@@ -19,7 +19,7 @@ namespace NitroxClient.Unity.Helper
                 baseSkin = GUI.skin;
                 GUI.skin = prevSkin;
             }
-            
+
             GUISkin copy = ScriptableObject.CreateInstance<GUISkin>();
 
             copy.name = name ?? Guid.NewGuid().ToString();
@@ -60,15 +60,9 @@ namespace NitroxClient.Unity.Helper
 
         public static GUISkin RegisterDerived(string name, GUISkin baseSkin = null)
         {
-            if (name == null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-            if (guiSkins.ContainsKey(name))
-            {
-                throw new ArgumentException("Name of new GUISkin already exists.", nameof(name));
-            }
-            
+            Validate.NotNull(name);
+            Validate.IsFalse(guiSkins.ContainsKey(name), $"Name of new GUISkin already exists.");
+
             GUISkin newSkin = CreateDerived(baseSkin, name);
             guiSkins.Add(name, newSkin);
             return newSkin;
@@ -97,7 +91,7 @@ namespace NitroxClient.Unity.Helper
         /// </summary>
         /// <param name="skin">Skin to switch to.</param>
         /// <param name="onGui">Render function to run.</param>
-        public static void SwitchSkin(GUISkin skin, Action onGui)
+        public static void RenderWithSkin(GUISkin skin, Action onGui)
         {
             if (onGui == null)
             {
@@ -110,29 +104,35 @@ namespace NitroxClient.Unity.Helper
             GUI.skin = prevSkin;
         }
 
+        /// <summary>
+        /// Adds or sets a custom style to the skin.
+        /// </summary>
+        /// <remarks>
+        /// Custom skins can be used by passing the "nameofskin" to the <see cref="GUIStyle"/> parameter of <see cref="GUILayout.Label(string, GUIStyle, GUILayoutOption[])"/> and similar.
+        /// </remarks>
+        /// <param name="skin">Skin to add a custom style to.</param>
+        /// <param name="name">Name of the new custom style.</param>
+        /// <param name="baseStyle">Style to base your custom style on.</param>
+        /// <param name="modify">Function that changes the custom style to your liking.</param>
         public static void SetCustomStyle(this GUISkin skin, string name, GUIStyle baseStyle, Action<GUIStyle> modify)
         {
             GUIStyle style = new GUIStyle(baseStyle);
             style.name = name;
             modify(style);
 
-            bool found = false;
-            for (int i = 0; i < skin.customStyles.Length; i++)
+            int index = Array.FindIndex(skin.customStyles, item => item.name == style.name);
+            if (index >= 0)
             {
-                GUIStyle item = skin.customStyles[i];
-                if (item.name == style.name)
-                {
-                    skin.customStyles[i] = style;
-                    found = true;
-                    break;
-                }
+                skin.customStyles[index] = style;
             }
-            if (!found)
+            else
             {
-                GUIStyle[] newStyles = new GUIStyle[skin.customStyles.Length + 1];
-                skin.customStyles.CopyTo(newStyles, 1);
-                newStyles[0] = style;
-                skin.customStyles = newStyles;
+                // Increase array size and add style.
+                List<GUIStyle> styles = new List<GUIStyle>(skin.customStyles)
+                {
+                    style
+                };
+                skin.customStyles = styles.ToArray();
             }
         }
     }
