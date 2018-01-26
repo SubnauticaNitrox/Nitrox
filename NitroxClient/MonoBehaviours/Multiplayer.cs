@@ -146,7 +146,7 @@ namespace NitroxClient.MonoBehaviours
             InitMonoBehaviours();
         }
 
-        public void StartMultiplayer(string ipAddress)
+        private void StartMultiplayer(string ipAddress)
         {
             client.Start(ipAddress);
             if (client.IsConnected())
