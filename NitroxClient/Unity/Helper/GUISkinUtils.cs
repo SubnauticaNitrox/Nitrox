@@ -93,10 +93,7 @@ namespace NitroxClient.Unity.Helper
         /// <param name="render">Render function to run.</param>
         public static void RenderWithSkin(GUISkin skin, Action render)
         {
-            if (render == null)
-            {
-                throw new ArgumentNullException(nameof(render));
-            }
+            Validate.NotNull(render);
 
             GUISkin prevSkin = GUI.skin;
             GUI.skin = skin;
