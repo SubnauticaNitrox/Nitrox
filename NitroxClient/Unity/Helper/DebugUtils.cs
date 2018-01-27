@@ -25,19 +25,5 @@ namespace NitroxClient.Unity.Helper
         {
             Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name + ": " + component.ToString()));
         }
-
-        public static string ByteArrayToHexString(this byte[] bytes)
-        {
-            StringBuilder hex = new StringBuilder(bytes.Length * 2);
-
-            foreach (byte b in bytes)
-            {
-                hex.Append("0x");
-                hex.Append(b.ToString("X2"));
-                hex.Append(" ");
-            }
-
-            return hex.ToString();
-        }
     }
 }
