@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
@@ -10,25 +6,14 @@ namespace NitroxClient.Debuggers
     {
         public NetworkDebugger() : base(400, null, KeyCode.N, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
-            Tabs.Add("Packets");
+            ActiveTab = AddTab("Packets", RenderTabPackets);
         }
 
-        private enum TabTypes
+        private void RenderTabPackets()
         {
-            PACKETS
-        }
-
-        protected override void Render(int windowId)
-        {
-            switch ((TabTypes)ActiveTab)
+            using (new GUILayout.VerticalScope("Box"))
             {
-                default:
-                case TabTypes.PACKETS:
-                    using (new GUILayout.VerticalScope("Box"))
-                    {
-                        GUILayout.Label("TODO: In/out-coming packets log", "header");
-                    }
-                    break;
+                GUILayout.Label("TODO: In/out-coming packets log", "header");
             }
         }
     }
