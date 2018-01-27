@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NitroxClient.MonoBehaviours;
+using UnityEngine;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -49,13 +51,15 @@ namespace NitroxPatcher
             });
 
             patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ToArray();
-
-            NitroxClient.MonoBehaviours.Multiplayer.OnBeforeMultiplayerStart += Apply;
-
+            Multiplayer.OnBeforeMultiplayerStart += Apply;
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
+            Log.Info("Enabling developer console.");
             DevConsole.disableConsole = false;
-            UnityEngine.Application.runInBackground = true;
+            Application.runInBackground = true;
+            Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
+
+            ApplyNitroxBehaviours();
         }
 
         public static void Apply()
@@ -92,6 +96,15 @@ namespace NitroxPatcher
             });
 
             isApplied = false;
+        }
+
+        private static void ApplyNitroxBehaviours()
+        {
+            Log.Info("Applying Nitrox behaviours..");
+            GameObject nitroxRoot = new GameObject();
+            nitroxRoot.name = "Nitrox";
+            nitroxRoot.AddComponent<NitroxBootstrapper>();
+            Log.Info("Behaviours applied.");
         }
 
         [Conditional("DEBUG")]
