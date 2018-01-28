@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic
 {
     public class MobileVehicleBay
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
         private readonly List<Type> interactiveChildTypes = new List<Type>() // we must sync guids of these types when creating vehicles (mainly cyclops)
         {
@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic
             { typeof(FireExtinguisherHolder) }
         };
 
-        public MobileVehicleBay(PacketSender packetSender)
+        public MobileVehicleBay(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

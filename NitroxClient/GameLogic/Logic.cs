@@ -21,9 +21,9 @@ namespace NitroxClient.GameLogic
         public Interior Interior { get; }
         public MobileVehicleBay MobileVehicleBay { get; }
         public Terrain Terrain { get; }
-        public PacketSender PacketSender { get; }
+        public IPacketSender PacketSender { get; }
 
-        public Logic(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Logic(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
             AI = new AI(packetSender);
             Building = new Building(packetSender);

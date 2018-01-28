@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class OpenableStateChangedProcessor : ClientPacketProcessor<OpenableStateChanged>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public OpenableStateChangedProcessor(PacketSender packetSender)
+        public OpenableStateChangedProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);            
             Openable openable = gameObject.RequireComponent<Openable>();
             
-            using (packetSender.Suppress<OpenableStateChanged>())
+            using (packetSender.suppress<OpenableStateChanged>())
             {
                 openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
             }

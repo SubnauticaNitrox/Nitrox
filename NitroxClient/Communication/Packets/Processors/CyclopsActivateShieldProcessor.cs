@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsActivateShieldProcessor : ClientPacketProcessor<CyclopsActivateShield>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsActivateShieldProcessor(PacketSender packetSender)
+        public CyclopsActivateShieldProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);            
             CyclopsShieldButton shield = cyclops.RequireComponentInChildren<CyclopsShieldButton>();
             
-            using (packetSender.Suppress<CyclopsActivateShield>())
+            using (packetSender.suppress<CyclopsActivateShield>())
             {
                 shield.OnClick();
             }

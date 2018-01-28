@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleNameChangeProcessor : ClientPacketProcessor<VehicleNameChange>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public VehicleNameChangeProcessor(PacketSender packetSender)
+        public VehicleNameChangeProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject target = GuidHelper.RequireObjectFrom(namePacket.Guid);
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
 
-            using (packetSender.Suppress<VehicleNameChange>())
+            using (packetSender.suppress<VehicleNameChange>())
             {
                 subNameInput.OnNameChange(namePacket.Name);
             }

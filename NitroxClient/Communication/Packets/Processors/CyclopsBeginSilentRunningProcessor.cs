@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsBeginSilentRunningProcessor : ClientPacketProcessor<CyclopsBeginSilentRunning>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsBeginSilentRunningProcessor(PacketSender packetSender)
+        public CyclopsBeginSilentRunningProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
             CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
             
-            using (packetSender.Suppress<CyclopsBeginSilentRunning>())
+            using (packetSender.suppress<CyclopsBeginSilentRunning>())
             {
                 ability.subRoot.BroadcastMessage("RigForSilentRunning");
                 ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);

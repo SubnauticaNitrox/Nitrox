@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsToggleFloodlightsProcessor : ClientPacketProcessor<CyclopsToggleFloodLights>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsToggleFloodlightsProcessor(PacketSender packetSender)
+        public CyclopsToggleFloodlightsProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (lighting.floodlightsOn != lightingPacket.IsOn)
             {
-                using (packetSender.Suppress<CyclopsToggleFloodLights>())
+                using (packetSender.suppress<CyclopsToggleFloodLights>())
                 {
                     lighting.ToggleFloodlights();
                 }

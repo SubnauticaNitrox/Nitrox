@@ -10,9 +10,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ItemContainerAddProcessor : ClientPacketProcessor<ItemContainerAdd>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ItemContainerAddProcessor(PacketSender packetSender)
+        public ItemContainerAddProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
                 
-                using (packetSender.Suppress<ItemContainerAdd>())
+                using (packetSender.suppress<ItemContainerAdd>())
                 {
                     container.UnsafeAdd(new InventoryItem(pickupable));
                 }

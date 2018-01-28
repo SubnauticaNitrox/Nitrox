@@ -7,9 +7,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ToggleLightsProcessor(PacketSender packetSender)
+        public ToggleLightsProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (packet.IsOn != toggleLights.GetLightsActive())
             {
-                using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
+                using (packetSender.suppress<NitroxModel.Packets.ToggleLights>())
                 {
                     toggleLights.SetLightsActive(packet.IsOn);
                 }

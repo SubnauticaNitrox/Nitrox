@@ -9,9 +9,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleColorChangeProcessor : ClientPacketProcessor<VehicleColorChange>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public VehicleColorChangeProcessor(PacketSender packetSender)
+        public VehicleColorChangeProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
             SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
-            using (packetSender.Suppress<VehicleColorChange>())
+            using (packetSender.suppress<VehicleColorChange>())
             {
                 // Switch to the currently selected tab:
                 subNameInput.SetSelected(colorPacket.Index);

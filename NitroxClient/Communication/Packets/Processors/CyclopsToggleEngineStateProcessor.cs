@@ -9,9 +9,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsToggleEngineStateProcessor : ClientPacketProcessor<CyclopsToggleEngineState>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsToggleEngineStateProcessor(PacketSender packetSender)
+        public CyclopsToggleEngineStateProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -36,7 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     else
                     {
                         engineState.ReflectionSet("invalidButton", false);
-                        using (packetSender.Suppress<CyclopsToggleInternalLighting>())
+                        using (packetSender.suppress<CyclopsToggleInternalLighting>())
                         {
                             engineState.OnClick();
                         }
