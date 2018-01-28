@@ -12,9 +12,11 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
 using UnityEngine;
+using System.Collections;
 
 namespace NitroxClient.MonoBehaviours
 {
+    //This class is getting really big and is taking on many responsibilities. It might be worth a joint effort to see if we can plan some refactoring to this guy at some point in the future.
     public class Multiplayer : MonoBehaviour
     {
         private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
@@ -26,8 +28,10 @@ namespace NitroxClient.MonoBehaviours
         private static readonly VisibleCells visibleCells = new VisibleCells();
         private static readonly DeferringPacketReceiver packetReceiver = new DeferringPacketReceiver(visibleCells);
         private static readonly TcpClient client = new TcpClient(packetReceiver);
-        public static readonly PacketSender PacketSender = new PacketSender(client);
-        public static readonly Logic Logic = new Logic(PacketSender, visibleCells, packetReceiver);
+        private static readonly ClientBridge clientBridge = new ClientBridge(client);
+
+        //One ring, to rule them all...
+        public static readonly Logic Logic = new Logic(clientBridge, visibleCells, packetReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
@@ -43,17 +47,12 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
             { typeof(PlayerChatManager), remotePlayerChatManager },
-            { typeof(PacketSender), PacketSender }
+            { typeof(IPacketSender), clientBridge }
         };
 
         static Multiplayer()
         {
             PacketProcessorsByType = PacketProcessor.GetProcessors(processorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
-        }
-
-        public static void RemoveAllOtherPlayers()
-        {
-            remotePlayerManager.RemoveAllPlayers();
         }
 
         public void Awake()
@@ -68,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (client != null && client.IsConnected())
+            if (clientBridge.CurrentState == ClientBridgeState.Connected)
             {
                 ProcessPackets();
             }
@@ -101,19 +100,20 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (client.IsConnected())
+            if (clientBridge.CurrentState == ClientBridgeState.Connected)
             {
                 Log.InGame("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
-                StartMultiplayer(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
+                NegotiatePlayerSlotReservation(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
+                StartCoroutine(HandleReservationFromConsole());
             }
             else
             {
                 Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
-        }
+        }        
 
         public void OnConsoleCommand_disconnect(NotificationCenter.Notification n)
         {
@@ -137,36 +137,16 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void StartMultiplayer(string ipAddress, string playerName)
+        public void NegotiatePlayerSlotReservation(string ipAddress, string playerName)
+        {
+            clientBridge.connect(ipAddress, playerName);
+        }
+
+        public void StartMultiplayer()
         {
             OnBeforeMultiplayerStart();
-
-            PacketSender.PlayerId = playerName;
-            StartMultiplayer(ipAddress);
+            clientBridge.claimReservation();
             InitMonoBehaviours();
-        }
-
-        private void StartMultiplayer(string ipAddress)
-        {
-            client.Start(ipAddress);
-            if (client.IsConnected())
-            {
-                PacketSender.Active = true;
-                Multiplayer.Logic.Player.Authenticate(PacketSender.PlayerId);
-                Log.InGame("Connected to server");
-            }
-            else
-            {
-                Log.InGame("Unable to connect to server");
-            }
-        }
-
-        private void StopMultiplayer()
-        {
-            if (client.IsConnected())
-            {
-                client.Stop();
-            }
         }
 
         public void InitMonoBehaviours()
@@ -181,6 +161,31 @@ namespace NitroxClient.MonoBehaviours
 
                 hasLoadedMonoBehaviors = true;
             }
+        }
+
+        private IEnumerator HandleReservationFromConsole()
+        {
+            yield return new WaitUntil(() => clientBridge.CurrentState == ClientBridgeState.WaitingForRerservation);
+            yield return new WaitUntil(() => clientBridge.CurrentState != ClientBridgeState.WaitingForRerservation);
+
+            switch (clientBridge.CurrentState)
+            {
+                case ClientBridgeState.Reserved:
+                    StartMultiplayer();
+                    break;
+                case ClientBridgeState.ReservationRejected:
+                    Log.InGame($"Cannot join server: {clientBridge.ReservationRejectionReason.ToString()}");
+                    break;
+                default:
+                    Log.InGame("Unable to communicate with the server for unknown reasons.");
+                    break;
+            }
+        }
+
+        private void StopMultiplayer()
+        {
+            remotePlayerManager.RemoveAllPlayers();
+            clientBridge.disconnect();
         }
     }
 }
