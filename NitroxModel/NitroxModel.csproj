@@ -109,6 +109,7 @@
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
+    <Compile Include="Packets\ReservePlayerSlot.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
     <Compile Include="Packets\TimeChange.cs" />
