@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxClient.Communication.Exceptions;
+using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
@@ -10,15 +11,18 @@ namespace NitroxClient.Communication
     //Example: We can refactor this implementation into a ReservableClientBridge, allowing us to implement different types of client bridges depending on specific requirements.
     public class ClientBridge : IClientBridge
     {
+        private readonly HashSet<Type> suppressedPacketsTypes;
         private IClient serverClient;
         private string correlationId;
 
         public ClientBridgeState CurrentState { get; private set; }
+        public string PlayerId { get; private set; }
         public string ReservationKey { get; private set; }
         public ReservationRejectionReason ReservationRejectionReason { get; private set; }
 
         public ClientBridge(IClient serverClient)
         {
+            suppressedPacketsTypes = new HashSet<Type>();
             this.serverClient = serverClient;
             correlationId = generateCorrelationId();
 
@@ -125,6 +129,11 @@ namespace NitroxClient.Communication
             serverClient.send(packet);
         }
 
+        public PacketSuppression<T> Suppress<T>()
+        {
+            return new PacketSuppression<T>(suppressedPacketsTypes);
+        }
+
         private void tryStopClient()
         {
             if (serverClient.IsConnected)
@@ -143,6 +152,7 @@ namespace NitroxClient.Communication
             var reservePlayerSlot = new ReservePlayerSlot(correlationId, playerName);
             serverClient.send(reservePlayerSlot);
 
+            PlayerId = playerName;
             CurrentState = ClientBridgeState.WaitingForRerservation;
         }
 
