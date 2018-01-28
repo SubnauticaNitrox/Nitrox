@@ -5,6 +5,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
 {
+    [Obsolete("WARNING - The PacketSender is set to be deprecated in the near future. Please migrate your code to use the IPackerSender abstraction instead.")]
     public class PacketSender
     {
         public bool Active { get; set; }
