@@ -7,9 +7,8 @@ namespace NitroxClient.Communication
 {
     //This is meant to be a drop-in replacement for the old PacketSender. It was re-written in accordance with the Bridge design pattern to clarify intent.
     //This pattern should give us greater flexibility in how we bridge the connection between the server and the client moving forward. 
-    //Example: We can create an IClientBridge abstraction and refactor this implementation into a ReservableClientBridge, allowing us to implement different types
-    //of client bridges depending on specific requirements.
-    public class ClientBridge
+    //Example: We can refactor this implementation into a ReservableClientBridge, allowing us to implement different types of client bridges depending on specific requirements.
+    public class ClientBridge : IClientBridge
     {
         private IClient serverClient;
         private string correlationId;
