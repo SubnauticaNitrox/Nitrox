@@ -44,7 +44,7 @@ namespace NitroxClient.Communication
         public void Stop()
         {
             connection.Close(); // Server will clean up pretty quickly
-            Multiplayer.PacketSender.Active = false;
+            Multiplayer.Logic.PacketSender.Active = false;
             Multiplayer.RemoveAllOtherPlayers();
             Log.InGame("Disconnected from server.");
         }

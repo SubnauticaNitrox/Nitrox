@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches
 
                 string guid = GuidHelper.GetGuid(parentVehicle);
                 VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, guid, eventData.hsb, eventData.color);
-                Multiplayer.PacketSender.send(packet);
+                Multiplayer.Logic.PacketSender.send(packet);
             }
         }
 

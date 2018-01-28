@@ -21,6 +21,7 @@ namespace NitroxClient.GameLogic
         public Interior Interior { get; }
         public MobileVehicleBay MobileVehicleBay { get; }
         public Terrain Terrain { get; }
+        public PacketSender PacketSender { get; }
 
         public Logic(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
@@ -40,6 +41,7 @@ namespace NitroxClient.GameLogic
             Interior = new Interior(packetSender);
             MobileVehicleBay = new MobileVehicleBay(packetSender);
             Terrain = new Terrain(packetSender, visibleCells, packetReceiver);
+            PacketSender = packetSender;
         }
     }
 }
