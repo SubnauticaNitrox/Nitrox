@@ -9,7 +9,7 @@ namespace NitroxClient.Communication
     public class PacketSender : IPacketSender
     {
         public bool Active { get; set; }
-        public string PlayerId { get; set; }
+        public string PlayerId { get; private set; }
 
         private readonly TcpClient client;
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
