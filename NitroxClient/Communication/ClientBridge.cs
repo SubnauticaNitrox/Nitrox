@@ -129,7 +129,7 @@ namespace NitroxClient.Communication
             serverClient.send(packet);
         }
 
-        public PacketSuppression<T> Suppress<T>()
+        public PacketSuppression<T> suppress<T>()
         {
             return new PacketSuppression<T>(suppressedPacketsTypes);
         }
