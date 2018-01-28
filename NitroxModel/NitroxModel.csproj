@@ -74,6 +74,7 @@
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
+    <Compile Include="Packets\ClaimPlayerSlotReservation.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />

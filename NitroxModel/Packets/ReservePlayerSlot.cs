@@ -1,5 +1,8 @@
-﻿namespace NitroxModel.Packets
+﻿using System;
+
+namespace NitroxModel.Packets
 {
+    [Serializable]
     public class ReservePlayerSlot : Packet
     {
         public string CorrelationId { get; private set; }

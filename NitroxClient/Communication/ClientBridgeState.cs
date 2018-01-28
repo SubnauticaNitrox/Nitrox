@@ -5,7 +5,8 @@
         Disconnected,
         WaitingForRerservation,
         Failed,
-        Connected,
-        ReservationRejected
+        Reserved,
+        ReservationRejected,
+        Connected
     }
 }

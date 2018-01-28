@@ -33,14 +33,14 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         }
 
         [TestMethod]
-        public void TheBridgeShouldBeConnectedAfterConfirmingAReservation()
+        public void TheBridgeShouldBeReservedAfterConfirmingAReservation()
         {
             //When
             this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             this.clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Connected);
+            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Reserved);
             this.clientBridge.ReservationRejectionReason.Should().Be(ReservationRejectionReason.None);
         }
 
@@ -56,11 +56,25 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         }
 
         [TestMethod]
+        public void TheBridgeShouldThrowAnInvalidReservationExceptionIfConfirmingAReserverationWhileItIsAlreadyReserved()
+        {
+            //When
+            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.confirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => this.clientBridge.confirmReservation(null, null);
+
+            //Then
+            action.ShouldThrow<InvalidReservationException>();
+            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+        }
+
+        [TestMethod]
         public void TheBridgeShouldThrowAnInvalidReservationExceptionIfConfirmingAReserverationWhileItIsAlreadyConnected()
         {
             //When
             this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             this.clientBridge.confirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.claimReservation();
             Action action = () => this.clientBridge.confirmReservation(null, null);
 
             //Then

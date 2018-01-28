@@ -45,7 +45,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         }
 
         [TestMethod]
-        public void TheBridgeShouldThrowAnInvalidRejectionReasonExceptionWhenHandlingARejectionReasonOnNone()
+        public void TheBridgeShouldThrowAnInvalidRejectionReasonExceptionWhenHandlingARejectionReasonOfNone()
         {
             //When
             this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
@@ -53,6 +53,31 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
 
             //Then
             action.ShouldThrow<InvalidReservationRejectionReasonException>();
+        }
+
+        [TestMethod]
+        public void TheBridgeShouldThrowAProhibitedReservationRejectionExceptionWhenHandlingAReservationRejectionAfterConfirmingOne()
+        {
+            //When
+            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => this.clientBridge.handleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+
+            //Then
+            action.ShouldThrow<ProhibitedReservationRejectionException>();
+        }
+
+        [TestMethod]
+        public void TheBridgeShouldThrowAProhibitedReservationRejectionExceptionWhenHandlingAReservationRejectionAfterOneHasBeenClaimed()
+        {
+            //When
+            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.claimReservation();
+            Action action = () => this.clientBridge.handleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+
+            //Then
+            action.ShouldThrow<ProhibitedReservationRejectionException>();
         }
 
         [TestMethod]

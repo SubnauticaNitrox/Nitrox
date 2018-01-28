@@ -55,10 +55,22 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         }
 
         [TestMethod]
+        public void ShouldThrowAProhibitedConnectAttemptExceptionWhenConnectIsCalledOnAReservedBridge()
+        {
+            //When
+            clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+
+            //Then
+            action.ShouldThrow<ProhibitedConnectAttemptException>();
+        }
+
+        [TestMethod]
         public void ShouldThrowAProhibitedConnectAttemptExceptionWhenConnectIsCalledOnAConnectedBridge()
         {
             //When
             clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            clientBridge.claimReservation();
             Action action = () => clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
 
             //Then
