@@ -274,3 +274,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+NitroxServer/Properties/Settings\.Designer\.cs
+
+NitroxServer/Properties/Settings\.settings

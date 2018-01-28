@@ -81,7 +81,7 @@ namespace NitroxServer.Serialization
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
             // This isn't always gonna work.
-            string path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
+            string path = Properties.Settings.Default.BuildDir;
             string fileName = path + pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
 
             if (!File.Exists(fileName))
