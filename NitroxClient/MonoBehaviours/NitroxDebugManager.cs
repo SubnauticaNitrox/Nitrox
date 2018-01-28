@@ -45,12 +45,15 @@ namespace NitroxClient.MonoBehaviours
                 ToggleDebugging();
             }
 
-            if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+            if (isDebugging)
             {
-                ToggleCursor();
-            }
+                if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+                {
+                    ToggleCursor();
+                }
 
-            CheckDebuggerHotkeys();
+                CheckDebuggerHotkeys();
+            }
         }
 
         public void ToggleDebugging()
@@ -68,7 +71,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void ToggleCursor()
+        public static void ToggleCursor()
         {
             UWE.Utils.lockCursor = !UWE.Utils.lockCursor;
         }
@@ -92,10 +95,6 @@ namespace NitroxClient.MonoBehaviours
 
         private void CheckDebuggerHotkeys()
         {
-            if (!isDebugging)
-            {
-                return;
-            }
             foreach (BaseDebugger debugger in Debuggers)
             {
                 if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
