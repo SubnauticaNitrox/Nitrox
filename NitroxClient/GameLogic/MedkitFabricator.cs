@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic
             bool doorOpen = (bool)medicalCabinet.ReflectionGet("doorOpen");
 
             MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
-            packetSender.Send(cabinetClicked);
+            packetSender.send(cabinetClicked);
         }
     }
 }

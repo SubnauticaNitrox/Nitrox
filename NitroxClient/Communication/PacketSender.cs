@@ -6,7 +6,7 @@ using NitroxModel.Packets;
 namespace NitroxClient.Communication
 {
     [Obsolete("WARNING - The PacketSender is set to be deprecated in the near future. Please migrate your code to use the IPackerSender abstraction instead.")]
-    public class PacketSender
+    public class PacketSender : IPacketSender
     {
         public bool Active { get; set; }
         public string PlayerId { get; set; }
@@ -21,7 +21,7 @@ namespace NitroxClient.Communication
             Active = false;
         }
 
-        public void Send(Packet packet)
+        public void send(Packet packet)
         {
             if (Active && !suppressedPacketsTypes.Contains(packet.GetType()))
             {

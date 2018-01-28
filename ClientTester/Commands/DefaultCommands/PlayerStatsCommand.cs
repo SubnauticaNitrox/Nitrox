@@ -31,7 +31,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             PlayerStats playerStats = (PlayerStats)Activator.CreateInstance(typeof(PlayerStats), new object[] { args[0] }.Concat(numericArgs).ToArray());
 
-            client.PacketSender.Send(playerStats);
+            client.PacketSender.send(playerStats);
         }
     }
 }

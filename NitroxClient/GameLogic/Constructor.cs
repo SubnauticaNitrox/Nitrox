@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
 
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
-                packetSender.Send(beginCrafting);
+                packetSender.send(beginCrafting);
             }
             else
             {

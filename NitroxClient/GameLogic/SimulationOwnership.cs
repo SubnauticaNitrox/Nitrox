@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
                 SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(packetSender.PlayerId, guid);
-                packetSender.Send(ownershipRequest);
+                packetSender.send(ownershipRequest);
                 requestedGuids.Add(guid);
             }
         }

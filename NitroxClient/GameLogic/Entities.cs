@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            packetSender.Send(update);
+            packetSender.send(update);
         }
     }
 }

@@ -34,7 +34,7 @@ namespace NitroxPatcher.Patches
 
                 string guid = GuidHelper.GetGuid(parentVehicle);
                 VehicleNameChange packet = new VehicleNameChange(guid, subname.GetName());
-                Multiplayer.PacketSender.Send(packet);
+                Multiplayer.PacketSender.send(packet);
             }
         }
 

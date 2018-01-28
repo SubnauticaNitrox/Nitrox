@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic
         public void OpenableStateChanged(string guid, bool isOpen, float animationDuration)
         {
             OpenableStateChanged stateChange = new OpenableStateChanged(guid, isOpen, animationDuration);
-            packetSender.Send(stateChange);
+            packetSender.send(stateChange);
             Log.Debug(stateChange);
         }
     }

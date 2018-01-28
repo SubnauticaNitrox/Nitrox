@@ -19,13 +19,13 @@ namespace NitroxClient.GameLogic
         public void Authenticate(string playerId)
         {
             Authenticate auth = new Authenticate(playerId);
-            packetSender.Send(auth);
+            packetSender.send(auth);
         }
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
         {
             PlayerStats playerStats = new PlayerStats(packetSender.PlayerId, oxygen, maxOxygen, health, food, water);
-            packetSender.Send(playerStats);
+            packetSender.send(playerStats);
         }
 
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<string> opSubGuid)
@@ -42,13 +42,13 @@ namespace NitroxClient.GameLogic
                 movement = new Movement(packetSender.PlayerId, location, velocity, bodyRotation, aimingRotation, opSubGuid);
             }
 
-            packetSender.Send(movement);
+            packetSender.send(movement);
         }
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
         {
             AnimationChangeEvent animEvent = new AnimationChangeEvent(packetSender.PlayerId, (int)type, (int)state);
-            packetSender.Send(animEvent);
+            packetSender.send(animEvent);
         }
     }
 }
