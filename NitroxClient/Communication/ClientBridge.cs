@@ -33,27 +33,6 @@ namespace NitroxClient.Communication
             ReservationRejectionReason = ReservationRejectionReason.None;
         }
 
-        public void claimReservation()
-        {
-            try
-            {
-                if (CurrentState != ClientBridgeState.Reserved)
-                {
-                    throw new ProhibitedClaimAttemptException();
-                }
-
-                var packet = new ClaimPlayerSlotReservation(correlationId, ReservationKey);
-                serverClient.send(packet);
-
-                CurrentState = ClientBridgeState.Connected;
-            }
-            catch(Exception ex)
-            {
-                CurrentState = ClientBridgeState.Failed;
-                throw ex;
-            }            
-        }
-
         public void connect(string ipAddress, string playerName)
         {
             try
@@ -116,6 +95,27 @@ namespace NitroxClient.Communication
             }
         }
 
+        public void claimReservation()
+        {
+            try
+            {
+                if (CurrentState != ClientBridgeState.Reserved)
+                {
+                    throw new ProhibitedClaimAttemptException();
+                }
+
+                var packet = new ClaimPlayerSlotReservation(correlationId, ReservationKey);
+                serverClient.send(packet);
+
+                CurrentState = ClientBridgeState.Connected;
+            }
+            catch (Exception ex)
+            {
+                CurrentState = ClientBridgeState.Failed;
+                throw ex;
+            }
+        }
+
         public void handleRejectedReservation(string correlationId, ReservationRejectionReason rejectionReason)
         {
             if (CurrentState == ClientBridgeState.Disconnected)
@@ -125,7 +125,7 @@ namespace NitroxClient.Communication
 
             try
             {
-                if(CurrentState != ClientBridgeState.WaitingForRerservation)
+                if (CurrentState != ClientBridgeState.WaitingForRerservation)
                 {
                     throw new ProhibitedReservationRejectionException();
                 }
@@ -172,7 +172,7 @@ namespace NitroxClient.Communication
 
         private void requestReservation(string playerName)
         {
-            if (CurrentState == ClientBridgeState.WaitingForRerservation || 
+            if (CurrentState == ClientBridgeState.WaitingForRerservation ||
                 CurrentState == ClientBridgeState.Reserved ||
                 CurrentState == ClientBridgeState.Connected)
             {
