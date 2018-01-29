@@ -9,8 +9,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     {
         public string ServerIp = "";
         Rect joinServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
+        Rect unableToJoinWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         string username = "username";
-        bool showingUsername = false;
+        bool joiningServer = false;
+        bool notifyingUnableToJoin = false;
         bool shouldFocus;
 
         public void Awake()
@@ -20,31 +22,54 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Start()
         {
-            showingUsername = true;
+            joiningServer = true;
+            notifyingUnableToJoin = false;
             shouldFocus = true;
         }
 
         public void OnGUI()
         {
-            if (!showingUsername)
+            if (joiningServer)
             {
-                return;
+                joinServerWindowRect = GUILayout.Window(0, joinServerWindowRect, BuildJoinServerDialog, "Join server");
             }
-            joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, DoJoinServerWindow, "Join server");
+
+            if (notifyingUnableToJoin)
+            {
+                unableToJoinWindowRect = GUILayout.Window(1, joinServerWindowRect, BuildUnableToJoinDialog, "Unable to Join Session");
+            }
         }
 
-        public IEnumerator JoinServerWait(string serverIp)
+        private IEnumerator NegotiateSession(string serverIp)
+        {
+            Multiplayer.Main.NegotiatePlayerSlotReservation(serverIp, username);
+            
+            yield return new WaitUntil(() => Multiplayer.Logic.ClientBridge.CurrentState != Communication.ClientBridgeState.WaitingForRerservation);
+
+            switch (Multiplayer.Logic.ClientBridge.CurrentState)
+            {
+                case Communication.ClientBridgeState.Reserved:
+                    StartCoroutine(LaunchSession());
+                    Destroy(gameObject);
+                    break;
+                case Communication.ClientBridgeState.ReservationRejected:
+                    notifyingUnableToJoin = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private IEnumerator LaunchSession()
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
-#pragma warning restore CS0618 // Type or member is obsolete
             StartCoroutine(startNewGame);
             //Wait until game starts
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.Main.StartMultiplayer(serverIp, username);
-            Destroy(gameObject);
+            Multiplayer.Main.StartMultiplayer();
         }
 
         private GUISkin GetGUISkin()
@@ -68,7 +93,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void DoJoinServerWindow(int windowId)
+        private void BuildJoinServerDialog(int windowId)
         {
             Event e = Event.current;
             if (e.isKey)
@@ -76,11 +101,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (e.keyCode)
                 {
                     case KeyCode.Return:
-                        StartCoroutine(JoinServerWait(ServerIp));
-                        showingUsername = false;
+                        StartCoroutine(NegotiateSession(ServerIp));
+                        joiningServer = false;
                         break;
                     case KeyCode.Escape:
-                        showingUsername = false;
+                        joiningServer = false;
                         break;
                 }
             }
@@ -96,23 +121,58 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         username = GUILayout.TextField(username);
                     }
 
-                    if (GUILayout.Button("Join"))
-                    {
-                        StartCoroutine(JoinServerWait(ServerIp));
-                        showingUsername = false;
-                    }
 
-                    if (GUILayout.Button("Cancel"))
-                    {
-                        showingUsername = false;
-                    }
-                }
+					if (GUILayout.Button("Join"))
+					{
+						StartCoroutine(NegotiateSession(ServerIp));
+						joiningServer = false;
+					}
+
+					if (GUILayout.Button("Cancel"))
+					{
+						joiningServer = false;
+					}
+				}
             });
 
             if (shouldFocus)
             {
                 GUI.FocusControl("usernameField");
                 shouldFocus = false;
+            }
+        }
+
+        private void BuildUnableToJoinDialog(int windowId)
+        {
+            Event e = Event.current;
+            if (e.isKey)
+            {
+                switch (e.keyCode)
+                {
+                    case KeyCode.Return:
+                        joiningServer = true;
+                        notifyingUnableToJoin = false;
+                        break;
+                    case KeyCode.Escape:
+                        joiningServer = true;
+                        notifyingUnableToJoin = false;
+                        break;
+                }
+            }
+
+            SetGUIStyle();
+            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
+            {
+                using (GUILayout.HorizontalScope h = new GUILayout.HorizontalScope())
+                {
+                    GUILayout.Label($"Rejection Reason: { Multiplayer.Logic.ClientBridge.ReservationRejectionReason.ToString() }");
+                }
+
+                if (GUILayout.Button("OK"))
+                {
+                    joiningServer = true;
+                    notifyingUnableToJoin = false;
+                }
             }
         }
     }
