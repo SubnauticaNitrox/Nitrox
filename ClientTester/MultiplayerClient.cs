@@ -2,42 +2,60 @@
 using NitroxClient.GameLogic;
 using NitroxClient.Map;
 using NitroxModel.Logger;
+using System.Threading;
 using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public PacketSender PacketSender { get; }
+        public IPacketSender PacketSender { get; }
+        public ClientBridge ClientBridge { get; }
         public Logic Logic { get; }
         public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
 
         private readonly VisibleCells visibleCells;
         private readonly DeferringPacketReceiver packetReceiver;
         private readonly TcpClient client;
+        private readonly string playerName;
 
         public MultiplayerClient(string playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            playerName = playerId;
             visibleCells = new VisibleCells();
             packetReceiver = new DeferringPacketReceiver(visibleCells);
             client = new TcpClient(packetReceiver);
-            PacketSender = new PacketSender(client, playerId);
-            Logic = new Logic(PacketSender, visibleCells, packetReceiver);
+            ClientBridge = new ClientBridge(client);
+            PacketSender = ClientBridge;
+            Logic = new Logic(ClientBridge, visibleCells, packetReceiver);
         }
 
         public void Start(string ip)
         {
-            client.Start(ip);
-            if (client.IsConnected())
+            ClientBridge.connect(ip, playerName);
+
+            var iterations = 0;
+            while(ClientBridge.CurrentState == ClientBridgeState.WaitingForRerservation)
             {
-                Log.InGame("Connected to server");
-                PacketSender.Active = true;
-                Logic.Player.Authenticate(PacketSender.PlayerId);
+                Thread.Sleep(250);
+
+                iterations++;
+                if(iterations >= 20)
+                {
+                    break;
+                }
             }
-            else
+
+            switch (ClientBridge.CurrentState)
             {
-                Log.InGame("Unable to connect to server");
+                case ClientBridgeState.Reserved:
+                    ClientBridge.claimReservation();
+                    Log.InGame("Connected to server");
+                    break;
+                default:
+                    Log.InGame("Unable to connect to server");
+                    break;
             }
         }
     }

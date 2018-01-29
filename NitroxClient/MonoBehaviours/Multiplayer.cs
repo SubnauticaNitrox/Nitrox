@@ -165,7 +165,6 @@ namespace NitroxClient.MonoBehaviours
 
         private IEnumerator HandleReservationFromConsole()
         {
-            yield return new WaitUntil(() => clientBridge.CurrentState == ClientBridgeState.WaitingForRerservation);
             yield return new WaitUntil(() => clientBridge.CurrentState != ClientBridgeState.WaitingForRerservation);
 
             switch (clientBridge.CurrentState)
