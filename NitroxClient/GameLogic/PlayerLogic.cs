@@ -16,12 +16,6 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void Authenticate(string playerId)
-        {
-            Authenticate auth = new Authenticate(playerId);
-            packetSender.send(auth);
-        }
-
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
         {
             PlayerStats playerStats = new PlayerStats(packetSender.PlayerId, oxygen, maxOxygen, health, food, water);
