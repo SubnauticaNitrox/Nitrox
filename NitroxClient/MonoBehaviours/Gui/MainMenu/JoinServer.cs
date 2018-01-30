@@ -95,9 +95,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(gameObject);
         }
 
-        private GUISkin GetGUISkin(int labelWidth)
+        private GUISkin GetGUISkin(string skinName, int labelWidth)
         {
-            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
+            return GUISkinUtils.RegisterDerivedOnce(skinName, s =>
             {
                 s.textField.fontSize = 14;
                 s.textField.richText = false;
@@ -132,7 +132,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            GUISkinUtils.RenderWithSkin(GetGUISkin(80), () => 
+            GUISkinUtils.RenderWithSkin(GetGUISkin("menus.server", 80), () => 
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
@@ -204,7 +204,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 			
-			GUISkinUtils.RenderWithSkin(GetGUISkin(490), () => 
+			GUISkinUtils.RenderWithSkin(GetGUISkin("dialogs.server.rejected", 490), () => 
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
