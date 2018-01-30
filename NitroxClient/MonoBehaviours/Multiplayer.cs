@@ -168,11 +168,6 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void ForceActivation()
-        {
-            gameObject.SetActive(true);
-        }
-
         private IEnumerator HandleReservationFromConsole()
         {
             yield return new WaitUntil(() => clientBridge.CurrentState != ClientBridgeState.WaitingForRerservation);
