@@ -23,11 +23,11 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             var serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.start(Arg.Any<string>()))
+                .When(client => client.Start(Arg.Any<string>()))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             serverClient
-                .When(client => client.send(Arg.Any<ReservePlayerSlot>()))
+                .When(client => client.Send(Arg.Any<ReservePlayerSlot>()))
                 .Do(info => this.correlationId = info.Arg<ReservePlayerSlot>().CorrelationId);
 
             this.clientBridge = new ClientBridge(serverClient);
@@ -37,8 +37,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void TheBridgeShouldBeReservedAfterConfirmingAReservation()
         {
             //When
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Reserved);
@@ -49,7 +49,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void TheBridgeShouldThrowAnInvalidReservationExceptionIfConfirmingAReservationWhileItIsNotWaiting()
         {
             //When
-            Action action = () => this.clientBridge.confirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => this.clientBridge.ConfirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             action.ShouldThrow<InvalidReservationException>();
@@ -60,9 +60,9 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void TheBridgeShouldThrowAnInvalidReservationExceptionIfConfirmingAReserverationWhileItIsAlreadyReserved()
         {
             //When
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.confirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
-            Action action = () => this.clientBridge.confirmReservation(null, null);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.ConfirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => this.clientBridge.ConfirmReservation(null, null);
 
             //Then
             action.ShouldThrow<InvalidReservationException>();
@@ -73,10 +73,10 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void TheBridgeShouldThrowAnInvalidReservationExceptionIfConfirmingAReserverationWhileItIsAlreadyConnected()
         {
             //When
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.confirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
-            this.clientBridge.claimReservation();
-            Action action = () => this.clientBridge.confirmReservation(null, null);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            this.clientBridge.ConfirmReservation(this.correlationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.ClaimReservation();
+            Action action = () => this.clientBridge.ConfirmReservation(null, null);
 
             //Then
             action.ShouldThrow<InvalidReservationException>();
@@ -88,8 +88,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             var incorrectCorrelationId = "WRONG";
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.confirmReservation(incorrectCorrelationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => this.clientBridge.ConfirmReservation(incorrectCorrelationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             action.ShouldThrow<UncorrelatedMessageException>();
@@ -101,8 +101,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             string nullCorrelationId = null;
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.confirmReservation(nullCorrelationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => this.clientBridge.ConfirmReservation(nullCorrelationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And
@@ -115,8 +115,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             string blankCorrelationId = string.Empty;
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.confirmReservation(blankCorrelationId, TestConstants.TEST_RESERVATION_KEY);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => this.clientBridge.ConfirmReservation(blankCorrelationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And
@@ -129,8 +129,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             string nullReservationKey = null;
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.confirmReservation(this.correlationId, nullReservationKey);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => this.clientBridge.ConfirmReservation(this.correlationId, nullReservationKey);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And
@@ -144,8 +144,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             string blankReservationKey = string.Empty;
-            this.clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.confirmReservation(this.correlationId, blankReservationKey);
+            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => this.clientBridge.ConfirmReservation(this.correlationId, blankReservationKey);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And

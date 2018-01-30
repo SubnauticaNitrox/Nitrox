@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             Transform camera = Camera.main.transform;
 
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid));
-            packetSender.send(placedBasePiece);
+            packetSender.Send(placedBasePiece);
         }
 
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
             Transform camera = Camera.main.transform;
 
             PlaceFurniture placedFurniture = new PlaceFurniture(guid, subGuid, itemPosition, quaternion, camera.position, camera.rotation, techType);
-            packetSender.send(placedFurniture);
+            packetSender.Send(placedFurniture);
         }
 
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
@@ -74,7 +74,7 @@ namespace NitroxClient.GameLogic
             if (amount < 0.95f) // Construction complete event handled by function below
             {
                 ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(itemPosition, guid, amount);
-                packetSender.send(amountChanged);
+                packetSender.Send(amountChanged);
             }
         }
 
@@ -93,7 +93,7 @@ namespace NitroxClient.GameLogic
             string guid = GuidHelper.GetGuid(gameObject);
 
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(itemPosition, guid, newlyConstructedBaseGuid);
-            packetSender.send(constructionCompleted);
+            packetSender.Send(constructionCompleted);
         }
 
         public void DeconstructionBegin(GameObject gameObject)
@@ -102,7 +102,7 @@ namespace NitroxClient.GameLogic
             string guid = GuidHelper.GetGuid(gameObject);
 
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(itemPosition, guid);
-            packetSender.send(deconstructionBegin);
+            packetSender.Send(deconstructionBegin);
         }
 
         public void DeconstructionComplete(GameObject gameObject)
@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
             string guid = GuidHelper.GetGuid(gameObject);
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(itemPosition, guid);
-            packetSender.send(deconstructionCompleted);
+            packetSender.Send(deconstructionCompleted);
         }
     }
 }

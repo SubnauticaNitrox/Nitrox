@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             EquipmentAddItem equip = new EquipmentAddItem(ownerGuid, slot, bytes, ownerPos);
-            packetSender.send(equip);
+            packetSender.Send(equip);
         }
 
         public void Unequip(Pickupable pickupable, GameObject owner, string slot)
@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic
             Vector3 ownerPos = owner.transform.position;
 
             EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, ownerPos);
-            packetSender.send(removeEquipment);
+            packetSender.Send(removeEquipment);
         }
     }
 }

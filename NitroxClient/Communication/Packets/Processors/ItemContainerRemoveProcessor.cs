@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 ItemsContainer container = opContainer.Get();
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
                 
-                using (packetSender.suppress<ItemContainerRemove>())
+                using (packetSender.Suppress<ItemContainerRemove>())
                 {
                     container.RemoveItem(pickupable, true);
                 }

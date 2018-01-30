@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);            
             Openable openable = gameObject.RequireComponent<Openable>();
             
-            using (packetSender.suppress<OpenableStateChanged>())
+            using (packetSender.Suppress<OpenableStateChanged>())
             {
                 openable.PlayOpenAnimation(packet.IsOpen, packet.Duration);
             }

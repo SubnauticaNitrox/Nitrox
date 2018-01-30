@@ -25,11 +25,11 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.start(Arg.Any<string>()))
+                .When(client => client.Start(Arg.Any<string>()))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             serverClient
-                .When(client => client.send(Arg.Any<ReservePlayerSlot>()))
+                .When(client => client.Send(Arg.Any<ReservePlayerSlot>()))
                 .Do(info => correlationId = info.Arg<ReservePlayerSlot>().CorrelationId);
 
             clientBridge = new ClientBridge(serverClient);
@@ -41,20 +41,20 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void ShouldBeAbleToSendAPacketThroughAConnectedClientBridge()
         {
             //When
-            clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            clientBridge.confirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
 
-            clientBridge.send(packet);
+            clientBridge.Send(packet);
 
             //Then
-            serverClient.Received().send(Arg.Is(packet));
+            serverClient.Received().Send(Arg.Is(packet));
         }
 
         [TestMethod]
         public void ShouldThrowAProhibitedSendAttemptWhenTheClientBridgeIsDisconnected()
         {
             //When
-            Action action = () => clientBridge.send(packet);
+            Action action = () => clientBridge.Send(packet);
 
             //Then
             action.ShouldThrow<ProhibitedSendAttemptException>();
@@ -64,8 +64,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void ShouldThrowAProhibitedSendAttemptWhenTheClientBridgeIsWaiting()
         {
             //When
-            clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => clientBridge.send(packet);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => clientBridge.Send(packet);
 
             //Then
             action.ShouldThrow<ProhibitedSendAttemptException>();
@@ -77,10 +77,10 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             try
             {
-                clientBridge.confirmReservation(null, null);
+                clientBridge.ConfirmReservation(null, null);
             }
             catch (Exception) { }
-            Action action = () => clientBridge.send(packet);
+            Action action = () => clientBridge.Send(packet);
 
             //Then
             action.ShouldThrow<ProhibitedSendAttemptException>();
@@ -90,9 +90,9 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void ShouldThrowAProhibitedSendAttemptWhenTheClientBridgeIsReservationRejected()
         {
             //When
-            clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            clientBridge.handleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
-            Action action = () => clientBridge.send(packet);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => clientBridge.Send(packet);
 
             //Then
             action.ShouldThrow<ProhibitedSendAttemptException>();

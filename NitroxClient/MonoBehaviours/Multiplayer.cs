@@ -144,13 +144,13 @@ namespace NitroxClient.MonoBehaviours
 
         public void NegotiatePlayerSlotReservation(string ipAddress, string playerName)
         {
-            clientBridge.connect(ipAddress, playerName);
+            clientBridge.Connect(ipAddress, playerName);
         }
 
         public void JoinSession()
         {
             OnBeforeMultiplayerStart();
-            clientBridge.claimReservation();
+            clientBridge.ClaimReservation();
             InitMonoBehaviours();
         }
 
@@ -194,7 +194,7 @@ namespace NitroxClient.MonoBehaviours
         private void StopMultiplayer()
         {
             remotePlayerManager.RemoveAllPlayers();
-            clientBridge.disconnect();
+            clientBridge.Disconnect();
         }
     }
 }

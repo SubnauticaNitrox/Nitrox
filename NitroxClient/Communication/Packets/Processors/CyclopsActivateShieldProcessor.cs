@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);            
             CyclopsShieldButton shield = cyclops.RequireComponentInChildren<CyclopsShieldButton>();
             
-            using (packetSender.suppress<CyclopsActivateShield>())
+            using (packetSender.Suppress<CyclopsActivateShield>())
             {
                 shield.OnClick();
             }

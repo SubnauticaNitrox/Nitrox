@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (lighting.lightingOn != lightingPacket.IsOn)
             {
-                using (packetSender.suppress<CyclopsToggleInternalLighting>())
+                using (packetSender.Suppress<CyclopsToggleInternalLighting>())
                 {
                     lighting.ToggleInternalLighting();
                 }

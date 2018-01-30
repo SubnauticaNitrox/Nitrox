@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
         {
             string crafterGuid = GuidHelper.GetGuid(crafter);
             FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterGuid, techType, duration);
-            packetSender.send(fabricatorBeginCrafting);
+            packetSender.Send(fabricatorBeginCrafting);
         }
 
         public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic
             string crafterGuid = GuidHelper.GetGuid(gameObject);
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterGuid, techType);
-            packetSender.send(fabricatorItemPickup);
+            packetSender.Send(fabricatorItemPickup);
             Log.Debug(fabricatorItemPickup);
         }
     }

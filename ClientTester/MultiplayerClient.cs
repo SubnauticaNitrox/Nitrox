@@ -33,7 +33,7 @@ namespace ClientTester
 
         public void Start(string ip)
         {
-            ClientBridge.connect(ip, playerName);
+            ClientBridge.Connect(ip, playerName);
 
             var iterations = 0;
             while(ClientBridge.CurrentState == ClientBridgeState.WaitingForRerservation)
@@ -50,7 +50,7 @@ namespace ClientTester
             switch (ClientBridge.CurrentState)
             {
                 case ClientBridgeState.Reserved:
-                    ClientBridge.claimReservation();
+                    ClientBridge.ClaimReservation();
                     Log.InGame("Connected to server");
                     break;
                 default:

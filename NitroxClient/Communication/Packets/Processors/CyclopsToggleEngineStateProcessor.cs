@@ -36,7 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     else
                     {
                         engineState.ReflectionSet("invalidButton", false);
-                        using (packetSender.suppress<CyclopsToggleInternalLighting>())
+                        using (packetSender.Suppress<CyclopsToggleInternalLighting>())
                         {
                             engineState.OnClick();
                         }

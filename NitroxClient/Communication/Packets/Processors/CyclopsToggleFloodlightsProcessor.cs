@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (lighting.floodlightsOn != lightingPacket.IsOn)
             {
-                using (packetSender.suppress<CyclopsToggleFloodLights>())
+                using (packetSender.Suppress<CyclopsToggleFloodLights>())
                 {
                     lighting.ToggleFloodlights();
                 }

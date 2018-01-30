@@ -17,11 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             if (packet.ReservationRejectionReason == ReservationRejectionReason.None)
             {
-                clientBridge.confirmReservation(packet.CorrelationId, packet.ReservationKey);
+                clientBridge.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
             }
             else
             {
-                clientBridge.handleRejectedReservation(packet.CorrelationId, packet.ReservationRejectionReason);
+                clientBridge.HandleRejectedReservation(packet.CorrelationId, packet.ReservationRejectionReason);
             }
         }
     }

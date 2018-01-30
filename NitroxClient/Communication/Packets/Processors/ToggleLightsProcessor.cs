@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (packet.IsOn != toggleLights.GetLightsActive())
             {
-                using (packetSender.suppress<NitroxModel.Packets.ToggleLights>())
+                using (packetSender.Suppress<NitroxModel.Packets.ToggleLights>())
                 {
                     toggleLights.SetLightsActive(packet.IsOn);
                 }

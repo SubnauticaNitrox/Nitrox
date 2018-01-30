@@ -21,13 +21,13 @@ namespace NitroxClient.Communication
             Active = false;
         }
 
-        public void send(Packet packet)
+        public void Send(Packet packet)
         {
             if (Active && !suppressedPacketsTypes.Contains(packet.GetType()))
             {
                 try
                 {
-                    client.send(packet);
+                    client.Send(packet);
                 }
                 catch (Exception ex)
                 {
@@ -37,7 +37,7 @@ namespace NitroxClient.Communication
             }
         }
 
-        public PacketSuppression<T> suppress<T>()
+        public PacketSuppression<T> Suppress<T>()
         {
             return new PacketSuppression<T>(suppressedPacketsTypes);
         }

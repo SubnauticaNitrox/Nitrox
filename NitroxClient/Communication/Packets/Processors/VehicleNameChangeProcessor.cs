@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject target = GuidHelper.RequireObjectFrom(namePacket.Guid);
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
 
-            using (packetSender.suppress<VehicleNameChange>())
+            using (packetSender.Suppress<VehicleNameChange>())
             {
                 subNameInput.OnNameChange(namePacket.Name);
             }

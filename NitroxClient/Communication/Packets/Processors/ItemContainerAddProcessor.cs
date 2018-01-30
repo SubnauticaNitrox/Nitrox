@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
                 
-                using (packetSender.suppress<ItemContainerAdd>())
+                using (packetSender.Suppress<ItemContainerAdd>())
                 {
                     container.UnsafeAdd(new InventoryItem(pickupable));
                 }

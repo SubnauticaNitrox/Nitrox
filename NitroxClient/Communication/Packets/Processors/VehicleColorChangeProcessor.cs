@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
             SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
-            using (packetSender.suppress<VehicleColorChange>())
+            using (packetSender.Suppress<VehicleColorChange>())
             {
                 // Switch to the currently selected tab:
                 subNameInput.SetSelected(colorPacket.Index);

@@ -20,7 +20,7 @@ namespace NitroxClient.GameLogic
         public void UpdatePosition(string guid, Vector3 location, Quaternion rotation)
         {
             ItemPosition itemPosition = new ItemPosition(guid, location, rotation);
-            packetSender.send(itemPosition);
+            packetSender.Send(itemPosition);
         }
 
         public void PickedUp(GameObject gameObject, string techType)
@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
         public void PickedUp(Vector3 itemPosition, string guid, string techType)
         {
             PickupItem pickupItem = new PickupItem(itemPosition, guid, techType);
-            packetSender.send(pickupItem);
+            packetSender.Send(pickupItem);
         }
 
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic
             Log.Debug("Dropping item with guid: " + guid);
 
             DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
-            packetSender.send(droppedItem);
+            packetSender.Send(droppedItem);
         }
 
         private Optional<string> GetCurrentWaterParkGuid()

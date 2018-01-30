@@ -23,7 +23,7 @@ namespace NitroxClient.Communication
             IsConnected = false;
         }
 
-        public void start(string ipAddress)
+        public void Start(string ipAddress)
         {
             try
             {
@@ -46,14 +46,14 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void stop()
+        public void Stop()
         {
             connection.Close();
             IsConnected = false;
             Log.InGame("Disconnected from server.");
         }
 
-        public void send(Packet packet)
+        public void Send(Packet packet)
         {
             connection.SendPacket(packet, new AsyncCallback(packetSentSuccessful));
         }
@@ -76,7 +76,7 @@ namespace NitroxClient.Communication
             else
             {
                 Log.Debug("Error reading data from server");
-                stop();
+                Stop();
             }
         }
     }

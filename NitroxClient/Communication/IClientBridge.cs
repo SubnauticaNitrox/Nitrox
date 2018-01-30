@@ -7,7 +7,7 @@ namespace NitroxClient.Communication
         ClientBridgeState CurrentState { get; }
         ReservationRejectionReason ReservationRejectionReason { get; }
 
-        void connect(string ipAddress, string playerName);
-        void disconnect();
+        void Connect(string ipAddress, string playerName);
+        void Disconnect();
     }
 }

@@ -18,13 +18,13 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             var serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.start(Arg.Any<string>()))
+                .When(client => client.Start(Arg.Any<string>()))
                 .Do(info => serverClient.IsConnected.Returns(true));
 
             var clientBridge = new ClientBridge(serverClient);
 
             //Act
-            clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
 
             //Assert
             clientBridge.CurrentState.Should().Be(ClientBridgeState.WaitingForRerservation);
@@ -40,10 +40,10 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             var clientBridge = new ClientBridge(serverClient);
 
             //Act
-            clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
 
             //Assert
-            serverClient.DidNotReceive().start(Arg.Any<string>());
+            serverClient.DidNotReceive().Start(Arg.Any<string>());
             clientBridge.CurrentState.Should().Be(ClientBridgeState.WaitingForRerservation);
         }
 
@@ -54,13 +54,13 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             var serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
-                .When(client => client.start(Arg.Any<string>()))
+                .When(client => client.Start(Arg.Any<string>()))
                 .Throw<Exception>();
 
             var clientBridge = new ClientBridge(serverClient);
 
             //Act
-            Action action = () => clientBridge.connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            Action action = () => clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
 
             //Assert
             action.ShouldThrow<ClientConnectionFailedException>();

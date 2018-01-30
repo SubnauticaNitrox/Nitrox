@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Constructable constructable = constructing.GetComponent<Constructable>();
             constructable.constructedAmount = amountChanged.ConstructionAmount;
 
-            using (packetSender.suppress<ConstructionAmountChanged>())
+            using (packetSender.Suppress<ConstructionAmountChanged>())
             {
                 constructable.Construct();
             }
