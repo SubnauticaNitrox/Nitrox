@@ -3,6 +3,8 @@ using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using NitroxClient.Communication.Exceptions;
 using System.Collections.Generic;
+using NitroxModel.PlayerSlot;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication
 {
@@ -24,6 +26,7 @@ namespace NitroxClient.Communication
 
         public ClientBridge(IClient serverClient)
         {
+            Log.Info("Initializing ClientBridge...");
             suppressedPacketsTypes = new HashSet<Type>();
             this.serverClient = serverClient;
             correlationId = generateCorrelationId();

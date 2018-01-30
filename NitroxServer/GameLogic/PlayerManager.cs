@@ -1,5 +1,7 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel.PlayerSlot;
 using NitroxModel.Tcp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,6 +9,8 @@ namespace NitroxServer.GameLogic
 {
     public class PlayerManager
     {
+        private readonly HashSet<string> currentPlayerNames = new HashSet<string>();
+        private readonly Dictionary<string, PlayerSlotReservation> reservations = new Dictionary<string, PlayerSlotReservation>();
         private readonly Dictionary<Connection, Player> playersByConnection = new Dictionary<Connection, Player>();
         
         public List<Player> GetPlayers()
@@ -17,13 +21,46 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public Player PlayerAuthenticated(Connection connection, string playerId)
+        public PlayerSlotReservation ReservePlayerSlot(string correlationId, string playerId)
         {
-            Player player = new Player(playerId, connection);
+            if (currentPlayerNames.Contains(playerId))
+            {
+                return new PlayerSlotReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            }
 
+            var reservationKey = Guid.NewGuid().ToString();
+            var reservation = new PlayerSlotReservation(correlationId, reservationKey, playerId);
+
+            lock (reservations)
+            {
+                reservations.Add(reservationKey, reservation);
+            }
+
+            return reservation;
+        }
+
+        public Player ClaimPlayerSlotReservation(Connection connection, string reservationKey, string correlationId)
+        {
+            var reservation = reservations[reservationKey];
+            if(reservation == null || reservation.CorrelationId != correlationId)
+            {
+                return null;
+            }
+
+            var player = new Player(reservation.PlayerId, connection);
             lock (playersByConnection)
             {
+                lock (currentPlayerNames)
+                {
+                    currentPlayerNames.Add(reservation.PlayerId);
+                }
+
                 playersByConnection[connection] = player;
+
+                lock (reservations)
+                {
+                    reservations.Remove(reservationKey);
+                }
             }
 
             return player;
@@ -31,6 +68,11 @@ namespace NitroxServer.GameLogic
 
         public void PlayerDisconnected(Connection connection)
         {
+            lock (currentPlayerNames)
+            {
+                currentPlayerNames.Remove(playersByConnection[connection].Id);
+            }
+
             lock (playersByConnection)
             {
                 playersByConnection.Remove(connection);

@@ -18,6 +18,7 @@ namespace NitroxClient.Communication
 
         public TcpClient(DeferringPacketReceiver packetManager)
         {
+            Log.Info("Initializing TcpClient...");
             packetReceiver = packetManager;
             IsConnected = false;
         }

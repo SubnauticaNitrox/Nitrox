@@ -1,4 +1,6 @@
-﻿namespace NitroxClient.Communication
+﻿using NitroxModel.PlayerSlot;
+
+namespace NitroxClient.Communication
 {
     public interface IClientBridge : IPacketSender
     {

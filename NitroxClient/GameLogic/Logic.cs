@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Map;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
@@ -26,6 +27,7 @@ namespace NitroxClient.GameLogic
 
         public Logic(IClientBridge clientBridge, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
+            Log.Info("Initializing Multiplayer GameLogic...");
             AI = new AI(clientBridge);
             Building = new Building(clientBridge);
             Chat = new Chat(clientBridge);
@@ -44,6 +46,7 @@ namespace NitroxClient.GameLogic
             Terrain = new Terrain(clientBridge, visibleCells, packetReceiver);
             PacketSender = clientBridge;
             ClientBridge = clientBridge;
+            Log.Info("Multiplayer GameLogic Initialized...");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -12,7 +13,6 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
 using UnityEngine;
-using System.Collections;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -47,16 +47,20 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
             { typeof(PlayerChatManager), remotePlayerChatManager },
-            { typeof(IPacketSender), clientBridge }
+            { typeof(IPacketSender), clientBridge },
+            { typeof(ClientBridge), clientBridge }
         };
 
         static Multiplayer()
         {
+            Log.Info("Initializing Multiplayer Client...");
             PacketProcessorsByType = PacketProcessor.GetProcessors(processorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
+            Log.Info("Multiplayer Client Initialized...");
         }
 
         public void Awake()
         {
+            Log.Info("Multiplayer Waking Up...");
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
@@ -67,7 +71,8 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (clientBridge.CurrentState == ClientBridgeState.Connected)
+            if (clientBridge.CurrentState != ClientBridgeState.Disconnected && 
+                clientBridge.CurrentState != ClientBridgeState.Failed)
             {
                 ProcessPackets();
             }
@@ -75,7 +80,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
+            Queue<Packet> packets = packetReceiver.GetReceivedPackets();            
 
             foreach (Packet packet in packets)
             {
@@ -113,7 +118,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
-        }        
+        }
 
         public void OnConsoleCommand_disconnect(NotificationCenter.Notification n)
         {
@@ -142,7 +147,7 @@ namespace NitroxClient.MonoBehaviours
             clientBridge.connect(ipAddress, playerName);
         }
 
-        public void StartMultiplayer()
+        public void JoinSession()
         {
             OnBeforeMultiplayerStart();
             clientBridge.claimReservation();
@@ -163,6 +168,11 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void ForceActivation()
+        {
+            gameObject.SetActive(true);
+        }
+
         private IEnumerator HandleReservationFromConsole()
         {
             yield return new WaitUntil(() => clientBridge.CurrentState != ClientBridgeState.WaitingForRerservation);
@@ -170,7 +180,7 @@ namespace NitroxClient.MonoBehaviours
             switch (clientBridge.CurrentState)
             {
                 case ClientBridgeState.Reserved:
-                    StartMultiplayer();
+                    JoinSession();
                     break;
                 case ClientBridgeState.ReservationRejected:
                     Log.InGame($"Cannot join server: {clientBridge.ReservationRejectionReason.ToString()}");

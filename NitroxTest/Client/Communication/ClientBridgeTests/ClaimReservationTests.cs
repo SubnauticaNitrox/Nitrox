@@ -6,6 +6,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using FluentAssertions;
 using NitroxClient.Communication.Exceptions;
+using NitroxModel.PlayerSlot;
 
 namespace NitroxTest.Client.Communication.ClientBridgeTests
 {

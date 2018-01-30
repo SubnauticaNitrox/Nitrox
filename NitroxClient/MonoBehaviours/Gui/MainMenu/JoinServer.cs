@@ -2,6 +2,9 @@
 using System.Collections;
 using NitroxModel.Helper;
 using UnityEngine;
+using NitroxModel.Logger;
+using NitroxModel;
+using System.ComponentModel;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -15,9 +18,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         bool notifyingUnableToJoin = false;
         bool shouldFocus;
 
+        private GameObject multiplayerClient;
+
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
+            
         }
 
         public void Start()
@@ -42,17 +48,25 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IEnumerator NegotiateSession(string serverIp)
         {
+            Log.InGame("Negotiating session...");            
+
+            if(Multiplayer.Main == null)
+            {
+                Log.InGame("Critical error, Multiplayer main unset.");
+            }
             Multiplayer.Main.NegotiatePlayerSlotReservation(serverIp, username);
-            
+
+            Log.InGame("Waiting for reservation...");
             yield return new WaitUntil(() => Multiplayer.Logic.ClientBridge.CurrentState != Communication.ClientBridgeState.WaitingForRerservation);
 
             switch (Multiplayer.Logic.ClientBridge.CurrentState)
             {
                 case Communication.ClientBridgeState.Reserved:
+                    Log.InGame("Launching game...");
                     StartCoroutine(LaunchSession());
-                    Destroy(gameObject);
                     break;
                 case Communication.ClientBridgeState.ReservationRejected:
+                    Log.InGame("Reservation rejected...");
                     notifyingUnableToJoin = true;
                     break;
                 default:
@@ -62,17 +76,26 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IEnumerator LaunchSession()
         {
+            Log.InGame("Launching game...");
+			
 #pragma warning disable CS0618 // Type or member is obsolete
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
             StartCoroutine(startNewGame);
+
+            Log.InGame("Waiting for game to load...");
             //Wait until game starts
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.Main.StartMultiplayer();
+
+            Log.InGame("Joining Multiplayer Session...");
+            Multiplayer.Main.JoinSession();
+
+            multiplayerClient = null;
+            Destroy(gameObject);
         }
 
-        private GUISkin GetGUISkin()
+        private GUISkin GetGUISkin(int labelWidth)
         {
             return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
             {
@@ -86,7 +109,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 s.label.fontSize = 14;
                 s.label.alignment = TextAnchor.MiddleRight;
                 s.label.stretchHeight = true;
-                s.label.fixedWidth = 80; //change this when adding new labels that need more space.
+                s.label.fixedWidth = labelWidth; 
 
                 s.button.fontSize = 14;
                 s.button.stretchHeight = true;
@@ -101,16 +124,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (e.keyCode)
                 {
                     case KeyCode.Return:
-                        StartCoroutine(NegotiateSession(ServerIp));
-                        joiningServer = false;
+                        startMultiplayerClient();
                         break;
                     case KeyCode.Escape:
-                        joiningServer = false;
+                        stopMultiplayerClient();
                         break;
                 }
             }
 
-            GUISkinUtils.RenderWithSkin(GetGUISkin(), () => 
+            GUISkinUtils.RenderWithSkin(GetGUISkin(80), () => 
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
@@ -124,13 +146,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
 					if (GUILayout.Button("Join"))
 					{
-						StartCoroutine(NegotiateSession(ServerIp));
-						joiningServer = false;
+						startMultiplayerClient();
 					}
 
 					if (GUILayout.Button("Cancel"))
 					{
-						joiningServer = false;
+						stopMultiplayerClient();
 					}
 				}
             });
@@ -140,6 +161,29 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 GUI.FocusControl("usernameField");
                 shouldFocus = false;
             }
+        }
+
+        private void startMultiplayerClient()
+        {
+            if (multiplayerClient == null)
+            {
+                multiplayerClient = new GameObject();
+                multiplayerClient.AddComponent<Multiplayer>();
+            }
+
+            StartCoroutine(NegotiateSession(ServerIp));
+            joiningServer = false;
+        }
+
+        private void stopMultiplayerClient()
+        {
+            if (multiplayerClient != null)
+            {
+                Destroy(multiplayerClient);
+                multiplayerClient = null;
+            }
+
+            joiningServer = false;
         }
 
         private void BuildUnableToJoinDialog(int windowId)
@@ -159,21 +203,26 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         break;
                 }
             }
-
-            SetGUIStyle();
-            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
+			
+			GUISkinUtils.RenderWithSkin(GetGUISkin(490), () => 
             {
-                using (GUILayout.HorizontalScope h = new GUILayout.HorizontalScope())
+                using (new GUILayout.VerticalScope("Box"))
                 {
-                    GUILayout.Label($"Rejection Reason: { Multiplayer.Logic.ClientBridge.ReservationRejectionReason.ToString() }");
-                }
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        var rejectionReason = Multiplayer.Logic.ClientBridge.ReservationRejectionReason;
+						var descriptionAttribute = rejectionReason.GetAttribute<DescriptionAttribute>();
 
-                if (GUILayout.Button("OK"))
-                {
-                    joiningServer = true;
-                    notifyingUnableToJoin = false;
-                }
-            }
+						GUILayout.Label(descriptionAttribute.Description);
+                    }
+
+					if (GUILayout.Button("OK"))
+					{
+						joiningServer = true;
+						notifyingUnableToJoin = false;
+					}
+				}
+            });
         }
     }
 }
