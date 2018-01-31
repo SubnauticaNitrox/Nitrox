@@ -124,10 +124,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (e.keyCode)
                 {
                     case KeyCode.Return:
-                        startMultiplayerClient();
+                        StartMultiplayerClient();
                         break;
                     case KeyCode.Escape:
-                        stopMultiplayerClient();
+                        StopMultiplayerClient();
                         break;
                 }
             }
@@ -146,12 +146,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
 					if (GUILayout.Button("Join"))
 					{
-						startMultiplayerClient();
+						StartMultiplayerClient();
 					}
 
 					if (GUILayout.Button("Cancel"))
 					{
-						stopMultiplayerClient();
+						StopMultiplayerClient();
 					}
 				}
             });
@@ -163,7 +163,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private void startMultiplayerClient()
+        private void StartMultiplayerClient()
         {
             if (multiplayerClient == null)
             {
@@ -175,7 +175,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joiningServer = false;
         }
 
-        private void stopMultiplayerClient()
+        private void StopMultiplayerClient()
         {
             if (multiplayerClient != null)
             {
