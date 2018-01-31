@@ -90,7 +90,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string incorrectCorrelationId = "WRONG";
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.ConfirmReservation(incorrectCorrelationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => clientBridge.ConfirmReservation(incorrectCorrelationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
             action.ShouldThrow<UncorrelatedMessageException>();
@@ -103,11 +103,10 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string nullCorrelationId = null;
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.ConfirmReservation(nullCorrelationId, TestConstants.TEST_RESERVATION_KEY);
+            Action action = () => clientBridge.ConfirmReservation(nullCorrelationId, TestConstants.TEST_RESERVATION_KEY);
 
             //Then
-            action.ShouldThrow<ParameterValidationException>().And
-                .Should().Match<ParameterValidationException>(ex => ex.FaultingParameterName == "correlationId" && ex.Message == "The value cannot be null.");
+            action.ShouldThrow<ArgumentNullException>();
             clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
 
@@ -131,11 +130,10 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string nullReservationKey = null;
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.ConfirmReservation(correlationId, nullReservationKey);
+            Action action = () => clientBridge.ConfirmReservation(correlationId, nullReservationKey);
 
             //Then
-            action.ShouldThrow<ParameterValidationException>().And
-                .Should().Match<ParameterValidationException>(ex => ex.FaultingParameterName == "reservationKey" && ex.Message == "The value cannot be null.");
+            action.ShouldThrow<ArgumentNullException>();
             clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
 
         }
@@ -146,7 +144,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string blankReservationKey = string.Empty;
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.ConfirmReservation(correlationId, blankReservationKey);
+            Action action = () => clientBridge.ConfirmReservation(correlationId, blankReservationKey);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And

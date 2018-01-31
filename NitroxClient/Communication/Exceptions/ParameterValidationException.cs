@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.Exceptions
 
         public ParameterValidationException(string faultingParameterName, string message) : base(message)
         {
-            this.FaultingParameterName = faultingParameterName;
+            FaultingParameterName = faultingParameterName;
         }
     }
 }

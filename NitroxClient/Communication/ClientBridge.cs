@@ -7,6 +7,7 @@ using NitroxModel.PlayerSlot;
 using NitroxModel.Logger;
 using NitroxModel;
 using NitroxModel.Packets.Exceptions;
+using NitroxModel.Helper;
 
 namespace NitroxClient.Communication
 {
@@ -194,10 +195,7 @@ namespace NitroxClient.Communication
 
         private void ValidateCorrelationId(string correlationId)
         {
-            if (correlationId == null)
-            {
-                throw new ParameterValidationException(nameof(correlationId), "The value cannot be null.");
-            }
+            Validate.NotNull(correlationId);
 
             if (string.IsNullOrEmpty(correlationId))
             {
@@ -207,10 +205,7 @@ namespace NitroxClient.Communication
 
         private void ValidateReservationKey(string reservationKey)
         {
-            if (reservationKey == null)
-            {
-                throw new ParameterValidationException(nameof(reservationKey), "The value cannot be null.");
-            }
+            Validate.NotNull(reservationKey);
 
             if (string.IsNullOrEmpty(reservationKey))
             {

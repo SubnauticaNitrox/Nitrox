@@ -104,9 +104,8 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             Action action = () => clientBridge.HandleRejectedReservation(nullCorrelationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
-            action.ShouldThrow<ParameterValidationException>().And
-                .Should().Match<ParameterValidationException>(ex => ex.FaultingParameterName == "correlationId" && ex.Message == "The value cannot be null.");
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+            action.ShouldThrow<ArgumentNullException>();
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
 
         [TestMethod]
