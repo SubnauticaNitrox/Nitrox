@@ -96,19 +96,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         username = GUILayout.TextField(username);
                     }
 
-<<<<<<< HEAD
                 if (GUILayout.Button("Join"))
                 {
                     StartCoroutine(JoinServerWait(ServerIp, username));
                     showingUsername = false;
                 }
-=======
-                    if (GUILayout.Button("Join"))
-                    {
-                        StartCoroutine(JoinServerWait(ServerIp));
-                        showingUsername = false;
-                    }
->>>>>>> upstream/master
 
                     if (GUILayout.Button("Cancel"))
                     {
