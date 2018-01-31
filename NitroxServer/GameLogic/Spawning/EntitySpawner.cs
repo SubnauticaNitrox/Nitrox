@@ -78,7 +78,10 @@ namespace NitroxServer.GameLogic
                     {
                         float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                         rollingProbability += probabilityDensity;
-                        if (rollingProbability >= randomNumber)
+                        //This is pretty hacky, it rerolls until its hits a prefab of a correct type
+                        //What should happen is that we check wei first, then grab data from there
+                        bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
+                        if (rollingProbability >= randomNumber && isValidSpawn)
                         {
                             selectedPrefab = prefab;
                             break;
@@ -93,6 +96,7 @@ namespace NitroxServer.GameLogic
                     for (int i = 0; i < selectedPrefab.count; i++)
                     {
                         Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
+                                                          entitySpawnPoint.Rotation,
                                                           worldEntityInfo.techType,
                                                           Guid.NewGuid().ToString(),
                                                           (int)worldEntityInfo.cellLevel);
@@ -108,6 +112,22 @@ namespace NitroxServer.GameLogic
                     }
                 }
             }
+        }
+
+        private bool IsValidSpawnType(string id, bool creatureSpawn)
+        {
+            if (worldEntitiesByClassId.ContainsKey(id))
+            {
+                WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[id];
+                if (creatureSpawn && worldEntityInfo.slotType == EntitySlot.Type.Creature)
+                {
+                    return true;
+                } else if (!creatureSpawn && worldEntityInfo.slotType != EntitySlot.Type.Creature)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private bool GetDataFiles(out string lootDistributions, out Dictionary<string, WorldEntityInfo> worldEntityData)

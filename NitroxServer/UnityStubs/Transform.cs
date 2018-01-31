@@ -7,12 +7,12 @@ namespace NitroxServer.UnityStubs
     {
         [ProtoMember(1)]
         public Vector3 Position { get; }
-
+        
         [ProtoMember(2)]
-        public Vector3 Scale { get; }
+        public Quaternion Rotation { get; }
 
         [ProtoMember(3)]
-        public Quaternion Rotation { get; }
+        public Vector3 Scale { get; }
 
         public Transform(Vector3 position, Vector3 scale, Quaternion rotation)
         {
