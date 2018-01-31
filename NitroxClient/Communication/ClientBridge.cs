@@ -29,7 +29,7 @@ namespace NitroxClient.Communication
             Log.Info("Initializing ClientBridge...");
             suppressedPacketsTypes = new HashSet<Type>();
             this.serverClient = serverClient;
-            correlationId = GenerateCorrelationId();
+            correlationId = Guid.NewGuid().ToString();
 
             CurrentState = ClientBridgeState.Disconnected;
             ReservationKey = null;
@@ -107,7 +107,7 @@ namespace NitroxClient.Communication
                     throw new ProhibitedClaimAttemptException();
                 }
 
-                var packet = new ClaimPlayerSlotReservation(correlationId, ReservationKey);
+                ClaimPlayerSlotReservation packet = new ClaimPlayerSlotReservation(correlationId, ReservationKey);
                 serverClient.Send(packet);
 
                 CurrentState = ClientBridgeState.Connected;
@@ -182,7 +182,7 @@ namespace NitroxClient.Communication
                 throw new ProhibitedConnectAttemptException();
             }
 
-            var reservePlayerSlot = new ReservePlayerSlot(correlationId, playerName);
+            ReservePlayerSlot reservePlayerSlot = new ReservePlayerSlot(correlationId, playerName);
             serverClient.Send(reservePlayerSlot);
 
             PlayerId = playerName;
@@ -229,21 +229,6 @@ namespace NitroxClient.Communication
             {
                 throw new UncorrelatedMessageException();
             }
-        }
-
-        private string GenerateCorrelationId()
-        {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var stringChars = new char[8];
-            var seed = GetHashCode();
-            var random = new Random(seed);
-
-            for (int i = 0; i < stringChars.Length; i++)
-            {
-                stringChars[i] = chars[random.Next(chars.Length)];
-            }
-
-            return new string(stringChars);
         }
     }
 }
