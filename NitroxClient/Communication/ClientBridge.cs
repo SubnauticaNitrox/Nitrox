@@ -157,7 +157,10 @@ namespace NitroxClient.Communication
                 throw new ProhibitedSendAttemptException();
             }
 
-            serverClient.Send(packet);
+            if (!suppressedPacketsTypes.Contains(packet.GetType()))
+            {
+                serverClient.Send(packet);
+            }
         }
 
         public PacketSuppression<T> Suppress<T>()
