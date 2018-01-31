@@ -13,9 +13,9 @@ namespace NitroxClient.Communication
     //Example: We can refactor this implementation into a ReservableClientBridge, allowing us to implement different types of client bridges depending on specific requirements.
     public class ClientBridge : IClientBridge
     {
-        private readonly HashSet<Type> suppressedPacketsTypes;
+        private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+        private string correlationId = Guid.NewGuid().ToString();
         private IClient serverClient;
-        private string correlationId;
 
         public ClientBridgeState CurrentState { get; private set; }
         public string ReservationKey { get; private set; }
@@ -27,9 +27,7 @@ namespace NitroxClient.Communication
         public ClientBridge(IClient serverClient)
         {
             Log.Info("Initializing ClientBridge...");
-            suppressedPacketsTypes = new HashSet<Type>();
             this.serverClient = serverClient;
-            correlationId = Guid.NewGuid().ToString();
 
             CurrentState = ClientBridgeState.Disconnected;
             ReservationKey = null;
