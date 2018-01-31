@@ -102,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             if (!showingWindow)
             {
-                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen","Bal Bla" , "#7494"));
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen", "Bal Bla", "#7494"));
                 AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
                 showingWindow = true;
             }
@@ -145,7 +145,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RespondLastJoinRequest(int accept)
         {
-            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply) accept);
+            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply)accept);
         }
     }
 }
