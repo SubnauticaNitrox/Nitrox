@@ -95,25 +95,7 @@ namespace NitroxClient.MonoBehaviours
         }
         public void OnConsoleCommand_discord(NotificationCenter.Notification n)
         {
-            if (n?.data?.Count > 0)
-            {
-                if (((string)n.data[0]).ToLower() == "yes")
-                {
-                    DiscordRP.RespondLastJoinRequest(true);
-                }
-                else if (((string)n.data[0]).ToLower() == "no")
-                {
-                    DiscordRP.RespondLastJoinRequest(false);
-                }
-                else
-                {
-                    Log.InGame("Command syntax: discord YES/NO");
-                }
-            }
-            else
-            {
-                Log.InGame("Command syntax: discord YES/NO");
-            }
+            DiscordRP.RequestCallbackTest();
         }
 
         private void InitializeLocalPlayerState()
