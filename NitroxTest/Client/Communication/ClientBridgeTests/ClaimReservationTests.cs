@@ -20,7 +20,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void GivenAnInitializedClientBridge()
         {
             //Given
-            var serverClient = Substitute.For<IClient>();
+            IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
                 .When(client => client.Start(Arg.Any<string>()))
@@ -30,19 +30,19 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
                 .When(client => client.Send(Arg.Any<ReservePlayerSlot>()))
                 .Do(info => this.correlationId = info.Arg<ReservePlayerSlot>().CorrelationId);
 
-            this.clientBridge = new ClientBridge(serverClient);
+            clientBridge = new ClientBridge(serverClient);
         }
 
         [TestMethod]
         public void ClaimingAReservationOnAReservedBridgeShouldMakeItConnected()
         {
             //When
-            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
-            this.clientBridge.ClaimReservation();
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            clientBridge.ClaimReservation();
 
             //Then
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Connected);
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Connected);
         }
 
         [TestMethod]
@@ -53,46 +53,46 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
 
             //Then
             action.ShouldThrow<ProhibitedClaimAttemptException>();
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
 
         [TestMethod]
         public void ShouldThrowAProhibitedClaimAttemptExceptionWhenClaimingAReservationOnAWaitingBrige()
         {
             //When
-            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             Action action = () => this.clientBridge.ClaimReservation();
 
             //Then
             action.ShouldThrow<ProhibitedClaimAttemptException>();
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
 
         [TestMethod]
         public void ShouldThrowAProhibitedClaimAttemptExceptionWhenClaimingARejectedReservation()
         {
             //When
-            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
             Action action = () => this.clientBridge.ClaimReservation();
 
             //Then
             action.ShouldThrow<ProhibitedClaimAttemptException>();
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
 
         [TestMethod]
         public void ShouldThrowAProhibitedClaimAttemptExceptionWhenClaimingAReservationOnAConnectedBridge()
         {
             //When
-            this.clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            this.clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
-            this.clientBridge.ClaimReservation();
+            clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
+            clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            clientBridge.ClaimReservation();
             Action action = () => this.clientBridge.ClaimReservation();
 
             //Then
             action.ShouldThrow<ProhibitedClaimAttemptException>();
-            this.clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
+            clientBridge.CurrentState.Should().Be(ClientBridgeState.Failed);
         }
     }
 }

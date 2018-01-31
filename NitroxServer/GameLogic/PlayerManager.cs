@@ -28,8 +28,8 @@ namespace NitroxServer.GameLogic
                 return new PlayerSlotReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
             }
 
-            var reservationKey = Guid.NewGuid().ToString();
-            var reservation = new PlayerSlotReservation(correlationId, reservationKey, playerId);
+            string reservationKey = Guid.NewGuid().ToString();
+            PlayerSlotReservation reservation = new PlayerSlotReservation(correlationId, reservationKey, playerId);
 
             lock (reservations)
             {
@@ -41,13 +41,13 @@ namespace NitroxServer.GameLogic
 
         public Player ClaimPlayerSlotReservation(Connection connection, string reservationKey, string correlationId)
         {
-            var reservation = reservations[reservationKey];
+            PlayerSlotReservation reservation = reservations[reservationKey];
             if(reservation == null || reservation.CorrelationId != correlationId)
             {
                 return null;
             }
 
-            var player = new Player(reservation.PlayerId, connection);
+            Player player = new Player(reservation.PlayerId, connection);
             lock (playersByConnection)
             {
                 lock (currentPlayerNames)

@@ -20,7 +20,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         public void GivenAClientBridgeThatIsWaitingForAReservation()
         {
             //Given
-            var serverClient = Substitute.For<IClient>();
+            IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
                 .When(client => client.Start(Arg.Any<string>()))

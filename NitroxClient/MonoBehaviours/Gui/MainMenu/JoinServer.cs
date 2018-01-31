@@ -5,6 +5,7 @@ using UnityEngine;
 using NitroxModel.Logger;
 using NitroxModel;
 using System.ComponentModel;
+using NitroxModel.PlayerSlot;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -210,8 +211,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        var rejectionReason = Multiplayer.Logic.ClientBridge.ReservationRejectionReason;
-						var descriptionAttribute = rejectionReason.GetAttribute<DescriptionAttribute>();
+                        ReservationRejectionReason rejectionReason = Multiplayer.Logic.ClientBridge.ReservationRejectionReason;
+						DescriptionAttribute descriptionAttribute = rejectionReason.GetAttribute<DescriptionAttribute>();
 
 						GUILayout.Label(descriptionAttribute.Description);
                     }

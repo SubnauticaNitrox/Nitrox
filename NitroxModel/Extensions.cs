@@ -8,8 +8,8 @@ namespace NitroxModel
         public static TAttribute GetAttribute<TAttribute>(this Enum value)
             where TAttribute : Attribute
         {
-            var type = value.GetType();
-            var name = Enum.GetName(type, value);
+            Type type = value.GetType();
+            string name = Enum.GetName(type, value);
 
             return type.GetField(name) 
                 .GetCustomAttributes(false)

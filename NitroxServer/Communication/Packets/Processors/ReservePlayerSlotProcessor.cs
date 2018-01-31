@@ -20,9 +20,9 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Log.Info("Processing reservation request...");
 
-            var correlationId = packet.CorrelationId;
-            var playerId = packet.PlayerName;
-            var reservation = playerManager.ReservePlayerSlot(correlationId, playerId);
+            string correlationId = packet.CorrelationId;
+            string playerId = packet.PlayerName;
+            PlayerSlotReservation reservation = playerManager.ReservePlayerSlot(correlationId, playerId);
 
             Log.Info($"Reservation processed successfully {reservation.PlayerId} - { reservation.ReservationRejectionReason.ToString() } - { reservation.ReservationKey }...");
 
