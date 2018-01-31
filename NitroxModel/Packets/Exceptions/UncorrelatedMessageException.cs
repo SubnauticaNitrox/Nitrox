@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxClient.Communication.Exceptions
+namespace NitroxModel.Packets.Exceptions
 {
     public class UncorrelatedMessageException : Exception
     {

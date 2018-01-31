@@ -1,4 +1,6 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.Helper;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Exceptions;
 using NitroxModel.PlayerSlot;
 using NitroxModel.Tcp;
 using System;
@@ -43,9 +45,11 @@ namespace NitroxServer.GameLogic
         public Player ClaimPlayerSlotReservation(Connection connection, string reservationKey, string correlationId)
         {
             PlayerSlotReservation reservation = reservations[reservationKey];
-            if(reservation == null || reservation.CorrelationId != correlationId)
+            Validate.NotNull(reservation);
+
+            if (reservation.CorrelationId != correlationId)
             {
-                return null;
+                throw new UncorrelatedMessageException(); ;
             }
 
             Player player = new Player(reservation.PlayerId, connection);

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using NitroxModel.PlayerSlot;
 using NitroxModel.Logger;
 using NitroxModel;
+using NitroxModel.Packets.Exceptions;
 
 namespace NitroxClient.Communication
 {

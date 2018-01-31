@@ -94,6 +94,7 @@
     <Compile Include="Packets\EntityTransformUpdates.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />
     <Compile Include="Packets\EquipmentRemoveItem.cs" />
+    <Compile Include="Packets\Exceptions\UncorrelatedMessageException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />

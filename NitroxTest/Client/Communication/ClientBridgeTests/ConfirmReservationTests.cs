@@ -4,6 +4,7 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxModel.Packets;
+using NitroxModel.Packets.Exceptions;
 using NitroxModel.PlayerSlot;
 using NSubstitute;
 using System;

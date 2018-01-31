@@ -70,7 +70,6 @@
     <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
     <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
     <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
-    <Compile Include="Communication\Exceptions\UncorrelatedMessageException.cs" />
     <Compile Include="Communication\IClientBridge.cs" />
     <Compile Include="Communication\IPacketSender.cs" />
     <Compile Include="Communication\PacketSender.cs" />
