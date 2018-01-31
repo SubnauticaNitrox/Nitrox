@@ -60,7 +60,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            Log.Info("Multiplayer Waking Up...");
+            Log.InGame("Multiplayer Client Loaded...");
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
