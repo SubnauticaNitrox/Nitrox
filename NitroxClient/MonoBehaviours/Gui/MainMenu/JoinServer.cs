@@ -37,12 +37,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (joiningServer)
             {
-                joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, BuildJoinServerDialog, "Join server");
+                joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, RenderJoinServerDialog, "Join server");
             }
 
             if (notifyingUnableToJoin)
             {
-                unableToJoinWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, BuildUnableToJoinDialog, "Unable to Join Session");
+                unableToJoinWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, RenderUnableToJoinDialog, "Unable to Join Session");
             }
         }
 
@@ -116,7 +116,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             });
         }
 
-        private void BuildJoinServerDialog(int windowId)
+        private void RenderJoinServerDialog(int windowId)
         {
             Event e = Event.current;
             if (e.isKey)
@@ -186,7 +186,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joiningServer = false;
         }
 
-        private void BuildUnableToJoinDialog(int windowId)
+        private void RenderUnableToJoinDialog(int windowId)
         {
             Event e = Event.current;
             if (e.isKey)
