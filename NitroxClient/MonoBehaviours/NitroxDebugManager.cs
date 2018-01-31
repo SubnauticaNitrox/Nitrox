@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Debuggers;
+using NitroxModel.Logger;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -123,6 +125,37 @@ namespace NitroxClient.MonoBehaviours
                 debugger.Enabled = true;
             }
             prevActiveDebuggers.Clear();
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+            SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        }
+
+        
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
+            SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        }
+
+        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            Log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
+        }
+
+        private void SceneManager_sceneUnloaded(Scene scene)
+        {
+            Log.Debug($"Scene '{scene.name}' unloaded.");
+        }
+
+        private void SceneManager_activeSceneChanged(Scene fromScene, Scene toScene)
+        {
+            Log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
         }
     }
 }
