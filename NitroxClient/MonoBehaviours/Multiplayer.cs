@@ -8,6 +8,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -28,6 +29,7 @@ namespace NitroxClient.MonoBehaviours
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
+        public static DiscordController DiscordRP;
 
         public bool InitialSyncCompleted;
 
@@ -115,6 +117,10 @@ namespace NitroxClient.MonoBehaviours
 
             // UI.
             gameObject.AddComponent<LostConnectionModal>();
+
+            // Utilities
+            DiscordRP = gameObject.AddComponent<DiscordController>();
+            InitDiscordRichPresence("ipAddress");
         }
 
         public void StopCurrentSession()
@@ -172,6 +178,17 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
             waitScreen.ReflectionCall("Hide");
+        }
+
+        private void InitDiscordRichPresence(string ipAddress)
+        {
+            DiscordRP.Presence.state = "In Game";
+            DiscordRP.Presence.partyId = "<Server Name>";
+            DiscordRP.Presence.partySize = 1 + remotePlayerManager.GetPlayerCount();
+            DiscordRP.Presence.partyMax = 42;
+            DiscordRP.Presence.joinSecret = ipAddress;
+            DiscordRP.Presence.instance = false;
+            DiscordRP.UpdatePresence();
         }
     }
 }
