@@ -142,7 +142,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         username = GUILayout.TextField(username);
                     }
 
-
                     if (GUILayout.Button("Join"))
                     {
                         StartMultiplayerClient();
