@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerWindowRect = GUILayout.Window(0, joinServerWindowRect, DoJoinServerWindow, "Join server");
         }
 
-        public IEnumerator JoinServerWait(string serverIp)
+        public IEnumerator JoinServerWait(string serverIp, string name)
         {
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
             StartCoroutine(startNewGame);
@@ -40,7 +40,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-            Multiplayer.Main.StartMultiplayer(serverIp, username);
+            Multiplayer.Main.StartMultiplayer(serverIp, name);
             Destroy(gameObject);
         }
 
@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (e.keyCode)
                 {
                     case KeyCode.Return:
-                        StartCoroutine(JoinServerWait(ServerIp));
+                        StartCoroutine(JoinServerWait(ServerIp, username));
                         showingUsername = false;
                         break;
                     case KeyCode.Escape:
@@ -91,7 +91,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                 if (GUILayout.Button("Join"))
                 {
-                    StartCoroutine(JoinServerWait(ServerIp));
+                    StartCoroutine(JoinServerWait(ServerIp, username));
                     showingUsername = false;
                 }
 

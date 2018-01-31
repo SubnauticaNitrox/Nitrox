@@ -17,8 +17,8 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
     public class DiscordController : MonoBehaviour
     {
         public DiscordRpc.RichPresence Presence;
-        public string ApplicationId;
-        public string OptionalSteamId;
+        public string ApplicationId = "405122994348752896";
+        public string OptionalSteamId = "264710";
         private int callbackCalls;
         public int ClickCounter;
         public UnityEngine.Events.UnityEvent OnConnect;
@@ -27,8 +27,8 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public DiscordJoinEvent OnSpectate;
         public DiscordJoinRequestEvent OnJoinRequest;
 
-        public string LastJoinRequestID;
-
+        DiscordRpc.JoinRequest lastJoinRequest;
+        bool showingWindow;
         DiscordRpc.EventHandlers handlers;
 
         public int CallbackCalls
@@ -72,7 +72,14 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             ++CallbackCalls;
             Log.Info(string.Format("Discord: join ({0})", secret));
             JoinServer joinServer = gameObject.AddComponent<JoinServer>();
-            StartCoroutine(joinServer.JoinServerWait(secret));
+            if (LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled())
+            {
+                Multiplayer.Main.StartMultiplayer(secret, "Test Username");
+            }
+            else
+            {
+                StartCoroutine(joinServer.JoinServerWait(secret, "Test Username"));
+            }
             OnJoin.Invoke(secret);
         }
 
@@ -86,10 +93,25 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void RequestCallback(ref DiscordRpc.JoinRequest request)
         {
             ++CallbackCalls;
-            Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
-            LastJoinRequestID = request.userId;
-            Log.InGame("Player " + request.username + " wants to join your server. Accept/Deny with \"discord YES/NO\"");
+            if (!showingWindow)
+            {
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
+                AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
+                acceptRequest.Request = request;
+                lastJoinRequest = request;
+                showingWindow = true;
+            }
             OnJoinRequest.Invoke(request);
+        }
+
+        public void RequestCallbackTest()
+        {
+            if (!showingWindow)
+            {
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen","Bal Bla" , "#7494"));
+                AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
+                showingWindow = true;
+            }
         }
 
         void Update()
@@ -101,6 +123,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             Log.Info("Discord: init");
             CallbackCalls = 0;
+            showingWindow = false;
 
             handlers = new DiscordRpc.EventHandlers();
             handlers.readyCallback = ReadyCallback;
@@ -109,7 +132,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             handlers.joinCallback += JoinCallback;
             handlers.spectateCallback += SpectateCallback;
             handlers.requestCallback += RequestCallback;
-            DiscordRpc.Initialize("405122994348752896", ref handlers, true, OptionalSteamId);
+            DiscordRpc.Initialize(ApplicationId, ref handlers, true, OptionalSteamId);
         }
 
         void OnDisable()
@@ -122,19 +145,13 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void UpdatePresence()
         {
             Presence.largeImageKey = "diving";
+            Presence.instance = false;
             DiscordRpc.UpdatePresence(ref Presence);
         }
 
-        public void RespondLastJoinRequest(bool accept)
+        public void RespondLastJoinRequest(int accept)
         {
-            if (accept)
-            {
-                DiscordRpc.Respond(LastJoinRequestID, DiscordRpc.Reply.Yes);
-            }
-            else
-            {
-                DiscordRpc.Respond(LastJoinRequestID, DiscordRpc.Reply.No);
-            }
+            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply) accept);
         }
     }
 }
