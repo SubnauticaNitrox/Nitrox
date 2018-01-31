@@ -104,6 +104,9 @@
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordController.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
+    <Compile Include="Debuggers\BaseDebugger.cs" />
+    <Compile Include="Debuggers\NetworkDebugger.cs" />
+    <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
@@ -157,6 +160,8 @@
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
     <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
+    <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
+    <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
@@ -170,7 +175,9 @@
     </Compile>
     <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
+    <Compile Include="Unity\Helper\GUISkinUtils.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
+    <Compile Include="Unity\Helper\StringUtils.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
     <Compile Include="Unity\Smoothing\SmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />

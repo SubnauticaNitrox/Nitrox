@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using NitroxClient.Unity.Helper;
+using System.Collections;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -29,12 +30,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 return;
             }
-            joinServerWindowRect = GUILayout.Window(0, joinServerWindowRect, DoJoinServerWindow, "Join server");
+            joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, DoJoinServerWindow, "Join server");
         }
 
         public IEnumerator JoinServerWait(string serverIp, string name)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618 // Type or member is obsolete
             StartCoroutine(startNewGame);
             //Wait until game starts
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
@@ -44,22 +47,25 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Destroy(gameObject);
         }
 
-        private void SetGUIStyle()
+        private GUISkin GetGUISkin()
         {
-            GUI.skin.textField.fontSize = 14;
-            GUI.skin.textField.richText = false;
-            GUI.skin.textField.alignment = TextAnchor.MiddleLeft;
-            GUI.skin.textField.wordWrap = true;
-            GUI.skin.textField.stretchHeight = true;
-            GUI.skin.textField.padding = new RectOffset(10, 10, 5, 5);
+            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
+            {
+                s.textField.fontSize = 14;
+                s.textField.richText = false;
+                s.textField.alignment = TextAnchor.MiddleLeft;
+                s.textField.wordWrap = true;
+                s.textField.stretchHeight = true;
+                s.textField.padding = new RectOffset(10, 10, 5, 5);
 
-            GUI.skin.label.fontSize = 14;
-            GUI.skin.label.alignment = TextAnchor.MiddleRight;
-            GUI.skin.label.stretchHeight = true;
-            GUI.skin.label.fixedWidth = 80; //change this when adding new labels that need more space.
+                s.label.fontSize = 14;
+                s.label.alignment = TextAnchor.MiddleRight;
+                s.label.stretchHeight = true;
+                s.label.fixedWidth = 80; //change this when adding new labels that need more space.
 
-            GUI.skin.button.fontSize = 14;
-            GUI.skin.button.stretchHeight = true;
+                s.button.fontSize = 14;
+                s.button.stretchHeight = true;
+            });
         }
 
         private void DoJoinServerWindow(int windowId)
@@ -79,27 +85,37 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            SetGUIStyle();
-            using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
+            GUISkinUtils.RenderWithSkin(GetGUISkin(), () => 
             {
-                using (GUILayout.HorizontalScope h = new GUILayout.HorizontalScope())
+                using (new GUILayout.VerticalScope("Box"))
                 {
-                    GUILayout.Label("Username:");
-                    GUI.SetNextControlName("usernameField");
-                    username = GUILayout.TextField(username);
-                }
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.Label("Username:");
+                        GUI.SetNextControlName("usernameField");
+                        username = GUILayout.TextField(username);
+                    }
 
+<<<<<<< HEAD
                 if (GUILayout.Button("Join"))
                 {
                     StartCoroutine(JoinServerWait(ServerIp, username));
                     showingUsername = false;
                 }
+=======
+                    if (GUILayout.Button("Join"))
+                    {
+                        StartCoroutine(JoinServerWait(ServerIp));
+                        showingUsername = false;
+                    }
+>>>>>>> upstream/master
 
-                if (GUILayout.Button("Cancel"))
-                {
-                    showingUsername = false;
+                    if (GUILayout.Button("Cancel"))
+                    {
+                        showingUsername = false;
+                    }
                 }
-            }
+            });
 
             if (shouldFocus)
             {
