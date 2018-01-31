@@ -178,7 +178,7 @@ namespace NitroxClient.MonoBehaviours
                     JoinSession();
                     break;
                 case ClientBridgeState.ReservationRejected:
-                    Log.InGame($"Cannot join server: {clientBridge.ReservationRejectionReason.ToString()}");
+                    Log.InGame($"Cannot join server: {clientBridge.ReservationState.ToString()}");
                     break;
                 default:
                     Log.InGame("Unable to communicate with the server for unknown reasons.");

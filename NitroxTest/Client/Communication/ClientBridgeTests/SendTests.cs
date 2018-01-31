@@ -1,12 +1,11 @@
-﻿using System;
+﻿using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NSubstitute;
-using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
-using FluentAssertions;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Exceptions;
-using NitroxModel.PlayerSlot;
+using NitroxClient.Communication.Abstract;
+using NitroxModel.Packets;
+using NSubstitute;
+using System;
 
 namespace NitroxTest.Client.Communication.ClientBridgeTests
 {
@@ -43,6 +42,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
+            clientBridge.ClaimReservation();
 
             clientBridge.Send(packet);
 
@@ -91,7 +91,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            clientBridge.HandleRejectedReservation(correlationId, TestConstants.TEST_REJECTION_STATE);
             Action action = () => clientBridge.Send(packet);
 
             //Then

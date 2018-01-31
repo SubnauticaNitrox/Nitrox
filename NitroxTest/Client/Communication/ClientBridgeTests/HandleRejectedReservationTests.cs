@@ -28,7 +28,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
 
             serverClient
                 .When(client => client.Send(Arg.Any<ReservePlayerSlot>()))
-                .Do(info => this.correlationId = info.Arg<ReservePlayerSlot>().CorrelationId);
+                .Do(info => correlationId = info.Arg<ReservePlayerSlot>().CorrelationId);
 
             clientBridge = new ClientBridge(serverClient);
         }
@@ -38,11 +38,11 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            clientBridge.HandleRejectedReservation(correlationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             clientBridge.CurrentState.Should().Be(ClientBridgeState.ReservationRejected);
-            clientBridge.ReservationRejectionReason.Should().Be(ReservationRejectionReason.PlayerNameInUse);
+            clientBridge.ReservationState.Should().HaveFlag(TestConstants.TEST_REJECTION_STATE);
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.None);
+            Action action = () => clientBridge.HandleRejectedReservation(correlationId, PlayerSlotReservationState.Reserved);
 
             //Then
             action.ShouldThrow<InvalidReservationRejectionReasonException>();
@@ -62,7 +62,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
-            Action action = () => this.clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => clientBridge.HandleRejectedReservation(correlationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             action.ShouldThrow<ProhibitedReservationRejectionException>();
@@ -75,7 +75,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
             clientBridge.ConfirmReservation(correlationId, TestConstants.TEST_RESERVATION_KEY);
             clientBridge.ClaimReservation();
-            Action action = () => this.clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => clientBridge.HandleRejectedReservation(correlationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             action.ShouldThrow<ProhibitedReservationRejectionException>();
@@ -87,7 +87,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string incorrectCorrelationId = "WRONG";
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.HandleRejectedReservation(incorrectCorrelationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => clientBridge.HandleRejectedReservation(incorrectCorrelationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             action.ShouldThrow<UncorrelatedMessageException>();
@@ -100,7 +100,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string nullCorrelationId = null;
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.HandleRejectedReservation(nullCorrelationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => clientBridge.HandleRejectedReservation(nullCorrelationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And
@@ -114,7 +114,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
             //When
             string blankCorrelationId = string.Empty;
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            Action action = () => this.clientBridge.HandleRejectedReservation(blankCorrelationId, ReservationRejectionReason.PlayerNameInUse);
+            Action action = () => this.clientBridge.HandleRejectedReservation(blankCorrelationId, TestConstants.TEST_REJECTION_STATE);
 
             //Then
             action.ShouldThrow<ParameterValidationException>().And

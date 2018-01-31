@@ -24,7 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
             string playerId = packet.PlayerName;
             PlayerSlotReservation reservation = playerManager.ReservePlayerSlot(correlationId, playerId);
 
-            Log.Info($"Reservation processed successfully {reservation.PlayerId} - { reservation.ReservationRejectionReason.ToString() } - { reservation.ReservationKey }...");
+            Log.Info($"Reservation processed successfully {reservation.PlayerId} - { reservation.ReservationState.ToString() } - { reservation.ReservationKey }...");
 
             connection.SendPacket(reservation, null);
         }

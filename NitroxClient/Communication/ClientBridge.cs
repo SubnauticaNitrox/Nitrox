@@ -5,6 +5,7 @@ using NitroxClient.Communication.Exceptions;
 using System.Collections.Generic;
 using NitroxModel.PlayerSlot;
 using NitroxModel.Logger;
+using NitroxModel;
 
 namespace NitroxClient.Communication
 {
@@ -19,7 +20,7 @@ namespace NitroxClient.Communication
 
         public ClientBridgeState CurrentState { get; private set; }
         public string ReservationKey { get; private set; }
-        public ReservationRejectionReason ReservationRejectionReason { get; private set; }
+        public PlayerSlotReservationState ReservationState { get; private set; }
 
         //Eww...
         public string PlayerId { get; private set; }
@@ -31,7 +32,7 @@ namespace NitroxClient.Communication
 
             CurrentState = ClientBridgeState.Disconnected;
             ReservationKey = null;
-            ReservationRejectionReason = ReservationRejectionReason.None;
+            ReservationState = PlayerSlotReservationState.Rejected;
         }
 
         public void Connect(string ipAddress, string playerName)
@@ -84,7 +85,7 @@ namespace NitroxClient.Communication
                 ConfirmCorrelationId(correlationId);
 
                 ReservationKey = reservationKey;
-                ReservationRejectionReason = ReservationRejectionReason.None;
+                ReservationState = PlayerSlotReservationState.Reserved;
 
                 CurrentState = ClientBridgeState.Reserved;
             }
@@ -117,7 +118,7 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void HandleRejectedReservation(string correlationId, ReservationRejectionReason rejectionReason)
+        public void HandleRejectedReservation(string correlationId, PlayerSlotReservationState reservationState)
         {
             if (CurrentState == ClientBridgeState.Disconnected)
             {
@@ -133,10 +134,10 @@ namespace NitroxClient.Communication
 
                 ValidateCorrelationId(correlationId);
                 ConfirmCorrelationId(correlationId);
-                ValidateRejectionReason(rejectionReason);
+                ValidateReservationState(reservationState);
 
                 ReservationKey = null;
-                ReservationRejectionReason = rejectionReason;
+                ReservationState = reservationState;
 
                 CurrentState = ClientBridgeState.ReservationRejected;
             }
@@ -216,9 +217,9 @@ namespace NitroxClient.Communication
             }
         }
 
-        private void ValidateRejectionReason(ReservationRejectionReason rejectionReason)
+        private void ValidateReservationState(PlayerSlotReservationState reservationState)
         {
-            if (rejectionReason == ReservationRejectionReason.None)
+            if (reservationState == PlayerSlotReservationState.Reserved)
             {
                 throw new InvalidReservationRejectionReasonException();
             }

@@ -6,7 +6,6 @@ using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using FluentAssertions;
 using NitroxClient.Communication.Exceptions;
-using NitroxModel.PlayerSlot;
 
 namespace NitroxTest.Client.Communication.ClientBridgeTests
 {
@@ -73,7 +72,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
         {
             //When
             clientBridge.Connect(TestConstants.TEST_IP_ADDRESS, TestConstants.TEST_PLAYER_NAME);
-            clientBridge.HandleRejectedReservation(correlationId, ReservationRejectionReason.PlayerNameInUse);
+            clientBridge.HandleRejectedReservation(correlationId, TestConstants.TEST_REJECTION_STATE);
             Action action = () => this.clientBridge.ClaimReservation();
 
             //Then

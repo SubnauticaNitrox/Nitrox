@@ -15,13 +15,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerSlotReservation packet)
         {
-            if (packet.ReservationRejectionReason == ReservationRejectionReason.None)
+            if (packet.ReservationState == PlayerSlotReservationState.Reserved)
             {
                 clientBridge.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
             }
             else
             {
-                clientBridge.HandleRejectedReservation(packet.CorrelationId, packet.ReservationRejectionReason);
+                clientBridge.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
             }
         }
     }

@@ -120,7 +120,7 @@
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Packets\PlayerSlotReservation.cs" />
-    <Compile Include="PlayerSlot\ReservationRejectionReason.cs" />
+    <Compile Include="PlayerSlot\PlayerSlotReservationState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />

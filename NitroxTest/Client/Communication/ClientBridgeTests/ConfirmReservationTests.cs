@@ -42,7 +42,7 @@ namespace NitroxTest.Client.Communication.ClientBridgeTests
 
             //Then
             clientBridge.CurrentState.Should().Be(ClientBridgeState.Reserved);
-            clientBridge.ReservationRejectionReason.Should().Be(ReservationRejectionReason.None);
+            clientBridge.ReservationState.Should().Be(PlayerSlotReservationState.Reserved);
         }
 
         [TestMethod]

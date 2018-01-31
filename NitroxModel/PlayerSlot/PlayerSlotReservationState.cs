@@ -1,20 +1,22 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace NitroxModel.PlayerSlot
 {
-    public enum ReservationRejectionReason
+    [Flags]
+    public enum PlayerSlotReservationState
     {
-        [Description("None")]
-        None,
+        Reserved = 0,        
+        Rejected = 1 << 0,
 
         [Description("The player name is already in use. Please try again with a different name.")]
-        PlayerNameInUse,
+        PlayerNameInUse = 1 << 1,
 
         //These are all intended for future use. Maybe YAGNI, but this is where we should look to expand upon server reservations
         [Description("The server is currently at capacity. Please try again later.")]
-        ServerFull,
+        ServerFull = 1 << 2,
 
         [Description("The password that you provided for the server is incorrect.")]
-        PasswordInvalid
+        PasswordInvalid = 1 << 3
     }
 }

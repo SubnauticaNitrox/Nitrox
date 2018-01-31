@@ -24,7 +24,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
-            
+
         }
 
         public void Start()
@@ -49,9 +49,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IEnumerator NegotiateSession(string serverIp)
         {
-            Log.InGame("Negotiating session...");            
+            Log.InGame("Negotiating session...");
 
-            if(Multiplayer.Main == null)
+            if (Multiplayer.Main == null)
             {
                 Log.InGame("Critical error, Multiplayer main unset.");
             }
@@ -78,7 +78,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private IEnumerator LaunchSession()
         {
             Log.InGame("Launching game...");
-			
+
 #pragma warning disable CS0618 // Type or member is obsolete
             IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
             StartCoroutine(startNewGame);
@@ -110,7 +110,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 s.label.fontSize = 14;
                 s.label.alignment = TextAnchor.MiddleRight;
                 s.label.stretchHeight = true;
-                s.label.fixedWidth = labelWidth; 
+                s.label.fixedWidth = labelWidth;
 
                 s.button.fontSize = 14;
                 s.button.stretchHeight = true;
@@ -133,7 +133,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            GUISkinUtils.RenderWithSkin(GetGUISkin("menus.server", 80), () => 
+            GUISkinUtils.RenderWithSkin(GetGUISkin("menus.server", 80), () =>
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
@@ -145,16 +145,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     }
 
 
-					if (GUILayout.Button("Join"))
-					{
-						StartMultiplayerClient();
-					}
+                    if (GUILayout.Button("Join"))
+                    {
+                        StartMultiplayerClient();
+                    }
 
-					if (GUILayout.Button("Cancel"))
-					{
-						StopMultiplayerClient();
-					}
-				}
+                    if (GUILayout.Button("Cancel"))
+                    {
+                        StopMultiplayerClient();
+                    }
+                }
             });
 
             if (shouldFocus)
@@ -204,25 +204,25 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         break;
                 }
             }
-			
-			GUISkinUtils.RenderWithSkin(GetGUISkin("dialogs.server.rejected", 490), () => 
+
+            GUISkinUtils.RenderWithSkin(GetGUISkin("dialogs.server.rejected", 490), () =>
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        ReservationRejectionReason rejectionReason = Multiplayer.Logic.ClientBridge.ReservationRejectionReason;
-						DescriptionAttribute descriptionAttribute = rejectionReason.GetAttribute<DescriptionAttribute>();
+                        PlayerSlotReservationState reservationState = Multiplayer.Logic.ClientBridge.ReservationState;
+                        string reservationStateDescription = reservationState.Describe();
 
-						GUILayout.Label(descriptionAttribute.Description);
+                        GUILayout.Label(reservationStateDescription);
                     }
 
-					if (GUILayout.Button("OK"))
-					{
-						joiningServer = true;
-						notifyingUnableToJoin = false;
-					}
-				}
+                    if (GUILayout.Button("OK"))
+                    {
+                        joiningServer = true;
+                        notifyingUnableToJoin = false;
+                    }
+                }
             });
         }
     }
