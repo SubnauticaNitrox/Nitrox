@@ -1,9 +1,8 @@
-﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMods : MonoBehaviour
     {

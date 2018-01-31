@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -10,6 +11,7 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<SceneCleanerPreserve>();
 
             gameObject.AddComponent<MainMenuMods>();
+            gameObject.AddComponent<CodePatchManager>();
             CreateDebugger();
         }
 
