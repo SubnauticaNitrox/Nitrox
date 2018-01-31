@@ -72,7 +72,6 @@
     <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
     <Compile Include="Communication\IClientBridge.cs" />
     <Compile Include="Communication\IPacketSender.cs" />
-    <Compile Include="Communication\PacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
