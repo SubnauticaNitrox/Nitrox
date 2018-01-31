@@ -6,10 +6,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerSlotReservation : Packet
     {
-        public PlayerSlotReservationState ReservationState { get; set; }
-        public string CorrelationId { get; set; }
-        public string PlayerId { get; set; }
-        public string ReservationKey { get; set; }
+        public PlayerSlotReservationState ReservationState { get; private set; }
+        public string CorrelationId { get; private set; }
+        public string PlayerId { get; private set; }
+        public string ReservationKey { get; private set; }
 
         public PlayerSlotReservation(string correlationId, PlayerSlotReservationState reservationState)
         {
