@@ -1,5 +1,7 @@
-﻿using NitroxClient.MonoBehaviours.DiscordRP;
+﻿using System.Collections;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -71,15 +73,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             ++CallbackCalls;
             Log.Info(string.Format("Discord: join ({0})", secret));
-            JoinServer joinServer = gameObject.AddComponent<JoinServer>();
-            if (LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled())
-            {
-                Multiplayer.Main.StartMultiplayer(secret, "Test Username");
-            }
-            else
-            {
-                StartCoroutine(joinServer.JoinServerWait(secret, "Test Username"));
-            }
+            StartCoroutine(JoinServerWait(secret, "Test Username"));
             OnJoin.Invoke(secret);
         }
 
@@ -108,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             if (!showingWindow)
             {
-                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen","Bal Bla" , "#7494"));
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen", "Bal Bla", "#7494"));
                 AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
                 showingWindow = true;
             }
@@ -151,7 +145,23 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RespondLastJoinRequest(int accept)
         {
-            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply) accept);
+            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply)accept);
+        }
+
+        public IEnumerator JoinServerWait(string serverIp, string name)
+        {
+#pragma warning disable CS0618 // Type or member is obsolete
+            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618 // Type or member is obsolete
+            if (LargeWorldStreamer.main != null && (LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled()))
+            {
+                StartCoroutine(startNewGame);
+            }
+            //Wait until game starts
+            yield return new WaitUntil(() => LargeWorldStreamer.main != null);
+            yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
+            yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
+            Multiplayer.Main.StartMultiplayer(serverIp, name);
         }
     }
 }

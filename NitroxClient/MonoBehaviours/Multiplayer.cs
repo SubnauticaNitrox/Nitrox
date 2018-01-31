@@ -96,7 +96,6 @@ namespace NitroxClient.MonoBehaviours
             NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
         }
 
-
         public void OnConsoleCommand_discordyes()
         {
             DiscordRP.RespondLastJoinRequest(true);
@@ -106,7 +105,6 @@ namespace NitroxClient.MonoBehaviours
         {
             DiscordRP.RespondLastJoinRequest(false);
         }
-
 
         private void InitializeLocalPlayerState()
         {
