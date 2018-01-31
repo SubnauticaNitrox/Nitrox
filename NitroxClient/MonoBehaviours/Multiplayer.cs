@@ -71,7 +71,7 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (clientBridge.CurrentState != ClientBridgeState.Disconnected && 
+            if (clientBridge.CurrentState != ClientBridgeState.Disconnected &&
                 clientBridge.CurrentState != ClientBridgeState.Failed)
             {
                 ProcessPackets();
@@ -80,7 +80,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void ProcessPackets()
         {
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();            
+            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {
