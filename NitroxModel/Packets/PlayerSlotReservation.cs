@@ -22,5 +22,10 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             ReservationKey = reservationKey;
         }
+
+        public override string ToString()
+        {
+            return $"PlayerId: {PlayerId} - ReservationState: { ReservationState.ToString() } - ReservationKey: { ReservationKey }";
+        }
     }
 }
