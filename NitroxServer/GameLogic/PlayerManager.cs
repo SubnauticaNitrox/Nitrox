@@ -27,7 +27,7 @@ namespace NitroxServer.GameLogic
         {
             if (currentPlayerNames.Contains(playerId))
             {
-                PlayerSlotReservationState rejectedReservationState = PlayerSlotReservationState.Rejected | PlayerSlotReservationState.PlayerNameInUse;
+                PlayerSlotReservationState rejectedReservationState = PlayerSlotReservationState.Rejected | PlayerSlotReservationState.UniquePlayerNameConstraintViolated;
                 return new PlayerSlotReservation(correlationId, rejectedReservationState);
             }
 
