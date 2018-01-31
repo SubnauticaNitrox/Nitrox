@@ -72,8 +72,14 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             ++CallbackCalls;
             Log.Info(string.Format("Discord: join ({0})", secret));
             JoinServer joinServer = gameObject.AddComponent<JoinServer>();
-            joinServer.JoiningServer = false;
-            StartCoroutine(joinServer.NegotiateSession(secret));
+            if (LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled())
+            {
+                Multiplayer.Main.StartMultiplayer(secret, "Test Username");
+            }
+            else
+            {
+                StartCoroutine(joinServer.JoinServerWait(secret, "Test Username"));
+            }
             OnJoin.Invoke(secret);
         }
 
@@ -102,7 +108,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             if (!showingWindow)
             {
-                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen", "Bal Bla", "#7494"));
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen","Bal Bla" , "#7494"));
                 AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
                 showingWindow = true;
             }
@@ -145,7 +151,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RespondLastJoinRequest(int accept)
         {
-            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply)accept);
+            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply) accept);
         }
     }
 }
