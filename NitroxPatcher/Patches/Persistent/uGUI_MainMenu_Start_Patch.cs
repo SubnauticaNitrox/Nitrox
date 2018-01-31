@@ -15,7 +15,6 @@ namespace NitroxPatcher.Patches.Persistent
         {
             // If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the patches if applicable.
             Main.Restore();
-            new GameObject().AddComponent<MultiplayerButton>();
         }
 
         public override void Patch(HarmonyInstance harmony)
