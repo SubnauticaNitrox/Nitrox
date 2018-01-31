@@ -37,12 +37,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (joiningServer)
             {
-                joinServerWindowRect = GUILayout.Window(0, joinServerWindowRect, BuildJoinServerDialog, "Join server");
+                joinServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, BuildJoinServerDialog, "Join server");
             }
 
             if (notifyingUnableToJoin)
             {
-                unableToJoinWindowRect = GUILayout.Window(1, joinServerWindowRect, BuildUnableToJoinDialog, "Unable to Join Session");
+                unableToJoinWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, BuildUnableToJoinDialog, "Unable to Join Session");
             }
         }
 
