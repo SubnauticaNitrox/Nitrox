@@ -134,8 +134,6 @@ namespace NitroxClient.MonoBehaviours
             SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
         }
 
-        
-
         private void OnDisable()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
