@@ -89,7 +89,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             Log.InGame("Joining Multiplayer Session...");
             Multiplayer.Main.JoinSession();
-
             Destroy(gameObject);
         }
 
