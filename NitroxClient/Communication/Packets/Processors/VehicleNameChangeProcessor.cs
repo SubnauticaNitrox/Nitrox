@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class VehicleNameChangeProcessor : ClientPacketProcessor<VehicleNameChange>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public VehicleNameChangeProcessor(PacketSender packetSender)
+        public VehicleNameChangeProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

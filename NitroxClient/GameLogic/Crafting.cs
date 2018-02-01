@@ -8,9 +8,9 @@ namespace NitroxClient.GameLogic
 {
     public class Crafting
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Crafting(PacketSender packetSender)
+        public Crafting(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

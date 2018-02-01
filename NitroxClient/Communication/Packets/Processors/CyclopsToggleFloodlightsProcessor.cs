@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsToggleFloodlightsProcessor : ClientPacketProcessor<CyclopsToggleFloodLights>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsToggleFloodlightsProcessor(PacketSender packetSender)
+        public CyclopsToggleFloodlightsProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

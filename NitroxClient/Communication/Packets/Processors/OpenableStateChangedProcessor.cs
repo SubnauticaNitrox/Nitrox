@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class OpenableStateChangedProcessor : ClientPacketProcessor<OpenableStateChanged>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public OpenableStateChangedProcessor(PacketSender packetSender)
+        public OpenableStateChangedProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

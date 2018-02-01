@@ -6,9 +6,9 @@ namespace NitroxClient.GameLogic
 {
     public class AI
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public AI(PacketSender packetSender)
+        public AI(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

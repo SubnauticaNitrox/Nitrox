@@ -10,9 +10,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ItemContainerRemoveProcessor : ClientPacketProcessor<ItemContainerRemove>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ItemContainerRemoveProcessor(PacketSender packetSender)
+        public ItemContainerRemoveProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

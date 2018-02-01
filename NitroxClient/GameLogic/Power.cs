@@ -7,9 +7,9 @@ namespace NitroxClient.GameLogic
 {
     public class Power
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Power(PacketSender packetSender)
+        public Power(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
