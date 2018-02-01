@@ -24,7 +24,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
-
         }
 
         public void Start()
@@ -92,7 +91,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Log.InGame("Joining Multiplayer Session...");
             Multiplayer.Main.JoinSession();
 
-            multiplayerClient = null;
             Destroy(gameObject);
         }
 

@@ -66,6 +66,7 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
 
             Main = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         public void Update()
