@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Debuggers;
+using NitroxModel.Logger;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -45,12 +47,15 @@ namespace NitroxClient.MonoBehaviours
                 ToggleDebugging();
             }
 
-            if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+            if (isDebugging)
             {
-                ToggleCursor();
-            }
+                if (Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+                {
+                    ToggleCursor();
+                }
 
-            CheckDebuggerHotkeys();
+                CheckDebuggerHotkeys();
+            }
         }
 
         public void ToggleDebugging()
@@ -68,7 +73,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void ToggleCursor()
+        public static void ToggleCursor()
         {
             UWE.Utils.lockCursor = !UWE.Utils.lockCursor;
         }
@@ -92,10 +97,6 @@ namespace NitroxClient.MonoBehaviours
 
         private void CheckDebuggerHotkeys()
         {
-            if (!isDebugging)
-            {
-                return;
-            }
             foreach (BaseDebugger debugger in Debuggers)
             {
                 if (Input.GetKeyDown(debugger.Hotkey) && Input.GetKey(KeyCode.LeftControl) == debugger.HotkeyControlRequired && Input.GetKey(KeyCode.LeftShift) == debugger.HotkeyShiftRequired && Input.GetKey(KeyCode.LeftAlt) == debugger.HotkeyAltRequired)
@@ -124,6 +125,35 @@ namespace NitroxClient.MonoBehaviours
                 debugger.Enabled = true;
             }
             prevActiveDebuggers.Clear();
+        }
+
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded += SceneManager_sceneUnloaded;
+            SceneManager.activeSceneChanged += SceneManager_activeSceneChanged;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+            SceneManager.sceneUnloaded -= SceneManager_sceneUnloaded;
+            SceneManager.activeSceneChanged -= SceneManager_activeSceneChanged;
+        }
+
+        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            Log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
+        }
+
+        private void SceneManager_sceneUnloaded(Scene scene)
+        {
+            Log.Debug($"Scene '{scene.name}' unloaded.");
+        }
+
+        private void SceneManager_activeSceneChanged(Scene fromScene, Scene toScene)
+        {
+            Log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
         }
     }
 }

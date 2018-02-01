@@ -1,14 +1,27 @@
-﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace NitroxClient.MonoBehaviours
+namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
-    public class MultiplayerButton : MonoBehaviour
+    public class MainMenuMods : MonoBehaviour
     {
-        public void Awake()
+        private void OnEnable()
         {
-            MultiplayerMenuMods();
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+        }
+
+        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            if (scene.name == "XMenu")
+            {
+                MultiplayerMenuMods();
+            }
         }
 
         private void MultiplayerMenuMods()

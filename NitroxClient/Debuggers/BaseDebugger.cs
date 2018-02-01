@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -78,6 +78,19 @@ namespace NitroxClient.Debuggers
             DERIVEDCOPY
         }
 
+        public DebuggerTab AddTab(DebuggerTab tab)
+        {
+            Validate.NotNull(tab);
+
+            tabs.Add(tab.Name, tab);
+            return tab;
+        }
+
+        public DebuggerTab AddTab(string name, Action render)
+        {
+            return AddTab(new DebuggerTab(name, render));
+        }
+
         public string GetHotkeyString()
         {
             if (Hotkey == KeyCode.None)
@@ -85,6 +98,15 @@ namespace NitroxClient.Debuggers
                 return "";
             }
             return $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
+        }
+
+        public Optional<DebuggerTab> GetTab(string name)
+        {
+            Validate.NotNull(name);
+
+            DebuggerTab tab;
+            tabs.TryGetValue(name, out tab);
+            return Optional<DebuggerTab>.OfNullable(tab);
         }
 
         /// <summary>
@@ -97,6 +119,38 @@ namespace NitroxClient.Debuggers
                 return;
             }
 
+            GUISkin skin = GetSkin();
+            GUISkinUtils.RenderWithSkin(skin, () =>
+            {
+                WindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), WindowRect, RenderInternal, $"[DEBUGGER] {DebuggerName}", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
+            });
+        }
+
+        /// <summary>
+        /// Optionally adjust the skin that is used during render.
+        /// </summary>
+        /// <remarks>
+        /// Set <see cref="SkinCreationOptions"/> on <see cref="GUISkinCreationOptions.UNITYCOPY"/> or <see cref="GUISkinCreationOptions.DERIVEDCOPY"/> in constructor before using this method.
+        /// </remarks>
+        /// <param name="skin">Skin that is being used during <see cref="Render(int)"/>.</param>
+        protected virtual void OnSetSkin(GUISkin skin)
+        {
+        }
+
+        /// <summary>
+        /// Optionally use a custom render solution for the debugger by overriding this method.
+        /// </summary>
+        protected virtual void Render()
+        {
+            ActiveTab?.Render();
+        }
+
+        /// <summary>
+        /// Gets (a copy of) a skin specified by <see cref="GUISkinCreationOptions"/>.
+        /// </summary>
+        /// <returns>A reference to an existing or copied skin.</returns>
+        private GUISkin GetSkin()
+        {
             GUISkin skin = GUI.skin;
             string skinName = GetSkinName();
             switch (SkinCreationOptions)
@@ -118,53 +172,8 @@ namespace NitroxClient.Debuggers
                     skin = GUISkinUtils.RegisterDerivedOnce(skinName, OnSetSkinImpl, baseSkin);
                     break;
             }
-            GUISkinUtils.RenderWithSkin(skin, () =>
-            {
-                WindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), WindowRect, RenderInternal, $"[DEBUGGER] {DebuggerName}", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
-            });
-        }
 
-        public DebuggerTab AddTab(DebuggerTab tab)
-        {
-            Validate.NotNull(tab);
-
-            tabs.Add(tab.Name, tab);
-            return tab;
-        }
-
-        public DebuggerTab AddTab(string name, Action render)
-        {
-            DebuggerTab tab = new DebuggerTab(name, render);
-            tabs.Add(name, tab);
-            return tab;
-        }
-
-        public Optional<DebuggerTab> GetTab(string name)
-        {
-            Validate.NotNull(name);
-
-            DebuggerTab tab;
-            tabs.TryGetValue(name, out tab);
-            return Optional<DebuggerTab>.OfNullable(tab);
-        }
-
-        /// <summary>
-        /// Optionally adjust the skin that is used during render.
-        /// </summary>
-        /// <remarks>
-        /// Set <see cref="SkinCreationOptions"/> on <see cref="GUISkinCreationOptions.UNITYCOPY"/> or <see cref="GUISkinCreationOptions.DERIVEDCOPY"/> in constructor before using this method.
-        /// </remarks>
-        /// <param name="skin">Skin that is being used during <see cref="Render(int)"/>.</param>
-        protected virtual void OnSetSkin(GUISkin skin)
-        {
-        }
-
-        /// <summary>
-        /// Optionally use a custom render solution for the debugger by overriding this method.
-        /// </summary>
-        protected virtual void Render()
-        {
-            ActiveTab?.Render();
+            return skin;
         }
 
         private string GetSkinName()
@@ -242,8 +251,8 @@ namespace NitroxClient.Debuggers
         {
             public DebuggerTab(string name, Action render)
             {
-                Validate.NotNull(name);
-                Validate.NotNull(render);
+                Validate.NotNull(name, $"Expected a name for the {nameof(DebuggerTab)}");
+                Validate.NotNull(render, $"Expected an action for the {nameof(DebuggerTab)}");
 
                 Name = name;
                 Render = render;
