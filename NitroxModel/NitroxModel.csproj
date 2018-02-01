@@ -64,6 +64,7 @@
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="DataStructures\VisibleCell.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Helper\Validate.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
+    <Compile Include="Packets\ClaimPlayerSlotReservation.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="Packets\EntityTransformUpdates.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />
     <Compile Include="Packets\EquipmentRemoveItem.cs" />
+    <Compile Include="Packets\Exceptions\UncorrelatedMessageException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
+    <Compile Include="Packets\ReservePlayerSlot.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
     <Compile Include="Packets\StoryEventRecieve.cs" />
@@ -118,6 +122,8 @@
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
+    <Compile Include="Packets\PlayerSlotReservation.cs" />
+    <Compile Include="PlayerSlot\PlayerSlotReservationState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />

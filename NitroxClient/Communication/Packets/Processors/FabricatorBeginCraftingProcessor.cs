@@ -9,9 +9,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class FabricatorBeginCraftingProcessor : ClientPacketProcessor<FabricatorBeginCrafting>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public FabricatorBeginCraftingProcessor(PacketSender packetSender)
+        public FabricatorBeginCraftingProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

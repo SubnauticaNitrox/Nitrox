@@ -6,11 +6,11 @@ namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
         private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
         private readonly HashSet<string> requestedGuids = new HashSet<string>();
 
-        public SimulationOwnership(PacketSender packetSender)
+        public SimulationOwnership(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

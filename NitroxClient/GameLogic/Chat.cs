@@ -5,9 +5,9 @@ namespace NitroxClient.GameLogic
 {
     public class Chat
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Chat(PacketSender packetSender)
+        public Chat(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

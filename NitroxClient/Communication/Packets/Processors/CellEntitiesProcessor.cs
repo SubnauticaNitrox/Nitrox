@@ -11,10 +11,10 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class CellEntitiesProcessor : ClientPacketProcessor<CellEntities>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
         private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
 
-        public CellEntitiesProcessor(PacketSender packetSender)
+        public CellEntitiesProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructionAmountChangedProcessor : ClientPacketProcessor<ConstructionAmountChanged>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ConstructionAmountChangedProcessor(PacketSender packetSender)
+        public ConstructionAmountChangedProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
