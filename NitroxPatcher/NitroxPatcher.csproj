@@ -90,7 +90,6 @@
     <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
-    <Compile Include="Patches\Persistent\uGUI_MainMenu_Start_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />

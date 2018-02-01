@@ -1,9 +1,13 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.Logger;
+using System.Linq;
+using System.Diagnostics;
+using NitroxModel.DataStructures.Util;
 using System;
+using System.Reflection;
 
 namespace NitroxModel.Helper
 {
-    public class Validate
+    public static class Validate
     {
         public static void NotNull<T>(T o)
             // Prevent non-nullable valuetypes from getting boxed to object.
@@ -12,7 +16,15 @@ namespace NitroxModel.Helper
         {
             if (o == null)
             {
-                throw new ArgumentNullException();
+                Optional<string> paramName = GetParameterName<T>();
+                if (paramName.IsPresent())
+                {
+                    throw new ArgumentNullException(paramName.Get());
+                }
+                else
+                {
+                    throw new ArgumentNullException();
+                }
             }
         }
 
@@ -21,7 +33,15 @@ namespace NitroxModel.Helper
         {
             if (o == null)
             {
-                throw new ArgumentNullException(message);
+                Optional<string> paramName = GetParameterName<T>();
+                if (paramName.IsPresent())
+                {
+                    throw new ArgumentNullException(paramName.Get(), message);
+                }
+                else
+                {
+                    throw new ArgumentNullException(message);
+                }
             }
         }
 
@@ -71,6 +91,12 @@ namespace NitroxModel.Helper
             {
                 throw new OptionalEmptyException<T>(message);
             }
+        }
+
+        private static Optional<string> GetParameterName<TParam>()
+        {
+            ParameterInfo[] parametersOfMethodBeforeValidate = new StackFrame(2).GetMethod().GetParameters();
+            return Optional<string>.OfNullable(parametersOfMethodBeforeValidate.SingleOrDefault(pi => pi.ParameterType == typeof(TParam))?.Name);
         }
     }
 }
