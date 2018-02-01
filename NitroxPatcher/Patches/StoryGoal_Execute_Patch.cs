@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         public static void Prefix(string key, GoalType goalType)
         {
             StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
-            Multiplayer.PacketSender.Send(packet);
+            Multiplayer.Logic.ClientBridge.Send(packet);
         }
 
         public override void Patch(HarmonyInstance harmony)
