@@ -11,7 +11,7 @@ namespace NitroxClient.GameLogic
 {
     public class Terrain
     {
-        private PacketSender packetSender;
+        private IPacketSender packetSender;
         private VisibleCells visibleCells;
         private DeferringPacketReceiver packetReceiver;
 
@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         private List<VisibleCell> added = new List<VisibleCell>();
         private List<VisibleCell> removed = new List<VisibleCell>();
 
-        public Terrain(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Terrain(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
             this.packetSender = packetSender;
             this.visibleCells = visibleCells;

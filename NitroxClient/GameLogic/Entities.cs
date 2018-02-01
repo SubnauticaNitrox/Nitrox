@@ -7,9 +7,9 @@ namespace NitroxClient.GameLogic
 {
     public class Entities
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Entities(PacketSender packetSender)
+        public Entities(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

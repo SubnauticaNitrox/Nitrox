@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsBeginSilentRunningProcessor : ClientPacketProcessor<CyclopsBeginSilentRunning>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsBeginSilentRunningProcessor(PacketSender packetSender)
+        public CyclopsBeginSilentRunningProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsActivateShieldProcessor : ClientPacketProcessor<CyclopsActivateShield>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsActivateShieldProcessor(PacketSender packetSender)
+        public CyclopsActivateShieldProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

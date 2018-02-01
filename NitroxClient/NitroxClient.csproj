@@ -56,9 +56,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\Client.cs" />
+    <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
+    <Compile Include="Communication\ClientBridge.cs" />
+    <Compile Include="Communication\ClientBridgeState.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
-    <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationRejectionReasonException.cs" />
+    <Compile Include="Communication\Exceptions\ParameterValidationException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedClaimAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
+    <Compile Include="Communication\IClientBridge.cs" />
+    <Compile Include="Communication\IPacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -102,6 +114,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
+    <Compile Include="Communication\TcpClient.cs" />
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />

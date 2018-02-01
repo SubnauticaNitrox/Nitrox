@@ -56,9 +56,9 @@ namespace NitroxModel.Tcp
             {
                 bytesRead = socket.EndReceive(ar);
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
-                Log.Info("Error reading data from socket");
+                Log.Info($"Error reading data from socket: { ex.Message }");
                 Open = false;
             }
 
@@ -90,6 +90,10 @@ namespace NitroxModel.Tcp
                     Log.Info("Error sending packet");
                     Open = false;
                 }
+            }
+            else
+            {
+                Log.Info("Cannot send packet to a closed connection.");
             }
         }
 
