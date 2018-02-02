@@ -141,11 +141,11 @@ namespace NitroxServer.GameLogic
             worldEntityData = new Dictionary<string, WorldEntityInfo>();
             string resourcesPath = "";
             Optional<string> steamPath = SteamFinder.FindSteamGamePath(264710, "Subnautica");
-            if (steamPath.IsEmpty())
+            string gameResourcesPath = "";
+            if (!steamPath.IsEmpty())
             {
-                throw new DirectoryNotFoundException("Could not find Subnautica's path! Are you sure it is installed?");
+                gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
             }
-            string gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
             if (File.Exists(gameResourcesPath))
             {
                 resourcesPath = gameResourcesPath;
