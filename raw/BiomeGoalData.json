@@ -1,0 +1,1269 @@
+{
+  "children": [
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 0"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 0"
+        }
+      ],
+      "name": "PPtr<GameObject> m_GameObject"
+    },
+    {
+      "children": [],
+      "name": "UInt8 m_Enabled = 1"
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "name": "int m_FileID = 1"
+        },
+        {
+          "children": [],
+          "name": "SInt64 m_PathID = 1589"
+        }
+      ],
+      "name": "PPtr<MonoScript> m_Script"
+    },
+    {
+      "children": [],
+      "name": "string m_Name = \"BiomeGoalData\""
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeCrashedShip\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"crashedShip\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 120"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioBounceBack\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 21600"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioRadiationSuit\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 36000"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioKelp28\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 50000"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioKoosh26\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioPrecursor1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LostRiver_BonesField\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioMushroom24\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"grandreef\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 1800"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioWarper2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"deepGrandReef\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 600"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioBloodKelp29\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"deepGrandReef\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioWarper1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mountains\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_Lifepod2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeSafeShallowsCave\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows_Cave\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeKelpForest\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"kelpForest\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 25"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeKelpForestCave\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"kelpForest_Cave\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeGrassyPlateaus\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"grassyPlateaus\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 25"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeJellyCave\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"JellyshroomCaves\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 30"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeMushroomForest\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mushroomForest\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 30"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeMushroomForestCave\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mushroomForest_cave_dark\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 20"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeKooshZone\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"kooshZone\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 60"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeFloatingIsland\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"FloatingIsland\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 7"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeMountains\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mountains\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 20"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeMountainCave\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mountains_dark\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 15"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeUnderwaterIslands\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"UnderwaterIslands\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 60"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeSparseReef\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"SparseReef\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 60"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeSeaTreaderPath\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"SeaTreaderPath\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 30"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeDunes\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"dunes\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 30"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeBloodKelp\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"bloodKelp\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 60"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeBloodKelp2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"bloodKelp\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 200"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeDeepGrandReef\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"deepGrandReef\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 30"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeLostRiver\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LostRiver_BonesField\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 7"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LavaCastle_Log1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"ILZCastleTunnel\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_LavaCastle_Log2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"ILZCastleChamber\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 10"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress4\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"ILZCorridor\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"crashedShip\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"mountains\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Precursor_Gun_InnerRooms\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 6000"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioCaptainsQuartersCode\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Precursor_Gun_InnerRooms\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LostRiver_BonesField_Corridor\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LostRiver_Canyon\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Infection_Progress2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 3"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LostRiver_GhostTree\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 5"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Prison_Aquarium_Mid\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 5"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Precursor_Prison_Aquarium_EnvironmentLog4\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Prison_Aquarium\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 1200"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Emperor_Telepathic_Contact1\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Precursor_LostRiverBase\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 10"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 600"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioCaptainsQuartersCode\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"Precursor_LostRiverBase\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 0"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 1200"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Emperor_Telepathic_Contact2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"ILZCastleChamber\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 10"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 10"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Emperor_Telepathic_Contact3\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"LavaLakes\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 10"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 2800"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeJellyCave2\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"safeShallows\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 1"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 0"
+            },
+            {
+              "children": [],
+              "name": "String key = \"Goal_BiomeVoid\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 0"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"void\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 2"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "float delay = 60"
+            },
+            {
+              "children": [],
+              "name": "String key = \"RadioRadiationSuit\""
+            },
+            {
+              "children": [],
+              "name": "GoalType goalType = 1"
+            },
+            {
+              "children": [],
+              "name": "String biome = \"kooshZone\""
+            },
+            {
+              "children": [],
+              "name": "float minStayDuration = 120"
+            }
+          ],
+          "name": "BiomeGoal goals"
+        }
+      ],
+      "name": "Array goals[] (size 49)"
+    }
+  ],
+  "name": null
+}

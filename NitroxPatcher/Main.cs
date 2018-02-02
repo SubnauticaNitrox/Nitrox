@@ -10,6 +10,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 
 namespace NitroxPatcher
 {
@@ -80,6 +81,10 @@ namespace NitroxPatcher
             isApplied = true;
         }
 
+
+        /// <summary>
+        /// If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the patches if applicable.
+        /// </summary>
         public static void Restore()
         {
             Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
@@ -104,6 +109,8 @@ namespace NitroxPatcher
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
+
+            CodePatchManager.Restore += (sender, e) => Restore();
             Log.Info("Behaviours applied.");
         }
 

@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication;
 using NitroxClient.Map;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
@@ -21,25 +22,31 @@ namespace NitroxClient.GameLogic
         public Interior Interior { get; }
         public MobileVehicleBay MobileVehicleBay { get; }
         public Terrain Terrain { get; }
+        public IPacketSender PacketSender { get; }
+        public IClientBridge ClientBridge { get; }
 
-        public Logic(PacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Logic(IClientBridge clientBridge, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
-            AI = new AI(packetSender);
-            Building = new Building(packetSender);
-            Chat = new Chat(packetSender);
-            Entities = new Entities(packetSender);
-            MedkitFabricator = new MedkitFabricator(packetSender);
-            Item = new Item(packetSender);
-            EquipmentSlots = new EquipmentSlots(packetSender);
-            ItemContainers = new ItemContainers(packetSender);
-            Player = new PlayerLogic(packetSender);
-            Power = new Power(packetSender);
-            SimulationOwnership = new SimulationOwnership(packetSender);
-            Crafting = new Crafting(packetSender);
-            Cyclops = new Cyclops(packetSender);
-            Interior = new Interior(packetSender);
-            MobileVehicleBay = new MobileVehicleBay(packetSender);
-            Terrain = new Terrain(packetSender, visibleCells, packetReceiver);
+            Log.Info("Initializing Multiplayer GameLogic...");
+            AI = new AI(clientBridge);
+            Building = new Building(clientBridge);
+            Chat = new Chat(clientBridge);
+            Entities = new Entities(clientBridge);
+            MedkitFabricator = new MedkitFabricator(clientBridge);
+            Item = new Item(clientBridge);
+            EquipmentSlots = new EquipmentSlots(clientBridge);
+            ItemContainers = new ItemContainers(clientBridge);
+            Player = new PlayerLogic(clientBridge);
+            Power = new Power(clientBridge);
+            SimulationOwnership = new SimulationOwnership(clientBridge);
+            Crafting = new Crafting(clientBridge);
+            Cyclops = new Cyclops(clientBridge);
+            Interior = new Interior(clientBridge);
+            MobileVehicleBay = new MobileVehicleBay(clientBridge);
+            Terrain = new Terrain(clientBridge, visibleCells, packetReceiver);
+            PacketSender = clientBridge;
+            ClientBridge = clientBridge;
+            Log.Info("Multiplayer GameLogic Initialized...");
         }
     }
 }

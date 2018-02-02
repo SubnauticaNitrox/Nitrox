@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches
             {
                 foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
-                    ReflectionHelper.ReflectionCall(__instance, "AddBindingOption", true, false, tabIndex, keyBinding.Label, keyBinding.Device, keyBinding.Button);
+                    ReflectionHelper.ReflectionCall(__instance, "AddBindingOption", new Type[] { typeof(int), typeof(string), typeof(GameInput.Device), typeof(GameInput.Button) }, true, false, tabIndex, keyBinding.Label, keyBinding.Device, keyBinding.Button);
                 }
             }
         }

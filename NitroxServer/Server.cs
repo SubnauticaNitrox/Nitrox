@@ -15,6 +15,7 @@ namespace NitroxServer
             SimulationOwnership simulationOwnership = new SimulationOwnership();
             PlayerManager playerManager = new PlayerManager();
             PacketHandler packetHandler = new PacketHandler(playerManager, timeKeeper, simulationOwnership);
+            EventTriggerer eventTriggerer = new EventTriggerer(playerManager);
 
             tcpServer = new TcpServer(packetHandler, playerManager);
         }

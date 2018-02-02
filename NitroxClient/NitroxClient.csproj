@@ -56,9 +56,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\Client.cs" />
+    <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
+    <Compile Include="Communication\ClientBridge.cs" />
+    <Compile Include="Communication\ClientBridgeState.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
-    <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationRejectionReasonException.cs" />
+    <Compile Include="Communication\Exceptions\ParameterValidationException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedClaimAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
+    <Compile Include="Communication\IClientBridge.cs" />
+    <Compile Include="Communication\IPacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -97,11 +109,13 @@
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
+    <Compile Include="Communication\TcpClient.cs" />
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
@@ -149,9 +163,10 @@
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
+    <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
-    <Compile Include="MonoBehaviours\Gui\MainMenu\MultiplayerButton.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />

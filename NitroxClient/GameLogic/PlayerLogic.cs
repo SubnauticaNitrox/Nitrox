@@ -9,17 +9,11 @@ namespace NitroxClient.GameLogic
 {
     public class PlayerLogic // Named as such because UWE's 'Player' pollutes the global namespace :(
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public PlayerLogic(PacketSender packetSender)
+        public PlayerLogic(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-        }
-
-        public void Authenticate(string playerId)
-        {
-            Authenticate auth = new Authenticate(playerId);
-            packetSender.Send(auth);
         }
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)

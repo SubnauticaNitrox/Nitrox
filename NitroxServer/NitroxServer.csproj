@@ -68,15 +68,17 @@
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\AuthenticatePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ClaimPlayerSlotReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ReservePlayerSlotProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\EntityManager.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\EventTriggerer.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnPoint.cs" />
@@ -86,6 +88,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
+    <Compile Include="Serialization\GenericNode.cs" />
     <Compile Include="Serialization\LootDistributionsParser.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
     <Compile Include="Serialization\WorldEntityDataParser.cs" />

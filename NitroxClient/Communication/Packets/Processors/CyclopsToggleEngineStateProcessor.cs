@@ -9,9 +9,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsToggleEngineStateProcessor : ClientPacketProcessor<CyclopsToggleEngineState>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsToggleEngineStateProcessor(PacketSender packetSender)
+        public CyclopsToggleEngineStateProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

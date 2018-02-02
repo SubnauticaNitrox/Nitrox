@@ -11,9 +11,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public SimulationOwnershipChangeProcessor(PacketSender packetSender)
+        public SimulationOwnershipChangeProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
