@@ -10,6 +10,7 @@ using UWE;
 using static LootDistributionData;
 using System.IO;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic
 {
@@ -20,6 +21,9 @@ namespace NitroxServer.GameLogic
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly IEnumerable<EntitySpawnPoint> entitySpawnPoints;
         private readonly LootDistributionData lootDistributionData;
+
+        private const uint TEXT_CLASS_ID = 0x31;
+        private const uint MONOBEHAVIOUR_CLASS_ID = 0x72;
 
         public EntitySpawner()
         {
@@ -136,8 +140,12 @@ namespace NitroxServer.GameLogic
             lootDistributions = "";
             worldEntityData = new Dictionary<string, WorldEntityInfo>();
             string resourcesPath = "";
-            string gameResourcesPath = Path.Combine(SteamFinder.FindSteamGamePath(264710, "Subnautica"), "Subnautica_Data/resources.assets");
-            AssetsFile resourcesFile;
+            Optional<string> steamPath = SteamFinder.FindSteamGamePath(264710, "Subnautica");
+            if (steamPath.IsEmpty())
+            {
+                throw new DirectoryNotFoundException("Could not find Subnautica's path! Are you sure it is installed?");
+            }
+            string gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
             if (File.Exists(gameResourcesPath))
             {
                 resourcesPath = gameResourcesPath;
@@ -152,17 +160,17 @@ namespace NitroxServer.GameLogic
             }
             else
             {
-                Log.Error("Could not find resources.assets in parent or current directory.", new FileNotFoundException());
-                return false;
+                throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
             }
-
+            
             using (FileStream resStream = new FileStream(resourcesPath, FileMode.Open))
+            using (AssetsFileReader resReader = new AssetsFileReader(resStream))
             {
-                resourcesFile = new AssetsFile(new AssetsFileReader(resStream));
+                AssetsFile resourcesFile = new AssetsFile(resReader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(resourcesFile);
                 foreach (AssetFileInfoEx afi in resourcesFileTable.pAssetFileInfo)
                 {
-                    if (afi.curFileType == 0x31) //TextAsset
+                    if (afi.curFileType == TEXT_CLASS_ID)
                     {
                         resourcesFile.reader.Position = afi.absoluteFilePos;
                         string assetName = resourcesFile.reader.ReadCountStringInt32();
@@ -171,7 +179,8 @@ namespace NitroxServer.GameLogic
                             resourcesFile.reader.Align();
                             lootDistributions = resourcesFile.reader.ReadCountStringInt32().Replace("\\n", "");
                         }
-                    } else if (afi.curFileType == 0x72) //MonoBehaviour
+                    }
+                    else if (afi.curFileType == MONOBEHAVIOUR_CLASS_ID)
                     {
                         resourcesFile.reader.Position = afi.absoluteFilePos;
                         resourcesFile.reader.Position += 28;

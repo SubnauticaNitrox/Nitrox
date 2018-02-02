@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -8,19 +8,19 @@ namespace NitroxModel.Helper
 {
     public class SteamFinder
     {
-        public static string FindSteamGamePath(int appid, string gameName)
+        public static Optional<string> FindSteamGamePath(int appid, string gameName)
         {
             if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)
             {
                 Log.Info("You either don't have steam installed or your registry variable isn't set.");
-                return "";
+                return Optional<string>.Empty();
             }
 
             string appsPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") + "/steamapps/";
 
             if (File.Exists(appsPath + $"appmanifest_{appid.ToString()}.acf"))
             {
-                return appsPath + "common/" + gameName;
+                return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
             }
             else
             {
@@ -31,10 +31,10 @@ namespace NitroxModel.Helper
                 }
                 else
                 {
-                    return path;
+                    return Optional<string>.Of(path);
                 }
             }
-            return "";
+            return Optional<string>.Empty();
         }
 
         private static string SearchAllInstalations(string libraryfolders, int appid, string gameName)
@@ -52,9 +52,9 @@ namespace NitroxModel.Helper
                 int number;
                 if (int.TryParse(key, out number))
                 {
-                    if (File.Exists(value + $"/steamapps/appmanifest_{appid.ToString()}.acf"))
+                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid.ToString()}.acf")))
                     {
-                        return value + "/steamapps/common/" + gameName;
+                        return Path.Combine(Path.Combine(value, "steamapps/common/"), gameName);
                     }
                 }
             }
