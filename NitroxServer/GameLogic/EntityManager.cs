@@ -21,7 +21,7 @@ namespace NitroxServer.GameLogic
             entitiesByGuid = entitiesByAbsoluteCell.Values.SelectMany(l => l).ToDictionary(e => e.Guid, e => e);
         }
 
-        public Entity UpdateEntityPosition(string guid, Vector3 position)
+        public Entity UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
         {
             Entity entity = GetEntityByGuid(guid);
             AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
@@ -51,6 +51,7 @@ namespace NitroxServer.GameLogic
             }
 
             entity.Position = position;
+            entity.Rotation = rotation;
 
             return entity;
         }

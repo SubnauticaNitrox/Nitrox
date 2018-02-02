@@ -18,7 +18,7 @@ namespace NitroxClient.MonoBehaviours
 
                 Survival survival = Player.main.GetComponent<Survival>();
 
-                if (survival != null && !survival.freezeStats && GameModeConsoleCommands.main && GameModeUtils.IsOptionActive(GameModeOption.Survival))
+                if (survival != null && !survival.freezeStats && GameModeUtils.IsOptionActive(GameModeOption.Survival))
                 {
                     float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
                     float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();

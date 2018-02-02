@@ -40,8 +40,11 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject gameObject = CraftData.InstantiateFromPrefab(entity.TechType);
                 gameObject.transform.position = entity.Position;
+                gameObject.transform.localRotation = entity.Rotation;
                 GuidHelper.SetNewGuid(gameObject, entity.Guid);
                 gameObject.SetActive(true);
+                LargeWorldEntity.Register(gameObject);
+                CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
 
                 Log.Debug("Received cell entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
             }
@@ -56,6 +59,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opGameObject.IsPresent())
             {
                 opGameObject.Get().transform.position = entity.Position;
+                opGameObject.Get().transform.localRotation = entity.Rotation;
             }
             else
             {
