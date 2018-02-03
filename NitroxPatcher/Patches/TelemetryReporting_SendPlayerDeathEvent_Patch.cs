@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(UnityEngine.Object context, Vector3 position)
         {
-            Multiplayer.Logic.PlayerDeath.BroadcastPlayerDeath(position);
+            Multiplayer.Logic.Player.BroadcastDeath(position);
         }
 
         public override void Patch(HarmonyInstance harmony)

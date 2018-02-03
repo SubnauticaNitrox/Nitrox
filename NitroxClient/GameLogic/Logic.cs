@@ -15,7 +15,6 @@ namespace NitroxClient.GameLogic
         public EquipmentSlots EquipmentSlots { get; }
         public ItemContainers ItemContainers { get; }
         public PlayerLogic Player { get; }
-        public PlayerDeath PlayerDeath { get; }
         public Power Power { get; }
         public SimulationOwnership SimulationOwnership { get; }
         public Crafting Crafting { get; }
@@ -38,7 +37,6 @@ namespace NitroxClient.GameLogic
             EquipmentSlots = new EquipmentSlots(clientBridge);
             ItemContainers = new ItemContainers(clientBridge);
             Player = new PlayerLogic(clientBridge);
-            PlayerDeath = new PlayerDeath(clientBridge);
             Power = new Power(clientBridge);
             SimulationOwnership = new SimulationOwnership(clientBridge);
             Crafting = new Crafting(clientBridge);
