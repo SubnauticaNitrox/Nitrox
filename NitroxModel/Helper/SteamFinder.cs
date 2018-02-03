@@ -1,8 +1,8 @@
-﻿using Microsoft.Win32;
+﻿using System.IO;
+using System.Text.RegularExpressions;
+using Microsoft.Win32;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using System.IO;
-using System.Text.RegularExpressions;
 
 namespace NitroxModel.Helper
 {
@@ -16,16 +16,16 @@ namespace NitroxModel.Helper
                 return Optional<string>.Empty();
             }
 
-            string appsPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") + "/steamapps/";
+            string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
 
-            if (File.Exists(appsPath + $"appmanifest_{appid.ToString()}.acf"))
+            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{appid.ToString()}.acf")))
             {
                 return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
             }
             else
             {
-                string path = SearchAllInstalations(appsPath + "libraryfolders.vdf", appid, gameName);
-                if (path == "")
+                string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
+                if (path == null)
                 {
                     Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
                 }
@@ -37,7 +37,7 @@ namespace NitroxModel.Helper
             return Optional<string>.Empty();
         }
 
-        private static string SearchAllInstalations(string libraryfolders, int appid, string gameName)
+        private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
         {
             StreamReader file = new StreamReader(libraryfolders);
             string line;
@@ -54,11 +54,11 @@ namespace NitroxModel.Helper
                 {
                     if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid.ToString()}.acf")))
                     {
-                        return Path.Combine(Path.Combine(value, "steamapps/common/"), gameName);
+                        return Path.Combine(Path.Combine(value, "steamapps/common"), gameName);
                     }
                 }
             }
-            return "";
+            return null;
         }
 
         private static object ReadRegistrySafe(string path, string key)
