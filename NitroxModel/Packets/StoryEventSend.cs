@@ -10,9 +10,8 @@ namespace NitroxModel.Packets
 
         public StoryEventSend(StoryEventType storyEventType, string key = "") : base()
         {
-            UnityEngine.Debug.Log(key + " " + storyEventType.ToString());
-            this.StoryEventType = storyEventType;
-            this.Key = key;
+            StoryEventType = storyEventType;
+            Key = key;
         }
     }
 
