@@ -3,6 +3,8 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Reflection;
+using System.Collections.Generic;
 
 namespace NitroxClient.MonoBehaviours.Gui.HUD
 {
@@ -69,9 +71,10 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             Canvas canvas = oxygenBar.GameObject.GetComponentInParent<Canvas>();
             GameObject componentParent = oxygenBar.GameObject.transform.parent.gameObject;
             Quaternion rotation = oxygenBar.GameObject.transform.localRotation;
-
-            CreateBackground(canvas, componentParent, rotation);
-            CreatePlayerNameText();
+            
+            //  Gonna keep these here but disabling them for this change
+            //CreateBackground(canvas, componentParent, rotation);
+            //CreatePlayerNameText();
             SetNewPosition(position);
         }
 
@@ -213,7 +216,35 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             Vector2 screenPosition = new Vector2(Screen.width - positionOffset.x, Screen.height - (positionOffset.y * position));
             Vector2 worldPosition;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
-            barGameObject.transform.position = canvas.transform.TransformPoint(worldPosition);
+            //barGameObject.transform.position = canvas.transform.TransformPoint(worldPosition);
+            
+            //Custom Position Code
+            FieldInfo man = typeof(Multiplayer).GetField("remotePlayerManager", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            PlayerManager manager = man.GetValue(Multiplayer.Main) as PlayerManager;
+            RemotePlayer player = manager.FindOrCreate(playerName);
+
+            PingInstance ping = player.PlayerPing;
+
+            FieldInfo pool = typeof(uGUI_PingTab).GetField("pool", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            List<uGUI_PingEntry> entries = pool.GetValue(FindObjectOfType<uGUI_PingTab>()) as List<uGUI_PingEntry>;
+
+            FieldInfo pingsField = typeof(PingManager).GetField("pings", BindingFlags.NonPublic | BindingFlags.GetField | BindingFlags.Instance);
+            Dictionary<int, PingInstance> pings = pingsField.GetValue(null) as Dictionary<int, PingInstance>;
+            
+            //I know it's a lot of reflection but I didn't want to change any of your code (Namely the Multiplayer class)
+            
+            int id = 0;
+            
+            foreach(KeyValuePair<int, PingInstance> pair in pings)
+            {
+                if(pair.Value == ping)
+                {
+                    id = pair.Key;
+                }
+            }
+            barGameObject.transform.parent = entries[id].transform;
+            //positionOffset might need adjusting slightly to avoid the bars conflicting with existing PDA UI
+            barGameObject.transform.localPosition = positionOffset;
         }
 
         void OnDestroy()
