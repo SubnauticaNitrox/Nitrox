@@ -1,22 +1,21 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.GameLogic
 {
     public class Interior
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Interior(PacketSender packetSender)
+        public Interior(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void OpenableStateChanged(String guid, bool isOpen, float animationDuration)
+        public void OpenableStateChanged(string guid, bool isOpen, float animationDuration)
         {
-            OpenableStateChanged stateChange = new OpenableStateChanged(packetSender.PlayerId, guid, isOpen, animationDuration);
+            OpenableStateChanged stateChange = new OpenableStateChanged(guid, isOpen, animationDuration);
             packetSender.Send(stateChange);
             Log.Debug(stateChange);
         }

@@ -37,16 +37,27 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="0Harmony">
-      <HintPath>..\NitroxPatcher\0Harmony.dll</HintPath>
+    <Reference Include="FluentAssertions, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.4\lib\net40\FluentAssertions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.19.4.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.4\lib\net40\FluentAssertions.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NSubstitute, Version=2.0.3.0, Culture=neutral, PublicKeyToken=92dd2e9066daa5ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSubstitute.2.0.3\lib\net40\NSubstitute.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -66,23 +77,34 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Client\Communication\ChunkAwarePacketReceiverTest.cs" />
-    <Compile Include="Model\PacketProcessorTest.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConnectTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConfirmReservationTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\TestConstants.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConnectRetryTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\SendTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ClaimReservationTests.cs" />
+    <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
+    <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
     <Compile Include="Model\Tcp\MessageBufferTest.cs" />
     <Compile Include="Model\Test\TestActionPacket.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
     <Compile Include="Patcher\Patches\BaseGhost_Finish_PatchTest.cs" />
+    <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
     <Compile Include="Patcher\Patches\BuilderTool_HandleInput_PatchTest.cs" />
     <Compile Include="Patcher\Patches\ConstructorInput_OnCraftingBegin_PatchTest.cs" />
     <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
-    <Compile Include="Patcher\Patches\BuilderPatchTest.cs" />
     <Compile Include="Patcher\Test\PatchTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
+      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
+      <Name>Harmony</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
@@ -105,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

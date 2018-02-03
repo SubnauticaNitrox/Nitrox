@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -10,9 +10,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ItemContainerAddProcessor : ClientPacketProcessor<ItemContainerAdd>
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ItemContainerAddProcessor(PacketSender packetSender)
+        public ItemContainerAddProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

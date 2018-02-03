@@ -16,7 +16,7 @@ namespace NitroxPatcher
             Validate.NotNull(operand);
         }
 
-        public ValidatedCodeInstruction(OpCode opcode, object operand, String errorMessage) : base(opcode, operand)
+        public ValidatedCodeInstruction(OpCode opcode, object operand, string errorMessage) : base(opcode, operand)
         {
             Validate.NotNull(operand, "operand : " + errorMessage);
         }

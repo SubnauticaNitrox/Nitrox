@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -9,27 +9,29 @@ namespace NitroxModel.Packets
     public class SimulationOwnershipChange : Packet
     {
         public List<OwnedGuid> OwnedGuids { get; }
-        
-        public SimulationOwnershipChange(String guid, String owningPlayerId) : base()
+
+        public SimulationOwnershipChange(string guid, string owningPlayerId)
         {
-            this.OwnedGuids = new List<OwnedGuid>();
-            this.OwnedGuids.Add(new OwnedGuid(guid, owningPlayerId));
+            OwnedGuids = new List<OwnedGuid>
+            {
+                new OwnedGuid(guid, owningPlayerId, false)
+            };
         }
 
-        public SimulationOwnershipChange(List<OwnedGuid> ownedGuids) : base()
+        public SimulationOwnershipChange(List<OwnedGuid> ownedGuids)
         {
-            this.OwnedGuids = ownedGuids;
+            OwnedGuids = ownedGuids;
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("[SimulationOwnershipChange - ");
 
-            foreach(OwnedGuid ownedGuid in OwnedGuids)
+            foreach (OwnedGuid ownedGuid in OwnedGuids)
             {
                 stringBuilder.Append(ownedGuid.ToString());
             }
-            
+
             stringBuilder.Append("]");
 
             return stringBuilder.ToString();

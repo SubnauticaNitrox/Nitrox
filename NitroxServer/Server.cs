@@ -1,57 +1,29 @@
 ﻿using NitroxModel.Logger;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.Communication;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Monobehaviours;
-using NitroxServer.GameLogic.Threading;
-using UnityEngine;
 
 namespace NitroxServer
 {
-    public class Server : MonoBehaviour
+    public class Server
     {
-        public static Logic Logic { get; private set; }
-
-        private TcpServer tcpServer;
-        private TimeKeeper timeKeeper;
-        private SimulationOwnership simulationOwnership;
-        private PacketHandler packetHandler;
-        private GameActionManager gameActionManager;
-        private ChunkManager chunkManager;
+        private readonly TcpServer tcpServer;
 
         public Server()
         {
-            this.timeKeeper = new TimeKeeper();
-            this.tcpServer = new TcpServer();
-            this.simulationOwnership = new SimulationOwnership();
-            this.gameActionManager = new GameActionManager();
-            this.chunkManager = new ChunkManager();
-            this.packetHandler = new PacketHandler(tcpServer, timeKeeper, simulationOwnership, gameActionManager, chunkManager);
+            TimeKeeper timeKeeper = new TimeKeeper();
+            SimulationOwnership simulationOwnership = new SimulationOwnership();
+            PlayerManager playerManager = new PlayerManager();
+            PacketHandler packetHandler = new PacketHandler(playerManager, timeKeeper, simulationOwnership);
+            EventTriggerer eventTriggerer = new EventTriggerer(playerManager);
 
-            Logic = new Logic(tcpServer);
+            tcpServer = new TcpServer(packetHandler, playerManager);
         }
 
-        public void Awake()
+        public void Start()
         {
-            tcpServer.Start(packetHandler);
-            ChunkLoader chunkLoader = this.gameObject.AddComponent<ChunkLoader>();
-            chunkLoader.chunkManager = chunkManager;
-
-            this.gameObject.AddComponent<CreaturePositionBroadcaster>();
+            Log.Info("Starting Nitrox Server");
+            tcpServer.Start();
         }
-
-        public void Update()
-        {
-            Optional<IGameAction> action = gameActionManager.next();
-
-            while(action.IsPresent())
-            {
-                action.Get().Execute();
-                action = gameActionManager.next();
-            }
-        }
-        
     }
-    
 }

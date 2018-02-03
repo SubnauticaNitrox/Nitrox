@@ -1,0 +1,3 @@
+[submodule "Harmony"]
+	path = Harmony
+	url = ../../SubnauticaNitrox/Harmony.git

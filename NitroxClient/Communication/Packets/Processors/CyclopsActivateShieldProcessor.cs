@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsActivateShieldProcessor : ClientPacketProcessor<CyclopsActivateShield>
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public CyclopsActivateShieldProcessor(PacketSender packetSender)
+        public CyclopsActivateShieldProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

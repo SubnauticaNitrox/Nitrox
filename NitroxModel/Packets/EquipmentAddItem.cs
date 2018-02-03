@@ -6,20 +6,20 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EquipmentAddItem : PlayerActionPacket
     {
-        public String OwnerGuid { get; }
-        public String Slot { get; }
+        public string OwnerGuid { get; }
+        public string Slot { get; }
         public byte[] ItemBytes { get; }
 
-        public EquipmentAddItem(String playerId, String ownerGuid, String slot, byte[] itemBytes, Vector3 ownerPosition) : base(playerId, ownerPosition)
+        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition)
         {
-            this.OwnerGuid = ownerGuid;
-            this.Slot = slot;
-            this.ItemBytes = itemBytes;
+            OwnerGuid = ownerGuid;
+            Slot = slot;
+            ItemBytes = itemBytes;
         }
 
         public override string ToString()
         {
-            return "[EquipmentAddItem - playerId: " + PlayerId + " OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " Total Item Bytes: " + ItemBytes.Length + "]";
+            return "[EquipmentAddItem OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " Total Item Bytes: " + ItemBytes.Length + "]";
         }
     }
 }

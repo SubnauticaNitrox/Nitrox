@@ -19,18 +19,18 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args[1] == "on" || args[1] == "1" || args[1] == "true")
             {
-                state = AnimChangeState.On;
+                state = AnimChangeState.ON;
             }
             else if (args[1] == "off" || args[1] == "0" || args[1] == "false")
             {
-                state = AnimChangeState.Off;
+                state = AnimChangeState.OFF;
             }
             else
             {
-                state = AnimChangeState.Unset;
+                state = AnimChangeState.UNSET;
             }
 
-            client.PacketSender.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
+            client.Logic.Player.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
         }
     }
 }

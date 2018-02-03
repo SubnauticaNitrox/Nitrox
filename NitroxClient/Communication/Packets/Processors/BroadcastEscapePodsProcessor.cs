@@ -1,12 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,12 +14,13 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
-        private String myEscapePodGuid;
-        private PacketSender packetSender;
-        private Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
-        private Dictionary<String, GameObject> escapePodsByGuid = new Dictionary<String, GameObject>();
+        private readonly IPacketSender packetSender;
+        private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
+        private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
-        public BroadcastEscapePodsProcessor(PacketSender packetSender)
+        private string myEscapePodGuid;
+
+        public BroadcastEscapePodsProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -92,7 +92,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

@@ -5,17 +5,17 @@ namespace NitroxModel.Packets
 {
     [Serializable]
     public class DeconstructionCompleted : PlayerActionPacket
-    { 
-        public String Guid { get; }
+    {
+        public string Guid { get; }
 
-        public DeconstructionCompleted(String playerId, Vector3 itemPosition, String guid) : base(playerId, itemPosition)
+        public DeconstructionCompleted(Vector3 itemPosition, string guid) : base(itemPosition)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()
         {
-            return "[DeconstructionCompleted( - playerId: " + PlayerId + " Guid: " + Guid + "]";
+            return "[DeconstructionCompleted Guid: " + Guid + "]";
         }
     }
 }

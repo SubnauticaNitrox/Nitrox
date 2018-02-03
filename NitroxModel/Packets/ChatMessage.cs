@@ -3,13 +3,14 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ChatMessage : AuthenticatedPacket
+    public class ChatMessage : Packet
     {
-        public String Text { get; }
+        public string PlayerId { get; }
+        public string Text { get; }
 
-        public ChatMessage(String playerId, String text) : base(playerId)
+        public ChatMessage(string playerId, string text)
         {
-            this.Text = text;
+            Text = text;
         }
     }
 }

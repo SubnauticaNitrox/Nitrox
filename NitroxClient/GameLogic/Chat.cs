@@ -1,19 +1,18 @@
 ﻿using NitroxClient.Communication;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.GameLogic
 {
     public class Chat
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Chat(PacketSender packetSender)
+        public Chat(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void SendChatMessage(String text)
+        public void SendChatMessage(string text)
         {
             ChatMessage message = new ChatMessage(packetSender.PlayerId, text);
             packetSender.Send(message);

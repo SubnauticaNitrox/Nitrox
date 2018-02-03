@@ -4,13 +4,15 @@ using System;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlayerDeathEvent : AuthenticatedPacket
+    public class PlayerDeathEvent : Packet
     {
-        public Vector3 DeathPosition { get; private set; }
+        public string PlayerId { get; }
+        public Vector3 DeathPosition { get; }
 
-        public PlayerDeathEvent(String playerId, Vector3 deathPosition) : base(playerId)
+        public PlayerDeathEvent(string playerId, Vector3 deathPosition)
         {
-            this.DeathPosition = deathPosition;
+            PlayerId = playerId;
+            DeathPosition = deathPosition;
         }
     }
 }

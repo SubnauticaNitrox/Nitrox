@@ -33,9 +33,6 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>.\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
     </Reference>
@@ -53,55 +50,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Main.cs" />
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
-    <Compile Include="Patches\TelemetryReporting_SendPlayerDeathEvent_Patch.cs" />
-    <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
-    <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
-    <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
-    <Compile Include="Patches\Server\CellManager_HideEntities_Patch.cs" />
-    <Compile Include="Patches\Server\LargeWorldStreamer_TryGetWorstBatch_Patch.cs" />
-    <Compile Include="Patches\Server\SwimBehaviour_SwimToInterval_Patch.cs" />
-    <Compile Include="Patches\Server\Player_Awake_Patch.cs" />
-    <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
-    <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
-    <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
-    <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
-    <Compile Include="Patches\Server\Creature_ChooseBestAction_Patch.cs" />
-    <Compile Include="Patches\Server\WaterSurfaceOnCamera_OnPostRender_Patch.cs" />
-    <Compile Include="Patches\Server\WaterBiomeManager_RasterizeAtmosphereVolumes_Patch.cs" />
-    <Compile Include="Patches\Server\MainMenuPlayerName_Start_Patch.cs" />
-    <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
-    <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
-    <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
-    <Compile Include="Patches\CrafterLogic_TryPickup_Patch.cs" />
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
-    <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
-    <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
-    <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
-    <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
-    <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
-    <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
-    <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
-    <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
-    <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
-    <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
+    <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
+    <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
+    <Compile Include="Patches\Constructable_Construct_Patch.cs" />
+    <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
+    <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
-    <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\CrafterLogic_TryPickup_Patch.cs" />
+    <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
+    <Compile Include="Patches\CyclopsEngineChangeState_OnClick_Patch.cs" />
+    <Compile Include="Patches\CyclopsHelmHUDManager_Start_Patch.cs" />
+    <Compile Include="Patches\CyclopsHelmHUDManager_StopPiloting_Patch.cs" />
+    <Compile Include="Patches\CyclopsHelmHUDManager_Update_Patch.cs" />
+    <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
+    <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
+    <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
+    <Compile Include="Patches\CyclopsMotorModeButton_OnClick_Patch.cs" />
+    <Compile Include="Patches\CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch.cs" />
+    <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
+    <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
+    <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
+    <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
+    <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
+    <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
+    <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
+    <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
-    <Compile Include="Patches\GameInput_Initialize_Patch.cs" />
-    <Compile Include="Patches\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
-    <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
-    <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
+    <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
+    <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
+    <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
+    <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
+    <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
+    <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
+    <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
-    <Compile Include="Patches\Constructable_Construct_Patch.cs" />
-    <Compile Include="Main.cs" />
-    <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
-    <Compile Include="Patches\SpawnConsoleCommand_Patch.cs" />
-    <Compile Include="Patches\uGUI_MainMenu_Start_Patch.cs" />
+    <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
+    <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
+    <Compile Include="Patches\TelemetryReporting_SendPlayerDeathEvent_Patch.cs" />
+    <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
+    <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
@@ -109,6 +105,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
+      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
+      <Name>Harmony</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
@@ -120,10 +120,6 @@
     <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
-      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
-      <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

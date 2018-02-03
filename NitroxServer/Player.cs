@@ -1,51 +1,84 @@
-﻿using NitroxModel.DataStructures;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using System;
-using System.Collections.Generic;
+using NitroxModel.Tcp;
 using UnityEngine;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public String Id { get; }
+        public string Id { get; }
         public Vector3 Position { get; set; }
 
-        private HashSet<Chunk> visibleChunks;
+        private readonly Connection connection;
+        private readonly HashSet<VisibleCell> visibleCells = new HashSet<VisibleCell>();
 
-        public Player(String id)
+        public Player(string id, Connection connection)
         {
-            this.Id = id;
-            this.visibleChunks = new HashSet<Chunk>();
+            Id = id;
+            this.connection = connection;
         }
 
-        public void AddChunks(IEnumerable<Chunk> chunks)
+        public void AddCells(IEnumerable<VisibleCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (VisibleCell cell in cells)
                 {
-                    visibleChunks.Add(chunk);
+                    visibleCells.Add(cell);
                 }
             }
         }
 
-        public void RemoveChunks(IEnumerable<Chunk> chunks)
+        public void RemoveCells(IEnumerable<VisibleCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (VisibleCell cell in cells)
                 {
-                    visibleChunks.Remove(chunk);
+                    visibleCells.Remove(cell);
                 }
             }
         }
 
-        public bool HasChunkLoaded(Chunk chunk)
+        public bool HasCellLoaded(VisibleCell cell)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                return visibleChunks.Contains(chunk);
+                return visibleCells.Contains(cell);
+            }
+        }
+
+        public void SendPacket(Packet packet)
+        {
+            if (connection.Open)
+            {
+                connection.SendPacket(packet, null);
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Player player = (Player)obj;
+
+            return (player.Id == Id);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 269;
+                hash = hash * 23 + Id.GetHashCode();
+                return hash;
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
@@ -35,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             rigidBody.isKinematic = false;
         }
 
-        private void AssignToWaterPark(String waterParkGuid, Pickupable pickupable)
+        private void AssignToWaterPark(string waterParkGuid, Pickupable pickupable)
         {
             GameObject waterParkGo = GuidHelper.RequireObjectFrom(waterParkGuid);            
             WaterPark waterPark = waterParkGo.RequireComponent<WaterPark>();

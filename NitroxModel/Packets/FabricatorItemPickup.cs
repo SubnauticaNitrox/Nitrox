@@ -3,15 +3,15 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class FabricatorItemPickup : AuthenticatedPacket
+    public class FabricatorItemPickup : Packet
     {
-        public String FabricatorGuid { get; }
+        public string FabricatorGuid { get; }
         public TechType TechType { get; }
 
-        public FabricatorItemPickup(String playerId, String fabricatorGuid, TechType techType) : base(playerId)
+        public FabricatorItemPickup(string fabricatorGuid, TechType techType)
         {
-            this.FabricatorGuid = fabricatorGuid;
-            this.TechType = techType;
+            FabricatorGuid = fabricatorGuid;
+            TechType = techType;
         }
 
         public override string ToString()

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NitroxClient.MonoBehaviours.Gui.Helper
+﻿namespace NitroxClient.MonoBehaviours.Gui.Helper
 {
     class SmoothedValue
     {
@@ -11,10 +9,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Helper
 
         public SmoothedValue(float targetValue, float currentValue, float maxValue, float smoothTime)
         {
-            this.TargetValue = targetValue;
-            this.CurrentValue = currentValue;
-            this.MaxValue = maxValue;
-            this.SmoothTime = smoothTime;
+            TargetValue = targetValue;
+            CurrentValue = currentValue;
+            MaxValue = maxValue;
+            SmoothTime = smoothTime;
         }
     }
 }

@@ -1,21 +1,22 @@
 ﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class MovementPacketProcessor : AuthenticatedPacketProcessor<Movement>
     {
-        private TcpServer tcpServer;
+        private readonly PlayerManager playerManager;
 
-        public MovementPacketProcessor(TcpServer tcpServer)
+        public MovementPacketProcessor(PlayerManager playerManager)
         {
-            this.tcpServer = tcpServer;
+            this.playerManager = playerManager;
         }
 
         public override void Process(Movement packet, Player player)
         {
             player.Position = packet.Position;
-            tcpServer.SendPacketToOtherPlayers(packet, player);
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

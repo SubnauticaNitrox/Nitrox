@@ -1,17 +1,16 @@
 ﻿using NitroxClient.Communication;
-using NitroxModel.Packets;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
-using System;
+using NitroxModel.Packets;
 using UnityEngine;
-using NitroxModel.Helper.GameLogic;
 
 namespace NitroxClient.GameLogic
 {
     public class MedkitFabricator
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public MedkitFabricator(PacketSender packetSender)
+        public MedkitFabricator(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
@@ -19,10 +18,10 @@ namespace NitroxClient.GameLogic
         public void Clicked(MedicalCabinet medicalCabinet)
         {
             Vector3 actionPosition = medicalCabinet.gameObject.transform.position;
-            String guid = GuidHelper.GetGuid(medicalCabinet.gameObject);
+            string guid = GuidHelper.GetGuid(medicalCabinet.gameObject);
             bool doorOpen = (bool)medicalCabinet.ReflectionGet("doorOpen");
 
-            MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(packetSender.PlayerId, guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
+            MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(guid, actionPosition, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);
             packetSender.Send(cabinetClicked);
         }
     }

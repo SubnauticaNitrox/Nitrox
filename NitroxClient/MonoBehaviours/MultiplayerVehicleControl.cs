@@ -1,7 +1,7 @@
-﻿using NitroxClient.GameLogic;
+﻿using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxClient.Unity.Smoothing;
 using NitroxModel.Helper;
-using NitroxModel.Helper.Math;
-using System.Reflection;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -10,50 +10,50 @@ namespace NitroxClient.MonoBehaviours
     {
         private Rigidbody rigidbody;
 
-        protected readonly SmoothParameter smoothYaw = new SmoothParameter();
-        protected readonly SmoothParameter smoothPitch = new SmoothParameter();
-        protected SmoothVector smoothPosition;
-        protected SmoothVector smoothVelocity;
-        protected SmoothRotation smoothRotation;
-        protected SmoothVector smoothAngularVelocity;
+        protected readonly SmoothParameter SmoothYaw = new SmoothParameter();
+        protected readonly SmoothParameter SmoothPitch = new SmoothParameter();
+        protected SmoothVector SmoothPosition;
+        protected SmoothVector SmoothVelocity;
+        protected SmoothRotation SmoothRotation;
+        protected SmoothVector SmoothAngularVelocity;
 
         protected virtual void Awake()
         {
             rigidbody = gameObject.GetComponent<Rigidbody>();
             // For now, we assume the set position and rotation is equal to the server one.
             // Default velocities are probably empty, but set them anyway.
-            smoothPosition = new SmoothVector(gameObject.transform.position);
-            smoothVelocity = new SmoothVector(rigidbody.velocity);
-            smoothRotation = new SmoothRotation(gameObject.transform.rotation);
-            smoothAngularVelocity = new SmoothVector(rigidbody.angularVelocity);
+            SmoothPosition = new SmoothVector(gameObject.transform.position);
+            SmoothVelocity = new SmoothVector(rigidbody.velocity);
+            SmoothRotation = new SmoothRotation(gameObject.transform.rotation);
+            SmoothAngularVelocity = new SmoothVector(rigidbody.angularVelocity);
         }
 
         protected virtual void FixedUpdate()
         {
-            smoothYaw.FixedUpdate();
-            smoothPitch.FixedUpdate();
+            SmoothYaw.FixedUpdate();
+            SmoothPitch.FixedUpdate();
 
-            smoothPosition.FixedUpdate();
-            smoothVelocity.FixedUpdate();
-            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(smoothPosition.SmoothValue, smoothVelocity.SmoothValue, gameObject, PlayerMovement.BROADCAST_INTERVAL);
-            smoothRotation.FixedUpdate();
-            smoothAngularVelocity.FixedUpdate();
-            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(smoothRotation.SmoothValue, smoothAngularVelocity.SmoothValue, gameObject, PlayerMovement.BROADCAST_INTERVAL);
+            SmoothPosition.FixedUpdate();
+            SmoothVelocity.FixedUpdate();
+            rigidbody.velocity = MovementHelper.GetCorrectedVelocity(SmoothPosition.SmoothValue, SmoothVelocity.SmoothValue, gameObject, PlayerMovement.BROADCAST_INTERVAL);
+            SmoothRotation.FixedUpdate();
+            SmoothAngularVelocity.FixedUpdate();
+            rigidbody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(SmoothRotation.SmoothValue, SmoothAngularVelocity.SmoothValue, gameObject, PlayerMovement.BROADCAST_INTERVAL);
         }
 
         internal void SetPositionVelocityRotation(Vector3 remotePosition, Vector3 remoteVelocity, Quaternion remoteRotation, Vector3 remoteAngularVelocity)
         {
             gameObject.SetActive(true);
-            smoothPosition.Target = remotePosition;
-            smoothVelocity.Target = remoteVelocity;
-            smoothRotation.Target = remoteRotation;
-            smoothAngularVelocity.Target = remoteAngularVelocity;
+            SmoothPosition.Target = remotePosition;
+            SmoothVelocity.Target = remoteVelocity;
+            SmoothRotation.Target = remoteRotation;
+            SmoothAngularVelocity.Target = remoteAngularVelocity;
         }
 
         internal virtual void SetSteeringWheel(float yaw, float pitch)
         {
-            smoothYaw.Target = yaw;
-            smoothPitch.Target = pitch;
+            SmoothYaw.Target = yaw;
+            SmoothPitch.Target = pitch;
         }
 
         internal virtual void Enter()
@@ -73,13 +73,13 @@ namespace NitroxClient.MonoBehaviours
     {
         private readonly FieldInfo steeringWheelYaw = ReflectionHelper.GetField<T>("steeringWheelYaw");
         private readonly FieldInfo steeringWheelPitch = ReflectionHelper.GetField<T>("steeringWheelPitch");
-        protected T steeringControl;
+        protected T SteeringControl;
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
-            steeringControl.ReflectionSet(steeringWheelYaw, smoothYaw.SmoothValue);
-            steeringControl.ReflectionSet(steeringWheelPitch, smoothPitch.SmoothValue);
+            SteeringControl.ReflectionSet(steeringWheelYaw, SmoothYaw.SmoothValue);
+            SteeringControl.ReflectionSet(steeringWheelPitch, SmoothPitch.SmoothValue);
         }
     }
 }

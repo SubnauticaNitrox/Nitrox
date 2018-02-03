@@ -1,15 +1,18 @@
 ﻿using System;
+using NitroxModel.GameLogic.Creatures.Actions;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class CreatureActionChanged : Packet
     {
-        public String NewAction { get; }
+        public string Guid { get; }
+        public SerializableCreatureAction NewAction { get; }
 
-        public CreatureActionChanged(String newAction) : base()
+        public CreatureActionChanged(string guid, SerializableCreatureAction newAction)
         {
-            this.NewAction = newAction;
+            Guid = guid;
+            NewAction = newAction;
         }
     }
 }

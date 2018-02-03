@@ -4,11 +4,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings
 {
     public class KeyBinding
     {
-        public GameInput.Button Button { get; private set; }
-        public GameInput.Device Device { get; private set; }
-        public string Label { get; private set; }
-        public DefaultKeyBinding DefaultKeyBinding { get; private set; }
-        public KeyBindingAction Action { get; private set; }
+        public GameInput.Button Button { get; }
+        public GameInput.Device Device { get; }
+        public string Label { get; }
+        public DefaultKeyBinding DefaultKeyBinding { get; }
+        public KeyBindingAction Action { get; }
 
         public KeyBinding(int keyBindingValue, string buttonLabel, GameInput.Device buttonDevice, DefaultKeyBinding buttonDefaults, KeyBindingAction buttonAction)
         {

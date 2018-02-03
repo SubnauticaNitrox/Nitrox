@@ -44,7 +44,7 @@ namespace NitroxReloader
             })
             .ToDictionary(ra => ra.AssemblyName, null);
 
-            var watcher = new FileSystemWatcher()
+            FileSystemWatcher watcher = new FileSystemWatcher()
             {
                 Path = ReloaderSettings.Path,
                 Filter = "*.dll",
@@ -85,7 +85,7 @@ namespace NitroxReloader
                     string path = changedFiles.Dequeue();
                     try
                     {
-                        var fn = Path.GetFileName(path);
+                        string fn = Path.GetFileName(path);
                         ReloaderAssembly ra;
                         if (reloadableAssemblies.TryGetValue(fn, out ra))
                         {

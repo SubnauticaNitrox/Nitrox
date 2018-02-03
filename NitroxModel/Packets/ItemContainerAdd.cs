@@ -6,18 +6,18 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ItemContainerAdd : PlayerActionPacket
     {
-        public String OwnerGuid { get; }
+        public string OwnerGuid { get; }
         public byte[] ItemData { get; }
 
-        public ItemContainerAdd(String playerId, String ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(playerId, ownerPositon)
+        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon)
         {
-            this.OwnerGuid = ownerGuid;
-            this.ItemData = itemData;
+            OwnerGuid = ownerGuid;
+            ItemData = itemData;
         }
 
         public override string ToString()
         {
-            return "[ItemContainerAdd - playerId: " + PlayerId + " OwnerGuid: " + OwnerGuid + " Total Bytes: " + ItemData.Length + "]";
+            return "[ItemContainerAdd OwnerGuid: " + OwnerGuid + " Total Bytes: " + ItemData.Length + "]";
         }
     }
 }

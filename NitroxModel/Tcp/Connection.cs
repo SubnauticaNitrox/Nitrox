@@ -1,33 +1,31 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 
 namespace NitroxModel.Tcp
 {
     public class Connection : IProcessorContext
     {
-        private Socket Socket;
-        private MessageBuffer MessageBuffer;
-        public bool Open { get; private set; }
+        private readonly Socket socket;
+        private readonly MessageBuffer messageBuffer = new MessageBuffer();
+        public bool Open { get; private set; } = true;
         public bool Authenticated { get; set; }
 
         public Connection(Socket socket)
         {
-            this.Socket = socket;
-            this.MessageBuffer = new MessageBuffer();
-            this.Open = true;
+            this.socket = socket;
         }
 
         public void Connect(IPEndPoint remoteEP)
         {
             try
             {
-                Socket.Connect(remoteEP);
-                if (!Socket.Connected)
+                socket.Connect(remoteEP);
+                if (!socket.Connected)
                 {
                     Open = false;
                 }
@@ -37,12 +35,12 @@ namespace NitroxModel.Tcp
                 Open = false;
             }
         }
-        
+
         public void BeginReceive(AsyncCallback callback)
         {
             try
             {
-                Socket.BeginReceive(MessageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
+                socket.BeginReceive(messageBuffer.ReceivingBuffer, 0, MessageBuffer.RECEIVING_BUFFER_SIZE, 0, callback, this);
             }
             catch (SocketException se)
             {
@@ -56,17 +54,17 @@ namespace NitroxModel.Tcp
             int bytesRead = 0;
             try
             {
-                bytesRead = Socket.EndReceive(ar);
+                bytesRead = socket.EndReceive(ar);
             }
-            catch (SocketException)
+            catch (SocketException ex)
             {
-                Log.Info("Error reading data from socket");
+                Log.Info($"Error reading data from socket: { ex.Message }");
                 Open = false;
             }
 
             if (bytesRead > 0)
             {
-                foreach(Packet packet in MessageBuffer.GetReceivedPackets(bytesRead))
+                foreach (Packet packet in messageBuffer.GetReceivedPackets(bytesRead))
                 {
                     yield return packet;
                 }
@@ -85,13 +83,17 @@ namespace NitroxModel.Tcp
                 byte[] packetData = packet.SerializeWithHeaderData();
                 try
                 {
-                    Socket.BeginSend(packetData, 0, packetData.Length, 0, callback, Socket);
+                    socket.BeginSend(packetData, 0, packetData.Length, 0, callback, socket);
                 }
                 catch (SocketException)
                 {
                     Log.Info("Error sending packet");
                     Open = false;
                 }
+            }
+            else
+            {
+                Log.Info("Cannot send packet to a closed connection.");
             }
         }
 
@@ -100,8 +102,8 @@ namespace NitroxModel.Tcp
             Open = false;
             try
             {
-                Socket.Shutdown(SocketShutdown.Both);
-                Socket.Close();
+                socket.Shutdown(SocketShutdown.Both);
+                socket.Close();
             }
             catch (Exception)
             {

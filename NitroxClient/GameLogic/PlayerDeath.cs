@@ -6,9 +6,9 @@ namespace NitroxClient.GameLogic
 {
     public class PlayerDeath
     {
-        private PacketSender packetSender;
+        private IPacketSender packetSender;
 
-        public PlayerDeath(PacketSender packetSender)
+        public PlayerDeath(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

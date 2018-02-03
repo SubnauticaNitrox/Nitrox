@@ -1,9 +1,8 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -12,7 +11,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.PlayerId + " " + completedPacket.NewBaseCreatedGuid);
+            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.NewBaseCreatedGuid);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);            
             Constructable constructable = constructing.GetComponent<Constructable>();
@@ -21,12 +20,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (completedPacket.NewBaseCreatedGuid.IsPresent())
             {
-                String newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
-                configureNewlyConstructedBase(newBaseGuid);
+                string newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
+                ConfigureNewlyConstructedBase(newBaseGuid);
             }            
         }
 
-        private void configureNewlyConstructedBase(String newBaseGuid)
+        private void ConfigureNewlyConstructedBase(string newBaseGuid)
         {
             Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 

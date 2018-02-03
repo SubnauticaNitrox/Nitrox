@@ -1,6 +1,8 @@
-﻿using Harmony;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -8,16 +10,40 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(Creature);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ChooseBestAction", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
+        private static CreatureAction previousAction;
+
         public static bool Prefix(Creature __instance, ref CreatureAction __result)
         {
-            __result = null;
+            string guid = GuidHelper.GetGuid(__instance.gameObject);
+
+            if (Multiplayer.Logic.SimulationOwnership.HasOwnership(guid))
+            {
+                previousAction = (CreatureAction)typeof(Creature).GetField("prevBestAction", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
+                return true;
+            }
+
+            // CreatureActionChangedProcessor.ActionByGuid.TryGetValue(guid, out __result);
+
             return false;
+        }
+
+        public static void Postfix(Creature __instance, ref CreatureAction __result)
+        {
+            string guid = GuidHelper.GetGuid(__instance.gameObject);
+
+            if (Multiplayer.Logic.SimulationOwnership.HasOwnership(guid))
+            {
+                if (previousAction != __result)
+                {
+                    // Multiplayer.Logic.AI.CreatureActionChanged(guid, __result);
+                }
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPrefix(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

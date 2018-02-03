@@ -5,18 +5,20 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class OwnedGuid
     {
-        public String Guid;
-        public String PlayerId;
+        public bool IsEntity { get; }
+        public string Guid { get; }
+        public string PlayerId { get; }
 
-        public OwnedGuid(String guid, String playerId)
+        public OwnedGuid(string guid, string playerId, bool isEntity)
         {
-            this.Guid = guid;
-            this.PlayerId = playerId;
+            Guid = guid;
+            PlayerId = playerId;
+            IsEntity = isEntity;
         }
 
         public override string ToString()
         {
-            return "[OwnedGuid Guid: " + Guid + " PlayerId: " + PlayerId + "]";
+            return "[OwnedGuid Guid: " + Guid + " PlayerId: " + PlayerId + " IsEntity: " + IsEntity + "]";
         }
     }
 }

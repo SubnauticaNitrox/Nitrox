@@ -1,6 +1,4 @@
-﻿using NitroxModel.Helper;
-using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,13 +13,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject chatEntry;
         private GUIText chatText;
         private Coroutine timer;
-        private List<String> messages;
+        private List<string> messages;
 
         protected void Awake()
         {
             SetupChatMessagesComponent();
 
-            messages = new List<String>();
+            messages = new List<string>();
         }
 
         private void SetupChatMessagesComponent()
@@ -37,7 +35,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         }
 
         // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous messages for CHAT_VISIBILITY_TIME_LENGTH seconds
-        public void WriteMessage(String message)
+        public void WriteMessage(string message)
         {
             if (timer != null)
             {
@@ -53,7 +51,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             timer = StartCoroutine(DeactivateChat());
         }
 
-        private void AddChatMessage(String sanitizedChatMessage)
+        private void AddChatMessage(string sanitizedChatMessage)
         {
             if (messages.Count == MESSAGE_LIMIT)
             {
@@ -66,7 +64,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private void BuildChatText()
         {
             chatText.text = "";
-            foreach (String message in messages)
+            foreach (string message in messages)
             {
                 if (chatText.text.Length > 0)
                 {
@@ -77,7 +75,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
         }
 
-        private String SanitizeMessage(String message)
+        private string SanitizeMessage(string message)
         {
             message = message.Trim();
 

@@ -6,15 +6,15 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PickupItem : PlayerActionPacket
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public Vector3 ItemPosition { get; }
-        public String TechType { get; }
+        public string TechType { get; }
 
-        public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
+        public PickupItem(Vector3 itemPosition, string guid, string techType) : base(itemPosition)
         {
-            this.ItemPosition = itemPosition;
-            this.Guid = guid;
-            this.TechType = techType;
+            ItemPosition = itemPosition;
+            Guid = guid;
+            TechType = techType;
         }
 
         public override string ToString()

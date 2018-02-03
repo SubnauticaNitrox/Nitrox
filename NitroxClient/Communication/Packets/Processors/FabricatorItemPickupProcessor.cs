@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -8,9 +8,9 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class FabricatorItemPickupProcessor : ClientPacketProcessor<FabricatorItemPickup>
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public FabricatorItemPickupProcessor(PacketSender packetSender)
+        public FabricatorItemPickupProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }

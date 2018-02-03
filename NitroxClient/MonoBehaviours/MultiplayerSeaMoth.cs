@@ -7,7 +7,7 @@
 
         protected override void Awake()
         {
-            steeringControl = seamoth = GetComponent<SeaMoth>();
+            SteeringControl = seamoth = GetComponent<SeaMoth>();
             base.Awake();
         }
 

@@ -1,28 +1,25 @@
-﻿using NitroxClient.Communication;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        private PacketSender packetSender;
-        private Dictionary<String, String> ownedGuidsToPlayer;
-        private HashSet<String> requestedGuids;
+        private readonly IPacketSender packetSender;
+        private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
+        private readonly HashSet<string> requestedGuids = new HashSet<string>();
 
-        public SimulationOwnership(PacketSender packetSender)
+        public SimulationOwnership(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.ownedGuidsToPlayer = new Dictionary<String, String>();
-            this.requestedGuids = new HashSet<String>();
         }
-         
-        public bool HasOwnership(String guid)
-        {
-            String owningPlayerId;
 
-            if(ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
+        public bool HasOwnership(string guid)
+        {
+            string owningPlayerId;
+
+            if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
             {
                 return owningPlayerId == packetSender.PlayerId;
             }
@@ -30,17 +27,17 @@ namespace NitroxClient.GameLogic
             return false;
         }
 
-        public void TryToRequestOwnership(String guid)
+        public void TryToRequestOwnership(string guid)
         {
-            if(!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
+            if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
                 SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(packetSender.PlayerId, guid);
                 packetSender.Send(ownershipRequest);
                 requestedGuids.Add(guid);
-            }            
+            }
         }
 
-        public void AddOwnedGuid(String guid, String playerId)
+        public void AddOwnedGuid(string guid, string playerId)
         {
             ownedGuidsToPlayer[guid] = playerId;
         }

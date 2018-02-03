@@ -1,29 +1,28 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
-using System;
-using UnityEngine;
 using NitroxModel.Helper;
-using System.Collections.Generic;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class EquipmentAddItemProcessor : ClientPacketProcessor<EquipmentAddItem>
     {
-        public static readonly int EQUIP_EVENT_TYPE_ID = 0;
-        
+        public const int EQUIP_EVENT_TYPE_ID = 0;
+
         public override void Process(EquipmentAddItem packet)
         {
             GameObject gameObject = SerializationHelper.GetGameObject(packet.ItemBytes);
 
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
-            if(opEquipment.IsPresent())
+            if (opEquipment.IsPresent())
             {
                 Equipment equipment = opEquipment.Get();
                 InventoryItem inventoryItem = new InventoryItem(pickupable);

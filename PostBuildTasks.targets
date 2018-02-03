@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Deploy" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == 'NitroxPatcher'">
+    <!-- Get outputs from referenced projects, instead of hardcoding them. -->
+    <MSBuild Projects="@(ProjectReference)" Targets="Build" BuildInParallel="true">
+      <Output TaskParameter="TargetOutputs" ItemName="CompiledAssemblies" />
+    </MSBuild>
+    <ItemGroup>
+      <CompiledAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
+    </ItemGroup>
+    <Message Text="Copying library files to: $(SubnauticaManaged)" />
+    <Message Text="@(CompiledAssemblies)" />
+    <Copy SourceFiles="@(CompiledAssemblies)" DestinationFolder="$(SubnauticaManaged)" Retries="0" ContinueOnError="true" />
+  </Target>
+</Project>

@@ -13,7 +13,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            Console.WriteLine(client.clientPos.ToString());
+            Console.WriteLine(client.ClientPos.ToString());
         }
     }
 }

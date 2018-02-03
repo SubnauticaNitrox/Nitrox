@@ -1,24 +1,24 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Helper.GameLogic;
-using NitroxModel.Helper.Unity;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class EquipmentRemoveItemProcessor : ClientPacketProcessor<EquipmentRemoveItem>
     {
-        public static readonly int UNEQUIP_EVENT_TYPE_ID = 1;
-        
+        public const int UNEQUIP_EVENT_TYPE_ID = 1;
+
         public override void Process(EquipmentRemoveItem packet)
         {
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
-            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);            
-            Pickupable pickupable = item.RequireComponent<Pickupable>();            
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
+            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);
+            Pickupable pickupable = item.RequireComponent<Pickupable>();
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
             if (opEquipment.IsPresent())
@@ -36,7 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
             else
             {
                 Log.Error("Could not find equipment type for " + owner.name);
-            }                        
+            }
 
             UnityEngine.Object.Destroy(item);
         }
