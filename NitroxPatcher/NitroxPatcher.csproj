@@ -56,6 +56,8 @@
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
     <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
+    <Compile Include="Patches\CyclopsDamagePoint_OnRepair_Patch.cs" />
+    <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\SubConsoleCommand_OnSubPrefabLoaded_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\TelemetryReporting_SendPlayerDeathEvent_Patch.cs" />
