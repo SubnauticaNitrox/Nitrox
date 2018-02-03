@@ -108,6 +108,7 @@
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
     <Compile Include="Packets\PlayerActionPacket.cs" />
+    <Compile Include="Packets\PlayerDeathEvent.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />

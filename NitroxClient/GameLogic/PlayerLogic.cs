@@ -44,5 +44,11 @@ namespace NitroxClient.GameLogic
             AnimationChangeEvent animEvent = new AnimationChangeEvent(packetSender.PlayerId, (int)type, (int)state);
             packetSender.Send(animEvent);
         }
+
+        public void BroadcastDeath(Vector3 deathPosition)
+        {
+            PlayerDeathEvent playerDeath = new PlayerDeathEvent(packetSender.PlayerId, deathPosition);
+            packetSender.Send(playerDeath);
+        }
     }
 }
