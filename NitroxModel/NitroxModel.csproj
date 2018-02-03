@@ -85,6 +85,7 @@
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
+    <Compile Include="Packets\CyclopsExternalDamage.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
