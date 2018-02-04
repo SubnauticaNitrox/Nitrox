@@ -57,6 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\MultiplayerSessionState\DisconnectedMultiplayerSession.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionManager.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
+    <Compile Include="Communication\MultiplayerSessionState\MultiplayerSessionConnectionStage.cs" />
+    <Compile Include="Communication\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
     <Compile Include="Communication\ClientBridge.cs" />
     <Compile Include="Communication\ClientBridgeState.cs" />
