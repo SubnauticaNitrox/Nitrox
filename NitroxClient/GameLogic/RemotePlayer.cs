@@ -18,6 +18,7 @@ namespace NitroxClient.GameLogic
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
+        public PingInstance PlayerPing;
 
         public string PlayerId { get; }
 
@@ -53,6 +54,7 @@ namespace NitroxClient.GameLogic
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             ping.SetLabel("Player " + playerId);
             ping.pingType = PingType.Signal;
+            PlayerPing = ping;
 
             AnimationController = PlayerView.AddComponent<AnimationController>();
 
