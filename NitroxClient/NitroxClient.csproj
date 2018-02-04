@@ -36,6 +36,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.1.6.0.12319\lib\net35\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -218,6 +221,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\playerBackgroundImage" />
   </ItemGroup>
   <ItemGroup />

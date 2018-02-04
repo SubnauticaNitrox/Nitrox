@@ -6,15 +6,15 @@ namespace NitroxClient.Communication
 {
     public class MultiplayerSessionManager : IMultiplayerSessionManager
     {
-        private IClient client;
-
         public event MultiplayerSessionManagerStateChangedEventHandler MultiplayerSessionManagerStateChanged;
         
         public IMultiplayerSessionState CurrentState { get; private set; }
+        public IClient Client { get; }
+        public string ServerIpAddress { get; }
 
         public MultiplayerSessionManager(IClient client)
         {
-            this.client = client;
+            Client = client;
             CurrentState = new DisconnectedMultiplayerSession();
         }
 
