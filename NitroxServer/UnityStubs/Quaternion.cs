@@ -6,16 +6,16 @@ namespace NitroxServer.UnityStubs
     public class Quaternion
     {
         [ProtoMember(1)]
-        public float w { get; }
-
-        [ProtoMember(2)]
         public float x { get; }
 
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public float y { get; }
 
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public float z { get; }
+
+        [ProtoMember(4)]
+        public float w { get; }
 
         public Quaternion()
         {
