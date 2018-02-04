@@ -49,6 +49,9 @@
       <HintPath>..\packages\NSubstitute.2.0.3\lib\net40\NSubstitute.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.1.6.0.12319\lib\net35\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
@@ -79,13 +82,16 @@
   <ItemGroup>
     <Compile Include="Client\Communication\ClientBridgeTests\ConnectTests.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\ConfirmReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\TestConstants.cs" />
+    <Compile Include="Client\Communication\SessionManagerTests\TestConstants.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\ConnectRetryTests.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\SendTests.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\ClaimReservationTests.cs" />
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
+    <Compile Include="Client\Communication\SessionManagerTests\EstablishingServerConnection.cs" />
+    <Compile Include="Client\Communication\SessionManagerTests\EstablishingServerConnectionTests.cs" />
     <Compile Include="Client\Communication\SessionManagerTests\MultiplayerSessionManagerStateChangeTests.cs" />
+    <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
