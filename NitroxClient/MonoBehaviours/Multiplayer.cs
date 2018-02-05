@@ -28,10 +28,10 @@ namespace NitroxClient.MonoBehaviours
         private static readonly VisibleCells visibleCells = new VisibleCells();
         private static readonly DeferringPacketReceiver packetReceiver = new DeferringPacketReceiver(visibleCells);
         private static readonly TcpClient client = new TcpClient(packetReceiver);
-        private static readonly ClientBridge clientBridge = new ClientBridge(client);
+        private static readonly MultiplayerSessionManager MultiplayerSessionManager = new MultiplayerSessionManager(client);
 
         //One ring, to rule them all...
-        public static readonly Logic Logic = new Logic(clientBridge, visibleCells, packetReceiver);
+        public static readonly Logic Logic = new Logic(MultiplayerSessionManager, visibleCells, packetReceiver);
 
         private static bool hasLoadedMonoBehaviors;
 
@@ -47,8 +47,8 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PlayerManager), remotePlayerManager },
             { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
             { typeof(PlayerChatManager), remotePlayerChatManager },
-            { typeof(IPacketSender), clientBridge },
-            { typeof(ClientBridge), clientBridge }
+            { typeof(IPacketSender), MultiplayerSessionManager },
+            { typeof(MultiplayerSessionManager), MultiplayerSessionManager }
         };
 
         static Multiplayer()
@@ -72,8 +72,8 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (clientBridge.CurrentState != ClientBridgeState.Disconnected &&
-                clientBridge.CurrentState != ClientBridgeState.Failed)
+            if (MultiplayerSessionManager.CurrentState != ClientBridgeState.Disconnected &&
+                MultiplayerSessionManager.CurrentState != ClientBridgeState.Failed)
             {
                 ProcessPackets();
             }
@@ -106,7 +106,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (clientBridge.CurrentState == ClientBridgeState.Connected)
+            if (MultiplayerSessionManager.CurrentState == ClientBridgeState.Connected)
             {
                 Log.InGame("Already connected to a server");
             }
@@ -145,13 +145,13 @@ namespace NitroxClient.MonoBehaviours
 
         public void NegotiatePlayerSlotReservation(string ipAddress, string playerName)
         {
-            clientBridge.Connect(ipAddress, playerName);
+            MultiplayerSessionManager.Connect(ipAddress, playerName);
         }
 
         public void JoinSession()
         {
             OnBeforeMultiplayerStart();
-            clientBridge.ClaimReservation();
+            MultiplayerSessionManager.ClaimReservation();
             InitMonoBehaviours();
         }
 
@@ -171,15 +171,15 @@ namespace NitroxClient.MonoBehaviours
 
         private IEnumerator HandleReservationFromConsole()
         {
-            yield return new WaitUntil(() => clientBridge.CurrentState != ClientBridgeState.WaitingForRerservation);
+            yield return new WaitUntil(() => MultiplayerSessionManager.CurrentState != ClientBridgeState.WaitingForRerservation);
 
-            switch (clientBridge.CurrentState)
+            switch (MultiplayerSessionManager.CurrentState)
             {
                 case ClientBridgeState.Reserved:
                     JoinSession();
                     break;
                 case ClientBridgeState.ReservationRejected:
-                    Log.InGame($"Cannot join server: {clientBridge.ReservationState.ToString()}");
+                    Log.InGame($"Cannot join server: {MultiplayerSessionManager.ReservationState.ToString()}");
                     break;
                 default:
                     Log.InGame("Unable to communicate with the server for unknown reasons.");
@@ -190,7 +190,7 @@ namespace NitroxClient.MonoBehaviours
         private void StopMultiplayer()
         {
             remotePlayerManager.RemoveAllPlayers();
-            clientBridge.Disconnect();
+            MultiplayerSessionManager.Disconnect();
         }
     }
 }

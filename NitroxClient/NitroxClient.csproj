@@ -60,13 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Abstract\IClient.cs" />
-    <Compile Include="Communication\MultiplayerSessionState\DisconnectedMultiplayerSession.cs" />
-    <Compile Include="Communication\Abstract\IMultiplayerSessionManager.cs" />
-    <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
-    <Compile Include="Communication\MultiplayerSessionState\MultiplayerSessionConnectionStage.cs" />
-    <Compile Include="Communication\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
-    <Compile Include="Communication\ClientBridge.cs" />
+    <Compile Include="Communication\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\ClientBridgeState.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
@@ -77,7 +72,7 @@
     <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
     <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
     <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
-    <Compile Include="Communication\IClientBridge.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionManager.cs" />
     <Compile Include="Communication\IPacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />

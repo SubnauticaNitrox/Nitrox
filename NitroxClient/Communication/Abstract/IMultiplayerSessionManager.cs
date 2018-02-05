@@ -1,13 +1,13 @@
-﻿namespace NitroxClient.Communication.Abstract
+﻿using NitroxModel.PlayerSlot;
+
+namespace NitroxClient.Communication.Abstract
 {
-    public delegate void MultiplayerSessionManagerStateChangedEventHandler(IMultiplayerSessionState newState);
-
-    public interface IMultiplayerSessionManager
+    public interface IMultiplayerSessionManager : IPacketSender
     {
-        IMultiplayerSessionState CurrentState { get; }
-        IClient Client { get; }
-        string ServerIpAddress { get; }
+        ClientBridgeState CurrentState { get; }
+        PlayerSlotReservationState ReservationState { get; }
 
-        event MultiplayerSessionManagerStateChangedEventHandler MultiplayerSessionManagerStateChanged;
+        void Connect(string ipAddress, string playerName);
+        void Disconnect();
     }
 }

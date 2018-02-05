@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Map;
 using NitroxModel.Logger;
 
@@ -23,29 +24,29 @@ namespace NitroxClient.GameLogic
         public MobileVehicleBay MobileVehicleBay { get; }
         public Terrain Terrain { get; }
         public IPacketSender PacketSender { get; }
-        public IClientBridge ClientBridge { get; }
+        public IMultiplayerSessionManager MultiplayerSessionManager { get; }
 
-        public Logic(IClientBridge clientBridge, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Logic(IMultiplayerSessionManager multiplayerSessionManager, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
             Log.Info("Initializing Multiplayer GameLogic...");
-            AI = new AI(clientBridge);
-            Building = new Building(clientBridge);
-            Chat = new Chat(clientBridge);
-            Entities = new Entities(clientBridge);
-            MedkitFabricator = new MedkitFabricator(clientBridge);
-            Item = new Item(clientBridge);
-            EquipmentSlots = new EquipmentSlots(clientBridge);
-            ItemContainers = new ItemContainers(clientBridge);
-            Player = new PlayerLogic(clientBridge);
-            Power = new Power(clientBridge);
-            SimulationOwnership = new SimulationOwnership(clientBridge);
-            Crafting = new Crafting(clientBridge);
-            Cyclops = new Cyclops(clientBridge);
-            Interior = new Interior(clientBridge);
-            MobileVehicleBay = new MobileVehicleBay(clientBridge);
-            Terrain = new Terrain(clientBridge, visibleCells, packetReceiver);
-            PacketSender = clientBridge;
-            ClientBridge = clientBridge;
+            AI = new AI(multiplayerSessionManager);
+            Building = new Building(multiplayerSessionManager);
+            Chat = new Chat(multiplayerSessionManager);
+            Entities = new Entities(multiplayerSessionManager);
+            MedkitFabricator = new MedkitFabricator(multiplayerSessionManager);
+            Item = new Item(multiplayerSessionManager);
+            EquipmentSlots = new EquipmentSlots(multiplayerSessionManager);
+            ItemContainers = new ItemContainers(multiplayerSessionManager);
+            Player = new PlayerLogic(multiplayerSessionManager);
+            Power = new Power(multiplayerSessionManager);
+            SimulationOwnership = new SimulationOwnership(multiplayerSessionManager);
+            Crafting = new Crafting(multiplayerSessionManager);
+            Cyclops = new Cyclops(multiplayerSessionManager);
+            Interior = new Interior(multiplayerSessionManager);
+            MobileVehicleBay = new MobileVehicleBay(multiplayerSessionManager);
+            Terrain = new Terrain(multiplayerSessionManager, visibleCells, packetReceiver);
+            PacketSender = multiplayerSessionManager;
+            MultiplayerSessionManager = multiplayerSessionManager;
             Log.Info("Multiplayer GameLogic Initialized...");
         }
     }

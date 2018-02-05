@@ -15,7 +15,7 @@ namespace ClientTester
     public class MultiplayerClient
     {
         public IPacketSender PacketSender { get; }
-        public ClientBridge ClientBridge { get; }
+        public MultiplayerSessionManager MultiplayerSessionManager { get; }
         public Logic Logic { get; }
         public object PacketProcessorsByType { get; private set; }
 
@@ -33,14 +33,14 @@ namespace ClientTester
             visibleCells = new VisibleCells();
             packetReceiver = new DeferringPacketReceiver(visibleCells);
             client = new TcpClient(packetReceiver);
-            ClientBridge = new ClientBridge(client);
-            PacketSender = ClientBridge;
-            Logic = new Logic(ClientBridge, visibleCells, packetReceiver);
+            MultiplayerSessionManager = new MultiplayerSessionManager(client);
+            PacketSender = MultiplayerSessionManager;
+            Logic = new Logic(MultiplayerSessionManager, visibleCells, packetReceiver);
         }
 
         public void Start(string ip)
         {
-            ClientBridge.Connect(ip, playerName);
+            MultiplayerSessionManager.Connect(ip, playerName);
 
             var iterations = 0;
             do
@@ -53,12 +53,12 @@ namespace ClientTester
                 {
                     break;
                 }
-            } while (ClientBridge.CurrentState == ClientBridgeState.WaitingForRerservation);
+            } while (MultiplayerSessionManager.CurrentState == ClientBridgeState.WaitingForRerservation);
 
-            switch (ClientBridge.CurrentState)
+            switch (MultiplayerSessionManager.CurrentState)
             {
                 case ClientBridgeState.Reserved:
-                    ClientBridge.ClaimReservation();
+                    MultiplayerSessionManager.ClaimReservation();
                     Log.InGame("Connected to server");
                     break;
                 default:
@@ -77,7 +77,7 @@ namespace ClientTester
                 {
                     try
                     {
-                        PacketProcessor processor = new PlayerSlotReservationProcessor(ClientBridge);
+                        PacketProcessor processor = new PlayerSlotReservationProcessor(MultiplayerSessionManager);
                         processor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)
