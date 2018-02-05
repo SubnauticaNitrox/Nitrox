@@ -6,22 +6,22 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PlayerSlotReservationProcessor : ClientPacketProcessor<PlayerSlotReservation>
     {
-        private ClientBridge clientBridge;
+        private MultiplayerSessionManager _multiplayerSessionManager;
 
-        public PlayerSlotReservationProcessor(ClientBridge clientBridge)
+        public PlayerSlotReservationProcessor(MultiplayerSessionManager multiplayerSessionManager)
         {
-            this.clientBridge = clientBridge;
+            this._multiplayerSessionManager = multiplayerSessionManager;
         }
 
         public override void Process(PlayerSlotReservation packet)
         {
             if (packet.ReservationState == PlayerSlotReservationState.Reserved)
             {
-                clientBridge.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
+                _multiplayerSessionManager.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
             }
             else
             {
-                clientBridge.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
+                _multiplayerSessionManager.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
             }
         }
     }

@@ -57,9 +57,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Multiplayer.Main.NegotiatePlayerSlotReservation(serverIp, username);
 
             Log.InGame("Waiting for reservation...");
-            yield return new WaitUntil(() => Multiplayer.Logic.ClientBridge.CurrentState != Communication.ClientBridgeState.WaitingForRerservation);
+            yield return new WaitUntil(() => Multiplayer.Logic.MultiplayerSessionManager.CurrentState != Communication.ClientBridgeState.WaitingForRerservation);
 
-            switch (Multiplayer.Logic.ClientBridge.CurrentState)
+            switch (Multiplayer.Logic.MultiplayerSessionManager.CurrentState)
             {
                 case Communication.ClientBridgeState.Reserved:
                     Log.InGame("Launching game...");
@@ -209,7 +209,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        PlayerSlotReservationState reservationState = Multiplayer.Logic.ClientBridge.ReservationState;
+                        PlayerSlotReservationState reservationState = Multiplayer.Logic.MultiplayerSessionManager.ReservationState;
                         string reservationStateDescription = reservationState.Describe();
 
                         GUILayout.Label(reservationStateDescription);
