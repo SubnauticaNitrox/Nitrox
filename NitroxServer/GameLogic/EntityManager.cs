@@ -70,21 +70,21 @@ namespace NitroxServer.GameLogic
             return entity;
         }
 
-        public List<Entity> GetVisibleEntities(VisibleCell[] cells)
+        public List<Entity> GetVisibleEntities(AbsoluteEntityCell[] cells)
         {
             List<Entity> entities = new List<Entity>();
 
-            foreach (VisibleCell cell in cells)
+            foreach (AbsoluteEntityCell cell in cells)
             {
                 List<Entity> cellEntities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out cellEntities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out cellEntities))
                     {
                         foreach (Entity entity in cellEntities)
                         {
-                            if (cell.AbsoluteCellEntity.Level <= entity.Level)
+                            if (cell.Level <= entity.Level)
                             {
                                 entities.Add(entity);
                             }
@@ -96,21 +96,21 @@ namespace NitroxServer.GameLogic
             return entities;
         }
 
-        public List<Entity> AssignEntitySimulation(Player player, VisibleCell[] added)
+        public List<Entity> AssignEntitySimulation(Player player, AbsoluteEntityCell[] added)
         {
             List<Entity> assignedEntities = new List<Entity>();
 
-            foreach (VisibleCell cell in added)
+            foreach (AbsoluteEntityCell cell in added)
             {
                 List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out entities))
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (cell.AbsoluteCellEntity.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
+                            if (cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
                             {
                                 assignedEntities.Add(entity);
                             }
@@ -122,21 +122,21 @@ namespace NitroxServer.GameLogic
             return assignedEntities;
         }
 
-        public List<Entity> RevokeEntitySimulationFor(Player player, VisibleCell[] removed)
+        public List<Entity> RevokeEntitySimulationFor(Player player, AbsoluteEntityCell[] removed)
         {
             List<Entity> revokedEntities = new List<Entity>();
 
-            foreach (VisibleCell cell in removed)
+            foreach (AbsoluteEntityCell cell in removed)
             {
                 List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out entities))
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (entity.Level <= cell.AbsoluteCellEntity.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
+                            if (entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
                             {
                                 revokedEntities.Add(entity);
                             }

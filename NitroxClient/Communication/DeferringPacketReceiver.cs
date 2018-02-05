@@ -65,9 +65,7 @@ namespace NitroxClient.Communication
                 {
                     AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, level);
 
-                    VisibleCell visibleCell = new VisibleCell(cell);
-
-                    if (visibleCells.HasVisibleCell(visibleCell))
+                    if (visibleCells.HasVisibleCell(cell))
                     {
                         cellLoaded = true;
                         break;
@@ -100,9 +98,9 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void CellLoaded(VisibleCell visibleCell)
+        public void CellLoaded(AbsoluteEntityCell visibleCell)
         {
-            if (visibleCell.AbsoluteCellEntity.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
+            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
             {
                 return;
             }
@@ -110,7 +108,7 @@ namespace NitroxClient.Communication
             lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
-                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell.AbsoluteCellEntity, out deferredPackets))
+                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell, out deferredPackets))
                 {
                     Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
                         visibleCell,

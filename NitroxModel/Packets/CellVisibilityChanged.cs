@@ -8,10 +8,10 @@ namespace NitroxModel.Packets
     public class CellVisibilityChanged : Packet
     {
         public string PlayerId { get; }
-        public VisibleCell[] Added { get; }
-        public VisibleCell[] Removed { get; }
+        public AbsoluteEntityCell[] Added { get; }
+        public AbsoluteEntityCell[] Removed { get; }
 
-        public CellVisibilityChanged(string playerId, VisibleCell[] added, VisibleCell[] removed)
+        public CellVisibilityChanged(string playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
             PlayerId = playerId;
             Added = added;
@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
         {
             StringBuilder toString = new StringBuilder("[CellVisibilityChanged | Added: ");
 
-            foreach (VisibleCell visibleCell in Added)
+            foreach (AbsoluteEntityCell visibleCell in Added)
             {
                 toString.Append(visibleCell);
                 toString.Append(' ');
@@ -30,7 +30,7 @@ namespace NitroxModel.Packets
 
             toString.Append("| Removed: ");
 
-            foreach (VisibleCell visibleCell in Removed)
+            foreach (AbsoluteEntityCell visibleCell in Removed)
             {
                 toString.Append(visibleCell);
                 toString.Append(' ');

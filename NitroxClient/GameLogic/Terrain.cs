@@ -18,8 +18,8 @@ namespace NitroxClient.GameLogic
         private bool cellsPendingSync = false;
         private float timeWhenCellsBecameOutOfSync;
 
-        private List<VisibleCell> added = new List<VisibleCell>();
-        private List<VisibleCell> removed = new List<VisibleCell>();
+        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
+        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
         public Terrain(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
         {
             yield return new WaitForSeconds(0.5f);
 
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
 
             if (!visibleCells.Contains(cell))
             {
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
 
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
         {
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
 
             if (visibleCells.Contains(cell))
             {

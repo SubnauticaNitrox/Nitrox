@@ -19,8 +19,8 @@ namespace NitroxTest.Client.Communication
         private const string PLAYER_ID = "TestPlayer";
         private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
-        private VisibleCell loadedCell;
-        private VisibleCell unloadedCell;
+        private AbsoluteEntityCell loadedCell;
+        private AbsoluteEntityCell unloadedCell;
         private Int3 cellId = Int3.zero;
 
         [TestInitialize]
@@ -31,8 +31,8 @@ namespace NitroxTest.Client.Communication
             Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
             Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
 
-            loadedCell = new VisibleCell(loadedBatchId, cellId, 3);
-            unloadedCell = new VisibleCell(unloadedBatchId, cellId, 3);
+            loadedCell = new AbsoluteEntityCell(loadedBatchId, cellId, 3);
+            unloadedCell = new AbsoluteEntityCell(unloadedBatchId, cellId, 3);
 
             visibleCells.Add(loadedCell);
         }

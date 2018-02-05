@@ -5,9 +5,9 @@ namespace NitroxClient.Map
 {
     public class VisibleCells
     {
-        private readonly HashSet<VisibleCell> cells = new HashSet<VisibleCell>();
+        private readonly HashSet<AbsoluteEntityCell> cells = new HashSet<AbsoluteEntityCell>();
 
-        public void Add(VisibleCell cell)
+        public void Add(AbsoluteEntityCell cell)
         {
             lock (cells)
             {
@@ -15,7 +15,7 @@ namespace NitroxClient.Map
             }
         }
 
-        public void Remove(VisibleCell cell)
+        public void Remove(AbsoluteEntityCell cell)
         {
             lock (cells)
             {
@@ -23,7 +23,7 @@ namespace NitroxClient.Map
             }
         }
 
-        public bool Contains(VisibleCell cell)
+        public bool Contains(AbsoluteEntityCell cell)
         {
             lock (cells)
             {
@@ -31,7 +31,7 @@ namespace NitroxClient.Map
             }
         }
 
-        public bool HasVisibleCell(VisibleCell cell)
+        public bool HasVisibleCell(AbsoluteEntityCell cell)
         {
             lock (cells)
             {

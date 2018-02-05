@@ -63,7 +63,6 @@
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
-    <Compile Include="DataStructures\VisibleCell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
