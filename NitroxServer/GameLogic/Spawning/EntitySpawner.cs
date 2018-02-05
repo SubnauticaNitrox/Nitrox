@@ -1,16 +1,16 @@
-﻿using AssetsTools.NET;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using AssetsTools.NET;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
-using System.IO;
-using NitroxModel.Helper;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic
 {
@@ -105,8 +105,7 @@ namespace NitroxServer.GameLogic
                                                           worldEntityInfo.techType,
                                                           Guid.NewGuid().ToString(),
                                                           (int)worldEntityInfo.cellLevel);
-
-                        AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId);
+                        AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId, entitySpawnPoint.Level);
 
                         if (!entitiesByAbsoluteCell.ContainsKey(absoluteCellId))
                         {
@@ -124,13 +123,8 @@ namespace NitroxServer.GameLogic
             if (worldEntitiesByClassId.ContainsKey(id))
             {
                 WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[id];
-                if (creatureSpawn && worldEntityInfo.slotType == EntitySlot.Type.Creature)
-                {
-                    return true;
-                } else if (!creatureSpawn && worldEntityInfo.slotType != EntitySlot.Type.Creature)
-                {
-                    return true;
-                }
+
+                return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
             }
             return false;
         }
@@ -162,7 +156,7 @@ namespace NitroxServer.GameLogic
             {
                 throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
             }
-            
+
             using (FileStream resStream = new FileStream(resourcesPath, FileMode.Open))
             using (AssetsFileReader resReader = new AssetsFileReader(resStream))
             {

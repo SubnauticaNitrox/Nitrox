@@ -7,33 +7,29 @@ namespace NitroxModel.DataStructures
     public class VisibleCell
     {
         public AbsoluteEntityCell AbsoluteCellEntity { get; }
-        public int Level { get; }
 
         public VisibleCell(Vector3 worldSpace, int level)
             : this(
-                new AbsoluteEntityCell(worldSpace),
-                level
+                new AbsoluteEntityCell(worldSpace, level)
             )
         {
         }
 
         public VisibleCell(Int3 batchId, Int3 cellId, int level)
             : this(
-                new AbsoluteEntityCell(batchId, cellId),
-                level
+                new AbsoluteEntityCell(batchId, cellId, level)
             )
         {
         }
 
-        public VisibleCell(AbsoluteEntityCell absoluteCellEntity, int level)
+        public VisibleCell(AbsoluteEntityCell absoluteCellEntity)
         {
             AbsoluteCellEntity = absoluteCellEntity;
-            Level = level;
         }
 
         public override string ToString()
         {
-            return "[VisibleCell AbsoluteCellEntity: " + AbsoluteCellEntity.Position + " Level: " + Level + "]";
+            return "[VisibleCell AbsoluteCellEntity: " + AbsoluteCellEntity + "]";
         }
 
         public override bool Equals(object obj)
@@ -46,8 +42,7 @@ namespace NitroxModel.DataStructures
 
             VisibleCell visibleCell = (VisibleCell)obj;
 
-            return (visibleCell.Level == Level &&
-                    visibleCell.AbsoluteCellEntity.Equals(AbsoluteCellEntity));
+            return (visibleCell.AbsoluteCellEntity.Equals(AbsoluteCellEntity));
         }
 
         public override int GetHashCode()
@@ -55,7 +50,6 @@ namespace NitroxModel.DataStructures
             unchecked
             {
                 int hash = 269;
-                hash = hash * 23 + Level;
                 hash = hash * 23 + AbsoluteCellEntity.GetHashCode();
                 return hash;
             }

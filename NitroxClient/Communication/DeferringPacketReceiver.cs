@@ -59,13 +59,13 @@ namespace NitroxClient.Communication
                     return false;
                 }
 
-                AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition);
-
                 bool cellLoaded = false;
 
                 for (int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
                 {
-                    VisibleCell visibleCell = new VisibleCell(cell, level);
+                    AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, level);
+
+                    VisibleCell visibleCell = new VisibleCell(cell);
 
                     if (visibleCells.HasVisibleCell(visibleCell))
                     {
@@ -76,7 +76,9 @@ namespace NitroxClient.Communication
 
                 if (!cellLoaded)
                 {
-                    Log.Debug("Action was deferred, cell not loaded (with required lod): " + cell);
+                    // Hacky, just choose level 0 for now.
+                    AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, 0);
+                    Log.Debug($"Action {packet} was deferred, cell not loaded (with required lod): {cell}");
                     AddPacketToDeferredMap(playerAction, cell);
                     return true;
                 }
@@ -100,7 +102,7 @@ namespace NitroxClient.Communication
 
         public void CellLoaded(VisibleCell visibleCell)
         {
-            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
+            if (visibleCell.AbsoluteCellEntity.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
             {
                 return;
             }

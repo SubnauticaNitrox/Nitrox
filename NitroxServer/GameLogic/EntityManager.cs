@@ -24,8 +24,8 @@ namespace NitroxServer.GameLogic
         public Entity UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
         {
             Entity entity = GetEntityByGuid(guid);
-            AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
-            AbsoluteEntityCell newCell = new AbsoluteEntityCell(position);
+            AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position, entity.Level);
+            AbsoluteEntityCell newCell = new AbsoluteEntityCell(position, entity.Level);
 
             if (oldCell != newCell)
             {
@@ -84,7 +84,7 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in cellEntities)
                         {
-                            if (cell.Level <= entity.Level)
+                            if (cell.AbsoluteCellEntity.Level <= entity.Level)
                             {
                                 entities.Add(entity);
                             }
@@ -110,7 +110,7 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
+                            if (cell.AbsoluteCellEntity.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
                             {
                                 assignedEntities.Add(entity);
                             }
@@ -136,7 +136,7 @@ namespace NitroxServer.GameLogic
                     {
                         foreach (Entity entity in entities)
                         {
-                            if (entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
+                            if (entity.Level <= cell.AbsoluteCellEntity.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
                             {
                                 revokedEntities.Add(entity);
                             }

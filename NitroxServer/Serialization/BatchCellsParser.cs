@@ -21,9 +21,6 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
-        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
-
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -60,7 +57,7 @@ namespace NitroxServer.Serialization
                 }
             });
 
-            Log.Info("Batch data loaded!");
+            Log.Info($"Batch data loaded! ({entitySpawnPoints.Count} entity-spawn-points)");
 
             return entitySpawnPoints;
         }
