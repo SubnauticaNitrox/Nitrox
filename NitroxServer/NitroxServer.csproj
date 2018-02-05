@@ -73,7 +73,7 @@
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ReservePlayerSlotProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\EntityManager.cs" />

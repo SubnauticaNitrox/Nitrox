@@ -53,11 +53,11 @@ namespace ClientTester
                 {
                     break;
                 }
-            } while (MultiplayerSessionManager.CurrentState == ClientBridgeState.WaitingForRerservation);
+            } while (MultiplayerSessionManager.CurrentStage == MultiplayerSessionManagerStage.WaitingForRerservation);
 
-            switch (MultiplayerSessionManager.CurrentState)
+            switch (MultiplayerSessionManager.CurrentStage)
             {
-                case ClientBridgeState.Reserved:
+                case MultiplayerSessionManagerStage.Reserved:
                     MultiplayerSessionManager.ClaimReservation();
                     Log.InGame("Connected to server");
                     break;
@@ -73,11 +73,11 @@ namespace ClientTester
 
             foreach (Packet packet in packets)
             {
-                if (packet.GetType() == typeof(PlayerSlotReservation))
+                if (packet.GetType() == typeof(MultiplaySessionReservation))
                 {
                     try
                     {
-                        PacketProcessor processor = new PlayerSlotReservationProcessor(MultiplayerSessionManager);
+                        PacketProcessor processor = new MultiplayerSessionReservationProcessor(MultiplayerSessionManager);
                         processor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)
