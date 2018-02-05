@@ -53,28 +53,14 @@ namespace NitroxModel.DataStructures
 
             AbsoluteEntityCell cell = (AbsoluteEntityCell)obj;
 
-            return (cell.Level == Level &&
-                    cell.BatchId.x == BatchId.x &&
-                    cell.BatchId.y == BatchId.y &&
-                    cell.BatchId.z == BatchId.z &&
-                    cell.CellId.x == CellId.x &&
-                    cell.CellId.y == CellId.y &&
-                    cell.CellId.z == CellId.z);
+            return cell.Level == Level && cell.BatchId == BatchId && cell.CellId == CellId;
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                int hash = 269;
-                hash = hash * 23 + Level;
-                hash = hash * 23 + BatchId.x.GetHashCode();
-                hash = hash * 23 + BatchId.y.GetHashCode();
-                hash = hash * 23 + BatchId.z.GetHashCode();
-                hash = hash * 23 + CellId.x.GetHashCode();
-                hash = hash * 23 + CellId.y.GetHashCode();
-                hash = hash * 23 + CellId.z.GetHashCode();
-                return hash;
+                return (Level * 23 + (269 + BatchId.GetHashCode())) * 23 + CellId.GetHashCode();
             }
         }
 
@@ -85,11 +71,12 @@ namespace NitroxModel.DataStructures
 
         public Int3 GetCellSize(Int3 blocksPerBatch)
         {
-            return GetCellSize(blocksPerBatch, Level);
+            return GetCellSize(Level, blocksPerBatch);
         }
 
-        public static Int3 GetCellSize(Int3 blocksPerBatch, int level)
+        public static Int3 GetCellSize(int level, Int3 blocksPerBatch)
         {
+            // Our own implementation for BatchCells.GetCellSize, that works on the server and client.
             return blocksPerBatch / GetCellsPerBlock(level);
         }
 

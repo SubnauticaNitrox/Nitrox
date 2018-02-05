@@ -36,16 +36,12 @@ namespace NitroxServer.GameLogic.Spawning
                 esp.CanSpawnCreature = entitySlot.IsCreatureSlot();
             }
 
-            Vector3 localPosition = go.GetComponent<Transform>().Position;
-            Quaternion localRotation = go.GetComponent<Transform>().Rotation;
-            Int3.Bounds bounds = BatchCells.GetBlockBounds(batchId, cellHeader.cellId, 0, Map.BATCH_DIMENSIONS);
+            esp.Rotation = go.GetComponent<Transform>().Rotation;
+
+            Int3.Bounds bounds = BatchCells.GetBlockBounds(batchId, cellHeader.cellId, esp.Level, Map.BATCH_DIMENSIONS);
+            UnityEngine.Vector3 localPosition = go.GetComponent<Transform>().Position;
             UnityEngine.Vector3 center = EntityCell.GetCenter(bounds);
-
-            esp.Position = new UnityEngine.Vector3(center.x + localPosition.x - Map.BATCH_DIMENSION_CENTERING.x,
-                                                   center.y + localPosition.y - Map.BATCH_DIMENSION_CENTERING.y,
-                                                   center.z + localPosition.z - Map.BATCH_DIMENSION_CENTERING.z);
-
-            esp.Rotation = new UnityEngine.Quaternion(localRotation.x, localRotation.y, localRotation.z, localRotation.w);
+            esp.Position = center + localPosition - Map.BATCH_DIMENSION_CENTERING.ToVector3();
 
             return esp;
         }
