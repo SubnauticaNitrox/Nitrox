@@ -30,13 +30,5 @@ namespace NitroxClient.Map
                 return cells.Contains(cell);
             }
         }
-
-        public bool HasVisibleCell(AbsoluteEntityCell cell)
-        {
-            lock (cells)
-            {
-                return cells.Contains(cell);
-            }
-        }
     }
 }

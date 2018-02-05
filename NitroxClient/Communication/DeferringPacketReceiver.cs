@@ -65,7 +65,7 @@ namespace NitroxClient.Communication
                 {
                     AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, level);
 
-                    if (visibleCells.HasVisibleCell(cell))
+                    if (visibleCells.Contains(cell))
                     {
                         cellLoaded = true;
                         break;

@@ -24,7 +24,7 @@ namespace NitroxModel.DataStructures
 
             Vector3 localPosition = (worldSpace + Map.BATCH_DIMENSION_CENTERING.ToVector3()) / Map.BATCH_SIZE;
             BatchId = Int3.Floor(localPosition);
-            CellId = Int3.Round((localPosition - BatchId.ToVector3()) * GetCellsPerBlock());
+            CellId = Int3.Floor(((localPosition - BatchId.ToVector3()) * GetCellsPerBlock()).AddScalar(0.0001f));
         }
 
         private Int3 BatchPosition => BatchId * Map.BATCH_SIZE - Map.BATCH_DIMENSION_CENTERING;
@@ -60,7 +60,7 @@ namespace NitroxModel.DataStructures
         {
             unchecked
             {
-                return (Level * 23 + (269 + BatchId.GetHashCode())) * 23 + CellId.GetHashCode();
+                return (269 + Level * 23 + BatchId.GetHashCode()) * 23 + CellId.GetHashCode();
             }
         }
 
