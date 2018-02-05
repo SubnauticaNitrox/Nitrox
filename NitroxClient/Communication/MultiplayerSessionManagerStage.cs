@@ -1,6 +1,6 @@
 ﻿namespace NitroxClient.Communication
 {
-    public enum ClientBridgeState
+    public enum MultiplayerSessionManagerStage
     {
         Disconnected,
         WaitingForRerservation,

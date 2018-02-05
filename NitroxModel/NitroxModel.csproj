@@ -119,7 +119,7 @@
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\RangedPacket.cs" />
-    <Compile Include="Packets\ReservePlayerSlot.cs" />
+    <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
     <Compile Include="Packets\StoryEventRecieve.cs" />
@@ -129,7 +129,8 @@
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
-    <Compile Include="PlayerSlot\PlayerSlotReservationState.cs" />
+    <Compile Include="Packets\MultiplaySessionReservation.cs" />
+    <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
