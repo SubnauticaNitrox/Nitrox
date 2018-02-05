@@ -75,13 +75,17 @@
     <Compile Include="Helper\SteamFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
+    <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
+    <Compile Include="MultiplayerSession\MultiplayerSessionPolicy.cs" />
+    <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
+    <Compile Include="MultiplayerSession\PlayerSettings.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
-    <Compile Include="Packets\ClaimPlayerSlotReservation.cs" />
+    <Compile Include="Packets\JoinMultiplayerSessionRequest.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
@@ -129,7 +133,7 @@
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
-    <Compile Include="Packets\MultiplaySessionReservation.cs" />
+    <Compile Include="Packets\MultiplayerSessionReservation.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />

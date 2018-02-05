@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             string correlationId = packet.CorrelationId;
             string playerId = packet.PlayerName;
-            MultiplaySessionReservation reservation = playerManager.ReservePlayerSlot(correlationId, playerId);
+            MultiplayerSessionReservation reservation = playerManager.ReservePlayerSlot(correlationId, playerId);
 
             Log.Info($"Reservation processed successfully: { reservation }...");
 

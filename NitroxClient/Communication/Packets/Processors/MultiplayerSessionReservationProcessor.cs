@@ -4,24 +4,24 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class MultiplayerSessionReservationProcessor : ClientPacketProcessor<MultiplaySessionReservation>
+    public class MultiplayerSessionReservationProcessor : ClientPacketProcessor<MultiplayerSessionReservation>
     {
-        private readonly MultiplayerSessionManager _multiplayerSessionManager;
+        private readonly MultiplayerSessionManager _multiplayerSession;
 
-        public MultiplayerSessionReservationProcessor(MultiplayerSessionManager multiplayerSessionManager)
+        public MultiplayerSessionReservationProcessor(MultiplayerSessionManager multiplayerSession)
         {
-            _multiplayerSessionManager = multiplayerSessionManager;
+            _multiplayerSession = multiplayerSession;
         }
 
-        public override void Process(MultiplaySessionReservation packet)
+        public override void Process(MultiplayerSessionReservation packet)
         {
             if (packet.ReservationState == MultiplayerSessionReservationState.Reserved)
             {
-                _multiplayerSessionManager.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
+                _multiplayerSession.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
             }
             else
             {
-                _multiplayerSessionManager.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
+                _multiplayerSession.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
             }
         }
     }
