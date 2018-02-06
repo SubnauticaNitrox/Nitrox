@@ -1,18 +1,18 @@
 ﻿using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Exceptions;
-using NitroxModel.PlayerSlot;
 using NitroxModel.Tcp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.GameLogic
 {
     public class PlayerManager
     {
-        private readonly HashSet<string> currentPlayerNames = new HashSet<string>();
-        private readonly Dictionary<string, PlayerSlotReservation> reservations = new Dictionary<string, PlayerSlotReservation>();
+        private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
+        private readonly Dictionary<string, MultiplayerSessionReservation> reservations = new Dictionary<string, MultiplayerSessionReservation>();
         private readonly Dictionary<Connection, Player> playersByConnection = new Dictionary<Connection, Player>();
         
         public List<Player> GetPlayers()
@@ -23,16 +23,21 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public PlayerSlotReservation ReservePlayerSlot(string correlationId, string playerId)
+        public MultiplayerSessionReservation ReservePlayerSlot(string correlationId, string playerId)
         {
-            if (currentPlayerNames.Contains(playerId))
+            lock (reservedPlayerNames)
             {
-                PlayerSlotReservationState rejectedReservationState = PlayerSlotReservationState.Rejected | PlayerSlotReservationState.UniquePlayerNameConstraintViolated;
-                return new PlayerSlotReservation(correlationId, rejectedReservationState);
-            }
+                if (reservedPlayerNames.Contains(playerId))
+                {
+                    MultiplayerSessionReservationState rejectedReservationState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
+                    return new MultiplayerSessionReservation(correlationId, rejectedReservationState);
+                }
+
+                reservedPlayerNames.Add(playerId);
+            }            
 
             string reservationKey = Guid.NewGuid().ToString();
-            PlayerSlotReservation reservation = new PlayerSlotReservation(correlationId, reservationKey, playerId);
+            MultiplayerSessionReservation reservation = new MultiplayerSessionReservation(correlationId, reservationKey, playerId);
 
             lock (reservations)
             {
@@ -44,7 +49,7 @@ namespace NitroxServer.GameLogic
 
         public Player ClaimPlayerSlotReservation(Connection connection, string reservationKey, string correlationId)
         {
-            PlayerSlotReservation reservation = reservations[reservationKey];
+            MultiplayerSessionReservation reservation = reservations[reservationKey];
             Validate.NotNull(reservation);
 
             if (reservation.CorrelationId != correlationId)
@@ -55,11 +60,6 @@ namespace NitroxServer.GameLogic
             Player player = new Player(reservation.PlayerId, connection);
             lock (playersByConnection)
             {
-                lock (currentPlayerNames)
-                {
-                    currentPlayerNames.Add(reservation.PlayerId);
-                }
-
                 playersByConnection[connection] = player;
 
                 lock (reservations)
@@ -73,9 +73,9 @@ namespace NitroxServer.GameLogic
 
         public void PlayerDisconnected(Connection connection)
         {
-            lock (currentPlayerNames)
+            lock (reservedPlayerNames)
             {
-                currentPlayerNames.Remove(playersByConnection[connection].Id);
+                reservedPlayerNames.Remove(playersByConnection[connection].Id);
             }
 
             lock (playersByConnection)

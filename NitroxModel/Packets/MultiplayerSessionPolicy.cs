@@ -1,6 +1,10 @@
-﻿namespace NitroxModel.MultiplayerSession
+﻿using System;
+using NitroxModel.MultiplayerSession;
+
+namespace NitroxModel.Packets
 {
-    public class MultiplayerSessionPolicy
+    [Serializable]
+    public class MultiplayerSessionPolicy : Packet
     {
         public bool RequiresServerPassword { get; }
 

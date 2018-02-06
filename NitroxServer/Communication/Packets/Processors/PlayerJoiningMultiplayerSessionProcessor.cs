@@ -5,13 +5,13 @@ using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class JoinMultiplayerSessionRequestProcessor : UnauthenticatedPacketProcessor<JoinMultiplayerSessionRequest>
+    public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
         private readonly TimeKeeper timeKeeper;
         private readonly EscapePodManager escapePodManager;
         private readonly PlayerManager playerManager;
 
-        public JoinMultiplayerSessionRequestProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager,
+        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager,
             PlayerManager playerManager)
         {
             this.timeKeeper = timeKeeper;
@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.playerManager = playerManager;
         }
 
-        public override void Process(JoinMultiplayerSessionRequest packet, Connection connection)
+        public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
         {
             Player player =
                 playerManager.ClaimPlayerSlotReservation(connection, packet.ReservationKey, packet.CorrelationId);

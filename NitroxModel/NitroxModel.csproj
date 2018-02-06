@@ -75,7 +75,8 @@
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
-    <Compile Include="MultiplayerSession\MultiplayerSessionPolicy.cs" />
+    <Compile Include="Packets\MultiplayerPolicySessionRequest.cs" />
+    <Compile Include="Packets\MultiplayerSessionPolicy.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
     <Compile Include="MultiplayerSession\PlayerSettings.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
-    <Compile Include="Packets\JoinMultiplayerSessionRequest.cs" />
+    <Compile Include="Packets\PlayerJoiningMultiplayerSession.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
