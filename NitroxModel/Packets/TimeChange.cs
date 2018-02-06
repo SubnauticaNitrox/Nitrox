@@ -5,11 +5,15 @@ namespace NitroxModel.Packets
     [Serializable]
     public class TimeChange : Packet
     {
-        public float CurrentTime { get; }
+        public float CurrentGameTime { get; }
+        public double CurrentServerUtcTimeMilliseconds { get; }
+        public double ClientSentAtMilliseconds { get; }
 
-        public TimeChange(float currentTime)
+        public TimeChange(float currentGameTime, double currentServerUtcTimeMilliseconds, double clientSentAtMilliseconds = 0)
         {
-            CurrentTime = currentTime;
+            CurrentGameTime = currentGameTime;
+            CurrentServerUtcTimeMilliseconds = currentServerUtcTimeMilliseconds;
+            ClientSentAtMilliseconds = clientSentAtMilliseconds;
         }
     }
 }

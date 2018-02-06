@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Abstract\IClient.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsExternalDamageProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
     <Compile Include="Communication\ClientBridge.cs" />
     <Compile Include="Communication\ClientBridgeState.cs" />
@@ -151,6 +151,7 @@
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
+    <Compile Include="GameLogic\ServerTime.cs" />
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />

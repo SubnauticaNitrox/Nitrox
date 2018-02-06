@@ -14,9 +14,9 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(CyclopsDamagePoint);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnRepair", BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Postfix(CyclopsExternalDamageManager __instance)
+        public static void Postfix(CyclopsDamagePoint __instance)
         {
-            Multiplayer.Logic.Cyclops.UpdateExternalDamagePoints(__instance.GetComponentInParent<SubRoot>());
+            Multiplayer.Logic.Cyclops.ExternalDamagePointRepaired(__instance.GetComponentInParent<SubRoot>());
         }
 
         public override void Patch(HarmonyInstance harmony)
