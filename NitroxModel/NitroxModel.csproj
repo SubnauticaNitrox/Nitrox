@@ -52,6 +52,9 @@
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\GameLogic\SerializableDamageInfo.cs" />
+    <Compile Include="DataStructures\GameLogic\SerializableFireNode.cs" />
+    <Compile Include="DataStructures\GameLogic\SerializableRoomFire.cs" />
     <Compile Include="DataStructures\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />
@@ -85,7 +88,7 @@
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
-    <Compile Include="Packets\CyclopsExternalDamage.cs" />
+    <Compile Include="Packets\CyclopsDamage.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
