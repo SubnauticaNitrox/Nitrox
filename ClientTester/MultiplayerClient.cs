@@ -53,13 +53,13 @@ namespace ClientTester
                 {
                     break;
                 }
-            } while (MultiplayerSessionManager.CurrentStage == MultiplayerSessionManagerStage.WaitingForRerservation);
+            } while (MultiplayerSessionManager.CurrentStage == MultiplayerSessionConnectionStage.AwaitingSessionReservation);
 
             switch (MultiplayerSessionManager.CurrentStage)
             {
-                case MultiplayerSessionManagerStage.Reserved:
+                case MultiplayerSessionConnectionStage.SessionReserved:
                     MultiplayerSessionManager.ClaimReservation();
-                    Log.InGame("Connected to server");
+                    Log.InGame("SessionJoined to server");
                     break;
                 default:
                     Log.InGame("Unable to connect to server");
@@ -73,7 +73,7 @@ namespace ClientTester
 
             foreach (Packet packet in packets)
             {
-                if (packet.GetType() == typeof(MultiplaySessionReservation))
+                if (packet.GetType() == typeof(MultiplayerSessionReservation))
                 {
                     try
                     {

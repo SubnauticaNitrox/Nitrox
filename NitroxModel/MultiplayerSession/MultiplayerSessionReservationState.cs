@@ -1,8 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Text;
-using NitroxModel;
-using NitroxModel.MultiplayerSession;
 
 namespace NitroxModel.MultiplayerSession
 {

@@ -3,6 +3,8 @@
     public interface IMultiplayerSessionConnectionState
     {
         MultiplayerSessionConnectionStage CurrentStage { get; }
-        void HandleContext(IMultiplayerSessionConnectionContext sessionConnectionContext);
+        void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext);
+        void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext);
+        void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext);
     }
 }
