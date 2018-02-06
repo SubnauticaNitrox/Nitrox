@@ -16,12 +16,13 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsExternalDamageManager __instance)
         {
-            Multiplayer.Logic.Cyclops.UpdateExternalDamagePoints(__instance.GetComponentInParent<SubRoot>());
+            //Multiplayer.Logic.Cyclops.ExternalDamagePointCreated(__instance.GetComponentInParent<SubRoot>());
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPostfix(harmony, TARGET_METHOD);
+            // Currently unused until a random number generator solution is agreed on.
+            //PatchPostfix(harmony, TARGET_METHOD);
 
             // PatchTranspiler(harmony, TARGET_METHOD);
         }

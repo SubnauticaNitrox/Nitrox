@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -18,27 +19,28 @@ namespace NitroxClient.Communication.Packets.Processors
     /// Currently it does a full re-sync of damage points. Will likely be re-written to handle add/remove events, and in the rare case, a full re-sync request when
     /// we choose if/how we will sync the random number generator.
     /// </summary>
-    public class CyclopsExternalDamageProcessor : ClientPacketProcessor<CyclopsExternalDamage>
+    public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
     {
         private readonly IPacketSender packetSender;
 
-        public CyclopsExternalDamageProcessor(IPacketSender packetSender)
+        public CyclopsDamageProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public override void Process(CyclopsExternalDamage packet)
+        public override void Process(CyclopsDamage packet)
         {
             GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
             CyclopsExternalDamageManager damageManager = cyclops.RequireComponentInChildren<CyclopsExternalDamageManager>();
 
-            FieldInfo unusedDamagePointsField = typeof(CyclopsExternalDamageManager).GetField("unusedDamagePoints", BindingFlags.NonPublic | BindingFlags.Instance);
-            Validate.NotNull(unusedDamagePointsField, "Could not find 'unusedDamagePoints' method in class 'CyclopsExternalDamageManager'");
-            List<CyclopsDamagePoint> unusedDamagePoints = (List<CyclopsDamagePoint>)unusedDamagePointsField.GetValue(damageManager);
+            List<CyclopsDamagePoint> unusedDamagePoints = (List<CyclopsDamagePoint>)damageManager.ReflectionGet("unusedDamagePoints");
+            //FieldInfo unusedDamagePointsField = typeof(CyclopsExternalDamageManager).GetField("unusedDamagePoints", BindingFlags.NonPublic | BindingFlags.Instance);
+            //Validate.NotNull(unusedDamagePointsField, "Could not find 'unusedDamagePoints' method in class 'CyclopsExternalDamageManager'");
+            //List<CyclopsDamagePoint> unusedDamagePoints = (List<CyclopsDamagePoint>)unusedDamagePointsField.GetValue(damageManager);
 
             // Sync the health of the Cyclops. The health of the Cyclops is checked when damaged/healed, and if there's a mismatch in the expected count of damage points,
             // it will add/remove them randomly until it matches the expected number. You can see this logic in CyclopsExternalDamageManager.OnTakeDamage().
-            damageManager.subLiveMixin.health = damageManager.subLiveMixin.maxHealth;
+            //damageManager.subLiveMixin.health = packet.Health;
 
             // CyclopsExternalDamageManager.damagePoints is an unchanged list. It will never have items added/removed from it. Since packet.DamagePointIndexes is also an array
             // generated in an ordered manner, we can match them without worrying about unordered items.
@@ -58,9 +60,12 @@ namespace NitroxClient.Communication.Packets.Processors
                             // Copied from CyclopsExternalDamageManager.CreatePoint(), except without the random index.
                             damageManager.damagePoints[damagePointsIndex].gameObject.SetActive(true);
                             damageManager.damagePoints[damagePointsIndex].RestoreHealth();
-                            GameObject prefabGo = damageManager.fxPrefabs[UnityEngine.Random.Range(0, damageManager.fxPrefabs.Length)];
+                            GameObject prefabGo = damageManager.fxPrefabs[UnityEngine.Random.Range(0, damageManager.fxPrefabs.Length - 1)];
                             damageManager.damagePoints[damagePointsIndex].SpawnFx(prefabGo);
                             unusedDamagePoints.Remove(damageManager.damagePoints[damagePointsIndex]);
+
+                            Log.Debug("[CyclopsDamageProcessor Creating DamagePoint index: " + damagePointsIndex.ToString()
+                                + " all packet DamagePoint Indexes: " + string.Join(", ", packet.DamagePointIndexes.Select(x => x.ToString()).ToArray()) + "]");
                         }
 
                         packetDamagePointsIndex++;
@@ -70,6 +75,9 @@ namespace NitroxClient.Communication.Packets.Processors
                         // If it's active, but not in the list, it must have been repaired.
                         if (damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
                         {
+                            Log.Debug("[CyclopsDamageProcessor Repairing DamagePoint index: " + damagePointsIndex.ToString()
+                                + " all packet DamagePoint Indexes: " + string.Join(", ", packet.DamagePointIndexes.Select(x => x.ToString()).ToArray()) + "]");
+
                             RepairPoint(damageManager, unusedDamagePoints, damagePointsIndex);
                         }
                     }
@@ -77,12 +85,14 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (packetDamagePointsIndex < packet.DamagePointIndexes.Length)
                 {
-                    Log.Error("packet.DamagePointGuids did not fully iterate! Guid: " + packet.DamagePointIndexes[packetDamagePointsIndex].ToString() 
-                        + " had no matching Guid in damageManager.damagePoints, or the order is incorrect!");
+                    Log.Error("[CyclopsDamageProcessor packet.DamagePointGuids did not fully iterate! Guid: " + packet.DamagePointIndexes[packetDamagePointsIndex].ToString() 
+                        + " had no matching Guid in damageManager.damagePoints, or the order is incorrect!]");
                 }
             }
             else
             {
+                Log.Debug("[CyclopsDamageProcessor No DamagePoints in packet, repairing all DamagePoints]");
+
                 // None should be active.
                 for (int i = 0; i < damageManager.damagePoints.Length; i++)
                 {
@@ -93,7 +103,20 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
             }
 
-            damageManager.subLiveMixin.health = packet.Health;
+            // Get that screen shake going on
+            //if (packet.DamageInfo.Damage > 0)
+            //{
+            //    damageManager.subRoot.OnTakeDamage(new DamageInfo() { damage = packet.AttackDamage });
+            //}
+
+            // unusedDamagePoints is checked against damagePoints to determine if there's enough damage points. Failing to set the new list
+            // of unusedDamagePoints will cause random DamagePoints to appear.
+            damageManager.ReflectionSet("unusedDamagePoints", unusedDamagePoints);
+            cyclops.GetComponent<LiveMixin>().health = packet.SubHealth;
+            damageManager.subLiveMixin.health = packet.DamageManagerHealth;
+            cyclops.GetComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
+            // ToggleLeakPointsBasedOnDamage is a visual update only.
+            damageManager.ReflectionCall("ToggleLeakPointsBasedOnDamage", false, false, null);
         }
 
         /// <summary>
