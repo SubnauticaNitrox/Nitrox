@@ -4,11 +4,10 @@
     {
         Disconnected,
         EstablishingServerPolicy,
-        AwaitingReservationRequest,
-        AwaitingReservationResponse,
+        AwaitingReservationCredentials,
+        AwaitingSessionReservation,
         SessionReserved,
         SessionReservationRejected,
-        SessionJoined,
-        Failed
+        SessionJoined
     }
 }
