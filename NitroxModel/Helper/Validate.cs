@@ -4,6 +4,8 @@ using System.Diagnostics;
 using NitroxModel.DataStructures.Util;
 using System;
 using System.Reflection;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Exceptions;
 
 namespace NitroxModel.Helper
 {
@@ -90,6 +92,15 @@ namespace NitroxModel.Helper
             if (opt.IsEmpty())
             {
                 throw new OptionalEmptyException<T>(message);
+            }
+        }
+
+        public static void PacketCorrelation<T>(T packet, string expectedCorrelationId)
+            where T : CorrelatedPacket
+        {
+            if (!expectedCorrelationId.Equals(packet.CorrelationId))
+            {
+                throw new UncorrelatedPacketException(packet, expectedCorrelationId);
             }
         }
 
