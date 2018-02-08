@@ -3,14 +3,13 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class MultiplayerSessionReservationRequest : Packet
+    public class MultiplayerSessionReservationRequest : CorrelatedPacket
     {
-        public string CorrelationId { get; }
         public string PlayerName { get; }
 
         public MultiplayerSessionReservationRequest(string correlationId, string playerName)
+            : base(correlationId)
         {
-            CorrelationId = correlationId;
             PlayerName = playerName;
         }
     }
