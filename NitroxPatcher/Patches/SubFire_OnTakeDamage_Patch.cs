@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches
                 if (firstOpCodeReached
                     && instruction.opcode.Equals(SECOND_INJECTION_OPCODE))
                 {
-                    //Multiplayer.Logic.Cyclops.FireCreated(gameObject, DamageInfo, CyclopsRooms)
+                    // Multiplayer.Logic.Cyclops.FireCreated(gameObject, DamageInfo, CyclopsRooms)
 
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Cyclops", BindingFlags.Instance | BindingFlags.Public));
@@ -46,7 +46,7 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_2);
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Cyclops).GetMethod("FireCreated", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Cyclops).GetMethod("OnFireCreated", BindingFlags.Public | BindingFlags.Instance));
                 }
             }
         }

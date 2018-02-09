@@ -89,6 +89,7 @@
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
     <Compile Include="Packets\CyclopsDamage.cs" />
+    <Compile Include="Packets\CyclopsDestroyed.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
@@ -102,6 +103,7 @@
     <Compile Include="Packets\Exceptions\UncorrelatedMessageException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
+    <Compile Include="Packets\CyclopsFireHealthChanged.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
