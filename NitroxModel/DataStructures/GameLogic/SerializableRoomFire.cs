@@ -16,5 +16,20 @@ namespace NitroxModel.DataStructures.GameLogic
                 + " SerializableFireNodes: " + string.Join(", ", ActiveRoomFireNodes.Select(x => x.ToString()).ToArray())
                 + "]";
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SerializableRoomFire)
+            {
+                return Room == ((SerializableRoomFire)obj).Room;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return Room.GetHashCode();
+        }
     }
 }

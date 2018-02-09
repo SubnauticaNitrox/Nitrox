@@ -7,7 +7,7 @@ namespace NitroxPatcher.Patches
 {
     /// <summary>
     /// <see cref="CyclopsExternalDamageManager.RepairPoint(CyclopsDamagePoint)"/> would seem like the correct method to patch, but adding to its postfix will
-    /// execute before <see cref="CyclopsDamagePoint.OnRepair"/> is finished working.
+    /// execute before <see cref="CyclopsDamagePoint.OnRepair"/> is finished working. Both owners and non-owners will be able to repair damage points on a ship.
     /// </summary>
     class CyclopsDamagePoint_OnRepair_Patch : NitroxPatch
     {
@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsDamagePoint __instance)
         {
-            Multiplayer.Logic.Cyclops.ExternalDamagePointRepaired(__instance.GetComponentInParent<SubRoot>());
+            Multiplayer.Logic.Cyclops.OnDamagePointRepaired(__instance.GetComponentInParent<SubRoot>());
         }
 
         public override void Patch(HarmonyInstance harmony)
