@@ -1,4 +1,6 @@
-﻿namespace NitroxClient.Communication.Abstract
+﻿using NitroxClient.Communication.MultiplayerSession;
+
+namespace NitroxClient.Communication.Abstract
 {
     public interface IMultiplayerSessionConnectionState
     {
