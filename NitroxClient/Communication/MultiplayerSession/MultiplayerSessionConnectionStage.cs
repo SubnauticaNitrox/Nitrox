@@ -1,4 +1,4 @@
-﻿namespace NitroxClient.Communication
+﻿namespace NitroxClient.Communication.MultiplayerSession
 {
     public enum MultiplayerSessionConnectionStage
     {
