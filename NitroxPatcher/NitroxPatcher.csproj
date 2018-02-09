@@ -57,6 +57,7 @@
     <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
     <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsDamagePoint_OnRepair_Patch.cs" />
+    <Compile Include="Patches\Fire_Douse_Patch.cs" />
     <Compile Include="Patches\SubRoot_OnTakeDamage_Patch.cs" />
     <Compile Include="Patches\SubFire_OnTakeDamage_Patch.cs" />
     <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
