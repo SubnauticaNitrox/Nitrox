@@ -24,6 +24,7 @@ namespace NitroxClient.GameLogic
         public Terrain Terrain { get; }
         public IPacketSender PacketSender { get; }
         public IClientBridge ClientBridge { get; }
+        public ServerTime ServerTime { get; }
 
         public Logic(IClientBridge clientBridge, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
@@ -46,6 +47,7 @@ namespace NitroxClient.GameLogic
             Terrain = new Terrain(clientBridge, visibleCells, packetReceiver);
             PacketSender = clientBridge;
             ClientBridge = clientBridge;
+            ServerTime = new ServerTime(clientBridge);
             Log.Info("Multiplayer GameLogic Initialized...");
         }
     }
