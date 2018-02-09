@@ -80,19 +80,16 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Client\Communication\ClientBridgeTests\ClaimReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\ConfirmReservationTests.cs" />
-    <Compile Include="Client\Communication\SessionManagerTests\TestConstants.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\ConnectRetryTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\ConnectTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\SendTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\TestConstants.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionJoinedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservationRejectedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservedStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\AwaitingReservationCredentialsStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\AwaitingSessionReservationStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatingStateTests\EstablishingSessionPolicyStateTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\MultiplayerSessionMangerTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\TestConstants.cs" />
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
-    <Compile Include="Client\Communication\SessionManagerTests\EstablishingServerConnection.cs" />
-    <Compile Include="Client\Communication\SessionManagerTests\EstablishingServerConnectionTests.cs" />
-    <Compile Include="Client\Communication\SessionManagerTests\MultiplayerSessionManagerStateChangeTests.cs" />
+    <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\DisconnectedStateTests.cs" />
     <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
