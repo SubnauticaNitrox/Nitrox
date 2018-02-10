@@ -16,14 +16,13 @@ namespace NitroxClient.Communication.MultiplayerSession
         private MultiplayerSessionPolicy sessionPolicy;
         private PlayerSettings playerSettings;
         private AuthenticationContext authenticationContext;
-        private MultiplayerSessionReservation reservation;
 
         IClient IMultiplayerSessionState.Client => client;
         string IMultiplayerSessionState.IpAddress => ipAddress;
         MultiplayerSessionPolicy IMultiplayerSessionState.SessionPolicy => sessionPolicy;
         PlayerSettings IMultiplayerSessionState.PlayerSettings => playerSettings;
         AuthenticationContext IMultiplayerSessionState.AuthenticationContext => authenticationContext;
-        MultiplayerSessionReservation IMultiplayerSessionState.Reservation => reservation;
+        public MultiplayerSessionReservation Reservation { get; private set; }
 
         public MultiplayerSessionManager(IClient client)
         {
@@ -66,7 +65,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
         {
-            this.reservation = reservation;
+            Reservation = reservation;
             CurrentState.NegotiateReservation(this);
         }
 
@@ -105,7 +104,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             sessionPolicy = null;
             playerSettings = null;
             authenticationContext = null;
-            reservation = null;
+            Reservation = null;
         }
     }
 }

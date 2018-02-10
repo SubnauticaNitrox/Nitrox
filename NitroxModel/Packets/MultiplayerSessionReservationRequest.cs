@@ -1,16 +1,19 @@
 ﻿using System;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class MultiplayerSessionReservationRequest : CorrelatedPacket
     {
-        public string PlayerName { get; }
+        public PlayerSettings PlayerSettings { get; }
+        public AuthenticationContext AuthenticationContext { get; }
 
-        public MultiplayerSessionReservationRequest(string correlationId, string playerName)
-            : base(correlationId)
+        public MultiplayerSessionReservationRequest(string reservationCorrelationId, PlayerSettings playerSettings, AuthenticationContext authenticationContext)
+            : base(reservationCorrelationId)
         {
-            PlayerName = playerName;
+            PlayerSettings = playerSettings;
+            AuthenticationContext = authenticationContext;
         }
     }
 }
