@@ -163,6 +163,7 @@ namespace NitroxClient.MonoBehaviours
                 Log.InGame("Launching game...");
 #pragma warning disable CS0618 // Type or member is obsolete
                 IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618 // Type or member is obsolete
                 StartCoroutine(startNewGame);
 
                 Log.InGame("Waiting for game to load...");
