@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
+using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
@@ -9,6 +10,7 @@ using NitroxClient.GameLogic.HUD;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
@@ -72,8 +74,7 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (MultiplayerSessionManager.CurrentState != ClientBridgeState.Disconnected &&
-                MultiplayerSessionManager.CurrentState != ClientBridgeState.Failed)
+            if (MultiplayerSessionManager.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
                 ProcessPackets();
             }
@@ -106,14 +107,15 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
-            if (MultiplayerSessionManager.CurrentState == ClientBridgeState.Connected)
+            if (MultiplayerSessionManager.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SessionJoined)
             {
                 Log.InGame("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
-                NegotiatePlayerSlotReservation(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
-                StartCoroutine(HandleReservationFromConsole());
+                string ipAddress = n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS;
+                string userName = (string)n.data[0];
+                NegotiateReservationFromConsole(ipAddress, userName);
             }
             else
             {
@@ -125,7 +127,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (n != null)
             {
-                StopMultiplayer(); // TODO: More than just disconnect (clean up injections or something)
+                StopCurrentSession(); // TODO: More than just disconnect (clean up injections or something)
             }
         }
 
@@ -143,18 +145,23 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void NegotiatePlayerSlotReservation(string ipAddress, string playerName)
+        public void InitiateSessionConnection(string ipAddress)
         {
-            MultiplayerSessionManager.Connect(ipAddress, playerName);
+            MultiplayerSessionManager.Connect(ipAddress);
+        }
+
+        public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
+        {
+            MultiplayerSessionManager.RequestSessionReservation(playerSettings, authenticationContext);
         }
 
         public void JoinSession()
         {
             OnBeforeMultiplayerStart();
-            MultiplayerSessionManager.ClaimReservation();
+            MultiplayerSessionManager.JoinSession();
             InitMonoBehaviours();
         }
-
+        
         public void InitMonoBehaviours()
         {
             if (!hasLoadedMonoBehaviors)
@@ -169,25 +176,32 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private IEnumerator HandleReservationFromConsole()
+        private void NegotiateReservationFromConsole(string ipAddress, string userName)
         {
-            yield return new WaitUntil(() => MultiplayerSessionManager.CurrentState != ClientBridgeState.WaitingForRerservation);
-
-            switch (MultiplayerSessionManager.CurrentState)
+            MultiplayerSessionManager.ConnectionStateChanged += state =>
             {
-                case ClientBridgeState.Reserved:
-                    JoinSession();
-                    break;
-                case ClientBridgeState.ReservationRejected:
-                    Log.InGame($"Cannot join server: {MultiplayerSessionManager.ReservationState.ToString()}");
-                    break;
-                default:
-                    Log.InGame("Unable to communicate with the server for unknown reasons.");
-                    break;
-            }
+                switch (MultiplayerSessionManager.CurrentState.CurrentStage)
+                {
+                    case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
+                        AuthenticationContext authenticationContext = new AuthenticationContext(userName);
+                        RequestSessionReservation(new PlayerSettings(), authenticationContext);
+                        break;
+                    case MultiplayerSessionConnectionStage.SessionReserved:
+                        JoinSession();
+                        break;
+                    case MultiplayerSessionConnectionStage.SessionReservationRejected:
+                        Log.InGame($"Cannot join server: {MultiplayerSessionManager.Reservation.ReservationState.ToString()}");
+                        break;
+                    default:
+                        Log.InGame($"Current Stage: { MultiplayerSessionManager.CurrentState.CurrentStage }");
+                        break;
+                }
+            };
+
+            InitiateSessionConnection(ipAddress);
         }
 
-        private void StopMultiplayer()
+        public void StopCurrentSession()
         {
             remotePlayerManager.RemoveAllPlayers();
             MultiplayerSessionManager.Disconnect();

@@ -1,5 +1,5 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.MultiplayerSession;
+﻿using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,14 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(MultiplayerSessionReservation packet)
         {
-            if (packet.ReservationState == MultiplayerSessionReservationState.Reserved)
-            {
-                _multiplayerSession.ConfirmReservation(packet.CorrelationId, packet.ReservationKey);
-            }
-            else
-            {
-                _multiplayerSession.HandleRejectedReservation(packet.CorrelationId, packet.ReservationState);
-            }
+            _multiplayerSession.ProcessReservationResponsePacket(packet);
         }
     }
 }
