@@ -47,8 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\CommandData.cs" />
-    <Compile Include="Helper\EventHelper.cs" />
     <Compile Include="NitroxConsole\CommandArgInput.cs" />
     <Compile Include="NitroxConsole\NitroxCommandArgAttribute.cs" />
     <Compile Include="NitroxConsole\NitroxCommandAttribute.cs" />
