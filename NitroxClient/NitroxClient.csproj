@@ -171,9 +171,11 @@
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
+    <Compile Include="MonoBehaviours\MultiplayerManager.cs" />
     <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
     <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
+    <Compile Include="MonoBehaviours\NitroxConsoleUi.cs" />
     <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />

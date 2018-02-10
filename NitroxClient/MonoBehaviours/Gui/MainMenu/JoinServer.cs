@@ -19,8 +19,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         bool notifyingUnableToJoin = false;
         bool shouldFocus;
 
-        private GameObject multiplayerClient;
-
         public void Awake()
         {
             DontDestroyOnLoad(gameObject);
@@ -44,54 +42,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 unableToJoinWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), joinServerWindowRect, RenderUnableToJoinDialog, "Unable to Join Session");
             }
-        }
-
-        private IEnumerator NegotiateSession(string serverIp)
-        {
-            Log.InGame("Negotiating session...");
-
-            if (Multiplayer.Main == null)
-            {
-                Log.InGame("Critical error, Multiplayer main unset.");
-            }
-            Multiplayer.Main.NegotiatePlayerSlotReservation(serverIp, username);
-
-            Log.InGame("Waiting for reservation...");
-            yield return new WaitUntil(() => Multiplayer.Logic.ClientBridge.CurrentState != Communication.ClientBridgeState.WaitingForRerservation);
-
-            switch (Multiplayer.Logic.ClientBridge.CurrentState)
-            {
-                case Communication.ClientBridgeState.Reserved:
-                    Log.InGame("Launching game...");
-                    StartCoroutine(LaunchSession());
-                    break;
-                case Communication.ClientBridgeState.ReservationRejected:
-                    Log.InGame("Reservation rejected...");
-                    notifyingUnableToJoin = true;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private IEnumerator LaunchSession()
-        {
-            Log.InGame("Launching game...");
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
-            StartCoroutine(startNewGame);
-
-            Log.InGame("Waiting for game to load...");
-            //Wait until game starts
-            yield return new WaitUntil(() => LargeWorldStreamer.main != null);
-            yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
-            yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-
-            Log.InGame("Joining Multiplayer Session...");
-            Multiplayer.Main.JoinSession();
-
-            Destroy(gameObject);
         }
 
         private GUISkin GetGUISkin(string skinName, int labelWidth)
@@ -164,24 +114,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void StartMultiplayerClient()
         {
-            if (multiplayerClient == null)
-            {
-                multiplayerClient = new GameObject();
-                multiplayerClient.AddComponent<Multiplayer>();
-            }
-
-            StartCoroutine(NegotiateSession(ServerIp));
+            Multiplayer.Main.SetUserData(ServerIp, username);
+            Multiplayer.Main.enabled = true;
             joiningServer = false;
         }
 
         private void StopMultiplayerClient()
         {
-            if (multiplayerClient != null)
-            {
-                Destroy(multiplayerClient);
-                multiplayerClient = null;
-            }
-
+            Multiplayer.Main.enabled = false;
             joiningServer = false;
         }
 

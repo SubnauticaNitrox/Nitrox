@@ -47,6 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataStructures\CommandData.cs" />
+    <Compile Include="Helper\EventHelper.cs" />
+    <Compile Include="NitroxConsole\CommandArgInput.cs" />
+    <Compile Include="NitroxConsole\NitroxCommandArgAttribute.cs" />
+    <Compile Include="NitroxConsole\NitroxCommandAttribute.cs" />
+    <Compile Include="NitroxConsole\Events\CommandCandidateEventArgs.cs" />
+    <Compile Include="NitroxConsole\Events\CommandEventArgs.cs" />
+    <Compile Include="NitroxConsole\CommandIdentity.cs" />
+    <Compile Include="NitroxConsole\NitroxConsole.cs" />
+    <Compile Include="NitroxConsole\CommandDatabase.cs" />
+    <Compile Include="NitroxConsole\Events\ConsoleInputEventArgs.cs" />
     <Compile Include="DataStructures\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
@@ -70,6 +81,7 @@
     <Compile Include="Helper\SteamFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
+    <Compile Include="NitroxConsole\Typing\CommandHistory.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
     <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
@@ -130,6 +142,7 @@
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

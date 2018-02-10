@@ -27,7 +27,7 @@ namespace NitroxServer.Communication
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
             socket.Listen(4000);
-            socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
+            socket.BeginAccept(ClientAccepted, socket);
         }
 
         private void ClientAccepted(IAsyncResult ar)
@@ -37,9 +37,9 @@ namespace NitroxServer.Communication
             Socket socket = (Socket)ar.AsyncState;
 
             Connection connection = new Connection(socket.EndAccept(ar)); // TODO: Will this throw an error if timed correctly?
-            connection.BeginReceive(new AsyncCallback(DataReceived));
+            connection.BeginReceive(DataReceived);
 
-            socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
+            socket.BeginAccept(ClientAccepted, socket);
         }
 
         private void DataReceived(IAsyncResult ar)

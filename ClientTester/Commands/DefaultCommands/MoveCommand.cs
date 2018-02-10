@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Timers;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;

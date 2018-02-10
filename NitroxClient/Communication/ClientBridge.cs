@@ -113,10 +113,10 @@ namespace NitroxClient.Communication
 
                 CurrentState = ClientBridgeState.Connected;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 CurrentState = ClientBridgeState.Failed;
-                throw ex;
+                throw;
             }
         }
 
@@ -143,11 +143,11 @@ namespace NitroxClient.Communication
 
                 CurrentState = ClientBridgeState.ReservationRejected;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 TryStopClient();
                 CurrentState = ClientBridgeState.Failed;
-                throw ex;
+                throw;
             }
         }
 

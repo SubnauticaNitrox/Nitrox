@@ -11,7 +11,7 @@
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            assertMinimumArgs(args, 4);
+            AssertMinimumArgs(args, 4);
 
             client.Logic.Item.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }
