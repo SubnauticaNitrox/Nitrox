@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.Helper;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -70,6 +71,31 @@ namespace NitroxModel.DataStructures.Util
             }
 
             return "Optional[" + Get().ToString() + "]";
+        }
+
+        public Optional<T> Then(Func<T, Optional<T>> continueFunc)
+        {
+            Validate.NotNull(continueFunc);
+
+            if (IsPresent())
+            {
+                return continueFunc(value);
+            }
+
+            return Empty();
+        }
+
+        public bool Then(Action<T> continueAction)
+        {
+            Validate.NotNull(continueAction);
+
+            if (IsPresent())
+            {
+                continueAction(value);
+                return true;
+            }
+
+            return false;
         }
     }
 

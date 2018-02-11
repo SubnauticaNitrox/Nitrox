@@ -55,8 +55,6 @@ namespace NitroxPatcher
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
-            Log.Info("Enabling developer console.");
-            DevConsole.disableConsole = false;
             Application.runInBackground = true;
             Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
 

@@ -6,35 +6,32 @@ using NitroxModel.Logger;
 
 namespace NitroxModel.Helper
 {
-    public class SteamFinder
+    public static class SteamFinder
     {
         public static Optional<string> FindSteamGamePath(int appid, string gameName)
         {
-            if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)
+            object steamPathRegistry = ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
+            if (steamPathRegistry == null)
             {
                 Log.Info("You either don't have steam installed or your registry variable isn't set.");
                 return Optional<string>.Empty();
             }
 
-            string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
+            string steamAppsPath = Path.Combine((string)steamPathRegistry, "steamapps");
 
-            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{appid.ToString()}.acf")))
+            if (File.Exists(Path.Combine(steamAppsPath, $"appmanifest_{appid}.acf")))
             {
-                return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
+                return Optional<string>.Of(Path.Combine(Path.Combine(steamAppsPath, "common"), gameName));
             }
-            else
+
+            string path = SearchAllInstallations(Path.Combine(steamAppsPath, "libraryfolders.vdf"), appid, gameName);
+            if (path == null)
             {
-                string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
-                if (path == null)
-                {
-                    Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
-                }
-                else
-                {
-                    return Optional<string>.Of(path);
-                }
+                Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
+                return Optional<string>.Empty();
             }
-            return Optional<string>.Empty();
+
+            return Optional<string>.Of(path);
         }
 
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
@@ -52,7 +49,7 @@ namespace NitroxModel.Helper
                 int number;
                 if (int.TryParse(key, out number))
                 {
-                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid.ToString()}.acf")))
+                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {
                         return Path.Combine(Path.Combine(value, "steamapps/common"), gameName);
                     }

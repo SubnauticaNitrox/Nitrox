@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -103,7 +104,7 @@ namespace NitroxClient.Debuggers
                             Type script = behaviour.GetType();
                             using (new GUILayout.VerticalScope("Box"))
                             {
-                                GUILayout.Label(script.Name);
+                                GUILayout.Label($"<color={GetComponentStatusColor(behaviour)}>{script.Name}</color>");
                             }
                         }
                     }
@@ -148,7 +149,7 @@ namespace NitroxClient.Debuggers
 
             using (new GUILayout.VerticalScope("Box"))
             {
-                if (selectedScene.IsValid())
+                if (selectedScene.IsValid() || selectedObject != null)
                 {
                     using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
                     {
@@ -167,7 +168,7 @@ namespace NitroxClient.Debuggers
                         }
                         foreach (GameObject child in showObjects)
                         {
-                            if (GUILayout.Button($"{child.name}", "label"))
+                            if (GUILayout.Button($"<color={GetGameObjectStatusColor(child)}>{child.name}</color>", "label"))
                             {
                                 selectedObject = child.gameObject;
                             }
@@ -176,16 +177,48 @@ namespace NitroxClient.Debuggers
                 }
                 else
                 {
-                    GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                    GUILayout.Label("Showing all gameobjects", "header");
+                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
+                    {
+                        hierarchyScrollPos = scroll.scrollPosition;
+                        foreach (GameObject go in UnityEngine.Object.FindObjectsOfType<GameObject>().Where(g => g.transform.parent == null).OrderBy(g => g.scene.name.Length))
+                        {
+                            if (GUILayout.Button($"[<color={GetSceneStatusColor(go.scene)}>{go.scene.name}</color>] <color={GetGameObjectStatusColor(go)}>{go.name}</color>", "label"))
+                            {
+                                selectedObject = go;
+                            }
+                        }
+                    }
                 }
             }
         }
 
         private void RenderTabScenes()
         {
-            Scene scene = SceneManager.GetActiveScene();
             using (new GUILayout.VerticalScope("Box"))
             {
+                using (new GUILayout.HorizontalScope())
+                {
+                    if (selectedScene.IsValid())
+                    {
+                        if (GUILayout.Button("Clear selection"))
+                        {
+                            selectedScene = default(Scene);
+                            selectedObject = null;
+                        }
+                    }
+
+                    if (selectedObject != NitroxBootstrapper.Main.gameObject)
+                    {
+                        if (GUILayout.Button("Select Nitrox"))
+                        {
+                            selectedScene = default(Scene);
+                            selectedObject = NitroxBootstrapper.Main.gameObject;
+                            ActiveTab = GetTab("Hierarchy").Get();
+                        }
+                    }
+                }
+
                 GUILayout.Label("All scenes", "header");
                 for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
                 {
@@ -215,6 +248,41 @@ namespace NitroxClient.Debuggers
                     }
                 }
             }
+        }
+
+        private string GetSceneStatusColor(Scene scene)
+        {
+            if (scene.name == "DontDestroyOnLoad")
+            {
+                return "orange";
+            }
+
+            return "green";
+        }
+
+        private string GetGameObjectStatusColor(GameObject go)
+        {
+            if (!go.activeSelf)
+            {
+                return "#ff0000";
+            }
+
+            if (!go.activeInHierarchy)
+            {
+                return "#aa0000";
+            }
+
+            return "";
+        }
+
+        private string GetComponentStatusColor(MonoBehaviour comp)
+        {
+            if (!comp.enabled || !comp.gameObject.activeSelf)
+            {
+                return "#ff0000";
+            }
+
+            return "";
         }
     }
 }

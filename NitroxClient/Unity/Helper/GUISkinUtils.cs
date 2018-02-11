@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
 {
+    /// <summary>
+    /// Utilities for handling Unity's state-based IMGUI layout.
+    /// <remarks>
+    /// Possible future improvement: refactor to a 'NitroxGUI' that renders with a config object and resets Unity's GUI after render.
+    /// </remarks>
+    /// </summary>
     public static class GUISkinUtils
     {
         private static Dictionary<string, GUISkin> guiSkins = new Dictionary<string, GUISkin>();
@@ -99,6 +105,18 @@ namespace NitroxClient.Unity.Helper
             GUI.skin = skin;
             render();
             GUI.skin = prevSkin;
+        }
+
+        public static void RenderWithMatrix(Matrix4x4 matrix, Action render)
+        {
+            if (GUI.matrix == matrix)
+            {
+                return;
+            }
+            Matrix4x4 prevMatrix = GUI.matrix;
+            GUI.matrix = matrix;
+            render();
+            GUI.matrix = prevMatrix;
         }
 
         /// <summary>
