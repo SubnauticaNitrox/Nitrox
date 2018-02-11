@@ -1,7 +1,6 @@
-﻿using System;
-using NitroxModel.Packets;
-using NitroxServer.Communication.Packets.Processors.Abstract;
+﻿using NitroxModel.Packets;
 using NitroxModel.Tcp;
+using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors

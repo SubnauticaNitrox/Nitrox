@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Reflection;
-using System.Reflection.Emit;
 using Harmony;
-using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,9 +13,6 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(SubRoot);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnTakeDamage", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(DamageInfo) }, null);
 
-        /// <summary>
-        /// When random number seeds are synced, we'll need to inject code after the index is generated. This injects just after the first line of code.
-        /// </summary>
         public static void Postfix(SubRoot __instance, DamageInfo info)
         {
             Multiplayer.Logic.Cyclops.OnTakeDamage(__instance, info);
