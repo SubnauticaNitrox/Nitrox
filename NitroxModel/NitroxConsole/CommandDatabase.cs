@@ -17,7 +17,7 @@ namespace NitroxModel.NitroxConsole
     /// </summary>
     public class CommandDatabase
     {
-        private readonly Dictionary<CommandIdentity, CommandsStore> Commands = new Dictionary<CommandIdentity, CommandsStore>();
+        private readonly Dictionary<CommandIdentity, CommandsStore> commands = new Dictionary<CommandIdentity, CommandsStore>();
         /// <summary>
         /// Keeps track of the entered commands.
         /// </summary>
@@ -41,12 +41,12 @@ namespace NitroxModel.NitroxConsole
 
         private void AddEntry(CommandEntry entry, bool silentlyFail = false)
         {
-            if (!Commands.ContainsKey(entry.Command.Identity))
+            if (!commands.ContainsKey(entry.Command.Identity))
             {
-                Commands.Add(entry.Command.Identity, new CommandsStore(entry.Command.Identity));
+                commands.Add(entry.Command.Identity, new CommandsStore(entry.Command.Identity));
             }
 
-            CommandsStore store = Commands[entry.Command.Identity];
+            CommandsStore store = commands[entry.Command.Identity];
             if (store.Contains(entry))
             {
                 if (!silentlyFail)
@@ -62,7 +62,7 @@ namespace NitroxModel.NitroxConsole
         public Optional<CommandsStore> GetStore(CommandIdentity identity)
         {
             CommandsStore store;
-            Commands.TryGetValue(identity, out store);
+            commands.TryGetValue(identity, out store);
             return Optional<CommandsStore>.OfNullable(store);
         }
 
@@ -257,8 +257,7 @@ namespace NitroxModel.NitroxConsole
 
             public override string ToString()
             {
-                string argString = Args.Any() ? Args.Select(a => a.Name).Aggregate((a1, a2) => a1 + ", " + a2) : "";
-                return $"{nameof(Command)}: {Command}{(argString != "" ? $", {nameof(Args)}: {argString}" : "")}";
+                return $"{nameof(Command)}: {Command}, {nameof(Args)}: {string.Join(", ", Args.Select(a => a.Name).ToArray())}";
             }
 
             internal static CommandEntry From(string category, string command, Action handler)

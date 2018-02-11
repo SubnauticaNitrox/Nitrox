@@ -26,8 +26,9 @@ namespace NitroxModel.NitroxConsole.Events
         private static readonly Regex cmdRegex = new Regex(@"^\s*(?<cat>(?>[a-zA-Z][a-zA-Z0-9]*))?\s?(?<cmd>[a-zA-Z][a-zA-Z0-9]*)\s?(?<args>[\s\S]*)");
 
         /// <summary>
-        /// Pattern to match 1 part multiple times:
-        ///  - Command name + command value[string/number]
+        /// Pattern to match 2 parts multiple times:
+        ///  - Argument name 
+        ///  - Argument value[string/number]
         /// </summary>
         /// <remarks>
         /// https://regex101.com/r/IoD56p/3

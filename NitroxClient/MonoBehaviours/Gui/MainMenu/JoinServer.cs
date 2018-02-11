@@ -1,10 +1,6 @@
 ﻿using NitroxClient.Unity.Helper;
-using System.Collections;
-using NitroxModel.Helper;
 using UnityEngine;
-using NitroxModel.Logger;
 using NitroxModel;
-using System.ComponentModel;
 using NitroxModel.PlayerSlot;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
