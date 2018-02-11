@@ -21,9 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(ClaimPlayerSlotReservation packet, Connection connection)
         {
             Player player = playerManager.ClaimPlayerSlotReservation(connection, packet.ReservationKey, packet.CorrelationId);
-            // The callback could be used to calculate packet delay on the server end. Currently it's used for syncing clients to server
-            double totalMilliseconds = new TimeSpan(DateTime.Now.ToUniversalTime().Ticks).TotalMilliseconds;
-            player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime(), totalMilliseconds));
+            player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
             escapePodManager.AssignPlayerToEscapePod(player.Id);
 

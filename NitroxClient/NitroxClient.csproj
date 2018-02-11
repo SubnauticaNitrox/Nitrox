@@ -153,7 +153,6 @@
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
-    <Compile Include="GameLogic\ServerTime.cs" />
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />

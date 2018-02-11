@@ -77,7 +77,6 @@
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ReservePlayerSlotProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\EntityManager.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
