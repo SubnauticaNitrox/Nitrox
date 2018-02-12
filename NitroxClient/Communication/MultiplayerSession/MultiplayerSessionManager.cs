@@ -22,6 +22,9 @@ namespace NitroxClient.Communication.MultiplayerSession
         MultiplayerSessionPolicy IMultiplayerSessionState.SessionPolicy => sessionPolicy;
         PlayerSettings IMultiplayerSessionState.PlayerSettings => playerSettings;
         AuthenticationContext IMultiplayerSessionState.AuthenticationContext => authenticationContext;
+
+        public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
+        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
         public MultiplayerSessionReservation Reservation { get; private set; }
 
         public MultiplayerSessionManager(IClient client)
@@ -37,12 +40,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             this.client = client;
             CurrentState = initialState;
         } 
-
-        public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
-        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
-
-        //Eww...
-        public string PlayerId { get; private set; }
 
         public void Connect(string ipAddress)
         {
