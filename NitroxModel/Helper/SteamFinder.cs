@@ -22,17 +22,15 @@ namespace NitroxModel.Helper
             {
                 return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
             }
+
+            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
+            if (path == null)
+            {
+                Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
+            }
             else
             {
-                string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
-                if (path == null)
-                {
-                    Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
-                }
-                else
-                {
-                    return Optional<string>.Of(path);
-                }
+                return Optional<string>.Of(path);
             }
             return Optional<string>.Empty();
         }
