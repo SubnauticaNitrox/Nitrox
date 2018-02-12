@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
+using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
 {
     public class DropCommand : NitroxCommand
     {
+        private readonly Item itemBroadcaster = NitroxServiceLocator.LocateService<Item>();
+
         public DropCommand()
         {
             Name = "drop";
@@ -15,7 +19,7 @@ namespace ClientTester.Commands.DefaultCommands
         {
             assertMinimumArgs(args, 4);
 
-            client.Logic.Item.Dropped(new GameObject(), UWE.Utils.ParseEnum<TechType>(args[0]), CommandManager.GetVectorFromArgs(args, 1));
+            itemBroadcaster.Dropped(new GameObject(), UWE.Utils.ParseEnum<TechType>(args[0]), CommandManager.GetVectorFromArgs(args, 1));
         }
     }
 }

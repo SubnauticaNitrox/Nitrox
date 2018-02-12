@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,7 +15,7 @@ namespace NitroxPatcher.Patches
         {
             if(item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
             {
-                Multiplayer.Logic.ItemContainers.AddItem(item.item, __instance.tr.parent.gameObject);
+                NitroxServiceLocator.LocateService<ItemContainers>().AddItem(item.item, __instance.tr.parent.gameObject);
             }
         }
 

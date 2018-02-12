@@ -1,9 +1,13 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 
 namespace ClientTester.Commands.DefaultCommands
 {
     public class AniCommand : NitroxCommand
     {
+        private readonly PlayerLogic playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+
         public AniCommand()
         {
             Name = "ani";
@@ -30,7 +34,7 @@ namespace ClientTester.Commands.DefaultCommands
                 state = AnimChangeState.UNSET;
             }
 
-            client.Logic.Player.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
+            playerBroadcaster.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
         }
     }
 }

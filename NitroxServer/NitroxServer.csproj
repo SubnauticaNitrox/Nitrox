@@ -69,6 +69,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
@@ -76,9 +77,11 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
+    <Compile Include="GameLogic\ConnectionAssets.cs" />
     <Compile Include="GameLogic\EntityManager.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\EventTriggerer.cs" />
+    <Compile Include="GameLogic\PlayerContext.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnPoint.cs" />

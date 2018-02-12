@@ -6,11 +6,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Harmony;
+using NitroxClient;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxModel.Core;
 
 namespace NitroxPatcher
 {
@@ -29,6 +31,14 @@ namespace NitroxPatcher
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
+
+            Log.Info("Registering Dependencies");
+
+            //Our application's entry point. First, register client dependencies with AutoFac.
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
+
+            //Now, register dependencies in the static injector to simplify IL manipulation during patching.
+            StaticServiceLocator.InitializeStaticDependencies();
 
             Log.Info("Patching Subnautica...");
 

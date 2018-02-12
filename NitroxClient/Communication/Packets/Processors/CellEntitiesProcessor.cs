@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;

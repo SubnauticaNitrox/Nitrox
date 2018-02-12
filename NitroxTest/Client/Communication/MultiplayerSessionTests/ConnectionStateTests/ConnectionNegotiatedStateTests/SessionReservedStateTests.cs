@@ -31,8 +31,8 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             //Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
-                TestConstants.TEST_RESERVATION_KEY,
-                TestConstants.TEST_PLAYER_NAME);
+                TestConstants.TEST_PLAYER_ID,
+                TestConstants.TEST_RESERVATION_KEY);
 
             IClient client = Substitute.For<IClient>();
             client.IsConnected.Returns(true);
@@ -56,8 +56,8 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             //Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
-                TestConstants.TEST_RESERVATION_KEY,
-                TestConstants.TEST_PLAYER_NAME);
+                TestConstants.TEST_PLAYER_ID,
+                TestConstants.TEST_RESERVATION_KEY);
 
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);

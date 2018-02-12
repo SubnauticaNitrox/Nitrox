@@ -1,8 +1,9 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -16,7 +17,7 @@ namespace NitroxPatcher.Patches
             if (__instance.isOpen != openState)
             {
                 string guid = GuidHelper.GetGuid(__instance.gameObject);
-                Multiplayer.Logic.Interior.OpenableStateChanged(guid, openState, duration);
+                NitroxServiceLocator.LocateService<Interior>().OpenableStateChanged(guid, openState, duration);
             }
 
             return true;

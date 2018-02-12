@@ -12,6 +12,11 @@ namespace NitroxClient.MonoBehaviours
 
             gameObject.AddComponent<MainMenuMods>();
             gameObject.AddComponent<CodePatchManager>();
+
+#if DEBUG
+            gameObject.AddComponent<ConsoleJoinServer>();
+#endif
+
             CreateDebugger();
         }
 

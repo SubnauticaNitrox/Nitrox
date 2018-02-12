@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -14,6 +15,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private bool chatEnabled = false;
         private string chatMessage = "";
         private PlayerChatManager chatManager;
+        private GameLogic.Chat chatBroadcaster;
+
+        public void Awake()
+        {
+            chatBroadcaster = NitroxServiceLocator.LocateService<GameLogic.Chat>();
+        }
 
         public void OnGUI()
         {
@@ -48,7 +55,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chatManager != null && chatMessage.Length > 0)
             {
-                Multiplayer.Logic.Chat.SendChatMessage(chatMessage);
+                chatBroadcaster.SendChatMessage(chatMessage);
                 chatManager.WriteMessage("Me: " + chatMessage);
             }
         }

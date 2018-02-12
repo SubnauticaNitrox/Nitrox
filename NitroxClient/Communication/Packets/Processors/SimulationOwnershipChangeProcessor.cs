@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -11,23 +13,25 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
     {
-        private readonly IPacketSender packetSender;
+        private readonly IMultiplayerSession multiplayerSession;
+        private readonly SimulationOwnership simulationOwnershipManager;
 
-        public SimulationOwnershipChangeProcessor(IPacketSender packetSender)
+        public SimulationOwnershipChangeProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnershipManager)
         {
-            this.packetSender = packetSender;
+            this.multiplayerSession = multiplayerSession;
+            this.simulationOwnershipManager = simulationOwnershipManager;
         }
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
             foreach(OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
             {
-                if (packetSender.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
+                if (multiplayerSession.Reservation.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
                 {
                     SimulateEntity(ownedGuid);
                 }
 
-                Multiplayer.Logic.SimulationOwnership.AddOwnedGuid(ownedGuid.Guid, ownedGuid.PlayerId);
+                simulationOwnershipManager.AddOwnedGuid(ownedGuid.Guid, ownedGuid.PlayerId);
             }
         }
 

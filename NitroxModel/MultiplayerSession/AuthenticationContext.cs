@@ -1,7 +1,9 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.MultiplayerSession
 {
+    [Serializable]
     public class AuthenticationContext
     {
         public string Username { get; }

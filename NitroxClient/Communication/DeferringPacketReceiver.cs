@@ -7,18 +7,20 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
 {
+    //TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
     public class DeferringPacketReceiver
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;
         private const int DEFAULT_PACKET_PRIORITY = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
-        private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
+        private NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets;
         private readonly VisibleCells visibleCells;
 
         public DeferringPacketReceiver(VisibleCells visibleCells)
         {
             this.visibleCells = visibleCells;
+            receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
         }
 
         public void PacketReceived(Packet packet)
@@ -97,6 +99,15 @@ namespace NitroxClient.Communication
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
                 }
+            }
+        }
+
+        public void Flush()
+        {
+            lock (receivedPackets)
+            {
+                receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
+                deferredPacketsByAbsoluteCell.Clear();
             }
         }
     }

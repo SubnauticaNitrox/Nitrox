@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -13,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(UnityEngine.Object context, Vector3 position)
         {
-            Multiplayer.Logic.Player.BroadcastDeath(position);
+            NitroxServiceLocator.LocateService<PlayerLogic>().BroadcastDeath(position);
         }
 
         public override void Patch(HarmonyInstance harmony)

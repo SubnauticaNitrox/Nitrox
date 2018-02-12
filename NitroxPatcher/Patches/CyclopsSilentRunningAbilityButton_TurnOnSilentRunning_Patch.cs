@@ -3,6 +3,8 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.GameLogic.Helper;
 using System;
 using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,7 +16,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            Multiplayer.Logic.Cyclops.BeginSilentRunning(guid);
+            NitroxServiceLocator.LocateService<Cyclops>().BeginSilentRunning(guid);
         }
 
         public override void Patch(HarmonyInstance harmony)

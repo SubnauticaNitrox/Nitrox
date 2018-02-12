@@ -1,7 +1,12 @@
-﻿namespace ClientTester.Commands.DefaultCommands
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
+
+namespace ClientTester.Commands.DefaultCommands
 {
     public class PickupCommand : NitroxCommand
     {
+        private readonly Item itemBroadcaster = NitroxServiceLocator.LocateService<Item>();
+
         public PickupCommand()
         {
             Name = "pickup";
@@ -13,7 +18,7 @@
         {
             assertMinimumArgs(args, 4);
 
-            client.Logic.Item.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
+            itemBroadcaster.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }
     }
 }

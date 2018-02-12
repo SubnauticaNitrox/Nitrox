@@ -1,7 +1,9 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using System.Collections.Generic;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -10,7 +12,7 @@ namespace NitroxClient.GameLogic
     public class RemotePlayer
     {
         public readonly GameObject Body;
-        public readonly GameObject PlayerView;
+        public readonly GameObject PlayerModel;
         public readonly AnimationController AnimationController;
         public readonly ArmsController ArmsController;
         public readonly Rigidbody RigidBody;
@@ -20,43 +22,42 @@ namespace NitroxClient.GameLogic
         public PilotingChair PilotingChair { get; private set; }
 
         public string PlayerId { get; }
+        public string PlayerName { get; }
+        public PlayerSettings PlayerSettings { get; }
 
-        public RemotePlayer(string playerId)
+        public RemotePlayer(string playerId, string playerName, PlayerSettings playerSettings)
         {
             PlayerId = playerId;
+            PlayerName = playerName;
+            PlayerSettings = playerSettings;
+
             GameObject originalBody = GameObject.Find("body");
-
-            //Cheap fix for showing head, much easier since male_geo contains many different heads
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            Body = Object.Instantiate(originalBody);
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-
+            Body = CloneBody(originalBody);
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 
             //Get player
-            PlayerView = Body.transform.Find("player_view").gameObject;
+            PlayerModel = Body.transform.Find("player_view").gameObject;
 
             //Move variables to keep player animations from mirroring and for identification
-            ArmsController = PlayerView.GetComponent<ArmsController>();
+            ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
             ArmsController.smoothSpeedAboveWater = 0;
 
-            //Sets up a copy from the xSignal template for the signal
-            //todo: settings menu to disable this?
-            GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
-            signalBase.name = "signal" + playerId;
-            signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
-            signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
-            signalBase.transform.SetParent(PlayerView.transform, false);
-            PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Player " + playerId);
-            ping.pingType = PingType.Signal;
+            AnimationController = PlayerModel.AddComponent<AnimationController>(); 
 
-            AnimationController = PlayerView.AddComponent<AnimationController>();
+            ErrorMessage.AddMessage($"{playerName} joined the game.");
+        }
 
-            ErrorMessage.AddMessage($"{playerId} joined the game.");
+        private GameObject CloneBody(GameObject originalBody)
+        {
+            //Cheap fix for showing head, much easier since male_geo contains many different heads
+            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+            GameObject clonedBody = Object.Instantiate(originalBody);
+            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
+
+            return clonedBody;
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -179,7 +180,7 @@ namespace NitroxClient.GameLogic
 
         public void Destroy()
         {
-            ErrorMessage.AddMessage($"{PlayerId} left the game.");
+            ErrorMessage.AddMessage($"{PlayerName} left the game.");
             Object.DestroyImmediate(Body);
         }
 

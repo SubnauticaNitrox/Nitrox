@@ -16,8 +16,8 @@ namespace NitroxModel.Packets
             ReservationState = reservationState;
         }
 
-        public MultiplayerSessionReservation(string correlationId, string reservationKey, string playerId) : this(
-            correlationId, MultiplayerSessionReservationState.Reserved)
+        public MultiplayerSessionReservation(string correlationId, string playerId, string reservationKey) 
+            : this(correlationId, MultiplayerSessionReservationState.Reserved)
         {
             PlayerId = playerId;
             ReservationKey = reservationKey;
@@ -25,7 +25,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return $"PlayerId: {PlayerId} - ReservationState: {ReservationState.ToString()} - ReservationKey: {ReservationKey}";
+            return $"ReservationState: {ReservationState.ToString()} - ReservationKey: {ReservationKey}";
         }
     }
 }

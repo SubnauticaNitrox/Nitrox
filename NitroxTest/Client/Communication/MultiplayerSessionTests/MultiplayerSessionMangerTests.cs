@@ -85,8 +85,8 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             //Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
-                TestConstants.TEST_RESERVATION_KEY,
-                TestConstants.TEST_PLAYER_NAME);
+                TestConstants.TEST_PLAYER_ID,
+                TestConstants.TEST_RESERVATION_KEY);
 
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);

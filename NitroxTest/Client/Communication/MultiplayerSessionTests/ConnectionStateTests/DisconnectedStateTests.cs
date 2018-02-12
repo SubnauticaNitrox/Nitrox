@@ -52,7 +52,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             connectionState.NegotiateReservation(connectionContext);
 
             //Assert
-            serverClient.Received().Send(Arg.Any<MultiplayerPolicySessionRequest>());
+            serverClient.Received().Send(Arg.Any<MultiplayerSessionPolicyRequest>());
         }
 
         [TestMethod]

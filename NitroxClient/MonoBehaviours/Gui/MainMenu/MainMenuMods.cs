@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.MultiplayerSession;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -7,6 +6,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMods : MonoBehaviour
     {
+
         private void OnEnable()
         {
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -21,18 +21,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             if (scene.name == "XMenu")
             {
-                //If we just disconnected from a multiplayer session, then we need to kill the connection here.
-                //Maybe a better place for this, but here works in a pinch.
-                StopCurrentSession();
                 MultiplayerMenuMods();
-            }
-        }
-
-        private void StopCurrentSession()
-        {
-            if (Multiplayer.Main != null && Multiplayer.Logic.MultiplayerSessionManager.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SessionJoined)
-            {
-                Multiplayer.Main.StopCurrentSession();
             }
         }
 

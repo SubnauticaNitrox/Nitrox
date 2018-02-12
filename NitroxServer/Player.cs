@@ -1,23 +1,29 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
-using UnityEngine;
+ using NitroxServer.GameLogic;
+ using UnityEngine;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
         public string Id { get; }
+        public string Name { get; }
+        public PlayerSettings PlayerSettings;
         public Vector3 Position { get; set; }
 
         private readonly Connection connection;
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
-
-        public Player(string id, Connection connection)
+        
+        public Player(PlayerContext playerContext, Connection connection)
         {
-            Id = id;
+            Id = playerContext.PlayerId;
+            Name = playerContext.PlayerName;
+            PlayerSettings = playerContext.PlayerSettings;
             this.connection = connection;
         }
 
