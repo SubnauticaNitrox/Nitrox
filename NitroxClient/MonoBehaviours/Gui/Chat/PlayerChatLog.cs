@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using NitroxClient.GameLogic.ChatUI;
+using NitroxModel;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
-    class PlayerChat : MonoBehaviour
+    class PlayerChatLog : MonoBehaviour
     {
         private const int LINE_CHAR_LIMIT = 80;
         private const int MESSAGE_LIMIT = 6;
@@ -13,13 +16,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject chatEntry;
         private GUIText chatText;
         private Coroutine timer;
-        private List<string> messages;
+        private List<ChatLogEntry> entries;
 
         protected void Awake()
         {
             SetupChatMessagesComponent();
-
-            messages = new List<string>();
+            entries = new List<ChatLogEntry>();
         }
 
         private void SetupChatMessagesComponent()
@@ -32,18 +34,20 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.fontSize = 18;
             chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
+            chatText.richText = true;
         }
 
-        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous messages for CHAT_VISIBILITY_TIME_LENGTH seconds
-        public void WriteMessage(string message)
+        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for CHAT_VISIBILITY_TIME_LENGTH seconds
+        public void WriteEntry(ChatLogEntry chatLogEntry)
         {
             if (timer != null)
             {
-                // cancel hiding chat messages because a new one was recently posted
+                // cancel hiding chat entries because a new one was recently posted
                 StopCoroutine(timer);
             }
 
-            AddChatMessage(SanitizeMessage(message));
+            chatLogEntry.MessageText = SanitizeMessage(chatLogEntry.MessageText);
+            AddChatMessage(chatLogEntry);
             BuildChatText();
 
             chatText.enabled = true;
@@ -51,28 +55,23 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             timer = StartCoroutine(DeactivateChat());
         }
 
-        private void AddChatMessage(string sanitizedChatMessage)
+        private void AddChatMessage(ChatLogEntry chatLogEntry)
         {
-            if (messages.Count == MESSAGE_LIMIT)
+            if (entries.Count == MESSAGE_LIMIT)
             {
-                messages.RemoveAt(0);
+                entries.RemoveAt(0);
             }
 
-            messages.Add(sanitizedChatMessage);
+            entries.Add(chatLogEntry);
         }
 
         private void BuildChatText()
         {
-            chatText.text = "";
-            foreach (string message in messages)
-            {
-                if (chatText.text.Length > 0)
-                {
-                    chatText.text += "\n";
-                }
+            string[] formattedEntries = entries
+                .Select(entry => $"<color={entry.PlayerColor.AsHexString()}><b>{entry.PlayerName}: </b></color>{entry.MessageText}")
+                .ToArray();
 
-                chatText.text += message;
-            }
+            chatText.text = string.Join("\n", formattedEntries);
         }
 
         private string SanitizeMessage(string message)

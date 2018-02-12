@@ -1,5 +1,8 @@
-﻿using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+﻿using System;
+using System.Reflection;
+using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
@@ -16,6 +19,22 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             ping.SetLabel("Player " + player.PlayerName);
             ping.pingType = PingType.Signal;
+
+            SetPingColor(player, ping);
+        }
+        
+        private static void SetPingColor(RemotePlayer player, PingInstance ping)
+        {
+            FieldInfo field = typeof(PingManager).GetField("colorOptions", BindingFlags.Static | BindingFlags.Public);
+            Color[] colors = PingManager.colorOptions;
+
+            Color[] colorOptions = new Color[colors.Length + 1];
+            colors.ForEach(color => colorOptions[Array.IndexOf(colors, color)] = color);
+            colorOptions[colorOptions.Length - 1] = player.PlayerSettings.PlayerColor;
+
+            //Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
+            field.SetValue(null, colorOptions);
+            ping.SetColor(colorOptions.Length - 1);
         }
     }
 }
