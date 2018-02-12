@@ -81,8 +81,8 @@
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
-	<Compile Include="Patches\FreezeTime_Begin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
+	<Compile Include="Patches\IngameMenu_OnSelect_Patch.cs" />	
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
