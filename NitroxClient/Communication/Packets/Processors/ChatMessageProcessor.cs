@@ -1,20 +1,32 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
     {
-        public ChatMessageProcessor()
+        private readonly PlayerManager remotePlayerManager;
+        private readonly PlayerChatManager chatManager;
+
+        public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChatManager chatManager)
         {
+            this.remotePlayerManager = remotePlayerManager;
+            this.chatManager = chatManager;
         }
 
         public override void Process(ChatMessage message)
         {
-            if (Chat.Main != null)
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.PlayerId);
+            
+            if (remotePlayer.IsPresent())
             {
-                Chat.Main.WriteLocalMessage(message);
+                RemotePlayer remotePlayerInstance = remotePlayer.Get();
+                ChatLogEntry chatLogEntry = new ChatLogEntry(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
+                chatManager.WriteChatLogEntry(chatLogEntry);
             }
         }
     }

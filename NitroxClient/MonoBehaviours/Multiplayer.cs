@@ -73,7 +73,6 @@ namespace NitroxClient.MonoBehaviours
         
         public void InitMonoBehaviours()
         {
-            gameObject.AddComponent<Chat>();
             gameObject.AddComponent<PlayerMovement>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<AnimationSender>();

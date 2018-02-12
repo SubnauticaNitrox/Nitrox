@@ -8,7 +8,7 @@ namespace NitroxModel.MultiplayerSession
     {
         public Color PlayerColor { get; }
 
-        public PlayerSettings(Color playerColor)
+        public PlayerSettings(Color32 playerColor)
         {
             PlayerColor = playerColor;
         }
