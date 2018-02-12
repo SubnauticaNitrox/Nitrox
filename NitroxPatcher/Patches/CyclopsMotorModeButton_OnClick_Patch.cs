@@ -5,6 +5,8 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using System;
 using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -36,7 +38,7 @@ namespace NitroxPatcher.Patches
             {
                 SubRoot cyclops = (SubRoot)__instance.ReflectionGet("subRoot");
                 string guid = GuidHelper.GetGuid(cyclops.gameObject);
-                Multiplayer.Logic.Cyclops.ChangeEngineMode(guid, __instance.motorModeIndex);
+                NitroxServiceLocator.LocateService<Cyclops>().ChangeEngineMode(guid, __instance.motorModeIndex);
             }
         }
 

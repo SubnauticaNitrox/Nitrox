@@ -7,77 +7,90 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
+using NitroxClient;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.MultiplayerSession;
+using NitroxModel.Core;
+using NitroxModel.MultiplayerSession;
 using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public IPacketSender PacketSender { get; }
-        public MultiplayerSessionManager MultiplayerSessionManager { get; }
-        public Logic Logic { get; }
-        public object PacketProcessorsByType { get; private set; }
+        private DeferringPacketReceiver packetReceiver { get; }
+        private IMultiplayerSession multiplayerSession { get; }
 
         public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
-
-        private readonly VisibleCells visibleCells;
-        private readonly DeferringPacketReceiver packetReceiver;
-        private readonly TcpClient client;
+        
         private readonly string playerName;
 
         public MultiplayerClient(string playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             playerName = playerId;
-            visibleCells = new VisibleCells();
-            packetReceiver = new DeferringPacketReceiver(visibleCells);
-            client = new TcpClient(packetReceiver);
-            MultiplayerSessionManager = new MultiplayerSessionManager(client);
-            PacketSender = MultiplayerSessionManager;
-            Logic = new Logic(MultiplayerSessionManager, visibleCells, packetReceiver);
+
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
+            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
         }
 
         public void Start(string ip)
         {
-            MultiplayerSessionManager.Connect(ip, playerName);
+            Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap(); 
+            multiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
+            multiplayerSession.Connect(ip);
 
-            var iterations = 0;
-            do
+            for (int iterations = 0; iterations < 20; iterations++)
             {
                 Thread.Sleep(250);
-                ProcessPackets();
+                ProcessPackets(packetProcessorMap);
+            }
+        }
 
-                iterations++;
-                if (iterations >= 20)
-                {
-                    break;
-                }
-            } while (MultiplayerSessionManager.CurrentStage == MultiplayerSessionConnectionStage.AwaitingSessionReservation);
-
-            switch (MultiplayerSessionManager.CurrentStage)
+        private Dictionary<Type, PacketProcessor> GeneratePacketProcessorMap()
+        {
+            Dictionary<Type, PacketProcessor> packetProcessorMap = new Dictionary<Type, PacketProcessor>
             {
+                { typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(multiplayerSession) },
+                { typeof(MultiplayerSessionReservation), new MultiplayerSessionReservationProcessor(multiplayerSession) }
+            };
+
+            return packetProcessorMap;
+        }
+
+        private void ConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
+        {
+            switch (state.CurrentStage)
+            {
+                case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
+                    multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName));
+                    break;
                 case MultiplayerSessionConnectionStage.SessionReserved:
-                    MultiplayerSessionManager.ClaimReservation();
+                    multiplayerSession.JoinSession();
+                    multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     Log.InGame("SessionJoined to server");
                     break;
-                default:
+                case MultiplayerSessionConnectionStage.SessionReservationRejected:
                     Log.InGame("Unable to connect to server");
+                    multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     break;
             }
         }
 
-        private void ProcessPackets()
+        private void ProcessPackets(Dictionary<Type, PacketProcessor> packetProcessorMap)
         {
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {
-                if (packet.GetType() == typeof(MultiplayerSessionReservation))
+                if (packetProcessorMap.ContainsKey(packet.GetType()))
                 {
                     try
                     {
-                        PacketProcessor processor = new MultiplayerSessionReservationProcessor(MultiplayerSessionManager);
+                        PacketProcessor processor = packetProcessorMap[packet.GetType()];
                         processor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)

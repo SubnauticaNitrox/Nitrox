@@ -1,11 +1,8 @@
-﻿using Harmony;
-using NitroxClient.Communication;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Reflection;
-using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -17,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Pickupable __instance, Vector3 dropPosition)
         {
-            Multiplayer.Logic.Item.Dropped(__instance.gameObject, __instance.GetTechType(), dropPosition);
+            NitroxServiceLocator.LocateService<Item>().Dropped(__instance.gameObject, __instance.GetTechType(), dropPosition);
         }
 
         public override void Patch(HarmonyInstance harmony)

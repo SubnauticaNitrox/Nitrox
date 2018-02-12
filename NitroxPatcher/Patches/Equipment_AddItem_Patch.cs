@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,7 +15,7 @@ namespace NitroxPatcher.Patches
         {
             if(__result)
             {
-                Multiplayer.Logic.EquipmentSlots.Equip(newItem.item, __instance.owner, slot);
+                NitroxServiceLocator.LocateService<EquipmentSlots>().Equip(newItem.item, __instance.owner, slot);
             }
         }
 

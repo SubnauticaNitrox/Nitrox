@@ -3,6 +3,8 @@ using NitroxClient.MonoBehaviours;
 using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -18,7 +20,7 @@ namespace NitroxPatcher.Patches
         {
             if (!__instance._constructed && __instance.constructedAmount > 0)
             {
-                Multiplayer.Logic.Building.ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
 
             return true;
@@ -28,7 +30,7 @@ namespace NitroxPatcher.Patches
         {
             if (__result && __instance.constructedAmount <= 0f)
             {
-                Multiplayer.Logic.Building.DeconstructionComplete(__instance.gameObject);
+                NitroxServiceLocator.LocateService<Building>().DeconstructionComplete(__instance.gameObject);
             }
         }
 

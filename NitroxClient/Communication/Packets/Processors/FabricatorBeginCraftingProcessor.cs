@@ -2,6 +2,7 @@
 using NitroxModel.Packets;
 using UnityEngine;
 using System.Reflection;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 

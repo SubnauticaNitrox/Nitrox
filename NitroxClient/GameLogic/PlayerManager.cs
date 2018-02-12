@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxClient.GameLogic
 {
@@ -19,16 +22,24 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public RemotePlayer FindOrCreate(string playerId)
+        public void Create(string playerId, string playerName, PlayerSettings playerSettings)
         {
-            RemotePlayer player;
-
-            if (!playersById.TryGetValue(playerId, out player))
+            if (playersById.ContainsKey(playerId))
             {
-                player = playersById[playerId] = new RemotePlayer(playerId);
+                throw new Exception("The playerId has already been used.");
             }
 
-            return player;
+            RemotePlayer player = new RemotePlayer(playerId, playerName, playerSettings);
+
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
+            playerModelDirector
+                .StagePlayer()
+                .WithPing()
+                .WithRegularDiveSuit();
+
+            playerModelDirector.Construct();
+
+            playersById.Add(playerId, player);
         }
 
         public void RemovePlayer(string playerId)
@@ -45,8 +56,14 @@ namespace NitroxClient.GameLogic
         {
             foreach (string playerId in playersById.Keys)
             {
-                RemovePlayer(playerId);
+                Optional<RemotePlayer> opPlayer = Find(playerId);
+                if (opPlayer.IsPresent())
+                {
+                    opPlayer.Get().Destroy();
+                }
             }
+
+            playersById.Clear();
         }
     }
 }

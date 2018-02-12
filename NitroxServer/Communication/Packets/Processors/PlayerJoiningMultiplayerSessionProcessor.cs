@@ -1,6 +1,6 @@
 ﻿using NitroxModel.Packets;
-using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
+using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
@@ -21,14 +21,25 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
         {
-            Player player =
-                playerManager.ClaimPlayerSlotReservation(connection, packet.ReservationKey, packet.CorrelationId);
+            Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
             escapePodManager.AssignPlayerToEscapePod(player.Id);
 
             BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(escapePodManager.GetEscapePods());
             playerManager.SendPacketToAllPlayers(broadcastEscapePods);
+
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.Id, player.Name, player.PlayerSettings);
+            playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
+
+            foreach (Player otherPlayer in playerManager.GetPlayers())
+            {
+                if (!player.Equals(otherPlayer))
+                {
+                    playerJoinedPacket = new PlayerJoinedMultiplayerSession(otherPlayer.Id, otherPlayer.Name, otherPlayer.PlayerSettings);
+                    player.SendPacket(playerJoinedPacket);
+                }
+            }
         }
     }
 }

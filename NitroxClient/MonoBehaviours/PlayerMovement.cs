@@ -1,4 +1,6 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -9,8 +11,14 @@ namespace NitroxClient.MonoBehaviours
     public class PlayerMovement : MonoBehaviour
     {
         public const float BROADCAST_INTERVAL = 0.05f;
+        private PlayerLogic playerBroadcaster;
 
         private float time = 0.0f;
+
+        public void Awake()
+        {
+            playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+        }
 
         public void Update()
         {
@@ -40,7 +48,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                Multiplayer.Logic.Player.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
+                playerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 

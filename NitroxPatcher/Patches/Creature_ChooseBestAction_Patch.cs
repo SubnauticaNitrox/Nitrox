@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,7 +19,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.gameObject);
 
-            if (Multiplayer.Logic.SimulationOwnership.HasOwnership(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasOwnership(guid))
             {
                 previousAction = (CreatureAction)typeof(Creature).GetField("prevBestAction", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
                 return true;
@@ -32,7 +34,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.gameObject);
 
-            if (Multiplayer.Logic.SimulationOwnership.HasOwnership(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasOwnership(guid))
             {
                 if (previousAction != __result)
                 {

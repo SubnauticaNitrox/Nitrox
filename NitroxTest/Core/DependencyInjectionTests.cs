@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;
+using Autofac;
+using FluentAssertions;
 using NitroxModel.Core;
-using SimpleInjector;
 
 namespace NitroxTest.Core
 {
@@ -11,8 +13,8 @@ namespace NitroxTest.Core
         [ClassInitialize]
         public static void BeforeAll(TestContext context)
         {
-            TestSimpleInjectorContainerBuilder builder = new TestSimpleInjectorContainerBuilder();
-            NitroxServiceLocator.InstallContainer(builder);
+            TestAutoFacRegistrar registrar = new TestAutoFacRegistrar();
+            NitroxServiceLocator.InitializeDependencyContainer(registrar);
         }
 
         [TestMethod]
@@ -51,23 +53,40 @@ namespace NitroxTest.Core
             servicerB.Should().BeOfType<ServiceBProvider>();
         }
 
-        private class TestSimpleInjectorContainerBuilder : ISimpleInjectorContainerBuilder
+        [TestMethod]
+        public void ShouldResolveGenericDependenciesFromManuallyConstructedTypeInstances()
         {
-            public Container BuildContainer()
+            //Arrange
+            Type servicerInstanceType = typeof(IServicer<>);
+            Type recipientAType = typeof(ServiceRecipientA);
+            Type recipientBType = typeof(ServiceRecipientB);
+            Type servicerAType = servicerInstanceType.MakeGenericType(recipientAType);
+            Type servicerBType = servicerInstanceType.MakeGenericType(recipientBType);
+
+            //Act
+            IServicer<ServiceRecipientA>
+                servicerA = NitroxServiceLocator.LocateService<BaseServiceProvider<ServiceRecipientA>>(servicerAType);
+
+            IServicer<ServiceRecipientB>
+                servicerB = NitroxServiceLocator.LocateService<BaseServiceProvider<ServiceRecipientB>>(servicerBType);
+
+            //Assert
+            servicerA.Should().NotBeNull();
+            servicerA.Should().BeOfType<ServiceAProvider>();
+
+            servicerB.Should().NotBeNull();
+            servicerB.Should().BeOfType<ServiceBProvider>();
+        }
+
+        private class TestAutoFacRegistrar : IAutoFacRegistrar
+        {
+            public void RegisterDependencies(ContainerBuilder containerBuilder)
             {
-                Container testContainer = new Container();
+                containerBuilder.RegisterType<RootDependency>().As<IRootDependency>();
+                containerBuilder.RegisterType<DependencyWithRootDependency>();
 
-                testContainer.Register<IRootDependency, RootDependency>();
-                testContainer.Register<DependencyWithRootDependency>();
-                testContainer.Register<IServicer<ServiceRecipientA>, ServiceAProvider>();
-                testContainer.Register<IServicer<ServiceRecipientB>, ServiceBProvider>();
-
-                //We can do this if we can somehow run in 4.0
-                //testContainer.Register(typeof(IServicer<>), new[] { typeof(IServicer<>).Assembly });
-
-                testContainer.Verify();
-
-                return testContainer;
+                containerBuilder.RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
+                    .AsClosedTypesOf(typeof(IServicer<>));
             }
         }
     }
@@ -108,17 +127,23 @@ namespace NitroxTest.Core
     {
     }
 
-    public class ServiceAProvider : IServicer<ServiceRecipientA>
+    public abstract class BaseServiceProvider<TServiced> : IServicer<TServiced>
+        where TServiced : IServiced
     {
-        public void PerformService(ServiceRecipientA serviced)
+        public abstract void PerformService(TServiced serviced);
+    }
+
+    public class ServiceAProvider : BaseServiceProvider<ServiceRecipientA>
+    {
+        public override void PerformService(ServiceRecipientA serviced)
         {
             throw new System.NotImplementedException();
         }
     }
 
-    public class ServiceBProvider : IServicer<ServiceRecipientB>
+    public class ServiceBProvider : BaseServiceProvider<ServiceRecipientB>
     {
-        public void PerformService(ServiceRecipientB serviced)
+        public override void PerformService(ServiceRecipientB serviced)
         {
             throw new System.NotImplementedException();
         }

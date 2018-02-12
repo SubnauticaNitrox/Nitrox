@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;

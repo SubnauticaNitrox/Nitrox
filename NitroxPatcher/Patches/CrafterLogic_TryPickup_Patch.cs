@@ -35,8 +35,7 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.Logic.Crafting.FabricatorItemPickedUp(base.gameObject, techType);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Crafting", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(StaticServiceLocator).GetField("Crafting", BindingFlags.Static | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<TechType>(original));

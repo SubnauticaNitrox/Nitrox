@@ -2,6 +2,8 @@
 using NitroxClient.MonoBehaviours;
 using System;
 using System.Reflection;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ConstructorInput __instance, TechType techType, float duration)
         {
-            Multiplayer.Logic.MobileVehicleBay.BeginCrafting(__instance.constructor.gameObject, techType, duration);
+            NitroxServiceLocator.LocateService<MobileVehicleBay>().BeginCrafting(__instance.constructor.gameObject, techType, duration);
         }
 
         public override void Patch(HarmonyInstance harmony)

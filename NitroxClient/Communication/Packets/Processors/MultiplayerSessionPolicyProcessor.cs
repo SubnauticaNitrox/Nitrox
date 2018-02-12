@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,6 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(MultiplayerSessionPolicy packet)
         {
+            Log.Info("Processing session policy information.");
             multiplayerSession.ProcessSessionPolicy(packet);
         }
     }

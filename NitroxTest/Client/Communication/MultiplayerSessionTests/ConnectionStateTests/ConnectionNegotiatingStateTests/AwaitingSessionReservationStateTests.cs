@@ -17,9 +17,9 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         {
             //Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
-                TestConstants.TEST_CORRELATION_ID, 
-                TestConstants.TEST_RESERVATION_KEY, 
-                TestConstants.TEST_PLAYER_NAME);
+                TestConstants.TEST_CORRELATION_ID,
+                TestConstants.TEST_PLAYER_ID,
+                TestConstants.TEST_RESERVATION_KEY);
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Reservation.Returns(successfulReservation);
@@ -39,8 +39,8 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
             //Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 "wrong",
-                TestConstants.TEST_RESERVATION_KEY,
-                TestConstants.TEST_PLAYER_NAME);
+                TestConstants.TEST_PLAYER_ID,
+                TestConstants.TEST_RESERVATION_KEY);
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Reservation.Returns(successfulReservation);

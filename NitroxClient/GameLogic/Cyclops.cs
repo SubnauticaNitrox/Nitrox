@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic

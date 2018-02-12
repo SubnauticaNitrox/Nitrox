@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -15,13 +16,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Movement movement)
         {
-            remotePlayerManager
-                .FindOrCreate(movement.PlayerId)
-                .UpdatePosition(movement.Position,
-                                movement.Velocity,
-                                movement.BodyRotation,
-                                movement.AimingRotation,
-                                movement.SubGuid);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.PlayerId);
+
+            if (remotePlayer.IsPresent())
+            {
+                remotePlayer
+                    .Get()
+                    .UpdatePosition(movement.Position,
+                        movement.Velocity,
+                        movement.BodyRotation,
+                        movement.AimingRotation,
+                        movement.SubGuid);
+            }
         }
     }
 }

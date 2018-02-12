@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
+using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -57,7 +59,7 @@ namespace NitroxPatcher.Patches
 
                 string guid = GuidHelper.GetGuid(gameObject);
 
-                Multiplayer.Logic.PacketSender.Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
+                NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
             }
         }
 

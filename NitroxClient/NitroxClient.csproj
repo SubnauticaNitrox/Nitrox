@@ -36,8 +36,11 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleInjector, Version=1.6.0.12319, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
-      <HintPath>..\packages\SimpleInjector.1.6.0.12319\lib\net35\SimpleInjector.dll</HintPath>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
@@ -80,7 +83,7 @@
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
-    <Compile Include="Communication\IPacketSender.cs" />
+    <Compile Include="Communication\Abstract\IPacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceFurnitureProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
@@ -131,14 +135,19 @@
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\BasePlayerModelBuildHandler.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuildHandler.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\Entities.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\EquipmentModelBuilder.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\HsvColorFilter.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
@@ -146,17 +155,22 @@
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Interior.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
-    <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\PlayerLogic.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelBuildContext.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelDirector.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerPingBuilder.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerRebreatherModelBuilder.cs" />
     <Compile Include="GameLogic\Power.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\RegularDiveSuitBuilder.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
@@ -175,6 +189,7 @@
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
     <Compile Include="MonoBehaviours\CodePatchManager.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\ConsoleJoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
@@ -196,6 +211,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ClientAutoFaqRegistrar.cs" />
     <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\GUISkinUtils.cs" />

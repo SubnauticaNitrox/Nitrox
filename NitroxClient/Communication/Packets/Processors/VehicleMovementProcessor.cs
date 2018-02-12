@@ -21,61 +21,65 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleMovement vehicleMovement)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
+            Optional<RemotePlayer> player = remotePlayerManager.Find(vehicleMovement.PlayerId);
 
-            RemotePlayer player = remotePlayerManager.FindOrCreate(vehicleMovement.PlayerId);
-
-            Vector3 remotePosition = vehicleMovement.Position;
-            Vector3 remoteVelocity = vehicleMovement.Velocity;
-            Quaternion remoteRotation = vehicleMovement.BodyRotation;
-            Vector3 angularVelocity = vehicleMovement.AngularVelocity;
-
-            Vehicle vehicle = null;
-            SubRoot subRoot = null;
-            if (opGameObject.IsPresent())
+            if (player.IsPresent())
             {
-                GameObject gameObject = opGameObject.Get();
+                Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicleMovement.Guid);
+                RemotePlayer playerInstance = player.Get();
 
-                vehicle = gameObject.GetComponent<Vehicle>();
-                subRoot = gameObject.GetComponent<SubRoot>();
+                Vector3 remotePosition = vehicleMovement.Position;
+                Vector3 remoteVelocity = vehicleMovement.Velocity;
+                Quaternion remoteRotation = vehicleMovement.BodyRotation;
+                Vector3 angularVelocity = vehicleMovement.AngularVelocity;
 
-                MultiplayerVehicleControl mvc = null;
-
-                if (subRoot != null)
+                Vehicle vehicle = null;
+                SubRoot subRoot = null;
+                if (opGameObject.IsPresent())
                 {
-                    mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
-                }
-                else if (vehicle != null)
-                {
-                    SeaMoth seamoth = vehicle as SeaMoth;
-                    Exosuit exosuit = vehicle as Exosuit;
+                    GameObject gameObject = opGameObject.Get();
 
-                    if (seamoth)
+                    vehicle = gameObject.GetComponent<Vehicle>();
+                    subRoot = gameObject.GetComponent<SubRoot>();
+
+                    MultiplayerVehicleControl mvc = null;
+
+                    if (subRoot != null)
                     {
-                        mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                        mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
                     }
-                    else if (exosuit)
+                    else if (vehicle != null)
                     {
-                        mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        SeaMoth seamoth = vehicle as SeaMoth;
+                        Exosuit exosuit = vehicle as Exosuit;
+
+                        if (seamoth)
+                        {
+                            mvc = seamoth.gameObject.EnsureComponent<MultiplayerSeaMoth>();
+                        }
+                        else if (exosuit)
+                        {
+                            mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        }
+                    }
+
+                    if (mvc != null)
+                    {
+                        mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
+                        mvc.SetThrottle(vehicleMovement.AppliedThrottle);
+                        mvc.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
                     }
                 }
-
-                if (mvc != null)
+                else
                 {
-                    mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
-                    mvc.SetThrottle(vehicleMovement.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleMovement.SteeringWheelYaw, vehicleMovement.SteeringWheelPitch);
+                    CreateVehicleAt(playerInstance, vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
                 }
-            }
-            else
-            {
-                CreateVehicleAt(player, vehicleMovement.TechType, vehicleMovement.Guid, remotePosition, remoteRotation);
-            }
-            player.SetVehicle(vehicle);
-            player.SetSubRoot(subRoot);
-            player.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
 
-            player.AnimationController.UpdatePlayerAnimations = false;
+                playerInstance.SetVehicle(vehicle);
+                playerInstance.SetSubRoot(subRoot);
+                playerInstance.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
+                playerInstance.AnimationController.UpdatePlayerAnimations = false;
+            }
         }
 
         private void CreateVehicleAt(RemotePlayer player, TechType techType, string guid, Vector3 position, Quaternion rotation)

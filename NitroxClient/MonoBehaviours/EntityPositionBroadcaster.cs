@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -6,9 +8,15 @@ namespace NitroxClient.MonoBehaviours
     public class EntityPositionBroadcaster : MonoBehaviour
     {
         private static Dictionary<string, GameObject> watchingEntitiesByGuid = new Dictionary<string, GameObject>();
+        private Entities entityBroadcaster;
 
         private float time = 0.0f;
         private float interpolationPeriod = 0.25f;
+
+        public void Awake()
+        {
+            entityBroadcaster = NitroxServiceLocator.LocateService<Entities>();
+        }
 
         public void Update()
         {
@@ -21,7 +29,7 @@ namespace NitroxClient.MonoBehaviours
                 
                 if (watchingEntitiesByGuid.Count > 0)
                 {
-                    Multiplayer.Logic.Entities.BroadcastTransforms(watchingEntitiesByGuid);
+                    entityBroadcaster.BroadcastTransforms(watchingEntitiesByGuid);
                 }
             }
         }

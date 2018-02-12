@@ -5,15 +5,17 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Terrain
     {
-        private IPacketSender packetSender;
-        private VisibleCells visibleCells;
-        private DeferringPacketReceiver packetReceiver;
+        private readonly IMultiplayerSession multiplayerSession;
+        private readonly IPacketSender packetSender;
+        private readonly VisibleCells visibleCells;
+        private readonly DeferringPacketReceiver packetReceiver;
 
         private bool cellsPendingSync = false;
         private float timeWhenCellsBecameOutOfSync;
@@ -21,8 +23,9 @@ namespace NitroxClient.GameLogic
         private List<VisibleCell> added = new List<VisibleCell>();
         private List<VisibleCell> removed = new List<VisibleCell>();
 
-        public Terrain(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
+            this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
             this.visibleCells = visibleCells;
             this.packetReceiver = packetReceiver;
@@ -81,7 +84,7 @@ namespace NitroxClient.GameLogic
 
                 if (elapsed >= 0.1)
                 {
-                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
+                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(cellsChanged);
 
                     added.Clear();

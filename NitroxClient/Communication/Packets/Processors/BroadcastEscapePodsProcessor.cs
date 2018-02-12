@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
@@ -14,15 +15,15 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
-        private readonly IPacketSender packetSender;
+        private IMultiplayerSession multiplayerSession;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
         private string myEscapePodGuid;
 
-        public BroadcastEscapePodsProcessor(IPacketSender packetSender)
+        public BroadcastEscapePodsProcessor(IMultiplayerSession multiplayerSession)
         {
-            this.packetSender = packetSender;
+            this.multiplayerSession = multiplayerSession;
         }
 
         public override void Process(BroadcastEscapePods packet)
@@ -39,7 +40,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (EscapePodModel model in packet.EscapePods)
             {
-                if (model.AssignedPlayers.Contains(packetSender.PlayerId))
+                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.PlayerId))
                 {
                     EscapePod.main.transform.position = model.Location;
                     EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
