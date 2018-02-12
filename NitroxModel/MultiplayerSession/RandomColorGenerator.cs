@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using Random = System.Random;
+﻿using UnityEngine;
 
 namespace NitroxModel.MultiplayerSession
 {
@@ -8,8 +6,7 @@ namespace NitroxModel.MultiplayerSession
     {
         public static Color GenerateColor()
         {
-            Random rand = new Random(Guid.NewGuid().ToString().GetHashCode());
-            return new Color32((byte)rand.Next(256), (byte)rand.Next(256), (byte)rand.Next(256), 255);
+            return new Color32((byte)Random.Range(0, 255), (byte)Random.Range(0, 255), (byte)Random.Range(0, 255), 255);
         }
     }
 }
