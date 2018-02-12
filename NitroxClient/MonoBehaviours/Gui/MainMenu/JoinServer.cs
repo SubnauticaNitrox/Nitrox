@@ -1,11 +1,11 @@
-﻿using NitroxClient.Unity.Helper;
-using System.Collections;
-using NitroxModel.Helper;
-using UnityEngine;
-using NitroxModel.Logger;
+﻿using System.Collections;
+using NitroxClient.MonoBehaviours.Gui.Settings;
+using NitroxClient.Unity.Helper;
 using NitroxModel;
-using System.ComponentModel;
+using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.PlayerSlot;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -14,7 +14,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public string ServerIp = "";
         Rect joinServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         Rect unableToJoinWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
-        string username = "username";
+        string username = SettingsManager.Name;
         bool joiningServer = false;
         bool notifyingUnableToJoin = false;
         bool shouldFocus;

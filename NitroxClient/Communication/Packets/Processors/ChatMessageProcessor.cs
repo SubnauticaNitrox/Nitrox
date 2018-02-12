@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
-            chatManager.WriteMessage(message.PlayerId + ": " + message.Text);
+            chatManager.WriteMessage(message.PlayerId + ": " + message.Text, message.Color);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -13,13 +14,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject chatEntry;
         private GUIText chatText;
         private Coroutine timer;
-        private List<string> messages;
+
+        private List<ChatMessage> messages;
 
         protected void Awake()
         {
             SetupChatMessagesComponent();
 
-            messages = new List<string>();
+            messages = new List<ChatMessage>();
         }
 
         private void SetupChatMessagesComponent()
@@ -32,18 +34,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.fontSize = 18;
             chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
+            chatText.richText = true;
         }
 
-        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous messages for CHAT_VISIBILITY_TIME_LENGTH seconds
-        public void WriteMessage(string message)
+        public void WriteMessage(string message, Color color)
         {
             if (timer != null)
             {
                 // cancel hiding chat messages because a new one was recently posted
                 StopCoroutine(timer);
             }
-
-            AddChatMessage(SanitizeMessage(message));
+            AddChatMessage(SanitizeMessage(message), color);
             BuildChatText();
 
             chatText.enabled = true;
@@ -51,28 +52,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             timer = StartCoroutine(DeactivateChat());
         }
 
-        private void AddChatMessage(string sanitizedChatMessage)
+        private void AddChatMessage(string sanitizedChatMessage, Color color)
         {
             if (messages.Count == MESSAGE_LIMIT)
             {
                 messages.RemoveAt(0);
             }
 
-            messages.Add(sanitizedChatMessage);
+            messages.Add(new ChatMessage(sanitizedChatMessage, color));
         }
 
         private void BuildChatText()
         {
-            chatText.text = "";
-            foreach (string message in messages)
-            {
-                if (chatText.text.Length > 0)
-                {
-                    chatText.text += "\n";
-                }
-
-                chatText.text += message;
-            }
+            chatText.text = string.Join("\n", messages.Select(m => "<color=#" + ColorUtility.ToHtmlStringRGB(m.Color) + ">" + m.Text + "</color>").ToArray());
         }
 
         private string SanitizeMessage(string message)
@@ -92,6 +84,18 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             yield return new WaitForSeconds(CHAT_VISIBILITY_TIME_LENGTH);
             chatText.enabled = false;
             timer = null;
+        }
+
+        public class ChatMessage
+        {
+            public readonly string Text;
+            public Color Color;
+
+            public ChatMessage(string text, Color color)
+            {
+                Text = text;
+                Color = color;
+            }
         }
     }
 }

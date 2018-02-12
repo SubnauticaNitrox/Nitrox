@@ -101,6 +101,7 @@
     <Compile Include="Communication\Packets\Processors\ItemContainerRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerJoinProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
@@ -153,8 +154,10 @@
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
+    <Compile Include="MonoBehaviours\MultiplayerSettings.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
+    <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\HUD\RemotePlayerVitals.cs" />
@@ -164,10 +167,10 @@
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
-    <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
+    <Compile Include="MonoBehaviours\Gui\Settings\SettingsManager.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />

@@ -110,14 +110,10 @@ namespace NitroxClient.MonoBehaviours
             {
                 Log.InGame("Already connected to a server");
             }
-            else if (n?.data?.Count > 0)
+            else 
             {
                 NegotiatePlayerSlotReservation(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
                 StartCoroutine(HandleReservationFromConsole());
-            }
-            else
-            {
-                Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 

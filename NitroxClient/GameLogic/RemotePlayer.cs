@@ -1,5 +1,6 @@
 ﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.MonoBehaviours.Gui.Settings;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace NitroxClient.GameLogic
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
+        public PingInstance Ping;
 
         public string PlayerId { get; }
 
@@ -50,11 +52,13 @@ namespace NitroxClient.GameLogic
             signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(PlayerView.transform, false);
-            PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Player " + playerId);
-            ping.pingType = PingType.Signal;
+            Ping = signalBase.GetComponent<PingInstance>();
+            Ping.SetLabel("Player " + playerId);
+            Ping.pingType = PingType.Signal;
 
             AnimationController = PlayerView.AddComponent<AnimationController>();
+
+            Multiplayer.Logic.Chat.SendPlayerJoin(playerId, SettingsManager.PlayerColor);
 
             ErrorMessage.AddMessage($"{playerId} joined the game.");
         }

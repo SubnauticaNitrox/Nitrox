@@ -102,6 +102,7 @@
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />
+    <Compile Include="Packets\PlayerJoin.cs" />
     <Compile Include="Packets\Movement.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />

@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxClient.MonoBehaviours.Gui.Settings;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -48,8 +49,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chatManager != null && chatMessage.Length > 0)
             {
-                Multiplayer.Logic.Chat.SendChatMessage(chatMessage);
-                chatManager.WriteMessage("Me: " + chatMessage);
+                Multiplayer.Logic.Chat.SendChatMessage(chatMessage, SettingsManager.PlayerColor);
+                chatManager.WriteMessage("Me: " + chatMessage, SettingsManager.PlayerColor);
             }
         }
 
