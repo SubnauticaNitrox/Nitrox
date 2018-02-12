@@ -1,8 +1,8 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using Autofac;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Core;
 
 namespace NitroxTest.Core
@@ -65,10 +65,10 @@ namespace NitroxTest.Core
 
             //Act
             IServicer<ServiceRecipientA>
-                servicerA = NitroxServiceLocator.LocateService<BaseServiceProvider<ServiceRecipientA>>(servicerAType);
+                servicerA = (BaseServiceProvider<ServiceRecipientA>)NitroxServiceLocator.LocateService(servicerAType);
 
             IServicer<ServiceRecipientB>
-                servicerB = NitroxServiceLocator.LocateService<BaseServiceProvider<ServiceRecipientB>>(servicerBType);
+                servicerB = (BaseServiceProvider<ServiceRecipientB>)NitroxServiceLocator.LocateService(servicerBType);
 
             //Assert
             servicerA.Should().NotBeNull();
@@ -137,7 +137,7 @@ namespace NitroxTest.Core
     {
         public override void PerformService(ServiceRecipientA serviced)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 
@@ -145,7 +145,7 @@ namespace NitroxTest.Core
     {
         public override void PerformService(ServiceRecipientB serviced)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
