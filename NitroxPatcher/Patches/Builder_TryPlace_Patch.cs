@@ -1,11 +1,10 @@
-﻿using Harmony;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -35,7 +34,7 @@ namespace NitroxPatcher.Patches
                     /*
                      *  Multiplayer.Logic.Building.PlaceBasePiece(componentInParent, component.TargetBase, CraftData.GetTechType(Builder.prefab), Builder.placeRotation);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(StaticServiceLocator).GetField("Building", BindingFlags.Static | BindingFlags.Public));
+                    yield return TranspilerHelper.LocateService<Building>();
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(BaseGhost).GetMethod("get_TargetBase"));
@@ -50,7 +49,7 @@ namespace NitroxPatcher.Patches
                     /*
                      *  Multiplayer.Logic.Building.PlaceFurniture(gameObject, CraftData.GetTechType(Builder.prefab), Builder.ghostModel.transform.position, Builder.placeRotation);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(StaticServiceLocator).GetField("Building", BindingFlags.Static | BindingFlags.Public));
+                    yield return TranspilerHelper.LocateService<Building>();
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_2);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));

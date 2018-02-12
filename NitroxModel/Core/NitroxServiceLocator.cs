@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac;
 using Autofac.Builder;
-using Autofac.Core;
 
 namespace NitroxModel.Core
 {
@@ -21,8 +20,7 @@ namespace NitroxModel.Core
             return DependencyContainer.Resolve<T>();
         }
 
-        public static T LocateService<T>(Type serviceType)
-            where T : class
+        public static object LocateService(Type serviceType)
         {
             if (DependencyContainer == null)
             {
@@ -30,7 +28,7 @@ namespace NitroxModel.Core
                     "Cannot locate services until a AutoFac Container has been installed.");
             }
 
-            return (T) DependencyContainer.Resolve(serviceType);
+            return DependencyContainer.Resolve(serviceType);
         }
 
         public static void InitializeDependencyContainer(IAutoFacRegistrar dependencyRegistrar)

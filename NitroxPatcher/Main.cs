@@ -37,9 +37,6 @@ namespace NitroxPatcher
             //Our application's entry point. First, register client dependencies with AutoFac.
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
 
-            //Now, register dependencies in the static injector to simplify IL manipulation during patching.
-            StaticServiceLocator.InitializeStaticDependencies();
-
             Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.

@@ -20,10 +20,10 @@ namespace NitroxClient.MonoBehaviours
     {
         public static Multiplayer Main;
         public static event Action OnBeforeMultiplayerStart;
-        
+
         private IMultiplayerSession multiplayerSession;
         private DeferringPacketReceiver packetReceiver;
-        
+
         public void Awake()
         {
             Log.InGame("Multiplayer Client Loaded...");
@@ -33,7 +33,8 @@ namespace NitroxClient.MonoBehaviours
             DontDestroyOnLoad(gameObject);
         }
 
-        public void Update(){
+        public void Update()
+        {
             Reloader.ReloadAssemblies();
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
@@ -53,7 +54,7 @@ namespace NitroxClient.MonoBehaviours
                     Type packetType = packet.GetType();
                     Type packetProcessorType = clientPacketProcessorType.MakeGenericType(packetType);
 
-                    PacketProcessor processor = NitroxServiceLocator.LocateService<PacketProcessor>(packetProcessorType);
+                    PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
                     processor.ProcessPacket(packet, null);
                 }
                 catch (Exception ex)
@@ -70,7 +71,7 @@ namespace NitroxClient.MonoBehaviours
             multiplayerSession.JoinSession();
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
-        
+
         public void InitMonoBehaviours()
         {
             gameObject.AddComponent<PlayerMovement>();
