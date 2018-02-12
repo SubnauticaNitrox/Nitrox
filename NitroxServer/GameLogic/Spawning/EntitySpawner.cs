@@ -1,16 +1,16 @@
-﻿using AssetsTools.NET;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using AssetsTools.NET;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
-using System.IO;
-using NitroxModel.Helper;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic
 {
@@ -127,7 +127,10 @@ namespace NitroxServer.GameLogic
                 if (creatureSpawn && worldEntityInfo.slotType == EntitySlot.Type.Creature)
                 {
                     return true;
-                } else if (!creatureSpawn && worldEntityInfo.slotType != EntitySlot.Type.Creature)
+
+                }
+
+                if (!creatureSpawn && worldEntityInfo.slotType != EntitySlot.Type.Creature)
                 {
                     return true;
                 }
@@ -162,7 +165,7 @@ namespace NitroxServer.GameLogic
             {
                 throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
             }
-            
+
             using (FileStream resStream = new FileStream(resourcesPath, FileMode.Open))
             using (AssetsFileReader resReader = new AssetsFileReader(resStream))
             {

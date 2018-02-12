@@ -9,6 +9,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
 using NitroxServer.UnityStubs;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.Serialization
 {
