@@ -13,6 +13,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             ModelGeometry = modelGeometry;
         }
 
+        //We can swap this out with a method that applies the coloring effect with a custom shader sometime after 1.0 
         protected void PaintMaterial(Material material, params HsvColorFilter[] filters)
         {
             Texture2D texture = (Texture2D)material.mainTexture;
@@ -40,7 +41,9 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             readableTexture.SetPixels(pixels);
             readableTexture.Apply();
         }
-        
+
+        //This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode 
+        //that prevents us from accessing the pixel map of the 2D textures they apply to their materials. 
         private Texture2D CloneReadableTexture(Texture2D textureToClone)
         {
             // Create a temporary RenderTexture of the same size as the texture
