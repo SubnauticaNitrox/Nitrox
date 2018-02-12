@@ -30,7 +30,7 @@ namespace NitroxPatcher.Patches
                      * Multiplayer.Logic.Building.DeconstructionBegin(constructable.gameObject);
                      */
                     yield return TranspilerHelper.LocateService<Building>();
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<Constructable>(original));
+                    yield return original.Ldloc<Constructable>();
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }
