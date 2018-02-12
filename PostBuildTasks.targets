@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Target Name="Deploy" AfterTargets="Build" Condition="'$(MSBuildProjectName)' == 'NitroxPatcher'">
-    <!-- Get outputs from referenced projects, instead of hardcoding them. -->
-    <MSBuild Projects="@(ProjectReference)" Targets="Build" BuildInParallel="true">
-      <Output TaskParameter="TargetOutputs" ItemName="CompiledAssemblies" />
+
+    <!-- First, gather outputs of all projects refereced by NitroxPatcher, and from the Patcher itself. -->
+    <MSBuild Projects="@(ProjectReference);$(MSBuildProjectFile)" Targets="Build">
+      <Output TaskParameter="TargetOutputs" ItemName="RequiredLocalAssemblies" />
     </MSBuild>
-    <ItemGroup>
-      <CompiledAssemblies Include="$(OutputPath)\$(AssemblyName).dll" />
-    </ItemGroup>
-    <Message Text="Copying library files to: $(SubnauticaManaged)" />
-    <Message Text="@(CompiledAssemblies)" />
-    <Copy SourceFiles="@(CompiledAssemblies)" DestinationFolder="$(SubnauticaManaged)" Retries="0" ContinueOnError="true" />
+
+    <!-- In order to retrieve only local dependencies (without .NET libraries which are not copied to the bin directory anyway),
+         our projects have a target that returns @(ReferenceCopyLocalPaths) containing only said required files. -->
+
+    <!-- Secondly, gather dependencies from supported projects, invoking that target -->
+    <MSBuild
+      Projects="@(ProjectReference)"
+      Targets="ComputeRequiredLocalAssemblies"
+      BuildInParallel="true"
+      SkipNonexistentTargets="true">
+      <Output TaskParameter="TargetOutputs" ItemName="RequiredLocalAssemblies" />
+    </MSBuild>
+
+    <!-- Final note: The first task could have been incorporated in ComputeRequiredLocalAssemblies,
+         but then projects without the target (currently only Harmony) require a fallback. -->
+
+    <Message Text="Copying dependencies to Subnautica game folder: $([System.IO.Path]::GetFullPath($(SubnauticaManaged)))" />
+    <!-- Also note that a bunch of dependencies come from Subnautica and are already present in the target folder.
+         These will be ignored by the Copy command. -->
+    <Message Text="@(RequiredLocalAssemblies)" />
+    <Copy SourceFiles="@(RequiredLocalAssemblies)" DestinationFolder="$(SubnauticaManaged)" Retries="0" ContinueOnError="true" />
   </Target>
 </Project>
