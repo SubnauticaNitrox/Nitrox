@@ -37,7 +37,7 @@ namespace NitroxPatcher.Patches
                     yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<TechType>(original));
+                    yield return original.Ldloc<TechType>();
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
                 }
             }
