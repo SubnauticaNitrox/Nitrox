@@ -64,7 +64,6 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             Texture2D clonedTexture = new Texture2D(textureToClone.width, textureToClone.height);
             // Copy the pixels from the RenderTexture to the new Texture
             clonedTexture.ReadPixels(new Rect(0, 0, tmp.width, tmp.height), 0, 0);
-            clonedTexture.Apply();
             // Reset the active RenderTexture
             RenderTexture.active = previous;
             // Release the temporary RenderTexture
