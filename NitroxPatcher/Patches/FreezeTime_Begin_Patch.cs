@@ -12,6 +12,10 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(string userId, bool dontPauseSound)
         {
+            if (userId.Equals("FeedbackPanel"))
+            {
+                return true;
+            }
             return false;
         }
 
