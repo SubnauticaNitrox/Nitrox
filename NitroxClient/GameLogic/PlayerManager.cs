@@ -22,6 +22,18 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
+        internal Optional<RemotePlayer> FindByName(string playerName)
+        {
+            foreach (RemotePlayer player in playersById.Values)
+            {
+                if (player.PlayerName == playerName)
+                {
+                    return Optional<RemotePlayer>.Of(player);
+                }
+            }
+            return Optional<RemotePlayer>.Empty();
+        }
+
         public void Create(string playerId, string playerName, PlayerSettings playerSettings)
         {
             if (playersById.ContainsKey(playerId))

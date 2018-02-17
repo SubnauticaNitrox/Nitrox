@@ -64,7 +64,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 string otherPlayerId = (string)n.data[0];
                 PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-                Optional<RemotePlayer> opPlayer = remotePlayerManager.Find(otherPlayerId);
+                Optional<RemotePlayer> opPlayer = remotePlayerManager.FindByName(otherPlayerId);
                 if (opPlayer.IsPresent())
                 {
                     Player.main.SetPosition(opPlayer.Get().Body.transform.position);
