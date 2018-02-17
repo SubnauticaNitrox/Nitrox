@@ -32,6 +32,7 @@ namespace NitroxModel.Helper
             {
                 return Optional<string>.Of(path);
             }
+
             return Optional<string>.Empty();
         }
 
@@ -56,6 +57,7 @@ namespace NitroxModel.Helper
                     }
                 }
             }
+
             return null;
         }
 
@@ -68,6 +70,7 @@ namespace NitroxModel.Helper
                     return subkey.GetValue(key);
                 }
             }
+
             return null;
         }
     }

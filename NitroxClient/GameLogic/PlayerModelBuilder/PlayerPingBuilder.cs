@@ -2,7 +2,6 @@
 using System.Reflection;
 using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
@@ -10,7 +9,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
     {
         protected override void HandleBuild(RemotePlayer player)
         {
-            GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
+            GameObject signalBase = UnityEngine.Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + player.PlayerName;
             signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
@@ -22,7 +21,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
 
             SetPingColor(player, ping);
         }
-        
+
         private static void SetPingColor(RemotePlayer player, PingInstance ping)
         {
             FieldInfo field = typeof(PingManager).GetField("colorOptions", BindingFlags.Static | BindingFlags.Public);
@@ -32,7 +31,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             colors.ForEach(color => colorOptions[Array.IndexOf(colors, color)] = color);
             colorOptions[colorOptions.Length - 1] = player.PlayerSettings.PlayerColor;
 
-            //Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
+            // Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
             field.SetValue(null, colorOptions);
             ping.SetColor(colorOptions.Length - 1);
         }

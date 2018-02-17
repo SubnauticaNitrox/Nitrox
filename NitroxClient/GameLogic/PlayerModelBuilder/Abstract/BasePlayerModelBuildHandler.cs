@@ -1,6 +1,6 @@
 ﻿namespace NitroxClient.GameLogic.PlayerModelBuilder.Abstract
 {
-    //See: Chain of Responsibility
+    // See: Chain of Responsibility
     public abstract class BasePlayerModelBuildHandler : IPlayerModelBuildHandler
     {
         public void Build(RemotePlayer player)
@@ -16,6 +16,7 @@
         }
 
         protected abstract void HandleBuild(RemotePlayer player);
+
         public IPlayerModelBuildHandler Successor { get; private set; }
     }
 }

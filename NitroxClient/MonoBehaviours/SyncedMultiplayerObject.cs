@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours
     public class SyncedMultiplayerObject : MonoBehaviour
     {
         private Item itemBroadcaster;
-        private float time = 0.0f;
+        private float time;
         private const float INTERPOLATION_PERIOD = .25f;
 
         public void Awake()

@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 ItemsContainer container = opContainer.Get();
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
-                
+
                 using (packetSender.Suppress<ItemContainerRemove>())
                 {
                     container.RemoveItem(pickupable, true);

@@ -6,7 +6,7 @@ namespace NitroxClient.MonoBehaviours
 {
     public class PlayerStatsBroadcaster : MonoBehaviour
     {
-        private float time = 0.0f;
+        private float time;
         private const float INTERPOLATION_PERIOD = 4.00f;
         private PlayerLogic playerBroadcaster;
 

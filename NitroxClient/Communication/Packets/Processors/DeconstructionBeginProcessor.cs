@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject deconstructing = GuidHelper.RequireObjectFrom(packet.Guid);
             Constructable constructable = deconstructing.RequireComponent<Constructable>();
-            
+
             constructable.SetState(false, false);
         }
     }

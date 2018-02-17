@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxModel.Core;
 
 namespace ClientTester.Commands.DefaultCommands

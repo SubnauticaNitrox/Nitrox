@@ -1,7 +1,7 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {

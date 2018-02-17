@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class BroadcastEscapePodsProcessor : ClientPacketProcessor<BroadcastEscapePods>
     {
-        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
+        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
         private IMultiplayerSession multiplayerSession;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);

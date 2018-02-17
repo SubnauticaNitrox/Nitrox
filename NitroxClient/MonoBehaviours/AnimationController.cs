@@ -41,6 +41,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     viewPitch -= 360f;
                 }
+
                 viewPitch = -viewPitch;
                 smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
                 animator.SetFloat("view_pitch", smoothViewPitch);

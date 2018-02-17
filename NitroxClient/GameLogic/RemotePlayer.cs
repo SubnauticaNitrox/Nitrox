@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
@@ -37,22 +35,22 @@ namespace NitroxClient.GameLogic
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 
-            //Get player
+            // Get player
             PlayerModel = Body.transform.Find("player_view").gameObject;
 
-            //Move variables to keep player animations from mirroring and for identification
+            // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
             ArmsController.smoothSpeedAboveWater = 0;
 
-            AnimationController = PlayerModel.AddComponent<AnimationController>(); 
+            AnimationController = PlayerModel.AddComponent<AnimationController>();
 
             ErrorMessage.AddMessage($"{playerName} joined the game.");
         }
 
         private GameObject CloneBody(GameObject originalBody)
         {
-            //Cheap fix for showing head, much easier since male_geo contains many different heads
+            // Cheap fix for showing head, much easier since male_geo contains many different heads
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
             GameObject clonedBody = Object.Instantiate(originalBody);
             originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
@@ -124,6 +122,7 @@ namespace NitroxClient.GameLogic
                     mpCyclops.CurrentPlayer = null;
                     mpCyclops.Exit();
                 }
+
                 RigidBody.isKinematic = AnimationController["cyclops_steering"] = (newPilotingChair != null);
             }
         }

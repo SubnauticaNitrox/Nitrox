@@ -11,25 +11,25 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(EntityTransformUpdates packet)
         {
-            foreach(EntityTransformUpdate entity in packet.Updates)
+            foreach (EntityTransformUpdate entity in packet.Updates)
             {
                 Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(entity.Guid);
 
-                if(opGameObject.IsPresent())
+                if (opGameObject.IsPresent())
                 {
                     GameObject gameObject = opGameObject.Get();
 
                     float distance = Vector3.Distance(gameObject.transform.position, entity.Position);
-                    SwimBehaviour SwimBehaviour = gameObject.GetComponent<SwimBehaviour>();
+                    SwimBehaviour swimBehaviour = gameObject.GetComponent<SwimBehaviour>();
 
-                    if (distance > 5 || SwimBehaviour == null)
+                    if (distance > 5 || swimBehaviour == null)
                     {
                         gameObject.transform.position = entity.Position;
                         gameObject.transform.rotation = entity.Rotation;
                     }
                     else
                     {
-                        SwimBehaviour.SwimTo(entity.Position, 3f);                        
+                        swimBehaviour.SwimTo(entity.Position, 3f);
                     }
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 using UnityEngine;

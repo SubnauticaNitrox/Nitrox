@@ -6,13 +6,7 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public class AbsoluteEntityCell
     {
-        public Int3 Position
-        {
-            get
-            {
-                return (BatchId * Map.CELLS_PER_BATCH) + CellId;
-            }
-        }
+        public Int3 Position => (BatchId * Map.CELLS_PER_BATCH) + CellId;
         public Int3 BatchId { get; }
         public Int3 CellId { get; }
 

@@ -49,6 +49,7 @@ namespace ClientTester.Commands.DefaultCommands
                 client.ClientPos += velocity;
                 playerBroadcaster.UpdateLocation(client.ClientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
             }
+
             lastX = curX;
             lastY = curY;
         }

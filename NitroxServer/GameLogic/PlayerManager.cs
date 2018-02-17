@@ -8,13 +8,13 @@ using NitroxModel.Tcp;
 
 namespace NitroxServer.GameLogic
 {
-    //TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
+    // TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
         private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
-        
+
         public List<Player> GetPlayers()
         {
             lock (assetsByConnection)
@@ -41,7 +41,7 @@ namespace NitroxServer.GameLogic
                 }
 
                 string playerName = authenticationContext.Username;
-                
+
                 if (reservedPlayerNames.Contains(playerName))
                 {
                     MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
@@ -89,12 +89,12 @@ namespace NitroxServer.GameLogic
                 {
                     return;
                 }
-                
+
                 if (assetPackage.ReservationKey != null)
                 {
-                        PlayerContext playerContext = reservations[assetPackage.ReservationKey];
-                        reservedPlayerNames.Remove(playerContext.PlayerName);
-                        reservations.Remove(assetPackage.ReservationKey);
+                    PlayerContext playerContext = reservations[assetPackage.ReservationKey];
+                    reservedPlayerNames.Remove(playerContext.PlayerName);
+                    reservations.Remove(assetPackage.ReservationKey);
                 }
 
                 if (assetPackage.Player != null)

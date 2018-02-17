@@ -6,7 +6,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMods : MonoBehaviour
     {
-
         private void OnEnable()
         {
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -69,6 +68,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     return t.gameObject;
                 }
             }
+
             return null;
         }
     }

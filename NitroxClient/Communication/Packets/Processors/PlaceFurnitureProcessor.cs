@@ -1,11 +1,11 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.MonoBehaviours.Overrides;
-using NitroxModel.Helper;
+﻿using System.Reflection;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.Packets;
-using System.Reflection;
-using UnityEngine;
+using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Helper;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -42,6 +42,6 @@ namespace NitroxClient.Communication.Packets.Processors
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
             startCrafting.Invoke(constructable, new object[] { });
-        }        
+        }
     }
 }

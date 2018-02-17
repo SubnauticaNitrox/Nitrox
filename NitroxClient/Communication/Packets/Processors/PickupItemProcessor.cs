@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(pickup.Guid);
 
-            if(opGameObject.IsPresent())
+            if (opGameObject.IsPresent())
             {
                 UnityEngine.Object.Destroy(opGameObject.Get());
             }

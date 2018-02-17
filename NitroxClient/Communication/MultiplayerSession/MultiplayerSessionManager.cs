@@ -34,12 +34,12 @@ namespace NitroxClient.Communication.MultiplayerSession
             CurrentState = new Disconnected();
         }
 
-        //Testing entry point
+        // Testing entry point
         internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
         {
             this.client = client;
             CurrentState = initialState;
-        } 
+        }
 
         public void Connect(string ipAddress)
         {
@@ -75,7 +75,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             CurrentState.Disconnect(this);
         }
-        
+
         public void Send(Packet packet)
         {
             if (!suppressedPacketsTypes.Contains(packet.GetType()))
@@ -88,7 +88,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             return new PacketSuppression<T>(suppressedPacketsTypes);
         }
-        
+
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
             CurrentState = sessionConnectionState;

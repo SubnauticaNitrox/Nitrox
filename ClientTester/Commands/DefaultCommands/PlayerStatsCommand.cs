@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Packets;

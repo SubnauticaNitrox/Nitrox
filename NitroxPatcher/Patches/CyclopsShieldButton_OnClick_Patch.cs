@@ -1,10 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches

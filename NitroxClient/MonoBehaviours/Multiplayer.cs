@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
-    //This class is getting really big and is taking on many responsibilities. It might be worth a joint effort to see if we can plan some refactoring to this guy at some point in the future.
+    // This class is getting really big and is taking on many responsibilities. It might be worth a joint effort to see if we can plan some refactoring to this guy at some point in the future.
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
@@ -95,8 +95,8 @@ namespace NitroxClient.MonoBehaviours
         {
             if (scene.name == "XMenu")
             {
-                //If we just disconnected from a multiplayer session, then we need to kill the connection here.
-                //Maybe a better place for this, but here works in a pinch.
+                // If we just disconnected from a multiplayer session, then we need to kill the connection here.
+                // Maybe a better place for this, but here works in a pinch.
                 StopCurrentSession();
             }
         }

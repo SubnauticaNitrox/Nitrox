@@ -8,7 +8,7 @@ namespace NitroxClient.MonoBehaviours
     {
         private ISubTurnHandler[] subTurnHandlers;
         private ISubThrottleHandler[] subThrottleHandlers;
-        private float previousAbsYaw = 0f;
+        private float previousAbsYaw;
 
         internal RemotePlayer CurrentPlayer { get; set; }
 

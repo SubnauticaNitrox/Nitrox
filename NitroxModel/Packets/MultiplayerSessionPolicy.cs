@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public MultiplayerSessionPolicy(string correlationId)
             : base(correlationId)
         {
-            //This is done intentionally. It is only a stub for future extension.
+            // This is done intentionally. It is only a stub for future extension.
             RequiresServerPassword = false;
             AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.Server;
         }

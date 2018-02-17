@@ -1,5 +1,5 @@
-﻿using NitroxModel.Packets;
-using System;
+﻿using System;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxTest.Model

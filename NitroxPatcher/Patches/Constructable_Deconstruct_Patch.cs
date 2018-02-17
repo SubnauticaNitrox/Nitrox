@@ -1,8 +1,7 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 

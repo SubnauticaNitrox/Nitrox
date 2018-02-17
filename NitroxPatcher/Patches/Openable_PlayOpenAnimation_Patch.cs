@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(Openable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("PlayOpenAnimation", BindingFlags.Public | BindingFlags.Instance);
-        
+
         public static bool Prefix(Openable __instance, bool openState, float duration)
         {
             if (__instance.isOpen != openState)

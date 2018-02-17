@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
@@ -19,7 +18,7 @@ namespace NitroxServer
 
         private readonly Connection connection;
         private readonly HashSet<VisibleCell> visibleCells = new HashSet<VisibleCell>();
-        
+
         public Player(PlayerContext playerContext, Connection connection)
         {
             Id = playerContext.PlayerId;

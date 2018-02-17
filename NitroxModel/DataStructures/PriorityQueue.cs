@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 
 namespace NitroxModel.DataStructures
 {
@@ -11,11 +9,11 @@ namespace NitroxModel.DataStructures
         public PriorityQueue()
         {
             // Build the collection of priority chains.
-            _priorityChains = new SortedList<int, PriorityChain<T>>(); // NOTE: should be Priority
-            _cacheReusableChains = new Stack<PriorityChain<T>>(10);
+            priorityChains = new SortedList<int, PriorityChain<T>>(); // NOTE: should be Priority
+            cacheReusableChains = new Stack<PriorityChain<T>>(10);
 
-            _head = _tail = null;
-            _count = 0;
+            head = tail = null;
+            count = 0;
         }
 
         // NOTE: not used
@@ -25,11 +23,11 @@ namespace NitroxModel.DataStructures
         {
             get
             {
-                int count = _priorityChains.Count;
+                int count = priorityChains.Count;
 
                 if (count > 0)
                 {
-                    return (int)_priorityChains.Keys[count - 1];
+                    return priorityChains.Keys[count - 1];
                 }
                 else
                 {
@@ -38,13 +36,7 @@ namespace NitroxModel.DataStructures
             }
         }
 
-        public int Count
-        {
-            get
-            {
-                return _priorityChains.Count;
-            }
-        }
+        public int Count => priorityChains.Count;
 
         public PriorityItem<T> Enqueue(int priority, T data) // NOTE: should be Priority
         {
@@ -57,7 +49,7 @@ namespace NitroxModel.DataStructures
             PriorityItem<T> priorityItem = new PriorityItem<T>(data);
 
             // Step 1: Append this to the end of the "sequential" linked list.
-            InsertItemInSequentialChain(priorityItem, _tail);
+            InsertItemInSequentialChain(priorityItem, tail);
 
             // Step 2: Append the item into the priority chain.
             InsertItemInPriorityChain(priorityItem, chain, chain.Tail);
@@ -68,10 +60,10 @@ namespace NitroxModel.DataStructures
         public T Dequeue()
         {
             // Get the max-priority chain.
-            int count = _priorityChains.Count;
+            int count = priorityChains.Count;
             if (count > 0)
             {
-                PriorityChain<T> chain = _priorityChains.Values[count - 1];
+                PriorityChain<T> chain = priorityChains.Values[count - 1];
                 Debug.Assert(chain != null, "PriorityQueue.Dequeue: a chain should exist.");
 
                 PriorityItem<T> item = chain.Head;
@@ -84,7 +76,6 @@ namespace NitroxModel.DataStructures
             else
             {
                 throw new InvalidOperationException();
-
             }
         }
 
@@ -93,10 +84,10 @@ namespace NitroxModel.DataStructures
             T data = default(T);
 
             // Get the max-priority chain.
-            int count = _priorityChains.Count;
+            int count = priorityChains.Count;
             if (count > 0)
             {
-                PriorityChain<T> chain = _priorityChains.Values[count - 1];
+                PriorityChain<T> chain = priorityChains.Values[count - 1];
                 Debug.Assert(chain != null, "PriorityQueue.Peek: a chain should exist.");
 
                 PriorityItem<T> item = chain.Head;
@@ -144,29 +135,29 @@ namespace NitroxModel.DataStructures
         {
             PriorityChain<T> chain = null;
 
-            int count = _priorityChains.Count;
+            int count = priorityChains.Count;
             if (count > 0)
             {
-                if (priority == (int)_priorityChains.Keys[0])
+                if (priority == (int)priorityChains.Keys[0])
                 {
-                    chain = _priorityChains.Values[0];
+                    chain = priorityChains.Values[0];
                 }
-                else if (priority == (int)_priorityChains.Keys[count - 1])
+                else if (priority == (int)priorityChains.Keys[count - 1])
                 {
-                    chain = _priorityChains.Values[count - 1];
+                    chain = priorityChains.Values[count - 1];
                 }
-                else if ((priority > (int)_priorityChains.Keys[0]) &&
-                        (priority < (int)_priorityChains.Keys[count - 1]))
+                else if ((priority > (int)priorityChains.Keys[0]) &&
+                        (priority < (int)priorityChains.Keys[count - 1]))
                 {
-                    _priorityChains.TryGetValue((int)priority, out chain);
+                    priorityChains.TryGetValue((int)priority, out chain);
                 }
             }
 
             if (chain == null)
             {
-                if (_cacheReusableChains.Count > 0)
+                if (cacheReusableChains.Count > 0)
                 {
-                    chain = _cacheReusableChains.Pop();
+                    chain = cacheReusableChains.Pop();
                     chain.Priority = priority;
                 }
                 else
@@ -174,7 +165,7 @@ namespace NitroxModel.DataStructures
                     chain = new PriorityChain<T>(priority);
                 }
 
-                _priorityChains.Add((int)priority, chain);
+                priorityChains.Add((int)priority, chain);
             }
 
             return chain;
@@ -296,19 +287,19 @@ namespace NitroxModel.DataStructures
             item.Chain.Count--;
             if (item.Chain.Count == 0)
             {
-                if (item.Chain.Priority == (int)_priorityChains.Keys[_priorityChains.Count - 1])
+                if (item.Chain.Priority == (int)priorityChains.Keys[priorityChains.Count - 1])
                 {
-                    _priorityChains.RemoveAt(_priorityChains.Count - 1);
+                    priorityChains.RemoveAt(priorityChains.Count - 1);
                 }
                 else
                 {
-                    _priorityChains.Remove((int)item.Chain.Priority);
+                    priorityChains.Remove((int)item.Chain.Priority);
                 }
 
-                if (_cacheReusableChains.Count < 10)
+                if (cacheReusableChains.Count < 10)
                 {
                     item.Chain.Priority = int.MaxValue; // NOTE: should be Priority.Invalid
-                    _cacheReusableChains.Push(item.Chain);
+                    cacheReusableChains.Push(item.Chain);
                 }
             }
 
@@ -323,19 +314,19 @@ namespace NitroxModel.DataStructures
             {
                 // Note: passing null for after means insert at the head.
 
-                if (_head != null)
+                if (head != null)
                 {
-                    Debug.Assert(_tail != null, "PriorityQueue.InsertItemInSequentialChain: both the head and the tail should not be null.");
+                    Debug.Assert(tail != null, "PriorityQueue.InsertItemInSequentialChain: both the head and the tail should not be null.");
 
-                    _head.SequentialPrev = item;
-                    item.SequentialNext = _head;
-                    _head = item;
+                    head.SequentialPrev = item;
+                    item.SequentialNext = head;
+                    head = item;
                 }
                 else
                 {
-                    Debug.Assert(_tail == null, "PriorityQueue.InsertItemInSequentialChain: both the head and the tail should be null.");
+                    Debug.Assert(tail == null, "PriorityQueue.InsertItemInSequentialChain: both the head and the tail should be null.");
 
-                    _head = _tail = item;
+                    head = tail = item;
                 }
             }
             else
@@ -350,13 +341,13 @@ namespace NitroxModel.DataStructures
                 }
                 else
                 {
-                    Debug.Assert(_tail == after, "PriorityQueue.InsertItemInSequentialChain: the tail should be the item we are inserting after.");
+                    Debug.Assert(tail == after, "PriorityQueue.InsertItemInSequentialChain: the tail should be the item we are inserting after.");
                     after.SequentialNext = item;
-                    _tail = item;
+                    tail = item;
                 }
             }
 
-            _count++;
+            count++;
         }
 
         private void RemoveItemFromSequentialChain(PriorityItem<T> item)
@@ -366,91 +357,77 @@ namespace NitroxModel.DataStructures
             // Step 1: Fix up the previous link
             if (item.SequentialPrev != null)
             {
-                Debug.Assert(_head != item, "PriorityQueue.RemoveItemFromSequentialChain: the head should not point to this item.");
+                Debug.Assert(head != item, "PriorityQueue.RemoveItemFromSequentialChain: the head should not point to this item.");
 
                 item.SequentialPrev.SequentialNext = item.SequentialNext;
             }
             else
             {
-                Debug.Assert(_head == item, "PriorityQueue.RemoveItemFromSequentialChain: the head should point to this item.");
+                Debug.Assert(head == item, "PriorityQueue.RemoveItemFromSequentialChain: the head should point to this item.");
 
-                _head = item.SequentialNext;
+                head = item.SequentialNext;
             }
 
             // Step 2: Fix up the next link
             if (item.SequentialNext != null)
             {
-                Debug.Assert(_tail != item, "PriorityQueue.RemoveItemFromSequentialChain: the tail should not point to this item.");
+                Debug.Assert(tail != item, "PriorityQueue.RemoveItemFromSequentialChain: the tail should not point to this item.");
 
                 item.SequentialNext.SequentialPrev = item.SequentialPrev;
             }
             else
             {
-                Debug.Assert(_tail == item, "PriorityQueue.RemoveItemFromSequentialChain: the tail should point to this item.");
+                Debug.Assert(tail == item, "PriorityQueue.RemoveItemFromSequentialChain: the tail should point to this item.");
 
-                _tail = item.SequentialPrev;
+                tail = item.SequentialPrev;
             }
 
             // Step 3: cleanup
             item.SequentialPrev = item.SequentialNext = null;
-            _count--;
+            count--;
         }
 
         // Priority chains...
-        private SortedList<int, PriorityChain<T>> _priorityChains; // NOTE: should be Priority
-        private Stack<PriorityChain<T>> _cacheReusableChains;
+        private SortedList<int, PriorityChain<T>> priorityChains; // NOTE: should be Priority
+        private Stack<PriorityChain<T>> cacheReusableChains;
 
         // Sequential chain...
-        private PriorityItem<T> _head;
-        private PriorityItem<T> _tail;
-        private int _count;
+        private PriorityItem<T> head;
+        private PriorityItem<T> tail;
+        private int count;
     }
 
     public class PriorityChain<t>
     {
         public PriorityChain(int priority) // NOTE: should be Priority 
         {
-            _priority = priority;
+            Priority = priority;
         }
 
-        public int Priority { get { return _priority; } set { _priority = value; } } // NOTE: should be Priority
-        public int Count { get { return _count; } set { _count = value; } }
-        public PriorityItem<t> Head { get { return _head; } set { _head = value; } }
-        public PriorityItem<t> Tail { get { return _tail; } set { _tail = value; } }
-
-        private PriorityItem<t> _head;
-        private PriorityItem<t> _tail;
-        private int _priority;
-        private int _count;
+        public int Priority { get; set; } // NOTE: should be Priority
+        public int Count { get; set; }
+        public PriorityItem<t> Head { get; set; }
+        public PriorityItem<t> Tail { get; set; }
     }
 
     public class PriorityItem<t>
     {
         public PriorityItem(t data)
         {
-            _data = data;
+            Data = data;
         }
 
-        public t Data { get { return _data; } }
-        public bool IsQueued { get { return _chain != null; } }
+        public t Data { get; }
+        public bool IsQueued => Chain != null;
 
         // Note: not used
         // public int Priority { get { return _chain.Priority; } } // NOTE: should be Priority 
 
-        internal PriorityItem<t> SequentialPrev { get { return _sequentialPrev; } set { _sequentialPrev = value; } }
-        internal PriorityItem<t> SequentialNext { get { return _sequentialNext; } set { _sequentialNext = value; } }
+        internal PriorityItem<t> SequentialPrev { get; set; }
+        internal PriorityItem<t> SequentialNext { get; set; }
 
-        internal PriorityChain<t> Chain { get { return _chain; } set { _chain = value; } }
-        internal PriorityItem<t> PriorityPrev { get { return _priorityPrev; } set { _priorityPrev = value; } }
-        internal PriorityItem<t> PriorityNext { get { return _priorityNext; } set { _priorityNext = value; } }
-
-        private t _data;
-
-        private PriorityItem<t> _sequentialPrev;
-        private PriorityItem<t> _sequentialNext;
-
-        private PriorityChain<t> _chain;
-        private PriorityItem<t> _priorityPrev;
-        private PriorityItem<t> _priorityNext;
+        internal PriorityChain<t> Chain { get; set; }
+        internal PriorityItem<t> PriorityPrev { get; set; }
+        internal PriorityItem<t> PriorityNext { get; set; }
     }
 }

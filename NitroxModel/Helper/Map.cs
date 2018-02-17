@@ -9,7 +9,7 @@ namespace NitroxModel.Helper
         public static readonly Int3 CELLS_PER_BATCH = new Int3(10, 10, 10);
 
         public static readonly Int3 BATCH_DIMENSIONS = new Int3(BATCH_SIZE, BATCH_SIZE, BATCH_SIZE);
-        
+
         public static readonly Int3 DIMENSIONS_IN_METERS = new Int3(4096, 3200, 4096);
 
         public static readonly Int3 DIMENSIONS_IN_BATCHES = new Int3((int)Math.Ceiling(DIMENSIONS_IN_METERS.x / (double)BATCH_DIMENSIONS.x),

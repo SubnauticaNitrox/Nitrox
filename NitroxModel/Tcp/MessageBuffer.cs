@@ -16,10 +16,10 @@ namespace NitroxModel.Tcp
         public byte[] ReceivingBuffer { get; set; } = new byte[RECEIVING_BUFFER_SIZE];
 
         private readonly byte[] messageConstructingBuffer = new byte[MESSAGE_CONSTRUCTING_BUFFER_SIZE];
-        private int messageConstructingBufferPointer = 0;
-        private int currentPacketLength = 0;
+        private int messageConstructingBufferPointer;
+        private int currentPacketLength;
 
-        private int nextPacketHeaderBytesRead = 0;
+        private int nextPacketHeaderBytesRead;
         private readonly byte[] nextPacketHeaderBytes = new byte[4];
 
         private IFormatter formatter = Packet.Serializer;
@@ -45,6 +45,7 @@ namespace NitroxModel.Tcp
                     currentPacketLength = BitConverter.ToInt32(ReceivingBuffer, 0);
                     headerOffset = HEADER_BYTE_SIZE;
                 }
+
                 nextPacketHeaderBytesRead = 0;
             }
 
@@ -55,7 +56,7 @@ namespace NitroxModel.Tcp
 
                 if (currentPacketLength == messageConstructingBufferPointer)
                 {
-                    //deserialize this packet and add it to our queue of received packets
+                    // deserialize this packet and add it to our queue of received packets
                     using (Stream stream = new MemoryStream(messageConstructingBuffer.Take(currentPacketLength).ToArray()))
                     {
                         yield return (Packet)formatter.Deserialize(stream);

@@ -1,4 +1,4 @@
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
             CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
-            
+
             using (packetSender.Suppress<CyclopsBeginSilentRunning>())
             {
                 ability.subRoot.BroadcastMessage("RigForSilentRunning");

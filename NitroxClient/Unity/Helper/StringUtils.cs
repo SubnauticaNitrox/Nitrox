@@ -1,8 +1,5 @@
-﻿using NitroxModel.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
+using NitroxModel.Helper;
 
 namespace NitroxClient.Unity.Helper
 {

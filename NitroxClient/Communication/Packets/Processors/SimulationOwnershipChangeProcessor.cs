@@ -24,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
-            foreach(OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
+            foreach (OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
             {
                 if (multiplayerSession.Reservation.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
                 {
@@ -39,7 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(ownedGuid.Guid);
 
-            if(gameObject.IsPresent())
+            if (gameObject.IsPresent())
             {
                 EntityPositionBroadcaster.WatchEntity(ownedGuid.Guid, gameObject.Get());
             }

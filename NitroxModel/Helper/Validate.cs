@@ -1,9 +1,8 @@
-﻿using NitroxModel.Logger;
-using System.Linq;
+﻿using System;
 using System.Diagnostics;
-using NitroxModel.DataStructures.Util;
-using System;
+using System.Linq;
 using System.Reflection;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Exceptions;
 

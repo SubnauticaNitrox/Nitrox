@@ -82,13 +82,13 @@ namespace NitroxClient.Debuggers
 
                         GUILayout.Label($"GameObject: {selectedObject.name}", "header");
 
-                        //Add transform interface.
+                        // Add transform interface.
                         using (new GUILayout.VerticalScope("Box"))
                         {
                             GUILayout.Label("Transform");
                             using (new GUILayout.HorizontalScope())
                             {
-                                //TODO: Create a "save" button to save changes instead of realtime editing.
+                                // TODO: Create a "save" button to save changes instead of realtime editing.
                                 Vector3 pos = selectedObject.transform.position;
                                 float.TryParse(GUILayout.TextField(pos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out pos.x);
                                 float.TryParse(GUILayout.TextField(pos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out pos.y);
@@ -97,7 +97,7 @@ namespace NitroxClient.Debuggers
                             }
                         }
 
-                        //Add other component interfaces.
+                        // Add other component interfaces.
                         foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
                         {
                             Type script = behaviour.GetType();
@@ -130,6 +130,7 @@ namespace NitroxClient.Debuggers
                         parent = parent.parent;
                     }
                 }
+
                 breadcrumbBuilder.Insert(0, "//");
                 GUILayout.Label(breadcrumbBuilder.ToString(), "breadcrumb");
 
@@ -139,6 +140,7 @@ namespace NitroxClient.Debuggers
                     {
                         selectedObject = null;
                     }
+
                     if (GUILayout.Button("<"))
                     {
                         selectedObject = selectedObject?.transform.parent?.gameObject;
@@ -165,6 +167,7 @@ namespace NitroxClient.Debuggers
                                 showObjects.Add(t.gameObject);
                             }
                         }
+
                         foreach (GameObject child in showObjects)
                         {
                             if (GUILayout.Button($"{child.name}", "label"))
@@ -201,6 +204,7 @@ namespace NitroxClient.Debuggers
                             selectedScene = currentScene;
                             ActiveTab = GetTab("Hierarchy").Get();
                         }
+
                         if (GUILayout.Button(isLoaded ? "Unload" : "Load", "loadScene"))
                         {
                             if (isLoaded)

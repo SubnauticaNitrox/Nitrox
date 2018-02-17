@@ -35,6 +35,7 @@ namespace NitroxReloader
                 {
                     return false;
                 }
+
                 return assemblyWhitelist.Contains(Path.GetFileName(location));
             })
             .Select(assembly =>

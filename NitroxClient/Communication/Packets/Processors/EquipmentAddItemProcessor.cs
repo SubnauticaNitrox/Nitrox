@@ -41,6 +41,5 @@ namespace NitroxClient.Communication.Packets.Processors
                 Log.Error("Could not find equipment type for " + gameObject.name);
             }
         }
-
     }
 }

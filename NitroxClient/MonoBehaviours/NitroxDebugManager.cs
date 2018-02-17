@@ -114,6 +114,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     prevActiveDebuggers.Add(debugger);
                 }
+
                 debugger.Enabled = false;
             }
         }
@@ -124,6 +125,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 debugger.Enabled = true;
             }
+
             prevActiveDebuggers.Clear();
         }
 

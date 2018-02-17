@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 

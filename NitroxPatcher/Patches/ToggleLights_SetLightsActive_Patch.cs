@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
@@ -51,6 +50,7 @@ namespace NitroxPatcher.Patches
                         break;
                     }
                 }
+
                 if (!gameObject)
                 {
                     Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
@@ -85,6 +85,7 @@ namespace NitroxPatcher.Patches
                 {
                     return go.GetComponentInParent(ComponentType);
                 }
+
                 return go.GetComponent(ComponentType);
             }
         }

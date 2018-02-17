@@ -13,68 +13,68 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         [TestMethod]
         public void ManagerShouldInitializeInDisconnectedStage()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
 
-            //Act
+            // Act
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
 
-            //Assert
+            // Assert
             multiplayerSession.CurrentState.CurrentStage.ShouldBeEquivalentTo(MultiplayerSessionConnectionStage.Disconnected);
         }
 
         [TestMethod]
         public void ManagerShouldInitializeWithClient()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
 
-            //Act
+            // Act
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
 
-            //Assert
+            // Assert
             multiplayerSession.Client.ShouldBeEquivalentTo(client);
         }
 
         [TestMethod]
         public void ConnectShouldSetIpAddress()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
-            //Act
+            // Act
             multiplayerSession.Connect(TestConstants.TEST_IP_ADDRESS);
 
-            //Assert
+            // Assert
             multiplayerSession.IpAddress.ShouldBeEquivalentTo(TestConstants.TEST_IP_ADDRESS);
         }
 
         [TestMethod]
         public void ProcessSessionPolicyShouldSetThePolicy()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
-            //Act
+            // Act
             multiplayerSession.ProcessSessionPolicy(TestConstants.TEST_SESSION_POLICY);
 
-            //Assert
+            // Assert
             multiplayerSession.SessionPolicy.ShouldBeEquivalentTo(TestConstants.TEST_SESSION_POLICY);
         }
 
         [TestMethod]
         public void RequestSessionReservationShouldSetSettingsAndAuthContext()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
 
-            //Act
+            // Act
             multiplayerSession.RequestSessionReservation(TestConstants.TEST_PLAYER_SETTINGS, TestConstants.TEST_AUTHENTICATION_CONTEXT);
 
-            //Assert
+            // Assert
             multiplayerSession.PlayerSettings.ShouldBeEquivalentTo(TestConstants.TEST_PLAYER_SETTINGS);
             multiplayerSession.AuthenticationContext.ShouldBeEquivalentTo(TestConstants.TEST_AUTHENTICATION_CONTEXT);
         }
@@ -82,7 +82,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         [TestMethod]
         public void ProcessReservationResponsePacketShouldSetTheReservation()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
                 TestConstants.TEST_PLAYER_ID,
@@ -90,27 +90,27 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
 
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client, TestConstants.TEST_CONNECTION_STATE);
-            
-            //Act
+
+            // Act
             multiplayerSession.ProcessReservationResponsePacket(successfulReservation);
 
-            //Assert
+            // Assert
             multiplayerSession.Reservation.ShouldBeEquivalentTo(successfulReservation);
         }
 
         [TestMethod]
         public void UpdateStateShouldRaiseEvent()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
-            IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext) multiplayerSession;
+            IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext)multiplayerSession;
             multiplayerSession.MonitorEvents();
 
-            //Act
+            // Act
             connectionContext.UpdateConnectionState(TestConstants.TEST_CONNECTION_STATE);
 
-            //Assert
+            // Assert
             multiplayerSession.ShouldRaise("ConnectionStateChanged");
         }
     }

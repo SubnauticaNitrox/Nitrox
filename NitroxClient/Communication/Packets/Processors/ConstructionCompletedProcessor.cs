@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.NewBaseCreatedGuid);
 
-            GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);            
+            GameObject constructing = GuidHelper.RequireObjectFrom(completedPacket.Guid);
             Constructable constructable = constructing.GetComponent<Constructable>();
             constructable.constructedAmount = 1f;
             constructable.SetState(true, true);
@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 string newBaseGuid = completedPacket.NewBaseCreatedGuid.Get();
                 ConfigureNewlyConstructedBase(newBaseGuid);
-            }            
+            }
         }
 
         private void ConfigureNewlyConstructedBase(string newBaseGuid)

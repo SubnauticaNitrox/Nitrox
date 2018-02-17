@@ -1,7 +1,7 @@
-﻿using Harmony;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {
-            //To show the Cyclops HUD every time "hudActive" have to be true. "hornObject" is a good indicator to check if the player piloting the cyclops.
+            // To show the Cyclops HUD every time "hudActive" have to be true. "hornObject" is a good indicator to check if the player piloting the cyclops.
             if (!__instance.hornObject.activeSelf && (bool)__instance.ReflectionGet("hudActive"))
             {
                 __instance.canvasGroup.interactable = false;

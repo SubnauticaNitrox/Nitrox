@@ -1,19 +1,16 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.GameLogic;
-using NitroxClient.Map;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using NitroxClient;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.Packets.Processors;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 
 namespace ClientTester
@@ -24,7 +21,7 @@ namespace ClientTester
         private IMultiplayerSession multiplayerSession { get; }
 
         public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
-        
+
         private readonly string playerName;
 
         public MultiplayerClient(string playerId)
@@ -39,7 +36,7 @@ namespace ClientTester
 
         public void Start(string ip)
         {
-            Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap(); 
+            Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap();
             multiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
             multiplayerSession.Connect(ip);
 

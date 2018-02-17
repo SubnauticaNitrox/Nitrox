@@ -99,6 +99,7 @@ namespace NitroxClient.MonoBehaviours
                 Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
                 Log.Error(new StackTrace().ToString());
             }
+
             return true;
         }
     }

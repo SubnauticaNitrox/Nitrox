@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    //This base class has some handy methods that are common to bulding all types of equipment. 
+    // This base class has some handy methods that are common to bulding all types of equipment.
     public abstract class EquipmentModelBuilder : BasePlayerModelBuildHandler
     {
         protected GameObject ModelGeometry { get; set; }
@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             ModelGeometry = modelGeometry;
         }
 
-        //We can swap this out with a method that applies the coloring effect with a custom shader sometime after 1.0 
+        // We can swap this out with a method that applies the coloring effect with a custom shader sometime after 1.0
         protected void PaintMaterial(Material material, params HsvColorFilter[] filters)
         {
             Texture2D texture = (Texture2D)material.mainTexture;
@@ -42,8 +42,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             readableTexture.Apply();
         }
 
-        //This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode 
-        //that prevents us from accessing the pixel map of the 2D textures they apply to their materials. 
+        // This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode
+        // that prevents us from accessing the pixel map of the 2D textures they apply to their materials.
         private Texture2D CloneReadableTexture(Texture2D textureToClone)
         {
             // Create a temporary RenderTexture of the same size as the texture

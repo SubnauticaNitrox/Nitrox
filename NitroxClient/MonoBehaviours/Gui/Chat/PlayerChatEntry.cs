@@ -13,12 +13,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int INPUT_MARGIN = 15;
         private const string GUI_CHAT_NAME = "ChatInput";
 
-        private bool chatEnabled = false;
+        private bool chatEnabled;
         private string chatMessage = "";
         private PlayerChatManager chatManager;
         private IMultiplayerSession multiplayerSession;
         private GameLogic.Chat chatBroadcaster;
-        
 
         public void Awake()
         {

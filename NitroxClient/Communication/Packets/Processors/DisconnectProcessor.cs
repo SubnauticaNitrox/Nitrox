@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Disconnect disconnect)
         {
-            //TODO: don't remove right away... maybe grey out and start 
+            // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
             vitalsManager.RemovePlayer(disconnect.PlayerId);
 
