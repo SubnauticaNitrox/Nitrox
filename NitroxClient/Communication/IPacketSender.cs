@@ -5,7 +5,7 @@ namespace NitroxClient.Communication
     public interface IPacketSender
     {
         void Send(Packet packet);
-        PacketSuppression<T> Suppress<T>();
+        PacketSuppressor<T> Suppress<T>();
 
         //I loath that I must polute this interface with this icky-poo member, but it is necessary given that this feature already has a number of broad-stroke changes
         //and the current PacketSender oddly carries this responsibility.

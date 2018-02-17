@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
-    public class PacketSuppression<T> : IDisposable
+    public class PacketSuppressor<T> : IDisposable
     {
-        private readonly HashSet<Type> suppressedPacketsTypes;
+        private readonly HashSet<Type> suppressedPacketTypes;
 
-        public PacketSuppression(HashSet<Type> suppressedPacketsTypes)
+        public PacketSuppressor(HashSet<Type> suppressedPacketTypes)
         {
-            this.suppressedPacketsTypes = suppressedPacketsTypes;
-            suppressedPacketsTypes.Add(typeof(T));
+            this.suppressedPacketTypes = suppressedPacketTypes;
+            suppressedPacketTypes.Add(typeof(T));
         }
 
         public void Dispose()
         {
-            suppressedPacketsTypes.Remove(typeof(T));
+            suppressedPacketTypes.Remove(typeof(T));
         }
     }
 }
