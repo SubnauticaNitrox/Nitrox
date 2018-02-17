@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Packets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxModel.Packets;
 
 namespace NitroxTest.Model.Packets
 {
@@ -16,7 +16,9 @@ namespace NitroxTest.Model.Packets
         public void IsSerializable(Type t)
         {
             if (visitedTypes.Contains(t))
+            {
                 return;
+            }
 
             if (!t.IsSerializable && !t.IsInterface)
             {

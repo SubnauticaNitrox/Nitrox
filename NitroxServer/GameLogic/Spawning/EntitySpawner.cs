@@ -67,12 +67,12 @@ namespace NitroxServer.GameLogic
                     float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                     rollingProbabilityDensity += probabilityDensity;
                 }
+
                 double randomNumber = random.NextDouble();
                 double rollingProbability = 0;
 
                 if (rollingProbabilityDensity > 0)
                 {
-
                     if (rollingProbabilityDensity > 1f)
                     {
                         randomNumber *= rollingProbabilityDensity;
@@ -82,8 +82,8 @@ namespace NitroxServer.GameLogic
                     {
                         float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                         rollingProbability += probabilityDensity;
-                        //This is pretty hacky, it rerolls until its hits a prefab of a correct type
-                        //What should happen is that we check wei first, then grab data from there
+                        // This is pretty hacky, it rerolls until its hits a prefab of a correct type
+                        // What should happen is that we check wei first, then grab data from there
                         bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
                         if (rollingProbability >= randomNumber && isValidSpawn)
                         {
@@ -125,6 +125,7 @@ namespace NitroxServer.GameLogic
 
                 return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
             }
+
             return false;
         }
 
@@ -139,6 +140,7 @@ namespace NitroxServer.GameLogic
             {
                 gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
             }
+
             if (File.Exists(gameResourcesPath))
             {
                 resourcesPath = gameResourcesPath;
@@ -199,6 +201,7 @@ namespace NitroxServer.GameLogic
                     }
                 }
             }
+
             return true;
         }
     }

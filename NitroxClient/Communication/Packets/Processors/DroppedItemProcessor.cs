@@ -1,11 +1,10 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -31,15 +30,15 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void EnableRigidBody(GameObject gameObject)
         {
-            Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();            
+            Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
             rigidBody.isKinematic = false;
         }
 
         private void AssignToWaterPark(string waterParkGuid, Pickupable pickupable)
         {
-            GameObject waterParkGo = GuidHelper.RequireObjectFrom(waterParkGuid);            
+            GameObject waterParkGo = GuidHelper.RequireObjectFrom(waterParkGuid);
             WaterPark waterPark = waterParkGo.RequireComponent<WaterPark>();
-            
+
             waterPark.AddItem(pickupable);
         }
 

@@ -7,7 +7,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
 {
-    //TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
+    // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
     public class DeferringPacketReceiver
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;

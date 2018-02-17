@@ -7,7 +7,7 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionPolicyRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionPolicyRequest>
     {
-        //This will extend in the future when we look into different options for auth
+        // This will extend in the future when we look into different options for auth
         public override void Process(MultiplayerSessionPolicyRequest packet, Connection connection)
         {
             Log.Info("Providing session policies...");

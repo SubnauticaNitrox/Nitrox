@@ -10,7 +10,7 @@ namespace NitroxClient.MonoBehaviours
         private static Dictionary<string, GameObject> watchingEntitiesByGuid = new Dictionary<string, GameObject>();
         private Entities entityBroadcaster;
 
-        private float time = 0.0f;
+        private float time;
         private float interpolationPeriod = 0.25f;
 
         public void Awake()
@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours
             if (time >= interpolationPeriod)
             {
                 time = 0;
-                
+
                 if (watchingEntitiesByGuid.Count > 0)
                 {
                     entityBroadcaster.BroadcastTransforms(watchingEntitiesByGuid);

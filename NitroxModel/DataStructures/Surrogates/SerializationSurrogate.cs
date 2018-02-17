@@ -15,6 +15,7 @@ namespace NitroxModel.DataStructures.Surrogates
         }
 
         protected abstract void GetObjectData(T obj, SerializationInfo info);
+
         protected abstract T SetObjectData(T obj, SerializationInfo info);
     }
 }

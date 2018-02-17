@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic
         private readonly VisibleCells visibleCells;
         private readonly DeferringPacketReceiver packetReceiver;
 
-        private bool cellsPendingSync = false;
+        private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
 
         private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
@@ -99,6 +99,5 @@ namespace NitroxClient.GameLogic
                 yield return new WaitForSeconds(0.05f);
             }
         }
-
     }
 }

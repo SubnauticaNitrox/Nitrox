@@ -15,7 +15,7 @@ namespace ClientTester
         {
             string playerId1 = "sunrunner";
 
-            //give main server a second to start up...
+            // give main server a second to start up...
             System.Threading.Thread.Sleep(1000);
 
             MultiplayerClient mplayer1 = new MultiplayerClient(playerId1);

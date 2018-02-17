@@ -14,7 +14,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         [TestMethod]
         public void NegotiateShouldStartTheClientOnTheContext()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
@@ -26,17 +26,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.IsConnected.Should().BeTrue();
         }
 
         [TestMethod]
         public void NegotiateShouldSendMultiplayerSessionPolicyRequestPacketToClient()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
@@ -48,17 +48,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionPolicyRequest>());
         }
 
         [TestMethod]
         public void NegotiateShouldTransitionToEstablishingSessionPolicyState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(false);
             serverClient
@@ -70,34 +70,34 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<EstablishingSessionPolicy>());
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionWhenClientIsNull()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns((IClient)null);
             connectionContext.IpAddress.Returns(TestConstants.TEST_IP_ADDRESS);
 
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionWhenIpAddressIsNull()
         {
-            //Arrange
+            // Arrange
             IClient client = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(client);
@@ -105,38 +105,38 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void JoinSessionShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             Action action = () => connectionState.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void DisconnectShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             Disconnected connectionState = new Disconnected();
 
-            //Act
+            // Act
             Action action = () => connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
     }

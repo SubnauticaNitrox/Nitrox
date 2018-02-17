@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
 using NitroxModel.Packets;

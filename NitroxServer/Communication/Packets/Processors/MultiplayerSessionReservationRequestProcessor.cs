@@ -1,9 +1,9 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.Logger;
+using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxModel.Logger;
-using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -24,9 +24,9 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerSettings playerSettings = packet.PlayerSettings;
             AuthenticationContext authenticationContext = packet.AuthenticationContext;
             MultiplayerSessionReservation reservation = playerManager.ReservePlayerContext(
-                connection, 
-                playerSettings, 
-                authenticationContext, 
+                connection,
+                playerSettings,
+                authenticationContext,
                 correlationId);
 
             Log.Info($"Reservation processed successfully: {reservation}...");

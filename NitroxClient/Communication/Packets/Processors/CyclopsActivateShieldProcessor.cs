@@ -18,9 +18,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsActivateShield shieldPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);            
+            GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);
             CyclopsShieldButton shield = cyclops.RequireComponentInChildren<CyclopsShieldButton>();
-            
+
             using (packetSender.Suppress<CyclopsActivateShield>())
             {
                 shield.OnClick();

@@ -4,8 +4,8 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
- using NitroxServer.GameLogic;
- using UnityEngine;
+using NitroxServer.GameLogic;
+using UnityEngine;
 
 namespace NitroxServer
 {
@@ -18,7 +18,7 @@ namespace NitroxServer
 
         private readonly Connection connection;
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
-        
+		
         public Player(PlayerContext playerContext, Connection connection)
         {
             Id = playerContext.PlayerId;

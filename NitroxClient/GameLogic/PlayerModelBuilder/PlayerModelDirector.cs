@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    //The vision here is to use this director as our central tool for managing remote model appearance alterations like changing equipment or in-game changes to appearance.
-    //This could probably very easily be extended to work with the local Player later down the line. 
+    // The vision here is to use this director as our central tool for managing remote model appearance alterations like changing equipment or in-game changes to appearance.
+    // This could probably very easily be extended to work with the local Player later down the line.
     public class PlayerModelDirector
     {
         private PlayerModelBuildContext buildContext;

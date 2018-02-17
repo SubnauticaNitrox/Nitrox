@@ -42,6 +42,7 @@ namespace NitroxClient.Debuggers
             {
                 desiredWidth = 200;
             }
+
             WindowRect = new Rect(Screen.width / 2 - (desiredWidth / 2), 100, desiredWidth, 0); // Default position in center of screen.
             Hotkey = hotkey;
             HotkeyAltRequired = alt;
@@ -97,6 +98,7 @@ namespace NitroxClient.Debuggers
             {
                 return "";
             }
+
             return $"{(HotkeyControlRequired ? "CTRL+" : "")}{(HotkeyAltRequired ? "ALT+" : "")}{(HotkeyShiftRequired ? "SHIFT+" : "")}{Hotkey}";
         }
 
@@ -189,6 +191,7 @@ namespace NitroxClient.Debuggers
                 Enabled = false;
                 throw new NotSupportedException($"Cannot change {nameof(GUISkin)} for {GetType().FullName} when accessing the default skin. Change {nameof(SkinCreationOptions)} to something else than {nameof(GUISkinCreationOptions.DEFAULT)}.");
             }
+
             OnSetSkin(skin);
         }
 

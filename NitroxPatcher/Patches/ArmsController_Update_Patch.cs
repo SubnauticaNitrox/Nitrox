@@ -40,6 +40,7 @@ namespace NitroxPatcher.Patches
                 updateHandIKWeights.Invoke(__instance, new object[] { });
                 return false;
             }
+
             return true;
         }
 

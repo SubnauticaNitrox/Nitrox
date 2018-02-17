@@ -7,13 +7,13 @@ namespace NitroxModel.MultiplayerSession
     [Flags]
     public enum MultiplayerSessionReservationState
     {
-        Reserved = 0,        
+        Reserved = 0,
         Rejected = 1 << 0,
 
         [Description("The player name is already in use. Please try again with a different name.")]
         UniquePlayerNameConstraintViolated = 1 << 1,
 
-        //These are all intended for future use. Maybe YAGNI, but this is where we should look to expand upon server reservations
+        // These are all intended for future use. Maybe YAGNI, but this is where we should look to expand upon server reservations
         [Description("The server is currently at capacity. Please try again later.")]
         ServerPlayerCapacityReached = 1 << 2,
 

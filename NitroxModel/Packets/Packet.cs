@@ -50,8 +50,8 @@ namespace NitroxModel.Packets
 
             using (MemoryStream ms = new MemoryStream())
             {
-                //place holder for size, will be filled in later... allows us
-                //to avoid doing a byte array merge... zomg premature optimization
+                // place holder for size, will be filled in later... allows us
+                // to avoid doing a byte array merge... zomg premature optimization
                 ms.Write(new byte[MessageBuffer.HEADER_BYTE_SIZE], 0, MessageBuffer.HEADER_BYTE_SIZE);
                 Serializer.Serialize(ms, this);
                 packetData = ms.ToArray();
@@ -60,7 +60,7 @@ namespace NitroxModel.Packets
             int packetSize = packetData.Length - MessageBuffer.HEADER_BYTE_SIZE; // subtract HEADER_BYTE_SIZE because we dont want to take into account the added bytes
             byte[] packetSizeBytes = BitConverter.GetBytes(packetSize);
 
-            //premature optimization continued :)
+            // premature optimization continued :)
             for (int i = 0; i < MessageBuffer.HEADER_BYTE_SIZE; i++)
             {
                 packetData[i] = packetSizeBytes[i];

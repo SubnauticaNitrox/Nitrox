@@ -15,114 +15,113 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         [TestMethod]
         public void NegotiateShouldTransitionToAwaitingReservationCredentialsState()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingReservationCredentials>());
         }
 
         [TestMethod]
         public void NegotiateShouldThrowUncorrelatedPacketExceptionWhenThePolicyHasTheWrongCorrelationId()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong"));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<UncorrelatedPacketException>();
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionIfTheSessionPolicyIsNull()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.SessionPolicy.Returns((MultiplayerSessionPolicy)null);
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void JoinSessionShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
-
 
         [TestMethod]
         public void DisconnectShouldStopTheClient()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Stop();
         }
 
         [TestMethod]
         public void DisconnectShouldResetTheConnectionContext()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().ClearSessionState();
         }
 
         [TestMethod]
         public void DisconnectShouldTransitionToDisconnectedState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<Disconnected>());
         }
     }

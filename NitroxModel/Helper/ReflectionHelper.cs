@@ -88,6 +88,7 @@ namespace NitroxModel.Helper
                 methodInfo = t.GetMethod(methodName, bindingFlags);
                 Validate.NotNull(methodInfo, $"Type \"{t.Name}\" does not have a method called \"{methodName}\" with bindingFlags {bindingFlags}.");
             }
+
             return methodInfo;
         }
 

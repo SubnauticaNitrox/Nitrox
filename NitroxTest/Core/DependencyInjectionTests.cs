@@ -56,21 +56,21 @@ namespace NitroxTest.Core
         [TestMethod]
         public void ShouldResolveGenericDependenciesFromManuallyConstructedTypeInstances()
         {
-            //Arrange
+            // Arrange
             Type servicerInstanceType = typeof(IServicer<>);
             Type recipientAType = typeof(ServiceRecipientA);
             Type recipientBType = typeof(ServiceRecipientB);
             Type servicerAType = servicerInstanceType.MakeGenericType(recipientAType);
             Type servicerBType = servicerInstanceType.MakeGenericType(recipientBType);
 
-            //Act
+            // Act
             IServicer<ServiceRecipientA>
                 servicerA = (BaseServiceProvider<ServiceRecipientA>)NitroxServiceLocator.LocateService(servicerAType);
 
             IServicer<ServiceRecipientB>
                 servicerB = (BaseServiceProvider<ServiceRecipientB>)NitroxServiceLocator.LocateService(servicerBType);
 
-            //Assert
+            // Assert
             servicerA.Should().NotBeNull();
             servicerA.Should().BeOfType<ServiceAProvider>();
 

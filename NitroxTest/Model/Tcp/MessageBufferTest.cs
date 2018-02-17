@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NitroxTest.Model.Tcp
 {
@@ -88,7 +88,7 @@ namespace NitroxTest.Model.Tcp
         {
             Queue<Packet> results = new Queue<Packet>();
 
-            foreach(Packet packet in packets)
+            foreach (Packet packet in packets)
             {
                 results.Enqueue(packet);
             }
@@ -100,13 +100,12 @@ namespace NitroxTest.Model.Tcp
         {
             byte[] packetData = packet.SerializeWithHeaderData();
 
-            for(int i = 0; i < packetData.Length; i++)
+            for (int i = 0; i < packetData.Length; i++)
             {
                 messageBuffer.ReceivingBuffer[i + offset] = packetData[i];
             }
 
             return offset + packetData.Length;
         }
-        
     }
 }

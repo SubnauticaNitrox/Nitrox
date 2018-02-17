@@ -15,7 +15,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         [TestMethod]
         public void NegotiateShouldSendServerAuthorityReservationRequest()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);
 
@@ -26,17 +26,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Send(Arg.Any<MultiplayerSessionReservationRequest>());
         }
 
         [TestMethod]
         public void NegotiateShouldTransitionToAwaitingSessionReservationState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);
 
@@ -47,17 +47,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<AwaitingSessionReservation>());
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionWhenPlayerSettingsIsNull()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);
 
@@ -67,17 +67,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionWhenAuthenticationContextIsNull()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             serverClient.IsConnected.Returns(true);
 
@@ -87,75 +87,75 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void JoinSessionShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             Action action = () => connectionState.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void DisconnectShouldStopTheClient()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Stop();
         }
 
         [TestMethod]
         public void DisconnectShouldResetTheConnectionContext()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().ClearSessionState();
         }
 
         [TestMethod]
         public void DisconnectShouldTransitionToDisconnectedState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingReservationCredentials connectionState = new AwaitingReservationCredentials();
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<Disconnected>());
         }
     }

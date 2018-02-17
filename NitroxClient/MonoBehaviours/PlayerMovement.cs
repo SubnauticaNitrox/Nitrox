@@ -13,7 +13,7 @@ namespace NitroxClient.MonoBehaviours
         public const float BROADCAST_INTERVAL = 0.05f;
         private PlayerLogic playerBroadcaster;
 
-        private float time = 0.0f;
+        private float time;
 
         public void Awake()
         {

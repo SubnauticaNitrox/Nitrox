@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Persistent
 
             // NOTE: We currently only disable spawning of creature but we can later extend this to all slot types to make the server the authority.
             return false;
-            //return (!slot.IsCreatureSlot());
+            // return (!slot.IsCreatureSlot());
         }
 
         public override void Patch(HarmonyInstance harmony)

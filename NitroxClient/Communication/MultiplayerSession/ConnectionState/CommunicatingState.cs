@@ -6,6 +6,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     {
         public abstract MultiplayerSessionConnectionStage CurrentStage { get; }
         public abstract void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext);
+
         public abstract void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext);
 
         public virtual void Disconnect(IMultiplayerSessionConnectionContext sessionConnectionContext)

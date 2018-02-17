@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Unity.Helper;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -15,7 +15,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public string ServerIp = "";
         Rect joinServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
         Rect unableToJoinWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 150);
-        
+
         string username = "username";
         bool joiningServer;
         bool notifyingUnableToJoin;
@@ -112,7 +112,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             StartCoroutine(startNewGame);
 
             Log.InGame("Waiting for game to load...");
-            //Wait until game starts
+            // Wait until game starts
             yield return new WaitUntil(() => LargeWorldStreamer.main != null);
             yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
             yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);

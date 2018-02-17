@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    //Use this context object to develop a fluent api for setting up your player model transformations.
-    //EX: Create a TankModelBuilder to handle the regular tank and then add a method here called 'WithRegularTank()' 
-    //that instantiates the TankModelBuilder, passes it to the LinkBuilder method, and then returns 'this' 
+    // Use this context object to develop a fluent api for setting up your player model transformations.
+    // EX: Create a TankModelBuilder to handle the regular tank and then add a method here called 'WithRegularTank()'
+    // that instantiates the TankModelBuilder, passes it to the LinkBuilder method, and then returns 'this'
     public class PlayerModelBuildContext
     {
         private GameObject modelGeometry;

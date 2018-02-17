@@ -14,23 +14,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
     {
         // Token: 0x17000299 RID: 665
         // (get) Token: 0x06002B93 RID: 11155 RVA: 0x0001E932 File Offset: 0x0001CB32
-        public static Bounds aaBounds
-        {
-            get
-            {
-                return MultiplayerBuilder._aaBounds;
-            }
-        }
+        public static Bounds aaBounds => MultiplayerBuilder._aaBounds;
 
         // Token: 0x1700029A RID: 666
         // (get) Token: 0x06002B94 RID: 11156 RVA: 0x0001E939 File Offset: 0x0001CB39
-        public static bool isPlacing
-        {
-            get
-            {
-                return MultiplayerBuilder.prefab != null;
-            }
-        }
+        public static bool isPlacing => MultiplayerBuilder.prefab != null;
 
         // Token: 0x1700029B RID: 667
         // (get) Token: 0x06002B95 RID: 11157 RVA: 0x0001E946 File Offset: 0x0001CB46
@@ -48,6 +36,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return;
             }
+
             MultiplayerBuilder.initialized = true;
             MultiplayerBuilder.placeLayerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Trigger"));
             MultiplayerBuilder.ghostStructureMaterial = new Material(Resources.Load<Material>("Materials/ghostmodel"));
@@ -62,10 +51,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Debug.LogWarning("Builder : Begin() : Module prefab is null!");
                 return false;
             }
+
             if (modulePrefab != MultiplayerBuilder.prefab)
             {
                 MultiplayerBuilder.End();
             }
+
             MultiplayerBuilder.prefab = modulePrefab;
             MultiplayerBuilder.Update();
             return true;
@@ -83,8 +74,10 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     UnityEngine.Object.Destroy(componentInParent.gameObject);
                 }
+
                 UnityEngine.Object.Destroy(MultiplayerBuilder.ghostModel);
             }
+
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.canPlace = false;
@@ -101,10 +94,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return;
             }
+
             if (MultiplayerBuilder.CreateGhost())
             {
                 Log.Debug("Ghost Created!");
             }
+
             MultiplayerBuilder.canPlace = MultiplayerBuilder.UpdateAllowed();
             Transform expr_58 = MultiplayerBuilder.ghostModel.transform;
             expr_58.position = MultiplayerBuilder.placePosition + MultiplayerBuilder.placeRotation * MultiplayerBuilder.ghostModelPosition;
@@ -121,6 +116,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             Constructable component = MultiplayerBuilder.prefab.GetComponent<Constructable>();
             MultiplayerBuilder.constructableTechType = component.techType;
             MultiplayerBuilder.placeMinDistance = component.placeMinDistance;
@@ -163,19 +159,21 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     UnityEngine.Object.Destroy(componentsInChildren[i]);
                 }
+
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
                 MaterialExtensions.SetLocalScale(MultiplayerBuilder.renderers);
                 MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
             }
+
             return true;
         }
 
         // Token: 0x06002B9C RID: 11164 RVA: 0x001040F8 File Offset: 0x001022F8
         private static bool UpdateAllowed()
         {
-            //MultiplayerBuilder.SetDefaultPlaceTransform(ref MultiplayerBuilder.placePosition, ref MultiplayerBuilder.placeRotation);
+            // MultiplayerBuilder.SetDefaultPlaceTransform(ref MultiplayerBuilder.placePosition, ref MultiplayerBuilder.placeRotation);
             bool flag = false;
             ConstructableBase componentInParent = MultiplayerBuilder.ghostModel.GetComponentInParent<ConstructableBase>();
             bool flag2;
@@ -185,8 +183,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 transform.position = MultiplayerBuilder.placePosition;
                 transform.rotation = MultiplayerBuilder.placeRotation;
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag);
-                //MultiplayerBuilder.placePosition = transform.position;
-                //MultiplayerBuilder.placeRotation = transform.rotation;
+                // MultiplayerBuilder.placePosition = transform.position;
+                // MultiplayerBuilder.placeRotation = transform.rotation;
                 if (flag)
                 {
                     MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
@@ -197,6 +195,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 flag2 = MultiplayerBuilder.CheckAsSubModule();
             }
+
             if (flag2)
             {
                 List<GameObject> list = new List<GameObject>();
@@ -204,6 +203,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 flag2 = (list.Count == 0);
                 list.Clear();
             }
+
             return flag2;
         }
 
@@ -215,6 +215,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
             ConstructableBase componentInParent = MultiplayerBuilder.ghostModel.GetComponentInParent<ConstructableBase>();
             if (componentInParent != null)
@@ -231,6 +232,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     componentInParent.transform.SetParent(component.TargetBase.transform, true);
                 }
+
                 componentInParent.SetState(false, true);
 
                 component.GhostBase.transform.position = overridePosition;
@@ -260,6 +262,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                         gameObject.transform.parent = componentInParent2.GetModulesRoot();
                     }
                 }
+
                 Transform expr_138 = gameObject.transform;
                 expr_138.position = MultiplayerBuilder.placePosition;
                 expr_138.rotation = MultiplayerBuilder.placeRotation;
@@ -271,6 +274,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 gameObject.transform.position = overridePosition;
                 gameObject.transform.rotation = overrideQuaternion;
             }
+
             MultiplayerBuilder.ghostModel = null;
             MultiplayerBuilder.prefab = null;
             MultiplayerBuilder.canPlace = false;
@@ -340,6 +344,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     gameObject.transform.parent = componentInParent2.GetModulesRoot();
                 }
             }
+
             Transform expr_138 = gameObject.transform;
             expr_138.position = MultiplayerBuilder.placePosition;
             expr_138.rotation = MultiplayerBuilder.placeRotation;
@@ -350,6 +355,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 UnityEngine.Object.Destroy(MultiplayerBuilder.ghostModel);
             }
+
             componentInParent3.SetIsInside(flag || flag2);
             SkyEnvironmentChanged.Send(gameObject, currentSub);
             gameObject.transform.position = overridePosition;
@@ -387,6 +393,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     Matrix4x4 boundsToLocalMatrix = OrientedBounds.TransformMatrix(orientedBounds.position, orientedBounds.rotation);
                     OrientedBounds.MinMaxBounds(boundsToLocalMatrix, Vector3.zero, orientedBounds.extents, ref vector, ref a);
                 }
+
                 MultiplayerBuilder._aaBounds.extents = (a - vector) * 0.5f;
                 MultiplayerBuilder._aaBounds.center = vector + MultiplayerBuilder.aaBounds.extents;
             }
@@ -412,10 +419,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 results.Clear();
             }
+
             if (target == null)
             {
                 return;
             }
+
             ConstructableBounds[] componentsInChildren = target.GetComponentsInChildren<ConstructableBounds>();
             for (int i = 0; i < componentsInChildren.Length; i++)
             {
@@ -426,6 +435,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     orientedBounds = OrientedBounds.ToLocalBounds(transform, orientedBounds);
                 }
+
                 results.Add(orientedBounds);
             }
         }
@@ -437,6 +447,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return true;
             }
+
             int num = Physics.OverlapBoxNonAlloc(position, extents, MultiplayerBuilder.sColliders, rotation, layerMask, QueryTriggerInteraction.Ignore);
             return num == 0 || (num == 1 && MultiplayerBuilder.sColliders[0] == allowedCollider);
         }
@@ -448,6 +459,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 rotation = Quaternion.identity;
             }
+
             for (int i = 0; i < localBounds.Count; i++)
             {
                 OrientedBounds orientedBounds = localBounds[i];
@@ -455,6 +467,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     orientedBounds.rotation = Quaternion.identity;
                 }
+
                 orientedBounds.position = position + rotation * orientedBounds.position;
                 orientedBounds.rotation = rotation * orientedBounds.rotation;
                 if (!MultiplayerBuilder.CheckSpace(orientedBounds.position, orientedBounds.rotation, orientedBounds.extents, layerMask, allowedCollider))
@@ -462,6 +475,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -514,6 +528,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 rotation = Quaternion.identity;
             }
+
             List<GameObject> list = new List<GameObject>();
             for (int i = 0; i < localBounds.Count; i++)
             {
@@ -522,6 +537,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     orientedBounds.rotation = Quaternion.identity;
                 }
+
                 orientedBounds.position = position + rotation * orientedBounds.position;
                 orientedBounds.rotation = rotation * orientedBounds.rotation;
                 MultiplayerBuilder.GetOverlappedColliders(orientedBounds.position, orientedBounds.rotation, orientedBounds.extents, MultiplayerBuilder.sCollidersList);
@@ -534,6 +550,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                         list.RemoveAt(j);
                     }
                 }
+
                 for (int k = 0; k < MultiplayerBuilder.sCollidersList.Count; k++)
                 {
                     Collider collider = MultiplayerBuilder.sCollidersList[k];
@@ -546,6 +563,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                         }
                     }
                 }
+
                 MultiplayerBuilder.sCollidersList.Clear();
                 for (int l = 0; l < list.Count; l++)
                 {
@@ -566,31 +584,37 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             LargeWorldEntity component = go.GetComponent<LargeWorldEntity>();
             if (component != null && component.cellLevel >= LargeWorldEntity.CellLevel.Global)
             {
                 return false;
             }
+
             SubRoot componentInParent2 = go.GetComponentInParent<SubRoot>();
             if (componentInParent2 != null)
             {
                 return false;
             }
+
             Constructable componentInParent3 = go.GetComponentInParent<Constructable>();
             if (componentInParent3 != null)
             {
                 return false;
             }
+
             IObstacle component2 = go.GetComponent<IObstacle>();
             if (component2 != null)
             {
                 return false;
             }
+
             Pickupable component3 = go.GetComponent<Pickupable>();
             if (component3 != null && component3.attached)
             {
                 return false;
             }
+
             PlaceTool component4 = go.GetComponent<PlaceTool>();
             return !(component4 != null);
         }
@@ -606,6 +630,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -634,6 +659,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             Transform aimTransform = MultiplayerBuilder.GetAimTransform();
             MultiplayerBuilder.placementTarget = null;
             RaycastHit hit;
@@ -641,24 +667,29 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             MultiplayerBuilder.placementTarget = hit.collider.gameObject;
             MultiplayerBuilder.SetPlaceOnSurface(hit, ref MultiplayerBuilder.placePosition, ref MultiplayerBuilder.placeRotation);
             if (!MultiplayerBuilder.CheckTag(hit.collider))
             {
                 return false;
             }
+
             if (!MultiplayerBuilder.CheckSurfaceType(MultiplayerBuilder.GetSurfaceType(hit.normal)))
             {
                 return false;
             }
+
             if (!MultiplayerBuilder.CheckDistance(hit.point, MultiplayerBuilder.placeMinDistance))
             {
                 return false;
             }
+
             if (!MultiplayerBuilder.allowedOnConstructables && MultiplayerBuilder.HasComponent<Constructable>(hit.collider.gameObject))
             {
                 return false;
             }
+
             if (!Player.main.IsInSub())
             {
                 GameObject entityRoot = UWE.Utils.GetEntityRoot(MultiplayerBuilder.placementTarget);
@@ -666,11 +697,13 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 {
                     entityRoot = MultiplayerBuilder.placementTarget;
                 }
+
                 if (!MultiplayerBuilder.ValidateOutdoor(entityRoot))
                 {
                     return false;
                 }
             }
+
             return MultiplayerBuilder.CheckSpace(MultiplayerBuilder.placePosition, MultiplayerBuilder.placeRotation, MultiplayerBuilder.bounds, MultiplayerBuilder.placeLayerMask.value, hit.collider);
         }
 
@@ -681,10 +714,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return SurfaceType.Ceiling;
             }
+
             if ((double)hitNormal.y < 0.33)
             {
                 return SurfaceType.Wall;
             }
+
             return SurfaceType.Ground;
         }
 
@@ -695,6 +730,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             GameObject gameObject = c.gameObject;
             return !(gameObject == null) && !gameObject.CompareTag(MultiplayerBuilder.ignoreTag);
         }
@@ -738,6 +774,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 forward = -aimTransform.forward;
                 up = aimTransform.up;
             }
+
             rotation = Quaternion.LookRotation(forward, up);
             if (MultiplayerBuilder.rotationEnabled)
             {
@@ -797,6 +834,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     vector2 = Vector3.up;
                 }
             }
+
             position = hit.point;
             rotation = Quaternion.LookRotation(vector, vector2);
             if (MultiplayerBuilder.rotationEnabled)
@@ -817,6 +855,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 newLayer = LayerMask.NameToLayer("Default");
             }
+
             global::Utils.SetLayerRecursively(gameObject, newLayer, true, -1);
         }
 
@@ -828,17 +867,20 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return false;
             }
+
             SubRoot component2 = hitObject.GetComponent<SubRoot>();
             Base component3 = hitObject.GetComponent<Base>();
             if (component2 != null && component3 == null)
             {
                 return false;
             }
+
             Pickupable component4 = hitObject.GetComponent<Pickupable>();
             if (component4 != null)
             {
                 return false;
             }
+
             LiveMixin component5 = hitObject.GetComponent<LiveMixin>();
             return !(component5 != null) || !component5.destroyOnDeath;
         }
@@ -852,6 +894,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 gameObject = PrefabDatabase.GetPrefabForFilename(poweredPrefabName);
             }
+
             if (gameObject != null)
             {
                 PowerRelay component = gameObject.GetComponent<PowerRelay>();
@@ -868,6 +911,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     }
                     }.transform;
                 }
+
                 PowerRelay powerRelay = ghostModel.AddComponent<PowerRelay>();
                 powerRelay.maxOutboundDistance = component.maxOutboundDistance;
                 powerRelay.dontConnectToRelays = component.dontConnectToRelays;
@@ -912,7 +956,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         private static readonly string ignoreTag = "DenyBuilding";
 
         // Token: 0x04002A78 RID: 10872
-        private static bool initialized = false;
+        private static bool initialized;
 
         // Token: 0x04002A79 RID: 10873
         private static BuildModeInputHandler inputHandler = new BuildModeInputHandler();
@@ -924,7 +968,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
         private static List<Collider> sCollidersList = new List<Collider>();
 
         // Token: 0x04002A7C RID: 10876
-        public static float additiveRotation = 0f;
+        public static float additiveRotation;
 
         // Token: 0x04002A7D RID: 10877
         private static GameObject prefab;
@@ -1001,6 +1045,5 @@ namespace NitroxClient.MonoBehaviours.Overrides
         // Token: 0x04002A95 RID: 10901
         private static string placeSound = "event:/tools/builder/place";
     }
-
 }
 #pragma warning restore // Re-enable all warnings for copied file

@@ -6,7 +6,7 @@ namespace NitroxServer.GameLogic
     {
         Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
 
-        //TODO: redistribute upon disconnect
+        // TODO: redistribute upon disconnect
 
         public bool TryToAcquire(string guid, Player player)
         {
@@ -39,6 +39,5 @@ namespace NitroxServer.GameLogic
                 return false;
             }
         }
-
     }
 }

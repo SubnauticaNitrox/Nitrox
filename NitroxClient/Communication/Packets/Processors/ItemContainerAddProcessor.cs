@@ -1,8 +1,8 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ItemContainerAdd packet)
         {
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);            
+            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
 
             if (opContainer.IsPresent())
@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 ItemsContainer container = opContainer.Get();
                 GameObject item = SerializationHelper.GetGameObject(packet.ItemData);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
-                
+
                 using (packetSender.Suppress<ItemContainerAdd>())
                 {
                     container.UnsafeAdd(new InventoryItem(pickupable));

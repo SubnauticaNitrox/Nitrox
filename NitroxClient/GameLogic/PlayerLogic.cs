@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;

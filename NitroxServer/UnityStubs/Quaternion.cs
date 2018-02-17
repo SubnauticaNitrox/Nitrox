@@ -52,5 +52,4 @@ namespace NitroxServer.UnityStubs
             return "[Quaternion - {" + x + ", " + y + ", " + z + "," + w + "}]";
         }
     }
-
 }

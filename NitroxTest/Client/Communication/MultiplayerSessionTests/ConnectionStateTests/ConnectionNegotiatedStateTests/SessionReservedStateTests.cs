@@ -14,21 +14,21 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             SessionReserved connectionState = new SessionReserved();
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void JoinSessionShouldSendPlayerJoiningMultiplayerSessionPacket()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
                 TestConstants.TEST_PLAYER_ID,
@@ -43,17 +43,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             SessionReserved connectionState = new SessionReserved();
 
-            //Act
+            // Act
             connectionState.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             client.Received().Send(Arg.Any<PlayerJoiningMultiplayerSession>());
         }
-        
+
         [TestMethod]
         public void JoinSessionShouldTransitionToSessionJoinedState()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
                 TestConstants.TEST_PLAYER_ID,
@@ -68,61 +68,61 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             SessionReserved connection = new SessionReserved();
 
-            //Act
+            // Act
             connection.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<SessionJoined>());
         }
 
         [TestMethod]
         public void DisconnectShouldStopTheClient()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             SessionReserved connectionState = new SessionReserved();
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Stop();
         }
 
         [TestMethod]
         public void DisconnectShouldResetTheConnectionContext()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             SessionReserved connectionState = new SessionReserved();
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().ClearSessionState();
         }
 
         [TestMethod]
         public void DisconnectShouldTransitionToDisconnectedState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             SessionReserved connection = new SessionReserved();
 
-            //Act
+            // Act
             connection.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<Disconnected>());
         }
     }

@@ -3,9 +3,9 @@ using System.Net;
 using System.Net.Sockets;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
-using NitroxModel.Tcp;
 
 namespace NitroxServer.Communication
 {
@@ -67,18 +67,18 @@ namespace NitroxServer.Communication
                 PlayerDisconnected(connection);
             }
         }
-        
+
         private void PlayerDisconnected(Connection connection)
         {
             Player player = playerManager.GetPlayer(connection);
 
-            if(player != null)
+            if (player != null)
             {
                 playerManager.PlayerDisconnected(connection);
 
                 Disconnect disconnect = new Disconnect(player.Id);
                 playerManager.SendPacketToAllPlayers(disconnect);
             }
-        }     
+        }
     }
 }

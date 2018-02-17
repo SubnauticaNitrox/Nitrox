@@ -6,16 +6,16 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class MultiplayerSessionReservationProcessor : ClientPacketProcessor<MultiplayerSessionReservation>
     {
-        private readonly IMultiplayerSession _multiplayerSession;
+        private readonly IMultiplayerSession multiplayerSession;
 
         public MultiplayerSessionReservationProcessor(IMultiplayerSession multiplayerSession)
         {
-            _multiplayerSession = multiplayerSession;
+            this.multiplayerSession = multiplayerSession;
         }
 
         public override void Process(MultiplayerSessionReservation packet)
         {
-            _multiplayerSession.ProcessReservationResponsePacket(packet);
+            multiplayerSession.ProcessReservationResponsePacket(packet);
         }
     }
 }

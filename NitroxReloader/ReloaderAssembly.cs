@@ -67,10 +67,7 @@ namespace NitroxReloader
             }
         }
 
-        internal string AssemblyName
-        {
-            get { return GetAssemblyName(assembly); }
-        }
+        internal string AssemblyName => GetAssemblyName(assembly);
 
         #region Utils
         private static string GetAssemblyName(Assembly a)

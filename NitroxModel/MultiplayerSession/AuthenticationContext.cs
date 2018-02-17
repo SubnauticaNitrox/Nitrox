@@ -14,7 +14,7 @@ namespace NitroxModel.MultiplayerSession
             Username = username;
         }
 
-        public AuthenticationContext(string username, string serverPassword) 
+        public AuthenticationContext(string username, string serverPassword)
             : this(username)
         {
             ServerPassword = Optional<string>.Of(serverPassword);

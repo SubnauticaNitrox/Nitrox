@@ -15,7 +15,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         [TestMethod]
         public void NegotiateShouldTransitionToSessionRevervedAfterReceivingSuccessfulReservation()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 TestConstants.TEST_CORRELATION_ID,
                 TestConstants.TEST_PLAYER_ID,
@@ -26,17 +26,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<SessionReserved>());
         }
 
         [TestMethod]
         public void NegotiateShouldThrowUncorrelatedPacketExceptionWhenTheReservationHasTheWrongCorrelationId()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation successfulReservation = new MultiplayerSessionReservation(
                 "wrong",
                 TestConstants.TEST_PLAYER_ID,
@@ -47,17 +47,17 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<UncorrelatedPacketException>();
         }
 
         [TestMethod]
         public void NegotiateShouldTransitionToSessionReservationRejectedAfterReceivingRejectedReservation()
         {
-            //Arrange
+            // Arrange
             MultiplayerSessionReservation rejectedReservation = new MultiplayerSessionReservation(TestConstants.TEST_CORRELATION_ID, TestConstants.TEST_REJECTION_STATE);
 
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
@@ -65,91 +65,91 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<SessionReservationRejected>());
         }
 
         [TestMethod]
         public void NegotiateShouldThrowInvalidOperationExceptionWhenTheReservationIsNull()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Reservation.Returns((MultiplayerSessionReservation)null);
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.NegotiateReservation(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
-        
+
         [TestMethod]
         public void JoinSessionShouldThrowInvalidOperationException()
         {
-            //Arrange
+            // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             Action action = () => connectionState.JoinSession(connectionContext);
 
-            //Assert
+            // Assert
             action.ShouldThrow<InvalidOperationException>();
         }
 
         [TestMethod]
         public void DisconnectShouldStopTheClient()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             serverClient.Received().Stop();
         }
 
         [TestMethod]
         public void DisconnectShouldResetTheConnectionContext()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().ClearSessionState();
         }
 
         [TestMethod]
         public void DisconnectShouldTransitionToDisconnectedState()
         {
-            //Arrange
+            // Arrange
             IClient serverClient = Substitute.For<IClient>();
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
             connectionContext.Client.Returns(serverClient);
 
             AwaitingSessionReservation connectionState = new AwaitingSessionReservation(TestConstants.TEST_CORRELATION_ID);
 
-            //Act
+            // Act
             connectionState.Disconnect(connectionContext);
 
-            //Assert
+            // Assert
             connectionContext.Received().UpdateConnectionState(Arg.Any<Disconnected>());
         }
     }

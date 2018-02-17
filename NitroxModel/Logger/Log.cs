@@ -30,6 +30,7 @@ namespace NitroxModel.Logger
             {
                 ErrorMessage.AddMessage(msg);
             }
+
             Info(msg);
         }
 
