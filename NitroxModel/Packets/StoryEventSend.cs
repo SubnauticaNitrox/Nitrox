@@ -13,6 +13,11 @@ namespace NitroxModel.Packets
             StoryEventType = storyEventType;
             Key = key;
         }
+
+        public override string ToString()
+        {
+            return "[StoryEventSend - StoryEventType: " + StoryEventType + " Key: " + Key + "]";
+        }
     }
 
     public enum StoryEventType

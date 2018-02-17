@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Map;
+using NitroxModel;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -109,9 +110,12 @@ namespace NitroxClient.Communication
                 Queue<Packet> deferredPackets;
                 if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell.AbsoluteCellEntity, out deferredPackets))
                 {
+                    Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
+                        visibleCell,
+                        deferredPackets.Count,
+                        deferredPackets.PrefixWith("\n\t"));
                     while (deferredPackets.Count > 0)
                     {
-                        Log.Debug("Found deferred packet... adding it back with high priority.");
                         Packet packet = deferredPackets.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
