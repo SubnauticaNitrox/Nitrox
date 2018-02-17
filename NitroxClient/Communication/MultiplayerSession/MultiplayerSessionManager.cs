@@ -84,9 +84,9 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        public PacketSuppression<T> Suppress<T>()
+        public PacketSuppressor<T> Suppress<T>()
         {
-            return new PacketSuppression<T>(suppressedPacketsTypes);
+            return new PacketSuppressor<T>(suppressedPacketsTypes);
         }
 
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
