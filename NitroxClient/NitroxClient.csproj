@@ -62,10 +62,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientAutoFaqRegistrar.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
+    <Compile Include="Communication\Abstract\IPacketSender.cs" />
+    <Compile Include="Communication\DeferringPacketReceiver.cs" />
+    <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingSessionReservation.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\CommunicatingState.cs" />
@@ -76,14 +81,8 @@
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionJoined.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReservationRejected.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReserved.cs" />
-    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationProcessor.cs" />
-    <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionConnectionStage.cs" />
-    <Compile Include="Communication\DeferringPacketReceiver.cs" />
-    <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
-    <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
-    <Compile Include="Communication\Abstract\IPacketSender.cs" />
+    <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -115,6 +114,8 @@
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
@@ -135,20 +136,15 @@
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
-    <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\BasePlayerModelBuildHandler.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
+    <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuildHandler.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\Entities.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\EquipmentModelBuilder.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\HsvColorFilter.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
@@ -156,7 +152,6 @@
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
     <Compile Include="GameLogic\Interior.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
@@ -166,21 +161,28 @@
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\PlayerLogic.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\BasePlayerModelBuildHandler.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuildHandler.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\EquipmentModelBuilder.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\HsvColorFilter.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelBuildContext.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelDirector.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerPingBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerRebreatherModelBuilder.cs" />
-    <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\RegularDiveSuitBuilder.cs" />
+    <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
+    <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
-    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLog.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLog.cs" />
     <Compile Include="MonoBehaviours\Gui\HUD\RemotePlayerVitals.cs" />
     <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
@@ -188,11 +190,10 @@
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
-    <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\ConsoleJoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
-    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
@@ -211,10 +212,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ClientAutoFaqRegistrar.cs" />
     <Compile Include="Unity\Helper\DebugUtils.cs" />
-    <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\GUISkinUtils.cs" />
+    <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
     <Compile Include="Unity\Helper\StringUtils.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
