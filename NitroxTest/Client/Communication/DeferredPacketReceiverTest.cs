@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication;
 using NitroxClient.Map;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using UnityEngine;

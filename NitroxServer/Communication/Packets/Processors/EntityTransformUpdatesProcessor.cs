@@ -1,9 +1,9 @@
-﻿using NitroxModel.DataStructures;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System.Collections.Generic;
 using static NitroxModel.Packets.EntityTransformUpdates;
 
 namespace NitroxServer.Communication.Packets.Processors

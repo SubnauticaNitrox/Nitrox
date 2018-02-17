@@ -2,7 +2,7 @@
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxModel.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     public class AbsoluteEntityCell

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using AssetsTools.NET;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.GameLogic;
 using NitroxModel.Helper;

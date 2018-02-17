@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.Map
 {

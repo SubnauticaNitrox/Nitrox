@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {

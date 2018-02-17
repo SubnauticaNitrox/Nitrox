@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;

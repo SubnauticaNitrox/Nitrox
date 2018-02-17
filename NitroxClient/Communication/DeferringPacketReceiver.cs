@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Map;
 using NitroxModel;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 

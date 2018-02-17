@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NitroxModel.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     public class InteractiveChildObjectIdentifier

@@ -1,10 +1,9 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Map;
-using NitroxModel.DataStructures;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication;
+using NitroxClient.Map;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -33,7 +32,7 @@ namespace NitroxClient.GameLogic
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId, cellId, level));
             markCellsReadyForSync(0.5f);
         }
-        
+
         private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
         {
             yield return new WaitForSeconds(0.5f);
@@ -45,7 +44,7 @@ namespace NitroxClient.GameLogic
                 visibleCells.Add(cell);
                 added.Add(cell);
                 packetReceiver.CellLoaded(cell);
-            }            
+            }
         }
 
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
@@ -57,7 +56,7 @@ namespace NitroxClient.GameLogic
                 visibleCells.Remove(cell);
                 removed.Add(cell);
                 markCellsReadyForSync(0);
-            }     
+            }
         }
 
         private void markCellsReadyForSync(float delay)
