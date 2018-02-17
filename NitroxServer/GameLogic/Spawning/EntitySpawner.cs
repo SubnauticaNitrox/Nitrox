@@ -4,7 +4,6 @@ using System.IO;
 using AssetsTools.NET;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;

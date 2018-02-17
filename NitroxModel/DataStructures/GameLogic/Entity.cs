@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace NitroxModel.GameLogic
+namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     public class Entity

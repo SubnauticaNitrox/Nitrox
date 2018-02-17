@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxModel.GameLogic.Creatures.Actions
+namespace NitroxModel.DataStructures.GameLogic.Creatures.Actions
 {
     public interface SerializableCreatureAction
     {

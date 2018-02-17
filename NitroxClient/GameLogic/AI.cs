@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication;
-using NitroxModel.GameLogic.Creatures.Actions;
+using NitroxModel.DataStructures.GameLogic.Creatures.Actions;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
