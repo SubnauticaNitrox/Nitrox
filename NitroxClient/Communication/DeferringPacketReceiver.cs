@@ -92,7 +92,6 @@ namespace NitroxClient.Communication
                         visibleCell,
                         deferredPackets.Count,
                         deferredPackets.PrefixWith("\n\t"));
-
                     while (deferredPackets.Count > 0)
                     {
                         Packet packet = deferredPackets.Dequeue();
