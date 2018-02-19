@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic
         public Entity UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
         {
             Entity entity = GetEntityByGuid(guid);
-            AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position, entity.Level);
+            AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
             AbsoluteEntityCell newCell = new AbsoluteEntityCell(position, entity.Level);
 
             if (oldCell != newCell)

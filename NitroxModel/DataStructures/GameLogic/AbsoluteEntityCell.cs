@@ -35,6 +35,10 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 Int3 cellSize = GetCellSize();
                 return BatchPosition + CellId * cellSize + (cellSize >> 1);
+
+                // Same as:
+                // Int3.Bounds bounds = BatchCells.GetBlockBounds(BatchId, CellId, Level, Map.BATCH_DIMENSIONS);
+                // Vector3 center = EntityCell.GetCenter(bounds) - Map.BATCH_DIMENSION_CENTERING.ToVector3();
             }
         }
 

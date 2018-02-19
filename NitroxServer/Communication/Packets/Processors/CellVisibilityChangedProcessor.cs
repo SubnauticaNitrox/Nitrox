@@ -59,7 +59,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             foreach (Entity entity in revokedEntities)
             {
-                AbsoluteEntityCell entityCell = new AbsoluteEntityCell(entity.Position, entity.Level);
+                AbsoluteEntityCell entityCell = entity.AbsoluteEntityCell;
 
                 foreach (Player player in playerManager.GetPlayers())
                 {

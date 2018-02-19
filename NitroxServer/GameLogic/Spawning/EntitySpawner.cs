@@ -104,14 +104,14 @@ namespace NitroxServer.GameLogic
                                                           worldEntityInfo.techType,
                                                           Guid.NewGuid().ToString(),
                                                           (int)worldEntityInfo.cellLevel);
-                        AbsoluteEntityCell absoluteCellId = new AbsoluteEntityCell(entitySpawnPoint.BatchId, entitySpawnPoint.CellId, entitySpawnPoint.Level);
 
-                        if (!entitiesByAbsoluteCell.ContainsKey(absoluteCellId))
+                        List<Entity> entities;
+                        if (!entitiesByAbsoluteCell.TryGetValue(entitySpawnPoint.AbsoluteEntityCell, out entities))
                         {
-                            entitiesByAbsoluteCell[absoluteCellId] = new List<Entity>();
+                            entities = entitiesByAbsoluteCell[entitySpawnPoint.AbsoluteEntityCell] = new List<Entity>();
                         }
 
-                        entitiesByAbsoluteCell[absoluteCellId].Add(spawnedEntity);
+                        entities.Add(spawnedEntity);
                     }
                 }
             }
