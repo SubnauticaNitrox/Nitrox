@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -71,13 +72,7 @@ namespace NitroxServer.GameLogic
                 {
                     lock (cellEntities)
                     {
-                        foreach (Entity entity in cellEntities)
-                        {
-                            if (cell.Level <= entity.Level)
-                            {
-                                entities.Add(entity);
-                            }
-                        }
+                        entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
                     }
                 }
             }
@@ -97,13 +92,8 @@ namespace NitroxServer.GameLogic
                 {
                     lock (entities)
                     {
-                        foreach (Entity entity in entities)
-                        {
-                            if (cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player))
-                            {
-                                assignedEntities.Add(entity);
-                            }
-                        }
+                        assignedEntities.AddRange(
+                            entities.Where(entity => cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player)));
                     }
                 }
             }
@@ -123,13 +113,8 @@ namespace NitroxServer.GameLogic
                 {
                     lock (entities)
                     {
-                        foreach (Entity entity in entities)
-                        {
-                            if (entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player))
-                            {
-                                revokedEntities.Add(entity);
-                            }
-                        }
+                        revokedEntities.AddRange(
+                            entities.Where(entity => entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player)));
                     }
                 }
             }
