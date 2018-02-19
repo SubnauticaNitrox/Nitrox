@@ -2,8 +2,8 @@
 {
     public class ColorValueRange
     {
-        protected float min { get; set; }
-        protected float max { get; set; }
+        private readonly float min;
+        private readonly float max;
 
         public ColorValueRange(float min, float max)
         {
