@@ -24,17 +24,20 @@ namespace NitroxServer.GameLogic
 
             if (oldCell != newCell)
             {
-                lock (entitySpawner)
+                List<Entity> oldList;
+                if (entitySpawner.GetEntities(oldCell, out oldList))
                 {
-                    List<Entity> oldList;
-                    if (entitySpawner.GetEntities(oldCell, out oldList))
+                    lock (oldList)
                     {
                         // Validate.IsTrue?
                         oldList.Remove(entity);
                     }
+                }
 
-                    List<Entity> newList = entitySpawner.GetEntities(newCell);
+                List<Entity> newList = entitySpawner.GetEntities(newCell);
 
+                lock (newList)
+                {
                     newList.Add(entity);
                 }
             }
@@ -49,10 +52,7 @@ namespace NitroxServer.GameLogic
         {
             Entity entity = null;
 
-            lock (entitySpawner)
-            {
-                Validate.IsTrue(entitySpawner.TryGetEntityByGuid(guid, out entity));
-            }
+            Validate.IsTrue(entitySpawner.TryGetEntityByGuid(guid, out entity));
 
             Validate.NotNull(entity);
 
@@ -67,9 +67,9 @@ namespace NitroxServer.GameLogic
             {
                 List<Entity> cellEntities;
 
-                lock (entitySpawner)
+                if (entitySpawner.GetEntities(cell, out cellEntities))
                 {
-                    if (entitySpawner.GetEntities(cell, out cellEntities))
+                    lock (cellEntities)
                     {
                         foreach (Entity entity in cellEntities)
                         {
@@ -93,9 +93,9 @@ namespace NitroxServer.GameLogic
             {
                 List<Entity> entities;
 
-                lock (entitySpawner)
+                if (entitySpawner.GetEntities(cell, out entities))
                 {
-                    if (entitySpawner.GetEntities(cell, out entities))
+                    lock (entities)
                     {
                         foreach (Entity entity in entities)
                         {
@@ -119,9 +119,9 @@ namespace NitroxServer.GameLogic
             {
                 List<Entity> entities;
 
-                lock (entitySpawner)
+                if (entitySpawner.GetEntities(cell, out entities))
                 {
-                    if (entitySpawner.GetEntities(cell, out entities))
+                    lock (entities)
                     {
                         foreach (Entity entity in entities)
                         {

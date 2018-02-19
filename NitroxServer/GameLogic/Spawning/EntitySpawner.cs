@@ -43,7 +43,10 @@ namespace NitroxServer.GameLogic
 
         public bool TryGetEntityByGuid(string guid, out Entity entity)
         {
-            return entitiesByGuid.TryGetValue(guid, out entity);
+            lock (entitiesByGuid)
+            {
+                return entitiesByGuid.TryGetValue(guid, out entity);
+            }
         }
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
@@ -57,7 +60,10 @@ namespace NitroxServer.GameLogic
         {
             SpawnUnloadedEntitiesForBatch(absoluteEntityCell.BatchId);
 
-            return entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result);
+            lock (entitiesByAbsoluteCell)
+            {
+                return entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result);
+            }
         }
 
         private void RegisterEntity(Entity entity)
@@ -90,11 +96,14 @@ namespace NitroxServer.GameLogic
         /// </summary>
         private void SpawnUnloadedEntitiesForBatch(Int3 batchId)
         {
-            if (parsedBatches.Contains(batchId))
+            lock (parsedBatches)
             {
-                return;
+                if (parsedBatches.Contains(batchId))
+                {
+                    return;
+                }
+                parsedBatches.Add(batchId);
             }
-            parsedBatches.Add(batchId);
 
             Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
 
@@ -154,16 +163,19 @@ namespace NitroxServer.GameLogic
 
                 List<Entity> entitiesInCell = ListForCell(entitySpawnPoint.AbsoluteEntityCell);
 
-                for (int i = 0; i < selectedPrefab.count; i++)
+                lock (entitiesInCell)
                 {
-                    Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
-                                                      entitySpawnPoint.Rotation,
-                                                      worldEntityInfo.techType,
-                                                      Guid.NewGuid().ToString(),
-                                                      (int)worldEntityInfo.cellLevel);
+                    for (int i = 0; i < selectedPrefab.count; i++)
+                    {
+                        Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
+                                                          entitySpawnPoint.Rotation,
+                                                          worldEntityInfo.techType,
+                                                          Guid.NewGuid().ToString(),
+                                                          (int)worldEntityInfo.cellLevel);
 
-                    entitiesInCell.Add(spawnedEntity);
-                    RegisterEntity(spawnedEntity);
+                        entitiesInCell.Add(spawnedEntity);
+                        RegisterEntity(spawnedEntity);
+                    }
                 }
             }
         }
