@@ -18,12 +18,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private string serverNameInput;
         private string serverHostInput;
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
+        private GameObject joinServerGameObject;
 
         GameObject multiplayerButton;
         Transform savedGameAreaContent;
 
         public void Awake()
         {
+            //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
+            //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
+            JoinServer.SaveGameMenuPrototype = SavedGamesRef;
+
             multiplayerButton = SavedGamesRef.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject;
             savedGameAreaContent = LoadedMultiplayerRef.transform.Find("SavedGameArea/SavedGameAreaContent");
             if (!File.Exists(SERVER_LIST_PATH))
@@ -62,7 +67,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
             Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() => JoinServer(joinIp));
+            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
@@ -91,11 +96,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void JoinServer(string serverIp)
+        public void OpenJoinServerMenu(string serverIp)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            new GameObject().AddComponent<JoinServer>().ServerIp = serverIp;
+            if (joinServerGameObject != null)
+            {
+                Destroy(joinServerGameObject);
+            }
+
+            joinServerGameObject = new GameObject();
+            JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
+            joinServerComponent.ServerIp = serverIp;
         }
 
         public void ShowAddServerWindow()
