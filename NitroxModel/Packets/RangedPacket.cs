@@ -7,6 +7,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public abstract class RangedPacket : Packet
     {
+        public const int BUILDING_CELL_LEVEL = 3;
+        public const int ITEM_INTERACTION_CELL_LEVEL = 3;
+
         public AbsoluteEntityCell AbsoluteEntityCell { get; }
 
         public RangedPacket(AbsoluteEntityCell absoluteEntityCell)
@@ -14,7 +17,7 @@ namespace NitroxModel.Packets
             AbsoluteEntityCell = absoluteEntityCell;
         }
 
-        public RangedPacket(Vector3 worldSpace, int level = 1) : this(new AbsoluteEntityCell(worldSpace, level))
+        public RangedPacket(Vector3 worldSpace, int level) : this(new AbsoluteEntityCell(worldSpace, level))
         {
         }
     }

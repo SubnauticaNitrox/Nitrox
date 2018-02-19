@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public string Slot { get; }
         public string ItemGuid { get; }
 
-        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid, Vector3 ownerPosition) : base(ownerPosition)
+        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid, Vector3 ownerPosition) : base(ownerPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             Slot = slot;

@@ -11,7 +11,6 @@ namespace NitroxClient.Communication
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;
         private const int DEFAULT_PACKET_PRIORITY = 1;
-        private const int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
         private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
@@ -82,11 +81,6 @@ namespace NitroxClient.Communication
 
         public void CellLoaded(AbsoluteEntityCell visibleCell)
         {
-            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
-            {
-                return;
-            }
-
             lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
@@ -96,6 +90,7 @@ namespace NitroxClient.Communication
                         visibleCell,
                         deferredPackets.Count,
                         deferredPackets.PrefixWith("\n\t"));
+
                     while (deferredPackets.Count > 0)
                     {
                         Packet packet = deferredPackets.Dequeue();

@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public string Guid { get; }
         public Optional<string> NewBaseCreatedGuid { get; }
 
-        public ConstructionCompleted(Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(itemPosition, 3)
+        public ConstructionCompleted(Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(itemPosition, BUILDING_CELL_LEVEL)
         {
             Guid = guid;
             NewBaseCreatedGuid = newBaseCreatedGuid;

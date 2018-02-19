@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string Guid { get; }
         public float ConstructionAmount { get; }
 
-        public ConstructionAmountChanged(Vector3 itemPosition, string guid, float constructionAmount) : base(itemPosition, 3)
+        public ConstructionAmountChanged(Vector3 itemPosition, string guid, float constructionAmount) : base(itemPosition, BUILDING_CELL_LEVEL)
         {
             Guid = guid;
             ConstructionAmount = constructionAmount;

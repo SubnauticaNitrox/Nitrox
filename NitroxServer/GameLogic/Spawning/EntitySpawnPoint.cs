@@ -39,9 +39,10 @@ namespace NitroxServer.GameLogic.Spawning
             esp.Rotation = go.GetComponent<Transform>().Rotation;
 
             Int3.Bounds bounds = BatchCells.GetBlockBounds(batchId, cellHeader.cellId, esp.Level, Map.BATCH_DIMENSIONS);
+            UnityEngine.Vector3 center = EntityCell.GetCenter(bounds) - Map.BATCH_DIMENSION_CENTERING.ToVector3();
             UnityEngine.Vector3 localPosition = go.GetComponent<Transform>().Position;
-            UnityEngine.Vector3 center = EntityCell.GetCenter(bounds);
-            esp.Position = center + localPosition - Map.BATCH_DIMENSION_CENTERING.ToVector3();
+
+            esp.Position = center + localPosition;
 
             return esp;
         }

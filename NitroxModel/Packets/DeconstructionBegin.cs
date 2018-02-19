@@ -8,7 +8,7 @@ namespace NitroxModel.Packets
     {
         public string Guid { get; }
 
-        public DeconstructionBegin(Vector3 itemPosition, string guid) : base(itemPosition, 3)
+        public DeconstructionBegin(Vector3 itemPosition, string guid) : base(itemPosition, BUILDING_CELL_LEVEL)
         {
             Guid = guid;
         }

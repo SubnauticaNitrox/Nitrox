@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public Vector3 ItemPosition { get; }
         public string TechType { get; }
 
-        public PickupItem(Vector3 itemPosition, string guid, string techType) : base(itemPosition)
+        public PickupItem(Vector3 itemPosition, string guid, string techType) : base(itemPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             ItemPosition = itemPosition;
             Guid = guid;

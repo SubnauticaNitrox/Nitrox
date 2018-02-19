@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string OwnerGuid { get; }
         public string ItemGuid { get; }
 
-        public ItemContainerRemove(string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(ownerPositon)
+        public ItemContainerRemove(string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(ownerPositon, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             ItemGuid = itemGuid;

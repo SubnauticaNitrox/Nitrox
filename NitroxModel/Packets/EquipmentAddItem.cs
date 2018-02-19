@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
         public string Slot { get; }
         public byte[] ItemBytes { get; }
 
-        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition)
+        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             Slot = slot;

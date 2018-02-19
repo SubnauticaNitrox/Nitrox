@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
         public bool HasMedKit { get; }
         public float NextSpawnTime { get; }
 
-        public MedicalCabinetClicked(string guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(actionPosition)
+        public MedicalCabinetClicked(string guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(actionPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             Guid = guid;
             DoorOpen = doorOpen;

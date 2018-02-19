@@ -13,7 +13,7 @@ namespace NitroxModel.Packets
         public Vector3 ItemPosition { get; }
         public byte[] Bytes { get; }
 
-        public DroppedItem(string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(itemPosition)
+        public DroppedItem(string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(itemPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             Guid = guid;
             WaterParkGuid = waterParkGuid;

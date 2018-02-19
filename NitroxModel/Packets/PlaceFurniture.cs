@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         public Vector3 CameraPosition { get; }
         public Quaternion CameraRotation { get; }
 
-        public PlaceFurniture(string guid, Optional<string> subGuid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType) : base(itemPosition, 3)
+        public PlaceFurniture(string guid, Optional<string> subGuid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType) : base(itemPosition, BUILDING_CELL_LEVEL)
         {
             Guid = guid;
             SubGuid = subGuid;

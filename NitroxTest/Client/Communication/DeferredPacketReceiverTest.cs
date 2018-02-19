@@ -17,6 +17,7 @@ namespace NitroxTest.Client.Communication
 
         // Test Data
         private const string PLAYER_ID = "TestPlayer";
+        private const int CELL_LEVEL = 3;
         private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
         private AbsoluteEntityCell loadedCell;
@@ -31,8 +32,8 @@ namespace NitroxTest.Client.Communication
             Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
             Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
 
-            loadedCell = new AbsoluteEntityCell(loadedBatchId, cellId, 3);
-            unloadedCell = new AbsoluteEntityCell(unloadedBatchId, cellId, 3);
+            loadedCell = new AbsoluteEntityCell(loadedBatchId, cellId, CELL_LEVEL);
+            unloadedCell = new AbsoluteEntityCell(unloadedBatchId, cellId, CELL_LEVEL);
 
             visibleCells.Add(loadedCell);
         }
@@ -52,7 +53,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInLoadedCell()
         {
-            Packet packet = new TestActionPacket(loadedActionPosition);
+            Packet packet = new TestActionPacket(loadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -64,7 +65,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInUnloadedCell()
         {
-            Packet packet = new TestActionPacket(unloadedActionPosition);
+            Packet packet = new TestActionPacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -75,7 +76,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void PacketPrioritizedAfterBeingDeferred()
         {
-            Packet packet1 = new TestActionPacket(unloadedActionPosition);
+            Packet packet1 = new TestActionPacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);

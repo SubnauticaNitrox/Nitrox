@@ -9,7 +9,7 @@ namespace NitroxModel.Packets
         public string OwnerGuid { get; }
         public byte[] ItemData { get; }
 
-        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon)
+        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             ItemData = itemData;
