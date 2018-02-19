@@ -16,6 +16,9 @@ namespace NitroxServer.GameLogic
 {
     public class EntitySpawner
     {
+        private readonly Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+        private readonly Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
+
         private readonly HashSet<Int3> parsedBatches = new HashSet<Int3>();
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
@@ -38,45 +41,76 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        /// <summary>
-        /// Spawns entities for <paramref name="batchId"/> if it was not loaded yet.
-        /// </summary>
-        public Optional<IDictionary<AbsoluteEntityCell, List<Entity>>> SpawnUnloadedEntitiesForBatch(Int3 batchId)
+        public bool TryGetEntityByGuid(string guid, out Entity entity)
         {
-            if (!parsedBatches.Contains(batchId))
+            return entitiesByGuid.TryGetValue(guid, out entity);
+        }
+
+        public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
+        {
+            SpawnUnloadedEntitiesForBatch(absoluteEntityCell.BatchId);
+
+            return ListForCell(absoluteEntityCell);
+        }
+
+        public bool GetEntities(AbsoluteEntityCell absoluteEntityCell, out List<Entity> result)
+        {
+            SpawnUnloadedEntitiesForBatch(absoluteEntityCell.BatchId);
+
+            return entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result);
+        }
+
+        private void RegisterEntity(Entity entity)
+        {
+            lock (entitiesByGuid)
             {
-                Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
-
-                List<EntitySpawnPoint> batchSpawnPoints = batchCellsParser.ParseBatchData(batchId);
-
-                parsedBatches.Add(batchId);
-
-                Dictionary<AbsoluteEntityCell, List<Entity>> newSpawnPoints = new Dictionary<AbsoluteEntityCell, List<Entity>>();
-
-                Parallel.ForEach(batchSpawnPoints, spawnPoint =>
-                {
-                    List<Entity> result = new List<Entity>(SpawnEntities(spawnPoint));
-
-                    lock (newSpawnPoints)
-                    {
-                        newSpawnPoints[spawnPoint.AbsoluteEntityCell] = result;
-                    }
-                });
-
-                return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Of(newSpawnPoints);
-            }
-            else
-            {
-                return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Empty();
+                entitiesByGuid.Add(entity.Guid, entity);
             }
         }
 
-        private IEnumerable<Entity> SpawnEntities(EntitySpawnPoint entitySpawnPoint)
+        private List<Entity> ListForCell(AbsoluteEntityCell absoluteEntityCell)
+        {
+            Validate.NotNull(absoluteEntityCell);
+            Validate.NotNull(entitiesByAbsoluteCell);
+            List<Entity> result;
+
+            lock (entitiesByAbsoluteCell)
+            {
+                if (!entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
+                {
+                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new List<Entity>();
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Spawns entities for <paramref name="batchId"/> if it was not loaded yet.
+        /// </summary>
+        private void SpawnUnloadedEntitiesForBatch(Int3 batchId)
+        {
+            if (parsedBatches.Contains(batchId))
+            {
+                return;
+            }
+            parsedBatches.Add(batchId);
+
+            Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
+
+            List<EntitySpawnPoint> batchSpawnPoints = batchCellsParser.ParseBatchData(batchId);
+
+            Dictionary<AbsoluteEntityCell, List<Entity>> newSpawnPoints = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+
+            Parallel.ForEach(batchSpawnPoints, SpawnEntities);
+        }
+
+        private void SpawnEntities(EntitySpawnPoint entitySpawnPoint)
         {
             DstData dstData;
             if (!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
             {
-                yield break;
+                return;
             }
 
             float rollingProbabilityDensity = 0;
@@ -118,6 +152,8 @@ namespace NitroxServer.GameLogic
             {
                 WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[selectedPrefab.classId];
 
+                List<Entity> entitiesInCell = ListForCell(entitySpawnPoint.AbsoluteEntityCell);
+
                 for (int i = 0; i < selectedPrefab.count; i++)
                 {
                     Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
@@ -126,7 +162,8 @@ namespace NitroxServer.GameLogic
                                                       Guid.NewGuid().ToString(),
                                                       (int)worldEntityInfo.cellLevel);
 
-                    yield return spawnedEntity;
+                    entitiesInCell.Add(spawnedEntity);
+                    RegisterEntity(spawnedEntity);
                 }
             }
         }
