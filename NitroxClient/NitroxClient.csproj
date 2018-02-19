@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFaqRegistrar.cs" />
+    <Compile Include="ClientExtensions.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
