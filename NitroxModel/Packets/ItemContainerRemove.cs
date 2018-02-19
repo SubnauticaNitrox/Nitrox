@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemContainerRemove : PlayerActionPacket
+    public class ItemContainerRemove : RangedPacket
     {
         public string OwnerGuid { get; }
         public string ItemGuid { get; }

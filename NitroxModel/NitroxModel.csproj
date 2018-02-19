@@ -107,13 +107,13 @@
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
-    <Compile Include="Packets\PlayerActionPacket.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
     <Compile Include="Packets\PlayerSlotReservation.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
+    <Compile Include="Packets\RangedPacket.cs" />
     <Compile Include="Packets\ReservePlayerSlot.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />

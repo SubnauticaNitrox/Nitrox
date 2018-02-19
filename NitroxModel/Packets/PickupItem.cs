@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PickupItem : PlayerActionPacket
+    public class PickupItem : RangedPacket
     {
         public string Guid { get; }
         public Vector3 ItemPosition { get; }

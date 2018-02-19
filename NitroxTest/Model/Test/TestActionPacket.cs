@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxTest.Model
 {
     [Serializable]
-    public class TestActionPacket : PlayerActionPacket
+    public class TestActionPacket : RangedPacket
     {
         public TestActionPacket(Vector3 eventPosition) : base(eventPosition)
         {

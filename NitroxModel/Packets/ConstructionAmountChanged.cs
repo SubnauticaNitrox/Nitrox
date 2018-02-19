@@ -4,12 +4,12 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructionAmountChanged : PlayerActionPacket
+    public class ConstructionAmountChanged : RangedPacket
     {
         public string Guid { get; }
         public float ConstructionAmount { get; }
 
-        public ConstructionAmountChanged(Vector3 itemPosition, string guid, float constructionAmount) : base(itemPosition)
+        public ConstructionAmountChanged(Vector3 itemPosition, string guid, float constructionAmount) : base(itemPosition, 3)
         {
             Guid = guid;
             ConstructionAmount = constructionAmount;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -38,6 +39,7 @@ namespace NitroxClient.GameLogic
             yield return new WaitForSeconds(0.5f);
 
             AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
+            Log.Debug("Cell {0} loaded", cell);
 
             if (!visibleCells.Contains(cell))
             {
@@ -50,6 +52,7 @@ namespace NitroxClient.GameLogic
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
         {
             AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
+            Log.Debug("Cell {0} unloaded", cell);
 
             if (visibleCells.Contains(cell))
             {

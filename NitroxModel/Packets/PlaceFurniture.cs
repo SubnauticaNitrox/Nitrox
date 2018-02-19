@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlaceFurniture : PlayerActionPacket
+    public class PlaceFurniture : RangedPacket
     {
         public string Guid { get; }
         public Optional<string> SubGuid { get; }
@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
         public Vector3 CameraPosition { get; }
         public Quaternion CameraRotation { get; }
 
-        public PlaceFurniture(string guid, Optional<string> subGuid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType) : base(itemPosition)
+        public PlaceFurniture(string guid, Optional<string> subGuid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType) : base(itemPosition, 3)
         {
             Guid = guid;
             SubGuid = subGuid;

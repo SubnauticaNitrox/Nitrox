@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class MedicalCabinetClicked : PlayerActionPacket
+    public class MedicalCabinetClicked : RangedPacket
     {
         public string Guid { get; }
         public bool DoorOpen { get; }

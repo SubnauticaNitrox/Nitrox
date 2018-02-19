@@ -50,42 +50,24 @@ namespace NitroxClient.Communication
 
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is PlayerActionPacket)
+            if (packet is RangedPacket)
             {
-                PlayerActionPacket playerAction = (PlayerActionPacket)packet;
+                RangedPacket playerAction = (RangedPacket)packet;
 
-                if (!playerAction.PlayerMustBeInRangeToReceive)
+                if (visibleCells.Contains(playerAction.AbsoluteEntityCell))
                 {
                     return false;
                 }
 
-                bool cellLoaded = false;
-
-                for (int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
-                {
-                    AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, level);
-
-                    if (visibleCells.Contains(cell))
-                    {
-                        cellLoaded = true;
-                        break;
-                    }
-                }
-
-                if (!cellLoaded)
-                {
-                    // Hacky, just choose level 0 for now.
-                    AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition, 0);
-                    Log.Debug($"Action {packet} was deferred, cell not loaded (with required lod): {cell}");
-                    AddPacketToDeferredMap(playerAction, cell);
-                    return true;
-                }
+                Log.Debug($"Action {packet} was deferred, cell not loaded (with required lod): {playerAction.AbsoluteEntityCell}");
+                AddPacketToDeferredMap(playerAction, playerAction.AbsoluteEntityCell);
+                return true;
             }
 
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(RangedPacket playerAction, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {

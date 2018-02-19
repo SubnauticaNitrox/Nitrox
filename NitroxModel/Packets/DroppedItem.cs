@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DroppedItem : PlayerActionPacket
+    public class DroppedItem : RangedPacket
     {
         public string Guid { get; }
         public Optional<string> WaterParkGuid { get; }
