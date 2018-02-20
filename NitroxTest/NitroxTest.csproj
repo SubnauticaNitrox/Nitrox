@@ -93,6 +93,8 @@
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\DisconnectedStateTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\MultiplayerSessionMangerTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\TestConstants.cs" />
+    <Compile Include="Client\PlayerPreferences\PlayerPreferenceManagerTests.cs" />
+    <Compile Include="Client\PlayerPreferences\TestConstants.cs" />
     <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
