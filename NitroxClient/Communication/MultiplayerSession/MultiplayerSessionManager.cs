@@ -11,52 +11,46 @@ namespace NitroxClient.Communication.MultiplayerSession
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
-        private readonly IClient client;
-        private string ipAddress;
-        private MultiplayerSessionPolicy sessionPolicy;
-        private PlayerSettings playerSettings;
-        private AuthenticationContext authenticationContext;
-
-        IClient IMultiplayerSessionState.Client => client;
-        string IMultiplayerSessionState.IpAddress => ipAddress;
-        MultiplayerSessionPolicy IMultiplayerSessionState.SessionPolicy => sessionPolicy;
-        PlayerSettings IMultiplayerSessionState.PlayerSettings => playerSettings;
-        AuthenticationContext IMultiplayerSessionState.AuthenticationContext => authenticationContext;
-
-        public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
-        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
-        public MultiplayerSessionReservation Reservation { get; private set; }
 
         public MultiplayerSessionManager(IClient client)
         {
             Log.Info("Initializing MultiplayerSessionManager...");
-            this.client = client;
+            Client = client;
             CurrentState = new Disconnected();
         }
 
         // Testing entry point
         internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
         {
-            this.client = client;
+            Client = client;
             CurrentState = initialState;
         }
 
+        public IClient Client { get; }
+        public string IpAddress { get; private set; }
+        public MultiplayerSessionPolicy SessionPolicy { get; private set; }
+        public PlayerSettings PlayerSettings { get; private set; }
+        public AuthenticationContext AuthenticationContext { get; private set; }
+        public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
+        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
+        public MultiplayerSessionReservation Reservation { get; private set; }
+
         public void Connect(string ipAddress)
         {
-            this.ipAddress = ipAddress;
+            IpAddress = ipAddress;
             CurrentState.NegotiateReservation(this);
         }
 
         public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
         {
-            sessionPolicy = policy;
+            SessionPolicy = policy;
             CurrentState.NegotiateReservation(this);
         }
 
         public void RequestSessionReservation(PlayerSettings playerSettings, AuthenticationContext authenticationContext)
         {
-            this.playerSettings = playerSettings;
-            this.authenticationContext = authenticationContext;
+            PlayerSettings = playerSettings;
+            AuthenticationContext = authenticationContext;
             CurrentState.NegotiateReservation(this);
         }
 
@@ -80,7 +74,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             if (!suppressedPacketsTypes.Contains(packet.GetType()))
             {
-                client.Send(packet);
+                Client.Send(packet);
             }
         }
 
@@ -97,10 +91,10 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void ClearSessionState()
         {
-            ipAddress = null;
-            sessionPolicy = null;
-            playerSettings = null;
-            authenticationContext = null;
+            IpAddress = null;
+            SessionPolicy = null;
+            PlayerSettings = null;
+            AuthenticationContext = null;
             Reservation = null;
         }
     }
