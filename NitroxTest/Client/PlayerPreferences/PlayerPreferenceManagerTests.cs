@@ -24,11 +24,8 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
+            Color preferredColor = playerPreference.PreferredColor();
 
             //When
             playerPreferenceManager.SetPreference(TestConstants.TEST_IP_ADDRESS, playerPreference);
@@ -37,7 +34,9 @@ namespace NitroxTest.Client.PlayerPreferences
             //Then
             result.Should().NotBe(playerPreference);
             result.PlayerName.Should().Be(TestConstants.TEST_PLAYER_NAME);
-            result.PlayerColor.Should().Be(playerPreference.PlayerColor);
+            result.RedAdditive.Should().Be(preferredColor.r);
+            result.GreenAdditive.Should().Be(preferredColor.g);
+            result.BlueAdditive.Should().Be(preferredColor.b);
         }
 
         [TestMethod]
@@ -52,18 +51,10 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             Color newColor = RandomColorGenerator.GenerateColor();
-            PlayerPreference newPlayerPreference = new PlayerPreference
-            {
-                PlayerColor = newColor,
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference newPlayerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, newColor);
 
             //When
             playerPreferenceManager.SetPreference(TestConstants.TEST_IP_ADDRESS, playerPreference);
@@ -72,7 +63,9 @@ namespace NitroxTest.Client.PlayerPreferences
 
             //Then
             result.Should().NotBe(newPlayerPreference);
-            result.PlayerColor.Should().Be(newColor);
+            result.RedAdditive.Should().Be(newColor.r);
+            result.GreenAdditive.Should().Be(newColor.g);
+            result.BlueAdditive.Should().Be(newColor.b);
         }
 
         [TestMethod]
@@ -87,11 +80,7 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference playerPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference playerPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             //Act
             Action action = () => playerPreferenceManager.SetPreference(null, playerPreference);
@@ -131,29 +120,18 @@ namespace NitroxTest.Client.PlayerPreferences
 
             PlayerPreferenceManager playerPreferenceManager = new PlayerPreferenceManager(stateProvider);
 
-            PlayerPreference firstPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference firstPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             string firstIpAddress = "127.0.0.1";
             playerPreferenceManager.SetPreference(firstIpAddress, firstPreference);
 
-            PlayerPreference secondPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference secondPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
 
             string secondIpAddress = "123.456.789.321";
             playerPreferenceManager.SetPreference(secondIpAddress, secondPreference);
 
-            PlayerPreference thirdPreference = new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor(),
-                PlayerName = TestConstants.TEST_PLAYER_NAME
-            };
+            PlayerPreference thirdPreference = new PlayerPreference(TestConstants.TEST_PLAYER_NAME, RandomColorGenerator.GenerateColor());
+            Color expectedColor = thirdPreference.PreferredColor();
 
             string thirdIpAddress = "000.000.000.000";
             playerPreferenceManager.SetPreference(thirdIpAddress, thirdPreference);
@@ -164,7 +142,9 @@ namespace NitroxTest.Client.PlayerPreferences
             //Then
             result.Should().NotBe(thirdPreference);
             result.PlayerName.Should().Be(thirdPreference.PlayerName);
-            result.PlayerColor.Should().Be(thirdPreference.PlayerColor);
+            result.RedAdditive.Should().Be(expectedColor.r);
+            result.GreenAdditive.Should().Be(expectedColor.g);
+            result.BlueAdditive.Should().Be(expectedColor.b);
         }
 
         [TestMethod]
@@ -185,7 +165,6 @@ namespace NitroxTest.Client.PlayerPreferences
             //Then
             result.Should().NotBeNull();
             result.PlayerName.Should().BeNullOrEmpty();
-            result.PlayerColor.Should().NotBeNull();
         }
 
         [TestMethod]

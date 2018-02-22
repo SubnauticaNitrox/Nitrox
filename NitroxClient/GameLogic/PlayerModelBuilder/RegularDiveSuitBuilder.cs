@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         {
             float playerHue;
 
-            //Ignored because we simply need to retrieve the hue of the PlayerColor.
+            //Ignored because we simply need to retrieve the hue of the PreferredColor.
             float ignoredSaturation;
             float ignoredVibrance;
 

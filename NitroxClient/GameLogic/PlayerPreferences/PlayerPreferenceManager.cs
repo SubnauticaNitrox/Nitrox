@@ -1,12 +1,13 @@
 ﻿using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerPreferences
 {
     public class PlayerPreferenceManager
     {
-        private readonly IPreferenceStateProvider stateProvider;
         private readonly PlayerPreferenceState state;
+        private readonly IPreferenceStateProvider stateProvider;
 
         public PlayerPreferenceManager(IPreferenceStateProvider stateProvider)
         {
@@ -20,15 +21,23 @@ namespace NitroxClient.GameLogic.PlayerPreferences
             Validate.NotNull(ipAddress);
             Validate.NotNull(playerPreference);
 
-            state.LastSetPlayerPreference = playerPreference;
-
             if (state.Preferences.ContainsKey(ipAddress))
             {
+                PlayerPreference currentPreference = state.Preferences[ipAddress];
+
+                if (currentPreference.Equals(playerPreference))
+                {
+                    return;
+                }
+
                 state.Preferences[ipAddress] = playerPreference;
+                state.LastSetPlayerPreference = playerPreference;
+
                 return;
             }
 
             state.Preferences.Add(ipAddress, playerPreference);
+            state.LastSetPlayerPreference = playerPreference;
         }
 
         public PlayerPreference GetPreference(string ipAddress)
@@ -47,10 +56,12 @@ namespace NitroxClient.GameLogic.PlayerPreferences
                 return state.LastSetPlayerPreference.Clone();
             }
 
-            return new PlayerPreference
-            {
-                PlayerColor = RandomColorGenerator.GenerateColor()
-            };
+            Color playerColor = RandomColorGenerator.GenerateColor();
+            PlayerPreference defaultPlayerPreference = new PlayerPreference(playerColor);
+
+            state.LastSetPlayerPreference = defaultPlayerPreference;
+
+            return defaultPlayerPreference;
         }
 
         public void Save()
