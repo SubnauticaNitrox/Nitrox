@@ -21,13 +21,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             .Find("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/")
             .gameObject;
 
+        private PlayerPreference activePlayerPreference;
         private bool isSubscribed;
         private GameObject joinServerMenu;
         private GameObject multiplayerClient;
         private IMultiplayerSession multiplayerSession;
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
-        private PlayerPreference activePlayerPreference;
         public string ServerIp = "";
 
         public static GameObject SaveGameMenuPrototype { get; set; }
@@ -68,7 +68,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
             playerNameInputField.text = activePlayerPreference.PlayerName;
-            
+
             StartMultiplayerClient();
         }
 
@@ -97,7 +97,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             RightSideMainMenu.groups.Remove(joinServerMenu);
             Destroy(joinServerMenu);
         }
-        
+
         private void SubscribeColorChanged()
         {
             if (isSubscribed)
@@ -140,7 +140,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.Find("InputField").gameObject;
             uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
-            
+
             playerNameInputField.ActivateInputField();
         }
 

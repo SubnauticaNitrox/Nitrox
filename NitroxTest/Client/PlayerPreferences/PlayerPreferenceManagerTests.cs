@@ -32,7 +32,6 @@ namespace NitroxTest.Client.PlayerPreferences
             PlayerPreference result = playerPreferenceManager.GetPreference(TestConstants.TEST_IP_ADDRESS);
 
             //Then
-            result.Should().NotBe(playerPreference);
             result.PlayerName.Should().Be(TestConstants.TEST_PLAYER_NAME);
             result.RedAdditive.Should().Be(preferredColor.r);
             result.GreenAdditive.Should().Be(preferredColor.g);
@@ -62,7 +61,6 @@ namespace NitroxTest.Client.PlayerPreferences
             PlayerPreference result = playerPreferenceManager.GetPreference(TestConstants.TEST_IP_ADDRESS);
 
             //Then
-            result.Should().NotBe(newPlayerPreference);
             result.RedAdditive.Should().Be(newColor.r);
             result.GreenAdditive.Should().Be(newColor.g);
             result.BlueAdditive.Should().Be(newColor.b);
@@ -140,7 +138,6 @@ namespace NitroxTest.Client.PlayerPreferences
             PlayerPreference result = playerPreferenceManager.GetPreference(TestConstants.TEST_IP_ADDRESS);
 
             //Then
-            result.Should().NotBe(thirdPreference);
             result.PlayerName.Should().Be(thirdPreference.PlayerName);
             result.RedAdditive.Should().Be(expectedColor.r);
             result.GreenAdditive.Should().Be(expectedColor.g);
