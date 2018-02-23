@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
+    //I'd like to see about skinning this behavior with the notification window that appears at the bottom of the screen during certain story events in the game.
     public class MainMenuNotification : MonoBehaviour
     {
         private bool awaitingAcknowledgement;
@@ -38,7 +39,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void RenderUnableToJoinDialog(int windowId)
         {
-            GUISkinUtils.RenderWithSkin(GetGUISkin("dialogs.server.rejected", 500), () =>
+            GUISkinUtils.RenderWithSkin(GetGUISkin("dialogs.server.rejected", 550), () =>
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {

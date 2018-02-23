@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerPreferences
@@ -11,7 +10,7 @@ namespace NitroxClient.GameLogic.PlayerPreferences
         public float RedAdditive { get; private set; }
         public float GreenAdditive { get; private set; }
         public float BlueAdditive { get; private set; }
-        
+
         public PlayerPreference()
         {
         }
