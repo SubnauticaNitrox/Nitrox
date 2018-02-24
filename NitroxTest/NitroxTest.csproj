@@ -77,13 +77,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Client\Communication\ClientBridgeTests\ConnectTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\ConfirmReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\TestConstants.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\ConnectRetryTests.cs" />
-    <Compile Include="Client\Communication\ClientBridgeTests\SendTests.cs" />
     <Compile Include="Client\Communication\ClientBridgeTests\ClaimReservationTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConfirmReservationTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConnectRetryTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\ConnectTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\HandleRejectedReservationTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\SendTests.cs" />
+    <Compile Include="Client\Communication\ClientBridgeTests\TestConstants.cs" />
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
