@@ -68,7 +68,7 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void AddPacketToDeferredMap(RangedPacket playerAction, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(RangedPacket rangedPacket, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
@@ -77,19 +77,19 @@ namespace NitroxClient.Communication
                     deferredPacketsByAbsoluteCell.Add(cell, new Queue<Packet>());
                 }
 
-                deferredPacketsByAbsoluteCell[cell].Enqueue(playerAction);
+                deferredPacketsByAbsoluteCell[cell].Enqueue(rangedPacket);
             }
         }
 
-        public void CellLoaded(AbsoluteEntityCell visibleCell)
+        public void CellLoaded(AbsoluteEntityCell absoluteEntityCell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
-                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell, out deferredPackets))
+                if (deferredPacketsByAbsoluteCell.TryGetValue(absoluteEntityCell, out deferredPackets))
                 {
                     Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
-                        visibleCell,
+                        absoluteEntityCell,
                         deferredPackets.Count,
                         deferredPackets.PrefixWith("\n\t"));
                     while (deferredPackets.Count > 0)
