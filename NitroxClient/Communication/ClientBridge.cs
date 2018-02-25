@@ -1,13 +1,12 @@
 ﻿using System;
-using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
-using NitroxClient.Communication.Exceptions;
 using System.Collections.Generic;
-using NitroxModel.PlayerSlot;
-using NitroxModel.Logger;
-using NitroxModel;
-using NitroxModel.Packets.Exceptions;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Exceptions;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Exceptions;
+using NitroxModel.PlayerSlot;
 
 namespace NitroxClient.Communication
 {
@@ -164,9 +163,9 @@ namespace NitroxClient.Communication
             }
         }
 
-        public PacketSuppression<T> Suppress<T>()
+        public PacketSuppressor<T> Suppress<T>()
         {
-            return new PacketSuppression<T>(suppressedPacketsTypes);
+            return new PacketSuppressor<T>(suppressedPacketsTypes);
         }
 
         private void TryStopClient()
