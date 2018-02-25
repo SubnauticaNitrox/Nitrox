@@ -4,13 +4,13 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EquipmentAddItem : PlayerActionPacket
+    public class EquipmentAddItem : RangedPacket
     {
         public string OwnerGuid { get; }
         public string Slot { get; }
         public byte[] ItemBytes { get; }
 
-        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition)
+        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             Slot = slot;

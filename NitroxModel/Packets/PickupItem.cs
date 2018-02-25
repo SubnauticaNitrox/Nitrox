@@ -4,13 +4,13 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PickupItem : PlayerActionPacket
+    public class PickupItem : RangedPacket
     {
         public string Guid { get; }
         public Vector3 ItemPosition { get; }
         public string TechType { get; }
 
-        public PickupItem(Vector3 itemPosition, string guid, string techType) : base(itemPosition)
+        public PickupItem(Vector3 itemPosition, string guid, string techType) : base(itemPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             ItemPosition = itemPosition;
             Guid = guid;

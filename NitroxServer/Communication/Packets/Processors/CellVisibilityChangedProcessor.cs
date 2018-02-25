@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -32,7 +32,7 @@ namespace NitroxServer.Communication.Packets.Processors
             BroadcastSimulationChanges(ownershipChanges);
         }
 
-        private void SendNewlyVisibleEntities(Player player, VisibleCell[] visibleCells)
+        private void SendNewlyVisibleEntities(Player player, AbsoluteEntityCell[] visibleCells)
         {
             List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(visibleCells);
 
@@ -43,7 +43,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
         }
 
-        private void AssignLoadedCellEntitySimulation(Player player, VisibleCell[] addedCells, List<OwnedGuid> ownershipChanges)
+        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<OwnedGuid> ownershipChanges)
         {
             List<Entity> entities = entityManager.AssignEntitySimulation(player, addedCells);
 
@@ -53,13 +53,13 @@ namespace NitroxServer.Communication.Packets.Processors
             }
         }
 
-        private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, VisibleCell[] removedCells, List<OwnedGuid> ownershipChanges)
+        private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, AbsoluteEntityCell[] removedCells, List<OwnedGuid> ownershipChanges)
         {
             List<Entity> revokedEntities = entityManager.RevokeEntitySimulationFor(sendingPlayer, removedCells);
 
             foreach (Entity entity in revokedEntities)
             {
-                VisibleCell entityCell = new VisibleCell(entity.Position, entity.Level);
+                AbsoluteEntityCell entityCell = entity.AbsoluteEntityCell;
 
                 foreach (Player player in playerManager.GetPlayers())
                 {

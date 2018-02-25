@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.GameLogic.Creatures.Actions;
+using NitroxModel.DataStructures.GameLogic.Creatures.Actions;
 
 namespace NitroxModel.Packets
 {

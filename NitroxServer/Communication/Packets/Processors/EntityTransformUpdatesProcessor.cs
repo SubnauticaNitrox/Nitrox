@@ -1,9 +1,8 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System.Collections.Generic;
 using static NitroxModel.Packets.EntityTransformUpdates;
 
 namespace NitroxServer.Communication.Packets.Processors
@@ -46,7 +45,7 @@ namespace NitroxServer.Communication.Packets.Processors
             foreach (EntityTransformUpdate update in updates)
             {
                 Entity entity = entityManager.UpdateEntityPosition(update.Guid, update.Position, update.Rotation);
-                VisibleCell visibleCell = new VisibleCell(entity.Position, entity.Level);
+                AbsoluteEntityCell visibleCell = entity.AbsoluteEntityCell;
 
                 foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
                 {

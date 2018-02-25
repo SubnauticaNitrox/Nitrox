@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -24,8 +23,8 @@ namespace NitroxServer.GameLogic
         public Entity UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
         {
             Entity entity = GetEntityByGuid(guid);
-            AbsoluteEntityCell oldCell = new AbsoluteEntityCell(entity.Position);
-            AbsoluteEntityCell newCell = new AbsoluteEntityCell(position);
+            AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
+            AbsoluteEntityCell newCell = new AbsoluteEntityCell(position, entity.Level);
 
             if (oldCell != newCell)
             {
@@ -70,17 +69,17 @@ namespace NitroxServer.GameLogic
             return entity;
         }
 
-        public List<Entity> GetVisibleEntities(VisibleCell[] cells)
+        public List<Entity> GetVisibleEntities(AbsoluteEntityCell[] cells)
         {
             List<Entity> entities = new List<Entity>();
 
-            foreach (VisibleCell cell in cells)
+            foreach (AbsoluteEntityCell cell in cells)
             {
                 List<Entity> cellEntities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out cellEntities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out cellEntities))
                     {
                         foreach (Entity entity in cellEntities)
                         {
@@ -96,17 +95,17 @@ namespace NitroxServer.GameLogic
             return entities;
         }
 
-        public List<Entity> AssignEntitySimulation(Player player, VisibleCell[] added)
+        public List<Entity> AssignEntitySimulation(Player player, AbsoluteEntityCell[] added)
         {
             List<Entity> assignedEntities = new List<Entity>();
 
-            foreach (VisibleCell cell in added)
+            foreach (AbsoluteEntityCell cell in added)
             {
                 List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out entities))
                     {
                         foreach (Entity entity in entities)
                         {
@@ -122,17 +121,17 @@ namespace NitroxServer.GameLogic
             return assignedEntities;
         }
 
-        public List<Entity> RevokeEntitySimulationFor(Player player, VisibleCell[] removed)
+        public List<Entity> RevokeEntitySimulationFor(Player player, AbsoluteEntityCell[] removed)
         {
             List<Entity> revokedEntities = new List<Entity>();
 
-            foreach (VisibleCell cell in removed)
+            foreach (AbsoluteEntityCell cell in removed)
             {
                 List<Entity> entities;
 
                 lock (entitiesByAbsoluteCell)
                 {
-                    if (entitiesByAbsoluteCell.TryGetValue(cell.AbsoluteCellEntity, out entities))
+                    if (entitiesByAbsoluteCell.TryGetValue(cell, out entities))
                     {
                         foreach (Entity entity in entities)
                         {

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class Movement : PlayerActionPacket
+    public class Movement : Packet
     {
         public string PlayerId { get; }
         public Vector3 Position { get; }
@@ -14,7 +14,7 @@ namespace NitroxModel.Packets
         public Quaternion AimingRotation { get; }
         public Optional<string> SubGuid { get; }
 
-        public Movement(string playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> subGuid) : base(position)
+        public Movement(string playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> subGuid)
         {
             PlayerId = playerId;
             Position = position;
@@ -22,7 +22,6 @@ namespace NitroxModel.Packets
             BodyRotation = bodyRotation;
             AimingRotation = aimingRotation;
             SubGuid = subGuid;
-            PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()

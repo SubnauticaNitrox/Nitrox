@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Map;
 using NitroxModel;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 
@@ -11,7 +11,6 @@ namespace NitroxClient.Communication
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;
         private const int DEFAULT_PACKET_PRIORITY = 1;
-        private const int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
         private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
@@ -50,42 +49,24 @@ namespace NitroxClient.Communication
 
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is PlayerActionPacket)
+            if (packet is RangedPacket)
             {
-                PlayerActionPacket playerAction = (PlayerActionPacket)packet;
+                RangedPacket playerAction = (RangedPacket)packet;
 
-                if (!playerAction.PlayerMustBeInRangeToReceive)
+                if (visibleCells.Contains(playerAction.AbsoluteEntityCell))
                 {
                     return false;
                 }
 
-                AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition);
-
-                bool cellLoaded = false;
-
-                for (int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
-                {
-                    VisibleCell visibleCell = new VisibleCell(cell, level);
-
-                    if (visibleCells.HasVisibleCell(visibleCell))
-                    {
-                        cellLoaded = true;
-                        break;
-                    }
-                }
-
-                if (!cellLoaded)
-                {
-                    Log.Debug("Action was deferred, cell not loaded (with required lod): " + cell);
-                    AddPacketToDeferredMap(playerAction, cell);
-                    return true;
-                }
+                Log.Debug($"Action {packet} was deferred, cell not loaded (with required lod): {playerAction.AbsoluteEntityCell}");
+                AddPacketToDeferredMap(playerAction, playerAction.AbsoluteEntityCell);
+                return true;
             }
 
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(RangedPacket playerAction, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
@@ -98,22 +79,18 @@ namespace NitroxClient.Communication
             }
         }
 
-        public void CellLoaded(VisibleCell visibleCell)
+        public void CellLoaded(AbsoluteEntityCell visibleCell)
         {
-            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
-            {
-                return;
-            }
-
             lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
-                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell.AbsoluteCellEntity, out deferredPackets))
+                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell, out deferredPackets))
                 {
                     Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
                         visibleCell,
                         deferredPackets.Count,
                         deferredPackets.PrefixWith("\n\t"));
+
                     while (deferredPackets.Count > 0)
                     {
                         Packet packet = deferredPackets.Dequeue();

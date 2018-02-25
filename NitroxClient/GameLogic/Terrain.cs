@@ -1,10 +1,10 @@
-﻿using NitroxClient.Communication;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Map;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -18,8 +18,8 @@ namespace NitroxClient.GameLogic
         private bool cellsPendingSync = false;
         private float timeWhenCellsBecameOutOfSync;
 
-        private List<VisibleCell> added = new List<VisibleCell>();
-        private List<VisibleCell> removed = new List<VisibleCell>();
+        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
+        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
         public Terrain(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
@@ -33,31 +33,33 @@ namespace NitroxClient.GameLogic
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId, cellId, level));
             markCellsReadyForSync(0.5f);
         }
-        
+
         private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
         {
             yield return new WaitForSeconds(0.5f);
 
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
+            Log.Debug("Cell {0} loaded", cell);
 
             if (!visibleCells.Contains(cell))
             {
                 visibleCells.Add(cell);
                 added.Add(cell);
                 packetReceiver.CellLoaded(cell);
-            }            
+            }
         }
 
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
         {
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
+            Log.Debug("Cell {0} unloaded", cell);
 
             if (visibleCells.Contains(cell))
             {
                 visibleCells.Remove(cell);
                 removed.Add(cell);
                 markCellsReadyForSync(0);
-            }     
+            }
         }
 
         private void markCellsReadyForSync(float delay)

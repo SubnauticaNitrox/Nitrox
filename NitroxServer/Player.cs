@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
@@ -13,7 +13,7 @@ namespace NitroxServer
         public Vector3 Position { get; set; }
 
         private readonly Connection connection;
-        private readonly HashSet<VisibleCell> visibleCells = new HashSet<VisibleCell>();
+        private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
 
         public Player(string id, Connection connection)
         {
@@ -21,29 +21,29 @@ namespace NitroxServer
             this.connection = connection;
         }
 
-        public void AddCells(IEnumerable<VisibleCell> cells)
+        public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
             lock (visibleCells)
             {
-                foreach (VisibleCell cell in cells)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
                     visibleCells.Add(cell);
                 }
             }
         }
 
-        public void RemoveCells(IEnumerable<VisibleCell> cells)
+        public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
             lock (visibleCells)
             {
-                foreach (VisibleCell cell in cells)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
                     visibleCells.Remove(cell);
                 }
             }
         }
 
-        public bool HasCellLoaded(VisibleCell cell)
+        public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
             lock (visibleCells)
             {

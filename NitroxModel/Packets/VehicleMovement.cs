@@ -23,8 +23,6 @@ namespace NitroxModel.Packets
             SteeringWheelYaw = steeringWheelYaw;
             SteeringWheelPitch = steeringWheelPitch;
             AppliedThrottle = appliedThrottle;
-
-            PlayerMustBeInRangeToReceive = false;
         }
 
         public override string ToString()
