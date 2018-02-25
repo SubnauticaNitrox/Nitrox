@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlaceFurniture : RangedPacket
+    public class PlaceFurniture : DeferrablePacket
     {
         public string Guid { get; }
         public Optional<string> SubGuid { get; }

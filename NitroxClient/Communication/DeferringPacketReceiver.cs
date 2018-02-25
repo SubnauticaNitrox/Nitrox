@@ -51,24 +51,24 @@ namespace NitroxClient.Communication
 
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is RangedPacket)
+            if (packet is DeferrablePacket)
             {
-                RangedPacket playerAction = (RangedPacket)packet;
+                DeferrablePacket deferrablePacket = (DeferrablePacket)packet;
 
-                if (visibleCells.Contains(playerAction.AbsoluteEntityCell))
+                if (visibleCells.Contains(deferrablePacket.AbsoluteEntityCell))
                 {
                     return false;
                 }
 
-                Log.Debug($"Action {packet} was deferred, cell not loaded (with required lod): {playerAction.AbsoluteEntityCell}");
-                AddPacketToDeferredMap(playerAction, playerAction.AbsoluteEntityCell);
+                Log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {deferrablePacket.AbsoluteEntityCell}");
+                AddPacketToDeferredMap(deferrablePacket, deferrablePacket.AbsoluteEntityCell);
                 return true;
             }
 
             return false;
         }
 
-        private void AddPacketToDeferredMap(RangedPacket rangedPacket, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(DeferrablePacket deferrablePacket, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
@@ -77,7 +77,7 @@ namespace NitroxClient.Communication
                     deferredPacketsByAbsoluteCell.Add(cell, new Queue<Packet>());
                 }
 
-                deferredPacketsByAbsoluteCell[cell].Enqueue(rangedPacket);
+                deferredPacketsByAbsoluteCell[cell].Enqueue(deferrablePacket);
             }
         }
 
