@@ -7,10 +7,10 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
     //TODO: Refactor this into something that is event driven.
     public class PlayerModelDirector
     {
-        private readonly RemotePlayer player;
+        private readonly INitroxPlayer player;
         private readonly List<IPlayerModelBuilder> playerModelBuilders = new List<IPlayerModelBuilder>();
 
-        public PlayerModelDirector(RemotePlayer player)
+        public PlayerModelDirector(INitroxPlayer player)
         {
             this.player = player;
         }

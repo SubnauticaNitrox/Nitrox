@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
     public class PlayerPingBuilder : IPlayerModelBuilder
     {
-        public void Build(RemotePlayer player)
+        public void Build(INitroxPlayer player)
         {
             GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + player.PlayerName;
@@ -23,18 +23,18 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             SetPingColor(player, ping);
         }
 
-        private static void SetPingColor(RemotePlayer player, PingInstance ping)
+        private static void SetPingColor(INitroxPlayer player, PingInstance ping)
         {
             FieldInfo field = typeof(PingManager).GetField("colorOptions", BindingFlags.Static | BindingFlags.Public);
-            Color[] colors = PingManager.colorOptions;
+            Color[] originalColorOptions = PingManager.colorOptions;
 
-            Color[] colorOptions = new Color[colors.Length + 1];
-            colors.ForEach(color => colorOptions[Array.IndexOf(colors, color)] = color);
-            colorOptions[colorOptions.Length - 1] = player.PlayerSettings.PlayerColor;
+            Color[] newColorOptions = new Color[originalColorOptions.Length + 1];
+            originalColorOptions.ForEach(color => newColorOptions[Array.IndexOf(originalColorOptions, color)] = color);
+            newColorOptions[newColorOptions.Length - 1] = player.PlayerSettings.PlayerColor;
 
             // Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
-            field.SetValue(null, colorOptions);
-            ping.SetColor(colorOptions.Length - 1);
+            field.SetValue(null, newColorOptions);
+            ping.SetColor(newColorOptions.Length - 1);
         }
     }
 }
