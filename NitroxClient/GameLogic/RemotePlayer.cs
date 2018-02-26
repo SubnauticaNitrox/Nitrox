@@ -180,7 +180,6 @@ namespace NitroxClient.GameLogic
         public void Destroy()
         {
             ErrorMessage.AddMessage($"{PlayerId} left the game.");
-            Body.SetActive(false);
             Object.DestroyImmediate(Body);
         }
 

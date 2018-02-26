@@ -18,7 +18,7 @@ namespace NitroxModel.Helper
 
             string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
 
-            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{appid.ToString()}.acf")))
+            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{appid}.acf")))
             {
                 return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
             }
@@ -52,7 +52,7 @@ namespace NitroxModel.Helper
                 int number;
                 if (int.TryParse(key, out number))
                 {
-                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid.ToString()}.acf")))
+                    if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {
                         return Path.Combine(Path.Combine(value, "steamapps/common"), gameName);
                     }
