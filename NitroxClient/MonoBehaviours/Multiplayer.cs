@@ -79,8 +79,7 @@ namespace NitroxClient.MonoBehaviours
             ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
             PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
             playerModelDirector
-                .StagePlayer()
-                .WithRegularDiveSuit();
+                .AddDiveSuit();
 
             playerModelDirector.Construct();
         }
