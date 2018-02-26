@@ -6,15 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerJoinedMultiplayerSession : Packet
     {
-        public string PlayerId { get; }
-        public string PlayerName { get; }
-        public PlayerSettings PlayerSettings { get; }
+        public PlayerContext PlayerContext { get; }
 
-        public PlayerJoinedMultiplayerSession(string playerId, string playerName, PlayerSettings playerSettings)
+        public PlayerJoinedMultiplayerSession(PlayerContext playerContext)
         {
-            PlayerId = playerId;
-            PlayerName = playerName;
-            PlayerSettings = playerSettings;
+            PlayerContext = playerContext;
         }
     }
 }

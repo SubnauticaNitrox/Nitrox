@@ -29,14 +29,14 @@ namespace NitroxServer.Communication.Packets.Processors
             BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(escapePodManager.GetEscapePods());
             playerManager.SendPacketToAllPlayers(broadcastEscapePods);
 
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.Id, player.Name, player.PlayerSettings);
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             foreach (Player otherPlayer in playerManager.GetPlayers())
             {
                 if (!player.Equals(otherPlayer))
                 {
-                    playerJoinedPacket = new PlayerJoinedMultiplayerSession(otherPlayer.Id, otherPlayer.Name, otherPlayer.PlayerSettings);
+                    playerJoinedPacket = new PlayerJoinedMultiplayerSession(otherPlayer.PlayerContext);
                     player.SendPacket(playerJoinedPacket);
                 }
             }

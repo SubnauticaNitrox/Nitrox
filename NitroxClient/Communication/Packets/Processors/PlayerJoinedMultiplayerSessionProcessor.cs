@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerJoinedMultiplayerSession packet)
         {
-            remotePlayerManager.Create(packet.PlayerId, packet.PlayerName, packet.PlayerSettings);
+            remotePlayerManager.Create(packet.PlayerContext);
         }
     }
 }
