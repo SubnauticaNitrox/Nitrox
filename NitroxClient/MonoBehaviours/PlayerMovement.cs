@@ -11,13 +11,13 @@ namespace NitroxClient.MonoBehaviours
     public class PlayerMovement : MonoBehaviour
     {
         public const float BROADCAST_INTERVAL = 0.05f;
-        private PlayerLogic playerBroadcaster;
+        private LocalPlayer localPlayerBroadcaster;
 
         private float time;
 
         public void Awake()
         {
-            playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+            localPlayerBroadcaster = NitroxServiceLocator.LocateService<LocalPlayer>();
         }
 
         public void Update()
@@ -48,7 +48,7 @@ namespace NitroxClient.MonoBehaviours
                     subGuid = GuidHelper.GetGuid(currentSub.gameObject);
                 }
 
-                playerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
+                localPlayerBroadcaster.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
             }
         }
 

@@ -6,7 +6,7 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class AniCommand : NitroxCommand
     {
-        private readonly PlayerLogic playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+        private readonly LocalPlayer localPlayerBroadcaster = NitroxServiceLocator.LocateService<LocalPlayer>();
 
         public AniCommand()
         {
@@ -34,7 +34,7 @@ namespace ClientTester.Commands.DefaultCommands
                 state = AnimChangeState.UNSET;
             }
 
-            playerBroadcaster.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
+            localPlayerBroadcaster.AnimationChange((AnimChangeType)int.Parse(args[0]), state);
         }
     }
 }

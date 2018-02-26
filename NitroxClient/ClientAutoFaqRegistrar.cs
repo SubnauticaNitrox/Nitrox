@@ -31,6 +31,11 @@ namespace NitroxClient
                 .As<IClient>()
                 .InstancePerLifetimeScope();
 
+            containerBuilder.RegisterType<LocalPlayer>()
+                .AsSelf() //Would like to deprecate this registration at some point and just work through an abstraction.
+                .As<ILocalNitroxPlayer>()
+                .InstancePerLifetimeScope();
+            
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
@@ -44,7 +49,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<Item>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EquipmentSlots>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PlayerLogic>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Power>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();

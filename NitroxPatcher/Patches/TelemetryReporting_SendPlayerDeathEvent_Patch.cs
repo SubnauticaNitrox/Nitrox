@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(UnityEngine.Object context, Vector3 position)
         {
-            NitroxServiceLocator.LocateService<PlayerLogic>().BroadcastDeath(position);
+            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastDeath(position);
         }
 
         public override void Patch(HarmonyInstance harmony)
