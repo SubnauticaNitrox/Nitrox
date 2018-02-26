@@ -7,12 +7,11 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
 
-namespace NitroxServer.GameLogic
+namespace NitroxServer.GameLogic.Spawning
 {
     public class EntitySpawner
     {

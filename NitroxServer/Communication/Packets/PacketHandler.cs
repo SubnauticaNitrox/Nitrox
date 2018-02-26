@@ -7,6 +7,7 @@ using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Spawning;
 
 namespace NitroxServer.Communication.Packets
 {
