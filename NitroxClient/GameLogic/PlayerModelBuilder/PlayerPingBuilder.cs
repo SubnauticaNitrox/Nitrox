@@ -2,14 +2,15 @@
 using System.Reflection;
 using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    public class PlayerPingBuilder : BasePlayerModelBuildHandler
+    public class PlayerPingBuilder : IPlayerModelBuilder
     {
-        protected override void HandleBuild(RemotePlayer player)
+        public void Build(RemotePlayer player)
         {
-            GameObject signalBase = UnityEngine.Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
+            GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
             signalBase.name = "signal" + player.PlayerName;
             signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);

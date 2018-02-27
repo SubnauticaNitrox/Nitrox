@@ -1,22 +1,19 @@
-﻿using UnityEngine;
+﻿using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    public class RegularDiveSuitBuilder : EquipmentModelBuilder
+    public class RegularDiveSuitBuilder : IPlayerModelBuilder
     {
+        private readonly GameObject modelGeometry;
+
         public RegularDiveSuitBuilder(GameObject modelGeometry)
-            : base(modelGeometry)
         {
+            this.modelGeometry = modelGeometry;
         }
 
-        protected override void HandleBuild(RemotePlayer player)
+        public void Build(RemotePlayer player)
         {
-            GameObject diveSuit = ModelGeometry.transform.Find("diveSuit").gameObject;
-            SkinnedMeshRenderer[] renderers = diveSuit.GetAllComponentsInChildren<SkinnedMeshRenderer>();
-
-            Material torsoMaterial = renderers[0].materials[0];
-            Material armsMaterial = renderers[0].materials[1];
-
             float playerHue;
 
             //Ignored because we simply need to retrieve the hue of the PlayerColor.
@@ -26,10 +23,16 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             Color.RGBToHSV(player.PlayerSettings.PlayerColor, out playerHue, out ignoredSaturation, out ignoredVibrance);
 
             HsvColorFilter filter = new HsvColorFilter(playerHue, -1f, -1f, -1f);
-            filter.AddHueRange(0f, 60f / 360f);
+            filter.AddHueRange(0f, 60f);
 
-            PaintMaterial(torsoMaterial, filter);
-            PaintMaterial(armsMaterial, filter);
+            GameObject diveSuit = modelGeometry.transform.Find("diveSuit").gameObject;
+            SkinnedMeshRenderer[] renderers = diveSuit.GetAllComponentsInChildren<SkinnedMeshRenderer>();
+
+            Material torsoMaterial = renderers[0].materials[0];
+            torsoMaterial.ApplyFiltersToMainTexture(filter);
+
+            Material armsMaterial = renderers[0].materials[1];
+            armsMaterial.ApplyFiltersToMainTexture(filter);
         }
     }
 }

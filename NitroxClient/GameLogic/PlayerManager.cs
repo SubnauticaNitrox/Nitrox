@@ -45,9 +45,8 @@ namespace NitroxClient.GameLogic
 
             PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
             playerModelDirector
-                .StagePlayer()
-                .WithPing()
-                .WithRegularDiveSuit();
+                .AddPing()
+                .AddDiveSuit();
 
             playerModelDirector.Construct();
 

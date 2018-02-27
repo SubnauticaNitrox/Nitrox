@@ -1,35 +1,39 @@
-﻿using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
 {
-    // The vision here is to use this director as our central tool for managing remote model appearance alterations like changing equipment or in-game changes to appearance.
-    // This could probably very easily be extended to work with the local Player later down the line.
+    //TODO: Refactor this into something that is event driven.
     public class PlayerModelDirector
     {
-        private PlayerModelBuildContext buildContext;
         private readonly RemotePlayer player;
+        private readonly List<IPlayerModelBuilder> playerModelBuilders = new List<IPlayerModelBuilder>();
 
         public PlayerModelDirector(RemotePlayer player)
         {
             this.player = player;
         }
 
-        public PlayerModelBuildContext StagePlayer()
+        public PlayerModelDirector AddPing()
+        {
+            PlayerPingBuilder builder = new PlayerPingBuilder();
+            playerModelBuilders.Add(builder);
+            return this;
+        }
+
+        public PlayerModelDirector AddDiveSuit()
         {
             GameObject modelGeometry = player.PlayerModel.transform.Find("male_geo").gameObject;
-            buildContext = new PlayerModelBuildContext(modelGeometry);
-            return buildContext;
+            RegularDiveSuitBuilder builder = new RegularDiveSuitBuilder(modelGeometry);
+            playerModelBuilders.Add(builder);
+
+            return this;
         }
 
         public void Construct()
         {
-            if (buildContext?.RootBuilder != null)
-            {
-                IPlayerModelBuilder builder = buildContext.RootBuilder;
-                builder.Build(player);
-                buildContext = null;
-            }
+            playerModelBuilders.ForEach(builder => builder.Build(player));
         }
     }
 }

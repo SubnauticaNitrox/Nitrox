@@ -62,6 +62,14 @@ namespace NitroxClient
             texture.Apply();
         }
 
+        public static void ApplyFiltersToMainTexture(this Material material, params HsvColorFilter[] filters)
+        {
+            Texture2D mainTexture = (Texture2D) material.mainTexture;
+            Texture2D clonedTexture = mainTexture.Clone();
+            material.mainTexture = clonedTexture;
+            clonedTexture.ApplyFilters(filters);
+        }
+
         private static void FilterPixels(HsvColorFilter[] filters, Color[] pixels)
         {
             for (int index = 0; index < pixels.Length; index++)

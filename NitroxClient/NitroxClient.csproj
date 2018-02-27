@@ -162,16 +162,11 @@
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\PlayerLogic.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\BasePlayerModelBuildHandler.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuildHandler.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\EquipmentModelBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\HsvColorFilter.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelBuildContext.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelDirector.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerPingBuilder.cs" />
-    <Compile Include="GameLogic\PlayerModelBuilder\PlayerRebreatherModelBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\RegularDiveSuitBuilder.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
