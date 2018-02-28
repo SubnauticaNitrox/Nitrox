@@ -20,6 +20,7 @@ namespace NitroxClient.MonoBehaviours
     {
         public static Multiplayer Main;
         public static event Action OnBeforeMultiplayerStart;
+        public static event Action OnAfterMultiplayerEnd;
 
         private IMultiplayerSession multiplayerSession;
         private DeferringPacketReceiver packetReceiver;
@@ -89,6 +90,11 @@ namespace NitroxClient.MonoBehaviours
             remotePlayerManager.RemoveAllPlayers();
 
             packetReceiver.Flush();
+
+            OnAfterMultiplayerEnd?.Invoke();
+
+            //Always do this last.
+            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

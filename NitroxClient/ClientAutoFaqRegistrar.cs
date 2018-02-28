@@ -25,33 +25,33 @@ namespace NitroxClient
             containerBuilder.RegisterType<MultiplayerSessionManager>()
                 .As<IMultiplayerSession>()
                 .As<IPacketSender>()
-                .SingleInstance();
+                .InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<TcpClient>()
                 .As<IClient>()
-                .SingleInstance();
+                .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<PlayerManager>().SingleInstance();
-            containerBuilder.RegisterType<PlayerVitalsManager>().SingleInstance();
-            containerBuilder.RegisterType<PlayerChatManager>().SingleInstance();
-            containerBuilder.RegisterType<VisibleCells>().SingleInstance();
-            containerBuilder.RegisterType<DeferringPacketReceiver>().SingleInstance();
-            containerBuilder.RegisterType<AI>().SingleInstance();
-            containerBuilder.RegisterType<Building>().SingleInstance();
-            containerBuilder.RegisterType<Chat>().SingleInstance();
-            containerBuilder.RegisterType<Entities>().SingleInstance();
-            containerBuilder.RegisterType<MedkitFabricator>().SingleInstance();
-            containerBuilder.RegisterType<Item>().SingleInstance();
-            containerBuilder.RegisterType<EquipmentSlots>().SingleInstance();
-            containerBuilder.RegisterType<ItemContainers>().SingleInstance();
-            containerBuilder.RegisterType<PlayerLogic>().SingleInstance();
-            containerBuilder.RegisterType<Power>().SingleInstance();
-            containerBuilder.RegisterType<SimulationOwnership>().SingleInstance();
-            containerBuilder.RegisterType<Crafting>().SingleInstance();
-            containerBuilder.RegisterType<Cyclops>().SingleInstance();
-            containerBuilder.RegisterType<Interior>().SingleInstance();
-            containerBuilder.RegisterType<MobileVehicleBay>().SingleInstance();
-            containerBuilder.RegisterType<Terrain>().SingleInstance();
+            containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<VisibleCells>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<DeferringPacketReceiver>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Building>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Chat>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Item>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<EquipmentSlots>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerLogic>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Power>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Interior>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
@@ -59,7 +59,7 @@ namespace NitroxClient
             containerBuilder
                 .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
                 .AsClosedTypesOf(typeof(ClientPacketProcessor<>))
-                .SingleInstance();
+                .InstancePerLifetimeScope();
         }
     }
 }
