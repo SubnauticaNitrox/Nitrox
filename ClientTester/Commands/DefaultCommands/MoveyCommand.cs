@@ -8,7 +8,7 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveyCommand : NitroxCommand
     {
-        private readonly LocalPlayer localPlayerBroadcaster = NitroxServiceLocator.LocateService<LocalPlayer>();
+        private readonly LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
 
         public MoveyCommand()
         {
@@ -23,7 +23,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             float y = client.ClientPos.y;
             client.ClientPos.y = float.Parse(args[0]);
-            localPlayerBroadcaster.UpdateLocation(client.ClientPos, new Vector3(0, client.ClientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
+            localPlayer.UpdateLocation(client.ClientPos, new Vector3(0, client.ClientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
         }
     }
 }

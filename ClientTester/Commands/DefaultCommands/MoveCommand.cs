@@ -10,7 +10,7 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveCommand : NitroxCommand
     {
-        private readonly LocalPlayer localPlayerBroadcaster = NitroxServiceLocator.LocateService<LocalPlayer>();
+        private readonly LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
 
         public MoveCommand()
         {
@@ -47,7 +47,7 @@ namespace ClientTester.Commands.DefaultCommands
                 float velY = curY - lastY;
                 Vector3 velocity = new Vector3(velX / 10f, 0, velY / 10f);
                 client.ClientPos += velocity;
-                localPlayerBroadcaster.UpdateLocation(client.ClientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
+                localPlayer.UpdateLocation(client.ClientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
             }
 
             lastX = curX;

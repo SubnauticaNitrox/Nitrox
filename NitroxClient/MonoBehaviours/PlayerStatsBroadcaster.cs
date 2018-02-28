@@ -8,11 +8,11 @@ namespace NitroxClient.MonoBehaviours
     {
         private float time;
         private const float INTERPOLATION_PERIOD = 4.00f;
-        private LocalPlayer localPlayerBroadcaster;
+        private LocalPlayer localPlayer;
 
         public void Awake()
         {
-            localPlayerBroadcaster = NitroxServiceLocator.LocateService<LocalPlayer>();
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         }
 
         public void Update()
@@ -34,7 +34,7 @@ namespace NitroxClient.MonoBehaviours
                     float food = survival.food;
                     float water = survival.water;
 
-                    localPlayerBroadcaster.BroadcastStats(oxygen, maxOxygen, health, food, water);
+                    localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water);
                 }
             }
         }
