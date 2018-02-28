@@ -13,10 +13,10 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         /// <summary>
         /// Constructs a HSV Color Filter object with the specified replacement values. Populate the filter ranges with the appropriate method.
         /// </summary>
-        /// <param name="replacementHue">A value less than 0 will be ignored, resulting in the original hue being applied to any filtered pixels. A value greater than 1 will be divided by 360.</param>
+        /// <param name="replacementHue">A value less than 0 will be ignored, resulting in the original hue being applied to any filtered pixels. A value greater than or equal to 1 will be divided by 360.</param>
         /// <param name="replacementSaturation">A value less than 0 will be ignored, resulting in the original saturation being applied to any filtered pixels. A value greater than 1 will be divided by 100.</param>
         /// <param name="replacementVibrance">A value less than 0 will be ignored, resulting in the original vibrance being applied to any filtered pixels. A value greater than 1 will be divided by 100.</param>
-        /// <param name="replacementAlpha">A value less than 0 will be ignored, resulting in the original alpha being applied to any filtered pixels. A value greater than 1 will be divided by 255.</param>
+        /// <param name="replacementAlpha">A value less than 0 will be ignored, resulting in the original alpha being applied to any filtered pixels. A value greater than or equal to 1 will be divided by 255.</param>
         public HsvColorFilter(float replacementHue, float replacementSaturation, float replacementVibrance, float replacementAlpha)
         {
             HueValueRanges = new List<ColorValueRange>();
@@ -25,8 +25,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             AlphaValueRanges = new List<ColorValueRange>();
 
             this.replacementHue = replacementHue < 1f ? replacementHue : replacementHue / 360f;
-            this.replacementSaturation = replacementSaturation < 1f ? replacementSaturation : replacementSaturation / 100f;
-            this.replacementVibrance = replacementVibrance < 1f ? replacementVibrance : replacementVibrance / 100f;
+            this.replacementSaturation = replacementSaturation <= 1f ? replacementSaturation : replacementSaturation / 100f;
+            this.replacementVibrance = replacementVibrance <= 1f ? replacementVibrance : replacementVibrance / 100f;
             this.replacementAlpha = replacementAlpha < 1f ? replacementAlpha : replacementAlpha / 255f;
         }
 
@@ -65,7 +65,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         /// <summary>
         /// Adds a range to the hue filter that could cause pixels whose hue it covers to be replaced if their respective values are also covered by the saturation and vibrance filters.
         /// </summary>
-        /// <param name="minHue">The minimum hue to be considered for this condition. Values greater than 1 will be divided by 360.</param>
+        /// <param name="minHue">The minimum hue to be considered for this condition. Values greater than or equal to 1 will be divided by 360.</param>
         /// <param name="maxHue">The maximum hue to be considered for this condition. Values greater than 1 will be divided by 360.</param>
         public void AddHueRange(float minHue, float maxHue)
         {
@@ -82,8 +82,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         /// <param name="maxSaturation">The maximum saturation to be considered for this condition. Values greater than 1 will be divided by 100.</param>
         public void AddSaturationRange(float minSaturation, float maxSaturation)
         {
-            float newFilterMinValue = minSaturation < 1f ? minSaturation : minSaturation / 100f;
-            float newFilterMaxValue = maxSaturation < 1f ? maxSaturation : maxSaturation / 100f;
+            float newFilterMinValue = minSaturation <= 1f ? minSaturation : minSaturation / 100f;
+            float newFilterMaxValue = maxSaturation <= 1f ? maxSaturation : maxSaturation / 100f;
 
             SaturationValueRanges.Add(new ColorValueRange(newFilterMinValue, newFilterMaxValue));
         }
@@ -95,8 +95,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         /// <param name="maxVibrance">The maximum vibrance to be considered for this condition. Values greater than 1 will be divided by 100.</param>
         public void AddVibranceRange(float minVibrance, float maxVibrance)
         {
-            float newFilterMinValue = minVibrance < 1f ? minVibrance : minVibrance / 100f;
-            float newFilterMaxValue = maxVibrance < 1f ? maxVibrance : maxVibrance / 100f;
+            float newFilterMinValue = minVibrance <= 1f ? minVibrance : minVibrance / 100f;
+            float newFilterMaxValue = maxVibrance <= 1f ? maxVibrance : maxVibrance / 100f;
 
             VibranceValueRanges.Add(new ColorValueRange(newFilterMinValue, newFilterMaxValue));
         }
@@ -105,8 +105,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         /// <summary>
         /// Adds a range to the alpha filter that could cause pixels whose alpha it covers to be replaced if their respective values are also covered by the hue and saturation filters.
         /// </summary>
-        /// <param name="minAlpha">The minimum alpha to be considered for this condition. Values greater than 1 will be divided by 255.</param>
-        /// <param name="maxAlpha">The maximum alpha to be considered for this condition. Values greater than 1 will be divided by 100.</param>
+        /// <param name="minAlpha">The minimum alpha to be considered for this condition. Values greater than or equal to 1 will be divided by 255.</param>
+        /// <param name="maxAlpha">The maximum alpha to be considered for this condition. Values greater than or equal to 1 will be divided by 255.</param>
         public void AddAlphaRange(float minAlpha, float maxAlpha)
         {
             float newFilterMinValue = minAlpha < 1f ? minAlpha : minAlpha / 255f;
