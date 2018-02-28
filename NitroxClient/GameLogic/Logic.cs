@@ -9,6 +9,7 @@ namespace NitroxClient.GameLogic
         public AI AI { get; }
         public Building Building { get; }
         public Chat Chat { get; }
+        public Debugger Debugger { get; }
         public Entities Entities { get; }
         public MedkitFabricator MedkitFabricator { get; }
         public Item Item { get; }
@@ -31,6 +32,7 @@ namespace NitroxClient.GameLogic
             AI = new AI(clientBridge);
             Building = new Building(clientBridge);
             Chat = new Chat(clientBridge);
+            Debugger = new Debugger(clientBridge);
             Entities = new Entities(clientBridge);
             MedkitFabricator = new MedkitFabricator(clientBridge);
             Item = new Item(clientBridge);

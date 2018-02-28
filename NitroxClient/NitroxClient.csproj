@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
     <Compile Include="Communication\ClientBridge.cs" />
     <Compile Include="Communication\ClientBridgeState.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
+    <Compile Include="GameLogic\Debugger.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
