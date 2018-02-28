@@ -5,7 +5,7 @@
         public const int BATCH_SIZE = 160;
 
         public static readonly Int3 BATCH_DIMENSIONS = new Int3(BATCH_SIZE, BATCH_SIZE, BATCH_SIZE);
-        
+
         public static readonly Int3 DIMENSIONS_IN_METERS = new Int3(4096, 3200, 4096);
 
         public static readonly Int3 DIMENSIONS_IN_BATCHES = Int3.Ceil(DIMENSIONS_IN_METERS.ToVector3() / BATCH_SIZE);

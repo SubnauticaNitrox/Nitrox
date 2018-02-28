@@ -36,6 +36,12 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -56,20 +62,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClientAutoFaqRegistrar.cs" />
+    <Compile Include="ClientExtensions.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
-    <Compile Include="Communication\ClientBridge.cs" />
-    <Compile Include="Communication\ClientBridgeState.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
+    <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
+    <Compile Include="Communication\Abstract\IPacketSender.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
-    <Compile Include="Communication\Exceptions\InvalidReservationException.cs" />
-    <Compile Include="Communication\Exceptions\InvalidReservationRejectionReasonException.cs" />
-    <Compile Include="Communication\Exceptions\ParameterValidationException.cs" />
-    <Compile Include="Communication\Exceptions\ProhibitedClaimAttemptException.cs" />
-    <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
-    <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
-    <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
-    <Compile Include="Communication\IClientBridge.cs" />
-    <Compile Include="Communication\IPacketSender.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingSessionReservation.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\CommunicatingState.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\ConnectionNegotiatedState.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\ConnectionNegotiatingState.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\Disconnected.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\EstablishingSessionPolicy.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionJoined.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReservationRejected.cs" />
+    <Compile Include="Communication\MultiplayerSession\ConnectionState\SessionReserved.cs" />
+    <Compile Include="Communication\MultiplayerSession\MultiplayerSessionConnectionStage.cs" />
+    <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
@@ -101,12 +115,14 @@
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MedicalCabinetClickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceFurnitureProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
@@ -123,6 +139,7 @@
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
+    <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
@@ -141,11 +158,16 @@
     <Compile Include="GameLogic\ItemDropActions\ConstructorDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\ItemDropAction.cs" />
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
-    <Compile Include="GameLogic\Logic.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
     <Compile Include="GameLogic\PlayerLogic.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\HsvColorFilter.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelDirector.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\PlayerPingBuilder.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\RegularDiveSuitBuilder.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
@@ -153,11 +175,10 @@
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
-    <Compile Include="MonoBehaviours\Chat.cs" />
     <Compile Include="MonoBehaviours\CodePatchManager.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
-    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLog.cs" />
     <Compile Include="MonoBehaviours\Gui\HUD\RemotePlayerVitals.cs" />
     <Compile Include="MonoBehaviours\Gui\Helper\SmoothedValue.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindingManager.cs" />
@@ -165,6 +186,7 @@
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\Actions\KeyBindingAction.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\DefaultKeyBinding.cs" />
     <Compile Include="MonoBehaviours\Gui\Input\KeyBindings\KeyBinding.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\ConsoleJoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
@@ -213,6 +235,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\playerBackgroundImage" />
   </ItemGroup>
   <ItemGroup />

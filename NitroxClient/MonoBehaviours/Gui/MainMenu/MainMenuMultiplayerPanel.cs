@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +29,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 AddServer("local", "127.0.0.1");
             }
+
             CreateButton("Add a server", ShowAddServerWindow);
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
@@ -63,7 +63,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(() => JoinServer(joinIp));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
-            
+
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -118,7 +118,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
         }
-
 
         private void OnAddServerButtonClicked()
         {
@@ -177,7 +176,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     {
                         GUILayout.Label("Name:");
                         GUI.SetNextControlName("serverNameField");
-                        //120 so users can't go too crazy.
+                        // 120 so users can't go too crazy.
                         serverNameInput = GUILayout.TextField(serverNameInput, 120);
                     }
 
@@ -185,7 +184,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     {
                         GUILayout.Label("Host:");
                         GUI.SetNextControlName("serverHostField");
-                        //120 so users can't go too crazy.
+                        // 120 so users can't go too crazy.
                         serverHostInput = GUILayout.TextField(serverHostInput, 120);
                     }
 

@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic.Helper
 {
@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic.Helper
 
         public static Optional<object> Get(TransientObjectType key)
         {
-            if(localObjectsById.ContainsKey(key))
+            if (localObjectsById.ContainsKey(key))
             {
                 return Optional<object>.OfNullable(localObjectsById[key]);
             }

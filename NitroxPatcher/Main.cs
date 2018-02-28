@@ -1,16 +1,17 @@
-﻿using NitroxClient.MonoBehaviours;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Harmony;
+using NitroxClient;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using UnityEngine;
 
 namespace NitroxPatcher
 {
@@ -29,6 +30,11 @@ namespace NitroxPatcher
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
+
+            Log.Info("Registering Dependencies");
+
+            // Our application's entry point. First, register client dependencies with AutoFac.
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
 
             Log.Info("Patching Subnautica...");
 
@@ -80,7 +86,6 @@ namespace NitroxPatcher
 
             isApplied = true;
         }
-
 
         /// <summary>
         /// If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the patches if applicable.

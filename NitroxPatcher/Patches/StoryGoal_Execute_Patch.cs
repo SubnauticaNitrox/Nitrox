@@ -1,9 +1,10 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
+﻿using System;
+using System.Reflection;
+using Harmony;
+using NitroxClient.Communication.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Packets;
 using Story;
-using System;
-using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {
@@ -15,7 +16,7 @@ namespace NitroxPatcher.Patches
         public static void Prefix(string key, GoalType goalType)
         {
             StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
-            Multiplayer.Logic.ClientBridge.Send(packet);
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
         }
 
         public override void Patch(HarmonyInstance harmony)

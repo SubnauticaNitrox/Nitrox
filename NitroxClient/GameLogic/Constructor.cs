@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;

@@ -99,6 +99,7 @@
     <Compile Include="Patches\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TranspilerHelper.cs" />
     <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
   <ItemGroup>

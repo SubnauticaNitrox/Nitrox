@@ -1,7 +1,7 @@
-﻿using Harmony;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {

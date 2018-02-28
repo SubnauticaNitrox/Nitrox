@@ -64,6 +64,7 @@ namespace NitroxServer.Serialization
                     }
                 }
             }
+
             return worldEntitiesByClassId;
         }
     }

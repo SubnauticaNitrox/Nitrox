@@ -1,10 +1,9 @@
-﻿using Harmony;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches
 {
@@ -26,8 +25,7 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.Logic.EquipmentSlots.Unequip(pickupable, this.owner, slot)
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_EquipmentSlots", BindingFlags.Instance | BindingFlags.Public));
+                    yield return TranspilerHelper.LocateService<EquipmentSlots>();
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(InventoryItem).GetMethod("get_item", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);

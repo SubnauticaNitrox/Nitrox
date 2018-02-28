@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic
         private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
 
         private readonly IPacketSender packetSender;
-        private float timeSinceLastConstructionChangeEvent = 0.0f;
+        private float timeSinceLastConstructionChangeEvent;
 
         public Building(IPacketSender packetSender)
         {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="TestSubnauticaFolder">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <UsingTask
     TaskName="WriteAssemblyPathTask"
     TaskFactory="CodeTaskFactory"
@@ -14,8 +14,8 @@
       <Code Type="Fragment" Language="cs">
         <![CDATA[
 File.WriteAllText(SettingsLocation,
-    "namespace NitroxReloader{public static class ReloaderSettings{" +
-    "public const string Path = @\"" + AssemblyFolder + "\";}}");
+    "namespace NitroxReloader { public static class ReloaderSettings { " +
+    "public const string PATH = @\"" + AssemblyFolder + "\"; } }");
         ]]>
       </Code>
     </Task>

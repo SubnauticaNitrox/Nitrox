@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -34,7 +35,7 @@ namespace NitroxPatcher.Patches
 
                 string guid = GuidHelper.GetGuid(parentVehicle);
                 VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, guid, eventData.hsb, eventData.color);
-                Multiplayer.Logic.PacketSender.Send(packet);
+                NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }
 

@@ -10,6 +10,7 @@ namespace NitroxModel.Packets
 
         public ChatMessage(string playerId, string text)
         {
+            PlayerId = playerId;
             Text = text;
         }
     }

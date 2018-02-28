@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
-using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication
 {

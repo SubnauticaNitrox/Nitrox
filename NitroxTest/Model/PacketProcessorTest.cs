@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Autofac;
+using Autofac.Builder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxServer.Communication;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -20,8 +22,6 @@ namespace NitroxTest.Model
         [TestMethod]
         public void ClientPacketProcessorSanity()
         {
-            Dictionary<Type, object> processorParams = (Dictionary<Type, object>)typeof(Multiplayer).GetField("ProcessorArguments", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
-
             typeof(Multiplayer).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
@@ -35,43 +35,25 @@ namespace NitroxTest.Model
                     // Check constructor availability:
                     int numCtors = processor.GetConstructors().Length;
                     Assert.IsTrue(numCtors == 1, $"{processor} should have exactly 1 constructor! (has {numCtors})");
-
-                    // Check argument type availability on constructor:
-                    ConstructorInfo ctor = processor.GetConstructors().First();
-                    ctor.GetParameters().ToList().ForEach(param =>
-                    {
-                        Assert.IsTrue(processorParams.ContainsKey(param.ParameterType), $"Constructor for {processor} has an undefined argument of type {param.ParameterType}!");
-                    });
                 });
-        }
-
-        [TestMethod]
-        public void SameAmountOfClientPacketProcessors()
-        {
-            IEnumerable<Type> processors = typeof(Multiplayer).Assembly.GetTypes()
-                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            // Note that there are less constraints; this test is mostly to ensure that someone doesn't derive from PacketProcessor but from ClientPacketProcessor (otherwise the Packet type can't be determined at runtime).
-            // The RuntimeDetectsAllPacketProcessors test below shows which processors have not been detected.
-
-            Assert.AreEqual(processors.Count(), Multiplayer.PacketProcessorsByType.Count,
-                "Not all ClientPacketProcessors have been discovered by the runtime code " +
-                $"({Multiplayer.PacketProcessorsByType.Count} out of {processors.Count()}). " +
-                "Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor " +
-                "(and will hence not be detected).");
         }
 
         [TestMethod]
         public void RuntimeDetectsAllClientPacketProcessors()
         {
-            HashSet<Type> runtimeProcessors = new HashSet<Type>(Multiplayer.PacketProcessorsByType.Select(p => p.Value.GetType()));
+            ContainerBuilder containerBuilder = new ContainerBuilder();
+            ClientAutoFaqRegistrar clientDependencyRegistrar = new ClientAutoFaqRegistrar();
+            clientDependencyRegistrar.RegisterDependencies(containerBuilder);
+            IContainer clientDependencyContainer = containerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
+
             // Check if every PacketProcessor has been detected:
             typeof(Multiplayer).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(processor =>
-                    Assert.IsTrue(runtimeProcessors.Contains(processor),
+                    Assert.IsTrue(clientDependencyContainer.Resolve(processor.BaseType) != null,
                         $"{processor} has not been discovered by the runtime code!")
-            );
+                );
         }
 
         [TestMethod]
@@ -129,7 +111,7 @@ namespace NitroxTest.Model
                 .ForEach(processor =>
                     Assert.IsTrue(runtimeProcessors.Contains(processor),
                         $"{processor} has not been discovered by the runtime code!")
-            );
+                );
         }
 
         [TestMethod]
@@ -142,20 +124,27 @@ namespace NitroxTest.Model
 
             HashSet<Type> packetTypes = new HashSet<Type>(
                 authenticatedPacketProcessorsByType
-                .Concat(unauthenticatedPacketProcessorsByType)
-                .Concat(Multiplayer.PacketProcessorsByType)
-                .Select(kvp => kvp.Key));
+                    .Concat(unauthenticatedPacketProcessorsByType)
+                    .Select(kvp => kvp.Key));
+
+            ContainerBuilder containerBuilder = new ContainerBuilder();
+            ClientAutoFaqRegistrar clientDependencyRegistrar = new ClientAutoFaqRegistrar();
+            clientDependencyRegistrar.RegisterDependencies(containerBuilder);
+            IContainer clientDependencyContainer = containerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
 
             typeof(Packet).Assembly.GetTypes()
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(packet =>
-                {
-                    Console.WriteLine("Checking handler for packet {0}...", packet);
-                    Assert.IsTrue(packetTypes.Contains(packet),
-                        $"Runtime has not detected a handler for {packet}!");
-                }
-            );
+                    {
+                        Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
+                        Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
+
+                        Console.WriteLine("Checking handler for packet {0}...", packet);
+                        Assert.IsTrue(packetTypes.Contains(packet) || clientDependencyContainer.Resolve(clientProcessorType) != null,
+                            $"Runtime has not detected a handler for {packet}!");
+                    }
+                );
         }
     }
 }

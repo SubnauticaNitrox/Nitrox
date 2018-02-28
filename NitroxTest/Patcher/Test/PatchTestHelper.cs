@@ -1,9 +1,9 @@
-﻿using Harmony;
-using Harmony.ILCopying;
-using NitroxModel.Helper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using Harmony.ILCopying;
+using NitroxModel.Helper;
 
 namespace NitroxTest.Patcher.Test
 {

@@ -10,7 +10,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(DeconstructionCompleted packet)
         {
             GameObject deconstructing = GuidHelper.RequireObjectFrom(packet.Guid);
-            UnityEngine.Object.Destroy(deconstructing);            
+            UnityEngine.Object.Destroy(deconstructing);
         }
     }
 }

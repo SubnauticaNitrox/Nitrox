@@ -68,6 +68,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     return t.gameObject;
                 }
             }
+
             return null;
         }
     }

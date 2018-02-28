@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxClient.GameLogic
 {
@@ -19,16 +22,35 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public RemotePlayer FindOrCreate(string playerId)
+        internal Optional<RemotePlayer> FindByName(string playerName)
         {
-            RemotePlayer player;
-
-            if (!playersById.TryGetValue(playerId, out player))
+            foreach (RemotePlayer player in playersById.Values)
             {
-                player = playersById[playerId] = new RemotePlayer(playerId);
+                if (player.PlayerName == playerName)
+                {
+                    return Optional<RemotePlayer>.Of(player);
+                }
+            }
+            return Optional<RemotePlayer>.Empty();
+        }
+
+        public void Create(string playerId, string playerName, PlayerSettings playerSettings)
+        {
+            if (playersById.ContainsKey(playerId))
+            {
+                throw new Exception("The playerId has already been used.");
             }
 
-            return player;
+            RemotePlayer player = new RemotePlayer(playerId, playerName, playerSettings);
+
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
+            playerModelDirector
+                .AddPing()
+                .AddDiveSuit();
+
+            playerModelDirector.Construct();
+
+            playersById.Add(playerId, player);
         }
 
         public void RemovePlayer(string playerId)
@@ -45,8 +67,14 @@ namespace NitroxClient.GameLogic
         {
             foreach (string playerId in playersById.Keys)
             {
-                RemovePlayer(playerId);
+                Optional<RemotePlayer> opPlayer = Find(playerId);
+                if (opPlayer.IsPresent())
+                {
+                    opPlayer.Get().Destroy();
+                }
             }
+
+            playersById.Clear();
         }
     }
 }

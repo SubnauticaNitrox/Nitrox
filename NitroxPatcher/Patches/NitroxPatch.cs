@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Harmony;
 using NitroxModel.Helper;
@@ -66,29 +65,6 @@ namespace NitroxPatcher.Patches
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             Validate.NotNull(method, $"Patcher: Patch method \"{methodName}\" cannot be found");
             return new HarmonyMethod(method);
-        }
-
-        private static IEnumerable<LocalVariableInfo> GetMatchingVariables<T>(MethodBase method)
-        {
-            return method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T));
-        }
-
-        /// <summary>
-        /// Returns the one and only local variable of type <typeparamref name="T"/>. Throws <see cref="System.InvalidOperationException"/> if there is not exactly one local variable of that type.
-        /// </summary>
-        /// <exception cref="System.InvalidOperationException" />
-        protected static int GetLocalVariableIndex<T>(MethodBase method)
-        {
-            return GetMatchingVariables<T>(method).Single().LocalIndex;
-        }
-
-        /// <summary>
-        /// Returns the index of the <paramref name="i"/>'th local variable of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <exception cref="System.ArgumentOutOfRangeException" />
-        protected static int GetLocalVariableIndex<T>(MethodBase method, int i)
-        {
-            return GetMatchingVariables<T>(method).ElementAt(i).LocalIndex;
         }
     }
 }

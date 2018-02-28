@@ -36,6 +36,12 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -48,6 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
+    <Compile Include="Core\IAutoFacRegistrar.cs" />
+    <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
@@ -69,16 +77,20 @@
     <Compile Include="Helper\SteamFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
+    <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
+    <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
+    <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />
+    <Compile Include="MultiplayerSession\PlayerSettings.cs" />
+    <Compile Include="MultiplayerSession\RandomColorGenerator.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
-    <Compile Include="Packets\Authenticate.cs" />
     <Compile Include="Packets\BroadcastEscapePods.cs" />
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
-    <Compile Include="Packets\ClaimPlayerSlotReservation.cs" />
     <Compile Include="Packets\ConstructionAmountChanged.cs" />
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
+    <Compile Include="Packets\CorrelatedPacket.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
@@ -94,7 +106,7 @@
     <Compile Include="Packets\EntityTransformUpdates.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />
     <Compile Include="Packets\EquipmentRemoveItem.cs" />
-    <Compile Include="Packets\Exceptions\UncorrelatedMessageException.cs" />
+    <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
@@ -102,32 +114,37 @@
     <Compile Include="Packets\ItemPosition.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />
     <Compile Include="Packets\Movement.cs" />
+    <Compile Include="Packets\MultiplayerSessionPolicy.cs" />
+    <Compile Include="Packets\MultiplayerSessionPolicyRequest.cs" />
+    <Compile Include="Packets\MultiplayerSessionReservation.cs" />
+    <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlaceFurniture.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
-    <Compile Include="Packets\PlayerSlotReservation.cs" />
+    <Compile Include="Packets\PlayerJoinedMultiplayerSession.cs" />
+    <Compile Include="Packets\PlayerJoiningMultiplayerSession.cs" />
     <Compile Include="Packets\PlayerStats.cs" />
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\RangedPacket.cs" />
-    <Compile Include="Packets\ReservePlayerSlot.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
-    <Compile Include="Packets\StoryEventRecieve.cs" />
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
-    <Compile Include="PlayerSlot\PlayerSlotReservationState.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tcp\Connection.cs" />
     <Compile Include="Tcp\MessageBuffer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

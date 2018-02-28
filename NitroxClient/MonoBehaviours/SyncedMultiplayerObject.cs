@@ -1,12 +1,20 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class SyncedMultiplayerObject : MonoBehaviour
     {
-        private float time = 0.0f;
+        private Item itemBroadcaster;
+        private float time;
         private const float INTERPOLATION_PERIOD = .25f;
+
+        public void Awake()
+        {
+            itemBroadcaster = NitroxServiceLocator.LocateService<Item>();
+        }
 
         public void Update()
         {
@@ -21,7 +29,7 @@ namespace NitroxClient.MonoBehaviours
                 Vector3 currentPosition = gameObject.transform.position;
                 Quaternion rotation = gameObject.transform.rotation;
 
-                Multiplayer.Logic.Item.UpdatePosition(guid, currentPosition, rotation);
+                itemBroadcaster.UpdatePosition(guid, currentPosition, rotation);
             }
         }
 

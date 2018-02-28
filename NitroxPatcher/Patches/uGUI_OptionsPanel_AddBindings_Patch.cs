@@ -1,9 +1,9 @@
-﻿using Harmony;
+﻿using System;
+using System.Reflection;
+using Harmony;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
-using System;
-using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {
@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches
 
             if (device == GameInput.Device.Keyboard)
             {
-                foreach(KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
+                foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
                     ReflectionHelper.ReflectionCall(__instance, "AddBindingOption", new Type[] { typeof(int), typeof(string), typeof(GameInput.Device), typeof(GameInput.Button) }, true, false, tabIndex, keyBinding.Label, keyBinding.Device, keyBinding.Button);
                 }

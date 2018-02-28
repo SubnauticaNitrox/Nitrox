@@ -1,8 +1,9 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -22,7 +23,7 @@ namespace NitroxPatcher.Patches
             if (__state != __instance.lightingOn)
             {
                 string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
-                Multiplayer.Logic.Cyclops.ToggleInternalLight(guid, __instance.lightingOn);
+                NitroxServiceLocator.LocateService<Cyclops>().ToggleInternalLight(guid, __instance.lightingOn);
             }
         }
 

@@ -1,10 +1,11 @@
-﻿using Harmony;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
@@ -19,13 +20,14 @@ namespace NitroxPatcher.Patches
             if (cyclops != null && cyclops == Player.main.currentSub)
             {
                 CyclopsHelmHUDManager cyclops_HUD = cyclops.gameObject.RequireComponentInChildren<CyclopsHelmHUDManager>();
-                //To show the Cyclops HUD every time "hudActive" have to be true. "hornObject" is a good indicator to check if the player piloting the cyclops.
+                // To show the Cyclops HUD every time "hudActive" have to be true. "hornObject" is a good indicator to check if the player piloting the cyclops.
                 if ((bool)cyclops_HUD.ReflectionGet("hudActive"))
                 {
                     __state = cyclops_HUD.hornObject.activeSelf;
                     return cyclops_HUD.hornObject.activeSelf;
                 }
             }
+
             __state = false;
             return false;
         }
@@ -36,7 +38,7 @@ namespace NitroxPatcher.Patches
             {
                 SubRoot cyclops = (SubRoot)__instance.ReflectionGet("subRoot");
                 string guid = GuidHelper.GetGuid(cyclops.gameObject);
-                Multiplayer.Logic.Cyclops.ChangeEngineMode(guid, __instance.motorModeIndex);
+                NitroxServiceLocator.LocateService<Cyclops>().ChangeEngineMode(guid, __instance.motorModeIndex);
             }
         }
 

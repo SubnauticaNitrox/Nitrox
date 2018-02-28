@@ -87,8 +87,8 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             Canvas canvas = originalBar.gameObject.GetComponentInParent<Canvas>();
 
-            //Not sure why this is needed, but if a initial transform is not set 
-            //then it will be in a weird, inconsistent state.
+            // Not sure why this is needed, but if a initial transform is not set
+            // then it will be in a weird, inconsistent state.
             SetBarPostion(cloned.gameObject, new Vector2(0, 0), canvas);
 
             uGUI_CircularBar newBar = cloned.GetComponentInChildren<uGUI_CircularBar>();

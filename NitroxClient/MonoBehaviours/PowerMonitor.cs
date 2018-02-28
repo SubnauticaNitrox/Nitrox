@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -42,6 +44,7 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PowerLevelChangedProcessor).GetMethod("Process", BindingFlags.Public | BindingFlags.Instance), false },
         };
 
+        private Power powerBoardcaster;
         private float runningDelta = 0;
         private float elapsedTime = 0;
         private float interpolationPeriod = 4.00f;
@@ -54,8 +57,13 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void Awake()
+        {
+            powerBoardcaster = NitroxServiceLocator.LocateService<Power>();
+        }
+
         /**
-         * We allow small bursts of power to build up so we don't flood with packets.
+         * We allow small bursts of power to Build up so we don't flood with packets.
          * The buffer will be flushed upon reaching the timeout period or the threshold.
          */
         public void Update()
@@ -71,7 +79,7 @@ namespace NitroxClient.MonoBehaviours
                 if (runningDelta != 0)
                 {
                     string guid = GuidHelper.GetGuid(gameObject);
-                    Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
+                    powerBoardcaster.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }
             }
@@ -91,6 +99,7 @@ namespace NitroxClient.MonoBehaviours
                 Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
                 Log.Error(new StackTrace().ToString());
             }
+
             return true;
         }
     }

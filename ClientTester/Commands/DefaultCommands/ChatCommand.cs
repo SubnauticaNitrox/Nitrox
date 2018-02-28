@@ -1,9 +1,12 @@
-﻿using System;
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace ClientTester.Commands.DefaultCommands
 {
     public class ChatCommand : NitroxCommand
     {
+        private readonly Chat chatBroadcaster = NitroxServiceLocator.LocateService<Chat>();
+
         public ChatCommand()
         {
             Name = "chat";
@@ -17,11 +20,11 @@ namespace ClientTester.Commands.DefaultCommands
 
             if (args.Length >= 2)
             {
-                client.Logic.Chat.SendChatMessage(string.Join(" ", args)); //does not support double spaces!
+                chatBroadcaster.SendChatMessage(string.Join(" ", args)); //does not support double spaces!
             }
             else
             {
-                client.Logic.Chat.SendChatMessage(args[0]);
+                chatBroadcaster.SendChatMessage(args[0]);
             }
         }
     }

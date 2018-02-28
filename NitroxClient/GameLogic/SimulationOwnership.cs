@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
+        private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
         private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
         private readonly HashSet<string> requestedGuids = new HashSet<string>();
 
-        public SimulationOwnership(IPacketSender packetSender)
+        public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
+            this.muliplayerSession = muliplayerSession;
             this.packetSender = packetSender;
         }
 
@@ -21,7 +23,7 @@ namespace NitroxClient.GameLogic
 
             if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
             {
-                return owningPlayerId == packetSender.PlayerId;
+                return owningPlayerId == muliplayerSession.Reservation.PlayerId;
             }
 
             return false;
@@ -31,7 +33,7 @@ namespace NitroxClient.GameLogic
         {
             if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
-                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(packetSender.PlayerId, guid);
+                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid);
                 packetSender.Send(ownershipRequest);
                 requestedGuids.Add(guid);
             }
