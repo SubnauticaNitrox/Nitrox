@@ -117,10 +117,9 @@ namespace NitroxServer.GameLogic.Spawning
                 }
             }
 
-            if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.ContainsKey(selectedPrefab.classId))
+            WorldEntityInfo worldEntityInfo;
+            if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.TryGetValue(selectedPrefab.classId, out worldEntityInfo))
             {
-                WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[selectedPrefab.classId];
-
                 for (int i = 0; i < selectedPrefab.count; i++)
                 {
                     Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
@@ -136,10 +135,9 @@ namespace NitroxServer.GameLogic.Spawning
 
         private bool IsValidSpawnType(string id, bool creatureSpawn)
         {
-            if (worldEntitiesByClassId.ContainsKey(id))
+            WorldEntityInfo worldEntityInfo;
+            if (worldEntitiesByClassId.TryGetValue(id, out worldEntityInfo))
             {
-                WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[id];
-
                 return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
             }
 
