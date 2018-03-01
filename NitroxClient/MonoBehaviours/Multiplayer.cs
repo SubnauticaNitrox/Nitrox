@@ -4,7 +4,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -19,11 +18,11 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        public static event Action OnBeforeMultiplayerStart;
-        public static event Action OnAfterMultiplayerEnd;
 
         private IMultiplayerSession multiplayerSession;
         private DeferringPacketReceiver packetReceiver;
+        public static event Action OnBeforeMultiplayerStart;
+        public static event Action OnAfterMultiplayerEnd;
 
         public void Awake()
         {
@@ -68,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
         public void StartSession()
         {
             InitMonoBehaviours();
-            OnBeforeMultiplayerStart();
+            OnBeforeMultiplayerStart?.Invoke();
             multiplayerSession.JoinSession();
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
@@ -85,12 +84,6 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             multiplayerSession.Disconnect();
-
-            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            remotePlayerManager.RemoveAllPlayers();
-
-            packetReceiver.Flush();
-
             OnAfterMultiplayerEnd?.Invoke();
 
             //Always do this last.
