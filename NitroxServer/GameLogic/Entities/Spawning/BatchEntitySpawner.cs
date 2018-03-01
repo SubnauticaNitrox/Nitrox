@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -57,40 +58,29 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 yield break;
             }
 
-            float rollingProbabilityDensity = 0;
+            float rollingProbabilityDensity = dstData.prefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
 
-            PrefabData selectedPrefab = null;
-
-            foreach (PrefabData prefab in dstData.prefabs)
+            if (rollingProbabilityDensity <= 0)
             {
-                float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                rollingProbabilityDensity += probabilityDensity;
+                yield break;
             }
 
             double randomNumber = random.NextDouble();
-            double rollingProbability = 0;
-
-            if (rollingProbabilityDensity > 0)
+            if (rollingProbabilityDensity > 1f)
             {
-                if (rollingProbabilityDensity > 1f)
-                {
-                    randomNumber *= rollingProbabilityDensity;
-                }
-
-                foreach (PrefabData prefab in dstData.prefabs)
-                {
-                    float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                    rollingProbability += probabilityDensity;
-                    // This is pretty hacky, it rerolls until its hits a prefab of a correct type
-                    // What should happen is that we check wei first, then grab data from there
-                    bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
-                    if (rollingProbability >= randomNumber && isValidSpawn)
-                    {
-                        selectedPrefab = prefab;
-                        break;
-                    }
-                }
+                randomNumber *= rollingProbabilityDensity;
             }
+
+            double rollingProbability = 0;
+            PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
+            {
+                float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
+                rollingProbability += probabilityDensity;
+                // This is pretty hacky, it rerolls until its hits a prefab of a correct type
+                // What should happen is that we check wei first, then grab data from there
+                bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
+                return rollingProbability >= randomNumber && isValidSpawn;
+            });
 
             WorldEntityInfo worldEntityInfo;
             if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.TryGetValue(selectedPrefab.classId, out worldEntityInfo))
