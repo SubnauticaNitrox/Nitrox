@@ -83,12 +83,12 @@ namespace ClientTester
 
             foreach (Packet packet in packets)
             {
-                if (packetProcessorMap.ContainsKey(packet.GetType()))
+                PacketProcessor packetProcessor;
+                if (packetProcessorMap.TryGetValue(packet.GetType(), out packetProcessor))
                 {
                     try
                     {
-                        PacketProcessor processor = packetProcessorMap[packet.GetType()];
-                        processor.ProcessPacket(packet, null);
+                        packetProcessor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)
                     {

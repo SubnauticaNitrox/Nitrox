@@ -90,15 +90,14 @@ namespace NitroxClient.MonoBehaviours
             StackFrame stackFrame = new StackFrame(5, true);
             MethodBase method = stackFrame.GetMethod();
 
-            if (isActiveFlagByWhiteListedEnergyInterfaceCallers.ContainsKey(method))
+            bool isMethodActive;
+            if (isActiveFlagByWhiteListedEnergyInterfaceCallers.TryGetValue(method, out isMethodActive))
             {
-                return isActiveFlagByWhiteListedEnergyInterfaceCallers[method];
+                return isMethodActive;
             }
-            else
-            {
-                Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
-                Log.Error(new StackTrace().ToString());
-            }
+
+            Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+            Log.Error(new StackTrace().ToString());
 
             return true;
         }

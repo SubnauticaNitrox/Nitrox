@@ -59,9 +59,10 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessAuthenticated(Packet packet, Player player)
         {
-            if (authenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            PacketProcessor packetProcessor;
+            if (authenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
             {
-                authenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, player);
+                packetProcessor.ProcessPacket(packet, player);
             }
             else
             {
@@ -71,9 +72,10 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessUnauthenticated(Packet packet, Connection connection)
         {
-            if (unauthenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            PacketProcessor packetProcessor;
+            if (unauthenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
             {
-                unauthenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, connection);
+                packetProcessor.ProcessPacket(packet, connection);
             }
             else
             {
