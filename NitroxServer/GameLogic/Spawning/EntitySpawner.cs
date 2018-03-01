@@ -6,123 +6,132 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxServer.GameLogic.Spawning;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
 
-namespace NitroxServer.GameLogic
+namespace NitroxServer.GameLogic.Spawning
 {
     public class EntitySpawner
     {
-        private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell;
-
+        private readonly HashSet<Int3> parsedBatches = new HashSet<Int3>();
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
-        private readonly IEnumerable<EntitySpawnPoint> entitySpawnPoints;
         private readonly LootDistributionData lootDistributionData;
+        private readonly BatchCellsParser batchCellsParser;
+        private readonly Random random = new Random();
 
         private const uint TEXT_CLASS_ID = 0x31;
         private const uint MONOBEHAVIOUR_CLASS_ID = 0x72;
 
         public EntitySpawner()
         {
-            string lootDistributionString = "";
+            string lootDistributionString;
             if (GetDataFiles(out lootDistributionString, out worldEntitiesByClassId))
             {
-                BatchCellsParser BatchCellsParser = new BatchCellsParser();
-                entitySpawnPoints = BatchCellsParser.GetEntitySpawnPoints();
+                // TODO: If data files can't be loaded the code will crash due to NRE's.
+                batchCellsParser = new BatchCellsParser();
 
                 LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
                 lootDistributionData = lootDistributionsParser.GetLootDistributionData(lootDistributionString);
-
-                SpawnEntities();
             }
         }
 
-        public Dictionary<AbsoluteEntityCell, List<Entity>> GetEntitiesByAbsoluteCell()
+        /// <summary>
+        /// Spawns entities for <paramref name="batchId"/> if it was not loaded yet.
+        /// </summary>
+        public Optional<IDictionary<AbsoluteEntityCell, List<Entity>>> SpawnUnloadedEntitiesForBatch(Int3 batchId)
         {
-            return entitiesByAbsoluteCell;
-        }
-
-        private void SpawnEntities()
-        {
-            Log.Info("Spawning entities...");
-            entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
-            Random random = new Random();
-
-            foreach (EntitySpawnPoint entitySpawnPoint in entitySpawnPoints)
+            lock (parsedBatches)
             {
-                DstData dstData;
-                if (!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
+                if (parsedBatches.Contains(batchId))
                 {
-                    continue;
+                    return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Empty();
+                }
+                parsedBatches.Add(batchId);
+            }
+
+            Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
+
+            IDictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+
+            foreach (EntitySpawnPoint esp in batchCellsParser.ParseBatchData(batchId))
+            {
+                List<Entity> entities;
+                if (!entitiesByAbsoluteCell.TryGetValue(esp.AbsoluteEntityCell, out entities))
+                {
+                    entitiesByAbsoluteCell[esp.AbsoluteEntityCell] = entities = new List<Entity>();
                 }
 
-                float rollingProbabilityDensity = 0;
+                entities.AddRange(SpawnEntities(esp));
+            }
 
-                PrefabData selectedPrefab = null;
+            return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Of(entitiesByAbsoluteCell);
+        }
+
+        private IEnumerable<Entity> SpawnEntities(EntitySpawnPoint entitySpawnPoint)
+        {
+            DstData dstData;
+            if (!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
+            {
+                yield break;
+            }
+
+            float rollingProbabilityDensity = 0;
+
+            PrefabData selectedPrefab = null;
+
+            foreach (PrefabData prefab in dstData.prefabs)
+            {
+                float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
+                rollingProbabilityDensity += probabilityDensity;
+            }
+
+            double randomNumber = random.NextDouble();
+            double rollingProbability = 0;
+
+            if (rollingProbabilityDensity > 0)
+            {
+                if (rollingProbabilityDensity > 1f)
+                {
+                    randomNumber *= rollingProbabilityDensity;
+                }
 
                 foreach (PrefabData prefab in dstData.prefabs)
                 {
                     float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                    rollingProbabilityDensity += probabilityDensity;
-                }
-
-                double randomNumber = random.NextDouble();
-                double rollingProbability = 0;
-
-                if (rollingProbabilityDensity > 0)
-                {
-                    if (rollingProbabilityDensity > 1f)
+                    rollingProbability += probabilityDensity;
+                    // This is pretty hacky, it rerolls until its hits a prefab of a correct type
+                    // What should happen is that we check wei first, then grab data from there
+                    bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
+                    if (rollingProbability >= randomNumber && isValidSpawn)
                     {
-                        randomNumber *= rollingProbabilityDensity;
-                    }
-
-                    foreach (PrefabData prefab in dstData.prefabs)
-                    {
-                        float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                        rollingProbability += probabilityDensity;
-                        // This is pretty hacky, it rerolls until its hits a prefab of a correct type
-                        // What should happen is that we check wei first, then grab data from there
-                        bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
-                        if (rollingProbability >= randomNumber && isValidSpawn)
-                        {
-                            selectedPrefab = prefab;
-                            break;
-                        }
+                        selectedPrefab = prefab;
+                        break;
                     }
                 }
+            }
 
-                if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.ContainsKey(selectedPrefab.classId))
+            WorldEntityInfo worldEntityInfo;
+            if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.TryGetValue(selectedPrefab.classId, out worldEntityInfo))
+            {
+                for (int i = 0; i < selectedPrefab.count; i++)
                 {
-                    WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[selectedPrefab.classId];
+                    Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
+                                                      entitySpawnPoint.Rotation,
+                                                      worldEntityInfo.techType,
+                                                      Guid.NewGuid().ToString(),
+                                                      (int)worldEntityInfo.cellLevel);
 
-                    for (int i = 0; i < selectedPrefab.count; i++)
-                    {
-                        Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
-                                                          entitySpawnPoint.Rotation,
-                                                          worldEntityInfo.techType,
-                                                          Guid.NewGuid().ToString(),
-                                                          (int)worldEntityInfo.cellLevel);
-
-                        List<Entity> entities;
-                        if (!entitiesByAbsoluteCell.TryGetValue(entitySpawnPoint.AbsoluteEntityCell, out entities))
-                        {
-                            entities = entitiesByAbsoluteCell[entitySpawnPoint.AbsoluteEntityCell] = new List<Entity>();
-                        }
-
-                        entities.Add(spawnedEntity);
-                    }
+                    yield return spawnedEntity;
                 }
             }
         }
 
         private bool IsValidSpawnType(string id, bool creatureSpawn)
         {
-            if (worldEntitiesByClassId.ContainsKey(id))
+            WorldEntityInfo worldEntityInfo;
+            if (worldEntitiesByClassId.TryGetValue(id, out worldEntityInfo))
             {
-                WorldEntityInfo worldEntityInfo = worldEntitiesByClassId[id];
-
                 return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
             }
 

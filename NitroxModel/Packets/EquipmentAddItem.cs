@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EquipmentAddItem : RangedPacket
+    public class EquipmentAddItem : DeferrablePacket
     {
         public string OwnerGuid { get; }
         public string Slot { get; }

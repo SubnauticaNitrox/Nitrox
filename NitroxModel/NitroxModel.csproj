@@ -53,9 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
+    <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
@@ -101,6 +101,7 @@
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
+    <Compile Include="Packets\DeferrablePacket.cs" />
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\EntityTransformUpdates.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="Packets\PowerLevelChanged.cs" />
     <Compile Include="Packets\Processors\Abstract\IProcessorContext.cs" />
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
-    <Compile Include="Packets\RangedPacket.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
     <Compile Include="Packets\StoryEventSend.cs" />

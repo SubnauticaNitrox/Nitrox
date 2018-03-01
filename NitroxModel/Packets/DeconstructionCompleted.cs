@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DeconstructionCompleted : RangedPacket
+    public class DeconstructionCompleted : DeferrablePacket
     {
         public string Guid { get; }
 

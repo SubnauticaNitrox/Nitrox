@@ -39,5 +39,7 @@ namespace NitroxServer.GameLogic.Spawning
 
             return esp;
         }
+
+        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, ClassId: {ClassId}, Guid: {Guid}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
     }
 }

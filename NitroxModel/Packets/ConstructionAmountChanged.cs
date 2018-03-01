@@ -4,7 +4,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructionAmountChanged : RangedPacket
+    public class ConstructionAmountChanged : DeferrablePacket
     {
         public string Guid { get; }
         public float ConstructionAmount { get; }
