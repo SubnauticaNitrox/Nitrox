@@ -12,7 +12,7 @@ namespace NitroxTest.Client.Communication
     [TestClass]
     public class DeferredPacketReceiverTest
     {
-        private VisibleCells visibleCells;
+        private readonly VisibleCells visibleCells = new VisibleCells();
         private DeferringPacketReceiver packetReceiver;
 
         // Test Data
@@ -29,11 +29,8 @@ namespace NitroxTest.Client.Communication
         {
             packetReceiver = new DeferringPacketReceiver(visibleCells);
 
-            Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
-            Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
-
-            loadedCell = new AbsoluteEntityCell(loadedBatchId, cellId, CELL_LEVEL);
-            unloadedCell = new AbsoluteEntityCell(unloadedBatchId, cellId, CELL_LEVEL);
+            loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
+            unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
 
             visibleCells.Add(loadedCell);
         }
@@ -53,7 +50,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInLoadedCell()
         {
-            Packet packet = new TestActionPacket(loadedActionPosition, CELL_LEVEL);
+            Packet packet = new TestDeferrablePacket(loadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -65,7 +62,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInUnloadedCell()
         {
-            Packet packet = new TestActionPacket(unloadedActionPosition, CELL_LEVEL);
+            Packet packet = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -76,7 +73,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void PacketPrioritizedAfterBeingDeferred()
         {
-            Packet packet1 = new TestActionPacket(unloadedActionPosition, CELL_LEVEL);
+            Packet packet1 = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);
