@@ -14,7 +14,6 @@ using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
-    // This class is getting really big and is taking on many responsibilities. It might be worth a joint effort to see if we can plan some refactoring to this guy at some point in the future.
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
