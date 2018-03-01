@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using AssetsTools.NET;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -53,25 +52,20 @@ namespace NitroxServer.GameLogic.Spawning
 
             Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
 
-            List<EntitySpawnPoint> batchSpawnPoints = batchCellsParser.ParseBatchData(batchId);
+            IDictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
 
-            parsedBatches.Add(batchId);
-
-            Dictionary<AbsoluteEntityCell, List<Entity>> newSpawnPoints = new Dictionary<AbsoluteEntityCell, List<Entity>>();
-
-            Parallel.ForEach(batchSpawnPoints, spawnPoint =>
+            foreach (EntitySpawnPoint esp in batchCellsParser.ParseBatchData(batchId))
             {
-                List<Entity> result = new List<Entity>(SpawnEntities(spawnPoint));
-
-                lock (newSpawnPoints)
+                List<Entity> entities;
+                if (!entitiesByAbsoluteCell.TryGetValue(esp.AbsoluteEntityCell, out entities))
                 {
-                    newSpawnPoints[spawnPoint.AbsoluteEntityCell] = result;
+                    entitiesByAbsoluteCell[esp.AbsoluteEntityCell] = entities = new List<Entity>();
                 }
-            });
 
-            //Parallel.ForEach(batchSpawnPoints, SpawnEntities);
+                entities.AddRange(SpawnEntities(esp));
+            }
 
-            return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Of(newSpawnPoints);
+            return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Of(entitiesByAbsoluteCell);
         }
 
         private IEnumerable<Entity> SpawnEntities(EntitySpawnPoint entitySpawnPoint)

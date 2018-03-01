@@ -43,7 +43,7 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
 
-            Log.Info($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
+            Log.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
 
             return spawnPoints;
         }
