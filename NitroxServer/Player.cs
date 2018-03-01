@@ -12,22 +12,18 @@ namespace NitroxServer
     {
         private readonly Connection connection;
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
-		
+
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+        public PlayerContext PlayerContext { get; }
+        public string Id => PlayerContext.PlayerId;
+        public string Name => PlayerContext.PlayerName;
+        public Vector3 Position { get; set; }
+
         public Player(PlayerContext playerContext, Connection connection)
         {
             PlayerContext = playerContext;
             this.connection = connection;
         }
-
-        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-
-        public PlayerContext PlayerContext { get; }
-
-        public string Id => PlayerContext.PlayerId;
-
-        public string Name => PlayerContext.PlayerName;
-
-        public Vector3 Position { get; set; }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {

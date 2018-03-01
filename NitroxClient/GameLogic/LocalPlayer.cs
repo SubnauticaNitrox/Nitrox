@@ -15,6 +15,12 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
 
+        public GameObject Body { get; }
+        public GameObject PlayerModel { get; }
+        public GameObject BodyPrototype { get; }
+        public string PlayerName => multiplayerSession.AuthenticationContext.Username;
+        public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
+
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;
@@ -25,12 +31,6 @@ namespace NitroxClient.GameLogic
 
             BodyPrototype = CreateBodyPrototype();
         }
-
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
-        public GameObject BodyPrototype { get; }
-        public string PlayerName => multiplayerSession.AuthenticationContext.Username;
-        public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
         {

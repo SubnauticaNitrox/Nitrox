@@ -1,17 +1,30 @@
-﻿using System;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class RemotePlayer : INitroxPlayer
     {
+        public PlayerContext PlayerContext { get; }
+        public GameObject Body { get; }
+        public GameObject PlayerModel { get; }
+        public Rigidbody RigidBody { get; }
+        public ArmsController ArmsController { get; }
+        public AnimationController AnimationController { get; }
+
+        public string PlayerId => PlayerContext.PlayerId;
+        public string PlayerName => PlayerContext.PlayerName;
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+
+        public Vehicle Vehicle { get; private set; }
+        public SubRoot SubRoot { get; private set; }
+        public PilotingChair PilotingChair { get; private set; }
+
         public RemotePlayer(GameObject playerBody, PlayerContext playerContext)
         {
             Body = playerBody;
@@ -33,21 +46,6 @@ namespace NitroxClient.GameLogic
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
 
-        public AnimationController AnimationController { get; }
-        public ArmsController ArmsController { get; }
-        public Rigidbody RigidBody { get; }
-
-        public Vehicle Vehicle { get; private set; }
-        public SubRoot SubRoot { get; private set; }
-        public PilotingChair PilotingChair { get; private set; }
-
-        public PlayerContext PlayerContext { get; }
-        public string PlayerId => PlayerContext.PlayerId;
-        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-        public string PlayerName => PlayerContext.PlayerName;
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
-        
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
             Body.transform.parent = transform;
