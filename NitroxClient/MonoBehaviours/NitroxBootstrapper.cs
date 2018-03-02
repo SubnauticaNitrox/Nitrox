@@ -9,9 +9,7 @@ namespace NitroxClient.MonoBehaviours
         {
             DontDestroyOnLoad(gameObject);
             gameObject.AddComponent<SceneCleanerPreserve>();
-
             gameObject.AddComponent<MainMenuMods>();
-            gameObject.AddComponent<CodePatchManager>();
 
 #if DEBUG
             gameObject.AddComponent<ConsoleJoinServer>();

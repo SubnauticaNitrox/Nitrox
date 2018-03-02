@@ -59,6 +59,7 @@ namespace NitroxPatcher
 
             patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ToArray();
             Multiplayer.OnBeforeMultiplayerStart += Apply;
+            Multiplayer.OnAfterMultiplayerEnd += Restore;
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
             Log.Info("Enabling developer console.");
@@ -111,11 +112,11 @@ namespace NitroxPatcher
         private static void ApplyNitroxBehaviours()
         {
             Log.Info("Applying Nitrox behaviours..");
+
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
 
-            CodePatchManager.Restore += (sender, e) => Restore();
             Log.Info("Behaviours applied.");
         }
 

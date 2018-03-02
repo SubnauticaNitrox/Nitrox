@@ -62,19 +62,5 @@ namespace NitroxClient.GameLogic
                 playersById.Remove(playerId);
             }
         }
-
-        public void RemoveAllPlayers()
-        {
-            foreach (string playerId in playersById.Keys)
-            {
-                Optional<RemotePlayer> opPlayer = Find(playerId);
-                if (opPlayer.IsPresent())
-                {
-                    opPlayer.Get().Destroy();
-                }
-            }
-
-            playersById.Clear();
-        }
     }
 }

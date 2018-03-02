@@ -4,7 +4,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -15,14 +14,14 @@ using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
-    // This class is getting really big and is taking on many responsibilities. It might be worth a joint effort to see if we can plan some refactoring to this guy at some point in the future.
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        public static event Action OnBeforeMultiplayerStart;
 
         private IMultiplayerSession multiplayerSession;
         private DeferringPacketReceiver packetReceiver;
+        public static event Action OnBeforeMultiplayerStart;
+        public static event Action OnAfterMultiplayerEnd;
 
         public void Awake()
         {
@@ -67,7 +66,7 @@ namespace NitroxClient.MonoBehaviours
         public void StartSession()
         {
             InitMonoBehaviours();
-            OnBeforeMultiplayerStart();
+            OnBeforeMultiplayerStart?.Invoke();
             multiplayerSession.JoinSession();
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
@@ -84,11 +83,10 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
             multiplayerSession.Disconnect();
+            OnAfterMultiplayerEnd?.Invoke();
 
-            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            remotePlayerManager.RemoveAllPlayers();
-
-            packetReceiver.Flush();
+            //Always do this last.
+            NitroxServiceLocator.EndCurrentLifetimeScope();
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

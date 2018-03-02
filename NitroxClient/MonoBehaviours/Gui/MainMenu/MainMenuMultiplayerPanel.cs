@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -92,6 +93,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void JoinServer(string serverIp)
         {
+            NitroxServiceLocator.BeginNewLifetimeScope();
+
             new GameObject().AddComponent<JoinServer>().ServerIp = serverIp;
         }
 

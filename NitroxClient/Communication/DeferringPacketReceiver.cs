@@ -14,7 +14,7 @@ namespace NitroxClient.Communication
         private const int DEFAULT_PACKET_PRIORITY = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
-        private NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets;
+        private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets;
         private readonly VisibleCells visibleCells;
 
         public DeferringPacketReceiver(VisibleCells visibleCells)
@@ -98,15 +98,6 @@ namespace NitroxClient.Communication
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }
                 }
-            }
-        }
-
-        public void Flush()
-        {
-            lock (receivedPackets)
-            {
-                receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
-                deferredPacketsByAbsoluteCell.Clear();
             }
         }
     }
