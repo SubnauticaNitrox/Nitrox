@@ -171,6 +171,10 @@
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
+    <Compile Include="GameLogic\Spawning\NoTechTypeEntitySpawner.cs" />
+    <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
+    <Compile Include="GameLogic\Spawning\DefaultEntitySpawner.cs" />
+    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />

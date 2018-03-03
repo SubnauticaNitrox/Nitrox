@@ -10,9 +10,9 @@ using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
 
-namespace NitroxServer.GameLogic.Spawning
+namespace NitroxServer.GameLogic.Entities.Spawning
 {
-    public class EntitySpawner
+    public class BatchEntitySpawner : IEntitySpawner
     {
         private readonly HashSet<Int3> parsedBatches = new HashSet<Int3>();
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic.Spawning
         private const uint TEXT_CLASS_ID = 0x31;
         private const uint MONOBEHAVIOUR_CLASS_ID = 0x72;
 
-        public EntitySpawner()
+        public BatchEntitySpawner()
         {
             string lootDistributionString;
             if (GetDataFiles(out lootDistributionString, out worldEntitiesByClassId))
@@ -35,37 +35,28 @@ namespace NitroxServer.GameLogic.Spawning
                 lootDistributionData = lootDistributionsParser.GetLootDistributionData(lootDistributionString);
             }
         }
-
-        /// <summary>
-        /// Spawns entities for <paramref name="batchId"/> if it was not loaded yet.
-        /// </summary>
-        public Optional<IDictionary<AbsoluteEntityCell, List<Entity>>> SpawnUnloadedEntitiesForBatch(Int3 batchId)
+        
+        public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
             lock (parsedBatches)
             {
                 if (parsedBatches.Contains(batchId))
                 {
-                    return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Empty();
+                    return new List<Entity>();
                 }
                 parsedBatches.Add(batchId);
             }
 
             Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
 
-            IDictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+            List<Entity> entities = new List<Entity>();
 
             foreach (EntitySpawnPoint esp in batchCellsParser.ParseBatchData(batchId))
             {
-                List<Entity> entities;
-                if (!entitiesByAbsoluteCell.TryGetValue(esp.AbsoluteEntityCell, out entities))
-                {
-                    entitiesByAbsoluteCell[esp.AbsoluteEntityCell] = entities = new List<Entity>();
-                }
-
                 entities.AddRange(SpawnEntities(esp));
             }
 
-            return Optional<IDictionary<AbsoluteEntityCell, List<Entity>>>.Of(entitiesByAbsoluteCell);
+            return entities;
         }
 
         private IEnumerable<Entity> SpawnEntities(EntitySpawnPoint entitySpawnPoint)
@@ -119,10 +110,13 @@ namespace NitroxServer.GameLogic.Spawning
                     Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                                       entitySpawnPoint.Rotation,
                                                       worldEntityInfo.techType,
-                                                      Guid.NewGuid().ToString(),
                                                       (int)worldEntityInfo.cellLevel);
-
                     yield return spawnedEntity;
+                    
+                    if (TryAssigningChildEntity(spawnedEntity))
+                    {
+                        yield return spawnedEntity.ChildEntity.Get();
+                    }
                 }
             }
         }
@@ -136,6 +130,20 @@ namespace NitroxServer.GameLogic.Spawning
             }
 
             return false;
+        }
+
+        private bool TryAssigningChildEntity(Entity parentEntity)
+        {
+            Entity childEntity = null;
+
+            if (parentEntity.TechType == TechType.CrashHome)
+            {
+                childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level);
+            }
+
+            parentEntity.ChildEntity = Optional<Entity>.OfNullable(childEntity);
+
+            return parentEntity.ChildEntity.IsPresent();
         }
 
         private bool GetDataFiles(out string lootDistributions, out Dictionary<string, WorldEntityInfo> worldEntityData)

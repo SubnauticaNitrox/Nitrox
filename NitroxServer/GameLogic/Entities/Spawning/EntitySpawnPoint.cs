@@ -1,7 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.UnityStubs;
 
-namespace NitroxServer.GameLogic.Spawning
+namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public class EntitySpawnPoint
     {

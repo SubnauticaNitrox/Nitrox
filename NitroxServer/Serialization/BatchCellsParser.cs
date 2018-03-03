@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxServer.GameLogic.Spawning;
+using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization

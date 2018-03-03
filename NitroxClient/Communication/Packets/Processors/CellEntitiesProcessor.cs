@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic.Spawning;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -14,10 +15,18 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
+        private readonly IEntitySpawner defaultEntitySpawner;
+        private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType;
 
         public CellEntitiesProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
+
+            defaultEntitySpawner = new DefaultEntitySpawner(); 
+
+            customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
+            customSpawnersByTechType[TechType.None] = new NoTechTypeEntitySpawner();
+            customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         }
 
         public override void Process(CellEntities packet)
@@ -26,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (!alreadySpawnedGuids.Contains(entity.Guid))
                 {
-                    SpawnEntity(entity);
+                    SpawnEntity(entity, Optional<GameObject>.Empty());
                 }
                 else
                 {
@@ -35,22 +44,26 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void SpawnEntity(Entity entity)
+        private void SpawnEntity(Entity entity, Optional<GameObject> parent)
         {
-            if (entity.TechType != TechType.None)
-            {
-                GameObject gameObject = CraftData.InstantiateFromPrefab(entity.TechType);
-                gameObject.transform.position = entity.Position;
-                gameObject.transform.localRotation = entity.Rotation;
-                GuidHelper.SetNewGuid(gameObject, entity.Guid);
-                gameObject.SetActive(true);
-                LargeWorldEntity.Register(gameObject);
-                CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
+            IEntitySpawner entitySpawner = ResolveEntitySpawner(entity.TechType);
+            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
+            alreadySpawnedGuids.Add(entity.Guid);
 
-                Log.Debug("Received cell entity: " + entity.Guid + " at " + entity.Position + " of type " + entity.TechType);
+            if (entity.ChildEntity.IsPresent() && gameObject.IsPresent())
+            {
+                SpawnEntity(entity.ChildEntity.Get(), gameObject);
+            }
+        }
+
+        private IEntitySpawner ResolveEntitySpawner(TechType techType)
+        {
+            if(customSpawnersByTechType.ContainsKey(techType))
+            {
+                return customSpawnersByTechType[techType];
             }
 
-            alreadySpawnedGuids.Add(entity.Guid);
+            return defaultEntitySpawner;
         }
 
         private void UpdateEntityPosition(Entity entity)

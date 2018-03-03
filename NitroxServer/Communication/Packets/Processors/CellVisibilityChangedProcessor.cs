@@ -5,17 +5,20 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
         private readonly EntityManager entityManager;
+        private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public CellVisibilityChangedProcessor(EntityManager entityManager, PlayerManager playerManager)
+        public CellVisibilityChangedProcessor(EntityManager entityManager, EntitySimulation entitySimulation, PlayerManager playerManager)
         {
             this.entityManager = entityManager;
+            this.entitySimulation = entitySimulation;
             this.playerManager = playerManager;
         }
 
@@ -45,7 +48,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<OwnedGuid> ownershipChanges)
         {
-            List<Entity> entities = entityManager.AssignEntitySimulation(player, addedCells);
+            List<Entity> entities = entitySimulation.AssignForCells(player, addedCells);
 
             foreach (Entity entity in entities)
             {
@@ -55,7 +58,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, AbsoluteEntityCell[] removedCells, List<OwnedGuid> ownershipChanges)
         {
-            List<Entity> revokedEntities = entityManager.RevokeEntitySimulationFor(sendingPlayer, removedCells);
+            List<Entity> revokedEntities = entitySimulation.RevokeForCells(sendingPlayer, removedCells);
 
             foreach (Entity entity in revokedEntities)
             {
