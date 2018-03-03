@@ -36,10 +36,10 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (entitiesByAbsoluteCell)
             {
-                List<Entity> oldList = GetEntities(oldCell);
+                List<Entity> oldList = EntitiesFromCell(oldCell);
                 oldList.Remove(entity);
 
-                List<Entity> newList = GetEntities(newCell);
+                List<Entity> newList = EntitiesFromCell(newCell);
                 newList.Add(entity);
             }
         }
