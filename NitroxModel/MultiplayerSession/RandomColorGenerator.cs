@@ -8,7 +8,8 @@ namespace NitroxModel.MultiplayerSession
 
         public static Color GenerateColor()
         {
-            return new Color32(random.NextByte(), random.NextByte(), random.NextByte(), 255);
+            int r = random.Next();
+            return new Color32((byte)r, (byte)(r >> 8), (byte)(r >> 16), 255);
         }
     }
 }
