@@ -10,18 +10,11 @@ namespace NitroxClient.GameLogic.Spawning
     {
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
         {
-            GameObject gameObject = SpawnViaTechTypePrefab(entity) ?? SpawnViaPrefabDatabase(entity) ?? SpawnBlackBox(entity);
-            
-            return Optional<GameObject>.Of(gameObject);
-        }
-        
-        private GameObject SpawnViaTechTypePrefab(Entity entity)
-        {
             GameObject prefabForTechType = CraftData.GetPrefabForTechType(entity.TechType, false);
 
-            if (prefabForTechType == null)
+            if (prefabForTechType == null && !PrefabDatabase.TryGetPrefab(entity.ClassId, out prefabForTechType))
             {
-                return null;
+                return Optional<GameObject>.Of(Utils.CreateGenericLoot(entity.TechType));
             }
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefabForTechType, null);
@@ -32,34 +25,7 @@ namespace NitroxClient.GameLogic.Spawning
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
 
-            return gameObject;
-        }
-        
-        private GameObject SpawnViaPrefabDatabase(Entity entity)
-        {
-            GameObject prefab;
-
-            if (PrefabDatabase.TryGetPrefab(entity.ClassId, out prefab))
-            {
-                GameObject gameObject = UWE.Utils.InstantiateDeactivated(prefab, entity.Position, entity.Rotation);
-                gameObject.transform.SetParent(null, false);
-                gameObject.SetActive(true);
-
-                LargeWorldEntity component = gameObject.GetComponent<LargeWorldEntity>();
-                component.cellLevel = (LargeWorldEntity.CellLevel)entity.AbsoluteEntityCell.Level;
-                LargeWorld.main.streamer.cellManager.RegisterEntity(component);
-                LargeWorldEntity.Register(gameObject);
-                GuidHelper.SetNewGuid(gameObject, entity.Guid);
-
-                return gameObject;
-            }
-
-            return null;
-        }
-
-        private GameObject SpawnBlackBox(Entity entity)
-        {
-            return Utils.CreateGenericLoot(entity.TechType);
+            return Optional<GameObject>.Of(gameObject);
         }
     }
 }
