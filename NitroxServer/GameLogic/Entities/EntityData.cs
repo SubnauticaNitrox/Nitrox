@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using System.Linq;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -25,7 +25,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                 }
             }
-        }        
+        }
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {

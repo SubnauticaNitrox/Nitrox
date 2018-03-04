@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets
         {
             this.playerManager = playerManager;
             defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
-            ResourceAssets resourceAssets = ResourceAssetsParser.parse();
+            ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             EntityData entityData = new EntityData();
 
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>

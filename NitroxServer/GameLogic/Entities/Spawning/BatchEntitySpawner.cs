@@ -16,16 +16,16 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
         private readonly Random random = new Random();
-        
+
         public BatchEntitySpawner(ResourceAssets resourceAssets)
         {
-            this.worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
+            worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
             batchCellsParser = new BatchCellsParser();
 
             LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
-            lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);            
+            lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);
         }
-        
+
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
             lock (parsedBatches)
@@ -103,7 +103,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                       (int)worldEntityInfo.cellLevel,
                                                       selectedPrefab.classId);
                     yield return spawnedEntity;
-                    
+
                     if (TryAssigningChildEntity(spawnedEntity))
                     {
                         yield return spawnedEntity.ChildEntity.Get();

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Timers;
-using NitroxModel.Packets;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 
 namespace NitroxServer.GameLogic
 {
