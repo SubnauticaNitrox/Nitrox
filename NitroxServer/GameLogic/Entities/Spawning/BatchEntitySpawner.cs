@@ -110,7 +110,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                                       entitySpawnPoint.Rotation,
                                                       worldEntityInfo.techType,
-                                                      (int)worldEntityInfo.cellLevel);
+                                                      (int)worldEntityInfo.cellLevel,
+                                                      selectedPrefab.classId);
                     yield return spawnedEntity;
                     
                     if (TryAssigningChildEntity(spawnedEntity))
@@ -138,7 +139,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (parentEntity.TechType == TechType.CrashHome)
             {
-                childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level);
+                childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId);
             }
 
             parentEntity.ChildEntity = Optional<Entity>.OfNullable(childEntity);
