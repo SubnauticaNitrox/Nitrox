@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Timers;
 using NitroxModel.Packets;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic
 {
@@ -30,7 +31,7 @@ namespace NitroxServer.GameLogic
             Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                NitroxModel.Logger.Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
+                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
             timer.Interval = time;

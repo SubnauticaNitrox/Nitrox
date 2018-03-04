@@ -50,7 +50,7 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamFinder.FindSteamGamePath(264710, "Subnautica");
+            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath();
 
             if (subnauticaPath.IsEmpty())
             {

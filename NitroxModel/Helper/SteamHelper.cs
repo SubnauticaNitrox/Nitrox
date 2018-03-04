@@ -6,8 +6,16 @@ using NitroxModel.Logger;
 
 namespace NitroxModel.Helper
 {
-    public class SteamFinder
+    public static class SteamHelper
     {
+        public static readonly int SUBNAUTICA_APP_ID = 264710;
+        public static readonly string SUBNAUTICA_GAME_NAME = "Subnautica";
+
+        public static Optional<string> FindSubnauticaPath()
+        {
+            return FindSteamGamePath(SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
+        }
+
         public static Optional<string> FindSteamGamePath(int appid, string gameName)
         {
             if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)

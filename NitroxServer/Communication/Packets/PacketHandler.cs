@@ -9,6 +9,7 @@ using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -24,6 +25,7 @@ namespace NitroxServer.Communication.Packets
         {
             this.playerManager = playerManager;
             defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
+            ResourceAssets resourceAssets = ResourceAssetsParser.parse();
             EntityData entityData = new EntityData();
 
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
@@ -32,7 +34,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(TimeKeeper), timeKeeper },
                 {typeof(SimulationOwnership), simulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
-                {typeof(EntityManager), new EntityManager(entityData, new BatchEntitySpawner()) },
+                {typeof(EntityManager), new EntityManager(entityData, new BatchEntitySpawner(resourceAssets)) },
                 {typeof(EntitySimulation), new EntitySimulation(entityData, simulationOwnership) }
             };
 

@@ -22,8 +22,8 @@ namespace NitroxServer
 
         public void Start()
         {
-            Log.Info("Starting Nitrox Server");
             tcpServer.Start();
+            Log.Info("Nitrox Server Started");
         }
     }
 }

@@ -96,8 +96,9 @@
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\GenericNode.cs" />
     <Compile Include="Serialization\LootDistributionsParser.cs" />
+    <Compile Include="Serialization\ResourceAssets.cs" />
+    <Compile Include="Serialization\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
-    <Compile Include="Serialization\WorldEntityDataParser.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
