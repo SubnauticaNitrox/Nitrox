@@ -2,12 +2,12 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.GameLogic.Spawning;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -15,16 +15,13 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
-        private readonly IEntitySpawner defaultEntitySpawner;
-        private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType;
+        private readonly IEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
+        private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
 
         public CellEntitiesProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
 
-            defaultEntitySpawner = new DefaultEntitySpawner(); 
-
-            customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
             customSpawnersByTechType[TechType.None] = new NoTechTypeEntitySpawner();
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
         }
@@ -58,7 +55,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private IEntitySpawner ResolveEntitySpawner(TechType techType)
         {
-            if(customSpawnersByTechType.ContainsKey(techType))
+            if (customSpawnersByTechType.ContainsKey(techType))
             {
                 return customSpawnersByTechType[techType];
             }

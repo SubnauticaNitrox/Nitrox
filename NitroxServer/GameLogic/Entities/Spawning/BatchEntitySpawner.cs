@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using UWE;
@@ -17,6 +16,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
         private readonly Random random = new Random();
+        private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
         public BatchEntitySpawner(ResourceAssets resourceAssets)
         {
@@ -25,6 +25,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
             lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);
+
+            customBootstrappersByTechType[TechType.CrashHome] = new CrashFishBootstrapper();
         }
 
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)
@@ -94,9 +96,15 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                       selectedPrefab.classId);
                     yield return spawnedEntity;
 
-                    if (TryAssigningChildEntity(spawnedEntity))
+                    IEntityBootstrapper bootstrapper;
+                    if (customBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out bootstrapper))
                     {
-                        yield return spawnedEntity.ChildEntity.Get();
+                        bootstrapper.Prepare(spawnedEntity);
+
+                        if (spawnedEntity.ChildEntity.IsPresent())
+                        {
+                            yield return spawnedEntity.ChildEntity.Get();
+                        }
                     }
                 }
             }
@@ -111,20 +119,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
 
             return false;
-        }
-
-        private bool TryAssigningChildEntity(Entity parentEntity)
-        {
-            Entity childEntity = null;
-
-            if (parentEntity.TechType == TechType.CrashHome)
-            {
-                childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId);
-            }
-
-            parentEntity.ChildEntity = Optional<Entity>.OfNullable(childEntity);
-
-            return parentEntity.ChildEntity.IsPresent();
         }
     }
 }
