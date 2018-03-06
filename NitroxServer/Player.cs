@@ -4,26 +4,24 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxModel.Tcp;
-using NitroxServer.GameLogic;
 using UnityEngine;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public string Id { get; }
-        public string Name { get; }
-        public PlayerSettings PlayerSettings;
-        public Vector3 Position { get; set; }
-
         private readonly Connection connection;
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
-		
+
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+        public PlayerContext PlayerContext { get; }
+        public string Id => PlayerContext.PlayerId;
+        public string Name => PlayerContext.PlayerName;
+        public Vector3 Position { get; set; }
+
         public Player(PlayerContext playerContext, Connection connection)
         {
-            Id = playerContext.PlayerId;
-            Name = playerContext.PlayerName;
-            PlayerSettings = playerContext.PlayerSettings;
+            PlayerContext = playerContext;
             this.connection = connection;
         }
 
@@ -75,7 +73,7 @@ namespace NitroxServer
 
             Player player = (Player)obj;
 
-            return (player.Id == Id);
+            return player.Id == Id;
         }
 
         public override int GetHashCode()

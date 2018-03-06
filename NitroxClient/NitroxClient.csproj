@@ -152,6 +152,8 @@
     <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\ILocalNitroxPlayer.cs" />
+    <Compile Include="GameLogic\PlayerModelBuilder\INitroxPlayer.cs" />
     <Compile Include="GameLogic\Interior.cs" />
     <Compile Include="GameLogic\Item.cs" />
     <Compile Include="GameLogic\ItemContainers.cs" />
@@ -160,7 +162,7 @@
     <Compile Include="GameLogic\ItemDropActions\NoOpDropAction.cs" />
     <Compile Include="GameLogic\MedkitFabricator.cs" />
     <Compile Include="GameLogic\MovementHelper.cs" />
-    <Compile Include="GameLogic\PlayerLogic.cs" />
+    <Compile Include="GameLogic\LocalPlayer.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\Abstract\IPlayerModelBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\ColorValueRange.cs" />

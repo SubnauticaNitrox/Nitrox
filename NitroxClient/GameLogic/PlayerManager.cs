@@ -2,13 +2,22 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerManager
     {
+        private readonly ILocalNitroxPlayer localPlayer;
         private readonly Dictionary<string, RemotePlayer> playersById = new Dictionary<string, RemotePlayer>();
+
+        public PlayerManager(ILocalNitroxPlayer localPlayer)
+        {
+            this.localPlayer = localPlayer;
+        }
 
         public Optional<RemotePlayer> Find(string playerId)
         {
@@ -31,17 +40,21 @@ namespace NitroxClient.GameLogic
                     return Optional<RemotePlayer>.Of(player);
                 }
             }
+
             return Optional<RemotePlayer>.Empty();
         }
 
-        public void Create(string playerId, string playerName, PlayerSettings playerSettings)
+        public void Create(PlayerContext playerContext)
         {
-            if (playersById.ContainsKey(playerId))
+            Validate.NotNull(playerContext);
+
+            if (playersById.ContainsKey(playerContext.PlayerId))
             {
                 throw new Exception("The playerId has already been used.");
             }
 
-            RemotePlayer player = new RemotePlayer(playerId, playerName, playerSettings);
+            GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
+            RemotePlayer player = new RemotePlayer(remotePlayerBody, playerContext);
 
             PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
             playerModelDirector
@@ -50,7 +63,7 @@ namespace NitroxClient.GameLogic
 
             playerModelDirector.Construct();
 
-            playersById.Add(playerId, player);
+            playersById.Add(player.PlayerId, player);
         }
 
         public void RemovePlayer(string playerId)
@@ -61,6 +74,11 @@ namespace NitroxClient.GameLogic
                 opPlayer.Get().Destroy();
                 playersById.Remove(playerId);
             }
+        }
+
+        private GameObject CloneLocalPlayerBodyPrototype()
+        {
+            return Object.Instantiate(localPlayer.BodyPrototype);
         }
     }
 }

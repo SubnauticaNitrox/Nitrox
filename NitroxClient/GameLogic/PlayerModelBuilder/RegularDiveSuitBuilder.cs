@@ -11,8 +11,8 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         {
             this.modelGeometry = modelGeometry;
         }
-
-        public void Build(RemotePlayer player)
+        
+        public void Build(INitroxPlayer player)
         {
             float playerHue;
 

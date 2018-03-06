@@ -80,6 +80,7 @@
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />
+    <Compile Include="MultiplayerSession\PlayerContext.cs" />
     <Compile Include="MultiplayerSession\PlayerSettings.cs" />
     <Compile Include="MultiplayerSession\RandomColorGenerator.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />

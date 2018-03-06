@@ -1,21 +1,35 @@
 ﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace NitroxClient.GameLogic
 {
-    public class PlayerLogic // Named as such because UWE's 'Player' pollutes the global namespace :(
+    public class LocalPlayer : ILocalNitroxPlayer
     {
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
 
-        public PlayerLogic(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
+        public GameObject Body { get; }
+        public GameObject PlayerModel { get; }
+        public GameObject BodyPrototype { get; }
+        public string PlayerName => multiplayerSession.AuthenticationContext.Username;
+        public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
+
+        public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
+
+            Body = Player.main.transform.Find("body").gameObject;
+            PlayerModel = Body.transform.Find("player_view").gameObject;
+
+            BodyPrototype = CreateBodyPrototype();
         }
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
@@ -31,7 +45,8 @@ namespace NitroxClient.GameLogic
             if (opVehicle.IsPresent())
             {
                 VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid, vehicle.SteeringWheelYaw, vehicle.SteeringWheelPitch, vehicle.AppliedThrottle);
+                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid, vehicle.SteeringWheelYaw, vehicle.SteeringWheelPitch,
+                    vehicle.AppliedThrottle);
             }
             else
             {
@@ -51,6 +66,18 @@ namespace NitroxClient.GameLogic
         {
             PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition);
             packetSender.Send(playerDeath);
+        }
+
+        private GameObject CreateBodyPrototype()
+        {
+            GameObject prototype = Body;
+
+            // Cheap fix for showing head, much easier since male_geo contains many different heads
+            prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
+            GameObject clone = Object.Instantiate(prototype);
+            prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+
+            return clone;
         }
     }
 }

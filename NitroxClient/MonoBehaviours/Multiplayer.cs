@@ -4,6 +4,7 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -66,9 +67,21 @@ namespace NitroxClient.MonoBehaviours
         public void StartSession()
         {
             InitMonoBehaviours();
+            InitializeLocalPlayerState();
             OnBeforeMultiplayerStart?.Invoke();
+            
             multiplayerSession.JoinSession();
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        }
+
+        private void InitializeLocalPlayerState()
+        {
+            ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
+            playerModelDirector
+                .AddDiveSuit();
+
+            playerModelDirector.Construct();
         }
 
         public void InitMonoBehaviours()

@@ -6,13 +6,13 @@ namespace NitroxClient.MonoBehaviours
 {
     public class AnimationSender : MonoBehaviour
     {
-        private PlayerLogic playerBroadcaster;
+        private LocalPlayer localPlayer;
 
         AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
 
         public void Awake()
         {
-            playerBroadcaster = NitroxServiceLocator.LocateService<PlayerLogic>();
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
         }
 
         public void Update()
@@ -20,7 +20,7 @@ namespace NitroxClient.MonoBehaviours
             AnimChangeState underwaterState = (AnimChangeState)(Player.main.IsUnderwater() ? 1 : 0);
             if (lastUnderwaterState != underwaterState)
             {
-                playerBroadcaster.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);
+                localPlayer.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);
                 lastUnderwaterState = underwaterState;
             }
         }

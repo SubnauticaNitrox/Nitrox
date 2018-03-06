@@ -2,6 +2,6 @@
 {
     public interface IPlayerModelBuilder
     {
-        void Build(RemotePlayer player);
+        void Build(INitroxPlayer player);
     }
 }

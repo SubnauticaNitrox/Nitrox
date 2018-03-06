@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -7,30 +8,27 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
-    public class RemotePlayer
+    public class RemotePlayer : INitroxPlayer
     {
-        public readonly GameObject Body;
-        public readonly GameObject PlayerModel;
-        public readonly AnimationController AnimationController;
-        public readonly ArmsController ArmsController;
-        public readonly Rigidbody RigidBody;
+        public PlayerContext PlayerContext { get; }
+        public GameObject Body { get; }
+        public GameObject PlayerModel { get; }
+        public Rigidbody RigidBody { get; }
+        public ArmsController ArmsController { get; }
+        public AnimationController AnimationController { get; }
+
+        public string PlayerId => PlayerContext.PlayerId;
+        public string PlayerName => PlayerContext.PlayerName;
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public string PlayerId { get; }
-        public string PlayerName { get; }
-        public PlayerSettings PlayerSettings { get; }
-
-        public RemotePlayer(string playerId, string playerName, PlayerSettings playerSettings)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext)
         {
-            PlayerId = playerId;
-            PlayerName = playerName;
-            PlayerSettings = playerSettings;
-
-            GameObject originalBody = GameObject.Find("body");
-            Body = CloneBody(originalBody);
+            Body = playerBody;
+            PlayerContext = playerContext;
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
@@ -45,17 +43,7 @@ namespace NitroxClient.GameLogic
 
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 
-            ErrorMessage.AddMessage($"{playerName} joined the game.");
-        }
-
-        private GameObject CloneBody(GameObject originalBody)
-        {
-            // Cheap fix for showing head, much easier since male_geo contains many different heads
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            GameObject clonedBody = Object.Instantiate(originalBody);
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-
-            return clonedBody;
+            ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -123,7 +111,7 @@ namespace NitroxClient.GameLogic
                     mpCyclops.Exit();
                 }
 
-                RigidBody.isKinematic = AnimationController["cyclops_steering"] = (newPilotingChair != null);
+                RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
             }
         }
 

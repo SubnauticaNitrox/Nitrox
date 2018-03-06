@@ -1,8 +1,8 @@
 ﻿using System;
-using NitroxModel.MultiplayerSession;
 
-namespace NitroxServer.GameLogic
+namespace NitroxModel.MultiplayerSession
 {
+    [Serializable]
     public class PlayerContext
     {
         public string PlayerId { get; }
