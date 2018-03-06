@@ -1,7 +1,7 @@
-﻿using AssetsTools.NET;
+﻿using System.IO;
+using AssetsTools.NET;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using System.IO;
 using UWE;
 
 namespace NitroxServer.Serialization
@@ -11,11 +11,11 @@ namespace NitroxServer.Serialization
         private const uint TEXT_CLASS_ID = 0x31;
         private const uint MONOBEHAVIOUR_CLASS_ID = 0x72;
 
-        public static ResourceAssets parse()
+        public static ResourceAssets Parse()
         {
             ResourceAssets resourceAssets = new ResourceAssets();
-            
-            using (FileStream resStream = new FileStream(findPath(), FileMode.Open))
+
+            using (FileStream resStream = new FileStream(FindPath(), FileMode.Open))
             using (AssetsFileReader resReader = new AssetsFileReader(resStream))
             {
                 AssetsFile resourcesFile = new AssetsFile(resReader);
@@ -61,11 +61,11 @@ namespace NitroxServer.Serialization
 
             Validate.IsTrue(resourceAssets.WorldEntitiesByClassId.Count > 0);
             Validate.IsTrue(resourceAssets.LootDistributionsJson != "");
-        
+
             return resourceAssets;
         }
 
-        private static string findPath()
+        private static string FindPath()
         {
             Optional<string> steamPath = SteamHelper.FindSubnauticaPath();
 
@@ -75,7 +75,7 @@ namespace NitroxServer.Serialization
             {
                 gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
             }
-            
+
             if (File.Exists(gameResourcesPath))
             {
                 return gameResourcesPath;

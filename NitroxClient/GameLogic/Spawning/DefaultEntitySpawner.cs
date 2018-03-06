@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using UnityEngine;
+﻿using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 using UWE;
 
 namespace NitroxClient.GameLogic.Spawning

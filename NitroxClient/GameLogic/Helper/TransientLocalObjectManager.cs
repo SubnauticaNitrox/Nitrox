@@ -27,9 +27,10 @@ namespace NitroxClient.GameLogic.Helper
 
         public static Optional<object> Get(TransientObjectType key)
         {
-            if (localObjectsById.ContainsKey(key))
+            object obj;
+            if (localObjectsById.TryGetValue(key, out obj))
             {
-                return Optional<object>.OfNullable(localObjectsById[key]);
+                return Optional<object>.OfNullable(obj);
             }
 
             return Optional<object>.Empty();

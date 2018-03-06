@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using UWE;
@@ -16,16 +16,19 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
         private readonly Random random = new Random();
-        
+        private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
+
         public BatchEntitySpawner(ResourceAssets resourceAssets)
         {
-            this.worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
+            worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
             batchCellsParser = new BatchCellsParser();
 
             LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
-            lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);            
+            lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);
+
+            customBootstrappersByTechType[TechType.CrashHome] = new CrashFishBootstrapper();
         }
-        
+
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
             lock (parsedBatches)
@@ -57,40 +60,29 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 yield break;
             }
 
-            float rollingProbabilityDensity = 0;
+            float rollingProbabilityDensity = dstData.prefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
 
-            PrefabData selectedPrefab = null;
-
-            foreach (PrefabData prefab in dstData.prefabs)
+            if (rollingProbabilityDensity <= 0)
             {
-                float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                rollingProbabilityDensity += probabilityDensity;
+                yield break;
             }
 
             double randomNumber = random.NextDouble();
-            double rollingProbability = 0;
-
-            if (rollingProbabilityDensity > 0)
+            if (rollingProbabilityDensity > 1f)
             {
-                if (rollingProbabilityDensity > 1f)
-                {
-                    randomNumber *= rollingProbabilityDensity;
-                }
-
-                foreach (PrefabData prefab in dstData.prefabs)
-                {
-                    float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                    rollingProbability += probabilityDensity;
-                    // This is pretty hacky, it rerolls until its hits a prefab of a correct type
-                    // What should happen is that we check wei first, then grab data from there
-                    bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
-                    if (rollingProbability >= randomNumber && isValidSpawn)
-                    {
-                        selectedPrefab = prefab;
-                        break;
-                    }
-                }
+                randomNumber *= rollingProbabilityDensity;
             }
+
+            double rollingProbability = 0;
+            PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
+            {
+                float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
+                rollingProbability += probabilityDensity;
+                // This is pretty hacky, it rerolls until its hits a prefab of a correct type
+                // What should happen is that we check wei first, then grab data from there
+                bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
+                return rollingProbability >= randomNumber && isValidSpawn;
+            });
 
             WorldEntityInfo worldEntityInfo;
             if (!ReferenceEquals(selectedPrefab, null) && worldEntitiesByClassId.TryGetValue(selectedPrefab.classId, out worldEntityInfo))
@@ -103,10 +95,16 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                       (int)worldEntityInfo.cellLevel,
                                                       selectedPrefab.classId);
                     yield return spawnedEntity;
-                    
-                    if (TryAssigningChildEntity(spawnedEntity))
+
+                    IEntityBootstrapper bootstrapper;
+                    if (customBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out bootstrapper))
                     {
-                        yield return spawnedEntity.ChildEntity.Get();
+                        bootstrapper.Prepare(spawnedEntity);
+
+                        if (spawnedEntity.ChildEntity.IsPresent())
+                        {
+                            yield return spawnedEntity.ChildEntity.Get();
+                        }
                     }
                 }
             }
@@ -121,20 +119,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
 
             return false;
-        }
-
-        private bool TryAssigningChildEntity(Entity parentEntity)
-        {
-            Entity childEntity = null;
-
-            if (parentEntity.TechType == TechType.CrashHome)
-            {
-                childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId);
-            }
-
-            parentEntity.ChildEntity = Optional<Entity>.OfNullable(childEntity);
-
-            return parentEntity.ChildEntity.IsPresent();
         }
     }
 }

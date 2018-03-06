@@ -1,8 +1,8 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using System.Collections;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using System.Collections;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning
@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.Spawning
          */
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
         {
-            if(parent.IsPresent())
+            if (parent.IsPresent())
             {
                 CrashHome crashHome = parent.Get().GetComponent<CrashHome>();
                 LargeWorldStreamer.main.StartCoroutine(WaitToAssignGuid(entity.Guid, crashHome));
@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.Spawning
         private IEnumerator WaitToAssignGuid(string guid, CrashHome crashHome)
         {
             yield return new WaitForSeconds(0.25f);
-            GuidHelper.SetNewGuid(((Crash)crashHome.ReflectionGet("crash")).gameObject, guid);
+            ((Crash)crashHome.ReflectionGet("crash")).gameObject.SetNewGuid(guid);
         }
     }
 }

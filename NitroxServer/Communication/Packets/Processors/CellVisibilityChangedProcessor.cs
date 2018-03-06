@@ -68,8 +68,9 @@ namespace NitroxServer.Communication.Packets.Processors
                 {
                     if (player != sendingPlayer && player.HasCellLoaded(entityCell))
                     {
-                        Log.Info("player " + player.Id + " can take over " + entity.Guid);
+                        Log.Info("Player " + player.Name + " can take over " + entity.Guid);
                         ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
+                        return;
                     }
                 }
             }

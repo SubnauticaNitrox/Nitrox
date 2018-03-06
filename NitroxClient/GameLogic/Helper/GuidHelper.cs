@@ -36,12 +36,12 @@ namespace NitroxClient.GameLogic.Helper
             return Optional<GameObject>.Of(uniqueIdentifier.gameObject);
         }
 
-        public static string GetGuid(GameObject gameObject)
+        public static string GetGuid(this GameObject gameObject)
         {
             return GetUniqueIdentifier(gameObject).Id;
         }
 
-        public static void SetNewGuid(GameObject gameObject, string guid)
+        public static void SetNewGuid(this GameObject gameObject, string guid)
         {
             GetUniqueIdentifier(gameObject).Id = guid;
         }

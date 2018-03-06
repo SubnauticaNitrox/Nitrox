@@ -72,12 +72,13 @@ namespace NitroxClient.Communication
         {
             lock (deferredPacketsByAbsoluteCell)
             {
-                if (!deferredPacketsByAbsoluteCell.ContainsKey(cell))
+                Queue<Packet> queue;
+                if (!deferredPacketsByAbsoluteCell.TryGetValue(cell, out queue))
                 {
-                    deferredPacketsByAbsoluteCell.Add(cell, new Queue<Packet>());
+                    deferredPacketsByAbsoluteCell[cell] = queue = new Queue<Packet>();
                 }
 
-                deferredPacketsByAbsoluteCell[cell].Enqueue(deferrablePacket);
+                queue.Enqueue(deferrablePacket);
             }
         }
 
