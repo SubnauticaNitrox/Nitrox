@@ -18,13 +18,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SceneDebuggerChange sceneDebuggerChange)
         {
-            GameObject gameObject = GameObject.Find(sceneDebuggerChange.Path);
+            Transform gameObject = GameObject.Find(sceneDebuggerChange.Path).transform;
             if (sceneDebuggerChange.GameObjectID != -1)
             {
-                gameObject = gameObject.transform.parent.GetChild(sceneDebuggerChange.GameObjectID).gameObject;
+                gameObject = gameObject.parent.GetChild(sceneDebuggerChange.GameObjectID);
             }
             Component component = gameObject.GetComponents<Component>()[sceneDebuggerChange.ComponentID];
-            Log.Debug(component.GetType());
+
             if (component.GetType() != typeof(Transform))
             {
                 FieldInfo field = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(fi => fi.Name == sceneDebuggerChange.FieldName).ToArray()[0];
@@ -39,17 +39,22 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                if (sceneDebuggerChange.FieldName == "position")
+                switch (sceneDebuggerChange.FieldName)
                 {
-                    gameObject.transform.position = (Vector2)sceneDebuggerChange.Value;
-                }
-                else if (sceneDebuggerChange.FieldName == "rotation")
-                {
-                    gameObject.transform.rotation = (Quaternion)sceneDebuggerChange.Value;
-                }
-                else if (sceneDebuggerChange.FieldName == "scale")
-                {
-                    gameObject.transform.localScale = (Vector2)sceneDebuggerChange.Value;
+                    case "position":
+                        gameObject.position = (Vector3)sceneDebuggerChange.Value;
+                        break;
+
+                    case "rotation":
+                        gameObject.rotation = (Quaternion)sceneDebuggerChange.Value;
+                        break;
+
+                    case "scale":
+                        gameObject.localScale = (Vector3)sceneDebuggerChange.Value;
+                        break;
+                    case "enabled":
+                        gameObject.gameObject.SetActive((bool)sceneDebuggerChange.Value);
+                        break;
                 }
             }
 

@@ -23,7 +23,9 @@ namespace NitroxClient.Debuggers
         private List<DebuggerAction> actionList = new List<DebuggerAction>();
         private bool editMode;
         private bool sendToServer;
+        private BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
 
+        private bool selectedObjectActiveSelf;
         private Vector3 selectedObjectPos;
         private Quaternion selectedObjectRot;
         private Vector3 selectedObjectScale;
@@ -84,7 +86,7 @@ namespace NitroxClient.Debuggers
 
             skin.SetCustomStyle("options", skin.textField, s =>
             {
-                s.fixedWidth = 225;
+                s.fixedWidth = 200;
                 s.margin = new RectOffset(8, 8, 4, 4);
             });
             skin.SetCustomStyle("options_label", skin.label, s =>
@@ -117,7 +119,7 @@ namespace NitroxClient.Debuggers
                         {
                             using (new GUILayout.HorizontalScope())
                             {
-                                selectedObject.SetActive(GUILayout.Toggle(selectedObject.activeSelf, "Active"));
+                                selectedObjectActiveSelf = GUILayout.Toggle(selectedObjectActiveSelf, "Active");
                             }
                             GUILayout.Label("Position");
                             using (new GUILayout.HorizontalScope())
@@ -151,7 +153,6 @@ namespace NitroxClient.Debuggers
                             {
                                 using (new GUILayout.HorizontalScope("Box"))
                                 {
-                                    behaviour.enabled = GUILayout.Toggle(behaviour.enabled, "");
                                     if (GUILayout.Button(script.Name))
                                     {
                                         selectedMonoBehaviour = behaviour;
@@ -229,6 +230,7 @@ namespace NitroxClient.Debuggers
                     if (GUILayout.Button("<"))
                     {
                         selectedObject = selectedObject?.transform.parent?.gameObject;
+                        selectedObjectActiveSelf = selectedObject.activeSelf;
                         selectedObjectPos = selectedObject.transform.position;
                         selectedObjectRot = selectedObject.transform.rotation;
                         selectedObjectScale = selectedObject.transform.localScale;
@@ -260,6 +262,7 @@ namespace NitroxClient.Debuggers
                             if (GUILayout.Button($"{child.name}", "label"))
                             {
                                 selectedObject = child.gameObject;
+                                selectedObjectActiveSelf = selectedObject.activeSelf;
                                 selectedObjectPos = selectedObject.transform.position;
                                 selectedObjectRot = selectedObject.transform.rotation;
                                 selectedObjectScale = selectedObject.transform.localScale;
@@ -312,7 +315,7 @@ namespace NitroxClient.Debuggers
 
         private void DisplayAllPublicValues(MonoBehaviour mono)
         {
-            List<FieldInfo> fields = mono.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).ToList();
+            List<FieldInfo> fields = mono.GetType().GetFields(flags).ToList();
             foreach (FieldInfo field in fields)
             {
                 using (new GUILayout.HorizontalScope("box"))
@@ -376,6 +379,7 @@ namespace NitroxClient.Debuggers
                     {
                         try
                         {
+                            //Check if convert work to prevent two TextFields
                             Convert.ChangeType(field.GetValue(selectedMonoBehaviour).ToString(), field.FieldType);
                             RegistrateChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(CheckValue(field, selectedMonoBehaviour), "options"), field.FieldType));
                         }
@@ -433,11 +437,13 @@ namespace NitroxClient.Debuggers
 
         private void SaveChanges()
         {
+            selectedObject.SetActive(selectedObjectActiveSelf);
             selectedObject.transform.position = selectedObjectPos;
             selectedObject.transform.rotation = selectedObjectRot;
             selectedObject.transform.localScale = selectedObjectScale;
             if (sendToServer)
             {
+                DebuggerAction.SendValueChangeToServer(selectedObject.transform, "enabled", selectedObjectActiveSelf);
                 DebuggerAction.SendValueChangeToServer(selectedObject.transform, "position", selectedObjectPos);
                 DebuggerAction.SendValueChangeToServer(selectedObject.transform, "rotation", selectedObjectRot);
                 DebuggerAction.SendValueChangeToServer(selectedObject.transform, "scale", selectedObjectScale);
@@ -491,10 +497,10 @@ namespace NitroxClient.Debuggers
         {
             if (Multiplayer.Main != null)
             {
-                string guid = GetGameObjectPath(component.gameObject);
-                int id = GetGameObjectChildNumber(component.gameObject);
-                int id2 = GetComponentChildNumber(component);
-                Multiplayer.Logic.Debugger.SceneDebuggerChange(guid, id, id2, fieldName, value);
+                string path = GetGameObjectPath(component.gameObject);
+                int objectNumber = GetGameObjectChildNumber(component.gameObject);
+                int componentNumber = GetComponentChildNumber(component);
+                Multiplayer.Logic.Debugger.SceneDebuggerChange(path, objectNumber, componentNumber, fieldName, value);
             }
         }
 
