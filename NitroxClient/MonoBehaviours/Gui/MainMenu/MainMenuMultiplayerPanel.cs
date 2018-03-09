@@ -24,8 +24,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
-            multiplayerButton = SavedGamesRef.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject;
-            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("SavedGameArea/SavedGameAreaContent");
+            multiplayerButton = SavedGamesRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject;
+            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent");
             if (!File.Exists(SERVER_LIST_PATH))
             {
                 AddServer("local", "127.0.0.1");
