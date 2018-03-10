@@ -46,20 +46,25 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             foreach (EntitySpawnPoint esp in batchCellsParser.ParseBatchData(batchId))
             {
-                entities.AddRange(SpawnEntities(esp));
+                if (esp.Density > 0)
+                {
+                    DstData dstData;
+                    if (lootDistributionData.GetBiomeLoot(esp.BiomeType, out dstData))
+                    {
+                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, dstData));
+                    }
+                    else if(esp.ClassId != null)
+                    {
+                        entities.AddRange(SpawnEntitiesStaticly(esp));
+                    }
+                }
             }
 
             return entities;
         }
 
-        private IEnumerable<Entity> SpawnEntities(EntitySpawnPoint entitySpawnPoint)
+        private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData)
         {
-            DstData dstData;
-            if (!lootDistributionData.GetBiomeLoot(entitySpawnPoint.BiomeType, out dstData))
-            {
-                yield break;
-            }
-
             float rollingProbabilityDensity = dstData.prefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
@@ -76,10 +81,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             double rollingProbability = 0;
             PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
             {
+                if(prefab.probability == 0)
+                {
+                    return false;
+                }
+
                 float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
                 rollingProbability += probabilityDensity;
-                // This is pretty hacky, it rerolls until its hits a prefab of a correct type
-                // What should happen is that we check wei first, then grab data from there
                 bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
                 return rollingProbability >= randomNumber && isValidSpawn;
             });
@@ -89,23 +97,51 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 for (int i = 0; i < selectedPrefab.count; i++)
                 {
-                    Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
-                                                      entitySpawnPoint.Rotation,
-                                                      worldEntityInfo.techType,
-                                                      (int)worldEntityInfo.cellLevel,
-                                                      selectedPrefab.classId);
-                    yield return spawnedEntity;
-
-                    IEntityBootstrapper bootstrapper;
-                    if (customBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out bootstrapper))
+                    IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint, 
+                                                                            worldEntityInfo.techType, 
+                                                                            worldEntityInfo.cellLevel, 
+                                                                            selectedPrefab.classId);
+                    foreach (Entity entity in entities)
                     {
-                        bootstrapper.Prepare(spawnedEntity);
-
-                        if (spawnedEntity.ChildEntity.IsPresent())
-                        {
-                            yield return spawnedEntity.ChildEntity.Get();
-                        }
+                        yield return entity;
                     }
+                }
+            }
+        }
+
+        private IEnumerable<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint)
+        {
+            WorldEntityInfo worldEntityInfo;
+            if (worldEntitiesByClassId.TryGetValue(entitySpawnPoint.ClassId, out worldEntityInfo))
+            {
+                IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint, 
+                                                                        worldEntityInfo.techType, 
+                                                                        worldEntityInfo.cellLevel, 
+                                                                        entitySpawnPoint.ClassId);
+                foreach (Entity entity in entities)
+                {
+                    yield return entity;
+                }
+            }
+        }
+
+        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, TechType techType, LargeWorldEntity.CellLevel cellLevel, string classId)
+        {
+            Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
+                                              entitySpawnPoint.Rotation,
+                                              techType,
+                                              (int)cellLevel,
+                                              classId);
+            yield return spawnedEntity;
+
+            IEntityBootstrapper bootstrapper;
+            if (customBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out bootstrapper))
+            {
+                bootstrapper.Prepare(spawnedEntity);
+
+                if (spawnedEntity.ChildEntity.IsPresent())
+                {
+                    yield return spawnedEntity.ChildEntity.Get();
                 }
             }
         }
