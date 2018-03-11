@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
             {
-                Transform transform = constructedObject.transform.RequireTransform(childIdentifier.GameObjectNamePath);
+                Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
 
                 if (transform != null)
                 {
