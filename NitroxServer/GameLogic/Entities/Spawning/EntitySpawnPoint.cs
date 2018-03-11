@@ -21,6 +21,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 AbsoluteEntityCell = new AbsoluteEntityCell(batchId, cellHeader.cellId, cellHeader.level),
                 ClassId = go.ClassId,
+                Density = 1
             };
 
             EntitySlot entitySlot = go.GetComponent<EntitySlot>();

@@ -29,8 +29,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
             JoinServer.SaveGameMenuPrototype = SavedGamesRef;
 
-            multiplayerButton = SavedGamesRef.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject;
-            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("SavedGameArea/SavedGameAreaContent");
+            multiplayerButton = SavedGamesRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject;
+            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent");
+            
             if (!File.Exists(SERVER_LIST_PATH))
             {
                 AddServer("local", "127.0.0.1");

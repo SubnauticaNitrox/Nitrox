@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject LoadedMultiplayer = Instantiate(savedGamesRef);
             LoadedMultiplayer.name = "Multiplayer";
             LoadedMultiplayer.transform.Find("Header").GetComponent<Text>().text = "Multiplayer";
-            Destroy(LoadedMultiplayer.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject);
+            Destroy(LoadedMultiplayer.transform.Find("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject);
 
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
             panel.SavedGamesRef = savedGamesRef;
