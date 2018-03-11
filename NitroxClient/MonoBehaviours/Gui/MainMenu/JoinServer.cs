@@ -5,6 +5,7 @@ using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -18,7 +19,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     {
         private static readonly GameObject colorPickerPanelPrototype = Resources.Load<GameObject>("WorldEntities/Tools/RocketBase")
             .transform
-            .Find("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/")
+            .RequireTransform("Base/BuildTerminal/GUIScreen/CustomizeScreen/Panel/")
             .gameObject;
 
         private PlayerPreference activePlayerPreference;
@@ -48,7 +49,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void Start()
         {
             //Set Server IP in info label
-            GameObject lowerDetailTextGameObject = playerSettingsPanel.transform.Find("LowerDetail/Text").gameObject;
+            GameObject lowerDetailTextGameObject = playerSettingsPanel.transform.RequireTransform("LowerDetail/Text").gameObject;
             lowerDetailTextGameObject.GetComponent<Text>().text = $"Server IP Address\n{ServerIp}";
 
             //Initialize elements from preferences
@@ -64,7 +65,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             uGUI_ColorPicker colorPicker = playerSettingsPanel.GetComponentInChildren<uGUI_ColorPicker>();
             colorPicker.SetHSB(new Vector3(hue, 1f, vibrance));
 
-            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.Find("InputField").gameObject;
+            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.RequireTransform("InputField").gameObject;
 
             uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
             playerNameInputField.text = activePlayerPreference.PlayerName;
@@ -129,7 +130,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Color selectedColor = eventData.color;
 
             GameObject selectedColorGameObject = playerSettingsPanel.transform
-                .Find("BaseTab/SelectedColor")
+                .RequireTransform("BaseTab/SelectedColor")
                 .gameObject;
 
             Image baseTabSelectedColorImage = selectedColorGameObject.GetComponent<Image>();
@@ -138,7 +139,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void FocusPlayerNameTextbox()
         {
-            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.Find("InputField").gameObject;
+            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.RequireTransform("InputField").gameObject;
             uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
 
             playerNameInputField.ActivateInputField();
@@ -174,7 +175,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private void OnJoinClick()
         {
             Text playerNameText = playerSettingsPanel.transform
-                .Find("InputField/Text")
+                .RequireTransform("InputField/Text")
                 .gameObject
                 .GetComponent<Text>();
 
@@ -326,9 +327,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject joinServerMenu = Instantiate(SaveGameMenuPrototype);
 
-            Destroy(joinServerMenu.transform.Find("Header").gameObject);
-            Destroy(joinServerMenu.transform.Find("Scrollbar").gameObject);
-            Destroy(joinServerMenu.transform.Find("SavedGameArea").gameObject);
+            Destroy(joinServerMenu.transform.RequireTransform("Header").gameObject);
+            Destroy(joinServerMenu.transform.RequireTransform("Scroll View/Scrollbar").gameObject);
+            Destroy(joinServerMenu.transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent").gameObject);
             Destroy(joinServerMenu.GetComponent<LayoutGroup>());
             Destroy(joinServerMenu.GetComponent<MainMenuLoadPanel>());
             joinServerMenu.GetAllComponentsInChildren<LayoutGroup>().ForEach(Destroy);
@@ -359,13 +360,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             //Create a clone of the RocketBase color picker panel.
             GameObject playerSettingsPanel = Instantiate(colorPickerPanelPrototype);
-            GameObject baseTab = playerSettingsPanel.transform.Find("BaseTab").gameObject;
-            GameObject serverNameLabel = playerSettingsPanel.transform.Find("Name Label").gameObject;
-            GameObject stripe1Tab = playerSettingsPanel.transform.Find("Stripe1Tab").gameObject;
-            GameObject stripe2Tab = playerSettingsPanel.transform.Find("Stripe2Tab").gameObject;
-            GameObject nameTab = playerSettingsPanel.transform.Find("NameTab").gameObject;
-            GameObject frontOverlay = playerSettingsPanel.transform.Find("FrontOverlay").gameObject;
-            GameObject colorLabel = playerSettingsPanel.transform.Find("Color Label").gameObject;
+            GameObject baseTab = playerSettingsPanel.transform.RequireTransform("BaseTab").gameObject;
+            GameObject serverNameLabel = playerSettingsPanel.transform.RequireTransform("Name Label").gameObject;
+            GameObject stripe1Tab = playerSettingsPanel.transform.RequireTransform("Stripe1Tab").gameObject;
+            GameObject stripe2Tab = playerSettingsPanel.transform.RequireTransform("Stripe2Tab").gameObject;
+            GameObject nameTab = playerSettingsPanel.transform.RequireTransform("NameTab").gameObject;
+            GameObject frontOverlay = playerSettingsPanel.transform.RequireTransform("FrontOverlay").gameObject;
+            GameObject colorLabel = playerSettingsPanel.transform.RequireTransform("Color Label").gameObject;
 
             //Enables pointer events that are a required for the uGUI_ColorPicker to work.
             CanvasGroup colorPickerCanvasGroup = playerSettingsPanel.AddComponent<CanvasGroup>();
@@ -407,7 +408,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //The base tab is the outline surrounding the color picker, as well as teh "Player Color" label and associated "Selected Color" image.
         private static void InitializeBaseTabElement(RectTransform joinServerBackground, GameObject playerSettingsPanel)
         {
-            GameObject baseTab = playerSettingsPanel.transform.Find("BaseTab").gameObject;
+            GameObject baseTab = playerSettingsPanel.transform.RequireTransform("BaseTab").gameObject;
 
             //Re-position the border
             RectTransform baseTabTransform = (RectTransform)baseTab.transform;
@@ -422,14 +423,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             baseTabTransform.sizeDelta = new Vector2(joinServerBackground.rect.width, baseTabTransform.rect.height);
 
             //Move the SelectedColor element over to the right enough to match the shrinkage of the base tab.
-            GameObject baseTabSelectedColor = baseTabTransform.Find("SelectedColor").gameObject;
+            GameObject baseTabSelectedColor = baseTabTransform.RequireTransform("SelectedColor").gameObject;
             Image baseTabSelectedColorImage = baseTabSelectedColor.GetComponent<Image>();
             baseTabSelectedColorImage.rectTransform.anchoredPosition = new Vector2(
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.x + (originalBaseTabWidth - baseTabTransform.rect.width) / 2,
                 baseTabSelectedColorImage.rectTransform.anchoredPosition.y);
 
             //Place the "Player Color" label to the right of the SelectedColor image and shrink it to fit the new tab region.
-            GameObject baseTabTextGameObject = baseTabTransform.Find("Text").gameObject;
+            GameObject baseTabTextGameObject = baseTabTransform.RequireTransform("Text").gameObject;
             RectTransform baseTabTextTransform = (RectTransform)baseTabTextGameObject.transform;
             baseTabTextTransform.anchorMin = new Vector2(0.5f, 0.5f);
             baseTabTextTransform.anchorMax = new Vector2(0.5f, 0.5f);
@@ -444,7 +445,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             baseTabText.text = "Player Color";
 
             //This resizes the actual Image that outlines all of the UI elements.
-            GameObject baseTabBackgroundGameObject = baseTabTransform.Find("Background").gameObject;
+            GameObject baseTabBackgroundGameObject = baseTabTransform.RequireTransform("Background").gameObject;
             Image baseTabBackgroundImage = baseTabBackgroundGameObject.GetComponent<Image>();
             baseTabBackgroundImage.rectTransform.sizeDelta = new Vector2(joinServerBackground.rect.width, baseTabTransform.rect.height);
 
@@ -460,10 +461,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //The LowerDetail is the region that displays the current Server IP and the graphic that appears beneath it.
         private static void InitializeLowerDetailElement(GameObject playerSettingsPanel)
         {
-            GameObject lowerDetail = playerSettingsPanel.transform.Find("LowerDetail").gameObject;
+            GameObject lowerDetail = playerSettingsPanel.transform.RequireTransform("LowerDetail").gameObject;
 
             //We use this as a reference point for positioning the LowerDetail element.
-            RectTransform baseTabTextTransform = (RectTransform)playerSettingsPanel.transform.Find("BaseTab/Text");
+            RectTransform baseTabTextTransform = (RectTransform)playerSettingsPanel.transform.RequireTransform("BaseTab/Text");
 
             RectTransform lowerDetailRectTransform = (RectTransform)lowerDetail.transform;
             lowerDetailRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
@@ -472,7 +473,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             lowerDetailRectTransform.anchoredPosition = new Vector2(baseTabTextTransform.anchoredPosition.x - 24f, baseTabTextTransform.anchoredPosition.y - 61.4f);
 
             //The text element is right-aligned by default and needs to be centered for our purposes
-            GameObject lowerDetailTextGameObject = lowerDetailRectTransform.Find("Text").gameObject;
+            GameObject lowerDetailTextGameObject = lowerDetailRectTransform.RequireTransform("Text").gameObject;
             Text lowerDetailText = lowerDetailTextGameObject.GetComponent<Text>();
             lowerDetailText.resizeTextForBestFit = true;
             lowerDetailText.alignment = TextAnchor.MiddleCenter;
@@ -487,14 +488,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //Player name textbox
         private static void InitializePlayerNameInputElement(GameObject playerSettingsPanel)
         {
-            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.Find("InputField").gameObject;
+            GameObject playerNameInputFieldGameObject = playerSettingsPanel.transform.RequireTransform("InputField").gameObject;
             RectTransform inputFieldRectTransform = (RectTransform)playerNameInputFieldGameObject.transform;
             inputFieldRectTransform.anchoredPosition = new Vector2(inputFieldRectTransform.anchoredPosition.x, inputFieldRectTransform.anchoredPosition.y - 15f);
 
             uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
             playerNameInputField.selectionColor = Color.white;
 
-            GameObject inputFieldPlaceholder = inputFieldRectTransform.Find("Placeholder").gameObject;
+            GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireTransform("Placeholder").gameObject;
             Text inputFieldPlaceholderText = inputFieldPlaceholder.GetComponent<Text>();
             inputFieldPlaceholderText.text = "Enter Player Name";
         }
@@ -513,7 +514,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //This the the actual color picker that renders on the screen.
         private static void InitializeColorPickerElement(GameObject playerSettingsPanel)
         {
-            GameObject colorPickerGameObject = playerSettingsPanel.transform.Find("ColorPicker").gameObject;
+            GameObject colorPickerGameObject = playerSettingsPanel.transform.RequireTransform("ColorPicker").gameObject;
             RectTransform colorPickerGameObjectTransform = (RectTransform)colorPickerGameObject.transform;
             colorPickerGameObjectTransform.anchorMin = new Vector2(0f, 0f);
             colorPickerGameObjectTransform.anchorMax = new Vector2(1f, 1f);
@@ -524,7 +525,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         //Join and Cancel buttons
         private void InitializeButtonElements(RectTransform joinServerBackground, GameObject playerSettingsPanel)
         {
-            GameObject cancelButtonGameObject = playerSettingsPanel.transform.Find("Button").gameObject;
+            GameObject cancelButtonGameObject = playerSettingsPanel.transform.RequireTransform("Button").gameObject;
             GameObject joinButtonGameObject = Instantiate(cancelButtonGameObject, playerSettingsPanel.transform, false);
 
             //Click events
@@ -535,7 +536,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButton.onClick.AddListener(OnJoinClick);
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
-            GameObject cancelButtonTextGameObject = cancelButtonTransform.Find("Text").gameObject;
+            GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireTransform("Text").gameObject;
             Text cancelButtonText = cancelButtonTextGameObject.GetComponent<Text>();
             cancelButtonText.text = "Cancel";
 
@@ -553,7 +554,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.sizeDelta = new Vector2(joinButtonTransform.rect.width * 0.85f, joinButtonTransform.rect.height);
             joinButtonTransform.Rotate(Vector3.forward * -180);
 
-            GameObject joinButtonTextGameObject = joinButtonTransform.Find("Text").gameObject;
+            GameObject joinButtonTextGameObject = joinButtonTransform.RequireTransform("Text").gameObject;
             Text joinButtonText = joinButtonTextGameObject.GetComponent<Text>();
             joinButtonText.text = "Join";
 

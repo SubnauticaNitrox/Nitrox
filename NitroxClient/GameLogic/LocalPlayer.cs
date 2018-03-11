@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.ServerModel;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
@@ -26,8 +27,8 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
 
-            Body = Player.main.transform.Find("body").gameObject;
-            PlayerModel = Body.transform.Find("player_view").gameObject;
+            Body = Player.main.transform.RequireTransform("body").gameObject;
+            PlayerModel = Body.transform.RequireTransform("player_view").gameObject;
 
             BodyPrototype = CreateBodyPrototype();
         }

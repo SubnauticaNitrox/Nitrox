@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NitroxClient.Unity.Helper;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -26,11 +27,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void MultiplayerMenuMods()
         {
-            GameObject startButton = GameObject.Find("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
+            GameObject startButton = GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
             GameObject showLoadedMultiplayer = Instantiate(startButton);
-            Text buttonText = showLoadedMultiplayer.transform.Find("Circle/Bar/Text").gameObject.GetComponent<Text>();
+            Text buttonText = showLoadedMultiplayer.transform.RequireTransform("Circle/Bar/Text").gameObject.GetComponent<Text>();
             buttonText.text = "Multiplayer";
-            showLoadedMultiplayer.transform.SetParent(GameObject.Find("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons").transform, false);
+            showLoadedMultiplayer.transform.SetParent(GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons").transform, false);
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
@@ -40,8 +41,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject savedGamesRef = FindObject(rightSide.gameObject, "SavedGames");
             GameObject LoadedMultiplayer = Instantiate(savedGamesRef);
             LoadedMultiplayer.name = "Multiplayer";
-            LoadedMultiplayer.transform.Find("Header").GetComponent<Text>().text = "Multiplayer";
-            Destroy(LoadedMultiplayer.transform.Find("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject);
+            LoadedMultiplayer.transform.RequireTransform("Header").GetComponent<Text>().text = "Multiplayer";
+            Destroy(LoadedMultiplayer.transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject);
 
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
             panel.SavedGamesRef = savedGamesRef;

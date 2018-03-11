@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
@@ -29,7 +30,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             filter.AddSaturationRange(50f, 100f);
             filter.AddVibranceRange(minVibrance, 100f);
 
-            GameObject diveSuit = modelGeometry.transform.Find("diveSuit").gameObject;
+            GameObject diveSuit = modelGeometry.transform.RequireTransform("diveSuit").gameObject;
             SkinnedMeshRenderer[] renderers = diveSuit.GetAllComponentsInChildren<SkinnedMeshRenderer>();
 
             Material torsoMaterial = renderers[0].materials[0];
