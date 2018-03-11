@@ -11,19 +11,23 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         {
             this.modelGeometry = modelGeometry;
         }
-        
+
         public void Build(INitroxPlayer player)
         {
             float playerHue;
+            float playerSaturation;
+            float playerVibrance;
 
-            //Ignored because we simply need to retrieve the hue of the PlayerColor.
-            float ignoredSaturation;
-            float ignoredVibrance;
+            Color.RGBToHSV(player.PlayerSettings.PlayerColor, out playerHue, out playerSaturation, out playerVibrance);
 
-            Color.RGBToHSV(player.PlayerSettings.PlayerColor, out playerHue, out ignoredSaturation, out ignoredVibrance);
+            float minVibrance = playerVibrance >= 0.75f
+                ? 23f
+                : 15f;
 
-            HsvColorFilter filter = new HsvColorFilter(playerHue, -1f, -1f, -1f);
-            filter.AddHueRange(0f, 60f);
+            HsvColorFilter filter = new HsvColorFilter(playerHue, playerSaturation, playerVibrance, -1f);
+            filter.AddHueRange(5f, 45f);
+            filter.AddSaturationRange(50f, 100f);
+            filter.AddVibranceRange(minVibrance, 100f);
 
             GameObject diveSuit = modelGeometry.transform.Find("diveSuit").gameObject;
             SkinnedMeshRenderer[] renderers = diveSuit.GetAllComponentsInChildren<SkinnedMeshRenderer>();

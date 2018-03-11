@@ -170,6 +170,11 @@
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerModelDirector.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\PlayerPingBuilder.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\RegularDiveSuitBuilder.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\IPreferenceStateProvider.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\PlayerPreference.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceManager.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceState.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateStateProvider.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
@@ -195,6 +200,7 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\JoinServer.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuNotification.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />

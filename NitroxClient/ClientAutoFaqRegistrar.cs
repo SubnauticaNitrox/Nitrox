@@ -8,6 +8,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
 
@@ -23,6 +24,12 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+			containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
+                .As<IPreferenceStateProvider>()
+                .SingleInstance();
+
+            containerBuilder.RegisterType<PlayerPreferenceManager>().SingleInstance();
+				
             containerBuilder.RegisterType<MultiplayerSessionManager>()
                 .As<IMultiplayerSession>()
                 .As<IPacketSender>()

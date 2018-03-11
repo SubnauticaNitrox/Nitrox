@@ -66,11 +66,10 @@ namespace NitroxClient.MonoBehaviours
 
         public void StartSession()
         {
-            InitMonoBehaviours();
-            InitializeLocalPlayerState();
             OnBeforeMultiplayerStart?.Invoke();
-            
+            InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
+            InitMonoBehaviours();
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
@@ -95,7 +94,12 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-            multiplayerSession.Disconnect();
+			
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            {
+                multiplayerSession.Disconnect();
+            }
+			
             OnAfterMultiplayerEnd?.Invoke();
 
             //Always do this last.
