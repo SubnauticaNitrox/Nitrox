@@ -29,7 +29,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject startButton = GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
             GameObject showLoadedMultiplayer = Instantiate(startButton);
-            Text buttonText = showLoadedMultiplayer.transform.RequireTransform("Circle/Bar/Text").gameObject.GetComponent<Text>();
+            Text buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<Text>();
             buttonText.text = "Multiplayer";
             showLoadedMultiplayer.transform.SetParent(GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons").transform, false);
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
@@ -41,8 +41,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GameObject savedGamesRef = FindObject(rightSide.gameObject, "SavedGames");
             GameObject LoadedMultiplayer = Instantiate(savedGamesRef);
             LoadedMultiplayer.name = "Multiplayer";
-            LoadedMultiplayer.transform.RequireTransform("Header").GetComponent<Text>().text = "Multiplayer";
-            Destroy(LoadedMultiplayer.transform.RequireTransform("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject);
+            LoadedMultiplayer.RequireTransform("Header").GetComponent<Text>().text = "Multiplayer";
+            Destroy(LoadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
 
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
             panel.SavedGamesRef = savedGamesRef;

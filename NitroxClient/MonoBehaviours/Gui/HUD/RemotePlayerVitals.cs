@@ -84,7 +84,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             cloned.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
             cloned.transform.localRotation = originalBar.gameObject.transform.localRotation;
-            cloned.transform.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 180, 0f);
+            cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 180, 0f);
 
             Canvas canvas = originalBar.gameObject.GetComponentInParent<Canvas>();
 

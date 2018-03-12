@@ -44,6 +44,12 @@ namespace NitroxClient.Unity.Helper
 
             return child;
         }
+        public static Transform RequireTransform(this GameObject go, string name) => go.transform.RequireTransform(name);
+        public static Transform RequireTransform(this MonoBehaviour mb, string name) => mb.transform.RequireTransform(name);
+
+        public static GameObject RequireGameObject(this Transform tf, string name) => tf.RequireTransform(name).gameObject;
+        public static GameObject RequireGameObject(this GameObject go, string name) => go.transform.RequireGameObject(name);
+        public static GameObject RequireGameObject(this MonoBehaviour mb, string name) => mb.transform.RequireGameObject(name);
 
         public static GameObject RequireGameObject(string name)
         {

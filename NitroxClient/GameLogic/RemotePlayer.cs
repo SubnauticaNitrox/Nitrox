@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
             RigidBody.useGravity = false;
 
             // Get player
-            PlayerModel = Body.transform.RequireTransform("player_view").gameObject;
+            PlayerModel = Body.RequireGameObject("player_view");
 
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();

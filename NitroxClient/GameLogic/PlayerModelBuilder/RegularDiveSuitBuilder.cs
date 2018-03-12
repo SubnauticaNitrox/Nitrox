@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             filter.AddSaturationRange(50f, 100f);
             filter.AddVibranceRange(minVibrance, 100f);
 
-            GameObject diveSuit = modelGeometry.transform.RequireTransform("diveSuit").gameObject;
+            GameObject diveSuit = modelGeometry.RequireGameObject("diveSuit");
             SkinnedMeshRenderer[] renderers = diveSuit.GetAllComponentsInChildren<SkinnedMeshRenderer>();
 
             Material torsoMaterial = renderers[0].materials[0];

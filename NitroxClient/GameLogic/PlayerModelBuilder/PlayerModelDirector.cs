@@ -25,7 +25,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
 
         public PlayerModelDirector AddDiveSuit()
         {
-            GameObject modelGeometry = player.PlayerModel.transform.RequireTransform("male_geo").gameObject;
+            GameObject modelGeometry = player.PlayerModel.RequireGameObject("male_geo");
             RegularDiveSuitBuilder builder = new RegularDiveSuitBuilder(modelGeometry);
             playerModelBuilders.Add(builder);
 

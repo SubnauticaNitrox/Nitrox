@@ -27,8 +27,8 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
 
-            Body = Player.main.transform.RequireTransform("body").gameObject;
-            PlayerModel = Body.transform.RequireTransform("player_view").gameObject;
+            Body = Player.main.RequireGameObject("body");
+            PlayerModel = Body.RequireGameObject("player_view");
 
             BodyPrototype = CreateBodyPrototype();
         }
