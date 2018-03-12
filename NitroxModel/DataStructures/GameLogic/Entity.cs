@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -15,7 +16,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Guid { get; }
         public int Level { get; }
         public string ClassId { get; }
-        public Optional<Entity> ChildEntity { get; set; }
+        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId)
         {
@@ -25,12 +26,11 @@ namespace NitroxModel.DataStructures.GameLogic
             Guid = System.Guid.NewGuid().ToString();
             Level = level;
             ClassId = classId;
-            ChildEntity = Optional<Entity>.Empty();
         }
 
         public override string ToString()
         {
-            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntityGuid: " + ChildEntity + "]";
+            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + ChildEntities + "]";
         }
     }
 }

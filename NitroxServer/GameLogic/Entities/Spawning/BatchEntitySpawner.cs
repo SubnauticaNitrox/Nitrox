@@ -139,9 +139,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 bootstrapper.Prepare(spawnedEntity);
 
-                if (spawnedEntity.ChildEntity.IsPresent())
+                foreach(Entity childEntity in spawnedEntity.ChildEntities)
                 {
-                    yield return spawnedEntity.ChildEntity.Get();
+                    yield return childEntity;
                 }
             }
         }

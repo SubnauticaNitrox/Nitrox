@@ -1,6 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -8,11 +6,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         public void Prepare(Entity parentEntity)
         {
-            Log.Debug("Adding Crash entity to CrashHome...");
+            Entity crashFish = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId);
+            Entity sulfur = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.CrashPowder, parentEntity.Level, parentEntity.ClassId);
 
-            Entity childEntity = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId);
-
-            parentEntity.ChildEntity = Optional<Entity>.Of(childEntity);
+            parentEntity.ChildEntities.Add(crashFish);
+            parentEntity.ChildEntities.Add(sulfur);
         }
     }
 }
