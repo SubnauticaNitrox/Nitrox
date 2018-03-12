@@ -1,6 +1,7 @@
 ﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -34,7 +35,7 @@ namespace NitroxClient.GameLogic
             RigidBody.useGravity = false;
 
             // Get player
-            PlayerModel = Body.transform.Find("player_view").gameObject;
+            PlayerModel = Body.RequireGameObject("player_view");
 
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModelBuilder
@@ -24,7 +25,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
 
         public PlayerModelDirector AddDiveSuit()
         {
-            GameObject modelGeometry = player.PlayerModel.transform.Find("male_geo").gameObject;
+            GameObject modelGeometry = player.PlayerModel.RequireGameObject("male_geo");
             RegularDiveSuitBuilder builder = new RegularDiveSuitBuilder(modelGeometry);
             playerModelBuilders.Add(builder);
 

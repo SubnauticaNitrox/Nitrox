@@ -29,9 +29,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
             JoinServer.SaveGameMenuPrototype = SavedGamesRef;
 
-            multiplayerButton = SavedGamesRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent/NewGame").gameObject;
-            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("Scroll View/Viewport/SavedGameAreaContent");
-            
+            multiplayerButton = SavedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
+            savedGameAreaContent = LoadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+
             if (!File.Exists(SERVER_LIST_PATH))
             {
                 AddServer("local", "127.0.0.1");
@@ -54,8 +54,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void CreateButton(string text, UnityEngine.Events.UnityAction clickEvent)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
-            multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
-            Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
+            multiplayerButtonInst.RequireTransform("NewGameButton/Text").GetComponent<Text>().text = text;
+            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
@@ -65,8 +65,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
-            multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
-            Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
+            multiplayerButtonInst.RequireTransform("NewGameButton/Text").GetComponent<Text>().text = text;
+            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
