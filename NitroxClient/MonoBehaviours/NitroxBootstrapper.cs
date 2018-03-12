@@ -12,10 +12,16 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<MainMenuMods>();
 
 #if DEBUG
-            gameObject.AddComponent<ConsoleJoinServer>();
+            AttachMultiplayerConsole();
 #endif
 
             CreateDebugger();
+        }
+
+        private void AttachMultiplayerConsole()
+        {
+            GameObject consoleRoot = new GameObject();
+            consoleRoot.AddComponent<ConsoleJoinServer>();
         }
 
         private void CreateDebugger()

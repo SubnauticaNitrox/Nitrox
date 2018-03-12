@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
 using UnityEngine;
@@ -20,21 +21,37 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             ping.SetLabel("Player " + player.PlayerName);
             ping.pingType = PingType.Signal;
 
-            SetPingColor(player, ping);
+            UpdateLocalPlayerPda(player, ping);
+            SetInGamePingColor(player, ping);
         }
 
-        private static void SetPingColor(INitroxPlayer player, PingInstance ping)
+        private static void UpdateLocalPlayerPda(INitroxPlayer player, PingInstance ping)
         {
-            FieldInfo field = typeof(PingManager).GetField("colorOptions", BindingFlags.Static | BindingFlags.Public);
-            Color[] originalColorOptions = PingManager.colorOptions;
+            PDA localPlayerPda = Player.main.GetPDA();
+            GameObject pdaScreenGameObject = localPlayerPda.ui.gameObject;
+            GameObject pingTabGameObject = pdaScreenGameObject.transform.Find("Content/PingManagerTab").gameObject;
+            uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
 
-            Color[] newColorOptions = new Color[originalColorOptions.Length + 1];
-            originalColorOptions.ForEach(color => newColorOptions[Array.IndexOf(originalColorOptions, color)] = color);
-            newColorOptions[newColorOptions.Length - 1] = player.PlayerSettings.PlayerColor;
+            MethodInfo updateEntities = typeof(uGUI_PingTab).GetMethod("UpdateEntries", BindingFlags.NonPublic | BindingFlags.Instance);
+            updateEntities.Invoke(pingTab, new object[] { });
 
-            // Replace the normal colorOptions with our colorOptions (has one color more with the player-color). Set the color of the ping with this. Then replace it back.
-            field.SetValue(null, newColorOptions);
-            ping.SetColor(newColorOptions.Length - 1);
+            FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
+            Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>) pingTabEntriesField.GetValue(pingTab);
+            uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
+            pingEntry.icon.color = player.PlayerSettings.PlayerColor;
+
+            GameObject pingEntryGameObject = pingEntry.gameObject;
+            Object.Destroy(pingEntryGameObject.transform.Find("ColorToggle").gameObject);
+
+            pdaScreenGameObject.gameObject.SetActive(false);
+        }
+
+        private static void SetInGamePingColor(INitroxPlayer player, PingInstance ping)
+        {
+            uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
+
+            MethodInfo setColor = typeof(uGUI_Pings).GetMethod("OnColor", BindingFlags.NonPublic | BindingFlags.Instance);
+            setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerSettings.PlayerColor});
         }
     }
 }
