@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 ClassId = go.ClassId,
                 Density = 1
             };
-
+            
             EntitySlot entitySlot = go.GetComponent<EntitySlot>();
 
             if (!ReferenceEquals(entitySlot, null))

@@ -82,9 +82,11 @@
     <Compile Include="GameLogic\Entities\EntityManager.cs" />
     <Compile Include="GameLogic\Entities\EntitySimulator.cs" />
     <Compile Include="GameLogic\Entities\Spawning\BatchEntitySpawner.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\CrashFishBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\CrashFishBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPoint.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\IEntityBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\IEntityBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\EventTriggerer.cs" />

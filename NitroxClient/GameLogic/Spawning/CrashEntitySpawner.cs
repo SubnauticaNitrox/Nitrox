@@ -34,5 +34,10 @@ namespace NitroxClient.GameLogic.Spawning
             yield return new WaitForSeconds(0.25f);
             ((Crash)crashHome.ReflectionGet("crash")).gameObject.SetNewGuid(guid);
         }
+
+        public bool SpawnsOwnChildren()
+        {
+            return false;
+        }
     }
 }

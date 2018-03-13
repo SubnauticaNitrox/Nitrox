@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly IPacketSender packetSender;
         private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
-        private readonly IEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
+        private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
 
         public CellEntitiesProcessor(IPacketSender packetSender)
@@ -24,6 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             customSpawnersByTechType[TechType.None] = new NoTechTypeEntitySpawner();
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
+            customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
         }
 
         public override void Process(CellEntities packet)
@@ -49,7 +50,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
             foreach(Entity childEntity in entity.ChildEntities)
             {
-                SpawnEntity(childEntity, gameObject);
+                if (!entitySpawner.SpawnsOwnChildren())
+                {
+                    SpawnEntity(childEntity, gameObject);
+                }
+
+                alreadySpawnedGuids.Add(childEntity.Guid);
             }
         }
 

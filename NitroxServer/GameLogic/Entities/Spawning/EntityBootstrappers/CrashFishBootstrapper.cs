@@ -1,6 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 
-namespace NitroxServer.GameLogic.Entities.Spawning
+namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
 {
     class CrashFishBootstrapper : IEntityBootstrapper
     {

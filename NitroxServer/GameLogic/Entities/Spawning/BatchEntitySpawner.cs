@@ -6,6 +6,7 @@ using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
+using NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -27,6 +28,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);
 
             customBootstrappersByTechType[TechType.CrashHome] = new CrashFishBootstrapper();
+            customBootstrappersByTechType[TechType.Reefback] = new ReefbackBootstrapper();
         }
 
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)

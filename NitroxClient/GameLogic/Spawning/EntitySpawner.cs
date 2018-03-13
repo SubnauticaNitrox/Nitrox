@@ -10,5 +10,6 @@ namespace NitroxClient.GameLogic.Spawning
     public interface IEntitySpawner
     {
         Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent);
+        bool SpawnsOwnChildren();
     }
 }

@@ -19,6 +19,12 @@ namespace NitroxClient.GameLogic.Spawning
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefabForTechType, null);
             gameObject.transform.position = entity.Position;
+
+            if (parent.IsPresent())
+            {
+                gameObject.transform.SetParent(parent.Get().transform, true);
+            }
+
             gameObject.transform.localRotation = entity.Rotation;
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
@@ -26,6 +32,11 @@ namespace NitroxClient.GameLogic.Spawning
             CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
 
             return Optional<GameObject>.Of(gameObject);
+        }
+
+        public bool SpawnsOwnChildren()
+        {
+            return false;
         }
     }
 }
