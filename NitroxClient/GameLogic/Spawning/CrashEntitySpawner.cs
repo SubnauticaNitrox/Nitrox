@@ -24,14 +24,14 @@ namespace NitroxClient.GameLogic.Spawning
         }
 
         /**
-         * Hack to allow a small period of time for the CrashHome to load and spawn the Crash fish.
+         * Wait for the next fixed update so the CrashHome can load and spawn the Crash fish.
          * If we try to manually spawn the crash fish (and assign to the CrashHome) it will be at
          * the wrong orientation.  Maybe someone can figure out why this happens to we can create 
          * it without leveraging this hack.
          */
         private IEnumerator WaitToAssignGuid(string guid, CrashHome crashHome)
         {
-            yield return new WaitForSeconds(0.25f);
+            yield return new WaitForFixedUpdate();
             ((Crash)crashHome.ReflectionGet("crash")).gameObject.SetNewGuid(guid);
         }
 
