@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (component.GetType() != typeof(Transform))
             {
-                FieldInfo field = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).Where(fi => fi.Name == sceneDebuggerChange.FieldName).ToArray()[0];
+                FieldInfo field = component.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic).First(fi => fi.Name == sceneDebuggerChange.FieldName);
                 try
                 {
                     field.SetValue(component, sceneDebuggerChange.Value);
