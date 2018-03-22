@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -104,17 +105,8 @@ namespace NitroxClient.Debuggers
                     using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(gameObjectScrollPos))
                     {
                         gameObjectScrollPos = scroll.scrollPosition;
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label($"GameObject: {selectedObject.name}", "header");
-                            sendToServer = GUILayout.Toggle(sendToServer, "Send to server");
-                            if (GUILayout.Button("Save"))
-                            {
-                                SaveChanges();
-                            }
-                        }
+                        RenderToggleButtons($"GameObject: {selectedObject.name}");
 
-                        //Add transform interface.
                         using (new GUILayout.VerticalScope("Box"))
                         {
                             using (new GUILayout.HorizontalScope())
@@ -145,12 +137,12 @@ namespace NitroxClient.Debuggers
                             }
                         }
 
-                        //Add other component interfaces.
-                        foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
+                        using (new GUILayout.VerticalScope("Box"))
                         {
-                            Type script = behaviour.GetType();
-                            using (new GUILayout.VerticalScope("Box"))
+                            foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
                             {
+                                Type script = behaviour.GetType();
+
                                 using (new GUILayout.HorizontalScope("Box"))
                                 {
                                     if (GUILayout.Button(script.Name))
@@ -179,16 +171,7 @@ namespace NitroxClient.Debuggers
                     using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(monoBehaviourScrollPos))
                     {
                         monoBehaviourScrollPos = scroll.scrollPosition;
-                        using (new GUILayout.HorizontalScope())
-                        {
-                            GUILayout.Label($"MonoBehaviour: {selectedMonoBehaviour.GetType().Name}", "header");
-                            editMode = GUILayout.Toggle(editMode, "Edit Mode");
-                            sendToServer = GUILayout.Toggle(sendToServer, "Send to server");
-                            if (GUILayout.Button("Save"))
-                            {
-                                SaveChanges();
-                            }
-                        }
+                        RenderToggleButtons($"MonoBehaviour: {selectedMonoBehaviour.GetType().Name}");
 
                         using (new GUILayout.VerticalScope("Box"))
                         {
@@ -315,7 +298,7 @@ namespace NitroxClient.Debuggers
 
         private void DisplayAllPublicValues(MonoBehaviour mono)
         {
-            List<FieldInfo> fields = mono.GetType().GetFields(flags).ToList();
+            FieldInfo[] fields = mono.GetType().GetFields(flags);
             foreach (FieldInfo field in fields)
             {
                 using (new GUILayout.HorizontalScope("box"))
@@ -324,7 +307,7 @@ namespace NitroxClient.Debuggers
                     GUILayout.Label("[" + FieldTypeNames[FieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
                     if (field.FieldType == typeof(bool))
                     {
-                        bool i = bool.Parse(CheckValue(field, selectedMonoBehaviour));
+                        bool i = bool.Parse(GetValue(field, selectedMonoBehaviour));
                         if (GUILayout.Button(i.ToString()))
                         {
                             RegistrateChanges(field, selectedMonoBehaviour, !i);
@@ -350,9 +333,10 @@ namespace NitroxClient.Debuggers
                     }
                     else if (field.FieldType == typeof(Text))
                     {
-                        Text txt = (Text)field.GetValue(selectedMonoBehaviour);
-                        txt.text = GUILayout.TextField(CheckValue(field, selectedMonoBehaviour), "options");
-                        RegistrateChanges(field, selectedMonoBehaviour, txt);
+                        if (GUILayout.Button(field.Name))
+                        {
+                            selectedMonoBehaviour = (Text)field.GetValue(selectedMonoBehaviour);
+                        }
                     }
                     else if (field.FieldType == typeof(Texture) || field.FieldType == typeof(RawImage) || field.FieldType == typeof(Image))
                     {
@@ -381,7 +365,7 @@ namespace NitroxClient.Debuggers
                         {
                             //Check if convert work to prevent two TextFields
                             Convert.ChangeType(field.GetValue(selectedMonoBehaviour).ToString(), field.FieldType);
-                            RegistrateChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(CheckValue(field, selectedMonoBehaviour), "options"), field.FieldType));
+                            RegistrateChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, selectedMonoBehaviour), "options"), field.FieldType));
                         }
                         catch
                         {
@@ -392,35 +376,37 @@ namespace NitroxClient.Debuggers
             }
         }
 
+        private void RenderToggleButtons(string label)
+        {
+            using (new GUILayout.HorizontalScope())
+            {
+                GUILayout.Label(label, "header");
+                editMode = GUILayout.Toggle(editMode, "EditMode");
+                sendToServer = Multiplayer.Main != null && GUILayout.Toggle(sendToServer, "Send to server");
+                if (GUILayout.Button("Save"))
+                {
+                    SaveChanges();
+                }
+            }
+        }
+
         private void RegistrateChanges(FieldInfo field, Component component, object value)
         {
             if (editMode)
             {
-                if (GetFromField(field) == null)
+                if (DebuggerAction.GetActionFromField(actionList, field) == null)
                 {
                     DebuggerAction action = new DebuggerAction(component, field, component, value);
                     actionList.Add(action);
                 }
                 else
                 {
-                    GetFromField(field).Value = value;
+                    DebuggerAction.GetActionFromField(actionList, field).Value = value;
                 }
             }
         }
 
-        private DebuggerAction GetFromField(FieldInfo field)
-        {
-            foreach (DebuggerAction item in actionList)
-            {
-                if (item.Field == field)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        private string CheckValue(FieldInfo field, object obj)
+        private string GetValue(FieldInfo field, object instance)
         {
             if (editMode)
             {
@@ -432,7 +418,7 @@ namespace NitroxClient.Debuggers
                     }
                 }
             }
-            return field.GetValue(obj).ToString();
+            return field.GetValue(instance).ToString();
         }
 
         private void SaveChanges()
@@ -457,7 +443,7 @@ namespace NitroxClient.Debuggers
                     action.SendValueChangeToServer();
                 }
             }
-            actionList = new List<DebuggerAction>();
+            actionList.Clear();
         }
     }
 
@@ -470,6 +456,10 @@ namespace NitroxClient.Debuggers
 
         public DebuggerAction(Component component, FieldInfo field, object obj, object value)
         {
+            Validate.NotNull(component);
+            Validate.NotNull(field);
+            Validate.NotNull(obj);
+
             Component = component;
             Field = field;
             Obj = obj;
@@ -487,9 +477,9 @@ namespace NitroxClient.Debuggers
             if (Multiplayer.Main != null)
             {
                 string guid = GetGameObjectPath(Component.gameObject);
-                int id = GetGameObjectChildNumber(Component.gameObject);
-                int id2 = GetComponentChildNumber(Component);
-                Multiplayer.Logic.Debugger.SceneDebuggerChange(guid, id, id2, Field.Name, Value);
+                int objectNumber = Component.gameObject.transform.GetSiblingIndex();
+                int componentNumber = GetComponentChildNumber(Component);
+                Multiplayer.Logic.Debugger.SceneDebuggerChange(guid, objectNumber, componentNumber, Field.Name, Value);
             }
         }
 
@@ -497,39 +487,39 @@ namespace NitroxClient.Debuggers
         {
             if (Multiplayer.Main != null)
             {
+                Validate.NotNull(component);
+                Validate.NotNull(fieldName);
+
                 string path = GetGameObjectPath(component.gameObject);
-                int objectNumber = GetGameObjectChildNumber(component.gameObject);
+                int objectNumber = component.gameObject.transform.GetSiblingIndex();
                 int componentNumber = GetComponentChildNumber(component);
                 Multiplayer.Logic.Debugger.SceneDebuggerChange(path, objectNumber, componentNumber, fieldName, value);
             }
         }
 
+        public static DebuggerAction GetActionFromField(List<DebuggerAction> list, FieldInfo field)
+        {
+            foreach (DebuggerAction item in list)
+            {
+                if (item.Field == field)
+                {
+                    return item;
+                }
+            }
+            return null;
+            //return list.First(item => item.Field == field);
+        }
+
         private static string GetGameObjectPath(GameObject gameObject)
         {
-            string path = gameObject.name;
+            StringBuilder path = new StringBuilder("/" + gameObject.name);
             Transform parent = gameObject.transform;
             while (parent.parent != null)
             {
                 parent = parent.parent;
-                path = parent.name + "/" + path;
+                path.Insert(1, parent.name + "/");
             }
-            return "/" + path;
-        }
-
-        private static int GetGameObjectChildNumber(GameObject gameObject)
-        {
-            int childNumber = -1;
-            if (gameObject.transform.parent != null)
-            {
-                for (int i = 0; i < gameObject.transform.parent.childCount; i++)
-                {
-                    if (gameObject.transform.parent.GetChild(i).gameObject == gameObject)
-                    {
-                        childNumber = i;
-                    }
-                }
-            }
-            return childNumber;
+            return path.ToString();
         }
 
         private static int GetComponentChildNumber(Component component)

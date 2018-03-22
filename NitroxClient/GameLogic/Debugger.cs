@@ -12,9 +12,9 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void SceneDebuggerChange(string guid, int componentID, int componentID2, string sceneName, object value)
+        public void SceneDebuggerChange(string path, int gameObjectID, int componentID, string fieldName, object value)
         {
-            SceneDebuggerChange packet = new SceneDebuggerChange(guid, componentID, componentID2, sceneName, value);
+            SceneDebuggerChange packet = new SceneDebuggerChange(path, gameObjectID, componentID, fieldName, value);
             packetSender.Send(packet);
         }
     }
