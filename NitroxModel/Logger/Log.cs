@@ -8,13 +8,13 @@ namespace NitroxModel.Logger
         [Flags]
         public enum LogLevel
         {
-            Disabled = 0,
-            InGameMessages = 1,
-            ConsoleInfo = 2,
-            ConsoleDebug = 4
+            DISABLED = 0,
+            IN_GAME_MESSAGES = 1,
+            CONSOLE_INFO = 2,
+            CONSOLE_DEBUG = 4
         }
 
-        private static LogLevel level = LogLevel.Disabled;
+        private static LogLevel level = LogLevel.DISABLED;
 
         // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
         public static void SetLevel(LogLevel level)
@@ -26,7 +26,7 @@ namespace NitroxModel.Logger
         // For in-game notifications
         public static void InGame(string msg)
         {
-            if ((level & LogLevel.InGameMessages) != 0)
+            if ((level & LogLevel.IN_GAME_MESSAGES) != 0)
             {
                 ErrorMessage.AddMessage(msg);
             }
@@ -56,7 +56,7 @@ namespace NitroxModel.Logger
 
         public static void Info(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
+            if ((level & LogLevel.CONSOLE_INFO) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
                 Write("I: " + fmt, arg);
             }
@@ -72,7 +72,7 @@ namespace NitroxModel.Logger
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.ConsoleDebug) != 0)
+            if ((level & LogLevel.CONSOLE_DEBUG) != 0)
             {
                 Write("D: " + fmt, arg);
             }

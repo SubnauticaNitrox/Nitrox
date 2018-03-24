@@ -16,7 +16,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            assertMinimumArgs(args, 4);
+            AssertMinimumArgs(args, 4);
 
             itemBroadcaster.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
         }

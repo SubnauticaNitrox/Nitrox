@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class AwaitingReservationCredentials : ConnectionNegotiatingState
     {
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AwaitingReservationCredentials;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS;
 
         public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
