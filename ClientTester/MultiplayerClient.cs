@@ -17,8 +17,8 @@ namespace ClientTester
 {
     public class MultiplayerClient
     {
-        private DeferringPacketReceiver packetReceiver { get; }
-        private IMultiplayerSession multiplayerSession { get; }
+        private DeferringPacketReceiver PacketReceiver { get; }
+        private IMultiplayerSession MultiplayerSession { get; }
 
         public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
 
@@ -26,19 +26,19 @@ namespace ClientTester
 
         public MultiplayerClient(string playerId)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.CONSOLE_INFO | Log.LogLevel.CONSOLE_DEBUG);
             playerName = playerId;
 
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
-            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
-            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            PacketReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            MultiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
         }
 
         public void Start(string ip)
         {
             Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap();
-            multiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
-            multiplayerSession.Connect(ip);
+            MultiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
+            MultiplayerSession.Connect(ip);
 
             for (int iterations = 0; iterations < 20; iterations++)
             {
@@ -51,8 +51,8 @@ namespace ClientTester
         {
             Dictionary<Type, PacketProcessor> packetProcessorMap = new Dictionary<Type, PacketProcessor>
             {
-                { typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(multiplayerSession) },
-                { typeof(MultiplayerSessionReservation), new MultiplayerSessionReservationProcessor(multiplayerSession) }
+                { typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(MultiplayerSession) },
+                { typeof(MultiplayerSessionReservation), new MultiplayerSessionReservationProcessor(MultiplayerSession) }
             };
 
             return packetProcessorMap;
@@ -62,24 +62,24 @@ namespace ClientTester
         {
             switch (state.CurrentStage)
             {
-                case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
-                    multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName));
+                case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
+                    MultiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName));
                     break;
-                case MultiplayerSessionConnectionStage.SessionReserved:
-                    multiplayerSession.JoinSession();
-                    multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
+                case MultiplayerSessionConnectionStage.SESSION_RESERVED:
+                    MultiplayerSession.JoinSession();
+                    MultiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     Log.InGame("SessionJoined to server");
                     break;
-                case MultiplayerSessionConnectionStage.SessionReservationRejected:
+                case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
                     Log.InGame("Unable to connect to server");
-                    multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
+                    MultiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     break;
             }
         }
 
         private void ProcessPackets(Dictionary<Type, PacketProcessor> packetProcessorMap)
         {
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
+            Queue<Packet> packets = PacketReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {

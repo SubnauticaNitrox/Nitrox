@@ -17,7 +17,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            assertMinimumArgs(args, 2);
+            AssertMinimumArgs(args, 2);
 
             AnimChangeState state;
 

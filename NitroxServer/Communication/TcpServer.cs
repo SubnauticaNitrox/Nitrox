@@ -19,14 +19,14 @@ namespace NitroxServer.Communication
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
         }
-
-        public void Start()
+        
+        public void Start(int pEnd = 11000, int port = 11001)
         {
-            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+            IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, pEnd);
 
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Bind(localEndPoint);
-            socket.Listen(4000);
+            socket.Listen(port);
             socket.BeginAccept(new AsyncCallback(ClientAccepted), socket);
         }
 

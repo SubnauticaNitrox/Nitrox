@@ -1,5 +1,6 @@
 ﻿using System;
 using NitroxModel.Logger;
+using NitroxClient.GameLogic.ChatUI;
 
 namespace NitroxServer
 {
@@ -7,7 +8,7 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.CONSOLE_INFO | Log.LogLevel.CONSOLE_DEBUG | Log.LogLevel.IN_GAME_MESSAGES);
 
             try
             {
@@ -22,7 +23,9 @@ namespace NitroxServer
             while (true)
             {
                 Console.ReadLine();
+                
             }
         }
+
     }
 }
