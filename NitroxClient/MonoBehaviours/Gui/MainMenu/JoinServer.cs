@@ -320,10 +320,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private static GameObject CloneSaveGameMenuPrototype()
         {
             GameObject joinServerMenu = Instantiate(SaveGameMenuPrototype);
-
-            Destroy(joinServerMenu.RequireTransform("Header"));
-            Destroy(joinServerMenu.RequireTransform("Scroll View/Scrollbar"));
-            Destroy(joinServerMenu.RequireTransform("Scroll View/Viewport/SavedGameAreaContent"));
+            DestroyObject(joinServerMenu.RequireGameObject("Header"));
+            DestroyObject(joinServerMenu.RequireGameObject("Scroll View"));
             Destroy(joinServerMenu.GetComponent<LayoutGroup>());
             Destroy(joinServerMenu.GetComponent<MainMenuLoadPanel>());
             joinServerMenu.GetAllComponentsInChildren<LayoutGroup>().ForEach(Destroy);
