@@ -41,9 +41,12 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             pingEntry.icon.color = player.PlayerSettings.PlayerColor;
 
             GameObject pingEntryGameObject = pingEntry.gameObject;
-            Object.Destroy(pingEntryGameObject.transform.Find("ColorToggle").gameObject);
+            pingEntryGameObject.transform.Find("ColorToggle").gameObject.SetActive(false);
 
-            pdaScreenGameObject.gameObject.SetActive(false);
+            if (!localPlayerPda.isInUse)
+            {
+                pdaScreenGameObject.gameObject.SetActive(false);
+            }
         }
 
         private static void SetInGamePingColor(INitroxPlayer player, PingInstance ping)
