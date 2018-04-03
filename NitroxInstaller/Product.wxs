@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Product Id="*" Name="Nitrox" Language="1033" Version="1.0.0.0" Manufacturer="Killzoms" UpgradeCode="d329e602-d3c5-4b20-88b0-4d62d51002dd">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate EmbedCab="yes" />
+
+		<Feature Id="ProductFeature" Title="SetupProject1" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+	</Product>
+
+	<Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="Steam" Name="Steam">
+          <Directory Id="steamApps" Name="steamapps">
+            <Directory Id="steamCommon" Name="common">
+              <Directory Id="SubInstall" Name="Subnautica">
+                <Directory Id="INSTALLFOLDER" Name="Nitrox" />
+                <Directory Id="SubData" Name="Subnautica_Data">
+                  <Directory Id="Managed" Name="Managed" />
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+	</Fragment>
+
+	<Fragment>
+		<ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\0Harmony.dll">
+          <CopyFile Id="HarmonyCopy" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\NitroxClient.dll">
+          <CopyFile Id="NCCopy" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\NitroxModel.dll">
+          <CopyFile Id="NitroxMCopy" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\NitroxPatcher.dll">
+          <CopyFile Id="NPCopy" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\NitroxReloader.dll">
+          <CopyFile Id="NRCopy" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Assembly-CSharp.dll">
+          <CopyFile Id="ACS" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Assembly-CSharp-firstpass.dll">
+          <CopyFile Id="ACSF" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Autofac.Configuration.dll">
+          <CopyFile Id="AFC" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Autofac.dll">
+          <CopyFile Id="AF" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Autofac.xml">
+          <CopyFile Id="AFX" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\iTween.dll">
+          <CopyFile Id="iTween" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\LibNoise.dll">
+          <CopyFile Id="LibNoise" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\LitJson.dll">
+          <CopyFile Id="LitJson" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\LumenWorks.dll">
+          <CopyFile Id="LW" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Newtonsoft.Json.dll">
+          <CopyFile Id="Newtonsoft" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\Poly2Tri.dll">
+          <CopyFile Id="P2T" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\UnityEngine.dll">
+          <CopyFile Id="UE" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+      <Component>
+        <File Source="$(var.SolutionDir)bin\$(var.NitroxClient.Configuration)\UnityEngine.UI.dll">
+          <CopyFile Id="UEUI" DestinationDirectory="Managed"/>
+        </File>
+      </Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>
