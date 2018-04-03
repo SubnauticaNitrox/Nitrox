@@ -54,7 +54,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void CreateButton(string text, UnityEngine.Events.UnityAction clickEvent)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
-            multiplayerButtonInst.RequireTransform("NewGameButton/Text").GetComponent<Text>().text = text;
+            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+            txt.GetComponent<Text>().text = text;
+            DestroyObject(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
@@ -65,7 +67,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
-            multiplayerButtonInst.RequireTransform("NewGameButton/Text").GetComponent<Text>().text = text;
+            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+            txt.GetComponent<Text>().text = text;
+            DestroyObject(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));

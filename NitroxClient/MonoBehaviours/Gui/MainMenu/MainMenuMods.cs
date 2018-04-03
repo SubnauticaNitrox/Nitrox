@@ -28,10 +28,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private void MultiplayerMenuMods()
         {
             GameObject startButton = GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons/ButtonPlay");
-            GameObject showLoadedMultiplayer = Instantiate(startButton);
+            GameObject showLoadedMultiplayer = Instantiate(startButton, startButton.transform.parent);
+            showLoadedMultiplayer.name = "ButtonMultiplayer";
             Text buttonText = showLoadedMultiplayer.RequireGameObject("Circle/Bar/Text").GetComponent<Text>();
             buttonText.text = "Multiplayer";
-            showLoadedMultiplayer.transform.SetParent(GameObjectHelper.RequireGameObject("Menu canvas/Panel/MainMenu/PrimaryOptions/MenuButtons").transform, false);
+            Destroy(buttonText.GetComponent<TranslationLiveUpdate>());
             showLoadedMultiplayer.transform.SetSiblingIndex(3);
             Button showLoadedMultiplayerButton = showLoadedMultiplayer.GetComponent<Button>();
             showLoadedMultiplayerButton.onClick.RemoveAllListeners();
@@ -39,17 +40,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             MainMenuRightSide rightSide = MainMenuRightSide.main;
             GameObject savedGamesRef = FindObject(rightSide.gameObject, "SavedGames");
-            GameObject LoadedMultiplayer = Instantiate(savedGamesRef);
+            GameObject LoadedMultiplayer = Instantiate(savedGamesRef, rightSide.transform);
             LoadedMultiplayer.name = "Multiplayer";
             LoadedMultiplayer.RequireTransform("Header").GetComponent<Text>().text = "Multiplayer";
             Destroy(LoadedMultiplayer.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame"));
+            Destroy(LoadedMultiplayer.GetComponent<MainMenuLoadPanel>());
 
             MainMenuMultiplayerPanel panel = LoadedMultiplayer.AddComponent<MainMenuMultiplayerPanel>();
             panel.SavedGamesRef = savedGamesRef;
             panel.LoadedMultiplayerRef = LoadedMultiplayer;
 
-            Destroy(LoadedMultiplayer.GetComponent<MainMenuLoadPanel>());
-            LoadedMultiplayer.transform.SetParent(rightSide.transform, false);
             rightSide.groups.Add(LoadedMultiplayer);
         }
 

@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -18,18 +19,33 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
-            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+            DontDestroyOnLoad(gameObject);
+        }
 
+        public void OnDestroy()
+        {
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+        }
+
+        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-
-            DontDestroyOnLoad(gameObject);
         }
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
+
             if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+
+            //This could be cleaned up. Honestly, I see this as a hack to deal with other unimplemented features. I'd rather just patch this boat until we can let it sink...
+            NitroxServiceLocator.BeginNewLifetimeScope();
+            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+
+            if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SessionJoined)
+
             {
                 Log.InGame("Already connected to a server");
             }
