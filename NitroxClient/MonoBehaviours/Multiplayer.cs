@@ -70,6 +70,7 @@ namespace NitroxClient.MonoBehaviours
             InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
             InitMonoBehaviours();
+            Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
