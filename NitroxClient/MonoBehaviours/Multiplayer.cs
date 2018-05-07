@@ -42,6 +42,11 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public bool IsMultiplayer()
+        {
+            return multiplayerSession.Client.IsConnected;
+        }
+
         public void ProcessPackets()
         {
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -70,6 +75,7 @@ namespace NitroxClient.MonoBehaviours
             InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
             InitMonoBehaviours();
+            Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 

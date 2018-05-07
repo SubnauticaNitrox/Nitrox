@@ -80,7 +80,7 @@
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
-	<Compile Include="Patches\FreezeTime_Begin_Patch.cs" />
+    <Compile Include="Patches\FreezeTime_Begin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
     <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
+    <Compile Include="Patches\Persistent\EscapePodFirstUseCinematicsController_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
