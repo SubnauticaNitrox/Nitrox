@@ -36,7 +36,7 @@ namespace NitroxClient.MonoBehaviours
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();
             }
@@ -101,7 +101,7 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
 			
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 multiplayerSession.Disconnect();
             }

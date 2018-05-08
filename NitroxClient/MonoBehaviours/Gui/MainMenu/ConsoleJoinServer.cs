@@ -37,11 +37,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
         {
+            if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+
             //This could be cleaned up. Honestly, I see this as a hack to deal with other unimplemented features. I'd rather just patch this boat until we can let it sink...
             NitroxServiceLocator.BeginNewLifetimeScope();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
 
-            if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SessionJoined)
+            if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
             {
                 Log.InGame("Already connected to a server");
             }
@@ -99,19 +101,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             switch (state.CurrentStage)
             {
-                case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
+                case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
                     AuthenticationContext authenticationContext = new AuthenticationContext(userName);
                     multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), authenticationContext);
                     break;
-                case MultiplayerSessionConnectionStage.SessionReserved:
+                case MultiplayerSessionConnectionStage.SESSION_RESERVED:
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     Multiplayer.Main.StartSession();
                     break;
-                case MultiplayerSessionConnectionStage.SessionReservationRejected:
+                case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
                     Log.InGame($"Cannot join server: {multiplayerSession.Reservation.ReservationState.ToString()}");
                     multiplayerSession.Disconnect();
                     break;
-                case MultiplayerSessionConnectionStage.Disconnected:
+                case MultiplayerSessionConnectionStage.DISCONNECTED:
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     break;
                 default:

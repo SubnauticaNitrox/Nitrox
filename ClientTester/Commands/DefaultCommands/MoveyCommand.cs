@@ -19,7 +19,7 @@ namespace ClientTester.Commands.DefaultCommands
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
-            assertMinimumArgs(args, 1);
+            AssertMinimumArgs(args, 1);
 
             float y = client.ClientPos.y;
             client.ClientPos.y = float.Parse(args[0]);

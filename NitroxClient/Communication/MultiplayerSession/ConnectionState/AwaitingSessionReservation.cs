@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             this.reservationCorrelationId = reservationCorrelationId;
         }
 
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AwaitingSessionReservation;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION;
 
         public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
