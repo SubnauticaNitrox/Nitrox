@@ -84,7 +84,7 @@ namespace NitroxClient.GameLogic
             //RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             //RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
 
-            AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
+            AnimationController.Velocity = velocity;
             MovementSyncer?.SetNewLocation(position, bodyRotation);
 
             AnimationController.AimingRotation = aimingRotation;
