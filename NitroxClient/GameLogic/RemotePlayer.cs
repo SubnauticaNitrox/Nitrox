@@ -17,6 +17,7 @@ namespace NitroxClient.GameLogic
         public Rigidbody RigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
+        public MovementSyncer MovementSyncer { get; }
 
         public string PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
@@ -30,6 +31,8 @@ namespace NitroxClient.GameLogic
         {
             Body = playerBody;
             PlayerContext = playerContext;
+
+            MovementSyncer = Body.AddComponent<MovementSyncer>();
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
@@ -78,8 +81,11 @@ namespace NitroxClient.GameLogic
             SetPilotingChair(null);
             SetSubRoot(subRoot);
 
-            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
-            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
+            //RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
+            //RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
+
+            AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
+            MovementSyncer?.SetNewLocation(position, bodyRotation);
 
             AnimationController.AimingRotation = aimingRotation;
             AnimationController.UpdatePlayerAnimations = true;
