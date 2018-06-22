@@ -274,4 +274,3 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
-*.targets

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <DevVars>DevVars.targets</DevVars>
     <DevVarsLoc>$(SolutionDir)\$(DevVars)</DevVarsLoc>
-    <SubnauticaDir Condition="!Exists($(DevVarsLoc))">D:\Steam Library\steamapps\common\Subnautica</SubnauticaDir>
+    <SubnauticaDir Condition="!Exists($(DevVarsLoc))">C:\Program Files (x86)\Steam\steamapps\common\Subnautica</SubnauticaDir>
     <LangVersion>6</LangVersion>
   </PropertyGroup>
 
