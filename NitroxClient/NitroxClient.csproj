@@ -177,6 +177,7 @@
     <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateStateProvider.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
+    <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\NoTechTypeEntitySpawner.cs" />
