@@ -211,6 +211,7 @@
     <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
     <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
+    <Compile Include="MonoBehaviours\PlayerDeathBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PowerMonitor.cs" />
