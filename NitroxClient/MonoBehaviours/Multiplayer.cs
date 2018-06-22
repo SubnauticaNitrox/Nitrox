@@ -92,6 +92,7 @@ namespace NitroxClient.MonoBehaviours
         public void InitMonoBehaviours()
         {
             gameObject.AddComponent<PlayerMovement>();
+            gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<AnimationSender>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
