@@ -16,55 +16,53 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceConstructionAmountChanged(string guid, float constructionAmount)
         {
-            if(BasePiecesByGuid.ContainsKey(guid))
+            BasePiece basePiece;
+
+            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
             {
-                BasePiecesByGuid[guid].ConstructionAmount = constructionAmount;
+                basePiece.ConstructionAmount = constructionAmount;
             }
         }
 
         public void BasePieceConstructionCompleted(string guid, Optional<string> newlyCreatedParentGuid)
         {
-            if (!BasePiecesByGuid.ContainsKey(guid))
+            BasePiece basePiece;
+
+            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
             {
-                return;
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+
+                if (newlyCreatedParentGuid.IsPresent())
+                {
+                    basePiece.ParentBaseGuid = newlyCreatedParentGuid;
+                }
+
+                CompletedBasePieceHistory.Add(basePiece);
             }
-
-            BasePiece basePiece = BasePiecesByGuid[guid];
-
-            basePiece.ConstructionAmount = 1.0f;
-            basePiece.ConstructionCompleted = true;
-
-            if(newlyCreatedParentGuid.IsPresent())
-            {
-                basePiece.ParentBaseGuid = newlyCreatedParentGuid;
-            }
-
-            CompletedBasePieceHistory.Add(basePiece);
         }
 
         public void BasePieceDeconstructionBegin(string guid)
         {
-            if(!BasePiecesByGuid.ContainsKey(guid))
+            BasePiece basePiece;
+
+            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
             {
-                return;
+                basePiece.ConstructionAmount = 0.95f;
+                basePiece.ConstructionCompleted = false;
             }
-
-            BasePiece basePiece = BasePiecesByGuid[guid];
-
-            basePiece.ConstructionAmount = 0.95f;
-            basePiece.ConstructionCompleted = false;
         }
 
         public void BasePieceDeconstructionCompleted(string guid)
         {
-            if (!BasePiecesByGuid.ContainsKey(guid))
+            BasePiece basePiece;
+
+            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
             {
-                return;
+                CompletedBasePieceHistory.Remove(basePiece);
+                BasePiecesByGuid.Remove(guid);
             }
 
-            BasePiece basePiece = BasePiecesByGuid[guid];
-            CompletedBasePieceHistory.Remove(basePiece);
-            BasePiecesByGuid.Remove(guid);
         }
 
         public List<BasePiece> GetBasePiecesForNewlyConnectedPlayer()
