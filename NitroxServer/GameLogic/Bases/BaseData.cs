@@ -16,11 +16,19 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceConstructionAmountChanged(string guid, float constructionAmount)
         {
-            BasePiecesByGuid[guid].ConstructionAmount = constructionAmount;
+            if(BasePiecesByGuid.ContainsKey(guid))
+            {
+                BasePiecesByGuid[guid].ConstructionAmount = constructionAmount;
+            }
         }
 
         public void BasePieceConstructionCompleted(string guid, Optional<string> newlyCreatedParentGuid)
         {
+            if (!BasePiecesByGuid.ContainsKey(guid))
+            {
+                return;
+            }
+
             BasePiece basePiece = BasePiecesByGuid[guid];
 
             basePiece.ConstructionAmount = 1.0f;
@@ -36,6 +44,11 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceDeconstructionBegin(string guid)
         {
+            if(!BasePiecesByGuid.ContainsKey(guid))
+            {
+                return;
+            }
+
             BasePiece basePiece = BasePiecesByGuid[guid];
 
             basePiece.ConstructionAmount = 0.95f;
@@ -44,6 +57,11 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceDeconstructionCompleted(string guid)
         {
+            if (!BasePiecesByGuid.ContainsKey(guid))
+            {
+                return;
+            }
+
             BasePiece basePiece = BasePiecesByGuid[guid];
             CompletedBasePieceHistory.Remove(basePiece);
             BasePiecesByGuid.Remove(guid);
