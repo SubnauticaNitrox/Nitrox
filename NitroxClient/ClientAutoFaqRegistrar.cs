@@ -11,6 +11,7 @@ using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
+using NitroxClient.GameLogic.Bases;
 
 namespace NitroxClient
 {
@@ -64,6 +65,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<Interior>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)
