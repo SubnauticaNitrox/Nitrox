@@ -86,6 +86,7 @@
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\InitialPlayerSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Building.cs" />
+    <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
@@ -217,6 +219,7 @@
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PowerMonitor.cs" />
     <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
+    <Compile Include="MonoBehaviours\ThrottledBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

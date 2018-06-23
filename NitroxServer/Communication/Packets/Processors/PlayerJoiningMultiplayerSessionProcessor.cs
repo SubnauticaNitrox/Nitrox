@@ -2,6 +2,7 @@
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -10,13 +11,15 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly TimeKeeper timeKeeper;
         private readonly EscapePodManager escapePodManager;
         private readonly PlayerManager playerManager;
+        private readonly BaseData baseData;
 
         public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager,
-            PlayerManager playerManager)
+            PlayerManager playerManager, BaseData baseData)
         {
             this.timeKeeper = timeKeeper;
             this.escapePodManager = escapePodManager;
             this.playerManager = playerManager;
+            this.baseData = baseData;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
@@ -31,6 +34,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
+
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(baseData.GetBasePiecesForNewlyConnectedPlayer());
+            player.SendPacket(initialPlayerSync);
 
             foreach (Player otherPlayer in playerManager.GetPlayers())
             {

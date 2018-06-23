@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -28,10 +29,11 @@ namespace NitroxClient.GameLogic
 
             string guid = GuidHelper.GetGuid(constructableBase.gameObject);
             string parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
-            Vector3 itemPosition = constructableBase.gameObject.transform.position;
+            Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
 
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid));
+            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid));
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece, placedPosition);
             packetSender.Send(placedBasePiece);
         }
 

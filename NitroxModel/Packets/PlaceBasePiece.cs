@@ -1,34 +1,22 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PlaceBasePiece : DeferrablePacket
     {
-        public string Guid { get; }
-        public Vector3 ItemPosition { get; }
-        public Quaternion Rotation { get; }
-        public TechType TechType { get; }
-        public Optional<string> ParentBaseGuid { get; }
-        public Vector3 CameraPosition { get; }
-        public Quaternion CameraRotation { get; }
+        public BasePiece BasePiece;
 
-        public PlaceBasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentBaseGuid) : base(itemPosition, BUILDING_CELL_LEVEL)
+        public PlaceBasePiece(BasePiece basePiece, Vector3 placedPosition) : base(placedPosition, BUILDING_CELL_LEVEL)
         {
-            Guid = guid;
-            ItemPosition = itemPosition;
-            Rotation = rotation;
-            TechType = techType;
-            CameraPosition = cameraPosition;
-            CameraRotation = cameraRotation;
-            ParentBaseGuid = parentBaseGuid;
+            BasePiece = basePiece;
         }
 
         public override string ToString()
         {
-            return "[PlaceBasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentBaseGuid: " + ParentBaseGuid + "]";
+            return "[PlaceBasePiece - BasePiece: " + BasePiece + "]";
         }
     }
 }

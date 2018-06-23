@@ -1,4 +1,5 @@
 ﻿using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 
@@ -15,5 +16,6 @@ namespace NitroxServer.Serialization.World
         public EntitySimulation EntitySimulation { get; set; }
         public EntityManager EntityManager { get; set; }
         public EventTriggerer EventTriggerer { get; set; }
+        public BaseData BaseData { get; set; }
     }
 }
