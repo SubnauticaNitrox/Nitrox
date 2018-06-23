@@ -6,7 +6,6 @@ namespace NitroxModel.DataStructures.Util
     [Serializable]
     public class HasValueOptional<T> : Optional<T>
     {
-        [ProtoMember(1)]
         public T value { get; set; }
 
         public HasValueOptional(T value)
@@ -68,7 +67,7 @@ namespace NitroxModel.DataStructures.Util
             return "Optional<" + typeof(T) + ">.Empty()";
         }
     }
-    
+
     [Serializable]
     public abstract class Optional<T>
     {
@@ -102,7 +101,7 @@ namespace NitroxModel.DataStructures.Util
         public abstract bool IsEmpty();
         public abstract T OrElse(T elseValue);
     }
-
+    
     [Serializable]
     public sealed class OptionalEmptyException<T> : Exception
     {
