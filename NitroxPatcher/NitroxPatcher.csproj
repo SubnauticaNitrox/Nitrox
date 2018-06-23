@@ -94,6 +94,7 @@
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
+    <Compile Include="Patches\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />

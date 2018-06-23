@@ -57,6 +57,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<Item>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EquipmentSlots>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Signs>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Power>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();
