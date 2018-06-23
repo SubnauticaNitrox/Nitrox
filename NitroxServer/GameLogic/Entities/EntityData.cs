@@ -2,13 +2,25 @@
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Entities
 {
+    [ProtoContract]
     public class EntityData
     {
-        private readonly Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
-        private readonly Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
+        [ProtoContract]
+        public class EntityList
+        {
+            [ProtoMember(1)]
+            public List<Entity> Items { get; set; } = new List<Entity>();
+        }
+
+        [ProtoMember(1)]
+        public Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell { get; set; } = new Dictionary<AbsoluteEntityCell, EntityList>();
+        
+        [ProtoMember(2)]
+        public Dictionary<string, Entity> entitiesByGuid { get; set; } = new Dictionary<string, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
@@ -60,17 +72,17 @@ namespace NitroxServer.GameLogic.Entities
 
         private List<Entity> EntitiesFromCell(AbsoluteEntityCell absoluteEntityCell)
         {
-            List<Entity> result;
+            EntityList result;
 
             lock (entitiesByAbsoluteCell)
             {
                 if (!entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
                 {
-                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new List<Entity>();
+                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new EntityList();
                 }
             }
 
-            return result;
+            return result.Items;
         }
     }
 }

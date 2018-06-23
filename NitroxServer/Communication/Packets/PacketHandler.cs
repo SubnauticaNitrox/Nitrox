@@ -8,8 +8,7 @@ using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.Serialization;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -21,21 +20,19 @@ namespace NitroxServer.Communication.Packets
         private readonly DefaultServerPacketProcessor defaultPacketProcessor;
         private readonly PlayerManager playerManager;
 
-        public PacketHandler(PlayerManager playerManager, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
+        public PacketHandler(World world)
         {
-            this.playerManager = playerManager;
+            this.playerManager = world.PlayerManager;
             defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
-            ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            EntityData entityData = new EntityData();
-
+            
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {
                 {typeof(PlayerManager), playerManager },
-                {typeof(TimeKeeper), timeKeeper },
-                {typeof(SimulationOwnership), simulationOwnership },
+                {typeof(TimeKeeper), world.TimeKeeper },
+                {typeof(SimulationOwnership), world.SimulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
-                {typeof(EntityManager), new EntityManager(entityData, new BatchEntitySpawner(resourceAssets)) },
-                {typeof(EntitySimulation), new EntitySimulation(entityData, simulationOwnership) }
+                {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
+                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnership) }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));

@@ -1,15 +1,27 @@
 ﻿using System;
 using NitroxModel.Helper;
 using UnityEngine;
+using ProtoBuf;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
+    [ProtoContract]
     public class AbsoluteEntityCell
     {
-        public Int3 BatchId { get; }
-        public Int3 CellId { get; }
-        public int Level { get; }
+        [ProtoMember(1)]
+        public Int3 BatchId { get; set; }
+        
+        [ProtoMember(2)]
+        public Int3 CellId { get; set; }
+        
+        [ProtoMember(3)]
+        public int Level { get; set; }
+
+        public AbsoluteEntityCell()
+        {
+            // For serialization 
+        }
 
         public AbsoluteEntityCell(Int3 batchId, Int3 cellId, int level)
         {
