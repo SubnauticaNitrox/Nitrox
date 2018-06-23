@@ -13,6 +13,7 @@ using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.Serialization.World;
 
 namespace NitroxTest.Model
 {
@@ -83,7 +84,8 @@ namespace NitroxTest.Model
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
+            World world = new World();
+            PacketHandler ph = new PacketHandler(world);
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             int both = authenticatedPacketProcessorsByType.Count + unauthenticatedPacketProcessorsByType.Count;
@@ -97,7 +99,8 @@ namespace NitroxTest.Model
         [TestMethod]
         public void RuntimeDetectsAllServerPacketProcessors()
         {
-            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
+            World world = new World();
+            PacketHandler ph = new PacketHandler(world);
 
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
@@ -117,7 +120,8 @@ namespace NitroxTest.Model
         [TestMethod]
         public void AllPacketsAreHandled()
         {
-            PacketHandler ph = new PacketHandler(new PlayerManager(), new TimeKeeper(), new SimulationOwnership());
+            World world = new World();
+            PacketHandler ph = new PacketHandler(world);
 
             Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
             Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);

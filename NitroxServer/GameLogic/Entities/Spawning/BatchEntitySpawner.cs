@@ -12,15 +12,17 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public class BatchEntitySpawner : IEntitySpawner
     {
-        private readonly HashSet<Int3> parsedBatches = new HashSet<Int3>();
+        public HashSet<Int3> ParsedBatches { get; }
+
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
         private readonly Random random = new Random();
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
-        public BatchEntitySpawner(ResourceAssets resourceAssets)
+        public BatchEntitySpawner(ResourceAssets resourceAssets, HashSet<Int3> loadedPreviousParsed)
         {
+            ParsedBatches = loadedPreviousParsed;
             worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
             batchCellsParser = new BatchCellsParser();
 
@@ -33,13 +35,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
-            lock (parsedBatches)
+            lock (ParsedBatches)
             {
-                if (parsedBatches.Contains(batchId))
+                if (ParsedBatches.Contains(batchId))
                 {
                     return new List<Entity>();
                 }
-                parsedBatches.Add(batchId);
+                ParsedBatches.Add(batchId);
             }
 
             Log.Debug("Batch {0} not parsed yet; parsing...", batchId);

@@ -102,6 +102,9 @@
     <Compile Include="Serialization\ResourceAssets.cs" />
     <Compile Include="Serialization\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\World\PersistedWorldData.cs" />
+    <Compile Include="Serialization\World\World.cs" />
+    <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
