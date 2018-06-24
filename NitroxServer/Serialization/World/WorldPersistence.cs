@@ -14,7 +14,7 @@ namespace NitroxServer.Serialization.World
     public class WorldPersistence
     {
         private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
-        private readonly string fileName = @"save.txt";
+        private readonly string fileName = @"save.nitrox";
 
         public void Save(World world)
         {
