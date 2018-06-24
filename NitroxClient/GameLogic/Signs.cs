@@ -17,12 +17,10 @@ namespace NitroxClient.GameLogic
 
         public void Changed(uGUI_SignInput sign)
         {
-            Log.InGame("Changed called!");
-            string guid = sign.GetComponentInParent<UniqueIdentifier>().Id;
+            string guid = sign.gameObject.FindAncestor<PrefabIdentifier>().Id;
 
             SignChanged signChanged = new SignChanged(guid, sign.text, sign.colorIndex, sign.scaleIndex, sign.elementsState, sign.IsBackground());
             packetSender.Send(signChanged);
-            Log.InGame("Packet sent!");
         }
     }
 }

@@ -5,12 +5,12 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructionCompleted : Packet
+    public class ConstructionCompleted : DeferrablePacket
     {
         public string Guid { get; }
         public Optional<string> NewBaseCreatedGuid { get; }
 
-        public ConstructionCompleted(Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) //: base(itemPosition, BUILDING_CELL_LEVEL)
+        public ConstructionCompleted(Vector3 itemPosition, string guid, Optional<string> newBaseCreatedGuid) : base(itemPosition, BUILDING_CELL_LEVEL)
         {
             Guid = guid;
             NewBaseCreatedGuid = newBaseCreatedGuid;

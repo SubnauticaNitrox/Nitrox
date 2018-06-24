@@ -11,7 +11,6 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(SignChanged packet)
         {
-            Log.InGame("Packet recieved!");
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
             uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>();
 
