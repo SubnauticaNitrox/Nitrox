@@ -23,12 +23,12 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(5)]
         public string SerializableParentBaseGuid {
-            get { return (ParentBaseGuid.IsPresent()) ? ParentBaseGuid.Get() : null; }
-            set { ParentBaseGuid = Optional<string>.OfNullable(value); }
+            get { return (ParentGuid.IsPresent()) ? ParentGuid.Get() : null; }
+            set { ParentGuid = Optional<string>.OfNullable(value); }
         }
 
         [ProtoIgnore]
-        public Optional<string> ParentBaseGuid { get; set; }
+        public Optional<string> ParentGuid { get; set; }
 
         [ProtoMember(6)]
         public Vector3 CameraPosition { get; set; }
@@ -42,12 +42,26 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool ConstructionCompleted { get; set; }
 
-        public BasePiece()
+        [ProtoMember(10)]
+        public bool IsFurniture { get; set; }
+
+        [ProtoMember(11)]
+        public string SerializableNewBaseGuid
         {
-            // Constructor for serialization
+            get { return (NewBaseGuid.IsPresent()) ? NewBaseGuid.Get() : null; }
+            set { NewBaseGuid = Optional<string>.OfNullable(value); }
         }
 
-        public BasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentBaseGuid)
+        [ProtoIgnore]
+        public Optional<string> NewBaseGuid { get; set; }
+
+        public BasePiece()
+        {
+            NewBaseGuid = Optional<String>.Empty();
+            ParentGuid = Optional<String>.Empty();
+        }
+
+        public BasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentGuid, bool isFurniture)
         {
             Guid = guid;
             ItemPosition = itemPosition;
@@ -55,14 +69,16 @@ namespace NitroxModel.DataStructures.GameLogic
             TechType = techType;
             CameraPosition = cameraPosition;
             CameraRotation = cameraRotation;
-            ParentBaseGuid = parentBaseGuid;
+            ParentGuid = parentGuid;
+            IsFurniture = isFurniture;
             ConstructionAmount = 0.0f;
             ConstructionCompleted = false;
+            NewBaseGuid = Optional<string>.Empty();
         }
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentBaseGuid: " + ParentBaseGuid + " ConstructionAmount: " + ConstructionAmount + "]";
+            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentGuid: " + ParentGuid + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " NewBaseGuid: " + NewBaseGuid + "]";
         }
     }
 }

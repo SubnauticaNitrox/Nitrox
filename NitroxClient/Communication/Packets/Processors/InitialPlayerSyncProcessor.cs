@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 
                 if (basePiece.ConstructionCompleted)
                 {
-                    buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.ParentBaseGuid);
+                    buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.NewBaseGuid);
                 }
                 else
                 {

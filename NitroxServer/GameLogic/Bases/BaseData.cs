@@ -32,10 +32,11 @@ namespace NitroxServer.GameLogic.Bases
             {
                 basePiece.ConstructionAmount = 1.0f;
                 basePiece.ConstructionCompleted = true;
+                basePiece.NewBaseGuid = newlyCreatedParentGuid;
 
                 if (newlyCreatedParentGuid.IsPresent())
                 {
-                    basePiece.ParentBaseGuid = newlyCreatedParentGuid;
+                    basePiece.ParentGuid = Optional<string>.Empty();
                 }
 
                 CompletedBasePieceHistory.Add(basePiece);
