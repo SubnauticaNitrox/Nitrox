@@ -39,11 +39,25 @@ namespace NitroxClient.MonoBehaviours
                 return;
             }
 
-            Optional<BuildEvent> opBuildEvent = buildEvents.GetNextPendingEvent();
+            ProcessBuildEventsUntilFrameBlocked();
+        }
 
-            if(opBuildEvent.IsPresent())
+        private void ProcessBuildEventsUntilFrameBlocked()
+        {
+            bool processedFrameBlockingEvent = false;
+            bool isNextEventFrameBlocked = false;
+
+            while (buildEvents.Count > 0 && !isNextEventFrameBlocked)
             {
-                ActionBuildEvent(opBuildEvent.Get());
+                BuildEvent nextEvent = buildEvents.Dequeue();
+                ActionBuildEvent(nextEvent);
+
+                if (nextEvent.RequiresFreshFrame())
+                {
+                    processedFrameBlockingEvent = true;
+                }
+
+                isNextEventFrameBlocked = (processedFrameBlockingEvent && buildEvents.NextEventRequiresFreshFrame());
             }
         }
 
