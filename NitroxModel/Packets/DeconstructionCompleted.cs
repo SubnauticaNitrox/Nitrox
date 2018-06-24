@@ -4,11 +4,11 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DeconstructionCompleted : DeferrablePacket
+    public class DeconstructionCompleted : Packet
     {
         public string Guid { get; }
 
-        public DeconstructionCompleted(Vector3 itemPosition, string guid) : base(itemPosition, BUILDING_CELL_LEVEL)
+        public DeconstructionCompleted(string guid)
         {
             Guid = guid;
         }

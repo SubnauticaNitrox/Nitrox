@@ -5,11 +5,11 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlaceBasePiece : DeferrablePacket
+    public class PlaceBasePiece : Packet
     {
         public BasePiece BasePiece;
 
-        public PlaceBasePiece(BasePiece basePiece, Vector3 placedPosition) : base(placedPosition, BUILDING_CELL_LEVEL)
+        public PlaceBasePiece(BasePiece basePiece)
         {
             BasePiece = basePiece;
         }
