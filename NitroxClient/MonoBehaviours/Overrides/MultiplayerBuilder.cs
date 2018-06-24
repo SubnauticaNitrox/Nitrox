@@ -281,7 +281,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             return true;
         }
 
-        public static ConstructableBase TryPlaceBase(Optional<GameObject> opTargetBaseGameObject)
+        public static ConstructableBase TryPlaceBase(GameObject targetBaseGameObject)
         {
             MultiplayerBuilder.Initialize();
             global::Utils.PlayEnvSound(MultiplayerBuilder.placeSound, MultiplayerBuilder.ghostModel.transform.position, 10f);
@@ -295,9 +295,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
             component.transform.position = overridePosition;
             component.transform.rotation = overrideQuaternion;
 
-            if (opTargetBaseGameObject.IsPresent())
+            if (targetBaseGameObject)
             {
-                GameObject targetBaseGameObject = opTargetBaseGameObject.Get();
                 Base targetBase = targetBaseGameObject.GetComponent<Base>();
 
                 if (targetBase != null)

@@ -43,8 +43,6 @@ namespace NitroxClient.MonoBehaviours
 
             if(opBuildEvent.IsPresent())
             {
-                Log.Info("ThrottledBuilder actioning event " + opBuildEvent.Get().GetType());
-
                 ActionBuildEvent(opBuildEvent.Get());
             }
         }
@@ -86,17 +84,37 @@ namespace NitroxClient.MonoBehaviours
             MultiplayerBuilder.placeRotation = basePiece.Rotation;
             MultiplayerBuilder.Begin(buildPrefab);
 
-            Optional<GameObject> parentBase = (basePiece.ParentBaseGuid.IsPresent()) ? GuidHelper.GetObjectFrom(basePiece.ParentBaseGuid.Get()) : Optional<GameObject>.Empty();
+            GameObject parentBase = null;
+            
+            if(basePiece.ParentGuid.IsPresent())
+            {
+                parentBase = GuidHelper.RequireObjectFrom(basePiece.ParentGuid.Get());
+            }
+            
+            Constructable constructable;
+            GameObject gameObject;
 
-            ConstructableBase constructableBase = MultiplayerBuilder.TryPlaceBase(parentBase);
-            GuidHelper.SetNewGuid(constructableBase.gameObject, basePiece.Guid);
-
+            if (basePiece.IsFurniture)
+            {
+                SubRoot subRoot = (parentBase != null) ? parentBase.RequireComponent<SubRoot>() : null;
+                                
+                gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
+                constructable = gameObject.RequireComponentInParent<Constructable>();
+            }
+            else
+            {
+                constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
+                gameObject = constructable.gameObject;
+            }
+            
+            GuidHelper.SetNewGuid(gameObject, basePiece.Guid);
+            
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.
              */
             MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(startCrafting);
-            startCrafting.Invoke(constructableBase, new object[] { });
+            startCrafting.Invoke(constructable, new object[] { });
         }
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)

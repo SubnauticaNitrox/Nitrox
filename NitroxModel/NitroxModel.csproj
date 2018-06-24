@@ -125,7 +125,6 @@
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
-    <Compile Include="Packets\PlaceFurniture.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
     <Compile Include="Packets\PlayerJoinedMultiplayerSession.cs" />
     <Compile Include="Packets\PlayerJoiningMultiplayerSession.cs" />

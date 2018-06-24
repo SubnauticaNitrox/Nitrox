@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
 
-            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid));
+            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid), false);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece, placedPosition);
             packetSender.Send(placedBasePiece);
         }
@@ -55,8 +55,9 @@ namespace NitroxClient.GameLogic
 
             Transform camera = Camera.main.transform;
 
-            PlaceFurniture placedFurniture = new PlaceFurniture(guid, subGuid, itemPosition, quaternion, camera.position, camera.rotation, techType);
-            packetSender.Send(placedFurniture);
+            BasePiece basePiece = new BasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType, subGuid, true);
+            PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece, itemPosition);
+            packetSender.Send(placedBasePiece);
         }
 
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
