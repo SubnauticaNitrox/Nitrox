@@ -16,38 +16,54 @@ namespace NitroxServer.GameLogic.Bases
 
         public void BasePieceConstructionAmountChanged(string guid, float constructionAmount)
         {
-            BasePiecesByGuid[guid].ConstructionAmount = constructionAmount;
+            BasePiece basePiece;
+
+            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            {
+                basePiece.ConstructionAmount = constructionAmount;
+            }
         }
 
         public void BasePieceConstructionCompleted(string guid, Optional<string> newlyCreatedParentGuid)
         {
-            BasePiece basePiece = BasePiecesByGuid[guid];
+            BasePiece basePiece;
 
-            basePiece.ConstructionAmount = 1.0f;
-            basePiece.ConstructionCompleted = true;
-            basePiece.NewBaseGuid = newlyCreatedParentGuid;
-
-            if(newlyCreatedParentGuid.IsPresent())
+            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
             {
-                basePiece.ParentGuid = Optional<string>.Empty();
-            }
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+                basePiece.NewBaseGuid = newlyCreatedParentGuid;
 
-            CompletedBasePieceHistory.Add(basePiece);
+                if (newlyCreatedParentGuid.IsPresent())
+                {
+                    basePiece.ParentGuid = Optional<string>.Empty();
+                }
+
+                CompletedBasePieceHistory.Add(basePiece);
+            }
         }
 
         public void BasePieceDeconstructionBegin(string guid)
         {
-            BasePiece basePiece = BasePiecesByGuid[guid];
+            BasePiece basePiece;
 
-            basePiece.ConstructionAmount = 0.95f;
-            basePiece.ConstructionCompleted = false;
+            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            {
+                basePiece.ConstructionAmount = 0.95f;
+                basePiece.ConstructionCompleted = false;
+            }
         }
 
         public void BasePieceDeconstructionCompleted(string guid)
         {
-            BasePiece basePiece = BasePiecesByGuid[guid];
-            CompletedBasePieceHistory.Remove(basePiece);
-            BasePiecesByGuid.Remove(guid);
+            BasePiece basePiece;
+
+            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            {
+                CompletedBasePieceHistory.Remove(basePiece);
+                BasePiecesByGuid.Remove(guid);
+            }
+
         }
 
         public List<BasePiece> GetBasePiecesForNewlyConnectedPlayer()
