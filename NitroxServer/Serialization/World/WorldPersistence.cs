@@ -26,8 +26,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.ParsedBatchCells = world.BatchEntitySpawner.ParsedBatches;
                 persistedData.ServerStartTime = world.TimeKeeper.ServerStartTime;
                 persistedData.EntityData = world.EntityData;
-                persistedData.BasePiecesByGuid = world.BaseData.BasePiecesByGuid;
-                persistedData.CompletedBasePieceHistory = world.BaseData.CompletedBasePieceHistory;
+                persistedData.BaseData = world.BaseData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -60,8 +59,7 @@ namespace NitroxServer.Serialization.World
 
                 World world = CreateWorld(persistedData.ServerStartTime,
                                           persistedData.EntityData, 
-                                          persistedData.BasePiecesByGuid, 
-                                          persistedData.CompletedBasePieceHistory, 
+                                          persistedData.BaseData,
                                           persistedData.ParsedBatchCells);
                 
                 return Optional<World>.Of(world);
@@ -92,13 +90,12 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new Dictionary<string, BasePiece>(), new List<BasePiece>(), new HashSet<Int3>());
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new HashSet<Int3>());
         }
 
         private World CreateWorld(DateTime serverStartTime, 
                                   EntityData entityData, 
-                                  Dictionary<string, BasePiece> BasePiecesByGuid, 
-                                  List<BasePiece> CompletedBasePieceHistory,
+                                  BaseData baseData,
                                   HashSet<Int3> ParsedBatchCells)
         {
             World world = new World();
@@ -109,9 +106,7 @@ namespace NitroxServer.Serialization.World
             world.PlayerManager = new PlayerManager();
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
-            world.BaseData = new BaseData();
-            world.BaseData.BasePiecesByGuid = BasePiecesByGuid;
-            world.BaseData.CompletedBasePieceHistory = CompletedBasePieceHistory;
+            world.BaseData = baseData;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);

@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using ProtoBufNet;
 using System;
@@ -22,18 +23,14 @@ namespace NitroxServer.Serialization.World
         public EntityData EntityData { get; set; }
 
         [ProtoMember(5)]
-        public Dictionary<string, BasePiece> BasePiecesByGuid { get; set; }
+        public BaseData BaseData { get; set; }
         
-        [ProtoMember(6)]
-        public List<BasePiece> CompletedBasePieceHistory { get; set; }
-
         public bool IsValid()
         {
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (EntityData != null) &&
-                   (BasePiecesByGuid != null) &&
-                   (CompletedBasePieceHistory != null);
+                   (BaseData != null);
         }
     }
 }

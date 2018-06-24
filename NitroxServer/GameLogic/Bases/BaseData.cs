@@ -1,26 +1,63 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using ProtoBufNet;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Bases
 {
+    [ProtoContract]
     public class BaseData
     {
-        public Dictionary<string, BasePiece> BasePiecesByGuid { get; set; } = new Dictionary<string, BasePiece>();
-        public List<BasePiece> CompletedBasePieceHistory { get; set; } = new List<BasePiece>();
+        [ProtoMember(1)]
+        public Dictionary<string, BasePiece> SerializableBasePiecesByGuid
+        {
+            get
+            {
+                lock (basePiecesByGuid)
+                {
+                    return new Dictionary<string, BasePiece>(basePiecesByGuid);
+                }
+            }
+            set { basePiecesByGuid = value; }
+        }
+
+        [ProtoMember(2)]
+        public List<BasePiece> SerializableCompletedBasePieceHistory
+        {
+            get
+            {
+                lock (completedBasePieceHistory)
+                {
+                    return new List<BasePiece>(completedBasePieceHistory);
+                }
+            }
+            set { completedBasePieceHistory = value; }
+        }
+
+        [ProtoIgnore]
+        private Dictionary<string, BasePiece> basePiecesByGuid { get; set; } = new Dictionary<string, BasePiece>();
+
+        [ProtoIgnore]
+        private List<BasePiece> completedBasePieceHistory { get; set; } = new List<BasePiece>();
 
         public void AddBasePiece(BasePiece basePiece)
         {
-            BasePiecesByGuid.Add(basePiece.Guid, basePiece);
+            lock(basePiecesByGuid)
+            {
+                basePiecesByGuid.Add(basePiece.Guid, basePiece);
+            }
         }
 
         public void BasePieceConstructionAmountChanged(string guid, float constructionAmount)
         {
             BasePiece basePiece;
 
-            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            lock (basePiecesByGuid)
             {
-                basePiece.ConstructionAmount = constructionAmount;
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                {
+                    basePiece.ConstructionAmount = constructionAmount;
+                }
             }
         }
 
@@ -28,18 +65,24 @@ namespace NitroxServer.GameLogic.Bases
         {
             BasePiece basePiece;
 
-            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            lock (basePiecesByGuid)
             {
-                basePiece.ConstructionAmount = 1.0f;
-                basePiece.ConstructionCompleted = true;
-                basePiece.NewBaseGuid = newlyCreatedParentGuid;
-
-                if (newlyCreatedParentGuid.IsPresent())
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
                 {
-                    basePiece.ParentGuid = Optional<string>.Empty();
-                }
+                    basePiece.ConstructionAmount = 1.0f;
+                    basePiece.ConstructionCompleted = true;
+                    basePiece.NewBaseGuid = newlyCreatedParentGuid;
 
-                CompletedBasePieceHistory.Add(basePiece);
+                    if (newlyCreatedParentGuid.IsPresent())
+                    {
+                        basePiece.ParentGuid = Optional<string>.Empty();
+                    }
+
+                    lock(completedBasePieceHistory)
+                    {
+                        completedBasePieceHistory.Add(basePiece);
+                    }
+                }
             }
         }
 
@@ -47,36 +90,52 @@ namespace NitroxServer.GameLogic.Bases
         {
             BasePiece basePiece;
 
-            if(BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            lock (basePiecesByGuid)
             {
-                basePiece.ConstructionAmount = 0.95f;
-                basePiece.ConstructionCompleted = false;
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                {
+                    basePiece.ConstructionAmount = 0.95f;
+                    basePiece.ConstructionCompleted = false;
+                }
             }
         }
 
         public void BasePieceDeconstructionCompleted(string guid)
         {
             BasePiece basePiece;
-
-            if (BasePiecesByGuid.TryGetValue(guid, out basePiece))
+            lock (basePiecesByGuid)
             {
-                CompletedBasePieceHistory.Remove(basePiece);
-                BasePiecesByGuid.Remove(guid);
-            }
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                {
+                    lock(completedBasePieceHistory)
+                    {
+                        completedBasePieceHistory.Remove(basePiece);
+                    }
 
+                    basePiecesByGuid.Remove(guid);
+                }
+            }
         }
 
         public List<BasePiece> GetBasePiecesForNewlyConnectedPlayer()
         {
-            // Play back all completed base pieces first (other pieces have a dependency on these being done)
-            List<BasePiece> basePieces = new List<BasePiece>(CompletedBasePieceHistory);
-
-            // Play back pieces that may not be completed yet.
-            foreach(BasePiece basePiece in BasePiecesByGuid.Values)
+            List<BasePiece> basePieces;
+            
+            lock(completedBasePieceHistory)
             {
-                if(!basePieces.Contains(basePiece))
+                // Play back all completed base pieces first (other pieces have a dependency on these being done)
+                basePieces = new List<BasePiece>(completedBasePieceHistory);
+            }
+
+            lock(basePiecesByGuid)
+            {
+                // Play back pieces that may not be completed yet.
+                foreach (BasePiece basePiece in basePiecesByGuid.Values)
                 {
-                    basePieces.Add(basePiece);
+                    if (!basePieces.Contains(basePiece))
+                    {
+                        basePieces.Add(basePiece);
+                    }
                 }
             }
 

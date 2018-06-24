@@ -17,10 +17,35 @@ namespace NitroxServer.GameLogic.Entities
         }
 
         [ProtoMember(1)]
-        public Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell { get; set; } = new Dictionary<AbsoluteEntityCell, EntityList>();
-        
+        public Dictionary<AbsoluteEntityCell, EntityList> SerializableEntitiesByAbsoluteCell {
+            get
+            {
+                lock (entitiesByAbsoluteCell)
+                {
+                    return new Dictionary<AbsoluteEntityCell, EntityList>(entitiesByAbsoluteCell);
+                }
+            }
+            set { entitiesByAbsoluteCell = value; }
+        }
+
         [ProtoMember(2)]
-        public Dictionary<string, Entity> entitiesByGuid { get; set; } = new Dictionary<string, Entity>();
+        public Dictionary<string, Entity> SerializableEntitiesByGuid
+        {
+            get
+            {
+                lock (entitiesByGuid)
+                {
+                    return new Dictionary<string, Entity>(entitiesByGuid);
+                }
+            }
+            set { entitiesByGuid = value; }
+        }
+
+        [ProtoIgnore]
+        private Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell { get; set; } = new Dictionary<AbsoluteEntityCell, EntityList>();
+        
+        [ProtoIgnore]
+        private Dictionary<string, Entity> entitiesByGuid { get; set; } = new Dictionary<string, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
