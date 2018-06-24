@@ -125,6 +125,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SignChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateStateProvider.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
+    <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\NoTechTypeEntitySpawner.cs" />
