@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using System;
 using System.Reflection;
 using UnityEngine;
 
@@ -23,11 +24,15 @@ namespace NitroxClient.MonoBehaviours
      */
     public class ThrottledBuilder : MonoBehaviour
     {
+        public static ThrottledBuilder main;
+
+        public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
 
         public void Start()
         {
+            main = this;
             buildEvents = NitroxServiceLocator.LocateService<BuildThrottlingQueue>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         }
@@ -39,7 +44,14 @@ namespace NitroxClient.MonoBehaviours
                 return;
             }
 
+            bool queueHadItems = (buildEvents.Count > 0);
+
             ProcessBuildEventsUntilFrameBlocked();
+
+            if(queueHadItems && buildEvents.Count == 0)
+            {
+                QueueDrained(this, new EventArgs());
+            }
         }
 
         private void ProcessBuildEventsUntilFrameBlocked()

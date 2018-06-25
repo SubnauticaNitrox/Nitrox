@@ -11,6 +11,7 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.GameLogic.Items;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -32,6 +33,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(World), world },
                 {typeof(BaseData), world.BaseData },
                 {typeof(VehicleData), world.VehicleData },
+                {typeof(InventoryData), world.InventoryData },
                 {typeof(PlayerManager), playerManager },
                 {typeof(TimeKeeper), world.TimeKeeper },
                 {typeof(SimulationOwnership), world.SimulationOwnership },

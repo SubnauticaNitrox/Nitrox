@@ -4,6 +4,7 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.EntityData = world.EntityData;
                 persistedData.BaseData = world.BaseData;
                 persistedData.VehicleData = world.VehicleData;
+                persistedData.InventoryData = world.InventoryData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -62,6 +64,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.EntityData, 
                                           persistedData.BaseData,
                                           persistedData.VehicleData,
+                                          persistedData.InventoryData,
                                           persistedData.ParsedBatchCells);
                 
                 return Optional<World>.Of(world);
@@ -92,13 +95,14 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new List<Int3>());
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new List<Int3>());
         }
 
         private World CreateWorld(DateTime serverStartTime, 
                                   EntityData entityData, 
                                   BaseData baseData,
                                   VehicleData vehicleData,
+                                  InventoryData inventoryData,
                                   List<Int3> ParsedBatchCells)
         {
             World world = new World();
@@ -111,6 +115,7 @@ namespace NitroxServer.Serialization.World
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
             world.VehicleData = vehicleData;
+            world.InventoryData = inventoryData;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);

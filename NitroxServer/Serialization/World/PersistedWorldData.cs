@@ -1,5 +1,6 @@
 ﻿using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
+using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
 using System;
@@ -28,13 +29,17 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(6)]
         public VehicleData VehicleData { get; set; }
 
+        [ProtoMember(7)]
+        public InventoryData InventoryData { get; set; }
+          
         public bool IsValid()
         {
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (EntityData != null) &&
                    (BaseData != null) &&
-                   (VehicleData != null);
+                   (VehicleData != null) &&
+                   (InventoryData != null);
         }
     }
 }

@@ -73,6 +73,8 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
@@ -97,6 +99,7 @@
     <Compile Include="GameLogic\Entities\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\EventTriggerer.cs" />
+    <Compile Include="GameLogic\Items\InventoryData.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />

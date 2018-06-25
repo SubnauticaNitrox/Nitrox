@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         {
             if (item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().RemoveItem(item.item, __instance.tr.parent.gameObject);
+                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr.parent.gameObject);
             }
         }
 
