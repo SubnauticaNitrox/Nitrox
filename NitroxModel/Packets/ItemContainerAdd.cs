@@ -1,15 +1,14 @@
 ﻿using System;
-using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemContainerAdd : DeferrablePacket
+    public class ItemContainerAdd : Packet
     {
         public string OwnerGuid { get; }
         public byte[] ItemData { get; }
 
-        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon, ITEM_INTERACTION_CELL_LEVEL)
+        public ItemContainerAdd(string ownerGuid, byte[] itemData)
         {
             OwnerGuid = ownerGuid;
             ItemData = itemData;

@@ -17,10 +17,9 @@ namespace NitroxClient.GameLogic
         public void AddItem(Pickupable pickupable, GameObject owner)
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
-            Vector3 ownerPos = owner.transform.position;
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            ItemContainerAdd add = new ItemContainerAdd(ownerGuid, bytes, ownerPos);
+            ItemContainerAdd add = new ItemContainerAdd(ownerGuid, bytes);
             packetSender.Send(add);
         }
 
@@ -28,9 +27,8 @@ namespace NitroxClient.GameLogic
         {
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             string ownerGuid = GuidHelper.GetGuid(owner);
-            Vector3 ownerPos = owner.transform.position;
 
-            ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid, ownerPos);
+            ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
             packetSender.Send(remove);
         }
     }
