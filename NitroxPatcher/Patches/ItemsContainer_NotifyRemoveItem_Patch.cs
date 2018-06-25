@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches
 {
@@ -13,10 +14,17 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
-            if (item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
+            if (!localPlayer.ClosingGame)
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr.parent.gameObject);
+                if (item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
+                {
+                    NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr.parent.gameObject);
+                }
             }
+
+            Log.Info("NotifyRemoveItem ClosingGame:" + localPlayer.ClosingGame.ToString());
         }
 
         public override void Patch(HarmonyInstance harmony)

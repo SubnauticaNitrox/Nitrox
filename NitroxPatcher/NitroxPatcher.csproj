@@ -84,6 +84,7 @@
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
+    <Compile Include="Patches\LargeWorldOctreeCompiler_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />

@@ -16,6 +16,7 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
 
+        public bool ClosingGame { get; set; }
         public GameObject Body { get; }
         public GameObject PlayerModel { get; }
         public GameObject BodyPrototype { get; }
