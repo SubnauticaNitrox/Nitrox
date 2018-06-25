@@ -10,6 +10,7 @@ using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Bases;
+using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -28,7 +29,9 @@ namespace NitroxServer.Communication.Packets
             
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {
+                {typeof(World), world },
                 {typeof(BaseData), world.BaseData },
+                {typeof(VehicleData), world.VehicleData },
                 {typeof(PlayerManager), playerManager },
                 {typeof(TimeKeeper), world.TimeKeeper },
                 {typeof(SimulationOwnership), world.SimulationOwnership },

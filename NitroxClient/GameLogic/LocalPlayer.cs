@@ -2,7 +2,7 @@
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.ServerModel;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
@@ -39,15 +39,13 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerStats);
         }
 
-        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> opVehicle, Optional<string> opSubGuid)
+        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> vehicle, Optional<string> opSubGuid)
         {
             Movement movement;
 
-            if (opVehicle.IsPresent())
+            if (vehicle.IsPresent())
             {
-                VehicleModel vehicle = opVehicle.Get();
-                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.AngularVelocity, vehicle.TechType, vehicle.Guid, vehicle.SteeringWheelYaw, vehicle.SteeringWheelPitch,
-                    vehicle.AppliedThrottle);
+                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Get());
             }
             else
             {

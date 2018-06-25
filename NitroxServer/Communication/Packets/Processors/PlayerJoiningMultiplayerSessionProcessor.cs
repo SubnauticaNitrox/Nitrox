@@ -2,7 +2,7 @@
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Bases;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -11,15 +11,15 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly TimeKeeper timeKeeper;
         private readonly EscapePodManager escapePodManager;
         private readonly PlayerManager playerManager;
-        private readonly BaseData baseData;
+        private readonly World world;
 
         public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager,
-            PlayerManager playerManager, BaseData baseData)
+            PlayerManager playerManager, World world)
         {
             this.timeKeeper = timeKeeper;
             this.escapePodManager = escapePodManager;
             this.playerManager = playerManager;
-            this.baseData = baseData;
+            this.world = world;
         }
 
         public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
@@ -35,7 +35,8 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(baseData.GetBasePiecesForNewlyConnectedPlayer());
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.BaseData.GetBasePiecesForNewlyConnectedPlayer(), 
+                                                                        world.VehicleData.GetVehiclesForInitialSync());
             player.SendPacket(initialPlayerSync);
 
             foreach (Player otherPlayer in playerManager.GetPlayers())

@@ -42,10 +42,10 @@ namespace NitroxServer.GameLogic.Entities
         }
 
         [ProtoIgnore]
-        private Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell { get; set; } = new Dictionary<AbsoluteEntityCell, EntityList>();
+        private Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, EntityList>();
         
         [ProtoIgnore]
-        private Dictionary<string, Entity> entitiesByGuid { get; set; } = new Dictionary<string, Entity>();
+        private Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {

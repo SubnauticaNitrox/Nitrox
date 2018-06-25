@@ -1,38 +1,23 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public TechType TechType { get; }
-        public Vector3 AngularVelocity { get; }
-        public string Guid { get; }
-        public float SteeringWheelYaw { get; }
-        public float SteeringWheelPitch { get; }
-        public bool AppliedThrottle { get; }
+        public VehicleModel Vehicle { get; }
 
-        public VehicleMovement(string playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, string guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<string>.Empty())
+        public VehicleMovement(string playerId, VehicleModel vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
         {
-            TechType = techType;
-            AngularVelocity = angularVelocity;
-            Guid = guid;
-
-            SteeringWheelYaw = steeringWheelYaw;
-            SteeringWheelPitch = steeringWheelPitch;
-            AppliedThrottle = appliedThrottle;
+            Vehicle = vehicle;
         }
 
         public override string ToString()
         {
-            return "[VehicleMovement - TechType: " + TechType +
-                " AngularVelocity: " + AngularVelocity +
-                " Guid: " + Guid +
-                " SteeringWheelYaw: " + SteeringWheelYaw +
-                " SteeringWheelPitch: " + SteeringWheelPitch +
-                " AppliedThrottle: " + AppliedThrottle +
+            return "[VehicleMovement - vehicle: " + Vehicle +
                 "]\n\t" + base.ToString();
         }
     }

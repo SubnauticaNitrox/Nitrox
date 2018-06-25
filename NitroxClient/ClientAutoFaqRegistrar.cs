@@ -67,6 +67,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<MobileVehicleBay>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)

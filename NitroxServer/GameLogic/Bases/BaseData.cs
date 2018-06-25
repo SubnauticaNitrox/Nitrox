@@ -35,10 +35,10 @@ namespace NitroxServer.GameLogic.Bases
         }
 
         [ProtoIgnore]
-        private Dictionary<string, BasePiece> basePiecesByGuid { get; set; } = new Dictionary<string, BasePiece>();
+        private Dictionary<string, BasePiece> basePiecesByGuid = new Dictionary<string, BasePiece>();
 
         [ProtoIgnore]
-        private List<BasePiece> completedBasePieceHistory { get; set; } = new List<BasePiece>();
+        private List<BasePiece> completedBasePieceHistory = new List<BasePiece>();
 
         public void AddBasePiece(BasePiece basePiece)
         {

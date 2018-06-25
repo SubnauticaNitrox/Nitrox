@@ -2,7 +2,7 @@
 using System.Timers;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.ServerModel;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
 

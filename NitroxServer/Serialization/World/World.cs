@@ -2,6 +2,7 @@
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Serialization.World
 {
@@ -17,5 +18,6 @@ namespace NitroxServer.Serialization.World
         public EntityManager EntityManager { get; set; }
         public EventTriggerer EventTriggerer { get; set; }
         public BaseData BaseData { get; set; }
+        public VehicleData VehicleData { get; set; }
     }
 }

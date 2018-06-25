@@ -65,7 +65,7 @@
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="DataStructures\ServerModel\VehicleModel.cs" />
+    <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />

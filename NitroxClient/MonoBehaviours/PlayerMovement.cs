@@ -1,7 +1,7 @@
 ﻿using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
-using NitroxModel.DataStructures.ServerModel;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;

@@ -187,6 +187,7 @@
     <Compile Include="GameLogic\Spawning\DefaultEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
+    <Compile Include="GameLogic\Vehicles.cs" />
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />

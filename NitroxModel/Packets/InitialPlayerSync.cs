@@ -8,10 +8,12 @@ namespace NitroxModel.Packets
     public class InitialPlayerSync : Packet
     {
         public List<BasePiece> BasePieces { get; }
+        public List<VehicleModel> Vehicles { get; }
 
-        public InitialPlayerSync(List<BasePiece> basePieces)
+        public InitialPlayerSync(List<BasePiece> basePieces, List<VehicleModel> vehicles)
         {
             BasePieces = basePieces;
+            Vehicles = vehicles;
         }
 
         public override string ToString()

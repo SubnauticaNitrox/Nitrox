@@ -12,7 +12,19 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public class BatchEntitySpawner : IEntitySpawner
     {
-        public HashSet<Int3> ParsedBatches { get; }
+        public List<Int3> SerializableParsedBatches
+        {
+            get
+            {
+                lock (parsedBatches)
+                {
+                    return new List<Int3>(parsedBatches);
+                }
+            }
+            set { parsedBatches = new HashSet<Int3>(value); }
+        }
+
+        private HashSet<Int3> parsedBatches = new HashSet<Int3>();
 
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
@@ -20,9 +32,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly Random random = new Random();
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
-        public BatchEntitySpawner(ResourceAssets resourceAssets, HashSet<Int3> loadedPreviousParsed)
+        public BatchEntitySpawner(ResourceAssets resourceAssets, List<Int3> loadedPreviousParsed)
         {
-            ParsedBatches = loadedPreviousParsed;
+            parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
             worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
             batchCellsParser = new BatchCellsParser();
 
@@ -35,13 +47,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         public List<Entity> LoadUnspawnedEntities(Int3 batchId)
         {
-            lock (ParsedBatches)
+            lock (parsedBatches)
             {
-                if (ParsedBatches.Contains(batchId))
+                if (parsedBatches.Contains(batchId))
                 {
                     return new List<Entity>();
                 }
-                ParsedBatches.Add(batchId);
+                parsedBatches.Add(batchId);
             }
 
             Log.Debug("Batch {0} not parsed yet; parsing...", batchId);

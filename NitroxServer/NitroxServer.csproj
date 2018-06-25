@@ -73,6 +73,7 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="GameLogic\PlayerManager.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
+    <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
