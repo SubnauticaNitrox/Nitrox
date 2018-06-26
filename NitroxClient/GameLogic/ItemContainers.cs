@@ -12,10 +12,12 @@ namespace NitroxClient.GameLogic
     public class ItemContainers
     {
         private readonly IPacketSender packetSender;
+        private readonly LocalPlayer localPlayer;
 
-        public ItemContainers(IPacketSender packetSender)
+        public ItemContainers(IPacketSender packetSender, LocalPlayer localPlayer)
         {
             this.packetSender = packetSender;
+            this.localPlayer = localPlayer;
         }
 
         public void BroadcastItemAdd(Pickupable pickupable, GameObject owner)

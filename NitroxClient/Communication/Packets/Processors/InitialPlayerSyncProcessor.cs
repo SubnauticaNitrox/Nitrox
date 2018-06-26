@@ -1,13 +1,17 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -26,9 +30,19 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
+            SetPlayerInventoryGuid(packet.PlayerInventoryGuid);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
+        }
+
+        private void SetPlayerInventoryGuid(string guid)
+        {
+            Log.Info("Setting player inventory guid to: " + guid);
+            GameObject player = GameObjectHelper.RequireGameObject("Player");
+            Inventory inventory = player.RequireComponentInChildren<Inventory>();
+            ItemsContainer itemsContainer = inventory.container;
+            GuidHelper.SetNewGuid(itemsContainer.tr.gameObject, guid);
         }
 
         private void SpawnBasePieces(List<BasePiece> basePieces)

@@ -5,6 +5,8 @@ using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Tcp;
+using NitroxServer.GameLogic.Players;
+using static NitroxServer.GameLogic.Players.PlayerData;
 
 namespace NitroxServer.GameLogic
 {
@@ -14,6 +16,12 @@ namespace NitroxServer.GameLogic
         private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
+        private readonly PlayerData playerData;
+
+        public PlayerManager(PlayerData playerData)
+        {
+            this.playerData = playerData;
+        }
 
         public List<Player> GetPlayers()
         {
@@ -69,11 +77,13 @@ namespace NitroxServer.GameLogic
                 PlayerContext playerContext = reservations[reservationKey];
                 Validate.NotNull(playerContext);
 
-                Player player = new Player(playerContext, connection);
+                PersistedPlayerData persistedPlayerData = playerData.GetPersistedData(playerContext.PlayerName);
+
+                Player player = new Player(playerContext, connection, persistedPlayerData.InventoryGuid);
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);
-
+                
                 return player;
             }
         }

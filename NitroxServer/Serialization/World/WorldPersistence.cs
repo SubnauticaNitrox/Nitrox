@@ -5,6 +5,7 @@ using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Items;
+using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -30,6 +31,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.BaseData = world.BaseData;
                 persistedData.VehicleData = world.VehicleData;
                 persistedData.InventoryData = world.InventoryData;
+                persistedData.PlayerData = world.PlayerData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -65,6 +67,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.BaseData,
                                           persistedData.VehicleData,
                                           persistedData.InventoryData,
+                                          persistedData.PlayerData,
                                           persistedData.ParsedBatchCells);
                 
                 return Optional<World>.Of(world);
@@ -95,7 +98,7 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new List<Int3>());
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new List<Int3>());
         }
 
         private World CreateWorld(DateTime serverStartTime, 
@@ -103,6 +106,7 @@ namespace NitroxServer.Serialization.World
                                   BaseData baseData,
                                   VehicleData vehicleData,
                                   InventoryData inventoryData,
+                                  PlayerData playerData,
                                   List<Int3> ParsedBatchCells)
         {
             World world = new World();
@@ -110,12 +114,13 @@ namespace NitroxServer.Serialization.World
             world.TimeKeeper.ServerStartTime = serverStartTime;
 
             world.SimulationOwnership = new SimulationOwnership();
-            world.PlayerManager = new PlayerManager();
+            world.PlayerManager = new PlayerManager(playerData);
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
             world.VehicleData = vehicleData;
             world.InventoryData = inventoryData;
+            world.PlayerData = playerData;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);
