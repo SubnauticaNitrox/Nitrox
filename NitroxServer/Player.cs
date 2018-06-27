@@ -17,14 +17,12 @@ namespace NitroxServer
         public PlayerContext PlayerContext { get; }
         public string Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
-        public string InventoryGuid { get; }
         public Vector3 Position { get; set; }
 
-        public Player(PlayerContext playerContext, Connection connection, string inventoryGuid)
+        public Player(PlayerContext playerContext, Connection connection)
         {
             PlayerContext = playerContext;
             this.connection = connection;
-            InventoryGuid = inventoryGuid;
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)

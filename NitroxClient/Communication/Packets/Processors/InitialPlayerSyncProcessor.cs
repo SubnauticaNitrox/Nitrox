@@ -1,65 +1,72 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
     {
+        private readonly IPacketSender packetSender;
         private readonly BuildThrottlingQueue buildEventQueue;
         private readonly Vehicles vehicles;
         private readonly ItemContainers itemContainers;
+        private readonly EquipmentSlots equipment;
 
-        public InitialPlayerSyncProcessor(BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment)
         {
+            this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.vehicles = vehicles;
             this.itemContainers = itemContainers;
+            this.equipment = equipment;
         }
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetPlayerInventoryGuid(packet.PlayerInventoryGuid);
+            SpawnPlayerEquipment(packet.Equipment);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
         }
 
-        private void SetPlayerInventoryGuid(string guid)
+        private void SpawnPlayerEquipment(List<ItemData> items)
         {
-            Log.Info("Setting player inventory guid to: " + guid);
-            GameObject player = GameObjectHelper.RequireGameObject("Player");
-            Inventory inventory = player.RequireComponentInChildren<Inventory>();
-            ItemsContainer itemsContainer = inventory.container;
-            GuidHelper.SetNewGuid(itemsContainer.tr.gameObject, guid);
+            Log.Info("Received initial sync packet with " + items.Count + " equipment items");
+
+            using (packetSender.Suppress<EquipmentAddItem>())
+            {
+                equipment.AddItems(items);
+            }
         }
 
         private void SpawnBasePieces(List<BasePiece> basePieces)
         {
             Log.Info("Received initial sync packet with " + basePieces.Count + " base pieces");
 
-            foreach (BasePiece basePiece in basePieces)
+            using (packetSender.Suppress<ConstructionAmountChanged>())
+            using (packetSender.Suppress<ConstructionCompleted>())
+            using (packetSender.Suppress<PlaceBasePiece>())
             {
-                buildEventQueue.EnqueueBasePiecePlaced(basePiece);
+                foreach (BasePiece basePiece in basePieces)
+                {
+                    buildEventQueue.EnqueueBasePiecePlaced(basePiece);
 
-                if (basePiece.ConstructionCompleted)
-                {
-                    buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.NewBaseGuid);
-                }
-                else
-                {
-                    buildEventQueue.EnqueueAmountChanged(basePiece.Guid, basePiece.ConstructionAmount);
+                    if (basePiece.ConstructionCompleted)
+                    {
+                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.NewBaseGuid);
+                    }
+                    else
+                    {
+                        buildEventQueue.EnqueueAmountChanged(basePiece.Guid, basePiece.ConstructionAmount);
+                    }
                 }
             }
         }
@@ -82,7 +89,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
 
-            InventoryItemAdder itemAdder = new InventoryItemAdder(itemContainers, inventoryItems);
+            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
             ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
         }
         
@@ -94,11 +101,13 @@ namespace NitroxClient.Communication.Packets.Processors
          */ 
         private class InventoryItemAdder
         {
+            private IPacketSender packetSender;
             private ItemContainers itemContainers;
             private List<ItemData> inventoryItems;
 
-            public InventoryItemAdder(ItemContainers itemContainers, List<ItemData> inventoryItems)
+            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems)
             {
+                this.packetSender = packetSender;
                 this.itemContainers = itemContainers;
                 this.inventoryItems = inventoryItems;
             }
@@ -108,9 +117,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 Log.Info("Initial sync inventory items are clear to be added to inventories");
                 ThrottledBuilder.main.QueueDrained -= AddItemsToInventories;
 
-                foreach (ItemData itemData in inventoryItems)
+                using (packetSender.Suppress<ItemContainerAdd>())
                 {
-                    itemContainers.AddItem(itemData);
+                    foreach (ItemData itemData in inventoryItems)
+                    {
+                        itemContainers.AddItem(itemData);
+                    }
                 }
             }
         }

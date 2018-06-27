@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -16,10 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(EquipmentAddItem packet)
         {
-            GameObject gameObject = SerializationHelper.GetGameObject(packet.ItemBytes);
+            ItemData itemData = packet.ItemData;
+            GameObject gameObject = SerializationHelper.GetGameObject(itemData.SerializedData);
 
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(itemData.ContainerGuid);
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
             if (opEquipment.IsPresent())

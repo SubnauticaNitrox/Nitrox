@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, TARGET_CLASS.GetMethod("get_owner", BindingFlags.Public | BindingFlags.Instance));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_1);
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(EquipmentSlots).GetMethod("Unequip", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(EquipmentSlots).GetMethod("BroadcastUnequip", BindingFlags.Public | BindingFlags.Instance));
                 }
             }
         }
