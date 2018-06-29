@@ -82,7 +82,6 @@
     <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\FreezeTime_Begin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
-    <Compile Include="Patches\IngameMenuQuitConfirmation_OnYes_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
