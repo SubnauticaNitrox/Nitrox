@@ -74,6 +74,10 @@ namespace NitroxServer.Communication.Packets
             {
                 defaultPacketProcessor.ProcessPacket(packet, player);
             }
+            if (packet.GetType().ToString() != "NitroxModel.Packets.Movement")
+            {
+                Log.Info("Packet:" + packet.GetType());
+            }
         }
 
         private void ProcessUnauthenticated(Packet packet, Connection connection)

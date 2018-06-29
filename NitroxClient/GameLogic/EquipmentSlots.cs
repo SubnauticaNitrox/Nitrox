@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace NitroxClient.GameLogic
             EquipmentAddItem equip = new EquipmentAddItem(itemData, slot);
             packetSender.Send(equip);
         }
+
+
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {

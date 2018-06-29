@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches
 {
@@ -13,8 +14,10 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Equipment __instance, bool __result, string slot, InventoryItem newItem)
         {
+            Log.Info("Equipment_AddItem_Patch #########################################################################################################");
             if (__result)
             {
+
                 NitroxServiceLocator.LocateService<EquipmentSlots>().BroadcastEquip(newItem.item, __instance.owner, slot);
             }
         }
