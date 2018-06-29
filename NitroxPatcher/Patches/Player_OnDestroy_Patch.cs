@@ -19,7 +19,6 @@ namespace NitroxPatcher.Patches
         {
             IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             multiplayerSession.Disconnect();
-            Log.Info("Player OnDestroyEvent");
         }
 
         public override void Patch(HarmonyInstance harmony)
@@ -27,3 +26,4 @@ namespace NitroxPatcher.Patches
             PatchPrefix(harmony, TARGET_METHOD);
         }
     }
+}
