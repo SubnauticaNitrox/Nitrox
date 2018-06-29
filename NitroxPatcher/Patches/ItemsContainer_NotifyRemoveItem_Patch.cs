@@ -13,9 +13,13 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
             if (item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr.parent.gameObject);
+                if (!localPlayer.Shutdown)
+                {
+                    NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr.parent.gameObject);
+                }
             }
         }
 
