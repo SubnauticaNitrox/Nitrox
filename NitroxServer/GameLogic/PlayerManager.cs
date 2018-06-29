@@ -77,7 +77,9 @@ namespace NitroxServer.GameLogic
                 PlayerContext playerContext = reservations[reservationKey];
                 Validate.NotNull(playerContext);
 
-                Player player = new Player(playerContext, connection);
+                PersistedPlayerData persistedPlayerData = playerData.GetPersistedData(playerContext.PlayerName);
+
+                Player player = new Player(playerContext, connection, persistedPlayerData.InventoryGuid);
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);

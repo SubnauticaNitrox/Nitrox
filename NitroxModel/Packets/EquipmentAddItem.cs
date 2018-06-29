@@ -1,23 +1,25 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
+﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EquipmentAddItem : Packet
+    public class EquipmentAddItem : DeferrablePacket
     {
-        public ItemData ItemData { get; }
+        public string OwnerGuid { get; }
         public string Slot { get; }
+        public byte[] ItemBytes { get; }
 
-        public EquipmentAddItem(ItemData itemData, string slot)
+        public EquipmentAddItem(string ownerGuid, string slot, byte[] itemBytes, Vector3 ownerPosition) : base(ownerPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
-            ItemData = itemData;
+            OwnerGuid = ownerGuid;
             Slot = slot;
+            ItemBytes = itemBytes;
         }
 
         public override string ToString()
         {
-            return "[EquipmentAddItem ItemData: " + ItemData + "]";
+            return "[EquipmentAddItem OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " Total Item Bytes: " + ItemBytes.Length + "]";
         }
     }
 }
