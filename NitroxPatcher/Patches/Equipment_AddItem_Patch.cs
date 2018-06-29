@@ -14,7 +14,6 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Equipment __instance, bool __result, string slot, InventoryItem newItem)
         {
-            Log.Info("Equipment_AddItem_Patch #########################################################################################################");
             if (__result)
             {
 
