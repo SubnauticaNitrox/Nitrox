@@ -73,8 +73,6 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\EquipmentAddItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />

@@ -1,5 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
+﻿using ProtoBufNet;
+using System;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Players
@@ -22,38 +22,20 @@ namespace NitroxServer.GameLogic.Players
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
         
-        public void AddEquipment(string playerName, ItemData itemData)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquipmentByGuid.Add(itemData.Guid, itemData);
-            }
-        }
-
-        public void RemoveEquipment(string playerName, string guid)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquipmentByGuid.Remove(guid);
-            }
-        }
-
-        public List<ItemData> GetEquipmentForInitialSync(string playerName)
+        public PersistedPlayerData GetPersistedData(string playerName)
         {
             PersistedPlayerData playerPersistedData = null;
 
             lock (playersByPlayerName)
             {
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                if(!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
                 {
                     playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
                 }
-
-                return new List<ItemData>(playerPersistedData.EquipmentByGuid.Values);
             }
-        }
+
+            return playerPersistedData;
+        }        
 
         [ProtoContract]
         public class PersistedPlayerData
@@ -62,7 +44,7 @@ namespace NitroxServer.GameLogic.Players
             public string PlayerName { get; set; }
 
             [ProtoMember(2)]
-            public Dictionary<string, ItemData> EquipmentByGuid { get; set; } = new Dictionary<string, ItemData>();
+            public string InventoryGuid { get; set; }
 
             public PersistedPlayerData()
             {
@@ -71,7 +53,8 @@ namespace NitroxServer.GameLogic.Players
 
             public PersistedPlayerData(string playerName)
             {
-                PlayerName = playerName;
+                this.PlayerName = playerName;
+                this.InventoryGuid = Guid.NewGuid().ToString();
             }
         }
 

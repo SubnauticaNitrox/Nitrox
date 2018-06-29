@@ -1,15 +1,16 @@
 ﻿using System;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EquipmentRemoveItem : Packet
+    public class EquipmentRemoveItem : DeferrablePacket
     {
         public string OwnerGuid { get; }
         public string Slot { get; }
         public string ItemGuid { get; }
 
-        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid)
+        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid, Vector3 ownerPosition) : base(ownerPosition, ITEM_INTERACTION_CELL_LEVEL)
         {
             OwnerGuid = ownerGuid;
             Slot = slot;

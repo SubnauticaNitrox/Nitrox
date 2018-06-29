@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         {
             if (__result)
             {
-                NitroxServiceLocator.LocateService<EquipmentSlots>().BroadcastEquip(newItem.item, __instance.owner, slot);
+                NitroxServiceLocator.LocateService<EquipmentSlots>().Equip(newItem.item, __instance.owner, slot);
             }
         }
 
