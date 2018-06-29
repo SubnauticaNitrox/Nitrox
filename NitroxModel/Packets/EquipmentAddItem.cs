@@ -6,10 +6,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EquipmentAddItem : Packet
     {
-        public ItemData ItemData { get; }
+        public ItemEquipment ItemData { get; }
         public string Slot { get; }
 
-        public EquipmentAddItem(ItemData itemData, string slot)
+        public EquipmentAddItem(ItemEquipment itemData, string slot)
         {
             ItemData = itemData;
             Slot = slot;

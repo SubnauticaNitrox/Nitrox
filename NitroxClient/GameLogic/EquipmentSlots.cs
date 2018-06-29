@@ -2,9 +2,12 @@
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using System.Collections.Generic;
 using UnityEngine;
+using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
@@ -23,7 +26,7 @@ namespace NitroxClient.GameLogic
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            ItemData itemData = new ItemData(ownerGuid, itemGuid, bytes);
+            ItemEquipment itemData = new ItemEquipment(ownerGuid, itemGuid, bytes,slot);
             EquipmentAddItem equip = new EquipmentAddItem(itemData, slot);
             packetSender.Send(equip);
         }
@@ -37,15 +40,25 @@ namespace NitroxClient.GameLogic
             packetSender.Send(removeEquipment);
         }
 
-        public void AddItems(List<ItemData> items)
+        public void AddItems(List<ItemEquipment> items)
         {
             ItemsContainer container = Inventory.Get().container;
 
-            foreach (ItemData itemData in items)
+
+            foreach (ItemEquipment itemData in items)
             {
                 GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
                 container.UnsafeAdd(new InventoryItem(pickupable));
+                Equipment equipment = Inventory.Get().equipment;
+                InventoryItem inventoryItem = new InventoryItem(pickupable);
+                inventoryItem.container = equipment;
+                inventoryItem.item.Reparent(equipment.tr);
+                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                itemsBySlot[itemData.Slot] = inventoryItem;
+                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
+                Equipment.SendEquipmentEvent(pickupable, 0, item, itemData.Slot);
+                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { itemData.Slot, inventoryItem });
             }
         }
     }

@@ -22,7 +22,7 @@ namespace NitroxServer.GameLogic.Players
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
         
-        public void AddEquipment(string playerName, ItemData itemData)
+        public void AddEquipment(string playerName, ItemEquipment itemData)
         {
             lock (playersByPlayerName)
             {
@@ -40,7 +40,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public List<ItemData> GetEquipmentForInitialSync(string playerName)
+        public List<ItemEquipment> GetEquipmentForInitialSync(string playerName)
         {
             PersistedPlayerData playerPersistedData = null;
 
@@ -51,7 +51,7 @@ namespace NitroxServer.GameLogic.Players
                     playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
                 }
 
-                return new List<ItemData>(playerPersistedData.EquipmentByGuid.Values);
+                return new List<ItemEquipment>(playerPersistedData.EquipmentByGuid.Values);
             }
         }
 
@@ -62,7 +62,7 @@ namespace NitroxServer.GameLogic.Players
             public string PlayerName { get; set; }
 
             [ProtoMember(2)]
-            public Dictionary<string, ItemData> EquipmentByGuid { get; set; } = new Dictionary<string, ItemData>();
+            public Dictionary<string, ItemEquipment> EquipmentByGuid { get; set; } = new Dictionary<string, ItemEquipment>();
 
             public PersistedPlayerData()
             {

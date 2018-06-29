@@ -7,12 +7,12 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet
     {
-        public List<ItemData> Equipment { get; }
+        public List<ItemEquipment> Equipment { get; }
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
 
-        public InitialPlayerSync(List<ItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
+        public InitialPlayerSync(List<ItemEquipment> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
         {
             Equipment = equipment;
             BasePieces = basePieces;
