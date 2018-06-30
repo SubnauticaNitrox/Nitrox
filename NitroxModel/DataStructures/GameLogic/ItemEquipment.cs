@@ -5,31 +5,19 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class ItemEquipment
+    public class EquippedItemData : ItemData
     {
         [ProtoMember(1)]
-        public string ContainerGuid { get; }
-
-        [ProtoMember(2)]
-        public string Guid { get; }
-
-        [ProtoMember(3)]
-        public byte[] SerializedData { get; }
-
-        [ProtoMember(4)]
         public string Slot { get; }
 
-        public ItemEquipment(string containerGuid, string guid, byte[] serializedData, string slot)
+        public EquippedItemData(string containerGuid, string guid, byte[] serializedData, string slot) : base(containerGuid, guid, serializedData)
         {
             Slot = slot;
-            ContainerGuid = containerGuid;
-            Guid = guid;
-            SerializedData = serializedData;
         }
 
         public override string ToString()
         {
-            return "[ItemDataEquipment ContainerGuid: " + ContainerGuid + "Guid: " + Guid + " Slot: " + Slot + "]";
+            return "[EquippedItemData ContainerGuid: " + ContainerGuid + "Guid: " + Guid + " Slot: " + Slot + "]";
         }
     }
 }

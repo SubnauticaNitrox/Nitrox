@@ -6,18 +6,16 @@ namespace NitroxModel.Packets
     [Serializable]
     public class EquipmentAddItem : Packet
     {
-        public ItemEquipment ItemData { get; }
-        public string Slot { get; }
+        public EquippedItemData EquippedItemData { get; }
 
-        public EquipmentAddItem(ItemEquipment itemData, string slot)
+        public EquipmentAddItem(EquippedItemData equippedItemData)
         {
-            ItemData = itemData;
-            Slot = slot;
+            EquippedItemData = equippedItemData;
         }
 
         public override string ToString()
         {
-            return "[EquipmentAddItem ItemData: " + ItemData + "]";
+            return "[EquipmentAddItem EquippedItemData: " + EquippedItemData + "]";
         }
     }
 }

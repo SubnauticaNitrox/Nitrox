@@ -17,11 +17,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(EquipmentAddItem packet)
         {
-            ItemEquipment itemData = packet.ItemData;
-            GameObject gameObject = SerializationHelper.GetGameObject(itemData.SerializedData);
+            EquippedItemData equippedItemData = packet.EquippedItemData;
+            GameObject gameObject = SerializationHelper.GetGameObject(equippedItemData.SerializedData);
 
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-            GameObject owner = GuidHelper.RequireObjectFrom(itemData.ContainerGuid);
+            GameObject owner = GuidHelper.RequireObjectFrom(equippedItemData.ContainerGuid);
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
             if (opEquipment.IsPresent())
@@ -32,11 +32,11 @@ namespace NitroxClient.Communication.Packets.Processors
                 inventoryItem.item.Reparent(equipment.tr);
 
                 Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                itemsBySlot[packet.Slot] = inventoryItem;
+                itemsBySlot[equippedItemData.Slot] = inventoryItem;
 
                 equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
-                Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, packet.Slot);
-                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { packet.Slot, inventoryItem });
+                Equipment.SendEquipmentEvent(pickupable, EQUIP_EVENT_TYPE_ID, owner, equippedItemData.Slot);
+                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { equippedItemData.Slot, inventoryItem });
             }
             else
             {
