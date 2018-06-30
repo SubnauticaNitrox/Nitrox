@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -9,6 +10,8 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -31,10 +34,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
-            SpawnPlayerEquipment(packet.EquippedItems);
+            SetInventoryGuid(packet.InventoryGuid);
+            SpawnPlayerEquipment(packet.Equipment);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
+            SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
+        }
+
+        private void SetInventoryGuid(string inventoryguid)
+        {
+            GuidHelper.SetNewGuid(Inventory.Get().container.tr.root.gameObject, inventoryguid);
+            Log.Info("Received initial sync Player InventoryGuid: " + inventoryguid + "Container Name" + Inventory.Get().container.tr.name);
         }
 
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
@@ -78,6 +89,23 @@ namespace NitroxClient.Communication.Packets.Processors
             foreach (VehicleModel vehicle in vehicleModels)
             {
                 vehicles.UpdateVehiclePosition(vehicle, Optional<RemotePlayer>.Empty());
+            }
+        }
+
+        private void SpawnInventoryItemsPlayer(string playerGuid,List<ItemData> inventoryItems)
+        {
+            foreach (ItemData itemdata in inventoryItems)
+            {
+                if (itemdata.ContainerGuid == playerGuid)
+                {
+                    GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                    Pickupable pickupable = item.RequireComponent<Pickupable>();
+                    ItemsContainer container = Inventory.Get().container;
+                    InventoryItem inventoryItem = new InventoryItem(pickupable);
+                    inventoryItem.container = container;
+                    inventoryItem.item.Reparent(container.tr);
+                    container.UnsafeAdd(inventoryItem);
+                }
             }
         }
 
