@@ -35,7 +35,8 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.PlayerData.Inventory(player.Name), 
+                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
                                                                         world.BaseData.GetBasePiecesForNewlyConnectedPlayer(), 
                                                                         world.VehicleData.GetVehiclesForInitialSync(),
                                                                         world.InventoryData.GetAllItemsForInitialSync());
