@@ -7,14 +7,14 @@ namespace NitroxModel.Packets
     [Serializable]
     public class InitialPlayerSync : Packet
     {
-        public List<ItemEquipment> Equipment { get; }
+        public List<EquippedItemData> EquippedItems { get; }
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
 
-        public InitialPlayerSync(List<ItemEquipment> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
+        public InitialPlayerSync(List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
         {
-            Equipment = equipment;
+            EquippedItems = equipment;
             BasePieces = basePieces;
             Vehicles = vehicles;
             InventoryItems = inventoryItems;
@@ -22,7 +22,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[InitialPlayerSync - Equipment: " + Equipment + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + "]";
+            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + "]";
         }
     }
 }

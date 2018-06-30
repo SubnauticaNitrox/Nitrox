@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(EquipmentAddItem packet, Player player)
         {
-            playerData.AddEquipment(player.Name, packet.ItemData);
+            playerData.AddEquipment(player.Name, packet.EquippedItemData);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

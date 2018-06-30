@@ -31,19 +31,19 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
-            SpawnPlayerEquipment(packet.Equipment);
+            SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
         }
 
-        private void SpawnPlayerEquipment(List<ItemEquipment> items)
+        private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
-            Log.Info("Received initial sync packet with " + items.Count + " equipment items");
+            Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
 
             using (packetSender.Suppress<EquipmentAddItem>())
             {
-                equipment.AddItems(items);
+                equipment.AddItems(equippedItems);
             }
         }
 
