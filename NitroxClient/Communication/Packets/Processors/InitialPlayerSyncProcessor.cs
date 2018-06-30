@@ -37,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
         }
 
-        private void SpawnPlayerEquipment(List<ItemData> items)
+        private void SpawnPlayerEquipment(List<ItemEquipment> items)
         {
             Log.Info("Received initial sync packet with " + items.Count + " equipment items");
 

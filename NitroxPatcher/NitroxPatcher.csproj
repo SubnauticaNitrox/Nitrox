@@ -93,6 +93,7 @@
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
+    <Compile Include="Patches\Player_OnDestroy_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
     <Compile Include="Patches\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />

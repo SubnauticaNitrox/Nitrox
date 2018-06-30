@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(EquipmentAddItem packet)
         {
-            ItemData itemData = packet.ItemData;
+            ItemEquipment itemData = packet.ItemData;
             GameObject gameObject = SerializationHelper.GetGameObject(itemData.SerializedData);
 
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
