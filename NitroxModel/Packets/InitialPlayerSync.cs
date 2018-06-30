@@ -11,13 +11,16 @@ namespace NitroxModel.Packets
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
+        public string InventoryGuid { get; }
 
-        public InitialPlayerSync(List<ItemEquipment> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
+        public InitialPlayerSync(string inventoryGuid, List<ItemEquipment> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems)
         {
+            InventoryGuid = inventoryGuid;
             Equipment = equipment;
             BasePieces = basePieces;
             Vehicles = vehicles;
             InventoryItems = inventoryItems;
+            
         }
 
         public override string ToString()
