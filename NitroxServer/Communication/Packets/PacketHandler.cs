@@ -34,6 +34,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(World), world },
                 {typeof(PlayerData), world.PlayerData },
                 {typeof(BaseData), world.BaseData },
+                {typeof(BaseSign), world.SignData },
                 {typeof(VehicleData), world.VehicleData },
                 {typeof(InventoryData), world.InventoryData },
                 {typeof(PlayerManager), playerManager },
