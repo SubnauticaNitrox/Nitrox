@@ -8,27 +8,8 @@ namespace NitroxServer.GameLogic.Entities
 {
     [ProtoContract]
     public class EntityData
-    {
-        [ProtoContract]
-        public class EntityList
-        {
-            [ProtoMember(1)]
-            public List<Entity> Items { get; set; } = new List<Entity>();
-        }
-
+    {        
         [ProtoMember(1)]
-        public Dictionary<AbsoluteEntityCell, EntityList> SerializableEntitiesByAbsoluteCell {
-            get
-            {
-                lock (entitiesByAbsoluteCell)
-                {
-                    return new Dictionary<AbsoluteEntityCell, EntityList>(entitiesByAbsoluteCell);
-                }
-            }
-            set { entitiesByAbsoluteCell = value; }
-        }
-
-        [ProtoMember(2)]
         public Dictionary<string, Entity> SerializableEntitiesByGuid
         {
             get
@@ -38,11 +19,26 @@ namespace NitroxServer.GameLogic.Entities
                     return new Dictionary<string, Entity>(entitiesByGuid);
                 }
             }
-            set { entitiesByGuid = value; }
+            set
+            {
+                entitiesByGuid = value;
+
+                foreach(Entity entity in entitiesByGuid.Values)
+                {
+                    List<Entity> absoluteEntityCellEntities = null;
+
+                    if(!entitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out absoluteEntityCellEntities))
+                    {
+                        absoluteEntityCellEntities = entitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<Entity>();
+                    }
+
+                    absoluteEntityCellEntities.Add(entity);
+                }
+            }
         }
 
         [ProtoIgnore]
-        private Dictionary<AbsoluteEntityCell, EntityList> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, EntityList>();
+        private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
         
         [ProtoIgnore]
         private Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
@@ -97,17 +93,17 @@ namespace NitroxServer.GameLogic.Entities
 
         private List<Entity> EntitiesFromCell(AbsoluteEntityCell absoluteEntityCell)
         {
-            EntityList result;
+            List<Entity> result;
 
             lock (entitiesByAbsoluteCell)
             {
                 if (!entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
                 {
-                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new EntityList();
+                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new List<Entity>();
                 }
             }
 
-            return result.Items;
+            return result;
         }
     }
 }
