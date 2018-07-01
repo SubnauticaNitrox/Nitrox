@@ -36,12 +36,18 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(8)]
         public PlayerData PlayerData { get; set; }
 
+        [ProtoMember(9)]
+        public BaseSign SignData { get; set; }
+
+        
+
         public bool IsValid()
         {
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (EntityData != null) &&
                    (BaseData != null) &&
+                   (SignData != null) &&
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (PlayerData != null);

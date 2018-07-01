@@ -32,6 +32,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.VehicleData = world.VehicleData;
                 persistedData.InventoryData = world.InventoryData;
                 persistedData.PlayerData = world.PlayerData;
+                persistedData.SignData = world.SignData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -65,6 +66,7 @@ namespace NitroxServer.Serialization.World
                 World world = CreateWorld(persistedData.ServerStartTime,
                                           persistedData.EntityData, 
                                           persistedData.BaseData,
+                                          persistedData.SignData,
                                           persistedData.VehicleData,
                                           persistedData.InventoryData,
                                           persistedData.PlayerData,
@@ -98,12 +100,13 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new List<Int3>());
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new BaseSign(), new VehicleData(), new InventoryData(), new PlayerData(), new List<Int3>());
         }
 
         private World CreateWorld(DateTime serverStartTime, 
                                   EntityData entityData, 
                                   BaseData baseData,
+                                  BaseSign signData,
                                   VehicleData vehicleData,
                                   InventoryData inventoryData,
                                   PlayerData playerData,
@@ -118,6 +121,7 @@ namespace NitroxServer.Serialization.World
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
+            world.SignData = signData;
             world.VehicleData = vehicleData;
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;

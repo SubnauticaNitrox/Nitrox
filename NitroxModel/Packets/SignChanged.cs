@@ -21,5 +21,10 @@ namespace NitroxModel.Packets
             Elements = elements;
             Background = backgroundToggle;
         }
+
+        public override string ToString()
+        {
+            return "[SignChanged - NewText: " + NewText + " ColorIndex: " + ColorIndex + " ColorIndex: " + ScaleIndex + " Elements Count: " + Elements.Length + " Background: " + Background + " Guid: " + Guid + "]";
+        }
     }
 }

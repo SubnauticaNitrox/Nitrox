@@ -39,7 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
-            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
+            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, packet.SignData);
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
         }
 
@@ -114,11 +114,11 @@ namespace NitroxClient.Communication.Packets.Processors
          * Items should only be added after all base pieces spawn.  Since base pieces will spawn
          * gradually over multiple frames, we need to wait until that process has completely finished
          */
-        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems)
+        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems,List<SignData> Sing)
         {
-            Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
+            Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items and " + Sing.Count + " Sing");
 
-            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
+            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems, Sing);
             ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
         }
         
@@ -133,12 +133,14 @@ namespace NitroxClient.Communication.Packets.Processors
             private IPacketSender packetSender;
             private ItemContainers itemContainers;
             private List<ItemData> inventoryItems;
+            private List<SignData> singContainer;
 
-            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems)
+            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems, List<SignData> containerSing)
             {
                 this.packetSender = packetSender;
                 this.itemContainers = itemContainers;
                 this.inventoryItems = inventoryItems;
+                this.singContainer = containerSing;
             }
 
             public void AddItemsToInventories(object sender, EventArgs eventArgs)
@@ -151,6 +153,18 @@ namespace NitroxClient.Communication.Packets.Processors
                     foreach (ItemData itemData in inventoryItems)
                     {
                         itemContainers.AddItem(itemData);
+                    }
+
+                    foreach (SignData singData in singContainer)
+                    {
+                        Log.Info("Sign Guid" + singData.Guid);
+                        GameObject gameObject = GuidHelper.RequireObjectFrom(singData.Guid);
+                        uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>();
+                        sign.text = singData.NewText;
+                        sign.colorIndex = singData.ColorIndex;
+                        sign.elementsState = singData.Elements;
+                        sign.scaleIndex = singData.ScaleIndex;
+                        sign.SetBackground(singData.Background);
                     }
                 }
             }

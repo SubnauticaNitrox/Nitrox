@@ -23,5 +23,7 @@ namespace NitroxServer.Serialization.World
         public VehicleData VehicleData { get; set; }
         public InventoryData InventoryData { get; set; }
         public PlayerData PlayerData { get; set; }
+        public BaseSign SignData { get; set; }
+        
     }
 }

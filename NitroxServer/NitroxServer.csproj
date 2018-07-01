@@ -73,6 +73,7 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SignPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
@@ -87,6 +88,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
+    <Compile Include="GameLogic\Bases\BaseSign.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
     <Compile Include="GameLogic\ConnectionAssets.cs" />
     <Compile Include="GameLogic\Entities\EntityData.cs" />
