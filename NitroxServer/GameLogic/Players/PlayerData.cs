@@ -36,20 +36,23 @@ namespace NitroxServer.GameLogic.Players
         {
             lock (playersByPlayerName)
             {
-                PersistedPlayerData playerPersistedData = null;
+                lock (playersByPlayerName)
+                {
+                    PersistedPlayerData playerPersistedData = null;
 
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
+                    if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                    {
+                        playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
+                    }
 
-                if (string.IsNullOrEmpty(playerPersistedData.PlayerInventoryGuid))
-                {
-                    return playerPersistedData.PlayerInventoryGuid = Guid.NewGuid().ToString();
-                }
-                else
-                {
-                    return playerPersistedData.PlayerInventoryGuid;
+                    if (string.IsNullOrEmpty(playerPersistedData.PlayerInventoryGuid))
+                    {
+                        return playerPersistedData.PlayerInventoryGuid = Guid.NewGuid().ToString();
+                    }
+                    else
+                    {
+                        return playerPersistedData.PlayerInventoryGuid;
+                    }
                 }
             }
         }
