@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
+using System;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Players
@@ -28,6 +29,28 @@ namespace NitroxServer.GameLogic.Players
             {
                 PersistedPlayerData playerData = playersByPlayerName[playerName];
                 playerData.EquippedItemsByGuid.Add(equippedItem.Guid, equippedItem);
+            }
+        }
+
+        public string Inventory(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = null;
+
+                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                {
+                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
+                }
+
+                if (string.IsNullOrEmpty(playerPersistedData.PlayerInventoryGuid))
+                {
+                    return playerPersistedData.PlayerInventoryGuid = Guid.NewGuid().ToString();
+                }
+                else
+                {
+                    return playerPersistedData.PlayerInventoryGuid;
+                }
             }
         }
 
@@ -63,6 +86,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(2)]
             public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
+
+            [ProtoMember(3)]
+            public string PlayerInventoryGuid { get; set; }
 
             public PersistedPlayerData()
             {
