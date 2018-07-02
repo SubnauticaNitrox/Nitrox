@@ -86,6 +86,7 @@
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\InitialPlayerSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
@@ -119,6 +120,9 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
@@ -154,6 +158,9 @@
     <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
+    <Compile Include="GameLogic\KnownTechEntry.cs" />
+    <Compile Include="GameLogic\PDAEncyclopediaEntry.cs" />
+    <Compile Include="GameLogic\PDAManagerEntry.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\ILocalNitroxPlayer.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\INitroxPlayer.cs" />
     <Compile Include="GameLogic\Interior.cs" />

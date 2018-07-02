@@ -60,6 +60,8 @@ namespace NitroxClient
             containerBuilder.RegisterType<ItemContainers>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Signs>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Power>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PDAManagerEntry>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PDAEncyclopediaEntry>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SimulationOwnership>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Crafting>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Cyclops>().InstancePerLifetimeScope();
@@ -68,6 +70,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<Terrain>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
         }
 
         private void RegisterPacketProcessors(ContainerBuilder containerBuilder)

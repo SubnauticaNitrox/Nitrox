@@ -20,6 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             baseData.AddBasePiece(packet.BasePiece);
             playerManager.SendPacketToOtherPlayers(packet, player);
+            NitroxModel.Logger.Log.Info(packet.ToString()); //#gitignore
         }
     }
 }

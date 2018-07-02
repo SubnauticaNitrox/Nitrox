@@ -42,6 +42,57 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
+            SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.GetList);
+            SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.GetList);
+            SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.GetList);
+            SetKnownTech(packet.PDASaveData.PDADataknownTech.GetList);
+        }
+
+        private void SetKnownTech(List<TechType> data)
+        {
+            using (packetSender.Suppress<KnownTechEntryAdd>())
+            {
+                foreach (TechType key in data)
+                {
+                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                    KnownTech.Add(key, false);
+                }
+                Log.Info("KnownTech Save:" + data.Count);
+            }
+        }
+
+        private void SetEncyclopediaEntry(List<string> data)
+        {
+            using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
+            {
+                foreach (string key in data)
+                {
+                    PDAEncyclopedia.Add(key, false);
+                }
+                Log.Info("EncyclopediaEntry Save:" + data.Count);
+            }
+        }
+    
+        private void SetPDAEntryComplete(List<TechType> pdaEntryComplete)
+        {
+            HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+
+            foreach (TechType item in pdaEntryComplete)
+            {
+                complete.Add(item);
+            }
+            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
+
+        }
+
+        private void SetPDAEntryPartial(List<PDAEntry> data)
+        {
+            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            foreach (PDAEntry item in data)
+            {
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+            }
+            Log.Info("PDAEntryPartial Save :" + data.Count + " Read Partial Client Final Count:" + partial.Count);
         }
 
         private void SetInventoryGuid(string inventoryguid)
@@ -49,7 +100,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GuidHelper.SetNewGuid(Inventory.Get().container.tr.root.gameObject, inventoryguid);
             Log.Info("Received initial sync Player InventoryGuid: " + inventoryguid + "Container Name" + Inventory.Get().container.tr.name);
         }
-
+        
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
             Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
@@ -66,6 +117,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             using (packetSender.Suppress<ConstructionAmountChanged>())
             using (packetSender.Suppress<ConstructionCompleted>())
+            using (packetSender.Suppress<PlaceBasePiece>())
             using (packetSender.Suppress<PlaceBasePiece>())
             {
                 foreach (BasePiece basePiece in basePieces)

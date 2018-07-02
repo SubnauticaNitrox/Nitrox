@@ -57,6 +57,8 @@
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
+    <Compile Include="DataStructures\GameLogic\PDAContainerData.cs" />
+    <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
@@ -106,7 +108,9 @@
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
     <Compile Include="Packets\DeferrablePacket.cs" />
+    <Compile Include="Packets\ConsoleEntry.cs" />
     <Compile Include="Packets\Disconnect.cs" />
+    <Compile Include="Packets\DroppedItemPacket.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\EntityTransformUpdates.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />
@@ -117,6 +121,7 @@
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
+    <Compile Include="Packets\KnownTechEntry.cs" />
     <Compile Include="Packets\MedicalCabinetClicked.cs" />
     <Compile Include="Packets\Movement.cs" />
     <Compile Include="Packets\MultiplayerSessionPolicy.cs" />
@@ -125,6 +130,8 @@
     <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\PDAEncyclopediaEntry.cs" />
+    <Compile Include="Packets\PDAEntryEvent.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
