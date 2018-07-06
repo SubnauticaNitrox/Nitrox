@@ -6,7 +6,7 @@ namespace NitroxModel.DataStructures.Util
     [Serializable]
     public class HasValueOptional<T> : Optional<T>
     {
-        public T value { get; set; }
+        private readonly T value;
 
         public HasValueOptional(T value)
         {
@@ -35,7 +35,7 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            return "Optional[" + Get().ToString() + "]";
+            return $"Optional[{Get()}]";
         }
     }
 
@@ -64,7 +64,7 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            return "Optional<" + typeof(T) + ">.Empty()";
+            return $"Optional<{typeof(T)}>.Empty()";
         }
     }
 
@@ -80,7 +80,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (value == null || value.Equals(default(T)))
             {
-                throw new ArgumentNullException("Value cannot be null");
+                throw new ArgumentNullException(nameof(value), "Value cannot be null");
             }
 
             return new HasValueOptional<T>(value);
@@ -109,7 +109,7 @@ namespace NitroxModel.DataStructures.Util
         {
         }
 
-        public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t" + message)
+        public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t{message}")
         {
         }
     }
