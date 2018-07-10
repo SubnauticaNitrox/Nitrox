@@ -93,7 +93,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 randomNumber *= rollingProbabilityDensity;
             }
-
+            
             double rollingProbability = 0;
             PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
             {
@@ -103,9 +103,15 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
 
                 float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                rollingProbability += probabilityDensity;
                 bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
-                return rollingProbability >= randomNumber && isValidSpawn;
+
+                if(isValidSpawn)
+                {
+                    rollingProbability += probabilityDensity;
+                    return rollingProbability >= randomNumber;
+                }
+
+                return false;
             });
 
             WorldEntityInfo worldEntityInfo;
