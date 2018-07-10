@@ -118,7 +118,6 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<ConstructionAmountChanged>())
             using (packetSender.Suppress<ConstructionCompleted>())
             using (packetSender.Suppress<PlaceBasePiece>())
-            using (packetSender.Suppress<PlaceBasePiece>())
             {
                 foreach (BasePiece basePiece in basePieces)
                 {

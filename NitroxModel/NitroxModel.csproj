@@ -110,7 +110,6 @@
     <Compile Include="Packets\DeferrablePacket.cs" />
     <Compile Include="Packets\ConsoleEntry.cs" />
     <Compile Include="Packets\Disconnect.cs" />
-    <Compile Include="Packets\DroppedItemPacket.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\EntityTransformUpdates.cs" />
     <Compile Include="Packets\EquipmentAddItem.cs" />

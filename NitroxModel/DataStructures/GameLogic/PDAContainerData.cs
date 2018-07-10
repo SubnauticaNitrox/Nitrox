@@ -5,10 +5,10 @@ using ProtoBuf;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
+    [Serializable]
     [ProtoContract]
     public class PDAStateData
     {
-
         [ProtoMember(1)]
         public PDADataPartial PDADataPartial { get; set; }
         [ProtoMember(2)]
@@ -19,6 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public PDADataknownTech PDADataknownTech { get; set; }
     }
 
+    [Serializable]
     [ProtoContract]
     public class PDADataPartial
     {
@@ -78,6 +79,7 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+    [Serializable]
     [ProtoContract]
     public class PDADataComplete
     {
@@ -118,6 +120,7 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+    [Serializable]
     [ProtoContract]
     public class PDADataEncyclopedia
     {
@@ -151,6 +154,7 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+    [Serializable]
     [ProtoContract]
     public class PDADataknownTech
     {

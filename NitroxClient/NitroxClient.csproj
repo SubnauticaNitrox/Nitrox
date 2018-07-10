@@ -86,7 +86,6 @@
     <Compile Include="Communication\MultiplayerSession\MultiplayerSessionManager.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\InitialPlayerSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
@@ -122,7 +121,9 @@
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
