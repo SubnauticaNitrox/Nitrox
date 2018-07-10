@@ -77,8 +77,19 @@
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
+<<<<<<< HEAD
+<<<<<<< HEAD
     <Compile Include="Communication\Packets\Processors\ConsoleEntryProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+<<<<<<< HEAD
+=======
+=======
+    <Compile Include="Communication\Packets\Processors\ConsoleEntryProcessor.cs" />
+>>>>>>> 925f775... Add Comand (mpsave) to force save game on server
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryProcessor.cs" />
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+>>>>>>> c7606c2... Changes Requested
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />

@@ -23,7 +23,15 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDAEncyclopediaEntryAdd packet, Player player)
         {
+<<<<<<< HEAD
+<<<<<<< HEAD
             gameData.PDAState.PDADataEnciclopedia.Add(packet.Key);
+=======
+            gameData.PDASaveData.PDADataEnciclopedia.Add(packet.Key);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+            gameData.PDAState.PDADataEnciclopedia.Add(packet.Key);
+>>>>>>> c7606c2... Changes Requested
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

@@ -42,10 +42,23 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c7606c2... Changes Requested
             SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.GetList);
             SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.GetList);
             SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.GetList);
             SetKnownTech(packet.PDASaveData.PDADataknownTech.GetList);
+<<<<<<< HEAD
+=======
+            SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.Serializable);
+            SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.Serializable);
+            SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.Serializable);
+            SetKnownTech(packet.PDASaveData.PDADataknownTech.Serializable);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+>>>>>>> c7606c2... Changes Requested
         }
 
         private void SetKnownTech(List<TechType> data)
@@ -85,12 +98,49 @@ namespace NitroxClient.Communication.Packets.Processors
 
         }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
         private void SetPDAEntryPartial(List<PDAEntry> data)
         {
             List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
             foreach (PDAEntry item in data)
             {
                 partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+=======
+        private void SetPDAEntryPartial(List<PDA_Entry> data)
+=======
+        private void SetPDAEntryPartial(List<PDAEntry> data)
+>>>>>>> c7606c2... Changes Requested
+        {
+            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            foreach (PDAEntry item in data)
+            {
+<<<<<<< HEAD
+<<<<<<< HEAD
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType=item.TechType, unlocked = item.Unlocked });
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                if (partial.Contains(new PDAScanner.Entry { progress = item.Progress, techType = item.TechType, unlocked = item.Unlocked }))
+                {
+                    Log.Info("PDAEntryPartial Default Entry Found TechType: " + item.TechType);
+
+                    for (int i = 0; i < partial.Count; i++)
+                    {
+                        if (partial[i].techType == item.TechType)
+                        {
+                            partial[i].progress = item.Progress;
+                            partial[i].unlocked = item.Unlocked;
+                        }
+                    }
+                }
+                else
+                {
+                    partial.Add(new PDAScanner.Entry { progress = item.Progress, techType = item.TechType, unlocked = item.Unlocked });
+                }
+>>>>>>> 174dc57... Fix Save PDAData On Server Close
+=======
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+>>>>>>> c7606c2... Changes Requested
             }
             Log.Info("PDAEntryPartial Save :" + data.Count + " Read Partial Client Final Count:" + partial.Count);
         }

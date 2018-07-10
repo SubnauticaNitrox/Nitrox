@@ -84,6 +84,13 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("Save Request");
             NitroxServiceLocator.LocateService<IPacketSender>().Send(new ConsoleEntry("mpsave"));
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            //Multiplayer.Main.multiplayerSession.Send(new ConsoleEntry("mpsave"));
+>>>>>>> 925f775... Add Comand (mpsave) to force save game on server
+=======
+>>>>>>> c7606c2... Changes Requested
         }
 
         private void InitializeLocalPlayerState()

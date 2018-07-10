@@ -57,8 +57,18 @@
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
+<<<<<<< HEAD
+<<<<<<< HEAD
     <Compile Include="DataStructures\GameLogic\PDAContainerData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
+=======
+    <Compile Include="DataStructures\GameLogic\PDASaveData.cs" />
+    <Compile Include="DataStructures\GameLogic\PDA_Entry.cs" />
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+    <Compile Include="DataStructures\GameLogic\PDAContainerData.cs" />
+    <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
+>>>>>>> c7606c2... Changes Requested
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />

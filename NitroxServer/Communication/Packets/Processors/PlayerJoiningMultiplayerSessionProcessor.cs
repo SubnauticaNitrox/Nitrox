@@ -41,7 +41,15 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
+<<<<<<< HEAD
+<<<<<<< HEAD
                                                                        world.GameData.PDAState);
+=======
+                                                                       world.GameData.PDASaveData);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                                                                       world.GameData.PDAState);
+>>>>>>> c7606c2... Changes Requested
 
             player.SendPacket(initialPlayerSync);
 

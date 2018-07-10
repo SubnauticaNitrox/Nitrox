@@ -44,7 +44,15 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 lock (pdaEntryPartial)
                 {
+<<<<<<< HEAD
+<<<<<<< HEAD
                     return pdaEntryPartial;
+=======
+                    return new List<PDA_Entry>(pdaEntryPartial);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                    return pdaEntryPartial;
+>>>>>>> 174dc57... Fix Save PDAData On Server Close
                 }
             }
             set { pdaEntryPartial = value; }
@@ -103,7 +111,15 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 lock (pdaEntryComplete)
                 {
+<<<<<<< HEAD
+<<<<<<< HEAD
                     return pdaEntryComplete;
+=======
+                    return new List<TechType>(pdaEntryComplete);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                    return pdaEntryComplete;
+>>>>>>> 174dc57... Fix Save PDAData On Server Close
                 }
             }
             set { pdaEntryComplete = value; }
@@ -176,7 +192,15 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 lock (knownTech)
                 {
+<<<<<<< HEAD
+<<<<<<< HEAD
                     return knownTech;
+=======
+                    return new List<TechType>(knownTech);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                    return knownTech;
+>>>>>>> 174dc57... Fix Save PDAData On Server Close
                 }
             }
             set { knownTech = value; }

@@ -5,10 +5,24 @@ using ProtoBuf;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
+<<<<<<< HEAD
+<<<<<<< HEAD
     [Serializable]
     [ProtoContract]
     public class PDAStateData
     {
+=======
+    [ProtoContract]
+    public class PDAStateData
+    {
+
+>>>>>>> c7606c2... Changes Requested
+=======
+    [Serializable]
+    [ProtoContract]
+    public class PDAStateData
+    {
+>>>>>>> 5ccaa74... Server Request the object are Serializable
         [ProtoMember(1)]
         public PDADataPartial PDADataPartial { get; set; }
         [ProtoMember(2)]
@@ -19,7 +33,14 @@ namespace NitroxModel.DataStructures.GameLogic
         public PDADataknownTech PDADataknownTech { get; set; }
     }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
     [Serializable]
+=======
+>>>>>>> c7606c2... Changes Requested
+=======
+    [Serializable]
+>>>>>>> 5ccaa74... Server Request the object are Serializable
     [ProtoContract]
     public class PDADataPartial
     {
@@ -79,7 +100,14 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
     [Serializable]
+=======
+>>>>>>> c7606c2... Changes Requested
+=======
+    [Serializable]
+>>>>>>> 5ccaa74... Server Request the object are Serializable
     [ProtoContract]
     public class PDADataComplete
     {
@@ -120,7 +148,14 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
     [Serializable]
+=======
+>>>>>>> c7606c2... Changes Requested
+=======
+    [Serializable]
+>>>>>>> 5ccaa74... Server Request the object are Serializable
     [ProtoContract]
     public class PDADataEncyclopedia
     {
@@ -154,7 +189,14 @@ namespace NitroxModel.DataStructures.GameLogic
         }
     }
 
+<<<<<<< HEAD
+<<<<<<< HEAD
     [Serializable]
+=======
+>>>>>>> c7606c2... Changes Requested
+=======
+    [Serializable]
+>>>>>>> 5ccaa74... Server Request the object are Serializable
     [ProtoContract]
     public class PDADataknownTech
     {

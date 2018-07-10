@@ -101,7 +101,15 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
+<<<<<<< HEAD
+<<<<<<< HEAD
             return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDAState = new NitroxModel.DataStructures.GameLogic.PDAStateData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEncyclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+=======
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDASaveData = new PDASaveData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEnciclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDAState = new NitroxModel.DataStructures.GameLogic.PDAStateData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEncyclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+>>>>>>> c7606c2... Changes Requested
         }
 
         private World CreateWorld(DateTime serverStartTime, 

@@ -16,7 +16,15 @@ namespace NitroxPatcher.Patches
         {
             if (entry != null)
             { 
+<<<<<<< HEAD
+<<<<<<< HEAD
                 NitroxServiceLocator.LocateService<PDAManagerEntry>().Remove(entry);
+=======
+                NitroxServiceLocator.LocateService<PDAEntry>().Remove(entry);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                NitroxServiceLocator.LocateService<PDAManagerEntry>().Remove(entry);
+>>>>>>> c7606c2... Changes Requested
             }
         }
 
