@@ -119,6 +119,11 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\OpenableStateChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
@@ -154,6 +159,9 @@
     <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
+    <Compile Include="GameLogic\KnownTechEntry.cs" />
+    <Compile Include="GameLogic\PDAEncyclopediaEntry.cs" />
+    <Compile Include="GameLogic\PDAManagerEntry.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\ILocalNitroxPlayer.cs" />
     <Compile Include="GameLogic\PlayerModelBuilder\INitroxPlayer.cs" />
     <Compile Include="GameLogic\Interior.cs" />

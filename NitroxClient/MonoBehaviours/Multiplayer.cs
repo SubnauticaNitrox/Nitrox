@@ -71,12 +71,19 @@ namespace NitroxClient.MonoBehaviours
 
         public void StartSession()
         {
+            DevConsole.RegisterConsoleCommand(this, "mpsave", false, false);
             OnBeforeMultiplayerStart?.Invoke();
             InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
             InitMonoBehaviours();
             Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
+        }
+
+        private void OnConsoleCommand_mpsave()
+        {
+            Log.Info("Save Request");
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ConsoleEntry("mpsave"));
         }
 
         private void InitializeLocalPlayerState()

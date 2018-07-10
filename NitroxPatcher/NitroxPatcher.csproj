@@ -87,10 +87,15 @@
     <Compile Include="Patches\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
+    <Compile Include="Patches\PDAEncyclopedia_Add_Patch.cs" />
+    <Compile Include="Patches\PDAScanner_NotifyAdd_Patch.cs" />
+    <Compile Include="Patches\PDAScanner_NotifyProgress_Patch.cs" />
+    <Compile Include="Patches\PDAScanner_NotifyRemove_Patch.cs" />
     <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Persistent\EscapePodFirstUseCinematicsController_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\KnownTech_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Player_OnDestroy_Patch.cs" />
