@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -35,11 +36,21 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.PlayerData.Inventory(player.Name), 
-                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
-                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(), 
-                                                                        world.VehicleData.GetVehiclesForInitialSync(),
-                                                                        world.InventoryData.GetAllItemsForInitialSync());
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.PlayerData.Inventory(player.Name),
+                                                                       world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
+                                                                       world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
+                                                                       world.VehicleData.GetVehiclesForInitialSync(),
+                                                                       world.InventoryData.GetAllItemsForInitialSync(),
+<<<<<<< HEAD
+<<<<<<< HEAD
+                                                                       world.GameData.PDAState);
+=======
+                                                                       world.GameData.PDASaveData);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                                                                       world.GameData.PDAState);
+>>>>>>> c7606c2... Changes Requested
+
             player.SendPacket(initialPlayerSync);
 
             foreach (Player otherPlayer in playerManager.GetPlayers())

@@ -41,6 +41,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(SimulationOwnership), world.SimulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
                 {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
+                {typeof(GameData), world.GameData },
                 {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnership) }
             };
 

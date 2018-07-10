@@ -10,6 +10,7 @@ using NitroxServer.GameLogic.Vehicles;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization.World
 {
@@ -32,6 +33,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.VehicleData = world.VehicleData;
                 persistedData.InventoryData = world.InventoryData;
                 persistedData.PlayerData = world.PlayerData;
+                persistedData.GameData = world.GameData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -68,6 +70,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.VehicleData,
                                           persistedData.InventoryData,
                                           persistedData.PlayerData,
+                                          persistedData.GameData,
                                           persistedData.ParsedBatchCells);
                 
                 return Optional<World>.Of(world);
@@ -98,7 +101,15 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new List<Int3>());
+<<<<<<< HEAD
+<<<<<<< HEAD
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDAState = new NitroxModel.DataStructures.GameLogic.PDAStateData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEncyclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+=======
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDASaveData = new PDASaveData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEnciclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDAState = new NitroxModel.DataStructures.GameLogic.PDAStateData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEncyclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+>>>>>>> c7606c2... Changes Requested
         }
 
         private World CreateWorld(DateTime serverStartTime, 
@@ -107,6 +118,7 @@ namespace NitroxServer.Serialization.World
                                   VehicleData vehicleData,
                                   InventoryData inventoryData,
                                   PlayerData playerData,
+                                  GameData gameData,
                                   List<Int3> ParsedBatchCells)
         {
             World world = new World();
@@ -121,6 +133,7 @@ namespace NitroxServer.Serialization.World
             world.VehicleData = vehicleData;
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
+            world.GameData = gameData;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);

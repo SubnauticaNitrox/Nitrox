@@ -47,8 +47,34 @@ namespace NitroxClient.GameLogic
 
             Log.Debug("Dropping item with guid: " + guid);
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
             DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
             packetSender.Send(droppedItem);
+
+=======
+            if (techType == TechType.Beacon)
+=======
+            if (techType == TechType.Beacon | techType == TechType.Pipe)
+>>>>>>> c7606c2... Changes Requested
+            {
+                DroppedItemPacket droppedItem = new DroppedItemPacket(guid, waterpark, techType, dropPosition, bytes);
+                packetSender.Send(droppedItem);
+            }
+            else
+            {
+                DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
+                packetSender.Send(droppedItem);
+            }
+
+            
+>>>>>>> f39663e... Item Beacon Fix Sync
+=======
+            DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
+            packetSender.Send(droppedItem);
+
+>>>>>>> 6ac5fe5... Requested Changes
         }
 
         private Optional<string> GetCurrentWaterParkGuid()

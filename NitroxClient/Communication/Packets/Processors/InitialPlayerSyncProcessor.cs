@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxClient.Unity.Helper;
+using Story;
+using System.Reflection;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -40,6 +42,107 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> c7606c2... Changes Requested
+            SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.GetList);
+            SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.GetList);
+            SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.GetList);
+            SetKnownTech(packet.PDASaveData.PDADataknownTech.GetList);
+<<<<<<< HEAD
+=======
+            SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.Serializable);
+            SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.Serializable);
+            SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.Serializable);
+            SetKnownTech(packet.PDASaveData.PDADataknownTech.Serializable);
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+>>>>>>> c7606c2... Changes Requested
+        }
+
+        private void SetKnownTech(List<TechType> data)
+        {
+            using (packetSender.Suppress<KnownTechEntryAdd>())
+            {
+                foreach (TechType key in data)
+                {
+                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                    KnownTech.Add(key, false);
+                }
+                Log.Info("KnownTech Save:" + data.Count);
+            }
+        }
+
+        private void SetEncyclopediaEntry(List<string> data)
+        {
+            using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
+            {
+                foreach (string key in data)
+                {
+                    PDAEncyclopedia.Add(key, false);
+                }
+                Log.Info("EncyclopediaEntry Save:" + data.Count);
+            }
+        }
+    
+        private void SetPDAEntryComplete(List<TechType> pdaEntryComplete)
+        {
+            HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+
+            foreach (TechType item in pdaEntryComplete)
+            {
+                complete.Add(item);
+            }
+            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
+
+        }
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+        private void SetPDAEntryPartial(List<PDAEntry> data)
+        {
+            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            foreach (PDAEntry item in data)
+            {
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+=======
+        private void SetPDAEntryPartial(List<PDA_Entry> data)
+=======
+        private void SetPDAEntryPartial(List<PDAEntry> data)
+>>>>>>> c7606c2... Changes Requested
+        {
+            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            foreach (PDAEntry item in data)
+            {
+<<<<<<< HEAD
+<<<<<<< HEAD
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType=item.TechType, unlocked = item.Unlocked });
+>>>>>>> 08eed5b... Sync And Save (KnownTech Entries,PDAScanner Entries,PDAEncyclopediaEntries )
+=======
+                if (partial.Contains(new PDAScanner.Entry { progress = item.Progress, techType = item.TechType, unlocked = item.Unlocked }))
+                {
+                    Log.Info("PDAEntryPartial Default Entry Found TechType: " + item.TechType);
+
+                    for (int i = 0; i < partial.Count; i++)
+                    {
+                        if (partial[i].techType == item.TechType)
+                        {
+                            partial[i].progress = item.Progress;
+                            partial[i].unlocked = item.Unlocked;
+                        }
+                    }
+                }
+                else
+                {
+                    partial.Add(new PDAScanner.Entry { progress = item.Progress, techType = item.TechType, unlocked = item.Unlocked });
+                }
+>>>>>>> 174dc57... Fix Save PDAData On Server Close
+=======
+                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+>>>>>>> c7606c2... Changes Requested
+            }
+            Log.Info("PDAEntryPartial Save :" + data.Count + " Read Partial Client Final Count:" + partial.Count);
         }
 
         private void SetInventoryGuid(string inventoryguid)
@@ -47,7 +150,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GuidHelper.SetNewGuid(Inventory.Get().container.tr.root.gameObject, inventoryguid);
             Log.Info("Received initial sync Player InventoryGuid: " + inventoryguid + "Container Name" + Inventory.Get().container.tr.name);
         }
-
+        
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
             Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
@@ -92,8 +195,12 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void SpawnInventoryItemsPlayer(string playerGuid,List<ItemData> inventoryItems)
+        private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)
         {
+
+            ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+            Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+
             foreach (ItemData itemdata in inventoryItems)
             {
                 if (itemdata.ContainerGuid == playerGuid)
@@ -104,9 +211,11 @@ namespace NitroxClient.Communication.Packets.Processors
                     InventoryItem inventoryItem = new InventoryItem(pickupable);
                     inventoryItem.container = container;
                     inventoryItem.item.Reparent(container.tr);
+                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item You Already have On Inventory
                     container.UnsafeAdd(inventoryItem);
                 }
             }
+
         }
 
         /*
