@@ -7,7 +7,6 @@ using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
-    /*//#gitignore
     public class Creature_ChooseBestAction_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(Creature);
@@ -48,5 +47,4 @@ namespace NitroxPatcher.Patches
             PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
-    *///#gitignore
 }

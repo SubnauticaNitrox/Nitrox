@@ -6,7 +6,6 @@ using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
-    /*//#gitignore
     public class EntityCell_QueueForAwake_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(EntityCell);
@@ -24,5 +23,4 @@ namespace NitroxPatcher.Patches
             PatchPrefix(harmony, TARGET_METHOD);
         }
     }
-    *///#gitignore
 }

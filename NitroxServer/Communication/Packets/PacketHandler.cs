@@ -70,24 +70,10 @@ namespace NitroxServer.Communication.Packets
             if (authenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
             {
                 packetProcessor.ProcessPacket(packet, player);
-                if (packet.GetType().ToString() != "NitroxModel.Packets.Movement" && //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.EntityTransformUpdates" && //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.ItemPosition" //#gitignore
-                    ) //#gitignore
-                {//#gitignore
-                    Log.Info("Packet Authenticated Processor:" + packet.GetType() + " Player: " + player.Name); //#gitignore
-                }//#gitignore
             }
             else
             {
                 defaultPacketProcessor.ProcessPacket(packet, player);
-                if (packet.GetType().ToString() != "NitroxModel.Packets.Movement" && //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.EntityTransformUpdates" && //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.ItemPosition" //#gitignore
-                    ) //#gitignore
-                { //#gitignore
-                    Log.Info("Packet Authenticated Default:" + packet.GetType() + " Player: " + player.Name); //#gitignore
-                } //#gitignore
             }
         }
 
@@ -97,13 +83,6 @@ namespace NitroxServer.Communication.Packets
             if (unauthenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
             {
                 packetProcessor.ProcessPacket(packet, connection);
-                if (packet.GetType().ToString() != "NitroxModel.Packets.Movement" &&  //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.EntityTransformUpdates" && //#gitignore
-                    packet.GetType().ToString() != "NitroxModel.Packets.ItemPosition" //#gitignore
-                    ) //#gitignore
-                { //#gitignore
-                    Log.Info("Packet UnAuthenticated Processor:" + packet.GetType()); //#gitignore
-                } //#gitignore
             }
             else
             {

@@ -4,7 +4,6 @@ using Harmony;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    /*//#gitignore
     class CellManager_GetPrefabForSlot_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(CellManager);
@@ -24,5 +23,4 @@ namespace NitroxPatcher.Patches.Persistent
             PatchPrefix(harmony, TARGET_METHOD);
         }
     }
-    *///#gitignore
 }
