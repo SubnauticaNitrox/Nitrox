@@ -88,6 +88,7 @@
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Openable_PlayOpenAnimation_Patch.cs" />
     <Compile Include="Patches\PDAEncyclopedia_Add_Patch.cs" />
+    <Compile Include="Patches\PDALog_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\PDAScanner_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\PDAScanner_NotifyProgress_Patch.cs" />
     <Compile Include="Patches\PDAScanner_NotifyRemove_Patch.cs" />
