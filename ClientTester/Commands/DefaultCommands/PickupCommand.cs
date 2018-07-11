@@ -11,14 +11,14 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Name = "pickup";
             Description = "Picks up an item at location.";
-            Syntax = "pickup <guid> <x> <y> <z>";
+            Syntax = "pickup <guid> <x> <y> <z> <techTypeId>";
         }
 
         public override void Execute(MultiplayerClient client, string[] args)
         {
             assertMinimumArgs(args, 4);
 
-            itemBroadcaster.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], "");
+            itemBroadcaster.PickedUp(CommandManager.GetVectorFromArgs(args, 1), args[0], (TechType)int.Parse(args[1]));
         }
     }
 }

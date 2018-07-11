@@ -1,4 +1,6 @@
-﻿namespace NitroxModel.Helper
+﻿using System.Collections.Generic;
+
+namespace NitroxModel.Helper
 {
     public class Map
     {
@@ -16,5 +18,13 @@
         public static readonly Int3 BATCH_DIMENSION_CENTERING = new Int3(DIMENSIONS_IN_METERS.x / 2,
                                                                          DIMENSIONS_IN_METERS.y - SKYBOX_METERS_ABOVE_WATER,
                                                                          DIMENSIONS_IN_METERS.z / 2);
+
+        public static readonly int ITEM_LEVEL_OF_DETAIL = 3;
+
+        public static readonly List<TechType> GLOBAL_ROOT_TECH_TYPES = new List<TechType>()
+        {
+            TechType.Pipe,
+            TechType.Beacon
+        };
     }
 }

@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(itemPosition);
         }
 
-        public void PickedUp(GameObject gameObject, string techType)
+        public void PickedUp(GameObject gameObject, TechType techType)
         {
             string guid = GuidHelper.GetGuid(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic
             PickedUp(itemPosition, guid, techType);
         }
 
-        public void PickedUp(Vector3 itemPosition, string guid, string techType)
+        public void PickedUp(Vector3 itemPosition, string guid, TechType techType)
         {
             PickupItem pickupItem = new PickupItem(itemPosition, guid, techType);
             packetSender.Send(pickupItem);

@@ -4,6 +4,7 @@ using NitroxModel;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.Communication
 {
@@ -51,24 +52,26 @@ namespace NitroxClient.Communication
 
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is DeferrablePacket)
-            {
-                DeferrablePacket deferrablePacket = (DeferrablePacket)packet;
+            Optional<AbsoluteEntityCell> deferLocation = packet.GetDeferredCell();
 
-                if (visibleCells.Contains(deferrablePacket.AbsoluteEntityCell))
+            if (deferLocation.IsPresent())
+            {
+                AbsoluteEntityCell mustBeLoadedCell = deferLocation.Get();
+
+                if (visibleCells.Contains(mustBeLoadedCell))
                 {
                     return false;
                 }
 
-                Log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {deferrablePacket.AbsoluteEntityCell}");
-                AddPacketToDeferredMap(deferrablePacket, deferrablePacket.AbsoluteEntityCell);
+                Log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {mustBeLoadedCell}");
+                AddPacketToDeferredMap(packet, mustBeLoadedCell);
                 return true;
             }
 
             return false;
         }
 
-        private void AddPacketToDeferredMap(DeferrablePacket deferrablePacket, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(Packet deferred, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
@@ -78,7 +81,7 @@ namespace NitroxClient.Communication
                     deferredPacketsByAbsoluteCell[cell] = queue = new Queue<Packet>();
                 }
 
-                queue.Enqueue(deferrablePacket);
+                queue.Enqueue(deferred);
             }
         }
 

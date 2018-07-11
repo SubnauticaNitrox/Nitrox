@@ -107,7 +107,6 @@
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
-    <Compile Include="Packets\DeferrablePacket.cs" />
     <Compile Include="Packets\ConsoleEntry.cs" />
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\DroppedItem.cs" />

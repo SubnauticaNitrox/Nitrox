@@ -7,6 +7,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.Tcp;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -16,7 +18,7 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         public static readonly BinaryFormatter Serializer;
-
+        
         static Packet()
         {
             surrogateSelector = new SurrogateSelector();
@@ -67,6 +69,16 @@ namespace NitroxModel.Packets
             }
 
             return packetData;
+        }
+
+        // Deferred cells are a replacement for the old DeferredPacket class.  The idea
+        // is that some packets should not be replayed until a player enters close proximity.
+        // when the player enters a deferred cell, the DeferredPacketReceiver will automatically
+        // allow the packet to be processed. This method is virtual as some packets may have
+        // complex logic to decide if it needs to defer.
+        public virtual Optional<AbsoluteEntityCell> GetDeferredCell()
+        {
+            return Optional<AbsoluteEntityCell>.Empty();
         }
     }
 }

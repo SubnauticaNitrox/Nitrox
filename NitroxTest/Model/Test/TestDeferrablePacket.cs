@@ -1,14 +1,26 @@
 ﻿using System;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxTest.Model
 {
     [Serializable]
-    public class TestDeferrablePacket : DeferrablePacket
+    public class TestDeferrablePacket : Packet
     {
-        public TestDeferrablePacket(Vector3 eventPosition, int level) : base(eventPosition, level)
+        private Vector3 position;
+        private int level;
+
+        public TestDeferrablePacket(Vector3 position, int level)
         {
+            this.position = position;
+            this.level = level;
+        }
+
+        public override Optional<AbsoluteEntityCell> GetDeferredCell()
+        {
+            return Optional<AbsoluteEntityCell>.Of(new AbsoluteEntityCell(position, level));
         }
     }
 }

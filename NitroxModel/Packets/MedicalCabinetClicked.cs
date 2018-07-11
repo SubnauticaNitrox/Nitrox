@@ -4,14 +4,14 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class MedicalCabinetClicked : DeferrablePacket
+    public class MedicalCabinetClicked : Packet
     {
         public string Guid { get; }
         public bool DoorOpen { get; }
         public bool HasMedKit { get; }
         public float NextSpawnTime { get; }
 
-        public MedicalCabinetClicked(string guid, Vector3 actionPosition, bool doorOpen, bool hasMedKit, float nextSpawnTime) : base(actionPosition, ITEM_INTERACTION_CELL_LEVEL)
+        public MedicalCabinetClicked(string guid, bool doorOpen, bool hasMedKit, float nextSpawnTime)
         {
             Guid = guid;
             DoorOpen = doorOpen;
