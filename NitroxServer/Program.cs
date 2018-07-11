@@ -3,16 +3,18 @@ using NitroxModel.Logger;
 
 namespace NitroxServer
 {
+    
     class Program
     {
+        public static Server _Server;
         static void Main(string[] args)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
 
             try
             {
-                Server server = new Server();
-                server.Start();
+                _Server = new Server();
+                _Server.Start();
             }
             catch (Exception e)
             {

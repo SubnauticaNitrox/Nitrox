@@ -73,10 +73,16 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConsoleEntryProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
@@ -88,6 +94,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\TcpServer.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
+    <Compile Include="GameLogic\GameData.cs" />
     <Compile Include="GameLogic\ConnectionAssets.cs" />
     <Compile Include="GameLogic\Entities\EntityData.cs" />
     <Compile Include="GameLogic\Entities\EntityManager.cs" />

@@ -1,4 +1,5 @@
-﻿using NitroxServer.GameLogic.Bases;
+﻿using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
@@ -36,6 +37,9 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(8)]
         public PlayerData PlayerData { get; set; }
 
+        [ProtoMember(9)]
+        public GameData GameData { get; set; }
+
         public bool IsValid()
         {
             return (ParsedBatchCells != null) &&
@@ -44,6 +48,7 @@ namespace NitroxServer.Serialization.World
                    (BaseData != null) &&
                    (VehicleData != null) &&
                    (InventoryData != null) &&
+                   (GameData != null) &&
                    (PlayerData != null);
         }
     }

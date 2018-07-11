@@ -13,6 +13,11 @@ namespace NitroxServer
         private readonly WorldPersistence worldPersistence;
         private readonly PacketHandler packetHandler;
 
+        public void Save()
+        {
+            worldPersistence.Save(world);
+        }
+
         public Server()
         {
             worldPersistence = new WorldPersistence();
