@@ -17,6 +17,10 @@ namespace NitroxModel.DataStructures.GameLogic
         public PDADataEncyclopedia PDADataEnciclopedia { get; set; }
         [ProtoMember(4)]
         public PDADataknownTech PDADataknownTech { get; set; }
+        [ProtoMember(5)]
+        public PDALogData PDALogData { get; set; }
+
+
     }
 
     [Serializable]
@@ -184,6 +188,40 @@ namespace NitroxModel.DataStructures.GameLogic
             lock (knownTech)
             {
                 knownTech.Add(key);
+            }
+        }
+    }
+
+    [Serializable]
+    [ProtoContract]
+    public class PDALogData
+    {
+        public PDALogData()
+        {
+            // For serialization purposes
+        }
+
+        [ProtoIgnore]
+        private List<PDALogEntry> pdaDataEntry = new List<PDALogEntry>();
+
+        [ProtoMember(1)]
+        public List<PDALogEntry> GetList
+        {
+            get
+            {
+                lock (pdaDataEntry)
+                {
+                    return pdaDataEntry;
+                }
+            }
+            set { pdaDataEntry = value; }
+        }
+
+        public void Add(PDALogEntry key)
+        {
+            lock (pdaDataEntry)
+            {
+                pdaDataEntry.Add(key);
             }
         }
     }

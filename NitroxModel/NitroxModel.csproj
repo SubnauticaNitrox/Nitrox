@@ -58,6 +58,7 @@
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\PDAContainerData.cs" />
+    <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntry.cs" />
     <Compile Include="Packets\PDAEntryEvent.cs" />
+    <Compile Include="Packets\PDALogEntryAdd.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
