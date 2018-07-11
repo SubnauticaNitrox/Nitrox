@@ -67,6 +67,19 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
+        [ProtoMember(5)]
+        public List<PDALogEntry> SerializedPDALog
+        {
+            get
+            {
+                lock (pdaLogEntries)
+                {
+                    return pdaLogEntries;
+                }
+            }
+            set { pdaLogEntries = value; }
+        }
+
         [ProtoIgnore]
         private List<TechType> unlockedTechTypes = new List<TechType>();
 
@@ -78,6 +91,9 @@ namespace NitroxServer.GameLogic.Unlockables
 
         [ProtoIgnore]
         private Dictionary<TechType, PDAEntry> partiallyUnlockedByTechType = new Dictionary<TechType, PDAEntry>();
+
+        [ProtoIgnore]
+        private List<PDALogEntry> pdaLogEntries = new List<PDALogEntry>();
 
         public void UnlockedTechType(TechType techType)
         {
@@ -106,7 +122,15 @@ namespace NitroxServer.GameLogic.Unlockables
                 encyclopediaEntries.Add(entry);
             }
         }
-        
+
+        public void AddPDALogEntry(PDALogEntry entry)
+        {
+            lock (pdaLogEntries)
+            {
+                pdaLogEntries.Add(entry);
+            }
+        }
+
         public void EntryProgressChanged(TechType techType, float progress, int unlocked)
         {
             lock (partiallyUnlockedByTechType)
@@ -133,10 +157,14 @@ namespace NitroxServer.GameLogic.Unlockables
                     {
                         lock (encyclopediaEntries)
                         {
-                            return new InitialPdaData(new List<TechType>(unlockedTechTypes),
+                            lock (pdaLogEntries)
+                            {
+                                return new InitialPdaData(new List<TechType>(unlockedTechTypes),
                                                       new List<TechType>(knownTechTypes),
-                                                      new List<string>(encyclopediaEntries), 
-                                                      new List<PDAEntry>(partiallyUnlockedByTechType.Values));
+                                                      new List<string>(encyclopediaEntries),
+                                                      new List<PDAEntry>(partiallyUnlockedByTechType.Values),
+                                                      new List<PDALogEntry>(pdaLogEntries));
+                            }
                         }
                     }
                 }

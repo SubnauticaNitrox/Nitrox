@@ -32,5 +32,11 @@ namespace NitroxClient.GameLogic
             PDAEntryRemove EntryChanged = new PDAEntryRemove(entry.techType, entry.progress, entry.unlocked);
             packetSender.Send(EntryChanged);
         }
+
+        public void LogAdd(PDALog.Entry entry)
+        {
+            PDALogEntryAdd EntryChanged = new PDALogEntryAdd(entry.data.key, entry.timestamp);
+            packetSender.Send(EntryChanged);
+        }
     }
 }

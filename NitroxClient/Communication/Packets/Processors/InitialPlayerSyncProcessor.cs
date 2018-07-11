@@ -14,6 +14,7 @@ using UnityEngine;
 using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
+using NitroxModel.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -46,6 +47,34 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
+            SetPDALog(packet.PDAData.PDALogEntries);
+        }
+
+        private void SetPDALog(List<PDALogEntry> data)
+        {
+            using (packetSender.Suppress<PDALogEntryAdd>())
+            {
+                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                foreach (PDALogEntry Item in data)
+                {
+                    if (!entries.ContainsKey(Item.Key))
+                    {
+                        PDALog.EntryData entryData;
+                        PDALog.GetEntryData(Item.Key, out entryData);
+                        PDALog.Entry entry = new PDALog.Entry();
+                        entry.data = entryData;
+                        entry.timestamp = Item.Timestamp;
+                        entries.Add(entryData.key, entry);
+
+                        Log.Info("PDALog: " + entryData.key);
+                        if (entryData.key == "Story_AuroraWarning4")
+                        {
+                            CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
+                        }
+                    }
+                }
+                Log.Info("PDALogEntry Save:" + data.Count);
+            }
         }
 
         private void SetKnownTech(List<TechType> data)
