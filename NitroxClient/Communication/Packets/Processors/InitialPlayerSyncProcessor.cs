@@ -42,10 +42,10 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
-            SetEncyclopediaEntry(packet.PDASaveData.PDADataEnciclopedia.GetList);
-            SetPDAEntryComplete(packet.PDASaveData.PDADataComplete.GetList);
-            SetPDAEntryPartial(packet.PDASaveData.PDADataPartial.GetList);
-            SetKnownTech(packet.PDASaveData.PDADataknownTech.GetList);
+            SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
+            SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
+            SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
+            SetKnownTech(packet.PDAData.KnownTechTypes);
         }
 
         private void SetKnownTech(List<TechType> data)

@@ -17,7 +17,5 @@ namespace NitroxModel.Packets
         {
             return "[KnownTechEntryAdd - TechType: " + TechType + " Verbose: " + Verbose + "]";
         }
-    }
-
-    
+    }    
 }

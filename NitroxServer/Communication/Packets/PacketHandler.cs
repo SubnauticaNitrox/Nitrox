@@ -13,6 +13,7 @@ using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
+using NitroxServer.GameLogic.Unlockables;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -36,12 +37,13 @@ namespace NitroxServer.Communication.Packets
                 {typeof(BaseData), world.BaseData },
                 {typeof(VehicleData), world.VehicleData },
                 {typeof(InventoryData), world.InventoryData },
+                {typeof(GameData), world.GameData },
+                {typeof(PDAStateData), world.GameData.PDAState },
                 {typeof(PlayerManager), playerManager },
                 {typeof(TimeKeeper), world.TimeKeeper },
                 {typeof(SimulationOwnership), world.SimulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
                 {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
-                {typeof(GameData), world.GameData },
                 {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnership) }
             };
 

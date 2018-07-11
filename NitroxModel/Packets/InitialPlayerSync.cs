@@ -12,21 +12,21 @@ namespace NitroxModel.Packets
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
         public string InventoryGuid { get; }
-        public PDAStateData PDASaveData { get; }
+        public InitialPdaData PDAData { get; }
 
-        public InitialPlayerSync(string inventoryGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, DataStructures.GameLogic.PDAStateData pdaSaveData)
+        public InitialPlayerSync(string inventoryGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData)
         {
             InventoryGuid = inventoryGuid;
             EquippedItems = equipment;
             BasePieces = basePieces;
             Vehicles = vehicles;
             InventoryItems = inventoryItems;
-            PDASaveData = pdaSaveData;
+            PDAData = pdaData;
         }
 
         public override string ToString()
         {
-            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + "]";
+            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + " PDAData: " + PDAData + "]";
         }
     }
 }

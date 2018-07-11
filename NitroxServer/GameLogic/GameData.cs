@@ -1,8 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxServer.GameLogic.Unlockables;
 using ProtoBufNet;
 using System;
-using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -12,6 +10,5 @@ namespace NitroxServer.GameLogic.Bases
     {
         [ProtoMember(1)]
         public PDAStateData PDAState { get; set; }
-
     }
 }

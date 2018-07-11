@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic.Unlockables;
 
 namespace NitroxServer.Serialization.World
 {
@@ -101,7 +102,7 @@ namespace NitroxServer.Serialization.World
         
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(),new GameData() {  PDAState = new NitroxModel.DataStructures.GameLogic.PDAStateData() { PDADataComplete = new PDADataComplete(), PDADataPartial = new PDADataPartial(), PDADataEnciclopedia = new PDADataEncyclopedia(), PDADataknownTech = new PDADataknownTech()  } }, new List<Int3>());
+            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>());
         }
 
         private World CreateWorld(DateTime serverStartTime, 

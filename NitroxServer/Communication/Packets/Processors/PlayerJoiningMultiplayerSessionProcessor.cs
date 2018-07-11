@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -41,7 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
-                                                                       world.GameData.PDAState);
+                                                                       world.GameData.PDAState.GetInitialPdaData());
 
             player.SendPacket(initialPlayerSync);
 

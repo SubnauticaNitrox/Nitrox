@@ -113,6 +113,7 @@
     <Compile Include="GameLogic\Players\PlayerData.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
+    <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
     <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

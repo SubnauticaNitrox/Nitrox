@@ -1,36 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Bases;
-using NitroxServer.GameLogic.Items;
+using NitroxServer.GameLogic.Unlockables;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class PDAScannerEntryProgressProcessor : AuthenticatedPacketProcessor<PDAEntryProgress>
     {
         private readonly PlayerManager playerManager;
-        private readonly GameData gameData;
-        public PDAScannerEntryProgressProcessor(PlayerManager playerManager, GameData gameData)
+        private readonly PDAStateData pdaStateData;
+
+        public PDAScannerEntryProgressProcessor(PlayerManager playerManager, PDAStateData pdaStateData)
         {
             this.playerManager = playerManager;
-            this.gameData = gameData;
+            this.pdaStateData = pdaStateData;
         }
 
         public override void Process(PDAEntryProgress packet, Player player)
         {
-            PDAEntry entry;
-            if (gameData.PDAState.PDADataPartial.Contain(packet.TechType, out entry))
-            {
-                entry.Unlocked = packet.Unlocked;
-            }
-            else
-            {
-                gameData.PDAState.PDADataPartial.Add(new PDAEntry { Progress = packet.Progress, TechType = packet.TechType, Unlocked = packet.Unlocked });
-            }
+            pdaStateData.EntryProgressChanged(packet.TechType, packet.Progress, packet.Unlocked);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

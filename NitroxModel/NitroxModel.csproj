@@ -57,7 +57,7 @@
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
-    <Compile Include="DataStructures\GameLogic\PDAContainerData.cs" />
+    <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
@@ -128,8 +128,12 @@
     <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />
-    <Compile Include="Packets\PDAEncyclopediaEntry.cs" />
-    <Compile Include="Packets\PDAEntryEvent.cs" />
+    <Compile Include="Packets\PDAEncyclopediaEntryAdd.cs" />
+    <Compile Include="Packets\PDAEncyclopediaEntryRemove.cs" />
+    <Compile Include="Packets\PDAEncyclopediaEntryUpdate.cs" />
+    <Compile Include="Packets\PDAEntryAdd.cs" />
+    <Compile Include="Packets\PDAEntryProgress.cs" />
+    <Compile Include="Packets\PDAEntryRemove.cs" />
     <Compile Include="Packets\PickupItem.cs" />
     <Compile Include="Packets\PlaceBasePiece.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
