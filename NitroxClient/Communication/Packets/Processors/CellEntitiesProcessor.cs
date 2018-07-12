@@ -21,8 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public CellEntitiesProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-
-            customSpawnersByTechType[TechType.None] = new NoTechTypeEntitySpawner();
+            
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
         }
