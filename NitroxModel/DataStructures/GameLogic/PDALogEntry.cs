@@ -1,6 +1,4 @@
 ﻿using System;
-using UnityEngine;
-using System.Collections.Generic;
 using ProtoBuf;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -11,11 +9,19 @@ namespace NitroxModel.DataStructures.GameLogic
     {
         [ProtoMember(1)]
         public string Key;
+
         [ProtoMember(2)]
         public float Timestamp;
+
         public PDALogEntry()
         {
             // Default Constructor for serialization
+        }
+
+        public PDALogEntry(string key, float timestamp)
+        {
+            Key = key;
+            Timestamp = timestamp;
         }
     }
 }

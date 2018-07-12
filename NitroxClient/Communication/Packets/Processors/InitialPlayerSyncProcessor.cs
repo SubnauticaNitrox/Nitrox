@@ -50,55 +50,58 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDALog(packet.PDAData.PDALogEntries);
         }
 
-        private void SetPDALog(List<PDALogEntry> data)
+        private void SetPDALog(List<PDALogEntry> logEntries)
         {
+            Log.Info("Received initial sync packet with " + logEntries.Count + " pda log entries");
+
             using (packetSender.Suppress<PDALogEntryAdd>())
             {
                 Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                foreach (PDALogEntry Item in data)
+
+                foreach (PDALogEntry logEntry in logEntries)
                 {
-                    if (!entries.ContainsKey(Item.Key))
+                    if (!entries.ContainsKey(logEntry.Key))
                     {
                         PDALog.EntryData entryData;
-                        PDALog.GetEntryData(Item.Key, out entryData);
+                        PDALog.GetEntryData(logEntry.Key, out entryData);
                         PDALog.Entry entry = new PDALog.Entry();
                         entry.data = entryData;
-                        entry.timestamp = Item.Timestamp;
+                        entry.timestamp = logEntry.Timestamp;
                         entries.Add(entryData.key, entry);
-
-                        Log.Info("PDALog: " + entryData.key);
+                        
                         if (entryData.key == "Story_AuroraWarning4")
                         {
                             CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
                         }
                     }
                 }
-                Log.Info("PDALogEntry Save:" + data.Count);
             }
         }
 
-        private void SetKnownTech(List<TechType> data)
+        private void SetKnownTech(List<TechType> techTypes)
         {
+            Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
+
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                foreach (TechType key in data)
+                foreach (TechType techType in techTypes)
                 {
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                    KnownTech.Add(key, false);
+                    KnownTech.Add(techType, false);
                 }
-                Log.Info("KnownTech Save:" + data.Count);
             }
         }
 
-        private void SetEncyclopediaEntry(List<string> data)
+        private void SetEncyclopediaEntry(List<string> entries)
         {
+            Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
+
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
-                foreach (string key in data)
+                foreach (string entry in entries)
                 {
-                    PDAEncyclopedia.Add(key, false);
+                    PDAEncyclopedia.Add(entry, false);
                 }
-                Log.Info("EncyclopediaEntry Save:" + data.Count);
             }
         }
     
@@ -110,18 +113,21 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 complete.Add(item);
             }
+
             Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
 
         }
 
-        private void SetPDAEntryPartial(List<PDAEntry> data)
+        private void SetPDAEntryPartial(List<PDAEntry> entries)
         {
             List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-            foreach (PDAEntry item in data)
+
+            foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = item.Progress, techType= item.TechType, unlocked = item.Unlocked });
+                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType= entry.TechType, unlocked = entry.Unlocked });
             }
-            Log.Info("PDAEntryPartial Save :" + data.Count + " Read Partial Client Final Count:" + partial.Count);
+
+            Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
 
         private void SetInventoryGuid(string inventoryguid)

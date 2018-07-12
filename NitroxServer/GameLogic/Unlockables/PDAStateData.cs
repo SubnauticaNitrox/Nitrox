@@ -160,10 +160,10 @@ namespace NitroxServer.GameLogic.Unlockables
                             lock (pdaLogEntries)
                             {
                                 return new InitialPdaData(new List<TechType>(unlockedTechTypes),
-                                                      new List<TechType>(knownTechTypes),
-                                                      new List<string>(encyclopediaEntries),
-                                                      new List<PDAEntry>(partiallyUnlockedByTechType.Values),
-                                                      new List<PDALogEntry>(pdaLogEntries));
+                                                          new List<TechType>(knownTechTypes),
+                                                          new List<string>(encyclopediaEntries),
+                                                          new List<PDAEntry>(partiallyUnlockedByTechType.Values),
+                                                          new List<PDALogEntry>(pdaLogEntries));
                             }
                         }
                     }

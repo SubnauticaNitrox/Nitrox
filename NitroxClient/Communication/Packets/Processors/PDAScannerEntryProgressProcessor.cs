@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
