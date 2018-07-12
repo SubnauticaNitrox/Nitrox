@@ -1,7 +1,9 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using ProtoBufNet;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -22,7 +24,7 @@ namespace NitroxServer.GameLogic.Players
         }
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
-        
+
         public void AddEquipment(string playerName, EquippedItemData equippedItem)
         {
             lock (playersByPlayerName)
@@ -54,6 +56,58 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        public Vector3 PlayerSpawn(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = null;
+
+                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                {
+                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
+                }
+                return playerPersistedData.PlayerSpawnData;
+            }
+        }
+
+        public void UpdatePlayerSpawn(string playerName, Vector3 position)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].PlayerSpawnData = position;
+            }
+        }
+
+        public void PlayerStats(string playerName, PlayerStats statsData)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = null;
+
+                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                {
+                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
+                }
+
+                playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
+            }
+        }
+        public PlayerStatsData Stats(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = null;
+
+                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+                {
+                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
+                }
+
+                return playersByPlayerName[playerName].CurrentStats;
+            }
+        }
+
+        
         public void RemoveEquipment(string playerName, string guid)
         {
             lock (playersByPlayerName)
@@ -89,6 +143,12 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(3)]
             public string PlayerInventoryGuid { get; set; }
+
+            [ProtoMember(4)]
+            public Vector3 PlayerSpawnData { get; set; }
+
+            [ProtoMember(5)]
+            public PlayerStatsData CurrentStats { get; set; }
 
             public PersistedPlayerData()
             {

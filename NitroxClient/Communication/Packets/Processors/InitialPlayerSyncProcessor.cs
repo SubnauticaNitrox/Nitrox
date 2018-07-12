@@ -48,6 +48,8 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
             SetPDALog(packet.PDAData.PDALogEntries);
+            SetPlayerSpawn(packet.PlayerSpawnData);
+            SetPlayerStats(packet.PlayerStatsData);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
@@ -68,7 +70,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         entry.data = entryData;
                         entry.timestamp = logEntry.Timestamp;
                         entries.Add(entryData.key, entry);
-                        
+
                         if (entryData.key == "Story_AuroraWarning4")
                         {
                             CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
@@ -89,6 +91,25 @@ namespace NitroxClient.Communication.Packets.Processors
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
                     KnownTech.Add(techType, false);
                 }
+            }
+        }
+        
+        private void SetPlayerStats(PlayerStatsData statsData)
+        {
+            if (statsData != null)
+            {
+                using (packetSender.Suppress<PlayerStats>())
+                {
+                    Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
+                }
+            }
+        }
+
+        private void SetPlayerSpawn(Vector3 position)
+        {
+            if (position.x != 0 && position.y != 0 && position.z != 0)
+            {
+                Player.main.SetPosition(new Vector3(position.x, position.y, position.z));
             }
         }
 
