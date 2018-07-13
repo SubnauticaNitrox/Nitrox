@@ -58,7 +58,7 @@ namespace NitroxServer.GameLogic
 
                 reservedPlayerNames.Add(playerName);
 
-                PlayerContext playerContext = new PlayerContext(playerName, playerSettings);
+                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerGuid(playerName), playerSettings);
                 string playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 

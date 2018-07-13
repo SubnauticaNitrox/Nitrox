@@ -86,7 +86,9 @@
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />

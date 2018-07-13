@@ -12,14 +12,14 @@ namespace NitroxModel.Packets
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
-        public string InventoryGuid { get; }
+        public string PlayerGuid { get; }
         public InitialPdaData PDAData { get; }
         public Vector3 PlayerSpawnData { get; }
         public PlayerStatsData PlayerStatsData { get; }
 
-        public InitialPlayerSync(string inventoryGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, PlayerStatsData playerStatsData)
+        public InitialPlayerSync(string playerGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, PlayerStatsData playerStatsData)
         {
-            InventoryGuid = inventoryGuid;
+            PlayerGuid = playerGuid;
             EquippedItems = equipment;
             BasePieces = basePieces;
             Vehicles = vehicles;

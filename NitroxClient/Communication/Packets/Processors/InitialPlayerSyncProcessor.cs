@@ -15,6 +15,7 @@ using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
+using NitroxModel.Core;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -37,12 +38,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetInventoryGuid(packet.InventoryGuid);
+            SetPlayerGuid(packet.PlayerGuid);
             SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
-            SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
+            SpawnInventoryItemsPlayer(packet.PlayerGuid, packet.InventoryItems);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
@@ -151,11 +152,12 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
 
-        private void SetInventoryGuid(string inventoryguid)
+        private void SetPlayerGuid(string playerguid)
         {
-            GuidHelper.SetNewGuid(Inventory.Get().container.tr.root.gameObject, inventoryguid);
-            Log.Info("Received initial sync Player InventoryGuid: " + inventoryguid + "Container Name" + Inventory.Get().container.tr.name);
+            GuidHelper.SetNewGuid(Player.mainObject, playerguid);
+            Log.Info("Received initial sync Player Guid: " + playerguid);
         }
+    
         
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
@@ -195,9 +197,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
 
-            foreach (VehicleModel vehicle in vehicleModels)
+            using (packetSender.Suppress<VehicleAddEntry>())
             {
-                vehicles.UpdateVehiclePosition(vehicle, Optional<RemotePlayer>.Empty());
+                foreach (VehicleModel vehicle in vehicleModels)
+                {
+                    vehicles.Add(vehicle);
+                }
             }
         }
 
