@@ -66,6 +66,7 @@
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\ItemData.cs" />
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
+    <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\OwnedGuid.cs" />

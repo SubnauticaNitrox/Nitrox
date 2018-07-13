@@ -1,5 +1,6 @@
 ﻿using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -23,10 +24,9 @@ namespace NitroxClient.MonoBehaviours
             if (time >= INTERPOLATION_PERIOD)
             {
                 time = 0;
-
                 Survival survival = Player.main.GetComponent<Survival>();
 
-                if (survival != null && !survival.freezeStats && GameModeUtils.IsOptionActive(GameModeOption.Survival))
+                if (survival != null && !survival.freezeStats)
                 {
                     float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
                     float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();

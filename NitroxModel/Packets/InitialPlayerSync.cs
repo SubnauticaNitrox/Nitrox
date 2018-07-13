@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
@@ -13,8 +14,10 @@ namespace NitroxModel.Packets
         public List<ItemData> InventoryItems { get; }
         public string InventoryGuid { get; }
         public InitialPdaData PDAData { get; }
+        public Vector3 PlayerSpawnData { get; }
+        public PlayerStatsData PlayerStatsData { get; }
 
-        public InitialPlayerSync(string inventoryGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData)
+        public InitialPlayerSync(string inventoryGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, PlayerStatsData playerStatsData)
         {
             InventoryGuid = inventoryGuid;
             EquippedItems = equipment;
@@ -22,6 +25,8 @@ namespace NitroxModel.Packets
             Vehicles = vehicles;
             InventoryItems = inventoryItems;
             PDAData = pdaData;
+            PlayerSpawnData = playerSpawnData;
+            PlayerStatsData = playerStatsData;
         }
 
         public override string ToString()
