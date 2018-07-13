@@ -195,9 +195,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
 
-            foreach (VehicleModel vehicle in vehicleModels)
+            using (packetSender.Suppress<VehicleAddEntry>())
             {
-                vehicles.UpdateVehiclePosition(vehicle, Optional<RemotePlayer>.Empty());
+                foreach (VehicleModel vehicle in vehicleModels)
+                {
+                    vehicles.UpdateVehiclePosition(vehicle, Optional<RemotePlayer>.Empty());
+                }
             }
         }
 
