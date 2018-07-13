@@ -109,7 +109,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             if (!(position.x == 0 && position.y == 0 && position.z == 0))
             {
-                Player.main.SetPosition(new Vector3(position.x, position.y, position.z));
+                Player.main.SetPosition(position);
             }
         }
 
