@@ -65,7 +65,7 @@ namespace NitroxServer.Communication.Packets
                 ProcessAuthenticated(packet, player);
             }
         }
-
+        
         private void ProcessAuthenticated(Packet packet, Player player)
         {
             PacketProcessor packetProcessor;

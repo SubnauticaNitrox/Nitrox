@@ -23,6 +23,21 @@ namespace NitroxServer.GameLogic.Players
             set { playersByPlayerName = value; }
         }
 
+        [ProtoMember(2)]
+        public Dictionary<string, EquippedItemData> SerializableModules
+        {
+            get
+            {
+                lock (ModulesItemsByGuid)
+                {
+                    return new Dictionary<string, EquippedItemData>(ModulesItemsByGuid);
+                }
+            }
+            set { ModulesItemsByGuid = value; }
+        }
+
+        public Dictionary<string, EquippedItemData> ModulesItemsByGuid = new Dictionary<string, EquippedItemData>();
+
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
 
         public void AddEquipment(string playerName, EquippedItemData equippedItem)
@@ -128,7 +143,24 @@ namespace NitroxServer.GameLogic.Players
                     playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
                 }
 
-                return new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
+                List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
+                ItemData.AddRange((new List<EquippedItemData>(ModulesItemsByGuid.Values)));
+                return ItemData;
+            }
+        }
+
+        public void AddModule(EquippedItemData equippedmodule)
+        {
+            lock (ModulesItemsByGuid)
+            {
+                ModulesItemsByGuid.Add(equippedmodule.Guid, equippedmodule);
+            }
+        }
+        public void RemoveModule(string guid)
+        {
+            lock (ModulesItemsByGuid)
+            {
+                ModulesItemsByGuid.Remove(guid);
             }
         }
 

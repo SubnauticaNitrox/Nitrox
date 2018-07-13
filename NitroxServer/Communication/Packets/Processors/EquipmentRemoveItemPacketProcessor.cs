@@ -18,7 +18,14 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(EquipmentRemoveItem packet, Player player)
         {
-            playerData.RemoveEquipment(player.Name, packet.ItemGuid);
+            if (packet.IsPlayerEquipment)
+            {
+                playerData.RemoveEquipment(player.Name, packet.ItemGuid);
+            }
+            else
+            {
+                playerData.RemoveModule(packet.ItemGuid);
+            }
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
