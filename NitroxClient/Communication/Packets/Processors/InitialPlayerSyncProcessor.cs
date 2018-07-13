@@ -107,7 +107,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SetPlayerSpawn(Vector3 position)
         {
-            if (position.x != 0 && position.y != 0 && position.z != 0)
+            if (!(position.x == 0 && position.y == 0 && position.z == 0))
             {
                 Player.main.SetPosition(new Vector3(position.x, position.y, position.z));
             }
