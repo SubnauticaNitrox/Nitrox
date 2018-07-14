@@ -28,18 +28,10 @@ namespace NitroxClient.GameLogic
 
             EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
 
-
             Player player = owner.GetComponent<Player>();
-            if (player != null)
-            {
-                EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem,true);
-                packetSender.Send(equipPacket);
-            }
-            else
-            {
-                EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem, false);
-                packetSender.Send(equipPacket);
-            }
+            bool isPlayerEquipment = (player != null);
+            EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem, isPlayerEquipment);
+            packetSender.Send(equipPacket);
         }
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
@@ -48,18 +40,9 @@ namespace NitroxClient.GameLogic
             string ownerGuid = GuidHelper.GetGuid(owner);
 
             Player player = owner.GetComponent<Player>();
-            if (player != null)
-            {
-                EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, true);
-                packetSender.Send(removeEquipment);
-            }
-            else
-            {
-                EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, false);
-                packetSender.Send(removeEquipment);
-            }
-
-                
+            bool isPlayerEquipment = (player != null);
+            EquipmentRemoveItem equipPacket = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, isPlayerEquipment);
+            packetSender.Send(equipPacket);
         }
 
         public void AddItems(List<EquippedItemData> equippedItems)
