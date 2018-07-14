@@ -153,6 +153,8 @@
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
+    <Compile Include="Packets\VehicleAddEntry.cs" />
+    <Compile Include="Packets\VehicleRemoveEntry.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
