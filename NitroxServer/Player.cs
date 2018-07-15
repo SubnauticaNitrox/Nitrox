@@ -3,8 +3,8 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Tcp;
 using UnityEngine;
+using NitroxServer.Communication;
 
 namespace NitroxServer
 {
@@ -57,10 +57,7 @@ namespace NitroxServer
 
         public void SendPacket(Packet packet)
         {
-            if (connection.Open)
-            {
-                connection.SendPacket(packet, null);
-            }
+            connection.SendPacket(packet);            
         }
 
         public override bool Equals(object obj)

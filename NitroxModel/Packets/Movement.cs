@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using Lidgren.Network;
 
 namespace NitroxModel.Packets
 {
@@ -22,6 +23,8 @@ namespace NitroxModel.Packets
             BodyRotation = bodyRotation;
             AimingRotation = aimingRotation;
             SubGuid = subGuid;
+            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
         }
 
         public override string ToString()

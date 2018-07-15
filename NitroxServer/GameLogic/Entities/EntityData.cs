@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using ProtoBufNet;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -89,6 +90,30 @@ namespace NitroxServer.GameLogic.Entities
             Validate.NotNull(entity);
 
             return entity;
+        }
+
+        public List<Entity> GetEntitiesByGuids(List<string> guids)
+        {
+            List<Entity> entities = new List<Entity>();
+
+            lock (entitiesByGuid)
+            {
+                foreach(string guid in guids)
+                {
+                    Entity entity = null;
+
+                    if(entitiesByGuid.TryGetValue(guid, out entity))
+                    {
+                        entities.Add(entity);
+                    }
+                    else
+                    {
+                        Log.Error("Guid did not have a corresponding entity in GetEntitiesByGuids: " + guid);
+                    }
+                }
+            }
+
+            return entities;
         }
 
         private List<Entity> EntitiesFromCell(AbsoluteEntityCell absoluteEntityCell)

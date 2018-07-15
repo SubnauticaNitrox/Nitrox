@@ -118,7 +118,7 @@ namespace NitroxServer.Serialization.World
             world.TimeKeeper = new TimeKeeper();
             world.TimeKeeper.ServerStartTime = serverStartTime;
 
-            world.SimulationOwnership = new SimulationOwnership();
+            world.SimulationOwnershipData = new SimulationOwnershipData();
             world.PlayerManager = new PlayerManager(playerData);
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
@@ -127,6 +127,7 @@ namespace NitroxServer.Serialization.World
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
             world.GameData = gameData;
+            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);

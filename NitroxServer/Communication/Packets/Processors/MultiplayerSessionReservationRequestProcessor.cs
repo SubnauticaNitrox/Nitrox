@@ -1,7 +1,6 @@
 ﻿using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -31,7 +30,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             Log.Info($"Reservation processed successfully: {reservation}...");
 
-            connection.SendPacket(reservation, null);
+            connection.SendPacket(reservation);
         }
     }
 }

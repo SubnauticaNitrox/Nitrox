@@ -36,7 +36,7 @@ namespace NitroxClient
                 .As<IPacketSender>()
                 .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<TcpClient>()
+            containerBuilder.RegisterType<UdpClient>()
                 .As<IClient>()
                 .InstancePerLifetimeScope();
 

@@ -2,12 +2,10 @@
 
 namespace NitroxServer.GameLogic
 {
-    public class SimulationOwnership
+    public class SimulationOwnershipData
     {
         Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
-
-        // TODO: redistribute upon disconnect
-
+        
         public bool TryToAcquire(string guid, Player player)
         {
             lock (guidsByPlayer)
@@ -37,6 +35,29 @@ namespace NitroxServer.GameLogic
                 }
 
                 return false;
+            }
+        }
+
+        public List<string> RevokeAllForOwner(Player player)
+        {
+            lock (guidsByPlayer)
+            {
+                List<string> revokedGuids = new List<string>();
+
+                foreach(KeyValuePair<string, Player> guidWithPlayer in guidsByPlayer)
+                {
+                    if(guidWithPlayer.Value == player)
+                    {
+                        revokedGuids.Add(guidWithPlayer.Key);
+                    }
+                }
+
+                foreach(string guid in revokedGuids)
+                {
+                    guidsByPlayer.Remove(guid);
+                }
+
+                return revokedGuids;
             }
         }
     }

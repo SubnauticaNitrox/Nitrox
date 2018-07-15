@@ -157,11 +157,15 @@
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tcp\Connection.cs" />
-    <Compile Include="Tcp\MessageBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
+      <Name>Lidgren.Network</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

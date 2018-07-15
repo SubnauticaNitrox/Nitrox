@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using NitroxModel.Tcp;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
+using Lidgren.Network;
 
 namespace NitroxModel.Packets
 {
@@ -46,26 +46,25 @@ namespace NitroxModel.Packets
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public byte[] SerializeWithHeaderData()
+        public NetDeliveryMethod DeliveryMethod { get; protected set; } = NetDeliveryMethod.ReliableOrdered;
+        public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
+
+        public enum UdpChannelId
+        {
+            DEFAULT = 0,
+            PLAYER_MOVEMENT = 1,
+            VEHICLE_MOVEMENT = 2,
+            PLAYER_STATS = 3
+        }
+
+        public byte[] Serialize()
         {
             byte[] packetData;
 
             using (MemoryStream ms = new MemoryStream())
             {
-                // place holder for size, will be filled in later... allows us
-                // to avoid doing a byte array merge... zomg premature optimization
-                ms.Write(new byte[MessageBuffer.HEADER_BYTE_SIZE], 0, MessageBuffer.HEADER_BYTE_SIZE);
                 Serializer.Serialize(ms, this);
                 packetData = ms.ToArray();
-            }
-
-            int packetSize = packetData.Length - MessageBuffer.HEADER_BYTE_SIZE; // subtract HEADER_BYTE_SIZE because we dont want to take into account the added bytes
-            byte[] packetSizeBytes = BitConverter.GetBytes(packetSize);
-
-            // premature optimization continued :)
-            for (int i = 0; i < MessageBuffer.HEADER_BYTE_SIZE; i++)
-            {
-                packetData[i] = packetSizeBytes[i];
             }
 
             return packetData;

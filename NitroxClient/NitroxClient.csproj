@@ -139,7 +139,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
-    <Compile Include="Communication\TcpClient.cs" />
+    <Compile Include="Communication\UdpClient.cs" />
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
@@ -244,6 +244,10 @@
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
+      <Name>Lidgren.Network</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
