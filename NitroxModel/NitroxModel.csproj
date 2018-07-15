@@ -157,8 +157,6 @@
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tcp\Connection.cs" />
-    <Compile Include="Tcp\MessageBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

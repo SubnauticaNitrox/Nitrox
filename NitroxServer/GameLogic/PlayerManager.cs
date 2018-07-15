@@ -4,9 +4,9 @@ using System.Linq;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxModel.Tcp;
 using NitroxServer.GameLogic.Players;
 using static NitroxServer.GameLogic.Players.PlayerData;
+using NitroxServer.Communication;
 
 namespace NitroxServer.GameLogic
 {

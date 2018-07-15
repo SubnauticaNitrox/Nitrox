@@ -1,6 +1,5 @@
 ﻿using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Tcp;
 
 namespace NitroxServer.Communication.Packets.Processors.Abstract
 {

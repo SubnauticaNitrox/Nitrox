@@ -9,7 +9,7 @@ namespace NitroxServer
     public class Server
     {
         private readonly World world;
-        private readonly TcpServer tcpServer;
+        private readonly UdpServer udpServer;
         private readonly WorldPersistence worldPersistence;
         private readonly PacketHandler packetHandler;
 
@@ -23,12 +23,12 @@ namespace NitroxServer
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            tcpServer = new TcpServer(packetHandler, world.PlayerManager);            
+            udpServer = new UdpServer(packetHandler, world.PlayerManager);            
         }
 
         public void Start()
         {
-            tcpServer.Start();
+            udpServer.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }

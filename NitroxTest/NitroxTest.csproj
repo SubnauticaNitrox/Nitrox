@@ -100,7 +100,6 @@
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />
     <Compile Include="Model\PriorityQueueTest.cs" />
-    <Compile Include="Model\Tcp\MessageBufferTest.cs" />
     <Compile Include="Model\Test\TestDeferrablePacket.cs" />
     <Compile Include="Model\Test\TestNonActionPacket.cs" />
     <Compile Include="Patcher\Patches\BaseGhost_Finish_PatchTest.cs" />
