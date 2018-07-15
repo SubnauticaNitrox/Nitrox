@@ -2,7 +2,7 @@
 
 namespace NitroxServer.GameLogic
 {
-    public class SimulationOwnership
+    public class SimulationOwnershipData
     {
         Dictionary<string, Player> guidsByPlayer = new Dictionary<string, Player>();
         

@@ -9,13 +9,13 @@ namespace NitroxServer.GameLogic.Entities
     public class EntitySimulation
     {
         private readonly EntityData entityData;
-        private readonly SimulationOwnership simulationOwnership;
+        private readonly SimulationOwnershipData simulationOwnershipData;
         private readonly PlayerManager playerManager;
 
-        public EntitySimulation(EntityData entityData, SimulationOwnership simulationOwnership, PlayerManager playerManager)
+        public EntitySimulation(EntityData entityData, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager)
         {
             this.entityData = entityData;
-            this.simulationOwnership = simulationOwnership;
+            this.simulationOwnershipData = simulationOwnershipData;
             this.playerManager = playerManager;
         }
 
@@ -80,7 +80,7 @@ namespace NitroxServer.GameLogic.Entities
                 assignedEntities.AddRange(
                     entities.Where(entity => cell.Level <= entity.Level &&
                                              ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) && 
-                                             simulationOwnership.TryToAcquire(entity.Guid, player)));                               
+                                             simulationOwnershipData.TryToAcquire(entity.Guid, player)));                               
             }
 
             return assignedEntities;
@@ -95,7 +95,7 @@ namespace NitroxServer.GameLogic.Entities
                 List<Entity> entities = entityData.GetEntities(cell);
                 
                 revokedEntities.AddRange(
-                    entities.Where(entity => entity.Level <= cell.Level && simulationOwnership.RevokeIfOwner(entity.Guid, player)));                        
+                    entities.Where(entity => entity.Level <= cell.Level && simulationOwnershipData.RevokeIfOwner(entity.Guid, player)));                        
             }
 
             return revokedEntities;
@@ -103,7 +103,7 @@ namespace NitroxServer.GameLogic.Entities
 
         private List<Entity> RevokeAll(Player player)
         {
-            List<string> RevokedGuids = simulationOwnership.RevokeAllForOwner(player);
+            List<string> RevokedGuids = simulationOwnershipData.RevokeAllForOwner(player);
 
             return entityData.GetEntitiesByGuids(RevokedGuids);
         }

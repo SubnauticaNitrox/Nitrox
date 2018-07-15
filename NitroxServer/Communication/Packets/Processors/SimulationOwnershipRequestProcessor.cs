@@ -8,21 +8,20 @@ namespace NitroxServer.Communication.Packets.Processors
     class SimulationOwnershipRequestProcessor : AuthenticatedPacketProcessor<SimulationOwnershipRequest>
     {
         private readonly PlayerManager playerManager;
-        private readonly SimulationOwnership simulationOwnership;
+        private readonly SimulationOwnershipData simulationOwnershipData;
 
-        public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnership simulationOwnership)
+        public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData)
         {
             this.playerManager = playerManager;
-            this.simulationOwnership = simulationOwnership;
+            this.simulationOwnershipData = simulationOwnershipData;
         }
 
         public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
         {
             Log.Debug(ownershipRequest);
 
-            if (simulationOwnership.TryToAcquire(ownershipRequest.Guid, player))
+            if (simulationOwnershipData.TryToAcquire(ownershipRequest.Guid, player))
             {
-                // TODO: Distribute ownership in the `SimulationOwnership` class.
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
                 Log.Debug("Sending: " + simulationOwnershipChange);
