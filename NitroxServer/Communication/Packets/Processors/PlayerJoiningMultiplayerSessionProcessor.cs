@@ -40,7 +40,9 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
-                                                                       world.GameData.PDAState.GetInitialPdaData());
+                                                                       world.GameData.PDAState.GetInitialPdaData(),
+                                                                       world.PlayerData.PlayerSpawn(player.Name),
+                                                                       world.PlayerData.Stats(player.Name));
 
             player.SendPacket(initialPlayerSync);
 
