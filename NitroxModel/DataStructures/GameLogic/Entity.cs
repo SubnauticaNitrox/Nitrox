@@ -33,12 +33,16 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(8)]
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
+        [ProtoMember(9)]
+        public bool SpawnedByServer; // Keeps track if an entity was spawned by the server or a player
+                                     // Server-spawned entities need to be techType white-listed to be simulated
+
         public Entity()
         {
             // Default Constructor for serialization
         }
 
-        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId)
+        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId, bool spawnedByServer)
         {
             Position = position;
             Rotation = rotation;
@@ -46,11 +50,12 @@ namespace NitroxModel.DataStructures.GameLogic
             Guid = System.Guid.NewGuid().ToString();
             Level = level;
             ClassId = classId;
+            SpawnedByServer = spawnedByServer;
         }
 
         public override string ToString()
         {
-            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + ChildEntities + "]";
+            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + ChildEntities + " SpawnedByServer: " + SpawnedByServer + "]";
         }
     }
 }

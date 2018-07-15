@@ -97,6 +97,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
+    <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\GameData.cs" />
     <Compile Include="GameLogic\ConnectionAssets.cs" />
     <Compile Include="GameLogic\Entities\EntityData.cs" />

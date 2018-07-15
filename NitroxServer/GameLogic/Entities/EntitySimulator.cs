@@ -24,12 +24,14 @@ namespace NitroxServer.GameLogic.Entities
                 List<Entity> entities = entityData.GetEntities(cell);
                 
                 assignedEntities.AddRange(
-                    entities.Where(entity => cell.Level <= entity.Level && simulationOwnership.TryToAcquire(entity.Guid, player)));                               
+                    entities.Where(entity => cell.Level <= entity.Level &&
+                                             ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) && 
+                                             simulationOwnership.TryToAcquire(entity.Guid, player)));                               
             }
 
             return assignedEntities;
         }
-
+        
         public List<Entity> RevokeForCells(Player player, AbsoluteEntityCell[] removed)
         {
             List<Entity> revokedEntities = new List<Entity>();

@@ -153,7 +153,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               entitySpawnPoint.Rotation,
                                               techType,
                                               (int)cellLevel,
-                                              classId);
+                                              classId,
+                                              true);
             yield return spawnedEntity;
 
             IEntityBootstrapper bootstrapper;
