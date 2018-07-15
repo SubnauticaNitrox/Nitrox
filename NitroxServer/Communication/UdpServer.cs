@@ -7,6 +7,8 @@ using Lidgren.Network;
 using System.Collections.Generic;
 using System.Threading;
 using System.IO;
+using NitroxServer.GameLogic.Entities;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.Communication
 {
@@ -14,13 +16,15 @@ namespace NitroxServer.Communication
     {
         private readonly PacketHandler packetHandler;
         private readonly PlayerManager playerManager;
+        private readonly EntitySimulation entitySimulation;
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager)
+        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
+            this.entitySimulation = entitySimulation;
 
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
@@ -113,6 +117,14 @@ namespace NitroxServer.Communication
 
                     Disconnect disconnect = new Disconnect(player.Id);
                     playerManager.SendPacketToAllPlayers(disconnect);
+
+                    List<OwnedGuid> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+
+                    if (revokedGuids.Count > 0)
+                    {
+                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
+                        playerManager.SendPacketToAllPlayers(ownershipChange);
+                    }
                 }
             }
         }

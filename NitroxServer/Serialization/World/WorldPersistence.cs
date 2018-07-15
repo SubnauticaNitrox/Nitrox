@@ -127,6 +127,7 @@ namespace NitroxServer.Serialization.World
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
             world.GameData = gameData;
+            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnership, world.PlayerManager);
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);

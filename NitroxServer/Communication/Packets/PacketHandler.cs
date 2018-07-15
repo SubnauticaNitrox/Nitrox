@@ -43,7 +43,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(SimulationOwnership), world.SimulationOwnership },
                 {typeof(EscapePodManager), new EscapePodManager() },
                 {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
-                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnership) }
+                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnership, world.PlayerManager) }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));

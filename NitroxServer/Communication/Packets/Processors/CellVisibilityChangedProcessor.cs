@@ -29,9 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             SendNewlyVisibleEntities(player, packet.Added);
 
-            List<OwnedGuid> ownershipChanges = new List<OwnedGuid>();
-            AssignLoadedCellEntitySimulation(player, packet.Added, ownershipChanges);
-            ReassignRemovedCellEntitySimulation(player, packet.Removed, ownershipChanges);
+            List<OwnedGuid> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, packet.Added, packet.Removed);
             BroadcastSimulationChanges(ownershipChanges);
         }
 
@@ -43,36 +41,6 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 CellEntities cellEntities = new CellEntities(newlyVisibleEntities);
                 player.SendPacket(cellEntities);
-            }
-        }
-
-        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<OwnedGuid> ownershipChanges)
-        {
-            List<Entity> entities = entitySimulation.AssignForCells(player, addedCells);
-
-            foreach (Entity entity in entities)
-            {
-                ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
-            }
-        }
-
-        private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, AbsoluteEntityCell[] removedCells, List<OwnedGuid> ownershipChanges)
-        {
-            List<Entity> revokedEntities = entitySimulation.RevokeForCells(sendingPlayer, removedCells);
-
-            foreach (Entity entity in revokedEntities)
-            {
-                AbsoluteEntityCell entityCell = entity.AbsoluteEntityCell;
-
-                foreach (Player player in playerManager.GetPlayers())
-                {
-                    if (player != sendingPlayer && player.HasCellLoaded(entityCell))
-                    {
-                        Log.Info("Player " + player.Name + " can take over " + entity.Guid);
-                        ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
-                        return;
-                    }
-                }
             }
         }
 

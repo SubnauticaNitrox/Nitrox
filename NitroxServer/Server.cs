@@ -23,7 +23,7 @@ namespace NitroxServer
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager);            
+            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation);            
         }
 
         public void Start()
