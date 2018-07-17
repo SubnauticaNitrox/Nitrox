@@ -99,7 +99,6 @@
     <Compile Include="Patches\KnownTech_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
-    <Compile Include="Patches\LargeWorldOctreeCompiler_RequestAbort_Patch.cs" />
     <Compile Include="Patches\Player_OnDestroy_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
     <Compile Include="Patches\uGUI_SignInput_OnDeselect_Patch.cs" />
