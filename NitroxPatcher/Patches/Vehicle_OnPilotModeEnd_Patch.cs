@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().OnPilotMode(__instance, 1);
+            NitroxServiceLocator.LocateService<Vehicles>().OnPilotMode(__instance, false);
         }
 
         public override void Patch(HarmonyInstance harmony)

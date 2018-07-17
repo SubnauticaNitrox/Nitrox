@@ -121,7 +121,7 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
         }
 
-        public void DestroyVehicle(VehicleRemoveEntry entry, PlayerManager remotePlayerManager) //Destroy Vehicle From network
+        public void DestroyVehicle(VehicleDestroyed entry, PlayerManager remotePlayerManager) //Destroy Vehicle From network
         {
             Optional<GameObject> Object = GuidHelper.GetObjectFrom(entry.Guid);
             if (Object.IsPresent())
@@ -166,52 +166,14 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void Add(Vehicle vehicle) //Add Vehicle Fron Network Packet
+        public void CreateNewVehicle(Vehicle vehicle) //Add Vehicle Fron Network Packet
         {
-            string guid;
-            Vector3 position;
-            Quaternion rotation;
-            Vector3 velocity;
-            Vector3 angularVelocity;
-            TechType techType;
-            float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
-            bool appliedThrottle = false;
-
-            guid = GuidHelper.GetGuid(vehicle.gameObject);
-            position = vehicle.gameObject.transform.position;
-            rotation = vehicle.gameObject.transform.rotation;
-            techType = CraftData.GetTechType(vehicle.gameObject);
-
-            Rigidbody rigidbody = vehicle.gameObject.GetComponent<Rigidbody>();
-
-            velocity = rigidbody.velocity;
-            angularVelocity = rigidbody.angularVelocity;
-
-            // Required because vehicle is either a SeaMoth or an Exosuit, both types which can't see the fields either.
-            steeringWheelYaw = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelYaw");
-            steeringWheelPitch = (float)vehicle.ReflectionGet<Vehicle, Vehicle>("steeringWheelPitch");
-
-            // Vehicles (or the SeaMoth at least) do not have special throttle animations. Instead, these animations are always playing because the player can't even see them (unlike the cyclops which has cameras).
-            // So, we need to hack in and try to figure out when thrust needs to be applied.
-            if (vehicle && AvatarInputHandler.main.IsEnabled())
-            {
-                if (techType == TechType.Seamoth)
-                {
-                    bool flag = vehicle.transform.position.y < Ocean.main.GetOceanLevel() && vehicle.transform.position.y < vehicle.worldForces.waterDepth && !vehicle.precursorOutOfWater;
-                    appliedThrottle = flag && GameInput.GetMoveDirection().sqrMagnitude > .1f;
-                }
-                else if (techType == TechType.Exosuit)
-                {
-                    Exosuit exosuit = vehicle as Exosuit;
-                    if (exosuit)
-                    {
-                        appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
-                    }
-                }
-            }
-
-            VehicleModel model = new VehicleModel(techType,guid,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle);
-            VehicleAddEntry vehicleAdd = new VehicleAddEntry(model);
+            string guid = GuidHelper.GetGuid(vehicle.gameObject);
+            Vector3 position = vehicle.gameObject.transform.position;
+            Quaternion rotation = vehicle.gameObject.transform.rotation;
+            TechType techType = CraftData.GetTechType(vehicle.gameObject);
+            VehicleModel model = new VehicleModel(techType,guid,position,rotation,new Vector3(), new Vector3(), 0,0,false);
+            VehicleCreated vehicleAdd = new VehicleCreated(model);
             packetSender.Send(vehicleAdd);
         }
 
@@ -222,11 +184,11 @@ namespace NitroxClient.GameLogic
 
         public void Remove(Vehicle vehicle) //Remove Vehicle From Instance Event OnKill
         {
-            using (packetSender.Suppress<VehicleOnPilotMode>())
+            using (packetSender.Suppress<VehicleOnPilotModeChanged>())
             {
                 string guid = GuidHelper.GetGuid(vehicle.gameObject);
                 LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-                VehicleRemoveEntry vehicleremove = new VehicleRemoveEntry(guid, localPlayer.PlayerName, vehicle.GetPilotingMode());
+                VehicleDestroyed vehicleremove = new VehicleDestroyed(guid, localPlayer.PlayerName, vehicle.GetPilotingMode());
                 packetSender.Send(vehicleremove);
 
                 GuidHelper.SetNewGuid(vehicle.gameObject, string.Empty); //Clean Local (Detach Player From Vehicle Call OnPilotMode Event if Guid is Empty Dont Send That Event)
@@ -247,18 +209,17 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void OnPilotMode(Vehicle vehicle, byte type) // Set & Unset Remote Player Value Inside of Vehicle Sender
+        public void OnPilotMode(Vehicle vehicle, bool type) // Set & Unset Remote Player Value Inside of Vehicle Sender
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
-                VehicleOnPilotMode mode = new VehicleOnPilotMode(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), type);
+                VehicleOnPilotModeChanged mode = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), type);
                 packetSender.Send(mode);
-                Log.Info("Sender: " + mode.ToString());
             }
             
         }
 
-        public void OnPilotModeSet(string vehicleGuid, string playerGuid, byte type) // Set & Unset Remote Player Value Inside of Vehicle Receiver
+        public void OnPilotModeSet(string vehicleGuid, string playerGuid, bool type) // Set & Unset Remote Player Value Inside of Vehicle Receiver
         {
             Log.Info("Receiver: VehicleGuid: " + vehicleGuid + " PlayerGuid: " + playerGuid + " Type: " + type);
 
@@ -266,13 +227,12 @@ namespace NitroxClient.GameLogic
 
             if (Vehicle.IsPresent())
             {
-                Log.Info("Object Found");
                 GameObject Go = Vehicle.Get();
                 Vehicle V = Go.GetComponent<Vehicle>();
 
                 if (V != null)
                 {
-                    if (type == 0)
+                    if (type)
                     {
                         V.pilotId = playerGuid;
                     }
@@ -280,8 +240,6 @@ namespace NitroxClient.GameLogic
                     {
                         V.pilotId = string.Empty;
                     }
-                    Log.Info("Component Found");
-                    Log.Info("");
                 }
             }
         }

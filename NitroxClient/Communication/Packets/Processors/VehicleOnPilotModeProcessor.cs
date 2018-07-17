@@ -9,7 +9,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class VehicleOnPilotModeProcessor : ClientPacketProcessor<VehicleOnPilotMode>
+    public class VehicleOnPilotModeProcessor : ClientPacketProcessor<VehicleOnPilotModeChanged>
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
@@ -20,12 +20,9 @@ namespace NitroxClient.Communication.Packets.Processors
             this.vehicles = vehicles;
         }
 
-        public override void Process(VehicleOnPilotMode packet)
+        public override void Process(VehicleOnPilotModeChanged packet)
         {
-            using (packetSender.Suppress<VehicleRemoveEntry>())
-            {
-                vehicles.OnPilotModeSet(packet.VehicleGuid, packet.PlayerGuid,  packet.Type);
-            }
+            vehicles.OnPilotModeSet(packet.VehicleGuid, packet.PlayerGuid, packet.Type);
         }
     }
 }

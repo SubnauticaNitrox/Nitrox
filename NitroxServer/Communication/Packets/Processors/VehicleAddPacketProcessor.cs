@@ -5,7 +5,7 @@ using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    class VehicleAddPacketProcessor : AuthenticatedPacketProcessor<VehicleAddEntry>
+    class VehicleAddPacketProcessor : AuthenticatedPacketProcessor<VehicleCreated>
     {
         private readonly PlayerManager playerManager;
         private readonly VehicleData vehicleData;
@@ -16,7 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.vehicleData = vehicleData;
         }
 
-        public override void Process(VehicleAddEntry packet, Player player)
+        public override void Process(VehicleCreated packet, Player player)
         {
             NitroxModel.Logger.Log.Info(packet.ToString());
             vehicleData.UpdateVehicle(packet.Vehicle);

@@ -9,7 +9,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class VehicleRemoveProcessor : ClientPacketProcessor<VehicleRemoveEntry>
+    public class VehicleRemoveProcessor : ClientPacketProcessor<VehicleDestroyed>
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
@@ -22,9 +22,9 @@ namespace NitroxClient.Communication.Packets.Processors
             this.remotePlayerManager = remotePlayerManager;
         }
 
-        public override void Process(VehicleRemoveEntry packet)
+        public override void Process(VehicleDestroyed packet)
         {
-            using (packetSender.Suppress<VehicleRemoveEntry>())
+            using (packetSender.Suppress<VehicleDestroyed>())
             {
                 vehicles.DestroyVehicle(packet, remotePlayerManager);
             }

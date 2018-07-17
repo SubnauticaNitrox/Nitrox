@@ -6,13 +6,13 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class VehicleOnPilotMode : Packet
+    public class VehicleOnPilotModeChanged : Packet
     {
         public string VehicleGuid { get; }
         public string PlayerGuid { get; }
-        public byte Type { get; }
+        public bool Type { get; }
 
-        public VehicleOnPilotMode(string vehicleGuid, string playerGuid,byte type)
+        public VehicleOnPilotModeChanged(string vehicleGuid, string playerGuid,bool type)
         {
             VehicleGuid = vehicleGuid;
             PlayerGuid = playerGuid;
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleOnPilotMode - VehicleGuid: " + VehicleGuid + " PlayerGuid: " + PlayerGuid + " Type: " + Type + "]";
+            return "[VehicleOnPilotModeChanged - VehicleGuid: " + VehicleGuid + " PlayerGuid: " + PlayerGuid + " Type: " + Type + "]";
         }
     }
 }

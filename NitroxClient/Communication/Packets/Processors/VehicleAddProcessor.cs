@@ -9,7 +9,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class VehicleAddProcessor : ClientPacketProcessor<VehicleAddEntry>
+    public class VehicleAddProcessor : ClientPacketProcessor<VehicleCreated>
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
@@ -20,9 +20,9 @@ namespace NitroxClient.Communication.Packets.Processors
             this.vehicles = vehicles;
         }
 
-        public override void Process(VehicleAddEntry packet)
+        public override void Process(VehicleCreated packet)
         {
-            using (packetSender.Suppress<VehicleAddEntry>())
+            using (packetSender.Suppress<VehicleCreated>())
             {
                 vehicles.AddVehiclePosition(packet.Vehicle);
             }

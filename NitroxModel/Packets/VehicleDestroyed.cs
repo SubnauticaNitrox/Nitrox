@@ -6,13 +6,13 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class VehicleRemoveEntry : Packet
+    public class VehicleDestroyed : Packet
     {
         public string Guid { get; }
         public string PlayerName { get; }
         public bool GetPilotingMode { get; }
 
-        public VehicleRemoveEntry(string guid, string playerName, bool getPilotingMode)
+        public VehicleDestroyed(string guid, string playerName, bool getPilotingMode)
         {
             Guid = guid;
             PlayerName = playerName;
