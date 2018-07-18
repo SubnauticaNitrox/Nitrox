@@ -122,9 +122,9 @@
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VehicleRemoveProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VehicleAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleDestroyedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />

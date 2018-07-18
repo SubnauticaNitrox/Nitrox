@@ -14,18 +14,41 @@ namespace NitroxClient.GameLogic
 {
     public class Vehicles
     {
-
         private readonly IPacketSender packetSender;
+        private readonly PlayerManager playerManager;
 
-        public Vehicles(IPacketSender packetSender)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager)
         {
             this.packetSender = packetSender;
+            this.playerManager = playerManager;
         }
 
-        public void AddVehiclePosition(VehicleModel vehicleModel)
+        public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicleAt(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation);
         }
+
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation)
+        {
+            if (techType == TechType.Cyclops)
+            {
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation));
+            }
+            else
+            {
+                GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
+
+                if (techPrefab != null)
+                {
+                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation);
+                }
+                else
+                {
+                    Log.Error("No prefab for tech type: " + techType);
+                }
+            }
+        }
+
         public void UpdateVehiclePosition(VehicleModel vehicleModel, Optional<RemotePlayer> player)
         {
             Vector3 remotePosition = vehicleModel.Position;
@@ -70,8 +93,7 @@ namespace NitroxClient.GameLogic
                 {
                     mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
-                    
+                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);                    
                 }
             }
 
@@ -82,27 +104,6 @@ namespace NitroxClient.GameLogic
                 playerInstance.SetSubRoot(subRoot);
                 playerInstance.SetPilotingChair(subRoot?.GetComponentInChildren<PilotingChair>());
                 playerInstance.AnimationController.UpdatePlayerAnimations = false;
-            }
-        }
-
-        private void CreateVehicleAt(TechType techType, string guid, Vector3 position, Quaternion rotation)
-        {
-            if (techType == TechType.Cyclops)
-            {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation));
-            }
-            else
-            {
-                GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
-
-                if (techPrefab != null)
-                {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation);
-                }
-                else
-                {
-                    Log.Error("No prefab for tech type: " + techType);
-                }
             }
         }
 
@@ -121,31 +122,32 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
         }
 
-        public void DestroyVehicle(VehicleDestroyed entry, PlayerManager remotePlayerManager) //Destroy Vehicle From network
+        public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
         {
-            Optional<GameObject> Object = GuidHelper.GetObjectFrom(entry.Guid);
+            Optional<GameObject> Object = GuidHelper.GetObjectFrom(guid);
             if (Object.IsPresent())
             {
                 GameObject T = Object.Get();
                 Vehicle vehicle = T.RequireComponent<Vehicle>();
 
-                if (entry.GetPilotingMode) //Check Remote Object Have Player inside
+                if (isPiloting) //Check Remote Object Have Player inside
                 {
-                    Optional<RemotePlayer> player = remotePlayerManager.Find(vehicle.pilotId);
+                    Optional<RemotePlayer> remotePilot = playerManager.Find(vehicle.pilotId);
 
-                    if (player.IsPresent()) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
+                    if (remotePilot.IsPresent()) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
                     {
-                        RemotePlayer playerInstance = player.Get();
-                        playerInstance.SetVehicle(null);
-                        playerInstance.SetSubRoot(null);
-                        playerInstance.SetPilotingChair(null);
-                        playerInstance.AnimationController.UpdatePlayerAnimations = true;
+                        RemotePlayer remotePlayer = remotePilot.Get();
+                        remotePlayer.SetVehicle(null);
+                        remotePlayer.SetSubRoot(null);
+                        remotePlayer.SetPilotingChair(null);
+                        remotePlayer.AnimationController.UpdatePlayerAnimations = true;
                     }
                 }
 
                 if (vehicle.GetPilotingMode()) //Check Local Object Have Player inside
                 {
                     vehicle.ReflectionCall("OnPilotModeEnd", false, false, null);
+
                     if (!Player.main.ToNormalMode(true))
                     {
                         Player.main.ToNormalMode(false);
@@ -161,84 +163,83 @@ namespace NitroxClient.GameLogic
                         gameObject.transform.position = vehicle.transform.position;
                         gameObject.transform.rotation = vehicle.transform.rotation;
                     }
+
                     UnityEngine.Object.Destroy(vehicle.gameObject);
                 }
             }
         }
-
-        public void CreateNewVehicle(Vehicle vehicle) //Add Vehicle Fron Network Packet
-        {
-            string guid = GuidHelper.GetGuid(vehicle.gameObject);
-            Vector3 position = vehicle.gameObject.transform.position;
-            Quaternion rotation = vehicle.gameObject.transform.rotation;
-            TechType techType = CraftData.GetTechType(vehicle.gameObject);
-            VehicleModel model = new VehicleModel(techType,guid,position,rotation,new Vector3(), new Vector3(), 0,0,false);
-            VehicleCreated vehicleAdd = new VehicleCreated(model);
-            packetSender.Send(vehicleAdd);
-        }
-
-        public void Add(VehicleModel vehicleModel) //Add Vehicle From Save
-        {
-            CreateVehicleAt(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation);
-        }
-
-        public void Remove(Vehicle vehicle) //Remove Vehicle From Instance Event OnKill
+        
+        public void BroadcastDestroyedVehicle(Vehicle vehicle)
         {
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
             {
                 string guid = GuidHelper.GetGuid(vehicle.gameObject);
                 LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
-                VehicleDestroyed vehicleremove = new VehicleDestroyed(guid, localPlayer.PlayerName, vehicle.GetPilotingMode());
-                packetSender.Send(vehicleremove);
 
-                GuidHelper.SetNewGuid(vehicle.gameObject, string.Empty); //Clean Local (Detach Player From Vehicle Call OnPilotMode Event if Guid is Empty Dont Send That Event)
+                VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(guid, localPlayer.PlayerName, vehicle.GetPilotingMode());
+                packetSender.Send(vehicleDestroyed);
 
-                if (!string.IsNullOrEmpty(vehicle.pilotId)) // OnPilotMode Set That Value if Value exist have Remote Player Inside (Need Detach Before Destroy gameObject)
+                // Remove vehicle guid (Detach Player From Vehicle Call OnPilotMode Event if Guid is Empty Dont Send That Event)
+                GuidHelper.SetNewGuid(vehicle.gameObject, string.Empty); 
+
+                // If there is a pilotId then there is a remote player.  We must
+                // detach the remote player before destroying the game object.
+                if (!string.IsNullOrEmpty(vehicle.pilotId)) 
                 {
-                    PlayerManager remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>();
-                    Optional<RemotePlayer> player = remotePlayer.Find(vehicle.pilotId);
-                    if (player.IsPresent())
+                    Optional<RemotePlayer> pilot = playerManager.Find(vehicle.pilotId);
+
+                    if (pilot.IsPresent())
                     {
-                        RemotePlayer RP = player.Get();
-                        RP.SetVehicle(null);
-                        RP.SetSubRoot(null);
-                        RP.SetPilotingChair(null);
-                        RP.AnimationController.UpdatePlayerAnimations = true;
+                        RemotePlayer remotePlayer = pilot.Get();
+                        remotePlayer.SetVehicle(null);
+                        remotePlayer.SetSubRoot(null);
+                        remotePlayer.SetPilotingChair(null);
+                        remotePlayer.AnimationController.UpdatePlayerAnimations = true;
                     }
                 }
             }
         }
 
-        public void OnPilotMode(Vehicle vehicle, bool type) // Set & Unset Remote Player Value Inside of Vehicle Sender
+        public void BroadcastNewVehicle(Vehicle vehicle)
+        {
+            string guid = GuidHelper.GetGuid(vehicle.gameObject);
+            Vector3 position = vehicle.gameObject.transform.position;
+            Quaternion rotation = vehicle.gameObject.transform.rotation;
+            TechType techType = CraftData.GetTechType(vehicle.gameObject);
+
+            VehicleModel model = new VehicleModel(techType, guid, position, rotation, new Vector3(), new Vector3(), 0, 0, false);
+
+            VehicleCreated vehicleCreated = new VehicleCreated(model);
+            packetSender.Send(vehicleCreated);
+        }
+
+        public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
-                VehicleOnPilotModeChanged mode = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), type);
-                packetSender.Send(mode);
-            }
-            
+                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), isPiloting);
+                packetSender.Send(packet);
+            }            
         }
 
-        public void OnPilotModeSet(string vehicleGuid, string playerGuid, bool type) // Set & Unset Remote Player Value Inside of Vehicle Receiver
+        public void SetOnPilotMode(string vehicleGuid, string playerGuid, bool isPiloting)
         {
-            Log.Info("Receiver: VehicleGuid: " + vehicleGuid + " PlayerGuid: " + playerGuid + " Type: " + type);
+            Optional<GameObject> opVehicle = GuidHelper.GetObjectFrom(vehicleGuid);
 
-            Optional<GameObject> Vehicle = GuidHelper.GetObjectFrom(vehicleGuid);
-
-            if (Vehicle.IsPresent())
+            if (opVehicle.IsPresent())
             {
-                GameObject Go = Vehicle.Get();
-                Vehicle V = Go.GetComponent<Vehicle>();
+                GameObject gameObject = opVehicle.Get();
+                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
 
-                if (V != null)
+                if (vehicle != null)
                 {
-                    if (type)
+                    if (isPiloting)
                     {
-                        V.pilotId = playerGuid;
+                        vehicle.pilotId = playerGuid;
                     }
                     else
                     {
-                        V.pilotId = string.Empty;
+                        vehicle.pilotId = string.Empty;
                     }
                 }
             }

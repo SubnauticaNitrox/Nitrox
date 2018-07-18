@@ -3,7 +3,6 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().OnPilotMode(__instance, false);
+            NitroxServiceLocator.LocateService<Vehicles>().BroadcastOnPilotModeChanged(__instance, false);
         }
 
         public override void Patch(HarmonyInstance harmony)

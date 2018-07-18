@@ -5,7 +5,6 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
@@ -15,7 +14,6 @@ using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
-using NitroxModel.Core;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -201,14 +199,13 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 foreach (VehicleModel vehicle in vehicleModels)
                 {
-                    vehicles.Add(vehicle);
+                    vehicles.CreateVehicle(vehicle);
                 }
             }
         }
 
         private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)
         {
-
             ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
             Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
 

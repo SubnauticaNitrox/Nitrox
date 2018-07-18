@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().CreateNewVehicle(__instance);
+            NitroxServiceLocator.LocateService<Vehicles>().BroadcastNewVehicle(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)

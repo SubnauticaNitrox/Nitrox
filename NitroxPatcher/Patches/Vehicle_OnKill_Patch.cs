@@ -2,7 +2,6 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
@@ -14,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix(Vehicle __instance)
         {
-            NitroxServiceLocator.LocateService<Vehicles>().Remove(__instance);
+            NitroxServiceLocator.LocateService<Vehicles>().BroadcastDestroyedVehicle(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)

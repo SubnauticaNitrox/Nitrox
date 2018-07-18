@@ -1,23 +1,21 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
-using UnityEngine;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class VehicleCreated : VehicleMovement
+    public class VehicleCreated : Packet
     {
-        public VehicleModel VehicleData { get; }
+        public VehicleModel Vehicle { get; }
 
-        public VehicleCreated(VehicleModel vehicle) : base(string.Empty, vehicle)
+        public VehicleCreated(VehicleModel vehicle)
         {
-            VehicleData = vehicle;
+            Vehicle = vehicle;
         }
 
         public override string ToString()
         {
-            return "[VehicleCreated - Vehicle: " + Vehicle +  "]\n\t" + base.ToString();
+            return "[VehicleCreated - Vehicle: " + Vehicle +  "]";
         }
     }
 }
