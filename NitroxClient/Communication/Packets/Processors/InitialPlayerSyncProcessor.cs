@@ -37,18 +37,19 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             SetPlayerGuid(packet.PlayerGuid);
+            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
-            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnInventoryItemsPlayer(packet.PlayerGuid, packet.InventoryItems);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
             SetPDALog(packet.PDAData.PDALogEntries);
-            SetPlayerSpawn(packet.PlayerSpawnData);
+            SpawnPlayerEquipment(packet.EquippedItems);
             SetPlayerStats(packet.PlayerStatsData);
+            SetPlayerSpawn(packet.PlayerSpawnData);            
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
