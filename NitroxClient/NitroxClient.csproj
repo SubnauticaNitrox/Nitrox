@@ -122,6 +122,7 @@
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDestroyedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateStateProvider.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
+    <Compile Include="GameLogic\SeamothModulesEvent.cs" />
     <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />

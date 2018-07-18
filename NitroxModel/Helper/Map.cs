@@ -24,7 +24,15 @@ namespace NitroxModel.Helper
         public static readonly List<TechType> GLOBAL_ROOT_TECH_TYPES = new List<TechType>()
         {
             TechType.Pipe,
-            TechType.Beacon
+            TechType.Constructor,
+            TechType.Flare,
+            TechType.Gravsphere,
+            TechType.PipeSurfaceFloater,
+            TechType.SmallStorage,
+            TechType.CyclopsDecoy,
+            TechType.LEDLight,
+            TechType.Beacon,
+            
         };
     }
 }
