@@ -5,7 +5,6 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System;
@@ -37,10 +36,12 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetInventoryGuid(packet.InventoryGuid);
+            SetPlayerGuid(packet.PlayerGuid);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
+            SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
+            SpawnInventoryItemsPlayer(packet.PlayerGuid, packet.InventoryItems);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
@@ -49,8 +50,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
             SpawnPlayerEquipment(packet.EquippedItems);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerSpawn(packet.PlayerSpawnData);
-            
+            SetPlayerSpawn(packet.PlayerSpawnData);            
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
@@ -152,11 +152,12 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
 
-        private void SetInventoryGuid(string inventoryguid)
+        private void SetPlayerGuid(string playerguid)
         {
-            GuidHelper.SetNewGuid(Inventory.Get().container.tr.root.gameObject, inventoryguid);
-            Log.Info("Received initial sync Player InventoryGuid: " + inventoryguid + "Container Name" + Inventory.Get().container.tr.name);
+            GuidHelper.SetNewGuid(Player.mainObject, playerguid);
+            Log.Info("Received initial sync Player Guid: " + playerguid);
         }
+    
         
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
@@ -196,15 +197,17 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
 
-            foreach (VehicleModel vehicle in vehicleModels)
+            using (packetSender.Suppress<VehicleCreated>())
             {
-                vehicles.UpdateVehiclePosition(vehicle, Optional<RemotePlayer>.Empty());
+                foreach (VehicleModel vehicle in vehicleModels)
+                {
+                    vehicles.CreateVehicle(vehicle);
+                }
             }
         }
 
         private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)
         {
-
             ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
             Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
 

@@ -42,6 +42,9 @@ namespace NitroxServer.Communication
         {
             while (true)
             {
+                // Pause reading thread and wait for messages.
+                server.MessageReceivedEvent.WaitOne();
+
                 NetIncomingMessage im;
                 while ((im = server.ReadMessage()) != null)
                 {

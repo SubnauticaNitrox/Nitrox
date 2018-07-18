@@ -9,9 +9,9 @@ namespace NitroxModel.MultiplayerSession
         public string PlayerName { get; }
         public PlayerSettings PlayerSettings { get; }
 
-        public PlayerContext(string playerName, PlayerSettings playerSettings)
+        public PlayerContext(string playerName, string playerid, PlayerSettings playerSettings)
         {
-            PlayerId = Guid.NewGuid().ToString();
+            PlayerId = playerid;
             PlayerName = playerName;
             PlayerSettings = playerSettings;
         }

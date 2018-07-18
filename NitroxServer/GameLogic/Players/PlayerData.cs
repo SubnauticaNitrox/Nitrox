@@ -49,7 +49,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public string Inventory(string playerName)
+        public string PlayerGuid(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -60,13 +60,13 @@ namespace NitroxServer.GameLogic.Players
                     playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
                 }
 
-                if (string.IsNullOrEmpty(playerPersistedData.PlayerInventoryGuid))
+                if (string.IsNullOrEmpty(playerPersistedData.PlayerGuid))
                 {
-                    return playerPersistedData.PlayerInventoryGuid = Guid.NewGuid().ToString();
+                    return playerPersistedData.PlayerGuid = Guid.NewGuid().ToString();
                 }
                 else
                 {
-                    return playerPersistedData.PlayerInventoryGuid;
+                    return playerPersistedData.PlayerGuid;
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace NitroxServer.GameLogic.Players
             public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
 
             [ProtoMember(3)]
-            public string PlayerInventoryGuid { get; set; }
+            public string PlayerGuid { get; set; }
 
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }

@@ -26,6 +26,7 @@ namespace NitroxServer.Communication.Packets.Processors
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
+
             escapePodManager.AssignPlayerToEscapePod(player.Id);
 
             BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(escapePodManager.GetEscapePods());
@@ -34,7 +35,7 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(world.PlayerData.Inventory(player.Name),
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
