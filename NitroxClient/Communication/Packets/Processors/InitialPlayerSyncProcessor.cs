@@ -47,7 +47,6 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
             SetPDALog(packet.PDAData.PDALogEntries);
-            SpawnInventoryItemsPlayer(packet.InventoryGuid, packet.InventoryItems);
             SpawnPlayerEquipment(packet.EquippedItems);
             SetPlayerStats(packet.PlayerStatsData);
             SetPlayerSpawn(packet.PlayerSpawnData);            
