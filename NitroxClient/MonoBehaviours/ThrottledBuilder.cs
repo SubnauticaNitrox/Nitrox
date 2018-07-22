@@ -48,7 +48,7 @@ namespace NitroxClient.MonoBehaviours
 
             ProcessBuildEventsUntilFrameBlocked();
 
-            if(queueHadItems && buildEvents.Count == 0)
+            if(queueHadItems && buildEvents.Count == 0 && QueueDrained != null)
             {
                 QueueDrained(this, new EventArgs());
             }

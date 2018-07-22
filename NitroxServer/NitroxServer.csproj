@@ -78,7 +78,7 @@
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConsoleEntryProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
