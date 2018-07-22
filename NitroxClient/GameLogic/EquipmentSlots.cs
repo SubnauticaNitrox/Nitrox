@@ -6,6 +6,8 @@ using NitroxModel.Packets;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
@@ -24,8 +26,11 @@ namespace NitroxClient.GameLogic
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes,slot);
-            EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem);
+            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
+
+            Player player = owner.GetComponent<Player>();
+            bool isPlayerEquipment = (player != null);
+            EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem, isPlayerEquipment);
             packetSender.Send(equipPacket);
         }
 
@@ -34,8 +39,10 @@ namespace NitroxClient.GameLogic
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             string ownerGuid = GuidHelper.GetGuid(owner);
 
-            EquipmentRemoveItem removeEquipment = new EquipmentRemoveItem(ownerGuid, slot, itemGuid);
-            packetSender.Send(removeEquipment);
+            Player player = owner.GetComponent<Player>();
+            bool isPlayerEquipment = (player != null);
+            EquipmentRemoveItem equipPacket = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, isPlayerEquipment);
+            packetSender.Send(equipPacket);
         }
 
         public void AddItems(List<EquippedItemData> equippedItems)
@@ -44,18 +51,29 @@ namespace NitroxClient.GameLogic
             
             foreach (EquippedItemData equippedItem in equippedItems)
             {
-                GameObject item = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-                Pickupable pickupable = item.RequireComponent<Pickupable>();
-                container.UnsafeAdd(new InventoryItem(pickupable));
-                Equipment equipment = Inventory.Get().equipment;
-                InventoryItem inventoryItem = new InventoryItem(pickupable);
-                inventoryItem.container = equipment;
-                inventoryItem.item.Reparent(equipment.tr);
-                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
-                itemsBySlot[equippedItem.Slot] = inventoryItem;
-                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
-                Equipment.SendEquipmentEvent(pickupable, 0, item, equippedItem.Slot);
-                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { equippedItem.Slot, inventoryItem });
+                GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
+                Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
+                GameObject owner = GuidHelper.RequireObjectFrom(equippedItem.ContainerGuid);
+                Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+
+                if (opEquipment.IsPresent())
+                {
+                    Equipment equipment = opEquipment.Get();
+                    InventoryItem inventoryItem = new InventoryItem(pickupable);
+                    inventoryItem.container = equipment;
+                    inventoryItem.item.Reparent(equipment.tr);
+
+                    Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                    itemsBySlot[equippedItem.Slot] = inventoryItem;
+
+                    equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
+                    Equipment.SendEquipmentEvent(pickupable, 0, owner, equippedItem.Slot);
+                    equipment.ReflectionCall("NotifyEquip", false, false, new object[] { equippedItem.Slot, inventoryItem });
+                }
+                else
+                {
+                    Log.Info("Could not find equipment type for " + gameObject.name);
+                }
             }
         }
     }

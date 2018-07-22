@@ -8,9 +8,11 @@ namespace NitroxModel.Packets
         public string OwnerGuid { get; }
         public string Slot { get; }
         public string ItemGuid { get; }
+        public bool IsPlayerEquipment { get; }
 
-        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid)
+        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid, bool isPlayerEquipment)
         {
+            IsPlayerEquipment = isPlayerEquipment;
             OwnerGuid = ownerGuid;
             Slot = slot;
             ItemGuid = itemGuid;
@@ -18,7 +20,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[EquipmentRemoveItem OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " ItemGuid: " + ItemGuid + "]";
+            return "[EquipmentRemoveItem OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " ItemGuid: " + ItemGuid + " IsPlayerEquipment: " + IsPlayerEquipment + " ]";
         }
     }
 }

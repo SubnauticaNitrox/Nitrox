@@ -83,7 +83,7 @@ namespace NitroxClient.MonoBehaviours
         private void OnConsoleCommand_mpsave()
         {
             Log.Info("Save Request");
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ConsoleEntry("mpsave"));
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
         }
 
         private void InitializeLocalPlayerState()

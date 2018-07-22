@@ -67,6 +67,13 @@ namespace NitroxClient.GameLogic.Helper
                 return Optional<Equipment>.Of(vehicleUpgradeConsoleInput.equipment);
             }
 
+            Player equipmentplayer = owner.GetComponent<Player>();
+
+            if (equipmentplayer != null)
+            {
+                return Optional<Equipment>.Of(Inventory.main.equipment);
+            }
+
             return Optional<Equipment>.Empty();
         }
     }
