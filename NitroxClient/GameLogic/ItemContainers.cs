@@ -36,8 +36,11 @@ namespace NitroxClient.GameLogic
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             string ownerGuid = GuidHelper.GetGuid(owner);
 
-            ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
-            packetSender.Send(remove);
+            if (ownerGuid != GuidHelper.GetGuid(Player.main.gameObject))
+            {
+                ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
+                packetSender.Send(remove);
+            }
         }
 
         public void AddItem(ItemData itemData)
