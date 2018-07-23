@@ -6,6 +6,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UWE;
+using NitroxModel.DataStructures.GameLogic.Buildings;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {
@@ -183,8 +184,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 transform.position = MultiplayerBuilder.placePosition;
                 transform.rotation = MultiplayerBuilder.placeRotation;
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag);
-                // MultiplayerBuilder.placePosition = transform.position;
-                // MultiplayerBuilder.placeRotation = transform.rotation;
+
+                if(rotationMetadata.IsPresent())
+                {
+                    ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Get());
+                }
+                
                 if (flag)
                 {
                     MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
@@ -205,6 +210,46 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
 
             return flag2;
+        }
+
+        private static void ApplyRotationMetadata(GameObject ghostModel, RotationMetadata rotationMetadata)
+        {
+            BaseGhost component = ghostModel.GetComponent<BaseGhost>();
+
+            if (component == null)
+            {
+                Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
+            }
+            else if (component.GetType() != rotationMetadata.GhostType)
+            {
+                Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
+            }
+            else if (component is BaseAddCorridorGhost)
+            {
+                Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
+
+                CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
+                BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
+                corridor.ReflectionSet("rotation", corridorRotationMetadata.Rotation);
+
+                int corridorType = (int)corridor.ReflectionCall("CalculateCorridorType");
+                Base ghostBase = (Base)corridor.ReflectionGet("ghostBase");
+                ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
+                corridor.ReflectionCall("RebuildGhostGeometry");
+            }
+            else if (component is BaseAddMapRoomGhost)
+            {
+                Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
+
+                MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
+                BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);
+                mapRoom.ReflectionSet("cellType", mapRoomRotationMetadata.CellType);
+                mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
+
+                Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
+                ghostBase.SetCell(Int3.zero, mapRoomRotationMetadata.CellType);
+                mapRoom.ReflectionCall("RebuildGhostGeometry");
+            }
         }
 
         // Token: 0x06002B9D RID: 11165
@@ -1031,6 +1076,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
         // Token: 0x04002A91 RID: 10897
         public static Quaternion placeRotation;
+
+        public static Optional<RotationMetadata> rotationMetadata;
 
         // Token: 0x04002A92 RID: 10898
         private static Material ghostStructureMaterial;

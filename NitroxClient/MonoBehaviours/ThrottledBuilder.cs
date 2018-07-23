@@ -108,6 +108,7 @@ namespace NitroxClient.MonoBehaviours
             MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation;
             MultiplayerBuilder.placePosition = basePiece.ItemPosition;
             MultiplayerBuilder.placeRotation = basePiece.Rotation;
+            MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
             MultiplayerBuilder.Begin(buildPrefab);
 
             GameObject parentBase = null;

@@ -4,6 +4,7 @@ using System.Reflection;
 using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
+using NitroxModel.DataStructures.GameLogic.Buildings;
 
 namespace NitroxServer.Serialization
 {
@@ -47,6 +48,10 @@ namespace NitroxServer.Serialization
             model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(UnityStubs.Quaternion));
             model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(UnityStubs.Transform));
             model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));
+
+            MetaType metaType = model.Add(typeof(RotationMetadata), false);
+            metaType.AddSubType(50, typeof(CorridorRotationMetadata));
+            metaType.AddSubType(60, typeof(MapRoomRotationMetadata));
         }
         
         private void RegisterAssemblyClasses(string assemblyName)

@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic.Buildings;
+using NitroxModel.DataStructures.Util;
 using ProtoBuf;
 using System;
 using UnityEngine;
@@ -55,13 +56,24 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoIgnore]
         public Optional<string> NewBaseGuid { get; set; }
 
+        [ProtoMember(12, DynamicType = true)]
+        public RotationMetadata SerializableRotationMetadata
+        {
+            get { return (RotationMetadata.IsPresent()) ? RotationMetadata.Get() : null; }
+            set { RotationMetadata = Optional<RotationMetadata>.OfNullable(value); }
+        }
+
+        [ProtoIgnore]
+        public Optional<RotationMetadata> RotationMetadata {get; set; }
+
         public BasePiece()
         {
             NewBaseGuid = Optional<String>.Empty();
             ParentGuid = Optional<String>.Empty();
+            RotationMetadata = Optional<RotationMetadata>.Empty();
         }
 
-        public BasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentGuid, bool isFurniture)
+        public BasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentGuid, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
         {
             Guid = guid;
             ItemPosition = itemPosition;
@@ -74,11 +86,12 @@ namespace NitroxModel.DataStructures.GameLogic
             ConstructionAmount = 0.0f;
             ConstructionCompleted = false;
             NewBaseGuid = Optional<string>.Empty();
+            RotationMetadata = rotationMetadata;
         }
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentGuid: " + ParentGuid + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " NewBaseGuid: " + NewBaseGuid + "]";
+            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentGuid: " + ParentGuid + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " NewBaseGuid: " + NewBaseGuid + " RotationMetadata: " + RotationMetadata + "]";
         }
     }
 }

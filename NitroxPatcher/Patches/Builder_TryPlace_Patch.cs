@@ -35,13 +35,14 @@ namespace NitroxPatcher.Patches
                      *  Multiplayer.Logic.Building.PlaceBasePiece(componentInParent, component.TargetBase, CraftData.GetTechType(Builder.prefab), Builder.placeRotation);
                      */
                     yield return TranspilerHelper.LocateService<Building>();
+                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(BaseGhost).GetMethod("get_TargetBase"));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("prefab", BindingFlags.Static | BindingFlags.NonPublic));
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(CraftData).GetMethod("GetTechType", BindingFlags.Static | BindingFlags.Public, null, new Type[] { typeof(GameObject) }, null));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, TARGET_CLASS.GetField("placeRotation", BindingFlags.Static | BindingFlags.NonPublic));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceBasePiece", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(ConstructableBase), typeof(Base), typeof(TechType), typeof(Quaternion) }, null));
+                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("PlaceBasePiece", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(BaseGhost), typeof(ConstructableBase), typeof(Base), typeof(TechType), typeof(Quaternion) }, null));
                 }
 
                 if (instruction.opcode.Equals(PLACE_FURNITURE_INJECTION_OPCODE) && instruction.operand.Equals(PLACE_FURNITURE_INJECTION_OPERAND))
