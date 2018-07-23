@@ -177,7 +177,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             // MultiplayerBuilder.SetDefaultPlaceTransform(ref MultiplayerBuilder.placePosition, ref MultiplayerBuilder.placeRotation);
             bool flag = false;
             ConstructableBase componentInParent = MultiplayerBuilder.ghostModel.GetComponentInParent<ConstructableBase>();
-            bool flag2;
+            bool flag2 = true;
             if (componentInParent != null)
             {
                 Transform transform = componentInParent.transform;
@@ -195,10 +195,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
                     MultiplayerBuilder.InitBounds(MultiplayerBuilder.ghostModel);
                 }
-            }
-            else
-            {
-                flag2 = MultiplayerBuilder.CheckAsSubModule();
             }
 
             if (flag2)
