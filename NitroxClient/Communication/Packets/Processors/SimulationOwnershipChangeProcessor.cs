@@ -24,28 +24,28 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
-            foreach (OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
+            foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
-                if (multiplayerSession.Reservation.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
+                if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId && simulatedEntity.ChangesPosition)
                 {
-                    SimulateEntity(ownedGuid);
+                    SimulateEntity(simulatedEntity);
                 }
 
-                simulationOwnershipManager.AddOwnedGuid(ownedGuid.Guid, ownedGuid.PlayerId);
+                simulationOwnershipManager.AddOwnedGuid(simulatedEntity.Guid, simulatedEntity.PlayerId);
             }
         }
 
-        private void SimulateEntity(OwnedGuid ownedGuid)
+        private void SimulateEntity(SimulatedEntity simulatedEntity)
         {
-            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(ownedGuid.Guid);
+            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(simulatedEntity.Guid);
 
             if (gameObject.IsPresent())
             {
-                EntityPositionBroadcaster.WatchEntity(ownedGuid.Guid, gameObject.Get());
+                EntityPositionBroadcaster.WatchEntity(simulatedEntity.Guid, gameObject.Get());
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + ownedGuid.Guid);
+                Log.Error("Expected to simulate an unknown entity: " + simulatedEntity.Guid);
             }
         }
     }

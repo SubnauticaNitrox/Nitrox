@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -29,7 +28,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             SendNewlyVisibleEntities(player, packet.Added);
 
-            List<OwnedGuid> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, packet.Added, packet.Removed);
+            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, packet.Added, packet.Removed);
             BroadcastSimulationChanges(ownershipChanges);
         }
 
@@ -44,7 +43,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
         }
 
-        private void BroadcastSimulationChanges(List<OwnedGuid> ownershipChanges)
+        private void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
         {
             if (ownershipChanges.Count > 0)
             {

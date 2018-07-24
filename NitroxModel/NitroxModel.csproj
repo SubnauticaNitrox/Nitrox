@@ -71,8 +71,9 @@
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\SimulationLock.cs" />
     <Compile Include="DataStructures\Optional.cs" />
-    <Compile Include="DataStructures\OwnedGuid.cs" />
+    <Compile Include="DataStructures\SimulatedEntity.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />

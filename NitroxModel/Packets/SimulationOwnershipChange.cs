@@ -8,28 +8,28 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SimulationOwnershipChange : Packet
     {
-        public List<OwnedGuid> OwnedGuids { get; }
+        public List<SimulatedEntity> Entities { get; }
 
-        public SimulationOwnershipChange(string guid, string owningPlayerId)
+        public SimulationOwnershipChange(string guid, string owningPlayerId, SimulationLockType lockType)
         {
-            OwnedGuids = new List<OwnedGuid>
+            Entities = new List<SimulatedEntity>
             {
-                new OwnedGuid(guid, owningPlayerId, false)
+                new SimulatedEntity(guid, owningPlayerId, false, lockType)
             };
         }
 
-        public SimulationOwnershipChange(List<OwnedGuid> ownedGuids)
+        public SimulationOwnershipChange(List<SimulatedEntity> entities)
         {
-            OwnedGuids = ownedGuids;
+            Entities = entities;
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("[SimulationOwnershipChange - ");
 
-            foreach (OwnedGuid ownedGuid in OwnedGuids)
+            foreach (SimulatedEntity entity in Entities)
             {
-                stringBuilder.Append(ownedGuid.ToString());
+                stringBuilder.Append(entity.ToString());
             }
 
             stringBuilder.Append("]");

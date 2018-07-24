@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.GameLogic
 {
@@ -29,11 +30,11 @@ namespace NitroxClient.GameLogic
             return false;
         }
 
-        public void TryToRequestOwnership(string guid)
+        public void TryToRequestOwnership(string guid, SimulationLockType lockType)
         {
             if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
             {
-                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid);
+                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid, lockType);
                 packetSender.Send(ownershipRequest);
                 requestedGuids.Add(guid);
             }

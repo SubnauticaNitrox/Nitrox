@@ -8,6 +8,8 @@ namespace NitroxServer.GameLogic.Entities
 {
     public class EntitySimulation
     {
+        private static readonly SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
+
         private readonly EntityData entityData;
         private readonly SimulationOwnershipData simulationOwnershipData;
         private readonly PlayerManager playerManager;
@@ -19,9 +21,9 @@ namespace NitroxServer.GameLogic.Entities
             this.playerManager = playerManager;
         }
 
-        public List<OwnedGuid> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public List<SimulatedEntity> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
-            List<OwnedGuid> ownershipChanges = new List<OwnedGuid>();
+            List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
 
             AssignLoadedCellEntitySimulation(player, added, ownershipChanges);
 
@@ -31,9 +33,9 @@ namespace NitroxServer.GameLogic.Entities
             return ownershipChanges;
         }
 
-        public List<OwnedGuid> CalculateSimulationChangesFromPlayerDisconnect(Player player)
+        public List<SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(Player player)
         {
-            List<OwnedGuid> ownershipChanges = new List<OwnedGuid>();
+            List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
 
             List<Entity> revokedEntities = RevokeAll(player);
             AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
@@ -41,17 +43,17 @@ namespace NitroxServer.GameLogic.Entities
             return ownershipChanges;
         }
 
-        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<OwnedGuid> ownershipChanges)
+        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<SimulatedEntity> ownershipChanges)
         {
             List<Entity> entities = AssignForCells(player, addedCells);
 
             foreach (Entity entity in entities)
             {
-                ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
+                ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
             }
         }
 
-        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<Entity> entities, List<OwnedGuid> ownershipChanges)
+        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<Entity> entities, List<SimulatedEntity> ownershipChanges)
         {
             foreach (Entity entity in entities)
             {
@@ -62,7 +64,7 @@ namespace NitroxServer.GameLogic.Entities
                     if (player != oldPlayer && player.HasCellLoaded(entityCell))
                     {
                         Log.Info("Player " + player.Name + " can take over " + entity.Guid);
-                        ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
+                        ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }
                 }
@@ -80,7 +82,7 @@ namespace NitroxServer.GameLogic.Entities
                 assignedEntities.AddRange(
                     entities.Where(entity => cell.Level <= entity.Level &&
                                              ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) && 
-                                             simulationOwnershipData.TryToAcquire(entity.Guid, player)));                               
+                                             simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE)));                               
             }
 
             return assignedEntities;
