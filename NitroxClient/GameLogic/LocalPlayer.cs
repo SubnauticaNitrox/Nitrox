@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerStats);
         }
 
-        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleModel> vehicle, Optional<string> opSubGuid)
+        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle, Optional<string> opSubGuid)
         {
             Movement movement;
 

@@ -34,6 +34,16 @@ namespace NitroxClient.Communication.Packets.Processors
                 GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
 
                 SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
+
+                if (packet.TechType == TechType.Cyclops)
+                {
+                    SubRoot subRoot = constructedObject.GetComponent<SubRoot>();
+                    if (subRoot != null)
+                    {
+                        GuidHelper.SetNewGuid(subRoot.upgradeConsole.modules.owner, packet.ConstructedModulesEquipmentGuid.Get());
+                        Log.Info("New Modules Guid: " + GuidHelper.GetGuid(subRoot.upgradeConsole.modules.owner));
+                    }
+                }
             }
             else
             {

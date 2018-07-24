@@ -79,7 +79,6 @@
     <Compile Include="Patches\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeEnd_Patch.cs" />
-    <Compile Include="Patches\Vehicle_Awake_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnKill_Patch.cs" />
     <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />

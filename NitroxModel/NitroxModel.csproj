@@ -71,11 +71,12 @@
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
     <Compile Include="DataStructures\SimulationLock.cs" />
     <Compile Include="DataStructures\Optional.cs" />
     <Compile Include="DataStructures\SimulatedEntity.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
-    <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
+    <Compile Include="DataStructures\GameLogic\VehicleMovementData.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
@@ -158,7 +159,6 @@
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
-    <Compile Include="Packets\VehicleCreated.cs" />
     <Compile Include="Packets\VehicleOnPilotModeChanged.cs" />
     <Compile Include="Packets\VehicleDestroyed.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />

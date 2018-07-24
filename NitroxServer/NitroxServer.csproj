@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
@@ -88,7 +89,6 @@
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VehicleAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />

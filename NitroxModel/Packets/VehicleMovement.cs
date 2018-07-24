@@ -8,9 +8,9 @@ namespace NitroxModel.Packets
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public VehicleModel Vehicle { get; }
+        public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(string playerId, VehicleModel vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
+        public VehicleMovement(string playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
         {
             Vehicle = vehicle;
             DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
