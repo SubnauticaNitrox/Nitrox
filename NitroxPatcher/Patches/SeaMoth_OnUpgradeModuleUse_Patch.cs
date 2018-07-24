@@ -18,13 +18,14 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(SeaMoth __instance, TechType techType, int slotID, PacketSuppressor<ItemContainerRemove> __state)
         {
-            __state = NitroxServiceLocator.LocateService<IPacketSender>().Suppress<ItemContainerRemove>();
+            
             if (techType == TechType.SeamothElectricalDefense)
             {
                 NitroxServiceLocator.LocateService<SeamothModulesEvent>().BroadcastElectricalDefense(techType, slotID, __instance);
             }
             else if (techType == TechType.SeamothTorpedoModule)
             {
+                __state = NitroxServiceLocator.LocateService<IPacketSender>().Suppress<ItemContainerRemove>();
                 NitroxServiceLocator.LocateService<SeamothModulesEvent>().BroadcastTorpedoLaunch(techType, slotID, __instance);
             }
             return true;
@@ -32,7 +33,10 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(PacketSuppressor<ItemContainerRemove> __state)
         {
-            __state.Dispose();
+            if (__state != null)
+            {
+                __state.Dispose();
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)
