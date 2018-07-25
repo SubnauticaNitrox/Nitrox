@@ -38,7 +38,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SetPlayerGuid(packet.PlayerGuid);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
-            SpawnPlayerEquipment(packet.EquippedItems);
             SpawnBasePieces(packet.BasePieces);
             SpawnVehicles(packet.Vehicles);
             SpawnInventoryItemsPlayer(packet.PlayerGuid, packet.InventoryItems);
@@ -207,21 +206,24 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)
         {
-            ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-            Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
-
-            foreach (ItemData itemdata in inventoryItems)
+            using (packetSender.Suppress<ItemContainerAdd>())
             {
-                if (itemdata.ContainerGuid == playerGuid)
+                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+
+                foreach (ItemData itemdata in inventoryItems)
                 {
-                    GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
-                    Pickupable pickupable = item.RequireComponent<Pickupable>();
-                    ItemsContainer container = Inventory.Get().container;
-                    InventoryItem inventoryItem = new InventoryItem(pickupable);
-                    inventoryItem.container = container;
-                    inventoryItem.item.Reparent(container.tr);
-                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item You Already have On Inventory
-                    container.UnsafeAdd(inventoryItem);
+                    if (itemdata.ContainerGuid == playerGuid)
+                    {
+                        GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                        Pickupable pickupable = item.RequireComponent<Pickupable>();
+                        ItemsContainer container = Inventory.Get().container;
+                        InventoryItem inventoryItem = new InventoryItem(pickupable);
+                        inventoryItem.container = container;
+                        inventoryItem.item.Reparent(container.tr);
+                        goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item You Already have On Inventory
+                        container.UnsafeAdd(inventoryItem);
+                    }
                 }
             }
 
