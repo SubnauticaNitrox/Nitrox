@@ -76,6 +76,7 @@
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
     <Compile Include="Patches\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeEnd_Patch.cs" />
