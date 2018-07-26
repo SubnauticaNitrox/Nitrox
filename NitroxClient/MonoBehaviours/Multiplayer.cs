@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -98,12 +99,16 @@ namespace NitroxClient.MonoBehaviours
 
         public void InitMonoBehaviours()
         {
+            // Gameplay.
             gameObject.AddComponent<PlayerMovement>();
             gameObject.AddComponent<PlayerDeathBroadcaster>();
             gameObject.AddComponent<PlayerStatsBroadcaster>();
             gameObject.AddComponent<AnimationSender>();
             gameObject.AddComponent<EntityPositionBroadcaster>();
             gameObject.AddComponent<ThrottledBuilder>();
+
+            // UI.
+            gameObject.AddComponent<LostConnectionModal>();
         }
 
         public void StopCurrentSession()
