@@ -18,7 +18,12 @@ namespace NitroxPatcher.Patches.Persistent
             __instance.bottomFirstUseCinematicTarget.gameObject.SetActive(false);
             __instance.topFirstUseCinematicTarget.gameObject.SetActive(false);
 
-            return !Multiplayer.Main.IsMultiplayer();
+
+            if(Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
+            {
+                return false;
+            }
+            return true;
         }
 
         public override void Patch(HarmonyInstance harmony)
