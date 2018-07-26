@@ -53,16 +53,15 @@ namespace NitroxClient.Communication
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
-                        IsConnected = (status == NetConnectionStatus.Connected);
+                        IsConnected = status == NetConnectionStatus.Connected;
 
                         if(IsConnected)
                         {
                             connectedEvent.Set();
                         }
-
-                        if (LargeWorldStreamer.main != null && LargeWorldStreamer.main.IsReady() && !IsConnected)
+                        else if (LostConnectionModal.Instance)
                         {
-                            LostConnectionModal.Show();
+                            LostConnectionModal.Instance.Show();
                         }
 
                         Log.Info("IsConnected status: " + IsConnected);
