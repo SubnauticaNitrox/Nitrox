@@ -62,7 +62,7 @@ namespace NitroxClient.Communication
 
                         if (LargeWorldStreamer.main != null && LargeWorldStreamer.main.IsReady() && !IsConnected)
                         {
-                            LostConnections.Show();
+                            LostConnectionModal.Show();
                         }
 
                         Log.Info("IsConnected status: " + IsConnected);

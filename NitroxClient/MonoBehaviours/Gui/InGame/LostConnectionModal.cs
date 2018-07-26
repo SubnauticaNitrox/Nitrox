@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.InGame
 {
-    public class LostConnections
+    public class LostConnectionModal
     {
         public static void Show()
         {
