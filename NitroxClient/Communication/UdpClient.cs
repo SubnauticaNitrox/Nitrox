@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System.IO;
@@ -57,6 +58,11 @@ namespace NitroxClient.Communication
                         if(IsConnected)
                         {
                             connectedEvent.Set();
+                        }
+
+                        if (LargeWorldStreamer.main != null && LargeWorldStreamer.main.IsReady() && !IsConnected)
+                        {
+                            LostConnections.Show();
                         }
 
                         Log.Info("IsConnected status: " + IsConnected);
