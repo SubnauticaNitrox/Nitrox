@@ -155,6 +155,7 @@
     <Compile Include="Packets\SignChanged.cs" />
     <Compile Include="Packets\SimulationOwnershipChange.cs" />
     <Compile Include="Packets\SimulationOwnershipRequest.cs" />
+    <Compile Include="Packets\SimulationOwnershipResponse.cs" />
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
