@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using System.IO;
@@ -52,11 +53,15 @@ namespace NitroxClient.Communication
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
-                        IsConnected = (status == NetConnectionStatus.Connected);
+                        IsConnected = status == NetConnectionStatus.Connected;
 
                         if(IsConnected)
                         {
                             connectedEvent.Set();
+                        }
+                        else if (LostConnectionModal.Instance)
+                        {
+                            LostConnectionModal.Instance.Show();
                         }
 
                         Log.Info("IsConnected status: " + IsConnected);
