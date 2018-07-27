@@ -12,17 +12,23 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static bool Prefix(EscapePodFirstUseCinematicsController __instance)
         {
+            if (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
+            {
+                __instance.bottomCinematicTarget.gameObject.SetActive(true);
+                __instance.topCinematicTarget.gameObject.SetActive(true);
+
+                __instance.bottomFirstUseCinematicTarget.gameObject.SetActive(false);
+                __instance.topFirstUseCinematicTarget.gameObject.SetActive(false);
+
+
+            
+                return false;
+            }
             __instance.bottomCinematicTarget.gameObject.SetActive(true);
             __instance.topCinematicTarget.gameObject.SetActive(true);
 
             __instance.bottomFirstUseCinematicTarget.gameObject.SetActive(false);
             __instance.topFirstUseCinematicTarget.gameObject.SetActive(false);
-
-
-            if(Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
-            {
-                return false;
-            }
             return true;
         }
 
