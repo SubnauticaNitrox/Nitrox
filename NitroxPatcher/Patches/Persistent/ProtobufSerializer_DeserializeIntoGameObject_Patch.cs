@@ -54,7 +54,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static bool Prefix(ProtobufSerializer.GameObjectData goData)
         {
-            if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && !Multiplayer.Main.IsMultiplayer())
+            if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
             {
                 return false;
             }
