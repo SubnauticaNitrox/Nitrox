@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasOwnership(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(guid))
             {
                 previousAction = (CreatureAction)typeof(Creature).GetField("prevBestAction", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
                 return true;
@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasOwnership(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(guid))
             {
                 if (previousAction != __result)
                 {

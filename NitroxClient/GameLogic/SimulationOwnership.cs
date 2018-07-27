@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic
 
         private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
-        private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
+        private readonly Dictionary<string, SimulationLockType> simulatedGuidsByLockType = new Dictionary<string, SimulationLockType>();
         private readonly Dictionary<string, LockRequestCompleted> completeFunctionsByGuid = new Dictionary<string, LockRequestCompleted>();
         
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
@@ -21,13 +21,18 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public bool HasOwnership(string guid)
+        public bool HasAnyLockType(string guid)
         {
-            string owningPlayerId;
+            return simulatedGuidsByLockType.ContainsKey(guid);
+        }
 
-            if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
+        public bool HasExclusiveLock(string guid)
+        {
+            SimulationLockType activeLockType;
+
+            if (simulatedGuidsByLockType.TryGetValue(guid, out activeLockType))
             {
-                return owningPlayerId == muliplayerSession.Reservation.PlayerId;
+                return (activeLockType == SimulationLockType.EXCLUSIVE);
             }
 
             return false;
@@ -35,24 +40,21 @@ namespace NitroxClient.GameLogic
 
         public void RequestSimulationLock(string guid, SimulationLockType lockType, LockRequestCompleted whenCompleted)
         {
-            if (!ownedGuidsToPlayer.ContainsKey(guid))
-            {
-                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid, lockType);
-                packetSender.Send(ownershipRequest);
-                completeFunctionsByGuid.Add(guid, whenCompleted);
-            }
+            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid, lockType);
+            packetSender.Send(ownershipRequest);
+            completeFunctionsByGuid.Add(guid, whenCompleted);
         }
 
-        public void ReceivedSimulationLockResponse(string guid, bool lockAquired)
+        public void ReceivedSimulationLockResponse(string guid, bool lockAquired, SimulationLockType lockType)
         {
-            if(lockAquired)
+            if (lockAquired)
             {
-                AddOwnedGuid(guid, muliplayerSession.Reservation.PlayerId);
+                SimulateGuid(guid, lockType);
             }
 
             LockRequestCompleted requestCompleted = null;
 
-            if (completeFunctionsByGuid.TryGetValue(guid, out requestCompleted))
+            if (completeFunctionsByGuid.TryGetValue(guid, out requestCompleted) && requestCompleted != null)
             {
                 completeFunctionsByGuid.Remove(guid);
                 requestCompleted(guid, lockAquired);
@@ -63,9 +65,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void AddOwnedGuid(string guid, string playerId)
+        public void SimulateGuid(string guid, SimulationLockType lockType)
         {
-            ownedGuidsToPlayer[guid] = playerId;
+            simulatedGuidsByLockType[guid] = lockType;
         }
     }
 }

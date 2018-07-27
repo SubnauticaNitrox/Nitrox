@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
              * EntityPositionBroadcaster.WatchEntity(simulatedEntity.Guid, gameObject.Get());
              * 
              */
-            simulationOwnershipManager.ReceivedSimulationLockResponse(response.Guid, response.LockAquired);
+            simulationOwnershipManager.ReceivedSimulationLockResponse(response.Guid, response.LockAquired, response.LockType);
         }
     }
 }

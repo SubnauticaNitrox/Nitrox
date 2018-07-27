@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
             }
 
-            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(ownershipRequest.Guid, aquiredLock);
+            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(ownershipRequest.Guid, aquiredLock, ownershipRequest.LockType);
             player.SendPacket(responseToPlayer);
         }
     }

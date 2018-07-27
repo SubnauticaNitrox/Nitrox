@@ -26,26 +26,29 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
-                if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId && simulatedEntity.ChangesPosition)
+                if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
                 {
-                    SimulateEntity(simulatedEntity);
-                }
+                    if(simulatedEntity.ChangesPosition)
+                    {
+                        StartBroadcastingEntityPosition(simulatedEntity.Guid);
+                    }
 
-                simulationOwnershipManager.AddOwnedGuid(simulatedEntity.Guid, simulatedEntity.PlayerId);
+                    simulationOwnershipManager.SimulateGuid(simulatedEntity.Guid, SimulationLockType.TRANSIENT);
+                }
             }
         }
 
-        private void SimulateEntity(SimulatedEntity simulatedEntity)
+        private void StartBroadcastingEntityPosition(string guid)
         {
-            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(simulatedEntity.Guid);
+            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(guid);
 
             if (gameObject.IsPresent())
             {
-                EntityPositionBroadcaster.WatchEntity(simulatedEntity.Guid, gameObject.Get());
+                EntityPositionBroadcaster.WatchEntity(guid, gameObject.Get());
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + simulatedEntity.Guid);
+                Log.Error("Expected to simulate an unknown entity: " + guid);
             }
         }
     }

@@ -8,7 +8,7 @@ namespace NitroxServer.GameLogic
         struct PlayerLock
         {
             public Player Player { get; }
-            public SimulationLockType LockType { get; }
+            public SimulationLockType LockType { get; set; }
 
             public PlayerLock(Player player, SimulationLockType lockType)
             {
@@ -35,6 +35,8 @@ namespace NitroxServer.GameLogic
                 // If this player owns the lock then they are already simulating
                 if (playerLock.Player == player)
                 {
+                    // update the lock type in case they are attempting to downgrade
+                    playerLock.LockType = requestedLock;
                     return true;
                 }
 
