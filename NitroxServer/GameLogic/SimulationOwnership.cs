@@ -36,7 +36,7 @@ namespace NitroxServer.GameLogic
                 if (playerLock.Player == player)
                 {
                     // update the lock type in case they are attempting to downgrade
-                    playerLock.LockType = requestedLock;
+                    playerLocksByGuid[guid] = new PlayerLock(player, requestedLock);
                     return true;
                 }
 

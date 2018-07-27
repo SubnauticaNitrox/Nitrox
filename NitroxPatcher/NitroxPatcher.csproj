@@ -51,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />
+    <Compile Include="Patches\PilotingChair_ReleaseBy_Patch.cs" />
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
@@ -77,6 +79,7 @@
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
+    <Compile Include="Patches\PilotingChair_OnSteeringStart_Patch.cs" />
     <Compile Include="Patches\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeEnd_Patch.cs" />
