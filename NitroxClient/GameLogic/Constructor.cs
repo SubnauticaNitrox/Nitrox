@@ -43,7 +43,18 @@ namespace NitroxClient.GameLogic
                 List<InteractiveChildObjectIdentifier> childIdentifiers = ExtractGuidsOfInteractiveChildren(constructedObject);
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
 
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
+                Optional<string> ModuleGuid = Optional<string>.Empty();
+                if (techType == TechType.Cyclops)
+                {
+                    SubRoot subRoot = constructedObject.GetComponent<SubRoot>();
+                    if (subRoot != null)
+                    {
+                        Log.Info("New Cyclop Modules Guid: " + GuidHelper.GetGuid(subRoot.upgradeConsole.modules.owner));
+                        ModuleGuid = Optional<string>.Of(GuidHelper.GetGuid(subRoot.upgradeConsole.modules.owner));
+                    }
+                }
+
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, ModuleGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation);
                 packetSender.Send(beginCrafting);
             }
             else

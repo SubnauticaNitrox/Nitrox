@@ -195,13 +195,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
 
-            using (packetSender.Suppress<VehicleCreated>())
+            foreach (VehicleModel vehicle in vehicleModels)
             {
-                foreach (VehicleModel vehicle in vehicleModels)
-                {
-                    vehicles.CreateVehicle(vehicle);
-                }
+                vehicles.CreateVehicle(vehicle);
             }
+
         }
 
         private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)

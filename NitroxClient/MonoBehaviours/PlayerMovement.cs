@@ -38,7 +38,7 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleModel> vehicle = GetVehicleModel();
+                Optional<VehicleMovementData> vehicle = GetVehicleModel();
                 string subGuid = null;
 
                 SubRoot currentSub = Player.main.GetCurrentSub();
@@ -52,7 +52,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private Optional<VehicleModel> GetVehicleModel()
+        private Optional<VehicleMovementData> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
@@ -118,10 +118,10 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                return Optional<VehicleModel>.Empty();
+                return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleModel model = new VehicleModel(techType,
+            VehicleMovementData model = new VehicleMovementData(techType,
                                                   guid,
                                                   position,
                                                   rotation,
@@ -131,7 +131,7 @@ namespace NitroxClient.MonoBehaviours
                                                   steeringWheelPitch,
                                                   appliedThrottle);
 
-            return Optional<VehicleModel>.Of(model);
+            return Optional<VehicleMovementData>.Of(model);
         }
     }
 }

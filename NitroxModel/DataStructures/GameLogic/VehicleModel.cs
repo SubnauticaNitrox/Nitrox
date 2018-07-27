@@ -1,5 +1,7 @@
-﻿using ProtoBuf;
+﻿using NitroxModel.DataStructures.Util;
+using ProtoBuf;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -15,44 +17,37 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Guid { get; set; }
 
         [ProtoMember(3)]
-        public Vector3 Position { get; }
+        public string SerializableModulesEquipmentGuid
+        {
+            get { return (ModulesEquipmentGuid.IsPresent()) ? ModulesEquipmentGuid.Get() : null; }
+            set { ModulesEquipmentGuid = Optional<string>.OfNullable(value); }
+        }
+        [ProtoIgnore]
+        public Optional<string> ModulesEquipmentGuid { get; set; }
 
         [ProtoMember(4)]
-        public Quaternion Rotation { get; }
+        public Vector3 Position { get; set; }
 
         [ProtoMember(5)]
-        public Vector3 Velocity { get; }
+        public Quaternion Rotation { get; set; }
 
         [ProtoMember(6)]
-        public Vector3 AngularVelocity { get; }
+        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
-        [ProtoMember(7)]
-        public float SteeringWheelYaw { get; }
-
-        [ProtoMember(8)]
-        public float SteeringWheelPitch { get; }
-
-        [ProtoMember(9)]
-        public bool AppliedThrottle { get; }
 
         public VehicleModel()
         {
             // For serialization purposes
         }
 
-        public VehicleModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
+        public VehicleModel(TechType techType, string guid, Optional<string> modulesEquipmentGuid, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
             TechType = techType;
             Guid = guid;
-
+            ModulesEquipmentGuid = modulesEquipmentGuid;
             Position = position;
             Rotation = rotation;
-            Velocity = velocity;
-            AngularVelocity = angularVelocity;
-
-            SteeringWheelYaw = steeringWheelYaw;
-            SteeringWheelPitch = steeringWheelPitch;
-            AppliedThrottle = appliedThrottle;
+            InteractiveChildIdentifiers = interactiveChildIdentifiers;
         }
     }
 }

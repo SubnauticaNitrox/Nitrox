@@ -125,7 +125,6 @@
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDestroyedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />

@@ -22,12 +22,27 @@ namespace NitroxServer.GameLogic.Vehicles
 
         [ProtoIgnore]
         private Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
+
+
         
-        public void UpdateVehicle(VehicleModel vehicleModel)
+        public void UpdateVehicle(VehicleMovementData vehicleMovement)
         {
             lock(vehiclesByGuid)
             {
-                vehiclesByGuid[vehicleModel.Guid] = vehicleModel;
+                if (vehiclesByGuid.ContainsKey(vehicleMovement.Guid))
+                {
+                    vehiclesByGuid[vehicleMovement.Guid].Position = vehicleMovement.Position;
+                    vehiclesByGuid[vehicleMovement.Guid].Rotation = vehicleMovement.Rotation;
+                }
+               
+            }
+        }
+
+        public void AddVehicle(VehicleModel vehicleModel)
+        {
+            lock (vehiclesByGuid)
+            {
+                vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
             }
         }
 
