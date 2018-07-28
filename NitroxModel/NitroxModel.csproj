@@ -67,6 +67,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
+    <Compile Include="Helper\SteamFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />

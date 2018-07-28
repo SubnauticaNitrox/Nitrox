@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Spawning;
@@ -80,9 +81,15 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            // This isn't always gonna work.
-            string path = @"C:\Program Files (x86)\Steam\steamapps\common\Subnautica\SNUnmanagedData\Build18\";
-            string fileName = path + pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin";
+            Optional<string> subnauticaPath = SteamFinder.FindSteamGamePath(264710, "Subnautica");
+
+            if (subnauticaPath.IsEmpty())
+            {
+                throw new InvalidOperationException("Could not locate subnautica root");
+            }
+
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
+            string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {

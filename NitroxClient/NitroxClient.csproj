@@ -56,14 +56,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
+    <Compile Include="Communication\ClientBridge.cs" />
+    <Compile Include="Communication\ClientBridgeState.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
-    <Compile Include="Communication\Client.cs" />
-    <Compile Include="Communication\PacketSender.cs" />
+    <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationException.cs" />
+    <Compile Include="Communication\Exceptions\InvalidReservationRejectionReasonException.cs" />
+    <Compile Include="Communication\Exceptions\ParameterValidationException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedClaimAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedConnectAttemptException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedReservationRejectionException.cs" />
+    <Compile Include="Communication\Exceptions\ProhibitedSendAttemptException.cs" />
+    <Compile Include="Communication\IClientBridge.cs" />
+    <Compile Include="Communication\IPacketSender.cs" />
     <Compile Include="Communication\PacketSuppression.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionCompletedProcessor.cs" />
@@ -78,9 +91,9 @@
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FabricatorBeginCraftingProcessor.cs" />
@@ -104,16 +117,20 @@
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
-    <Compile Include="GameLogic\Building.cs" />
+    <Compile Include="Communication\TcpClient.cs" />
+    <Compile Include="Debuggers\BaseDebugger.cs" />
+    <Compile Include="Debuggers\NetworkDebugger.cs" />
+    <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
+    <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
-    <Compile Include="GameLogic\Entities.cs" />
-    <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
+    <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
+    <Compile Include="GameLogic\Debugger.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
@@ -134,7 +151,8 @@
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
-    <Compile Include="Map\VisibleChunks.cs" />
+    <Compile Include="GameLogic\Terrain.cs" />
+    <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\Chat.cs" />
@@ -157,6 +175,8 @@
     <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
     <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
+    <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
+    <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
     <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
@@ -170,7 +190,9 @@
     </Compile>
     <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
+    <Compile Include="Unity\Helper\GUISkinUtils.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
+    <Compile Include="Unity\Helper\StringUtils.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
     <Compile Include="Unity\Smoothing\SmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />

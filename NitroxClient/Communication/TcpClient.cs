@@ -1,30 +1,34 @@
-﻿using NitroxModel.Packets;
-using NitroxModel.Tcp;
-using NitroxModel.Logger;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxModel.Tcp;
+using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication
 {
-    public class TcpClient
+    public class TcpClient : IClient
     {
-        private DeferringPacketReceiver packetReceiver;
-        private const int port = 11000;
+        private readonly DeferringPacketReceiver packetReceiver;
+        private const int PORT = 11000;
         private Connection connection;
-        
+
+        public bool IsConnected { get; private set; }
+
         public TcpClient(DeferringPacketReceiver packetManager)
         {
-            this.packetReceiver = packetManager;
+            Log.Info("Initializing TcpClient...");
+            packetReceiver = packetManager;
+            IsConnected = false;
         }
 
-        public void Start(String ip)
+        public void Start(string ipAddress)
         {
             try
             {
-                IPAddress ipAddress = IPAddress.Parse(ip);
-                IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
+                IPAddress address = IPAddress.Parse(ipAddress);
+                IPEndPoint remoteEP = new IPEndPoint(address, PORT);
 
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 connection = new Connection(socket);
@@ -32,6 +36,7 @@ namespace NitroxClient.Communication
 
                 if (connection.Open)
                 {
+                    IsConnected = true;
                     connection.BeginReceive(new AsyncCallback(DataReceived));
                 }
             }
@@ -43,48 +48,36 @@ namespace NitroxClient.Communication
 
         public void Stop()
         {
-            connection.Close(); // Server will clean up pretty quickly
-            Multiplayer.PacketSender.Active = false;
-            Multiplayer.RemoveAllOtherPlayers();
+            connection.Close();
+            IsConnected = false;
             Log.InGame("Disconnected from server.");
         }
-        
+
+        public void Send(Packet packet)
+        {
+            connection.SendPacket(packet, new AsyncCallback(packetSentSuccessful));
+        }
+
+        public void packetSentSuccessful(IAsyncResult ar) { }
+
         private void DataReceived(IAsyncResult ar)
         {
             Connection connection = (Connection)ar.AsyncState;
 
             foreach (Packet packet in connection.GetPacketsFromRecievedData(ar))
             {
-                packetReceiver.PacketReceived(packet);                
+                packetReceiver.PacketReceived(packet);
             }
 
             if (connection.Open)
             {
                 connection.BeginReceive(new AsyncCallback(DataReceived));
-            } else
+            }
+            else
             {
                 Log.Debug("Error reading data from server");
                 Stop();
             }
-        }
-
-        public void Send(Packet packet)
-        {
-            connection.SendPacket(packet, new AsyncCallback(PacketSentSuccessful));
-        }
-
-        public void PacketSentSuccessful(IAsyncResult ar)
-        {
-
-        }
-
-        public bool IsConnected()
-        {
-            if (connection == null)
-            {
-                return false;
-            }
-            return connection.Open;
         }
     }
 }
