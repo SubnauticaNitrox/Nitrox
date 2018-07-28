@@ -1,8 +1,8 @@
-﻿using NitroxClient.Map;
+﻿using System.Collections.Generic;
+using NitroxClient.Map;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System.Collections.Generic;
 
 namespace NitroxClient.Communication
 {
