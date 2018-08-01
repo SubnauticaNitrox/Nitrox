@@ -105,6 +105,7 @@
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\CorrelatedPacket.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
+    <Compile Include="Packets\SceneDebuggerChange.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />

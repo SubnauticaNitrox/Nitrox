@@ -70,6 +70,7 @@
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
     <Compile Include="Communication\Abstract\IPacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="GameLogic\Cyclops.cs" />
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
+    <Compile Include="GameLogic\Debugger.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />
