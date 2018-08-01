@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NitroxInstaller", "Setup1\Setup1.vdproj", "{64D796EC-55CA-4BFD-9242-AFCB47267794}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NitroxInstaller", "NitroxInstaller\NitroxInstaller.vdproj", "{64D796EC-55CA-4BFD-9242-AFCB47267794}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxInstallerActions", "InstallerActions\NitroxInstallerActions.csproj", "{6736937F-3B52-4CA1-B24F-BFD3266BF1EA}"
 EndProject

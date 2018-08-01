@@ -13,6 +13,36 @@
 "SccProvider" = "8:"
     "Hierarchy"
     {
+        "Entry"
+        {
+        "MsmKey" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_38F8D2DA34EEBD7A1ED980C2B1A34FD9"
+        "OwnerKey" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_44A41BB076204E378154FA9AD902A35F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_38F8D2DA34EEBD7A1ED980C2B1A34FD9"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -31,6 +61,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -47,12 +93,84 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
     }
     "Deployable"
     {
         "CustomAction"
         {
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_1094F3FBB4644266940AE3AC82D8AAB3"
+            {
+            "Name" = "8:Primary output from NitroxInstallerActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+            "FileType" = "3:1"
+            "InstallAction" = "3:3"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_96C47FFC_5166_43B7_93EA_F73001CBEF05"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_57265CC011244A918C6194F85BABA82B"
+            {
+            "Name" = "8:Primary output from NitroxInstallerActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+            "FileType" = "3:1"
+            "InstallAction" = "3:2"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_6F0EC926_16B4_466B_9308_776577E63149"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_60B31B32999F437B9AE54C92202429F8"
+            {
+            "Name" = "8:Primary output from NitroxInstallerActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+            "FileType" = "3:1"
+            "InstallAction" = "3:1"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_646268D2_0E5F_4FC8_BAF4_B8B0B7F9225B"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:/baseInstallDirectory=\"[TARGETDIR]\\\""
+            }
+            "{4AA51A2D-7D85-4A59-BA75-B0809FC8B380}:_8885C211AF504CE7A008F195A421F4AF"
+            {
+            "Name" = "8:Primary output from NitroxInstallerActions (Active)"
+            "Condition" = "8:"
+            "Object" = "8:_11F63DA29F8E44E3B032C369620A3D29"
+            "FileType" = "3:1"
+            "InstallAction" = "3:4"
+            "Arguments" = "8:"
+            "EntryPoint" = "8:"
+            "Sequence" = "3:1"
+            "Identifier" = "8:_FE098427_ECE2_487A_B76D_271BCCF8B50A"
+            "InstallerClass" = "11:TRUE"
+            "CustomActionData" = "8:"
+            }
         }
         "DefaultFeature"
         {
@@ -64,10 +182,49 @@
         {
             "LaunchCondition"
             {
+                "{A06ECF26-33A3-4562-8140-9B0E340D4F24}:_7613CA4BB95A46D0A2F432630DA0D63D"
+                {
+                "Name" = "8:.NET Framework"
+                "Message" = "8:[VSDNETMSG]"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.6.1"
+                "AllowLaterVersions" = "11:FALSE"
+                "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=671728"
+                }
             }
         }
         "File"
         {
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_38F8D2DA34EEBD7A1ED980C2B1A34FD9"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:dnlib, Version=1.6.0.0, Culture=neutral, PublicKeyToken=50e96378b6e77999, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_38F8D2DA34EEBD7A1ED980C2B1A34FD9"
+                    {
+                    "Name" = "8:dnlib.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:dnlib.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B729DD09748A4B4CB4BD2622C1649DCC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -95,6 +252,28 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_03DDF876174E43A3918E17CF38797C09"
+                    {
+                    "Name" = "8:Subnautica_Data"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_646212ACE0AD425388FA9A426D0A04CB"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_B729DD09748A4B4CB4BD2622C1649DCC"
+                            {
+                            "Name" = "8:Managed"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_B7EDD0A7FD5B4B798133268C7EE8AFD9"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_99DF4FE206BE422DBDB4728B6FB689D1"
@@ -124,8 +303,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NitroxInstaller"
-        "ProductCode" = "8:{9CCA2513-FBFC-4416-B03C-41E41C86BCF7}"
-        "PackageCode" = "8:{13E6C3D0-6CCD-4ADD-8339-2884EAA8CF96}"
+        "ProductCode" = "8:{168B4B54-66D1-43C1-BD76-CE0974374DEF}"
+        "PackageCode" = "8:{3BBBCEBC-BAC4-4066-B250-B8AE6001D8DB}"
         "UpgradeCode" = "8:{CC6993D5-0FAA-4620-80CD-BA168FA91B59}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -644,12 +823,40 @@
         }
         "ProjectOutput"
         {
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_44A41BB076204E378154FA9AD902A35F"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_11F63DA29F8E44E3B032C369620A3D29"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\InstallerActions\\obj\\Debug\\InstallerActions.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_7C13590BCA854385B75DA91AB6418E9F"
+            "Folder" = "8:_B729DD09748A4B4CB4BD2622C1649DCC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            "ProjectOutputGroupRegister" = "3:1"
+            "OutputConfiguration" = "8:"
+            "OutputGroupCanonicalName" = "8:Built"
+            "OutputProjectGuid" = "8:{6736937F-3B52-4CA1-B24F-BFD3266BF1EA}"
+            "ShowKeyOutput" = "11:TRUE"
+                "ExcludeFilters"
+                {
+                }
+            }
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_44A41BB076204E378154FA9AD902A35F"
+            {
+            "SourcePath" = "8:..\\NitroxPatcher\\obj\\Debug\\NitroxPatcher.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_B729DD09748A4B4CB4BD2622C1649DCC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
