@@ -20,7 +20,10 @@ namespace NitroxClient.GameLogic
             { typeof(Openable) },
             { typeof(CyclopsLocker) },
             { typeof(Fabricator) },
-            { typeof(FireExtinguisherHolder) }
+            { typeof(FireExtinguisherHolder) },
+            { typeof(VehicleDockingBay) },
+            { typeof(DockedVehicleHandTarget) },
+            { typeof(DockingBayDoor) }
         };
 
         public MobileVehicleBay(IPacketSender packetSender)
