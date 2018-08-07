@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using dnlib.DotNet;
@@ -75,10 +76,43 @@ namespace InstallerActions.Patches
         public void Remove()
         {
             string gameInputPath = subnauticaBasePath + GAME_ASSEMBLY_NAME;
-            string backupGameInputPath = subnauticaBasePath + GAME_ASSEMBLY_BACKUP_NAME;
+            string modifiedAssemblyPath = subnauticaBasePath + GAME_ASSEMBLY_MODIFIED_NAME;
 
-            File.Delete(gameInputPath);
-            File.Move(backupGameInputPath, gameInputPath);
+            using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
+            {
+                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
+                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+
+                IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
+                int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
+
+                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+                module.Write(modifiedAssemblyPath);
+            }
+
+            if (File.Exists(gameInputPath))
+            {
+                File.Delete(gameInputPath);
+            }
+            
+            File.Move(modifiedAssemblyPath, gameInputPath);
+        }
+
+        private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)
+        {
+            int nitroxExecuteInstructionIndex = 0;
+
+            for (int instructionIndex = 0; instructionIndex < methodInstructions.Count; instructionIndex++)
+            {
+                string instruction = methodInstructions[instructionIndex].Operand?.ToString();
+
+                if (instruction == NITROX_EXECUTE_INSTRUCTION)
+                {
+                    nitroxExecuteInstructionIndex = instructionIndex;
+                }
+            }
+
+            return nitroxExecuteInstructionIndex;
         }
     }
 }
