@@ -32,15 +32,23 @@ namespace NitroxModel.DataStructures.GameLogic
         public Quaternion Rotation { get; set; }
 
         [ProtoMember(6)]
-        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
+        public List<InteractiveChildObjectIdentifier> SerializableInteractiveChildIdentifiers
+        {
+            get { return (InteractiveChildIdentifiers.IsPresent()) ? InteractiveChildIdentifiers.Get() : null; }
+            set { InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(value); }
+        }
+        [ProtoIgnore]
+        public Optional<List<InteractiveChildObjectIdentifier>> InteractiveChildIdentifiers { get; set; }
+
 
 
         public VehicleModel()
         {
-            // For serialization purposes
+            ModulesEquipmentGuid = Optional<string>.Empty();
+            InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.Empty();
         }
 
-        public VehicleModel(TechType techType, string guid, Optional<string> modulesEquipmentGuid, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public VehicleModel(TechType techType, string guid, Optional<string> modulesEquipmentGuid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             TechType = techType;
             Guid = guid;

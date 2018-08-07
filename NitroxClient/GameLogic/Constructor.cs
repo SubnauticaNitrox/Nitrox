@@ -21,6 +21,7 @@ namespace NitroxClient.GameLogic
             { typeof(CyclopsLocker) },
             { typeof(Fabricator) },
             { typeof(FireExtinguisherHolder) },
+            { typeof(StorageContainer) },
             { typeof(VehicleDockingBay) },
             { typeof(DockedVehicleHandTarget) },
             { typeof(DockingBayDoor) }

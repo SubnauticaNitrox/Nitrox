@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic
             CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.ModulesEquipmentGuid, vehicleModel.Position, vehicleModel.Rotation,vehicleModel.InteractiveChildIdentifiers);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Optional<string> modulesEquipmentGuid,Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public void CreateVehicle(TechType techType, string guid, Optional<string> modulesEquipmentGuid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             if (techType == TechType.Cyclops)
             {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Optional<string> modulesEquipmentGuid, Vector3 spawnPosition, Quaternion spawnRotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Optional<string> modulesEquipmentGuid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -123,7 +123,10 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
+            if (interactiveChildIdentifiers.IsPresent())
+            {
+                SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
+            }
 
             SubRoot subRoot = gameObject.GetComponent<SubRoot>();
             if (subRoot != null)

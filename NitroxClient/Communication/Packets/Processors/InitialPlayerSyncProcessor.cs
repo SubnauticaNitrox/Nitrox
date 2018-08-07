@@ -37,10 +37,10 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             SetPlayerGuid(packet.PlayerGuid);
+            SpawnVehicles(packet.Vehicles);
+            SpawnItemContainer(packet.PlayerGuid, packet.InventoryItems); //Need Maintain SpawnItemContainer before SpawnBasePieces because is Locker already Place SpawnItemContainer Duplicated Same Item
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnBasePieces(packet.BasePieces);
-            SpawnVehicles(packet.Vehicles);
-            SpawnInventoryItemsPlayer(packet.PlayerGuid, packet.InventoryItems);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
@@ -202,8 +202,10 @@ namespace NitroxClient.Communication.Packets.Processors
 
         }
 
-        private void SpawnInventoryItemsPlayer(string playerGuid, List<ItemData> inventoryItems)
+        private void SpawnItemContainer(string playerGuid, List<ItemData> inventoryItems)
         {
+            Log.Info("Received initial sync packet with " + inventoryItems.Count + " ItemContainer");
+
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
@@ -211,17 +213,25 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 foreach (ItemData itemdata in inventoryItems)
                 {
+                    GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                    Pickupable pickupable = item.RequireComponent<Pickupable>();
+                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+
                     if (itemdata.ContainerGuid == playerGuid)
                     {
-                        GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
-                        Pickupable pickupable = item.RequireComponent<Pickupable>();
                         ItemsContainer container = Inventory.Get().container;
                         InventoryItem inventoryItem = new InventoryItem(pickupable);
                         inventoryItem.container = container;
                         inventoryItem.item.Reparent(container.tr);
-                        goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item You Already have On Inventory
+                        
                         container.UnsafeAdd(inventoryItem);
                     }
+                    else
+                    {
+                        itemContainers.AddItem(itemdata);
+                    }
+
+
                 }
             }
 
