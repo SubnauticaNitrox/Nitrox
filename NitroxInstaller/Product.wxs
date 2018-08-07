@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  
+  <?define NitroxPatcher_TargetDir=$(var.NitroxPatcher.TargetDir)?>
+  <?define NitroxModel_TargetDir=$(var.NitroxModel.TargetDir)?>
+  <?define Lidgren.Network_TargetDir=$(var.Lidgren.Network.TargetDir)?>
+  <?define NitroxReloader_TargetDir=$(var.NitroxReloader.TargetDir)?>
+  <?define Harmony_TargetDir=$(var.Harmony.TargetDir)?>
+  <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
+  
+  <Product Id="*" Name="Nitrox" Language="1033" Version="1.0.0.0" Manufacturer="Nitrox" UpgradeCode="9ad745cb-3a52-4e99-adcc-ae5fc9c82ebd">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <Feature Id="ProductFeature" Title="Nitrox_Installer" Level="1">
+    <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
+    </Feature>
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <UIRef Id="WixUI_InstallDir" />
+    <WixVariable Id="WixUIBannerBmp" Value="Images\Nitrox_banner.bmp" />
+    <WixVariable Id="WixUIDialogBmp" Value="Images\Nitrox_dialog.bmp" />
+  </Product>
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="Nitrox Installer">
+          <Directory Id="SubnauticaData" Name="Subnautica_Data">
+            <Directory Id="SUBNAUTICAMANAGED" Name="Managed">
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <!-- <Component Id="ProductComponent"> -->
+      <!-- TODO: Insert files, registry keys, and other resources here. -->
+      <!-- </Component> -->
+    </ComponentGroup>
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="SUBNAUTICAMANAGED_files" Directory="SUBNAUTICAMANAGED">
+      <Component Id="NitroxPatcher.dll" Guid="b50a7020-d69c-48af-bacd-cea78b2a2dad">
+        <File Id="NitroxPatcher.dll" Name="NitroxPatcher.dll" Source="$(var.NitroxPatcher_TargetDir)NitroxPatcher.dll" />
+      </Component>
+      <Component Id="NitroxModel.dll" Guid="5d7afbad-137b-45db-8e11-3d6c99b4603d">
+        <File Id="NitroxModel.dll" Name="NitroxModel.dll" Source="$(var.NitroxModel_TargetDir)NitroxModel.dll" />
+      </Component>
+      <Component Id="Autofac.dll" Guid="823a4e32-ae59-4b85-b09c-c3db1b8aa99e">
+        <File Id="Autofac.dll" Name="Autofac.dll" Source="$(var.NitroxPatcher_TargetDir)Autofac.dll" />
+      </Component>
+      <Component Id="Lidgren.Network.dll" Guid="a6c71164-43a0-4832-a0c6-9036946d705f">
+        <File Id="Lidgren.Network.dll" Name="Lidgren.Network.dll" Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
+      </Component>
+      <Component Id="NitroxReloader.dll" Guid="8c0b2ce2-6b38-4c23-a05b-615c71ed3062">
+        <File Id="NitroxReloader.dll" Name="NitroxReloader.dll" Source="$(var.NitroxReloader_TargetDir)NitroxReloader.dll" />
+      </Component>
+      <Component Id="_0Harmony.dll" Guid="6c9dfcf3-f43a-4b75-bff0-e8bd75514fd5">
+        <File Id="_0Harmony.dll" Name="0Harmony.dll" Source="$(var.Harmony_TargetDir)0Harmony.dll" />
+      </Component>
+      <Component Id="NitroxClient.dll" Guid="9294ce3a-cdd3-4b01-9e1d-311e42a26a80">
+        <File Id="NitroxClient.dll" Name="NitroxClient.dll" Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />
+      </Component>
+      <Component Id="Autofac.Configuration.dll" Guid="e9cad602-b1d9-4234-a80a-1e19fe48c8d3">
+        <File Id="Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.NitroxPatcher_TargetDir)Autofac.Configuration.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
