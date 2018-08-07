@@ -43,6 +43,14 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
+      <Name>NitroxClient</Name>
+      <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxInstallerActions\NitroxInstallerActions.csproj">
       <Name>NitroxInstallerActions</Name>
       <Project>{f37a369d-a972-476c-8777-e87ea5e089f4}</Project>

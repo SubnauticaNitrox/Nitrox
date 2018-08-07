@@ -3,13 +3,13 @@ using Microsoft.Deployment.WindowsInstaller;
 
 namespace NitroxInstallerActions
 {
-    public class InstallPatchAction
+    public class UninstallPatchAction
     {
         [CustomAction]
-        public static ActionResult InstallPatch(Session session)
+        public static ActionResult UninstallPatch(Session session)
         {
-            session.Log("Begin install");
-            MessageBox.Show("Install.", "Install");
+            session.Log("Begin uninstall");
+            MessageBox.Show("uninstall", "uninstall");
             return ActionResult.Success;
         }
     }

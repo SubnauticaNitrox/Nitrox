@@ -19,7 +19,16 @@
     <UIRef Id="WixUI_InstallDir" />
     <WixVariable Id="WixUIBannerBmp" Value="Images\Nitrox_banner.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Images\Nitrox_dialog.bmp" />
+    <InstallExecuteSequence>
+      <Custom Action='PatchGameAction' Before='InstallFinalize'>NOT Installed</Custom>
+      <Custom Action='UnpatchGameAction' Before='RemoveFiles'>Installed</Custom>
+    </InstallExecuteSequence>
   </Product>
+  <Fragment>
+    <Binary Id="NitroxActionsBinary" SourceFile="$(var.NitroxInstallerActions.TargetDir)$(var.NitroxInstallerActions.TargetName).CA.dll"/>
+    <CustomAction Id="PatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="InstallPatch" Execute="immediate" Return="check"/>
+    <CustomAction Id="UnpatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="UninstallPatch" Execute="immediate" Return="check"/>
+  </Fragment>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
