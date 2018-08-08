@@ -9,7 +9,6 @@ namespace NitroxInstallerActions
         [CustomAction]
         public static ActionResult UninstallPatch(Session session)
         {
-            System.Diagnostics.Debugger.Launch();
             session.Log("Begin uninstall");
 
             try

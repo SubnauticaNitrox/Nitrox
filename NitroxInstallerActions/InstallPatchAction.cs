@@ -1,5 +1,6 @@
 ﻿using System;
-using InstallerActions;
+using System.IO;
+using System.Windows.Forms;
 using InstallerActions.Patches;
 using Microsoft.Deployment.WindowsInstaller;
 
@@ -10,12 +11,18 @@ namespace NitroxInstallerActions
         [CustomAction]
         public static ActionResult InstallPatch(Session session)
         {
-            System.Diagnostics.Debugger.Launch();
             session.Log("Begin install");
 
             try
             {
                 string managedDirectory = session.CustomActionData["MANAGEDDIR"];
+
+                if (!RequiredAssembliesExist(managedDirectory))
+                {
+                    MessageBox.Show("Error instaliing Nitrox to the specified directory. Please ensure the installer is pointing to your subnautica directory and try again.");
+                    return ActionResult.Failure;
+                }
+
                 NitroxEntryPatch nitroxPatch = new NitroxEntryPatch(managedDirectory);
 
                 if (!nitroxPatch.IsApplied)
@@ -23,13 +30,18 @@ namespace NitroxInstallerActions
                     nitroxPatch.Apply();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 session.Log(ex.Message);
                 return ActionResult.Failure;
             }
 
             return ActionResult.Success;
+        }
+
+        private static bool RequiredAssembliesExist(string managedDirectory)
+        {
+            return File.Exists(managedDirectory + NitroxEntryPatch.GAME_ASSEMBLY_NAME);
         }
     }
 }
