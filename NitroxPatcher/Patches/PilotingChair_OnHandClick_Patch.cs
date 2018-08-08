@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {
-    public class PilotingChair_OnSteeringStart_Patch : NitroxPatch
+    public class PilotingChair_OnHandClick_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(PilotingChair);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);

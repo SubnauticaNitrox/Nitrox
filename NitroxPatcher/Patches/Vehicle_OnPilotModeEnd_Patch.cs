@@ -3,6 +3,8 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,6 +16,10 @@ namespace NitroxPatcher.Patches
         public static void Prefix(Vehicle __instance)
         {
             NitroxServiceLocator.LocateService<Vehicles>().BroadcastOnPilotModeChanged(__instance, false);
+
+            string guid = GuidHelper.GetGuid(__instance.gameObject);
+            SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
+            simulationOwnership.RequestSimulationLock(guid, SimulationLockType.TRANSIENT, null);
         }
 
         public override void Patch(HarmonyInstance harmony)

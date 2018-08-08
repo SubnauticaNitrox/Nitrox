@@ -52,18 +52,17 @@ namespace NitroxPatcher.Patches.Persistent
 
         };
 
-        public static bool Prefix(ProtobufSerializer.GameObjectData goData)
+        public static void Postfix(ProtobufSerializer.GameObjectData goData, UniqueIdentifier uid)
         {
             if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
             {
-                return false;
+                UnityEngine.Object.Destroy(uid.gameObject);
             }
-            return true;
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

@@ -10,6 +10,8 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.Communication;
+using System.Collections;
 
 namespace NitroxClient.GameLogic
 {
@@ -17,11 +19,13 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
+        private readonly IMultiplayerSession multiplayerSession;
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
         {
             this.packetSender = packetSender;
             this.playerManager = playerManager;
+            this.multiplayerSession = multiplayerSession;
         }
 
         public void CreateVehicle(VehicleModel vehicleModel)
@@ -214,13 +218,58 @@ namespace NitroxClient.GameLogic
             }
         }
 
+        public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+        {
+            string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
+            string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
+            string playerId = multiplayerSession.Reservation.PlayerId;
+
+            VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, playerId);
+            packetSender.Send(packet);
+
+            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
+            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor));
+        }
+
+        public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle)
+        {
+            string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
+            string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
+            string playerId = multiplayerSession.Reservation.PlayerId;
+
+            VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, playerId);
+            packetSender.Send(packet);
+
+            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
+            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor));
+        }
+
+        /*
+         A poorly timed movement packet will cause major problems when docking because the remote 
+         player will think that the player is no longer in a vehicle.  Unfortunetly, the game calls
+         the vehicle exit code before the animation completes so we need to suppress any side affects.
+         Two thing we want to protect against:
+        
+             1) If a movement packet is received when docking, the player might exit the vehicle early
+                and it will show them sitting outside the vehicle during the docking animation.
+         
+             2) If a movement packet is received when undocking, the player game object will be stuck in
+                place until after the player exits the vehicle.  This causes the player body to strech to
+                the current cyclops position.
+        */
+        IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
+        {
+            yield return new WaitForSeconds(3.0f);
+            movementSuppressor.Dispose();
+        }
+
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
                 VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), isPiloting);
                 packetSender.Send(packet);
-            }            
+            }
         }
 
         public void SetOnPilotMode(string vehicleGuid, string playerGuid, bool isPiloting)

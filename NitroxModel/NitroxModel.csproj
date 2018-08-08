@@ -105,6 +105,7 @@
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\CorrelatedPacket.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
+    <Compile Include="Packets\SceneDebuggerChange.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
@@ -160,6 +161,8 @@
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
+    <Compile Include="Packets\VehicleUndocking.cs" />
+    <Compile Include="Packets\VehicleDocking.cs" />
     <Compile Include="Packets\VehicleOnPilotModeChanged.cs" />
     <Compile Include="Packets\VehicleDestroyed.cs" />
     <Compile Include="Packets\VehicleColorChange.cs" />
