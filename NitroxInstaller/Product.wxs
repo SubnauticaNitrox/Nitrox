@@ -19,6 +19,7 @@
     <UIRef Id="WixUI_InstallDir" />
     <WixVariable Id="WixUIBannerBmp" Value="Images\Nitrox_banner.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Images\Nitrox_dialog.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
     <InstallExecuteSequence>
       <Custom Action="SetInstallPath" After="CostFinalize"></Custom>
       <Custom Action="SetUninstallPath" After="CostFinalize"></Custom>

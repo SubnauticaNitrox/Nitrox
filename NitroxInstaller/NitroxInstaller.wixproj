@@ -24,6 +24,7 @@
   <ItemGroup>
     <Content Include="Images\Nitrox_banner.bmp" />
     <Content Include="Images\Nitrox_dialog.bmp" />
+    <Content Include="License.rtf" />
     <Content Include="NitroxInstaller.wax" />
   </ItemGroup>
   <ItemGroup>
