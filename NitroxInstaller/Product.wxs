@@ -13,21 +13,25 @@
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <Feature Id="ProductFeature" Title="Nitrox_Installer" Level="1">
-    <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
+      <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
     </Feature>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <UIRef Id="WixUI_InstallDir" />
     <WixVariable Id="WixUIBannerBmp" Value="Images\Nitrox_banner.bmp" />
     <WixVariable Id="WixUIDialogBmp" Value="Images\Nitrox_dialog.bmp" />
     <InstallExecuteSequence>
-      <Custom Action='PatchGameAction' Before='InstallFinalize'>NOT Installed</Custom>
-      <Custom Action='UnpatchGameAction' Before='RemoveFiles'>Installed</Custom>
+      <Custom Action="SetInstallPath" After="CostFinalize"></Custom>
+      <Custom Action="SetUninstallPath" After="CostFinalize"></Custom>
+      <Custom Action='PatchGameAction' After='InstallFiles'>NOT Installed</Custom>
+      <Custom Action='UnpatchGameAction' After='RemoveFiles'>Installed</Custom>
     </InstallExecuteSequence>
   </Product>
   <Fragment>
     <Binary Id="NitroxActionsBinary" SourceFile="$(var.NitroxInstallerActions.TargetDir)$(var.NitroxInstallerActions.TargetName).CA.dll"/>
-    <CustomAction Id="PatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="InstallPatch" Execute="immediate" Return="check"/>
-    <CustomAction Id="UnpatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="UninstallPatch" Execute="immediate" Return="check"/>
+    <CustomAction Id="SetInstallPath" Property="PatchGameAction" Value="MANAGEDDIR=[SUBNAUTICAMANAGED]"></CustomAction>
+    <CustomAction Id="SetUninstallPath" Property="UnpatchGameAction" Value="MANAGEDDIR=[SUBNAUTICAMANAGED]"></CustomAction>
+    <CustomAction Id="PatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="InstallPatch" Execute="deferred" Return="check" />
+    <CustomAction Id="UnpatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="UninstallPatch" Execute="deferred" Return="check" />
   </Fragment>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
