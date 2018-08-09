@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.HUD;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
@@ -56,8 +57,7 @@ namespace NitroxPatcher.Patches
             }
             else
             {
-                HandReticle.main.SetInteractText("Another player is currently steering the Cyclops!");
-                HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
+                pilotingChair.gameObject.AddComponent<DenyOwnershipHand>();
                 pilotingChair.isValidHandTarget = false;
             }
         }
