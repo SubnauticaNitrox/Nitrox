@@ -39,13 +39,13 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
-        public void UpdateVehicleChildObjects(string guid, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildObjectIdentifier)
+        public void UpdateVehicleChildObjects(string guid, List<InteractiveChildObjectIdentifier> interactiveChildObjectIdentifier)
         {
             lock (vehiclesByGuid)
             {
                 if (vehiclesByGuid.ContainsKey(guid))
                 {
-                    vehiclesByGuid[guid].InteractiveChildIdentifiers = interactiveChildObjectIdentifier;
+                    vehiclesByGuid[guid].InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(interactiveChildObjectIdentifier);
                 }
 
             }

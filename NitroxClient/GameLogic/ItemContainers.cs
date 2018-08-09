@@ -125,9 +125,17 @@ namespace NitroxClient.GameLogic
                 {
                     return GuidHelper.GetGuid(SC.gameObject);
                 }
+                else
+                {
+                    throw new Exception("Could not find StorageContainer From Object: submarine_locker_01_0" + LockerId);
+                }
 
             }
-            throw new Exception("Could not find Locker Guid");
+            else
+            {
+                throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
+            }
+            
         }
     }
 }

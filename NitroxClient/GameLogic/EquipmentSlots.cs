@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid,Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(childIdentifiers));
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid,childIdentifiers);
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(childIdentifiers));
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
                 packetSender.Send(vehicleChildInteractiveData);
             }
 

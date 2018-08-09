@@ -177,17 +177,13 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void UpdateVehicleChildren(string guid, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildrenGuids) //Destroy Vehicle From network
+        public void UpdateVehicleChildren(string guid, List<InteractiveChildObjectIdentifier> interactiveChildrenGuids)
         {
             Optional<GameObject> Object = GuidHelper.GetObjectFrom(guid);
             if (Object.IsPresent())
             {
                 GameObject T = Object.Get();
-
-                if (interactiveChildrenGuids.IsPresent())
-                {
-                    VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids.Get());
-                }
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids);
             }
         }
 

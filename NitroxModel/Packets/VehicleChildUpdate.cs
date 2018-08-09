@@ -16,20 +16,14 @@ namespace NitroxModel.Packets
         public string VehicleGuid { get; }
 
         [ProtoMember(2)]
-        public List<InteractiveChildObjectIdentifier> SerializableInteractiveChildIdentifiers
-        {
-            get { return (InteractiveChildIdentifiers.IsPresent()) ? InteractiveChildIdentifiers.Get() : null; }
-            set { InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(value); }
-        }
-        [ProtoIgnore]
-        public Optional<List<InteractiveChildObjectIdentifier>> InteractiveChildIdentifiers { get; set; }
+        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; set; }
 
         public VehicleChildUpdate()
         {
-            InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.Empty();
+
         }
 
-        public VehicleChildUpdate(string vehicleGuid,Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
+        public VehicleChildUpdate(string vehicleGuid,List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
             VehicleGuid = vehicleGuid;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
