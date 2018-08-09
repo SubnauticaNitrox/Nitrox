@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
                 GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
 
-                SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
 
                 if (packet.TechType == TechType.Cyclops)
                 {
@@ -48,24 +48,6 @@ namespace NitroxClient.Communication.Packets.Processors
             else
             {
                 Log.Error("Could not find constructed object!");
-            }
-        }
-
-        private void SetInteractiveChildrenGuids(GameObject constructedObject, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
-        {
-            foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
-            {
-                Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
-
-                if (transform != null)
-                {
-                    GameObject gameObject = transform.gameObject;
-                    GuidHelper.SetNewGuid(gameObject, childIdentifier.Guid);
-                }
-                else
-                {
-                    Log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
-                }
             }
         }
     }

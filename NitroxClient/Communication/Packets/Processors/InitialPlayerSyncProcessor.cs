@@ -38,15 +38,15 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SetPlayerGuid(packet.PlayerGuid);
             SpawnVehicles(packet.Vehicles);
-            SpawnItemContainer(packet.PlayerGuid, packet.InventoryItems); //Need Maintain SpawnItemContainer before SpawnBasePieces because is Locker already Place SpawnItemContainer Duplicated Same Item
+            SpawnPlayerEquipment(packet.EquippedItems); //Need Set Equipment On Vehicles before SpawnItemContainer because is Locker Is a Upgrade (VehicleStorageModule Seamoth / Prawn)
+            SpawnItemContainer(packet.PlayerGuid, packet.InventoryItems); //Need Maintain SpawnItemContainer before SpawnBasePieces/SpawnInventoryItemsAfterBasePiecesFinish because is Locker already Place SpawnItemContainer Duplicated Same Item
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnBasePieces(packet.BasePieces);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
-            SetPDALog(packet.PDAData.PDALogEntries);
-            SpawnPlayerEquipment(packet.EquippedItems);
+            SetPDALog(packet.PDAData.PDALogEntries);      
             SetPlayerStats(packet.PlayerStatsData);
             SetPlayerSpawn(packet.PlayerSpawnData);            
         }
