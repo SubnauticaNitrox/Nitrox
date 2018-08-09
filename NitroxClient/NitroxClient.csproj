@@ -125,6 +125,7 @@
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />

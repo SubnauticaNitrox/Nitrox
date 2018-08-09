@@ -125,7 +125,7 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
             if (interactiveChildIdentifiers.IsPresent())
             {
-                SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
 
         }
@@ -176,7 +176,21 @@ namespace NitroxClient.GameLogic
                 }
             }
         }
-        
+
+        public void UpdateVehicleChildren(string guid, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildrenGuids) //Destroy Vehicle From network
+        {
+            Optional<GameObject> Object = GuidHelper.GetObjectFrom(guid);
+            if (Object.IsPresent())
+            {
+                GameObject T = Object.Get();
+
+                if (interactiveChildrenGuids.IsPresent())
+                {
+                    VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids.Get());
+                }
+            }
+        }
+
         public void BroadcastDestroyedVehicle(Vehicle vehicle)
         {
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
@@ -281,24 +295,6 @@ namespace NitroxClient.GameLogic
                     {
                         vehicle.pilotId = string.Empty;
                     }
-                }
-            }
-        }
-
-        private void SetInteractiveChildrenGuids(GameObject constructedObject, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
-        {
-            foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
-            {
-                Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
-
-                if (transform != null)
-                {
-                    GameObject gameObject = transform.gameObject;
-                    GuidHelper.SetNewGuid(gameObject, childIdentifier.Guid);
-                }
-                else
-                {
-                    Log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
                 }
             }
         }
