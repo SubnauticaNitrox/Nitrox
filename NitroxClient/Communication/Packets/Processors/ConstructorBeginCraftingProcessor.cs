@@ -32,18 +32,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
                 GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
-
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
-
-                if (packet.TechType == TechType.Cyclops)
-                {
-                    SubRoot subRoot = constructedObject.GetComponent<SubRoot>();
-                    if (subRoot != null)
-                    {
-                        GuidHelper.SetNewGuid(subRoot.upgradeConsole.modules.owner, packet.ConstructedModulesEquipmentGuid.Get());
-                        Log.Info("New Modules Guid: " + GuidHelper.GetGuid(subRoot.upgradeConsole.modules.owner));
-                    }
-                }
             }
             else
             {

@@ -20,6 +20,7 @@ namespace NitroxClient.GameLogic.Helper
             { typeof(SeamothStorageContainer) },
             { typeof(VehicleDockingBay) },
             { typeof(DockedVehicleHandTarget) },
+            { typeof(UpgradeConsole) },
             { typeof(DockingBayDoor) }
         };
 
