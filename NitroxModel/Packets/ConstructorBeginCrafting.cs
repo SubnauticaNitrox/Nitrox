@@ -11,14 +11,13 @@ namespace NitroxModel.Packets
     {
         public string ConstructorGuid { get; }
         public string ConstructedItemGuid { get; }
-        public Optional<string>ConstructedModulesEquipmentGuid { get; }
         public TechType TechType { get; }
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
         public Vector3 Position { get; }
         public Quaternion Rotation { get; }
 
-        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, Optional<string> constructedModulesEquipmentGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation)
+        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation)
         {
             ConstructorGuid = constructorGuid;
             ConstructedItemGuid = constructedItemGuid;
@@ -27,7 +26,6 @@ namespace NitroxModel.Packets
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
             Position = position;
             Rotation = rotation;
-            ConstructedModulesEquipmentGuid = constructedModulesEquipmentGuid;
         }
 
         public override string ToString()

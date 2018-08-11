@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -35,6 +36,18 @@ namespace NitroxServer.GameLogic.Vehicles
                     vehiclesByGuid[vehicleMovement.Guid].Rotation = vehicleMovement.Rotation;
                 }
                
+            }
+        }
+
+        public void UpdateVehicleChildObjects(string guid, List<InteractiveChildObjectIdentifier> interactiveChildObjectIdentifier)
+        {
+            lock (vehiclesByGuid)
+            {
+                if (vehiclesByGuid.ContainsKey(guid))
+                {
+                    vehiclesByGuid[guid].InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(interactiveChildObjectIdentifier);
+                }
+
             }
         }
 

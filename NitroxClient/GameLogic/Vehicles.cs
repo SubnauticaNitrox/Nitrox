@@ -30,14 +30,14 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.ModulesEquipmentGuid, vehicleModel.Position, vehicleModel.Rotation,vehicleModel.InteractiveChildIdentifiers);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation,vehicleModel.InteractiveChildIdentifiers);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Optional<string> modulesEquipmentGuid,Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, modulesEquipmentGuid, position, rotation, interactiveChildIdentifiers));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, modulesEquipmentGuid, position, rotation, interactiveChildIdentifiers);
+                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Optional<string> modulesEquipmentGuid, Vector3 spawnPosition, Quaternion spawnRotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -123,21 +123,11 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
-
-            SubRoot subRoot = gameObject.GetComponent<SubRoot>();
-            if (subRoot != null)
+            if (interactiveChildIdentifiers.IsPresent())
             {
-                if (modulesEquipmentGuid.IsPresent())
-                {
-                    GuidHelper.SetNewGuid(subRoot.upgradeConsole.modules.owner, modulesEquipmentGuid.Get());
-                    Log.Info("Cyclop Modules Guid: " + GuidHelper.GetGuid(subRoot.upgradeConsole.modules.owner));
-                }
-                else
-                {
-                    Log.Info("Error Cyclop Modules Guid Missing Cyclop Guid: " + GuidHelper.GetGuid(subRoot.gameObject));
-                }
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
+
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
@@ -186,7 +176,17 @@ namespace NitroxClient.GameLogic
                 }
             }
         }
-        
+
+        public void UpdateVehicleChildren(string guid, List<InteractiveChildObjectIdentifier> interactiveChildrenGuids)
+        {
+            Optional<GameObject> Object = GuidHelper.GetObjectFrom(guid);
+            if (Object.IsPresent())
+            {
+                GameObject T = Object.Get();
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids);
+            }
+        }
+
         public void BroadcastDestroyedVehicle(Vehicle vehicle)
         {
             using (packetSender.Suppress<VehicleOnPilotModeChanged>())
@@ -291,24 +291,6 @@ namespace NitroxClient.GameLogic
                     {
                         vehicle.pilotId = string.Empty;
                     }
-                }
-            }
-        }
-
-        private void SetInteractiveChildrenGuids(GameObject constructedObject, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
-        {
-            foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
-            {
-                Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
-
-                if (transform != null)
-                {
-                    GameObject gameObject = transform.gameObject;
-                    GuidHelper.SetNewGuid(gameObject, childIdentifier.Guid);
-                }
-                else
-                {
-                    Log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
                 }
             }
         }

@@ -26,6 +26,15 @@ namespace NitroxClient.GameLogic
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
+            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
+            {
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid,childIdentifiers);
+                packetSender.Send(vehicleChildInteractiveData);
+            }
+
+            
+
             EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
 
             Player player = owner.GetComponent<Player>();
@@ -38,6 +47,13 @@ namespace NitroxClient.GameLogic
         {
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             string ownerGuid = GuidHelper.GetGuid(owner);
+
+            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
+            {
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
+                packetSender.Send(vehicleChildInteractiveData);
+            }
 
             Player player = owner.GetComponent<Player>();
             bool isPlayerEquipment = (player != null);
