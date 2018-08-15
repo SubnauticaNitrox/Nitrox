@@ -1,6 +1,7 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.HUD;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
@@ -53,8 +54,7 @@ namespace NitroxPatcher.Patches
             }
             else
             {
-                HandReticle.main.SetInteractText("Another player is currently controlling that vehicle!");
-                HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
+                vehicle.gameObject.AddComponent<DenyOwnershipHand>();
                 vehicle.isValidHandTarget = false;
             }
         }

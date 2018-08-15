@@ -125,6 +125,7 @@
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
@@ -162,6 +163,8 @@
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
+    <Compile Include="GameLogic\Helper\VehicleChildObjectIdentifierHelper.cs" />
+    <Compile Include="GameLogic\HUD\DenyOwnershipHand.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
     <Compile Include="GameLogic\Helper\GuidHelper.cs" />

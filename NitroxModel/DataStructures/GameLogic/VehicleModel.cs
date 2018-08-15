@@ -17,34 +17,31 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Guid { get; set; }
 
         [ProtoMember(3)]
-        public string SerializableModulesEquipmentGuid
-        {
-            get { return (ModulesEquipmentGuid.IsPresent()) ? ModulesEquipmentGuid.Get() : null; }
-            set { ModulesEquipmentGuid = Optional<string>.OfNullable(value); }
-        }
-        [ProtoIgnore]
-        public Optional<string> ModulesEquipmentGuid { get; set; }
-
-        [ProtoMember(4)]
         public Vector3 Position { get; set; }
 
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public Quaternion Rotation { get; set; }
 
-        [ProtoMember(6)]
-        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
+        [ProtoMember(5)]
+        public List<InteractiveChildObjectIdentifier> SerializableInteractiveChildIdentifiers
+        {
+            get { return (InteractiveChildIdentifiers.IsPresent()) ? InteractiveChildIdentifiers.Get() : null; }
+            set { InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(value); }
+        }
+        [ProtoIgnore]
+        public Optional<List<InteractiveChildObjectIdentifier>> InteractiveChildIdentifiers { get; set; }
+
 
 
         public VehicleModel()
         {
-            // For serialization purposes
+            InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.Empty();
         }
 
-        public VehicleModel(TechType techType, string guid, Optional<string> modulesEquipmentGuid, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public VehicleModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             TechType = techType;
             Guid = guid;
-            ModulesEquipmentGuid = modulesEquipmentGuid;
             Position = position;
             Rotation = rotation;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;

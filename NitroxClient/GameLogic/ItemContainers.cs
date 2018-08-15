@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using System.Text.RegularExpressions;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -20,9 +22,19 @@ namespace NitroxClient.GameLogic
             this.localPlayer = localPlayer;
         }
 
-        public void BroadcastItemAdd(Pickupable pickupable, GameObject owner)
+        public void BroadcastItemAdd(Pickupable pickupable, Transform ownerTransform)
         {
-            string ownerGuid = GuidHelper.GetGuid(owner);
+            string ownerGuid = null;
+
+            bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            if (isCyclopsLocker)
+            {
+                ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else
+            {
+                ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
+            }
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
@@ -31,10 +43,20 @@ namespace NitroxClient.GameLogic
             packetSender.Send(add);
         }
 
-        public void BroadcastItemRemoval(Pickupable pickupable, GameObject owner)
+        public void BroadcastItemRemoval(Pickupable pickupable, Transform ownerTransform)
         {
+            string ownerGuid = null;
+
+            bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            if (isCyclopsLocker)
+            {
+                ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else
+            {
+                ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
+            }
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            string ownerGuid = GuidHelper.GetGuid(owner);
             ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
             packetSender.Send(remove);
         }
@@ -88,6 +110,32 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error("Could not find container field on object " + owner.name);
             }
+        }
+
+        public string GetCyclopsLockerGuid(Transform ownerTransform)
+        {
+            string LockerId = ownerTransform.gameObject.name.Substring(7, 1);
+
+            GameObject locker = ownerTransform.parent.gameObject.FindChild("submarine_locker_01_0" + LockerId);
+            if (locker != null)
+            {
+                StorageContainer SC = locker.GetComponentInChildren<StorageContainer>();
+
+                if (SC != null)
+                {
+                    return GuidHelper.GetGuid(SC.gameObject);
+                }
+                else
+                {
+                    throw new Exception("Could not find StorageContainer From Object: submarine_locker_01_0" + LockerId);
+                }
+
+            }
+            else
+            {
+                throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
+            }
+            
         }
     }
 }
