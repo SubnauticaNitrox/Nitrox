@@ -7,7 +7,7 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         public override void Process(ServerCommand packet, Player player)
         {
-            Program._Server.Save();
+            Server.Instance.Save();
         }
     }
 }

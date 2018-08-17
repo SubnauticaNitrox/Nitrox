@@ -22,7 +22,7 @@ namespace NitroxModel.Logger
             Log.level = level;
             Write("Log level set to " + Log.level);
         }
-
+        
         // For in-game notifications
         public static void InGame(string msg)
         {
