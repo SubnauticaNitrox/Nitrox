@@ -1,0 +1,29 @@
+﻿<Window x:Class="NitroxServer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Nitrox Server" Height="350" Width="525" Loaded="Window_Loaded">
+    <Grid>
+        <TabControl HorizontalAlignment="Stretch"  Margin="0,0,0,0" VerticalAlignment="Stretch" >
+
+            <TabItem Header="Log">
+                <Grid Background="#FFE5E5E5">
+                    <TextBox HorizontalAlignment="Stretch" TextWrapping="Wrap" Name="LogTextBox" VerticalAlignment="Stretch" Foreground="White" Background="Black" HorizontalScrollBarVisibility="Auto" FontFamily="Console"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Network Info">
+                <Grid>
+                    <GroupBox Header="BandWidth" HorizontalAlignment="Left" Height="75" VerticalAlignment="Top" Width="182">
+                        <Grid>
+
+                            <Label Content="Download:" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Right" Width="67"/>
+                            <Label Name="DSpeed" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="67,0,0,0" Width="96"/>
+                            <Label Content="Upload:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,26,0,0" HorizontalContentAlignment="Right" Width="67"/>
+                            <Label Name="USpeed" Content="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="67,26,0,0" Width="96"/>
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

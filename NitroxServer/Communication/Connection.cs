@@ -9,6 +9,7 @@ namespace NitroxServer.Communication
     {
         private readonly NetServer server;
         private readonly NetConnection connection;
+        public static long UploadSpeed;
 
         public Connection(NetServer server, NetConnection connection)
         {
@@ -23,7 +24,9 @@ namespace NitroxServer.Communication
                 byte[] packetData = packet.Serialize();
                 NetOutgoingMessage om = server.CreateMessage();
                 om.Write(packetData);
-
+#if SWPF
+                UploadSpeed += (uint)packetData.Length;
+#endif
                 connection.SendMessage(om, packet.DeliveryMethod, (int)packet.UdpChannel);
             }
             else

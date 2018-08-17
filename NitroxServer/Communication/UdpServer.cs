@@ -19,6 +19,7 @@ namespace NitroxServer.Communication
         private readonly EntitySimulation entitySimulation;
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
+        static long downloadSpeed;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
         {
@@ -36,8 +37,25 @@ namespace NitroxServer.Communication
 
             Thread thread = new Thread(Listen);
             thread.Start();
+#if SWPF
+            System.Timers.Timer Hora = new System.Timers.Timer();
+            Hora.Elapsed += new System.Timers.ElapsedEventHandler(Hora_Elapsed);
+            Hora.Interval = 1000;
+            Hora.Enabled = true;
+#endif
         }
+
+#if SWPF
+        static void Hora_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            MainWindow.Instance.NetworkSpeed(downloadSpeed, Connection.UploadSpeed);
+            downloadSpeed = 0;
+            Connection.UploadSpeed = 0;
+        }
+#endif
+
         
+
         private void Listen()
         {
             while (true)
@@ -83,6 +101,10 @@ namespace NitroxServer.Communication
 
         private void ProcessIncomingData(Connection connection, byte[] data)
         {
+#if SWPF
+            downloadSpeed += data.Length;
+#endif
+
             Packet packet = Packet.Deserialize(data);
 
             try
