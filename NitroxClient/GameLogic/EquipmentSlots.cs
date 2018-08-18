@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            pickupable.gameObject.transform.SetParent(null);
+            pickupable.gameObject.transform.SetParent(null); // On Deserialized Function Try to find non-existent Parent set null to prevent that bug
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
