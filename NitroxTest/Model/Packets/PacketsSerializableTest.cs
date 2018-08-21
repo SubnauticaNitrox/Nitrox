@@ -20,17 +20,9 @@ namespace NitroxTest.Model.Packets
                 return;
             }
 
-            if (!t.IsSerializable && !t.IsInterface)
+            if (!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t))
             {
-                // We have our own surrogates to (de)serialize types that are not marked [Serializable]
-                // This code is very similar to how serializability is checked in:
-                // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
-
-                ISurrogateSelector selector;
-                if (Packet.Serializer.SurrogateSelector.GetSurrogate(t, Packet.Serializer.Context, out selector) == null)
-                {
-                    Assert.Fail($"Type {t} is not serializable!");
-                }
+                Assert.Fail($"Type {t} is not serializable!");
             }
 
             visitedTypes.Add(t);

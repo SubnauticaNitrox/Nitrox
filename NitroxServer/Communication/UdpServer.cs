@@ -83,19 +83,16 @@ namespace NitroxServer.Communication
 
         private void ProcessIncomingData(Connection connection, byte[] data)
         {
-            using (Stream stream = new MemoryStream(data))
-            {
-                Packet packet = (Packet)Packet.Serializer.Deserialize(stream);
+            Packet packet = Packet.Deserialize(data);
 
-                try
-                {
-                    packetHandler.Process(packet, connection);
-                }
-                catch (Exception ex)
-                {
-                    Log.Info("Exception while processing packet: " + packet + " " + ex);
-                }
+            try
+            {
+                packetHandler.Process(packet, connection);
             }
+            catch (Exception ex)
+            {
+                Log.Info("Exception while processing packet: " + packet + " " + ex);
+            }            
         }
 
         private void ConnectionStatusChanged(NetConnectionStatus status, NetConnection networkConnection)
