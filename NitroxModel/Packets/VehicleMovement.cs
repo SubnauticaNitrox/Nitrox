@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
 using Lidgren.Network;
 
@@ -10,7 +9,7 @@ namespace NitroxModel.Packets
     {
         public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
+        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation)
         {
             Vehicle = vehicle;
             DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;

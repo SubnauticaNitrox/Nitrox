@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerStats);
         }
 
-        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle, Optional<string> opSubGuid)
+        public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
 
@@ -49,7 +49,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation, opSubGuid);
+                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
             }
 
             packetSender.Send(movement);
@@ -65,6 +65,12 @@ namespace NitroxClient.GameLogic
         {
             PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition);
             packetSender.Send(playerDeath);
+        }
+
+        public void BroadcastSubrootChange(Optional<string> subrootGuid)
+        {
+            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootGuid);
+            packetSender.Send(packet);
         }
 
         private GameObject CreateBodyPrototype()

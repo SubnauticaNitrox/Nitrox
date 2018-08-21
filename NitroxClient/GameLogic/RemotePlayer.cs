@@ -68,21 +68,13 @@ namespace NitroxClient.GameLogic
             Body.transform.parent = null;
         }
 
-        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> opSubGuid)
+        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             Body.SetActive(true);
-
-            SubRoot subRoot = null;
-            if (opSubGuid.IsPresent())
-            {
-                GameObject sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
-                subRoot = sub.GetComponent<SubRoot>();
-            }
-
+            
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-            SetSubRoot(subRoot);
 
             RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
