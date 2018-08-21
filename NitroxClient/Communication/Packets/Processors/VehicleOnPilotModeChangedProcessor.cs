@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // before the animation completes on the remote player.)
             if (!vehicle.docked)
             {
-                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerGuid, packet.IsPiloting);
+                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerId, packet.IsPiloting);
             }
         }
     }

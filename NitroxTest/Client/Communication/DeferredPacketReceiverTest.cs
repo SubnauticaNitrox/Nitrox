@@ -16,7 +16,7 @@ namespace NitroxTest.Client.Communication
         private DeferringPacketReceiver packetReceiver;
 
         // Test Data
-        private const string PLAYER_ID = "TestPlayer";
+        private const ushort PLAYER_ID = 1;
         private const int CELL_LEVEL = 3;
         private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);

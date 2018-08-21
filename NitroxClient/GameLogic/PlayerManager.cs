@@ -12,14 +12,14 @@ namespace NitroxClient.GameLogic
     public class PlayerManager
     {
         private readonly ILocalNitroxPlayer localPlayer;
-        private readonly Dictionary<string, RemotePlayer> playersById = new Dictionary<string, RemotePlayer>();
+        private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public PlayerManager(ILocalNitroxPlayer localPlayer)
         {
             this.localPlayer = localPlayer;
         }
 
-        public Optional<RemotePlayer> Find(string playerId)
+        public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
 
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
             playersById.Add(player.PlayerId, player);
         }
 
-        public void RemovePlayer(string playerId)
+        public void RemovePlayer(ushort playerId)
         {
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.IsPresent())
@@ -79,6 +79,6 @@ namespace NitroxClient.GameLogic
         private GameObject CloneLocalPlayerBodyPrototype()
         {
             return Object.Instantiate(localPlayer.BodyPrototype);
-        }
+        }        
     }
 }

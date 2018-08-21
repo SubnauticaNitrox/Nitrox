@@ -25,8 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     .UpdatePosition(movement.Position,
                         movement.Velocity,
                         movement.BodyRotation,
-                        movement.AimingRotation,
-                        movement.SubGuid);
+                        movement.AimingRotation);
             }
         }
     }

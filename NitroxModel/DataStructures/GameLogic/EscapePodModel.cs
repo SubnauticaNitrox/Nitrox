@@ -13,7 +13,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public string MedicalFabricatorGuid { get; }
         public string StorageContainerGuid { get; }
         public string RadioGuid { get; }
-        public List<string> AssignedPlayers { get; } = new List<string>();
+        public List<ushort> AssignedPlayers { get; } = new List<ushort>();
 
         public EscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
         {
@@ -29,7 +29,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             string toString = "[EscapePodModel - Guid: " + Guid + " Location:" + Location + " FabricatorGuid: " + FabricatorGuid + " MedicalFabricatorGuid: " + MedicalFabricatorGuid + " StorageContainerGuid: " + StorageContainerGuid + " RadioGuid: " + RadioGuid + " AssignedPlayers: {";
 
-            foreach (string playerId in AssignedPlayers)
+            foreach (ushort playerId in AssignedPlayers)
             {
                 toString += playerId + " ";
             }

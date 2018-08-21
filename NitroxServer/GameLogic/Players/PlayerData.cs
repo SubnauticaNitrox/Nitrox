@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using ProtoBufNet;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,10 +35,13 @@ namespace NitroxServer.GameLogic.Players
             set { ModulesItemsByGuid = value; }
         }
 
+        [ProtoMember(3)]
+        public ushort currentPlayerId = 0;
+
         public Dictionary<string, EquippedItemData> ModulesItemsByGuid = new Dictionary<string, EquippedItemData>();
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
-
+        
         public void AddEquipment(string playerName, EquippedItemData equippedItem)
         {
             lock (playersByPlayerName)
@@ -49,25 +51,13 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public string PlayerGuid(string playerName)
+        public ushort PlayerId(string playerName)
         {
             lock (playersByPlayerName)
             {
-                PersistedPlayerData playerPersistedData = null;
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
 
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
-
-                if (string.IsNullOrEmpty(playerPersistedData.PlayerGuid))
-                {
-                    return playerPersistedData.PlayerGuid = Guid.NewGuid().ToString();
-                }
-                else
-                {
-                    return playerPersistedData.PlayerGuid;
-                }
+                return playerPersistedData.PlayerId;
             }
         }
 
@@ -75,12 +65,8 @@ namespace NitroxServer.GameLogic.Players
         {
             lock (playersByPlayerName)
             {
-                PersistedPlayerData playerPersistedData = null;
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
 
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
                 return playerPersistedData.PlayerSpawnData;
             }
         }
@@ -97,12 +83,7 @@ namespace NitroxServer.GameLogic.Players
         {
             lock (playersByPlayerName)
             {
-                PersistedPlayerData playerPersistedData = null;
-
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
 
                 playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
             }
@@ -111,18 +92,12 @@ namespace NitroxServer.GameLogic.Players
         {
             lock (playersByPlayerName)
             {
-                PersistedPlayerData playerPersistedData = null;
-
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
 
                 return playersByPlayerName[playerName].CurrentStats;
             }
         }
-
-        
+                
         public void RemoveEquipment(string playerName, string guid)
         {
             lock (playersByPlayerName)
@@ -134,19 +109,26 @@ namespace NitroxServer.GameLogic.Players
 
         public List<EquippedItemData> GetEquippedItemsForInitialSync(string playerName)
         {
-            PersistedPlayerData playerPersistedData = null;
-
             lock (playersByPlayerName)
             {
-                if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName);
-                }
-
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
                 List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
                 ItemData.AddRange((new List<EquippedItemData>(ModulesItemsByGuid.Values)));
                 return ItemData;
             }
+        }
+
+        // Must be called when playersByPlayerName is locked.
+        private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
+        {
+            PersistedPlayerData playerPersistedData = null;
+
+            if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
+            {
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId);
+            }
+
+            return playerPersistedData;
         }
 
         public void AddModule(EquippedItemData equippedmodule)
@@ -174,7 +156,7 @@ namespace NitroxServer.GameLogic.Players
             public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
 
             [ProtoMember(3)]
-            public string PlayerGuid { get; set; }
+            public ushort PlayerId { get; set; }
 
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }
@@ -187,9 +169,10 @@ namespace NitroxServer.GameLogic.Players
                 // Constructor for serialization purposes
             }
 
-            public PersistedPlayerData(string playerName)
+            public PersistedPlayerData(string playerName, ushort playerId)
             {
                 PlayerName = playerName;
+                PlayerId = playerId;
             }
         }
 

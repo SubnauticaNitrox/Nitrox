@@ -24,6 +24,7 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
+            pickupable.gameObject.transform.SetParent(null); // On Deserialized Function Try to find non-existent Parent set null to prevent that bug
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
@@ -60,11 +61,11 @@ namespace NitroxClient.GameLogic
             EquipmentRemoveItem equipPacket = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, isPlayerEquipment);
             packetSender.Send(equipPacket);
         }
-
+       
         public void AddItems(List<EquippedItemData> equippedItems)
         {
             ItemsContainer container = Inventory.Get().container;
-            
+
             foreach (EquippedItemData equippedItem in equippedItems)
             {
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);

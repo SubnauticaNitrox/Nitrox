@@ -9,6 +9,7 @@ using NitroxModel.Logger;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
 using Lidgren.Network;
+using LZ4;
 
 namespace NitroxModel.Packets
 {
@@ -17,7 +18,7 @@ namespace NitroxModel.Packets
     {
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
-        public static readonly BinaryFormatter Serializer;
+        private static readonly BinaryFormatter Serializer;
         
         static Packet()
         {
@@ -62,12 +63,32 @@ namespace NitroxModel.Packets
             byte[] packetData;
 
             using (MemoryStream ms = new MemoryStream())
+            using (LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress))
             {
-                Serializer.Serialize(ms, this);
+                Serializer.Serialize(lz4Stream, this);
                 packetData = ms.ToArray();
             }
 
             return packetData;
+        }
+
+        public static Packet Deserialize(byte[] data)
+        {
+            using (Stream stream = new MemoryStream(data))
+            using (LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress))
+            {
+                return (Packet)Serializer.Deserialize(lz4Stream);
+            }
+        }
+
+        public static bool IsTypeSerializable(Type type)
+        {
+            // We have our own surrogates to (de)serialize types that are not marked [Serializable]
+            // This code is very similar to how serializability is checked in:
+            // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
+
+            ISurrogateSelector selector;
+            return (Serializer.SurrogateSelector.GetSurrogate(type, Packet.Serializer.Context, out selector) != null);
         }
 
         // Deferred cells are a replacement for the old DeferredPacket class.  The idea

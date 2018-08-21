@@ -12,13 +12,13 @@ namespace NitroxClient.GameLogic
     public class RemotePlayer : INitroxPlayer
     {
         public PlayerContext PlayerContext { get; }
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
+        public GameObject Body { get; set; }
+        public GameObject PlayerModel { get; set; }
         public Rigidbody RigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
 
-        public string PlayerId => PlayerContext.PlayerId;
+        public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
@@ -46,6 +46,12 @@ namespace NitroxClient.GameLogic
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
+        
+        public void ResetModel(ILocalNitroxPlayer localPlayer)
+        {
+            Body = Object.Instantiate(localPlayer.BodyPrototype);
+            PlayerModel = Body.RequireGameObject("player_view");
+        }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
         {
@@ -62,21 +68,13 @@ namespace NitroxClient.GameLogic
             Body.transform.parent = null;
         }
 
-        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> opSubGuid)
+        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             Body.SetActive(true);
-
-            SubRoot subRoot = null;
-            if (opSubGuid.IsPresent())
-            {
-                GameObject sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
-                subRoot = sub.GetComponent<SubRoot>();
-            }
-
+            
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-            SetSubRoot(subRoot);
 
             RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);

@@ -15,7 +15,7 @@ namespace NitroxServer
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; }
-        public string Id => PlayerContext.PlayerId;
+        public ushort Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
 

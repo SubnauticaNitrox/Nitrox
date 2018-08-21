@@ -6,19 +6,19 @@ namespace NitroxModel.Packets
     public class VehicleOnPilotModeChanged : Packet
     {
         public string VehicleGuid { get; }
-        public string PlayerGuid { get; }
+        public ushort PlayerId { get; }
         public bool IsPiloting { get; }
 
-        public VehicleOnPilotModeChanged(string vehicleGuid, string playerGuid, bool isPiloting)
+        public VehicleOnPilotModeChanged(string vehicleGuid, ushort playerId, bool isPiloting)
         {
             VehicleGuid = vehicleGuid;
-            PlayerGuid = playerGuid;
+            PlayerId = playerId;
             IsPiloting = isPiloting;
         }
 
         public override string ToString()
         {
-            return "[VehicleOnPilotModeChanged - VehicleGuid: " + VehicleGuid + " PlayerGuid: " + PlayerGuid + " IsPiloting: " + IsPiloting + "]";
+            return "[VehicleOnPilotModeChanged - VehicleGuid: " + VehicleGuid + " PlayerId: " + PlayerId + " IsPiloting: " + IsPiloting + "]";
         }
     }
 }

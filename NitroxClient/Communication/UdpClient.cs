@@ -69,13 +69,7 @@ namespace NitroxClient.Communication
                     case NetIncomingMessageType.Data:
                         if (im.Data.Length > 0)
                         {
-                            Packet packet;
-
-                            using (Stream stream = new MemoryStream(im.Data))
-                            {
-                                packet = (Packet)Packet.Serializer.Deserialize(stream);
-                            }
-
+                            Packet packet = Packet.Deserialize(im.Data);
                             packetReceiver.PacketReceived(packet);
                         }
                         break;
