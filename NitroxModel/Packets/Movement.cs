@@ -8,14 +8,14 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Movement : Packet
     {
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
         public Vector3 Position { get; }
         public Vector3 Velocity { get; }
         public Quaternion BodyRotation { get; }
         public Quaternion AimingRotation { get; }
         public Optional<string> SubGuid { get; }
 
-        public Movement(string playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> subGuid)
+        public Movement(ushort playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> subGuid)
         {
             PlayerId = playerId;
             Position = position;

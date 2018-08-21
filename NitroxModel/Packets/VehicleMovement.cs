@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
     {
         public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(string playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
+        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation, Optional<string>.Empty())
         {
             Vehicle = vehicle;
             DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;

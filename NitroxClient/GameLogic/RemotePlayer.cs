@@ -12,13 +12,13 @@ namespace NitroxClient.GameLogic
     public class RemotePlayer : INitroxPlayer
     {
         public PlayerContext PlayerContext { get; }
-        public GameObject Body { get; }
-        public GameObject PlayerModel { get; }
+        public GameObject Body { get; set; }
+        public GameObject PlayerModel { get; set; }
         public Rigidbody RigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
 
-        public string PlayerId => PlayerContext.PlayerId;
+        public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
@@ -45,6 +45,12 @@ namespace NitroxClient.GameLogic
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
+        }
+        
+        public void ResetModel(ILocalNitroxPlayer localPlayer)
+        {
+            Body = Object.Instantiate(localPlayer.BodyPrototype);
+            PlayerModel = Body.RequireGameObject("player_view");
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)

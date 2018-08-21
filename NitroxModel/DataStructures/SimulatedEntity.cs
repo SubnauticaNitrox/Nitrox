@@ -7,10 +7,10 @@ namespace NitroxModel.DataStructures
     {
         public bool ChangesPosition { get; }
         public string Guid { get; }
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulatedEntity(string guid, string playerId, bool changesPosition, SimulationLockType lockType)
+        public SimulatedEntity(string guid, ushort playerId, bool changesPosition, SimulationLockType lockType)
         {
             Guid = guid;
             PlayerId = playerId;

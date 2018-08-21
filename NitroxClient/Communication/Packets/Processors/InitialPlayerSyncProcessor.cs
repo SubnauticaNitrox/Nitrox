@@ -154,8 +154,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GuidHelper.SetNewGuid(Player.mainObject, playerguid);
             Log.Info("Received initial sync Player Guid: " + playerguid);
-        }
-    
+        }    
         
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {

@@ -24,10 +24,10 @@ namespace ClientTester
 
         private readonly string playerName;
 
-        public MultiplayerClient(string playerId)
+        public MultiplayerClient(ushort playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
-            playerName = playerId;
+            playerName = "Player" + playerId.ToString();
 
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
             packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();

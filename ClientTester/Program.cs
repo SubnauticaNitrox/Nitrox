@@ -13,7 +13,7 @@ namespace ClientTester
         [STAThread]
         static void Main(string[] args)
         {
-            string playerId1 = "sunrunner";
+            ushort playerId1 = 1;
 
             // give main server a second to start up...
             System.Threading.Thread.Sleep(1000);

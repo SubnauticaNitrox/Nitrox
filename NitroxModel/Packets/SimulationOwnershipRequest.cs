@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SimulationOwnershipRequest : Packet
     {
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
         public string Guid { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulationOwnershipRequest(string playerId, string guid, SimulationLockType lockType)
+        public SimulationOwnershipRequest(ushort playerId, string guid, SimulationLockType lockType)
         {
             PlayerId = playerId;
             Guid = guid;

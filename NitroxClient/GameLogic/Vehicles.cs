@@ -140,7 +140,8 @@ namespace NitroxClient.GameLogic
 
                 if (isPiloting) //Check Remote Object Have Player inside
                 {
-                    Optional<RemotePlayer> remotePilot = playerManager.Find(vehicle.pilotId);
+                    ushort pilot = ushort.Parse(vehicle.pilotId);
+                    Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
                     if (remotePilot.IsPresent()) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
                     {
@@ -204,11 +205,12 @@ namespace NitroxClient.GameLogic
                 // detach the remote player before destroying the game object.
                 if (!string.IsNullOrEmpty(vehicle.pilotId)) 
                 {
-                    Optional<RemotePlayer> pilot = playerManager.Find(vehicle.pilotId);
+                    ushort pilot = ushort.Parse(vehicle.pilotId);
+                    Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
-                    if (pilot.IsPresent())
+                    if (remotePilot.IsPresent())
                     {
-                        RemotePlayer remotePlayer = pilot.Get();
+                        RemotePlayer remotePlayer = remotePilot.Get();
                         remotePlayer.SetVehicle(null);
                         remotePlayer.SetSubRoot(null);
                         remotePlayer.SetPilotingChair(null);
@@ -222,7 +224,7 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            string playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, playerId);
             packetSender.Send(packet);
@@ -235,7 +237,7 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            string playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, playerId);
             packetSender.Send(packet);
@@ -267,12 +269,14 @@ namespace NitroxClient.GameLogic
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
-                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), GuidHelper.GetGuid(Player.main.gameObject), isPiloting);
+                ushort playerId = multiplayerSession.Reservation.PlayerId;
+
+                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), playerId, isPiloting);
                 packetSender.Send(packet);
             }
         }
 
-        public void SetOnPilotMode(string vehicleGuid, string playerGuid, bool isPiloting)
+        public void SetOnPilotMode(string vehicleGuid, ushort playerId, bool isPiloting)
         {
             Optional<GameObject> opVehicle = GuidHelper.GetObjectFrom(vehicleGuid);
 
@@ -285,7 +289,7 @@ namespace NitroxClient.GameLogic
                 {
                     if (isPiloting)
                     {
-                        vehicle.pilotId = playerGuid;
+                        vehicle.pilotId = playerId.ToString();
                     }
                     else
                     {

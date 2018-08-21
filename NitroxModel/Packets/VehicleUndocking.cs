@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     {
         public string VehicleGuid { get; }
         public string DockGuid { get; }
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
 
-        public VehicleUndocking(string vehicleGuid, string dockGuid, string playerId)
+        public VehicleUndocking(string vehicleGuid, string dockGuid, ushort playerId)
         {
             VehicleGuid = vehicleGuid;
             DockGuid = dockGuid;
