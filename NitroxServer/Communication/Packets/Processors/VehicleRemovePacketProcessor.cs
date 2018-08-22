@@ -18,7 +18,6 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleDestroyed packet, Player player)
         {
-            NitroxModel.Logger.Log.Info(packet.ToString());
             vehicleData.RemoveVehicle(packet.Guid);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
