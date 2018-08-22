@@ -8,8 +8,8 @@ using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
-using Lidgren.Network;
 using LZ4;
+using LiteNetLib;
 
 namespace NitroxModel.Packets
 {
@@ -47,7 +47,7 @@ namespace NitroxModel.Packets
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public NetDeliveryMethod DeliveryMethod { get; protected set; } = NetDeliveryMethod.ReliableOrdered;
+        public SendOptions DeliveryMethod { get; protected set; } = SendOptions.ReliableOrdered;
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId

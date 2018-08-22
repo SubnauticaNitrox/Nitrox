@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Lidgren.Network;
 
 namespace NitroxModel.Packets
 {
@@ -20,7 +19,7 @@ namespace NitroxModel.Packets
             Velocity = velocity;
             BodyRotation = bodyRotation;
             AimingRotation = aimingRotation;
-            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            DeliveryMethod = LiteNetLib.SendOptions.Sequenced;
             UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
         }
 

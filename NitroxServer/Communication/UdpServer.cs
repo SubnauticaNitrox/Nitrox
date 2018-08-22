@@ -3,87 +3,87 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
 using NitroxServer.GameLogic;
-using Lidgren.Network;
 using System.Collections.Generic;
-using System.Threading;
-using System.IO;
 using NitroxServer.GameLogic.Entities;
 using NitroxModel.DataStructures;
+using LiteNetLib;
+using LiteNetLib.Utils;
+using System.Threading;
 
 namespace NitroxServer.Communication
 {
     public class UdpServer
     {
+        private const int MAX_CLIENTS = ushort.MaxValue;
+        private const string CONNECTION_KEY = "nitrox";
+        private const int SERVER_PORT = 11000;
+
         private readonly PacketHandler packetHandler;
         private readonly PlayerManager playerManager;
         private readonly EntitySimulation entitySimulation;
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
-        private readonly NetServer server;
+        private readonly NetManager server;
+        private readonly EventBasedNetListener listener;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-
-            NetPeerConfiguration config = BuildNetworkConfig();
-            server = new NetServer(config);
+            this.listener = new EventBasedNetListener();
+            this.server = new NetManager(listener, MAX_CLIENTS, CONNECTION_KEY);
         }
 
         public void Start()
         {
-            server.Start();
+            listener.PeerConnectedEvent += PeerConnected;
+            listener.PeerDisconnectedEvent += PeerDisconnected;
+            listener.NetworkReceiveEvent += NetworkDataReceived;
+            listener.NetworkReceiveUnconnectedEvent += OnNetworkReceiveUnconnected;
 
-            Thread thread = new Thread(Listen);
-            thread.Start();
+            server.DiscoveryEnabled = true;
+            server.UnconnectedMessagesEnabled = true;
+            server.UpdateTime = 15;
+            server.UnsyncedEvents = true;
+            server.Start(SERVER_PORT);
         }
-        
-        private void Listen()
+
+        private void PeerConnected(NetPeer peer)
         {
-            while (true)
+            Connection connection = new Connection(peer);
+
+            lock (connectionsByRemoteIdentifier)
             {
-                // Pause reading thread and wait for messages.
-                server.MessageReceivedEvent.WaitOne();
+                connectionsByRemoteIdentifier[peer.ConnectId] = connection;
+            }
+        }
 
-                NetIncomingMessage im;
-                while ((im = server.ReadMessage()) != null)
+        private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
+        {
+            Connection connection = GetConnection(peer.ConnectId);
+            Player player = playerManager.GetPlayer(connection);
+
+            if (player != null)
+            {
+                playerManager.PlayerDisconnected(connection);
+
+                Disconnect disconnect = new Disconnect(player.Id);
+                playerManager.SendPacketToAllPlayers(disconnect);
+
+                List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+
+                if (revokedGuids.Count > 0)
                 {
-                    switch (im.MessageType)
-                    {
-                        case NetIncomingMessageType.DebugMessage:
-                        case NetIncomingMessageType.ErrorMessage:
-                        case NetIncomingMessageType.WarningMessage:
-                        case NetIncomingMessageType.VerboseDebugMessage:
-                            string message = im.ReadString();
-                            Log.Info("Networking: " + message);
-                            break;
-                        case NetIncomingMessageType.StatusChanged:
-                            NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
-
-                            string reason = im.ReadString();
-                            Log.Info("Identifier " + im.SenderConnection.RemoteUniqueIdentifier + " " + status + ": " + reason);
-
-                            ConnectionStatusChanged(status, im.SenderConnection);
-                            break;
-                        case NetIncomingMessageType.Data:
-                            if (im.Data.Length > 0)
-                            {
-                                Connection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
-                                ProcessIncomingData(connection, im.Data);
-                            }
-                            break;
-                        default:
-                            Log.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
-                            break;
-                    }
-                    server.Recycle(im);
+                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
+                    playerManager.SendPacketToAllPlayers(ownershipChange);
                 }
             }
         }
 
-        private void ProcessIncomingData(Connection connection, byte[] data)
+        private void NetworkDataReceived(NetPeer peer, NetDataReader reader)
         {
-            Packet packet = Packet.Deserialize(data);
+            Connection connection = GetConnection(peer.ConnectId);
+            Packet packet = Packet.Deserialize(reader.Data);
 
             try
             {
@@ -92,41 +92,12 @@ namespace NitroxServer.Communication
             catch (Exception ex)
             {
                 Log.Info("Exception while processing packet: " + packet + " " + ex);
-            }            
+            }
         }
 
-        private void ConnectionStatusChanged(NetConnectionStatus status, NetConnection networkConnection)
+        public void OnNetworkReceiveUnconnected(NetEndPoint remoteEndPoint, NetDataReader reader, UnconnectedMessageType messageType)
         {
-            if (status == NetConnectionStatus.Connected)
-            {
-                Connection connection = new Connection(server, networkConnection);
-
-                lock (connectionsByRemoteIdentifier)
-                {
-                    connectionsByRemoteIdentifier[networkConnection.RemoteUniqueIdentifier] = connection;
-                }
-            }
-            else if (status == NetConnectionStatus.Disconnected)
-            {
-                Connection connection = GetConnection(networkConnection.RemoteUniqueIdentifier);
-                Player player = playerManager.GetPlayer(connection);
-
-                if (player != null)
-                {
-                    playerManager.PlayerDisconnected(connection);
-
-                    Disconnect disconnect = new Disconnect(player.Id);
-                    playerManager.SendPacketToAllPlayers(disconnect);
-
-                    List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
-
-                    if (revokedGuids.Count > 0)
-                    {
-                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
-                        playerManager.SendPacketToAllPlayers(ownershipChange);
-                    }
-                }
-            }
+            int i = 0;
         }
 
         private Connection GetConnection(long remoteIdentifier)
@@ -139,16 +110,6 @@ namespace NitroxServer.Communication
             }
 
             return connection;
-        }
-
-        private NetPeerConfiguration BuildNetworkConfig()
-        {
-            NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
-            config.Port = 11000;
-            config.MaximumConnections = 100;
-            config.AutoFlushSendQueue = true;
-
-            return config;
         }
     }
 }
