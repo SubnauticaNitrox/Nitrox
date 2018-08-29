@@ -44,18 +44,14 @@ namespace NitroxServer.Communication
 
         public void Stop()
         {
-            isStopped = false;
+            isStopped = true;
 
-            thread.Stop();
-
-            //Close all connections here or let them timeout?
-
-            server.Stop();
+            server.Shutdown("Shutting down server...");
         }
         
         private void Listen()
         {
-            while (true)
+            while (!isStopped)
             {
                 // Pause reading thread and wait for messages.
                 server.MessageReceivedEvent.WaitOne();
