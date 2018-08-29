@@ -35,6 +35,13 @@ namespace NitroxServer
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
+
+        public void Stop()
+        {
+            worldPersistence.Save(world);
+            udpServer.Stop();
+            Log.Info("Nitrox Server Stopped");
+        }
         
         private void EnablePeriodicSaving()
         {

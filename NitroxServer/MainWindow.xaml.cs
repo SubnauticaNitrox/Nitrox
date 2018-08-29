@@ -21,6 +21,7 @@ namespace NitroxServer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Server _server;
         public static MainWindow Instance;
 
         public MainWindow()
@@ -38,13 +39,18 @@ namespace NitroxServer
 
             try
             {
-                Server _Server = new Server();
-                _Server.Start();
+                _server = new Server();
+                _server.Start();
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
+        }
+
+        private void Window_Closing(object sender, RoutedEventArgs e)
+        {
+           _server.Stop();
         }
 
         public void WriteLog(string data)

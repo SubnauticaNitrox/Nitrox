@@ -14,6 +14,8 @@ namespace NitroxServer.Communication
 {
     public class UdpServer
     {
+        private bool isStopped = true;
+
         private readonly PacketHandler packetHandler;
         private readonly PlayerManager playerManager;
         private readonly EntitySimulation entitySimulation;
@@ -36,6 +38,19 @@ namespace NitroxServer.Communication
 
             Thread thread = new Thread(Listen);
             thread.Start();
+
+            isStopped = false;
+        }
+
+        public void Stop()
+        {
+            isStopped = false;
+
+            thread.Stop();
+
+            //Close all connections here or let them timeout?
+
+            server.Stop();
         }
         
         private void Listen()
