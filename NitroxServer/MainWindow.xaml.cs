@@ -52,7 +52,7 @@ namespace NitroxServer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            Task.Factory.StartNew(()=> _server.Stop()); //No something locks the UI and everything freezes, thus a task for now.
+            Task.Factory.StartNew(()=> _server.Stop()); //Something locks the UI and everything freezes, thus a task for now.
         }
 
         public void WriteLog(string data)
