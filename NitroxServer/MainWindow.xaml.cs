@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -51,7 +52,7 @@ namespace NitroxServer
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-           _server.Stop();
+            Task.Factory.StartNew(()=> _server.Stop()); //No something locks the UI and everything freezes, thus a task for now.
         }
 
         public void WriteLog(string data)

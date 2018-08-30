@@ -21,6 +21,7 @@ namespace NitroxServer.Communication
         private readonly EntitySimulation entitySimulation;
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
+        private readonly Thread thread;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
         {
@@ -30,13 +31,12 @@ namespace NitroxServer.Communication
 
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
+            thread = new Thread(Listen);
         }
 
         public void Start()
         {
             server.Start();
-
-            Thread thread = new Thread(Listen);
             thread.Start();
 
             isStopped = false;
@@ -47,6 +47,7 @@ namespace NitroxServer.Communication
             isStopped = true;
 
             server.Shutdown("Shutting down server...");
+            thread.Join(30000);
         }
         
         private void Listen()

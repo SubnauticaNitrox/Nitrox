@@ -12,6 +12,7 @@ namespace NitroxServer
         private readonly UdpServer udpServer;
         private readonly WorldPersistence worldPersistence;
         private readonly PacketHandler packetHandler;
+        private readonly Timer saveTimer;
 
         public static Server Instance;
 
@@ -26,7 +27,16 @@ namespace NitroxServer
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation);            
+            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation);
+
+            //Maybe add settings for the interval?
+            saveTimer = new Timer();
+            saveTimer.Interval = 60000;
+            saveTimer.AutoReset = true;
+            saveTimer.Elapsed += delegate
+            {
+                Save();
+            };
         }
 
         public void Start()
@@ -38,22 +48,21 @@ namespace NitroxServer
 
         public void Stop()
         {
-            worldPersistence.Save(world);
+            Log.Info("Nitrox Server Stopping...");
+            DisablePeriodicSaving();
+            Save();
             udpServer.Stop();
             Log.Info("Nitrox Server Stopped");
         }
         
         private void EnablePeriodicSaving()
         {
-            Timer timer = new Timer();
-            timer.Elapsed += delegate
-            {
-                worldPersistence.Save(world);
-            };
-            timer.Interval = 60000;
-            timer.Enabled = true;
-            timer.AutoReset = true;
-            timer.Start();
+            saveTimer.Start();
+        }
+
+        private void DisablePeriodicSaving()
+        {
+            saveTimer.Stop();
         }
     }
 }
