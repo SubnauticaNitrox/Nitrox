@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -21,6 +23,7 @@ namespace NitroxServer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Server _server;
         public static MainWindow Instance;
 
         public MainWindow()
@@ -38,13 +41,18 @@ namespace NitroxServer
 
             try
             {
-                Server _Server = new Server();
-                _Server.Start();
+                _server = new Server();
+                _server.Start();
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            Task.Factory.StartNew(()=> _server.Stop()); //Something locks the UI and everything freezes, thus a task for now.
         }
 
         public void WriteLog(string data)

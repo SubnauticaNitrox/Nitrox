@@ -14,11 +14,14 @@ namespace NitroxServer.Communication
 {
     public class UdpServer
     {
+        private bool isStopped = true;
+
         private readonly PacketHandler packetHandler;
         private readonly PlayerManager playerManager;
         private readonly EntitySimulation entitySimulation;
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
+        private readonly Thread thread;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
         {
@@ -28,19 +31,28 @@ namespace NitroxServer.Communication
 
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
+            thread = new Thread(Listen);
         }
 
         public void Start()
         {
             server.Start();
-
-            Thread thread = new Thread(Listen);
             thread.Start();
+
+            isStopped = false;
+        }
+
+        public void Stop()
+        {
+            isStopped = true;
+
+            server.Shutdown("Shutting down server...");
+            thread.Join(30000);
         }
         
         private void Listen()
         {
-            while (true)
+            while (!isStopped)
             {
                 // Pause reading thread and wait for messages.
                 server.MessageReceivedEvent.WaitOne();
