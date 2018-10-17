@@ -5,11 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Disconnect : Packet
     {
-        public ushort PlayerId { get; }
+        public ulong LPlayerId { get; }
 
-        public Disconnect(ushort playerId)
+        public Disconnect(ulong playerId)
         {
-            PlayerId = playerId;
+            LPlayerId = playerId;
         }
     }
 }

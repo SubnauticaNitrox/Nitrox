@@ -8,6 +8,7 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
+            ServerLogger log = new ServerLogger();
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
 
             try

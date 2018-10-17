@@ -33,10 +33,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicleDockingBay.DockVehicle(vehicle);
             }
 
-            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.PlayerId));
+            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.LPlayerId));
         }
 
-        IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ushort playerId)
+        IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ulong playerId)
         {
             yield return new WaitForSeconds(3.0f);
             vehicles.SetOnPilotMode(vehicleGuid, playerId, false);

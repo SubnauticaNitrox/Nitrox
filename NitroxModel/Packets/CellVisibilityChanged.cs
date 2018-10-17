@@ -7,13 +7,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CellVisibilityChanged : Packet
     {
-        public ushort PlayerId { get; }
+        public ulong LPlayerId { get; }
         public AbsoluteEntityCell[] Added { get; }
         public AbsoluteEntityCell[] Removed { get; }
 
-        public CellVisibilityChanged(ushort playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public CellVisibilityChanged(ulong playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
-            PlayerId = playerId;
+            LPlayerId = playerId;
             Added = added;
             Removed = removed;
         }
@@ -37,7 +37,7 @@ namespace NitroxModel.Packets
             }
 
             toString.Append("| PlayerId: ");
-            toString.Append(PlayerId);
+            toString.Append(LPlayerId);
             toString.Append("]");
 
             return toString.ToString();

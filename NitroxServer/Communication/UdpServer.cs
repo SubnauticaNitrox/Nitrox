@@ -127,7 +127,7 @@ namespace NitroxServer.Communication
                 {
                     playerManager.PlayerDisconnected(connection);
 
-                    Disconnect disconnect = new Disconnect(player.Id);
+                    Disconnect disconnect = new Disconnect(player.LId);
                     playerManager.SendPacketToAllPlayers(disconnect);
 
                     List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);

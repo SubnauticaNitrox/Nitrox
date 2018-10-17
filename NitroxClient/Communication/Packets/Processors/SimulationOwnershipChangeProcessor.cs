@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
-                if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
+                if (multiplayerSession.Reservation.LPlayerId == simulatedEntity.LPlayerId)
                 {
                     if(simulatedEntity.ChangesPosition)
                     {

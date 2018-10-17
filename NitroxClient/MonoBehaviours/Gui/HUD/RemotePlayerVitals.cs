@@ -48,7 +48,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private GameObject background;
         private GameObject playerNameText;
 
-        public void CreateVitals(ushort playerId, int position)
+        public void CreateVitals(ulong playerId, int position)
         {
             this.playerName = playerId.ToString();
             this.position = position;

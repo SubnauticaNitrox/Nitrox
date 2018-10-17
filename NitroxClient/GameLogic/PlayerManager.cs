@@ -12,14 +12,14 @@ namespace NitroxClient.GameLogic
     public class PlayerManager
     {
         private readonly ILocalNitroxPlayer localPlayer;
-        private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
+        private readonly Dictionary<ulong, RemotePlayer> playersById = new Dictionary<ulong, RemotePlayer>();
 
         public PlayerManager(ILocalNitroxPlayer localPlayer)
         {
             this.localPlayer = localPlayer;
         }
 
-        public Optional<RemotePlayer> Find(ushort playerId)
+        public Optional<RemotePlayer> Find(ulong playerId)
         {
             RemotePlayer player;
 
@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic
         {
             Validate.NotNull(playerContext);
 
-            if (playersById.ContainsKey(playerContext.PlayerId))
+            if (playersById.ContainsKey(playerContext.LPlayerId))
             {
                 throw new Exception("The playerId has already been used.");
             }
@@ -63,16 +63,16 @@ namespace NitroxClient.GameLogic
 
             playerModelDirector.Construct();
 
-            playersById.Add(player.PlayerId, player);
+            playersById.Add(player.LPlayerId, player);
         }
 
-        public void RemovePlayer(ushort playerId)
+        public void RemovePlayer(ulong lplayerId)
         {
-            Optional<RemotePlayer> opPlayer = Find(playerId);
+            Optional<RemotePlayer> opPlayer = Find(lplayerId);
             if (opPlayer.IsPresent())
             {
                 opPlayer.Get().Destroy();
-                playersById.Remove(playerId);
+                playersById.Remove(lplayerId);
             }
         }
 

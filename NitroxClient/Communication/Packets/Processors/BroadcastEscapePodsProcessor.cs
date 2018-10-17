@@ -40,7 +40,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (EscapePodModel model in packet.EscapePods)
             {
-                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.PlayerId))
+                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.LPlayerId))
                 {
                     EscapePod.main.transform.position = model.Location;
                     EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;

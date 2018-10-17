@@ -140,7 +140,7 @@ namespace NitroxClient.GameLogic
 
                 if (isPiloting) //Check Remote Object Have Player inside
                 {
-                    ushort pilot = ushort.Parse(vehicle.pilotId);
+                    ulong pilot = ulong.Parse(vehicle.pilotId);
                     Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
                     if (remotePilot.IsPresent()) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
@@ -205,7 +205,7 @@ namespace NitroxClient.GameLogic
                 // detach the remote player before destroying the game object.
                 if (!string.IsNullOrEmpty(vehicle.pilotId)) 
                 {
-                    ushort pilot = ushort.Parse(vehicle.pilotId);
+                    ulong pilot = ulong.Parse(vehicle.pilotId);
                     Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
                     if (remotePilot.IsPresent())
@@ -224,9 +224,9 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
+            ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
 
-            VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, playerId);
+            VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, LPlayerId);
             packetSender.Send(packet);
 
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
@@ -237,9 +237,9 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            ushort playerId = multiplayerSession.Reservation.PlayerId;
+            ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
 
-            VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, playerId);
+            VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, LPlayerId);
             packetSender.Send(packet);
 
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
@@ -269,14 +269,14 @@ namespace NitroxClient.GameLogic
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
-                ushort playerId = multiplayerSession.Reservation.PlayerId;
+                ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
 
-                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), playerId, isPiloting);
+                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), LPlayerId, isPiloting);
                 packetSender.Send(packet);
             }
         }
 
-        public void SetOnPilotMode(string vehicleGuid, ushort playerId, bool isPiloting)
+        public void SetOnPilotMode(string vehicleGuid, ulong playerId, bool isPiloting)
         {
             Optional<GameObject> opVehicle = GuidHelper.GetObjectFrom(vehicleGuid);
 

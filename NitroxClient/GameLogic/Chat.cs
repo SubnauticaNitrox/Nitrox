@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic
 
         public void SendChatMessage(string text)
         {
-            ChatMessage message = new ChatMessage(multiplayerSession.Reservation.PlayerId, text);
+            ChatMessage message = new ChatMessage(multiplayerSession.Reservation.LPlayerId, text);
             multiplayerSession.Send(message);
         }
     }

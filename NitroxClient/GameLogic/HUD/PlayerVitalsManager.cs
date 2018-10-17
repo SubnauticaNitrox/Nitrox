@@ -6,9 +6,9 @@ namespace NitroxClient.GameLogic.HUD
 {
     public class PlayerVitalsManager
     {
-        private readonly Dictionary<ushort, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<ushort, RemotePlayerVitals>();
+        private readonly Dictionary<ulong, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<ulong, RemotePlayerVitals>();
 
-        public void RemovePlayer(ushort playerId)
+        public void RemovePlayer(ulong playerId)
         {
             RemotePlayerVitals removedPlayerVitals = GetForPlayerId(playerId);
             vitalsByPlayerId.Remove(playerId);
@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic.HUD
             }
         }
 
-        public RemotePlayerVitals GetForPlayerId(ushort playerId)
+        public RemotePlayerVitals GetForPlayerId(ulong playerId)
         {
             RemotePlayerVitals vitals;
             if (!vitalsByPlayerId.TryGetValue(playerId, out vitals))

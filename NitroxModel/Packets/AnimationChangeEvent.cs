@@ -5,13 +5,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class AnimationChangeEvent : Packet
     {
-        public ushort PlayerId { get; }
+        public ulong LPlayerId { get; }
         public int Type { get; }
         public int State { get; }
 
-        public AnimationChangeEvent(ushort playerId, int type, int state)
+        public AnimationChangeEvent(ulong playerId, int type, int state)
         {
-            PlayerId = playerId;
+            LPlayerId = playerId;
             Type = type;
             State = state;
         }

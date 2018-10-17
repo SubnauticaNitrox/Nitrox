@@ -7,18 +7,19 @@ namespace NitroxModel.Packets
     {
         public string VehicleGuid { get; }
         public string DockGuid { get; }
-        public ushort PlayerId { get; }
+        public ulong LPlayerId { get; }
 
-        public VehicleUndocking(string vehicleGuid, string dockGuid, ushort playerId)
+
+        public VehicleUndocking(string vehicleGuid, string dockGuid, ulong playerId)
         {
             VehicleGuid = vehicleGuid;
             DockGuid = dockGuid;
-            PlayerId = playerId;
+            LPlayerId = playerId;
         }
 
         public override string ToString()
         {
-            return "[VehicleUndocking VehicleGuid: " + VehicleGuid + " DockGuid: " + DockGuid + " PlayerId: " + PlayerId + "]";
+            return "[VehicleUndocking VehicleGuid: " + VehicleGuid + " DockGuid: " + DockGuid + " PlayerId: " + LPlayerId + "]";
         }
     }
 }

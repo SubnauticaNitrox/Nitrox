@@ -6,12 +6,12 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SubRootChanged : Packet
     {
-        public ushort PlayerId { get; }
+        public ulong LPlayerId { get; }
         public Optional<string> SubRootGuid { get; }
 
-        public SubRootChanged(ushort playerId, Optional<string> subRootGuid)
+        public SubRootChanged(ulong playerId, Optional<string> subRootGuid)
         {
-            PlayerId = playerId;
+            LPlayerId = playerId;
             SubRootGuid = subRootGuid;
         }
     }

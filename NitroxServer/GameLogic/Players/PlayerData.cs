@@ -35,9 +35,6 @@ namespace NitroxServer.GameLogic.Players
             set { ModulesItemsByGuid = value; }
         }
 
-        [ProtoMember(3)]
-        public ushort CurrentPlayerId = 0;
-
         public Dictionary<string, EquippedItemData> ModulesItemsByGuid = new Dictionary<string, EquippedItemData>();
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
@@ -125,14 +122,7 @@ namespace NitroxServer.GameLogic.Players
 
             if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
             {
-                if (steamId > 0)
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, steamId);
-                }
-                else
-                {
-                    playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, CurrentPlayerId++);
-                }
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, steamId);
             }
 
             return playerPersistedData;
@@ -163,7 +153,7 @@ namespace NitroxServer.GameLogic.Players
             public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
 
             [ProtoMember(3)]
-            public ushort PlayerId { get; set; }
+            public ulong LPlayerId { get; set; }
 
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }
@@ -171,29 +161,15 @@ namespace NitroxServer.GameLogic.Players
             [ProtoMember(5)]
             public PlayerStatsData CurrentStats { get; set; }
 
-            [ProtoMember(6)]
-            public ulong LPlayerId { get; set; }
-
-            [ProtoMember(7)]
-            public ushort PrevPlayerId { get; set; }
-
             public PersistedPlayerData()
             {
                 // Constructor for serialization purposes
-            }
-
-            public PersistedPlayerData(string playerName, ushort playerId)
-            {
-                PlayerName = playerName;
-                PlayerId = playerId;
             }
             
             public PersistedPlayerData(string playerName, ulong lPlayerId)
             {
                 PlayerName = playerName;
                 LPlayerId = lPlayerId;
-                PrevPlayerId = PlayerId;
-                PlayerId = 0;
             }
         }
 

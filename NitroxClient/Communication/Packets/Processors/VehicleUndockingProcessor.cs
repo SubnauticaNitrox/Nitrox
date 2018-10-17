@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
             
             using (packetSender.Suppress<VehicleUndocking>())
             {
-                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerId, true);
+                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.LPlayerId, true);
                 vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
                 SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
                 vehicleDockingBay.ReflectionSet("_dockedVehicle", null);

@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
 
-        public ushort PlayerId => PlayerContext.PlayerId;
+        public ulong LPlayerId => PlayerContext.LPlayerId;
         public string PlayerName => PlayerContext.PlayerName;
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
