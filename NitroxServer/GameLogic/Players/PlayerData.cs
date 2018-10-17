@@ -164,7 +164,7 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(3)]
             public ushort PlayerId { get; set; }
-            
+
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }
 
