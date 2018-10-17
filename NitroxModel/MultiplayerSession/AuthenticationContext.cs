@@ -21,11 +21,10 @@ namespace NitroxModel.MultiplayerSession
             SteamID = steamID;
         }
 
-        public AuthenticationContext(string username, string serverPassword, ulong steamID)
+        public AuthenticationContext(string username, string serverPassword)
             : this(username)
         {
             ServerPassword = Optional<string>.Of(serverPassword);
-            SteamID = steamID;
         }
     }
 }
