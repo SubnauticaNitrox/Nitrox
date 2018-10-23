@@ -157,7 +157,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
+                string Splitter = ":";
+                if (ServerIp.Contains(Splitter))
+                {
+                    char split = ':';
+                    string[] SplitIp = ServerIp.Split(split);
+                    Log.InGame($"Unable to contact the remote server at: {SplitIp[0]}:{SplitIp[1]}");
+                }
+                else
+                {
+                    Log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
+                }
                 OnCancelClick();
             }
         }
