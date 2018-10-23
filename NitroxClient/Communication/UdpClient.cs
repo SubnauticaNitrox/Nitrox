@@ -11,7 +11,7 @@ namespace NitroxClient.Communication
     public class UdpClient : IClient
     {
         private readonly DeferringPacketReceiver packetReceiver;
-        private const int PORT = 11000;
+        private int PORT = 11000;
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
 
@@ -26,13 +26,28 @@ namespace NitroxClient.Communication
         public void Start(string ipAddress)
         {
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-
+            string IP;
+            int port;
+            string PortSeparator =":";
+            if (ipAddress.Contains(PortSeparator))
+            {
+                char seperate = ':';
+                string[] splitted = ipAddress.Split(seperate);
+                IP = splitted[0];
+                port = int.Parse(splitted[1]);
+            }
+            else
+            {
+                IP = ipAddress;
+                port = 11000;
+            }
+            //PORT = port;
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
             config.AutoFlushSendQueue = true;
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(ReceivedMessage));
             client.Start();
-            client.Connect(ipAddress, PORT);
+            client.Connect(IP, port);
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }
