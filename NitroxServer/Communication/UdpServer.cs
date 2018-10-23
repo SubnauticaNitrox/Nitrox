@@ -156,8 +156,34 @@ namespace NitroxServer.Communication
         private NetPeerConfiguration BuildNetworkConfig()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
-            config.Port = 11000;
-            config.MaximumConnections = 100;
+            string INIContents;
+            int PortNumber, MaxConn;
+            if (File.Exists(@".\config.ini"))
+            {
+                StreamReader INIReader = new StreamReader(@".\config.ini");
+                INIContents = INIReader.ReadToEnd();
+                INIReader.Close();
+                Char Splitter = ';';
+                Char equals = '=';
+                string[] SplitINIContents = INIContents.Split(Splitter);
+                string[] ParseINIContents;
+                ParseINIContents=SplitINIContents[0].Split(equals);
+                PortNumber = int.Parse(ParseINIContents[1]);
+                ParseINIContents = SplitINIContents[1].Split(equals);
+                MaxConn = int.Parse(ParseINIContents[1]);
+            }
+            else
+            {
+                string NewINIContents;
+                NewINIContents = "[NetworkSettings]\nDefaultPortNumber=11000;\nMaxConnections=100;";
+                StreamWriter WriteINI = new StreamWriter(@".\config.ini");
+                WriteINI.Write(NewINIContents);
+                WriteINI.Close();
+                PortNumber = 11000;
+                MaxConn = 100;
+            }
+            config.Port = PortNumber;
+            config.MaximumConnections = MaxConn;
             config.AutoFlushSendQueue = true;
 
             return config;
