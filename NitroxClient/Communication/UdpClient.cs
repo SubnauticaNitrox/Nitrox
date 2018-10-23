@@ -11,7 +11,7 @@ namespace NitroxClient.Communication
     public class UdpClient : IClient
     {
         private readonly DeferringPacketReceiver packetReceiver;
-        private int PORT = 11000;
+        private const int PORT = 11000;
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
 
