@@ -28,7 +28,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
-
+        public int ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -153,21 +153,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(ServerIp);
+                multiplayerSession.Connect(ServerIp,ServerPort);
             }
             catch (ClientConnectionFailedException)
             {
-                string Splitter = ":";
-                if (ServerIp.Contains(Splitter))
-                {
-                    char split = ':';
-                    string[] SplitIp = ServerIp.Split(split);
-                    Log.InGame($"Unable to contact the remote server at: {SplitIp[0]}:{SplitIp[1]}");
-                }
-                else
-                {
-                    Log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
-                }
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort.ToString()}");
                 OnCancelClick();
             }
         }
@@ -249,7 +239,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp);
+                            multiplayerSession.Connect(ServerIp,ServerPort);
                         });
 
                     break;

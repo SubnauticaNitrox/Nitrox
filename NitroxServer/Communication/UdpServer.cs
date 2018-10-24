@@ -160,9 +160,7 @@ namespace NitroxServer.Communication
             int PortNumber, MaxConn;
             if (File.Exists(@".\config.ini"))
             {
-                StreamReader INIReader = new StreamReader(@".\config.ini");
-                INIContents = INIReader.ReadToEnd();
-                INIReader.Close();
+                INIContents = File.ReadAllText(@".\config.ini");
                 Char Splitter = ';';
                 Char equals = '=';
                 string[] SplitINIContents = INIContents.Split(Splitter);
@@ -176,9 +174,7 @@ namespace NitroxServer.Communication
             {
                 string NewINIContents;
                 NewINIContents = "[NetworkSettings]\nDefaultPortNumber=11000;\nMaxConnections=100;";
-                StreamWriter WriteINI = new StreamWriter(@".\config.ini");
-                WriteINI.Write(NewINIContents);
-                WriteINI.Close();
+                File.WriteAllText(@".\config.ini", NewINIContents);
                 PortNumber = 11000;
                 MaxConn = 100;
             }

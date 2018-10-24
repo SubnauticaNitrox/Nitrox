@@ -112,7 +112,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
-            joinServerComponent.ServerIp = serverIp;
+            string seperator = ":";
+            if (serverIp.Contains(seperator))
+            {
+                char splitter = ':';
+                string[] splitIP = serverIp.Split(splitter);
+                joinServerComponent.ServerIp = splitIP[0];
+                joinServerComponent.ServerPort = int.Parse(splitIP[1]);
+            }
+            else
+            {
+                joinServerComponent.ServerIp = serverIp;
+                joinServerComponent.ServerPort = 11000;
+            }
+            
         }
 
         public void ShowAddServerWindow()

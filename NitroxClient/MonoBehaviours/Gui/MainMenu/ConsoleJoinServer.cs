@@ -49,11 +49,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 Log.InGame("Console Multiplayer Session Join Client Loaded...");
                 StartMultiplayerClient();
-
+                int ServerPort = 11000;
                 string ipAddress = n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS;
                 userName = (string)n.data[0];
-
-                multiplayerSession.Connect(ipAddress);
+                string seperator = ":";
+                if (ipAddress.Contains(seperator))
+                {
+                    char splitter = ':';
+                    string[] splitIP = ipAddress.Split(splitter);
+                    ipAddress = splitIP[0];
+                    ServerPort = int.Parse(splitIP[1]);
+                }
+                multiplayerSession.Connect(ipAddress,ServerPort);
             }
             else
             {
