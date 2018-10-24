@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
                 IClient client = sessionConnectionContext.Client;
                 string ipAddress = sessionConnectionContext.IpAddress;
-                int port = sessionConnectionContext.ServerPort;
+                int port = sessionConnectionContext.serverPort;
                 StartClient(ipAddress, client,port);
                 EstablishSessionPolicy(sessionConnectionContext, client);
             }

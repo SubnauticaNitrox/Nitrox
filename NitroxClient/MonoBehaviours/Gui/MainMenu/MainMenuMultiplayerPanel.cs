@@ -118,12 +118,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 char splitter = ':';
                 string[] splitIP = serverIp.Split(splitter);
                 joinServerComponent.ServerIp = splitIP[0];
-                joinServerComponent.ServerPort = int.Parse(splitIP[1]);
+                joinServerComponent.serverPort = int.Parse(splitIP[1]);
             }
             else
             {
                 joinServerComponent.ServerIp = serverIp;
-                joinServerComponent.ServerPort = 11000;
+                joinServerComponent.serverPort = 11000;
             }
             
         }

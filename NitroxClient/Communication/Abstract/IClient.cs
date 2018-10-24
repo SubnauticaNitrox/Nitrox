@@ -8,7 +8,7 @@ namespace NitroxClient.Communication.Abstract
     public interface IClient
     {
         bool IsConnected { get; }
-        void Start(string ipAddress, int ServerPort);
+        void Start(string ipAddress, int serverPort);
         void Stop();
         void Send(Packet packet);
     }

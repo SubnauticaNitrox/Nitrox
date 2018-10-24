@@ -48,7 +48,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
 
             // Assert
             multiplayerSession.IpAddress.ShouldBeEquivalentTo(TestConstants.TEST_IP_ADDRESS);
-            multiplayerSession.ServerPort.ShouldBeEquivalentTo(TestConstants.TEST_SERVER_PORT);
+            multiplayerSession.serverPort.ShouldBeEquivalentTo(TestConstants.TEST_SERVER_PORT);
         }
 
         [TestMethod]

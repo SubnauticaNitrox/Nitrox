@@ -22,7 +22,7 @@ namespace NitroxClient.Communication
             packetReceiver = packetManager;
         }
 
-        public void Start(string ipAddress, int ServerPort)
+        public void Start(string ipAddress, int serverPort)
         {
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
             
@@ -31,7 +31,7 @@ namespace NitroxClient.Communication
             client = new NetClient(config);
             client.RegisterReceivedCallback(new SendOrPostCallback(ReceivedMessage));
             client.Start();
-            client.Connect(ipAddress, ServerPort);
+            client.Connect(ipAddress, serverPort);
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }
