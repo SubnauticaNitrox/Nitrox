@@ -22,13 +22,13 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
-            vitalsManager.RemovePlayer(disconnect.LPlayerId);
+            vitalsManager.RemovePlayer(disconnect.PlayerId);
 
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.LPlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
 
             if (remotePlayer.IsPresent())
             {
-                remotePlayerManager.RemovePlayer(disconnect.LPlayerId);
+                remotePlayerManager.RemovePlayer(disconnect.PlayerId);
                 Log.InGame(remotePlayer.Get().PlayerName + " disconnected");
             }
         }

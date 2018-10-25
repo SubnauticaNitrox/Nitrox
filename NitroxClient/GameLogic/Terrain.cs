@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic
 
                 if (elapsed >= 0.1)
                 {
-                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.LPlayerId, added.ToArray(), removed.ToArray());
+                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(cellsChanged);
 
                     added.Clear();

@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic
         {
             Validate.NotNull(playerContext);
 
-            if (playersById.ContainsKey(playerContext.LPlayerId))
+            if (playersById.ContainsKey(playerContext.PlayerId))
             {
                 throw new Exception("The playerId has already been used.");
             }
@@ -63,16 +63,16 @@ namespace NitroxClient.GameLogic
 
             playerModelDirector.Construct();
 
-            playersById.Add(player.LPlayerId, player);
+            playersById.Add(player.PlayerId, player);
         }
 
-        public void RemovePlayer(ulong lplayerId)
+        public void RemovePlayer(ulong playerId)
         {
-            Optional<RemotePlayer> opPlayer = Find(lplayerId);
+            Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.IsPresent())
             {
                 opPlayer.Get().Destroy();
-                playersById.Remove(lplayerId);
+                playersById.Remove(playerId);
             }
         }
 

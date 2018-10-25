@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
         {
-            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.LPlayerId, oxygen, maxOxygen, health, food, water);
+            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water);
             packetSender.Send(playerStats);
         }
 
@@ -45,11 +45,11 @@ namespace NitroxClient.GameLogic
 
             if (vehicle.IsPresent())
             {
-                movement = new VehicleMovement(multiplayerSession.Reservation.LPlayerId, vehicle.Get());
+                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Get());
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.LPlayerId, location, velocity, bodyRotation, aimingRotation);
+                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
             }
 
             packetSender.Send(movement);
@@ -57,19 +57,19 @@ namespace NitroxClient.GameLogic
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
         {
-            AnimationChangeEvent animEvent = new AnimationChangeEvent(multiplayerSession.Reservation.LPlayerId, (int)type, (int)state);
+            AnimationChangeEvent animEvent = new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state);
             packetSender.Send(animEvent);
         }
 
         public void BroadcastDeath(Vector3 deathPosition)
         {
-            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.LPlayerId, deathPosition);
+            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition);
             packetSender.Send(playerDeath);
         }
 
         public void BroadcastSubrootChange(Optional<string> subrootGuid)
         {
-            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.LPlayerId, subrootGuid);
+            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootGuid);
             packetSender.Send(packet);
         }
 

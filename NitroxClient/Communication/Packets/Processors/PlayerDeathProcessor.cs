@@ -9,7 +9,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(PlayerDeathEvent playerDeath)
         {
             // TODO: Add any death related triggers (i.e. scoreboard updates, rewards, etc.)
-            Log.InGame(playerDeath.LPlayerId + " died");
+            Log.InGame(playerDeath.PlayerId + " died");
         }
     }
 }

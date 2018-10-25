@@ -54,7 +54,7 @@ namespace NitroxServer.GameLogic.Players
             {
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName, steamId);
 
-                return playerPersistedData.LPlayerId;
+                return playerPersistedData.PlayerId;
             }
         }
 
@@ -153,7 +153,7 @@ namespace NitroxServer.GameLogic.Players
             public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
 
             [ProtoMember(3)]
-            public ulong LPlayerId { get; set; }
+            public ulong PlayerId { get; set; }
 
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }
@@ -169,7 +169,7 @@ namespace NitroxServer.GameLogic.Players
             public PersistedPlayerData(string playerName, ulong lPlayerId)
             {
                 PlayerName = playerName;
-                LPlayerId = lPlayerId;
+                PlayerId = lPlayerId;
             }
         }
 

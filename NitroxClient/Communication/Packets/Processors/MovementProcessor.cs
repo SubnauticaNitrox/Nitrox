@@ -16,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Movement movement)
         {
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.LPlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.PlayerId);
 
             if (remotePlayer.IsPresent())
             {

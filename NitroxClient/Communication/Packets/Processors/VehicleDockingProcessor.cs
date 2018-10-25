@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicleDockingBay.DockVehicle(vehicle);
             }
 
-            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.LPlayerId));
+            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.PlayerId));
         }
 
         IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ulong playerId)

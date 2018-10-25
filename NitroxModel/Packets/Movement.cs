@@ -7,7 +7,7 @@ namespace NitroxModel.Packets
     [Serializable]
     public class Movement : Packet
     {
-        public ulong LPlayerId { get; }
+        public ulong PlayerId { get; }
         public Vector3 Position { get; }
         public Vector3 Velocity { get; }
         public Quaternion BodyRotation { get; }
@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public Movement(ulong playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
-            LPlayerId = playerId;
+            PlayerId = playerId;
             Position = position;
             Velocity = velocity;
             BodyRotation = bodyRotation;
@@ -26,7 +26,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[Movement - PlayerId: " + LPlayerId + " Position: " + Position + " Velocity: " + Velocity + " Body rotation: " + BodyRotation + " Camera rotation: " + AimingRotation + "]";
+            return "[Movement - PlayerId: " + PlayerId + " Position: " + Position + " Velocity: " + Velocity + " Body rotation: " + BodyRotation + " Camera rotation: " + AimingRotation + "]";
         }
     }
 }

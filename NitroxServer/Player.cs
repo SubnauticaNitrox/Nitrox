@@ -15,7 +15,7 @@ namespace NitroxServer
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; }
-        public ulong LId => PlayerContext.LPlayerId;
+        public ulong Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
 
@@ -70,7 +70,7 @@ namespace NitroxServer
 
             Player player = (Player)obj;
 
-            return player.LId == LId;
+            return player.Id == Id;
         }
 
         public override int GetHashCode()
@@ -78,7 +78,7 @@ namespace NitroxServer
             unchecked
             {
                 int hash = 269;
-                hash = hash * 23 + LId.GetHashCode();
+                hash = hash * 23 + Id.GetHashCode();
                 return hash;
             }
         }

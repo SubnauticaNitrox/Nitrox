@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.LPlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.PlayerId);
 
             if (remotePlayer.IsPresent())
             {

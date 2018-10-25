@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SubRootChanged packet)
         {
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.LPlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
 
             if (remotePlayer.IsPresent())
             {

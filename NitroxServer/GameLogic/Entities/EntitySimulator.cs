@@ -49,7 +49,7 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (Entity entity in entities)
             {
-                ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.LId, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+                ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
             }
         }
 
@@ -64,7 +64,7 @@ namespace NitroxServer.GameLogic.Entities
                     if (player != oldPlayer && player.HasCellLoaded(entityCell))
                     {
                         Log.Info("Player " + player.Name + " can take over " + entity.Guid);
-                        ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.LId, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+                        ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }
                 }

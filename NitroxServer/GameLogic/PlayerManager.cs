@@ -59,8 +59,8 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
 
                 PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName, authenticationContext.SteamID), playerSettings);
-                ulong playerId = playerContext.LPlayerId;
-                string reservationKey = playerContext.LPlayerId.ToString();
+                ulong playerId = playerContext.PlayerId;
+                string reservationKey = playerContext.PlayerId.ToString();
 
                 reservations.Add(reservationKey, playerContext);
                 assetPackage.ReservationKey = reservationKey;

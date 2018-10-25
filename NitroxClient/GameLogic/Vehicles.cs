@@ -224,9 +224,9 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
+            ulong PlayerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, LPlayerId);
+            VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, PlayerId);
             packetSender.Send(packet);
 
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
@@ -237,9 +237,9 @@ namespace NitroxClient.GameLogic
         {
             string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
-            ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
+            ulong PlayerId = multiplayerSession.Reservation.PlayerId;
 
-            VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, LPlayerId);
+            VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, PlayerId);
             packetSender.Send(packet);
 
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
@@ -269,9 +269,9 @@ namespace NitroxClient.GameLogic
         {
             if (!string.IsNullOrEmpty(vehicle.gameObject.GetGuid()))
             {
-                ulong LPlayerId = multiplayerSession.Reservation.LPlayerId;
+                ulong PlayerId = multiplayerSession.Reservation.PlayerId;
 
-                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), LPlayerId, isPiloting);
+                VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(vehicle.gameObject.GetGuid(), PlayerId, isPiloting);
                 packetSender.Send(packet);
             }
         }

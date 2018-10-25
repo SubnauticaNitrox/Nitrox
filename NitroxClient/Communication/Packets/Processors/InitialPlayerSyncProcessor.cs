@@ -212,8 +212,10 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 foreach (ItemData itemdata in inventoryItems)
                 {
+                    MonoBehaviour.print(itemdata.ToString());
                     GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
                     Pickupable pickupable = item.RequireComponent<Pickupable>();
+                    MonoBehaviour.print(pickupable.name);
                     goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
 
                     if (itemdata.ContainerGuid == playerGuid)

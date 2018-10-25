@@ -6,12 +6,12 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerDeathEvent : Packet
     {
-        public ulong LPlayerId { get; }
+        public ulong PlayerId { get; }
         public Vector3 DeathPosition { get; }
 
         public PlayerDeathEvent(ulong playerId, Vector3 deathPosition)
         {
-            LPlayerId = playerId;
+            PlayerId = playerId;
             DeathPosition = deathPosition;
         }
     }

@@ -7,7 +7,7 @@ namespace NitroxModel.Packets
     public class MultiplayerSessionReservation : CorrelatedPacket
     {
         public MultiplayerSessionReservationState ReservationState { get; }
-        public ulong LPlayerId { get; }
+        public ulong PlayerId { get; }
         public string ReservationKey { get; }
 
         public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState)
@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
         public MultiplayerSessionReservation(string correlationId, ulong playerId, string reservationKey)
             : this(correlationId, MultiplayerSessionReservationState.Reserved)
         {
-            LPlayerId = playerId;
+            PlayerId = playerId;
             ReservationKey = reservationKey;
         }
 

@@ -7,11 +7,11 @@ namespace NitroxModel.MultiplayerSession
     {
         public string PlayerName { get; }
         public PlayerSettings PlayerSettings { get; }
-        public ulong LPlayerId { get; }
+        public ulong PlayerId { get; }
 
         public PlayerContext(string playerName, ulong playerId, PlayerSettings playerSettings)
         {
-            LPlayerId = playerId;
+            PlayerId = playerId;
             PlayerName = playerName;
             PlayerSettings = playerSettings;
         }

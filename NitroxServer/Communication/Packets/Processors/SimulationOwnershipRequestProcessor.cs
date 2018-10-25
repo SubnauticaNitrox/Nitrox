@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
             
             if (aquiredLock)
             {
-                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.LId, ownershipRequest.LockType);
+                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id, ownershipRequest.LockType);
                 playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
             }
 
