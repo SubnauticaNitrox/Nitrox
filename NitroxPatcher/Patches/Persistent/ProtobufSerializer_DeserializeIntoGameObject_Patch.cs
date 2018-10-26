@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
+using UnityEngine;
 
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
@@ -49,7 +50,22 @@ namespace NitroxPatcher.Patches.Persistent
             "eb6634e5-3a58-4a0d-ae4e-b673e1fa51ea", // Coral_reef_jeweled_disk_purple_01_02
             "c197a6ca-f910-43db-92ab-2e35e423a6f1", // Coral_reef_jeweled_disk_purple_01_04
             "9a643563-9278-4c77-8bd2-f9b4b1a1053a", // Coral_reef_jeweled_disk_red_01_03
-
+            "37ea521a-6be4-437c-8ed7-6b453d9218a8", // FloaterLarge
+            "e4f6fd0f-82ec-49ee-8546-6b770d118f61", // Fern 01
+            "e205ce39-5e36-4c21-b981-b6240da26449", // Fern 02
+            "a4be67bb-f6e1-4d15-bf08-9d9a3fae4bfa", // Tropical Plant 1a
+            "28ec1137-da13-44f3-b76d-bac12ab766d1", // land_plant_small_01_01
+            "98be0944-e0b3-4fba-8f08-ca5d322c22f6", // land_plant_small_02_02
+            "abe4426a-5968-40b0-9d99-b06207984aa8", // Jungle Tree 3a
+            "98b3ffc5-5497-49ad-8155-3608826ad373", // Jungle Tree 3b
+            "1cc51be0-8ea9-4730-936f-23b562a9256f", // Land_tree_01
+            "0e394d55-da8c-4b3e-b038-979477ce77c1", // AbandonedBaseFloatingIsland3
+            "7ce2ca9d-6154-4988-9b02-38f670e741b8", // CaveCrawler_02
+            "c2b5b625-bd5b-4390-be53-2d9f3ef58f36", // IslandsPDARendezvous
+            "12a7577b-68c4-45ae-8172-42abf649501e", // IslandsPDAExterior
+            "5f93851f-cb13-4b99-99a9-15c34c063e13", // IslandsPDABase1a
+            "99b164ac-dfb4-4a14-b305-8666fa227717", // AbandonedBaseFloatingIsland1
+            "569f22e0-274d-49b0-ae5e-21ef0ce907ca", // AbandonedBaseFloatingIsland2
         };
 
         public static void Postfix(ProtobufSerializer.GameObjectData goData, UniqueIdentifier uid)
@@ -57,6 +73,10 @@ namespace NitroxPatcher.Patches.Persistent
             if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
             {
                 UnityEngine.Object.Destroy(uid.gameObject);
+            }
+            else
+            {
+                MonoBehaviour.print(goData + " : " + uid);
             }
         }
 
