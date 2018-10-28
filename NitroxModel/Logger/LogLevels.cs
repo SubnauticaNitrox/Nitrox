@@ -5,6 +5,10 @@ namespace NitroxModel.Logger
     [Flags]
     public enum LogLevels
     {
+        /// <summary>
+        ///     None is only for completeness sake. Use <see cref="NoLogger.Default" /> if you don't want to log anything.
+        ///     <see cref="NoLogger.Default" /> also has better performance.
+        /// </summary>
         None = 0,
         Trace = 1,
         Debug = 2,
