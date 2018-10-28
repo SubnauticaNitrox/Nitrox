@@ -24,7 +24,7 @@ namespace ClientTester
 
         private readonly string playerName;
 
-        public MultiplayerClient(ushort playerId)
+        public MultiplayerClient(ulong playerId)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             playerName = "Player" + playerId.ToString();
