@@ -23,7 +23,7 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            StaticLogger.Instance = new Log(Log.LogLevels.All, Console.Out);
+            StaticLogger.Instance = new Log(LogLevels.All, Console.Out);
 
             if (patches != null)
             {

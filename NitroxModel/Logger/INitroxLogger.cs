@@ -4,6 +4,7 @@ namespace NitroxModel.Logger
 {
     public interface INitroxLogger
     {
+        LogLevels AllowedLevels { get; }
         void Trace(string format, params object[] arg);
         void Debug(string format, params object[] arg);
         void Info(string format, params object[] args);

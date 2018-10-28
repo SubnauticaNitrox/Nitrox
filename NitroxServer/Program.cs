@@ -8,12 +8,13 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
-            StaticLogger.Instance = new Log(Log.LogLevels.Info | Log.LogLevels.Debug, Console.Out);
+            StaticLogger.Instance = new Log(LogLevels.All, Console.Out);
+            StaticLogger.Instance.Debug($"Log levels set to: {StaticLogger.Instance.AllowedLevels}");
 
             try
             {
-                Server _Server = new Server();
-                _Server.Start();
+                Server server = new Server();
+                server.Start();
             }
             catch (Exception e)
             {

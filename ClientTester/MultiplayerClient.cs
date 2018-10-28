@@ -26,7 +26,7 @@ namespace ClientTester
 
         public MultiplayerClient(ushort playerId)
         {
-            StaticLogger.Instance = new Log(Log.LogLevels.All, Console.Out);
+            StaticLogger.Instance = new Log(LogLevels.All, Console.Out);
             playerName = "Player " + playerId;
 
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());

@@ -27,7 +27,7 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.Register(context => new Log(Log.LogLevels.All, Console.Out))
+            containerBuilder.Register(context => new Log(LogLevels.All, Console.Out))
                 .As<INitroxLogger>()
                 .SingleInstance();
 

@@ -6,17 +6,6 @@ namespace NitroxModel.Logger
 {
     public class Log : INitroxLogger
     {
-        [Flags]
-        public enum LogLevels
-        {
-            Trace = 1,
-            Debug = 2,
-            Info = 4,
-            Warn = 8,
-            Error = 16,
-            All = Trace | Debug | Info | Warn | Error
-        }
-
         protected readonly TextWriter Output;
 
         public LogLevels AllowedLevels { get; }
@@ -28,24 +17,14 @@ namespace NitroxModel.Logger
             Output = writer;
         }
 
-        public void Trace(string fmt, params object[] arg)
+        public void Info(string fmt, params object[] arg)
         {
-            Trace(string.Format(fmt, arg));
+            Write(fmt, LogLevels.Info, arg);
         }
 
-        public void Debug(string format, params object[] arg)
+        public void Warn(string fmt, params object[] arg)
         {
-            Write(format, AllowedLevels, arg);
-        }
-
-        public void Trace(string str = "")
-        {
-            Write(str, LogLevels.Trace);
-        }
-
-        public void Error(string fmt, params object[] arg)
-        {
-            Write(fmt, LogLevels.Error, arg);
+            Write(fmt, LogLevels.Warn, arg);
         }
 
         public void Error(string msg, Exception ex)
@@ -58,20 +37,19 @@ namespace NitroxModel.Logger
             Write("{0}", LogLevels.Error, (object)ex);
         }
 
-        public void Warn(string fmt, params object[] arg)
+        public void Error(string fmt, params object[] arg)
         {
-            Write(fmt, LogLevels.Warn, arg);
+            Write(fmt, LogLevels.Error, arg);
         }
 
-        public void Info(string fmt, params object[] arg)
+        public void Debug(string format, params object[] arg)
         {
-            Write(fmt, LogLevels.Info, arg);
+            Write(format, LogLevels.Debug, arg);
         }
 
-        public void Info(string o)
+        public void Trace(string fmt, params object[] arg)
         {
-            string msg = o == null ? "null" : o;
-            Write(msg);
+            Write(fmt, LogLevels.Trace, arg);
         }
 
         protected virtual void Write(string fmt, LogLevels levels, params object[] arg)

@@ -80,6 +80,7 @@
     <Compile Include="Helper\Extensions\GameObjectExtensions.cs" />
     <Compile Include="Logger\INitroxLogger.cs" />
     <Compile Include="Logger\LogExtensions.cs" />
+    <Compile Include="Logger\LogLevels.cs" />
     <Compile Include="Logger\NoLogger.cs" />
     <Compile Include="Logger\StaticLogger.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />

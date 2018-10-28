@@ -5,7 +5,7 @@ namespace NitroxModel.Logger
     /// <summary>
     ///     Static logger for projects that do not have Dependency Injection.
     /// </summary>
-    public class StaticLogger
+    public static class StaticLogger
     {
         private static INitroxLogger instance;
 

@@ -14,6 +14,8 @@ namespace NitroxModel.Logger
 
         }
 
+        public LogLevels AllowedLevels { get; } = LogLevels.None;
+
         public void Trace(string format, params object[] arg)
         {
             
