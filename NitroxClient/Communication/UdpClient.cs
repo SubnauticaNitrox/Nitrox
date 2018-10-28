@@ -11,15 +11,17 @@ namespace NitroxClient.Communication
     public class UdpClient : IClient
     {
         private readonly DeferringPacketReceiver packetReceiver;
+        private readonly INitroxLogger log;
         private const int PORT = 11000;
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
 
         public bool IsConnected { get; set; } = false;
         
-        public UdpClient(DeferringPacketReceiver packetManager)
+        public UdpClient(DeferringPacketReceiver packetManager, INitroxLogger logger)
         {
-            Log.Info("Initializing UdpClient...");
+            log = logger;
+            log.Info("Initializing UdpClient...");
             packetReceiver = packetManager;
         }
 
@@ -49,7 +51,7 @@ namespace NitroxClient.Communication
                     case NetIncomingMessageType.WarningMessage:
                     case NetIncomingMessageType.VerboseDebugMessage:
                         string text = im.ReadString();
-                        Log.Info("Network message: " + text);
+                        log.Info($"Network message: {text}");
                         break;
                     case NetIncomingMessageType.StatusChanged:
                         NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
@@ -64,7 +66,7 @@ namespace NitroxClient.Communication
                             LostConnectionModal.Instance.Show();
                         }
 
-                        Log.Info("IsConnected status: " + IsConnected);
+                        log.Info($"IsConnected status: {IsConnected}");
                         break;
                     case NetIncomingMessageType.Data:
                         if (im.Data.Length > 0)
@@ -74,7 +76,7 @@ namespace NitroxClient.Communication
                         }
                         break;
                     default:
-                        Log.Info("Unhandled lidgren message type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
+                        log.Info($"Unhandled lidgren message type: {im.MessageType} {im.LengthBytes} bytes {im.DeliveryMethod}|{im.SequenceChannel}");
                         break;
                 }
                 client.Recycle(im);

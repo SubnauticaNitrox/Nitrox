@@ -1,97 +1,115 @@
 ﻿using System;
-using System.Diagnostics;
+using System.IO;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Logger
 {
-    public class Log
+    public class Log : INitroxLogger
     {
         [Flags]
-        public enum LogLevel
+        public enum LogLevels
         {
-            Disabled = 0,
-            InGameMessages = 1,
-            ConsoleInfo = 2,
-            ConsoleDebug = 4
+            Trace = 1,
+            Debug = 2,
+            Info = 4,
+            Warn = 8,
+            Error = 16,
+            All = Trace | Debug | Info | Warn | Error
         }
 
-        private static LogLevel level = LogLevel.Disabled;
+        protected readonly TextWriter Output;
 
-        // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
-        public static void SetLevel(LogLevel level)
-        {
-            Log.level = level;
-            Write("Log level set to " + Log.level);
-        }
-        
-        // For in-game notifications
-        public static void InGame(string msg)
-        {
-            if ((level & LogLevel.InGameMessages) != 0)
-            {
-                ErrorMessage.AddMessage(msg);
-            }
+        public LogLevels AllowedLevels { get; }
 
-            Info(msg);
+        public Log(LogLevels allowedLevels, TextWriter writer)
+        {
+            Validate.NotNull(writer, "Attempt was made to create a logger without a TextWriter.");
+            AllowedLevels = allowedLevels;
+            Output = writer;
         }
 
-        private static void Write(string fmt, params object[] arg)
-        {
-            Console.WriteLine("[Nitrox] " + fmt, arg);
-        }
-
-        public static void Error(string fmt, params object[] arg)
-        {
-            Write("E: " + fmt, arg);
-        }
-
-        public static void Error(string msg, Exception ex)
-        {
-            Error(msg + "\n{0}", (object)ex);
-        }
-
-        public static void Warn(string fmt, params object[] arg)
-        {
-            Write("W: " + fmt, arg);
-        }
-
-        public static void Info(string fmt, params object[] arg)
-        {
-            if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
-            {
-                Write("I: " + fmt, arg);
-            }
-        }
-
-        public static void Info(object o)
-        {
-            string msg = (o == null) ? "null" : o.ToString();
-            Info(msg);
-        }
-
-        // Only for debug prints. Should not be displayed to general user.
-        // Should we print the calling method for this for more debug context?
-        public static void Debug(string fmt, params object[] arg)
-        {
-            if ((level & LogLevel.ConsoleDebug) != 0)
-            {
-                Write("D: " + fmt, arg);
-            }
-        }
-
-        public static void Debug(object o)
-        {
-            string msg = (o == null) ? "null" : o.ToString();
-            Debug(msg);
-        }
-
-        public static void Trace(string fmt, params object[] arg)
+        public void Trace(string fmt, params object[] arg)
         {
             Trace(string.Format(fmt, arg));
         }
 
-        public static void Trace(string str = "")
+        public void Debug(string format, params object[] arg)
         {
-            Write("T: {0}:\n{1}", str, new StackTrace(1));
+            Write(format, AllowedLevels, arg);
+        }
+
+        public void Trace(string str = "")
+        {
+            Write(str, LogLevels.Trace);
+        }
+
+        public void Error(string fmt, params object[] arg)
+        {
+            Write(fmt, LogLevels.Error, arg);
+        }
+
+        public void Error(string msg, Exception ex)
+        {
+            Write(msg + "\n{0}", LogLevels.Error, (object)ex);
+        }
+
+        public void Error(Exception ex)
+        {
+            Write("{0}", LogLevels.Error, (object)ex);
+        }
+
+        public void Warn(string fmt, params object[] arg)
+        {
+            Write(fmt, LogLevels.Warn, arg);
+        }
+
+        public void Info(string fmt, params object[] arg)
+        {
+            Write(fmt, LogLevels.Info, arg);
+        }
+
+        public void Info(string o)
+        {
+            string msg = o == null ? "null" : o;
+            Write(msg);
+        }
+
+        protected virtual void Write(string fmt, LogLevels levels, params object[] arg)
+        {
+            if ((levels & AllowedLevels) == 0)
+            {
+                return;
+            }
+
+            string prefix;
+            switch (levels)
+            {
+                case LogLevels.Trace:
+                    prefix = "T: ";
+                    break;
+                case LogLevels.Debug:
+                    prefix = "D: ";
+                    break;
+                case LogLevels.Info:
+                    prefix = "I: ";
+                    break;
+                case LogLevels.Warn:
+                    prefix = "W: ";
+                    break;
+                case LogLevels.Error:
+                    prefix = "E: ";
+                    break;
+                default:
+                    prefix = "";
+                    break;
+            }
+
+            Write(string.Format($"[Nitrox] {prefix}{fmt}", arg));
+        }
+
+        protected virtual void Write(string message)
+        {
+            Output.WriteLine(message);
         }
     }
 }

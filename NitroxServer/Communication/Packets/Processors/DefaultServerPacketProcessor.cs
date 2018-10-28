@@ -31,7 +31,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             if (!loggingPacketBlackList.Contains(packet.GetType()))
             {
-                Log.Debug("Using default packet processor for: " + packet.ToString() + " and player " + player.Id);
+                StaticLogger.Instance.Debug("Using default packet processor for: " + packet.ToString() + " and player " + player.Id);
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

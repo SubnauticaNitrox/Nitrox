@@ -14,12 +14,14 @@ namespace NitroxClient.Communication.Packets.Processors
     public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
     {
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly INitroxLogger log;
         private readonly SimulationOwnership simulationOwnershipManager;
 
-        public SimulationOwnershipChangeProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnershipManager)
+        public SimulationOwnershipChangeProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnershipManager, INitroxLogger logger)
         {
             this.multiplayerSession = multiplayerSession;
             this.simulationOwnershipManager = simulationOwnershipManager;
+            log = logger;
         }
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
@@ -48,7 +50,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + guid);
+                log.Error("Expected to simulate an unknown entity: " + guid);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Autofac;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -12,6 +13,7 @@ using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxClient.GameLogic.Bases;
+using NitroxModel.Logger;
 
 namespace NitroxClient
 {
@@ -25,6 +27,10 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+            containerBuilder.Register(context => new Log(Log.LogLevels.All, Console.Out))
+                .As<INitroxLogger>()
+                .SingleInstance();
+
 			containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
                 .As<IPreferenceStateProvider>()
                 .SingleInstance();

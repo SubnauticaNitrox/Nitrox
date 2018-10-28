@@ -1,5 +1,6 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -48,6 +49,13 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private GameObject background;
         private GameObject playerNameText;
 
+        private INitroxLogger log;
+
+        private void Awake()
+        {
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
+        }
+
         public void CreateVitals(ushort playerId, int position)
         {
             this.playerName = playerId.ToString();
@@ -57,7 +65,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             if (originalBar == null)
             {
-                Log.Warn("uGUI_HealthBar does not exist. Are you playing on creative?");
+                log.Warn("uGUI_HealthBar does not exist. Are you playing on creative?");
                 // TODO: Make sure it works when the world changes back to survival.
                 return;
             }

@@ -11,9 +11,11 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly PlayerManager remotePlayerManager;
         private readonly PlayerVitalsManager vitalsManager;
+        private readonly INitroxLogger log;
 
-        public DisconnectProcessor(PlayerManager remotePlayerManager, PlayerVitalsManager vitalsManager)
+        public DisconnectProcessor(PlayerManager remotePlayerManager, PlayerVitalsManager vitalsManager, INitroxLogger logger)
         {
+            log = logger;
             this.remotePlayerManager = remotePlayerManager;
             this.vitalsManager = vitalsManager;
         }
@@ -29,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (remotePlayer.IsPresent())
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);
-                Log.InGame(remotePlayer.Get().PlayerName + " disconnected");
+                log.InGame($"{remotePlayer.Get().PlayerName} disconnected");
             }
         }
     }

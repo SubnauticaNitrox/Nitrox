@@ -10,6 +10,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PowerLevelChangedProcessor : ClientPacketProcessor<PowerLevelChanged>
     {
+        private readonly INitroxLogger log;
+
+        public PowerLevelChangedProcessor(INitroxLogger logger)
+        {
+            log = logger;
+        }
+
         public override void Process(PowerLevelChanged packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
@@ -60,7 +67,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Unsupported packet power type: " + packet.PowerType);
+                log.Error("Unsupported packet power type: " + packet.PowerType);
             }
         }
     }

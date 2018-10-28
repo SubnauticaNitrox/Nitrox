@@ -42,17 +42,17 @@ namespace NitroxServer
         public void Start()
         {
             udpServer.Start();
-            Log.Info("Nitrox Server Started");
+            StaticLogger.Instance.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
 
         public void Stop()
         {
-            Log.Info("Nitrox Server Stopping...");
+            StaticLogger.Instance.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
             Save();
             udpServer.Stop();
-            Log.Info("Nitrox Server Stopped");
+            StaticLogger.Instance.Info("Nitrox Server Stopped");
         }
         
         private void EnablePeriodicSaving()

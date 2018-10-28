@@ -8,7 +8,7 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            StaticLogger.Instance = new Log(Log.LogLevels.Info | Log.LogLevels.Debug, Console.Out);
 
             try
             {
@@ -17,7 +17,7 @@ namespace NitroxServer
             }
             catch (Exception e)
             {
-                Log.Error(e.ToString());
+                StaticLogger.Instance.Error(e);
             }
 
             while (true)

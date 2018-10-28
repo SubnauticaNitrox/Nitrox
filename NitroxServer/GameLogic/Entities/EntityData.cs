@@ -108,7 +108,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                     else
                     {
-                        Log.Error("Guid did not have a corresponding entity in GetEntitiesByGuids: " + guid);
+                        StaticLogger.Instance.Error("Guid did not have a corresponding entity in GetEntitiesByGuids: " + guid);
                     }
                 }
             }

@@ -25,6 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject joinServerMenu;
         private GameObject multiplayerClient;
         private IMultiplayerSession multiplayerSession;
+        private INitroxLogger log;
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
@@ -37,6 +38,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             preferencesManager = NitroxServiceLocator.LocateService<PlayerPreferenceManager>();
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
 
             InitializeJoinMenu();
             SubscribeColorChanged();
@@ -157,7 +159,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
+                log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
                 OnCancelClick();
             }
         }
@@ -210,17 +212,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.EstablishingServerPolicy:
-                    Log.InGame("Requesting session policy information...");
+                    log.InGame("Requesting session policy information...");
                     break;
                 case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
-                    Log.InGame("Waiting for User Input...");
+                    log.InGame("Waiting for User Input...");
 
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
 
                     break;
                 case MultiplayerSessionConnectionStage.SessionReserved:
-                    Log.InGame("Launching game...");
+                    log.InGame("Launching game...");
 
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
@@ -228,7 +230,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
-                    Log.InGame("Reservation rejected...");
+                    log.InGame("Reservation rejected...");
 
                     MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 
@@ -244,7 +246,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     break;
                 case MultiplayerSessionConnectionStage.Disconnected:
-                    Log.Info("Disconnected from server");
+                    log.Info("Disconnected from server");
                     break;
             }
         }

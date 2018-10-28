@@ -28,7 +28,7 @@ namespace NitroxServer.Communication
             }
             else
             {
-                Log.Info("Cannot send packet to a closed connection.");
+                StaticLogger.Instance.Info("Cannot send packet to a closed connection.");
             }
         }
     }

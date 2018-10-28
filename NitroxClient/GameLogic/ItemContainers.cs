@@ -14,12 +14,14 @@ namespace NitroxClient.GameLogic
     public class ItemContainers
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
         private readonly LocalPlayer localPlayer;
 
-        public ItemContainers(IPacketSender packetSender, LocalPlayer localPlayer)
+        public ItemContainers(IPacketSender packetSender, LocalPlayer localPlayer, INitroxLogger logger)
         {
             this.packetSender = packetSender;
             this.localPlayer = localPlayer;
+            log = logger;
         }
 
         public void BroadcastItemAdd(Pickupable pickupable, Transform ownerTransform)
@@ -67,7 +69,7 @@ namespace NitroxClient.GameLogic
 
             if(owner.IsEmpty())
             {
-                Log.Info("Unable to find inventory container with id: " + itemData.ContainerGuid);
+                log.Info("Unable to find inventory container with id: " + itemData.ContainerGuid);
                 return;
             }
 
@@ -86,7 +88,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Could not find container field on object " + owner.Get().name);
+                log.Error("Could not find container field on object " + owner.Get().name);
             }
         }
 
@@ -108,7 +110,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Could not find container field on object " + owner.name);
+                log.Error("Could not find container field on object " + owner.name);
             }
         }
 

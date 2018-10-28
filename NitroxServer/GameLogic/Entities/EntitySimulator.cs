@@ -63,7 +63,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     if (player != oldPlayer && player.HasCellLoaded(entityCell))
                     {
-                        Log.Info("Player " + player.Name + " can take over " + entity.Guid);
+                        StaticLogger.Instance.Info("Player " + player.Name + " can take over " + entity.Guid);
                         ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }

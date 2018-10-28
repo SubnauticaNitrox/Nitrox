@@ -8,15 +8,17 @@ namespace NitroxClient.Communication.Packets.Processors
     public class MultiplayerSessionPolicyProcessor : ClientPacketProcessor<MultiplayerSessionPolicy>
     {
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly INitroxLogger log;
 
-        public MultiplayerSessionPolicyProcessor(IMultiplayerSession multiplayerSession)
+        public MultiplayerSessionPolicyProcessor(IMultiplayerSession multiplayerSession, INitroxLogger logger)
         {
             this.multiplayerSession = multiplayerSession;
+            log = logger;
         }
 
         public override void Process(MultiplayerSessionPolicy packet)
         {
-            Log.Info("Processing session policy information.");
+            log.Info("Processing session policy information.");
             multiplayerSession.ProcessSessionPolicy(packet);
         }
     }

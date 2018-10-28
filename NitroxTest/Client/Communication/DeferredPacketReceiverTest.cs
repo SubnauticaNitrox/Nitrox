@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace NitroxTest.Client.Communication
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new DeferringPacketReceiver(visibleCells);
+            packetReceiver = new DeferringPacketReceiver(NoLogger.Default, visibleCells);
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);

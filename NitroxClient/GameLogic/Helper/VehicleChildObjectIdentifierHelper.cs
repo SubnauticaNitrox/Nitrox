@@ -2,15 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
-    public class VehicleChildObjectIdentifierHelper
+    public static class VehicleChildObjectIdentifierHelper
     {
-        private static readonly List<Type> interactiveChildTypes = new List<Type>() // we must sync guids of these types when creating vehicles (mainly cyclops)
+        private static readonly List<Type> interactiveChildTypes = new List<Type> // we must sync guids of these types when creating vehicles (mainly cyclops)
         {
             { typeof(Openable) },
             { typeof(CyclopsLocker) },
@@ -23,6 +24,13 @@ namespace NitroxClient.GameLogic.Helper
             { typeof(UpgradeConsole) },
             { typeof(DockingBayDoor) }
         };
+
+        private static readonly INitroxLogger log;
+
+        static VehicleChildObjectIdentifierHelper()
+        {
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
+        }
 
         public static  List<InteractiveChildObjectIdentifier> ExtractGuidsOfInteractiveChildren(GameObject constructedObject)
         {
@@ -60,7 +68,7 @@ namespace NitroxClient.GameLogic.Helper
                 }
                 else
                 {
-                    Log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
+                    log.Error("Error GUID tagging interactive child due to not finding it: " + childIdentifier.GameObjectNamePath);
                 }
             }
         }

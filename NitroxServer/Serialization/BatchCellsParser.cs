@@ -43,18 +43,19 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
 
-            Log.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
+            StaticLogger.Instance.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
 
             return spawnPoints;
         }
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath();
-
-            if (subnauticaPath.IsEmpty())
+            string error;
+            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath(out error);
+            if (!string.IsNullOrEmpty(error))
             {
-                throw new InvalidOperationException("Could not locate subnautica root");
+                StaticLogger.Instance.Error("Could not locate subnautica root");
+                throw new InvalidOperationException(error);
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");

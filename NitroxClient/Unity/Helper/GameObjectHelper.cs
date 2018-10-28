@@ -1,5 +1,6 @@
 ﻿using System;
 using NitroxModel.Helper;
+using NitroxModel.Helper.Extensions;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
@@ -36,14 +37,12 @@ namespace NitroxClient.Unity.Helper
 
             if (child == null)
             {
-#if DEBUG
-                tf.gameObject.DumpGameObject(dumpTransform: false);
-#endif
-                throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
+                throw new ArgumentNullException($"{tf} does not contain \"{name}\":\n{tf.gameObject.DumpAsString(dumpTransform: false)}");
             }
 
             return child;
         }
+
         public static Transform RequireTransform(this GameObject go, string name) => go.transform.RequireTransform(name);
         public static Transform RequireTransform(this MonoBehaviour mb, string name) => mb.transform.RequireTransform(name);
 
@@ -54,7 +53,7 @@ namespace NitroxClient.Unity.Helper
         public static GameObject RequireGameObject(string name)
         {
             GameObject go = GameObject.Find(name);
-            Validate.NotNull(go, "No global GameObject found with " + name + "!");
+            Validate.NotNull(go, $"No global GameObject found with {name}!");
 
             return go;
         }

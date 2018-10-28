@@ -26,7 +26,7 @@ namespace NitroxServer.Communication.Packets
 
         public PacketHandler(World world)
         {
-            this.playerManager = world.PlayerManager;
+            playerManager = world.PlayerManager;
             defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
             
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
@@ -43,7 +43,8 @@ namespace NitroxServer.Communication.Packets
                 {typeof(SimulationOwnershipData), world.SimulationOwnershipData },
                 {typeof(EscapePodManager), new EscapePodManager() },
                 {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
-                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager) }
+                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager) },
+                {typeof(INitroxLogger), StaticLogger.Instance}
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
@@ -87,7 +88,7 @@ namespace NitroxServer.Communication.Packets
             }
             else
             {
-                Log.Info("Received invalid, unauthenticated packet: " + packet);
+                StaticLogger.Instance.Info("Received invalid, unauthenticated packet: " + packet);
             }
         }
     }

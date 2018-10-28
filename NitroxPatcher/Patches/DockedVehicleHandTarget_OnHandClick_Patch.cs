@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches
 
             if (simulationOwnership.HasExclusiveLock(guid))
             {
-                Log.Debug($"Already have an exclusive lock on this vehicle: {guid}");
+                StaticLogger.Instance.Debug($"Already have an exclusive lock on this vehicle: {guid}");
                 return true;
             }
 

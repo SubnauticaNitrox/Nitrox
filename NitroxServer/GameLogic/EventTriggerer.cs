@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic
         public void SetupEventTimers()
         {
             // eventually this should be on a better timer so it can be saved, paused, etc
-            Log.Debug("Event Triggerer started!");
+            StaticLogger.Instance.Debug("Event Triggerer started!");
             double auroraTimer = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             CreateTimer(auroraTimer * 0.2d, StoryEventType.PDA, "Story_AuroraWarning1");
             CreateTimer(auroraTimer * 0.5d, StoryEventType.PDA, "Story_AuroraWarning2");
@@ -31,7 +31,7 @@ namespace NitroxServer.GameLogic
             Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
+                StaticLogger.Instance.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
             timer.Interval = time;

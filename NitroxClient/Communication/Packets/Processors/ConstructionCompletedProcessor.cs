@@ -10,16 +10,18 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class ConstructionCompletedProcessor : ClientPacketProcessor<ConstructionCompleted>
     {
-        private BuildThrottlingQueue buildEventQueue;
+        private readonly BuildThrottlingQueue buildEventQueue;
+        private readonly INitroxLogger log;
 
-        public ConstructionCompletedProcessor(BuildThrottlingQueue buildEventQueue)
+        public ConstructionCompletedProcessor(BuildThrottlingQueue buildEventQueue, INitroxLogger logger)
         {
+            log = logger;
             this.buildEventQueue = buildEventQueue;
         }
 
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.NewBaseCreatedGuid);
+            log.Debug($"Processing ConstructionCompleted {completedPacket.Guid} {completedPacket.NewBaseCreatedGuid}");
             buildEventQueue.EnqueueConstructionCompleted(completedPacket.Guid, completedPacket.NewBaseCreatedGuid);
         }
     }

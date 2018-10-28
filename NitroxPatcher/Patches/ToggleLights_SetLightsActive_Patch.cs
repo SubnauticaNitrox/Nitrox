@@ -6,6 +6,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.Helper.Extensions;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -53,8 +54,8 @@ namespace NitroxPatcher.Patches
 
                 if (!gameObject)
                 {
-                    Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
-                    DebugUtils.DumpComponent(__instance);
+                    StaticLogger.Instance.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
+                    StaticLogger.Instance.Debug(__instance.gameObject.DumpAsString());
                 }
 
                 string guid = GuidHelper.GetGuid(gameObject);

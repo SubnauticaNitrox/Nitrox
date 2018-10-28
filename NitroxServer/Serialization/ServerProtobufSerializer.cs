@@ -84,7 +84,7 @@ namespace NitroxServer.Serialization
                         }
                         catch
                         {
-                            Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name);
+                            StaticLogger.Instance.Warn($"Could not load serializable attribute for {type} {property.Name}");
                         }
                     }
                 }

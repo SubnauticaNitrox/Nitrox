@@ -21,13 +21,15 @@ namespace NitroxClient.MonoBehaviours
         public static Multiplayer Main;
 
         private IMultiplayerSession multiplayerSession;
+        private INitroxLogger log;
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
 
         public void Awake()
         {
-            Log.InGame("Multiplayer Client Loaded...");
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
+            log.InGame("Multiplayer Client Loaded...");
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
             Main = this;
@@ -65,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Error processing packet: " + packet, ex);
+                    log.Error("Error processing packet: " + packet, ex);
                 }
             }
         }
@@ -83,7 +85,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void OnConsoleCommand_mpsave()
         {
-            Log.Info("Save Request");
+            log.Info("Save Request");
             NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
         }
 

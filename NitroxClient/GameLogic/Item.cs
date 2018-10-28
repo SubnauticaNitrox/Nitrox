@@ -11,10 +11,12 @@ namespace NitroxClient.GameLogic
     public class Item
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
 
-        public Item(IPacketSender packetSender)
+        public Item(IPacketSender packetSender, INitroxLogger logger)
         {
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public void UpdatePosition(string guid, Vector3 location, Quaternion rotation)
@@ -45,7 +47,7 @@ namespace NitroxClient.GameLogic
 
             SyncedMultiplayerObject.ApplyTo(gameObject);
 
-            Log.Debug("Dropping item with guid: " + guid);
+            log.Debug($"Dropping item with guid: {guid}");
 
             DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
             packetSender.Send(droppedItem);

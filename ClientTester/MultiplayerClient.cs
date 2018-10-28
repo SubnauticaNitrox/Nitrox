@@ -26,8 +26,8 @@ namespace ClientTester
 
         public MultiplayerClient(ushort playerId)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
-            playerName = "Player" + playerId.ToString();
+            StaticLogger.Instance = new Log(Log.LogLevels.All, Console.Out);
+            playerName = "Player " + playerId;
 
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
             packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
@@ -51,7 +51,7 @@ namespace ClientTester
         {
             Dictionary<Type, PacketProcessor> packetProcessorMap = new Dictionary<Type, PacketProcessor>
             {
-                { typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(multiplayerSession) },
+                { typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(multiplayerSession, StaticLogger.Instance) },
                 { typeof(MultiplayerSessionReservation), new MultiplayerSessionReservationProcessor(multiplayerSession) }
             };
 
@@ -68,10 +68,10 @@ namespace ClientTester
                 case MultiplayerSessionConnectionStage.SessionReserved:
                     multiplayerSession.JoinSession();
                     multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
-                    Log.InGame("SessionJoined to server");
+                    StaticLogger.Instance.InGame("SessionJoined to server");
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
-                    Log.InGame("Unable to connect to server");
+                    StaticLogger.Instance.InGame("Unable to connect to server");
                     multiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     break;
             }
@@ -92,12 +92,12 @@ namespace ClientTester
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Error processing packet: " + packet, ex);
+                        StaticLogger.Instance.Error($"Error processing packet: {packet}", ex);
                     }
                 }
                 else
                 {
-                    Log.Debug("No packet processor for the given type: " + packet.GetType());
+                    StaticLogger.Instance.Debug($"No packet processor for the given type: {packet.GetType()}");
                 }
             }
         }

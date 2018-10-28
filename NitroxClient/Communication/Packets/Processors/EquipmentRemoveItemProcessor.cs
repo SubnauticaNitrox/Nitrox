@@ -12,7 +12,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class EquipmentRemoveItemProcessor : ClientPacketProcessor<EquipmentRemoveItem>
     {
+        private readonly INitroxLogger log;
         public const int UNEQUIP_EVENT_TYPE_ID = 1;
+
+        public EquipmentRemoveItemProcessor(INitroxLogger logger)
+        {
+            log = logger;
+        }
 
         public override void Process(EquipmentRemoveItem packet)
         {
@@ -35,10 +41,10 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Could not find equipment type for " + owner.name);
+                log.Error($"Could not find equipment type for {owner.name}");
             }
 
-            UnityEngine.Object.Destroy(item);
+            Object.Destroy(item);
         }
     }
 }

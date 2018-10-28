@@ -8,17 +8,19 @@ namespace NitroxClient.GameLogic
     public class Power
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
 
-        public Power(IPacketSender packetSender)
+        public Power(IPacketSender packetSender, INitroxLogger logger)
         {
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public void ChargeChanged(string guid, float amount, PowerType powerType)
         {
             PowerLevelChanged powerChanged = new PowerLevelChanged(guid, amount, powerType);
             packetSender.Send(powerChanged);
-            Log.Debug(powerChanged);
+            log.Debug(powerChanged.ToString());
         }
     }
 }

@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper.Extensions;
 
 namespace NitroxClient.Communication
 {
@@ -17,9 +18,11 @@ namespace NitroxClient.Communication
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
         private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets;
         private readonly VisibleCells visibleCells;
+        private readonly INitroxLogger log;
 
-        public DeferringPacketReceiver(VisibleCells visibleCells)
+        public DeferringPacketReceiver(INitroxLogger logger, VisibleCells visibleCells)
         {
+            log = logger;
             this.visibleCells = visibleCells;
             receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
         }
@@ -63,7 +66,7 @@ namespace NitroxClient.Communication
                     return false;
                 }
 
-                Log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {mustBeLoadedCell}");
+                log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {mustBeLoadedCell}");
                 AddPacketToDeferredMap(packet, mustBeLoadedCell);
                 return true;
             }
@@ -92,7 +95,7 @@ namespace NitroxClient.Communication
                 Queue<Packet> deferredPackets;
                 if (deferredPacketsByAbsoluteCell.TryGetValue(absoluteEntityCell, out deferredPackets))
                 {
-                    Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
+                    log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
                         absoluteEntityCell,
                         deferredPackets.Count,
                         deferredPackets.PrefixWith("\n\t"));

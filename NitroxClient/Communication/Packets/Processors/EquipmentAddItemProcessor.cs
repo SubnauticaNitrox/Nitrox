@@ -13,7 +13,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class EquipmentAddItemProcessor : ClientPacketProcessor<EquipmentAddItem>
     {
+        private readonly INitroxLogger log;
         public const int EQUIP_EVENT_TYPE_ID = 0;
+
+        public EquipmentAddItemProcessor(INitroxLogger logger)
+        {
+            log = logger;
+        }
 
         public override void Process(EquipmentAddItem packet)
         {
@@ -45,12 +51,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log.Error("Could not find equipment type for " + gameObject.name);
+                    log.Error($"Could not find equipment type for {gameObject.name}");
                 }
             }
             else
             {
-                Log.Info("Could not find Container for " + gameObject.name);
+                log.Info($"Could not find Container for {gameObject.name}");
             }
         }
     }

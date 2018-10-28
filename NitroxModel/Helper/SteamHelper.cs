@@ -11,16 +11,17 @@ namespace NitroxModel.Helper
         public static readonly int SUBNAUTICA_APP_ID = 264710;
         public static readonly string SUBNAUTICA_GAME_NAME = "Subnautica";
 
-        public static Optional<string> FindSubnauticaPath()
+        public static Optional<string> FindSubnauticaPath(out string error)
         {
-            return FindSteamGamePath(SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
+            return FindSteamGamePath(SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME, out error);
         }
 
-        public static Optional<string> FindSteamGamePath(int appid, string gameName)
+        public static Optional<string> FindSteamGamePath(int appid, string gameName, out string error)
         {
+            error = "";
             if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)
             {
-                Log.Info("You either don't have steam installed or your registry variable isn't set.");
+                error = "You either don't have steam installed or your registry variable isn't set.";
                 return Optional<string>.Empty();
             }
 
@@ -34,7 +35,7 @@ namespace NitroxModel.Helper
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
             if (path == null)
             {
-                Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
+                error = $"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.";
             }
             else
             {

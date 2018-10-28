@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Debuggers;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,7 @@ namespace NitroxClient.MonoBehaviours
     {
         public readonly KeyCode EnableDebuggerHotkey = KeyCode.F7;
         public readonly List<BaseDebugger> Debuggers;
+        private INitroxLogger log;
         private readonly HashSet<BaseDebugger> prevActiveDebuggers = new HashSet<BaseDebugger>();
         private bool isDebugging;
         private Rect windowRect;
@@ -21,6 +23,11 @@ namespace NitroxClient.MonoBehaviours
                 new SceneDebugger(),
                 new NetworkDebugger()
             };
+        }
+
+        private void Awake()
+        {
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
         }
 
         public void OnGUI()
@@ -145,17 +152,17 @@ namespace NitroxClient.MonoBehaviours
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
-            Log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
+            log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
         }
 
         private void SceneManager_sceneUnloaded(Scene scene)
         {
-            Log.Debug($"Scene '{scene.name}' unloaded.");
+            log.Debug($"Scene '{scene.name}' unloaded.");
         }
 
         private void SceneManager_activeSceneChanged(Scene fromScene, Scene toScene)
         {
-            Log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
+            log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
         }
     }
 }

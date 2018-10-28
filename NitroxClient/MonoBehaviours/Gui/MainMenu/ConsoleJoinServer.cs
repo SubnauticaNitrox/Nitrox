@@ -13,12 +13,15 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class ConsoleJoinServer : MonoBehaviour
     {
         private IMultiplayerSession multiplayerSession;
+        private INitroxLogger log;
         private GameObject multiplayerClient;
         private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
         private string userName;
 
         public void Awake()
         {
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
+
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
             DontDestroyOnLoad(gameObject);
         }
@@ -43,11 +46,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             if (multiplayerSession.CurrentState.CurrentStage == MultiplayerSessionConnectionStage.SessionJoined)
             {
-                Log.InGame("Already connected to a server");
+                log.InGame("Already connected to a server");
             }
             else if (n?.data?.Count > 0)
             {
-                Log.InGame("Console Multiplayer Session Join Client Loaded...");
+                log.InGame("Console Multiplayer Session Join Client Loaded...");
                 StartMultiplayerClient();
 
                 string ipAddress = n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS;
@@ -57,7 +60,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             else
             {
-                Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
+                log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
             }
         }
 
@@ -108,14 +111,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     Multiplayer.Main.StartSession();
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
-                    Log.InGame($"Cannot join server: {multiplayerSession.Reservation.ReservationState.ToString()}");
+                    log.InGame($"Cannot join server: {multiplayerSession.Reservation.ReservationState.ToString()}");
                     multiplayerSession.Disconnect();
                     break;
                 case MultiplayerSessionConnectionStage.Disconnected:
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     break;
                 default:
-                    Log.InGame($"Current Stage: {multiplayerSession.CurrentState.CurrentStage}");
+                    log.InGame($"Current Stage: {multiplayerSession.CurrentState.CurrentStage}");
                     break;
             }
         }

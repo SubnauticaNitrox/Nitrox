@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NSubstitute;
 
@@ -17,7 +18,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(NoLogger.Default, client);
 
             // Assert
             multiplayerSession.CurrentState.CurrentStage.ShouldBeEquivalentTo(MultiplayerSessionConnectionStage.Disconnected);
@@ -30,7 +31,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             IClient client = Substitute.For<IClient>();
 
             // Act
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(NoLogger.Default, client);
 
             // Assert
             multiplayerSession.Client.ShouldBeEquivalentTo(client);
@@ -103,7 +104,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         {
             // Arrange
             IClient client = Substitute.For<IClient>();
-            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
+            IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(NoLogger.Default, client);
             IMultiplayerSessionConnectionContext connectionContext = (IMultiplayerSessionConnectionContext)multiplayerSession;
             multiplayerSession.MonitorEvents();
 

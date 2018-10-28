@@ -11,6 +11,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     class DroppedItemProcessor : ClientPacketProcessor<DroppedItem>
     {
+        private readonly INitroxLogger log;
+
+        public DroppedItemProcessor(INitroxLogger logger)
+        {
+            log = logger;
+        }
+
         public override void Process(DroppedItem drop)
         {
             GameObject gameObject = SerializationHelper.GetGameObject(drop.Bytes);
@@ -44,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void ExecuteDropItemAction(TechType techType, GameObject gameObject)
         {
-            Log.Debug("Performing drop action for tech type: " + techType);
+            log.Debug($"Performing drop action for tech type: {techType}");
 
             ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
             itemDropAction.ProcessDroppedItem(gameObject);
@@ -56,7 +63,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (smo != null)
             {
-                UnityEngine.Object.Destroy(smo);
+                Object.Destroy(smo);
             }
         }
     }

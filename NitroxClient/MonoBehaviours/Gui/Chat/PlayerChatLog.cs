@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel;
+using NitroxModel.Helper.Extensions;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat

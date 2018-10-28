@@ -1,32 +1,34 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-using NitroxClient.Unity.Helper;
 using Story;
-using System.Reflection;
-using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
     {
-        private readonly IPacketSender packetSender;
         private readonly BuildThrottlingQueue buildEventQueue;
-        private readonly Vehicles vehicles;
-        private readonly ItemContainers itemContainers;
         private readonly EquipmentSlots equipment;
+        private readonly ItemContainers itemContainers;
+        private readonly INitroxLogger log;
+        private readonly IPacketSender packetSender;
+        private readonly Vehicles vehicles;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment)
+        public InitialPlayerSyncProcessor(INitroxLogger logger, IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment)
         {
+            log = logger;
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.vehicles = vehicles;
@@ -46,18 +48,18 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
-            SetPDALog(packet.PDAData.PDALogEntries);      
+            SetPDALog(packet.PDAData.PDALogEntries);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerSpawn(packet.PlayerSpawnData);            
+            SetPlayerSpawn(packet.PlayerSpawnData);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
         {
-            Log.Info("Received initial sync packet with " + logEntries.Count + " pda log entries");
+            log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {
-                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
                 foreach (PDALogEntry logEntry in logEntries)
                 {
@@ -72,7 +74,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                         if (entryData.key == "Story_AuroraWarning4")
                         {
-                            CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, new object[] { true });
+                            CrashedShipExploder.main.ReflectionCall("SwapModels", false, false, true);
                         }
                     }
                 }
@@ -81,18 +83,18 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SetKnownTech(List<TechType> techTypes)
         {
-            Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
+            log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
                 foreach (TechType techType in techTypes)
                 {
-                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                    HashSet<TechType> complete = (HashSet<TechType>)typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
                     KnownTech.Add(techType, false);
                 }
             }
         }
-        
+
         private void SetPlayerStats(PlayerStatsData statsData)
         {
             if (statsData != null)
@@ -114,7 +116,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SetEncyclopediaEntry(List<string> entries)
         {
-            Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
+            log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
@@ -124,41 +126,40 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
             }
         }
-    
+
         private void SetPDAEntryComplete(List<TechType> pdaEntryComplete)
         {
-            HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            HashSet<TechType> complete = (HashSet<TechType>)typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
             foreach (TechType item in pdaEntryComplete)
             {
                 complete.Add(item);
             }
 
-            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
-
+            log.Info($"PDAEntryComplete Save:{pdaEntryComplete.Count} Read Partial Client Final Count:{complete.Count}");
         }
 
         private void SetPDAEntryPartial(List<PDAEntry> entries)
         {
-            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+            List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType= entry.TechType, unlocked = entry.Unlocked });
+                partial.Add(new PDAScanner.Entry {progress = entry.Progress, techType = entry.TechType, unlocked = entry.Unlocked});
             }
 
-            Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
+            log.Info($"PDAEntryPartial Save :{entries.Count} Read Partial Client Final Count:{partial.Count}");
         }
 
         private void SetPlayerGuid(string playerguid)
         {
-            GuidHelper.SetNewGuid(Player.mainObject, playerguid);
-            Log.Info("Received initial sync Player Guid: " + playerguid);
-        }    
-        
+            Player.mainObject.SetNewGuid(playerguid);
+            log.Info($"Received initial sync Player Guid: {playerguid}");
+        }
+
         private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
         {
-            Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
+            log.Info($"Received initial sync packet with {equippedItems.Count} equipment items");
 
             using (packetSender.Suppress<EquipmentAddItem>())
             {
@@ -168,7 +169,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SpawnBasePieces(List<BasePiece> basePieces)
         {
-            Log.Info("Received initial sync packet with " + basePieces.Count + " base pieces");
+            log.Info($"Received initial sync packet with {basePieces.Count} base pieces");
 
             using (packetSender.Suppress<ConstructionAmountChanged>())
             using (packetSender.Suppress<ConstructionCompleted>())
@@ -192,29 +193,28 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SpawnVehicles(List<VehicleModel> vehicleModels)
         {
-            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
+            log.Info($"Received initial sync packet with {vehicleModels.Count} vehicles");
 
             foreach (VehicleModel vehicle in vehicleModels)
             {
                 vehicles.CreateVehicle(vehicle);
             }
-
         }
 
         private void SpawnItemContainer(string playerGuid, List<ItemData> inventoryItems)
         {
-            Log.Info("Received initial sync packet with " + inventoryItems.Count + " ItemContainer");
+            log.Info($"Received initial sync packet with {inventoryItems.Count} ItemContainer");
 
             using (packetSender.Suppress<ItemContainerAdd>())
             {
                 ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker);
 
                 foreach (ItemData itemdata in inventoryItems)
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
                     Pickupable pickupable = item.RequireComponent<Pickupable>();
-                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+                    goals.Remove(pickupable.GetTechType()); // Remove Notification Goal Event On Item Player Already have On Any Container
 
                     if (itemdata.ContainerGuid == playerGuid)
                     {
@@ -222,46 +222,46 @@ namespace NitroxClient.Communication.Packets.Processors
                         InventoryItem inventoryItem = new InventoryItem(pickupable);
                         inventoryItem.container = container;
                         inventoryItem.item.Reparent(container.tr);
-                        
+
                         container.UnsafeAdd(inventoryItem);
                     }
                     else
                     {
                         itemContainers.AddItem(itemdata);
                     }
-
-
                 }
             }
-
         }
 
-        /*
-         * Items should only be added after all base pieces spawn.  Since base pieces will spawn
-         * gradually over multiple frames, we need to wait until that process has completely finished
-         */
+        /// <summary>
+        ///     Items should only be added after all base pieces spawn.  Since base pieces will spawn
+        ///     gradually over multiple frames, we need to wait until that process has completely finished
+        /// </summary>
+        /// <param name="inventoryItems"></param>
         private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems)
         {
-            Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
+            log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
 
-            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
+            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems, log);
             ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
         }
-        
-        /*
-         * This class simply encapsulates a callback method that is invoked when the throttled builder
-         * is completed with the initial sync of base items.  We keep this in a new class to be able to
-         * hold the relevant inventory items and use them when the time comes.  This can be later extended
-         * to wait on other events if need be.
-         */ 
+
+        /// <summary>
+        ///     This class simply encapsulates a callback method that is invoked when the throttled builder
+        ///     is completed with the initial sync of base items.  We keep this in a new class to be able to
+        ///     hold the relevant inventory items and use them when the time comes.  This can be later extended
+        ///     to wait on other events if need be.
+        /// </summary>
         private class InventoryItemAdder
         {
-            private IPacketSender packetSender;
-            private ItemContainers itemContainers;
-            private List<ItemData> inventoryItems;
+            private readonly List<ItemData> inventoryItems;
+            private readonly ItemContainers itemContainers;
+            private readonly IPacketSender packetSender;
+            private readonly INitroxLogger log;
 
-            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems)
+            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems, INitroxLogger logger)
             {
+                log = logger;
                 this.packetSender = packetSender;
                 this.itemContainers = itemContainers;
                 this.inventoryItems = inventoryItems;
@@ -269,7 +269,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             public void AddItemsToInventories(object sender, EventArgs eventArgs)
             {
-                Log.Info("Initial sync inventory items are clear to be added to inventories");
+                log.Info("Initial sync inventory items are clear to be added to inventories");
                 ThrottledBuilder.main.QueueDrained -= AddItemsToInventories;
 
                 using (packetSender.Suppress<ItemContainerAdd>())

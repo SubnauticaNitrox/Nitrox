@@ -14,12 +14,14 @@ namespace NitroxClient.Communication.Packets.Processors
     class CellEntitiesProcessor : ClientPacketProcessor<CellEntities>
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
         private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
 
-        public CellEntitiesProcessor(IPacketSender packetSender)
+        public CellEntitiesProcessor(IPacketSender packetSender, INitroxLogger logger)
         {
+            log = logger;
             this.packetSender = packetSender;
             
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
@@ -79,7 +81,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Entity was already spawned but not found(is it in another chunk?) guid: " + entity.Guid + " " + entity.TechType + " " + entity.ClassId);
+                log.Error("Entity was already spawned but not found(is it in another chunk?) guid: " + entity.Guid + " " + entity.TechType + " " + entity.ClassId);
             }
         }
     }

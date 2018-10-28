@@ -11,10 +11,12 @@ namespace NitroxClient.Communication.MultiplayerSession
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+        private readonly INitroxLogger log;
 
-        public MultiplayerSessionManager(IClient client)
+        public MultiplayerSessionManager(INitroxLogger logger, IClient client)
         {
-            Log.Info("Initializing MultiplayerSessionManager...");
+            log = logger;
+            log.Info("Initializing MultiplayerSessionManager...");
             Client = client;
             CurrentState = new Disconnected();
         }
@@ -22,6 +24,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         // Testing entry point
         internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
         {
+            log = NoLogger.Default;
             Client = client;
             CurrentState = initialState;
         }

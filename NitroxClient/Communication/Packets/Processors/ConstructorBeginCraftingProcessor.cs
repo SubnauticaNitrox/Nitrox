@@ -17,6 +17,13 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public static GameObject ConstructedObject;
 
+        private readonly INitroxLogger log;
+
+        public ConstructorBeginCraftingProcessor(INitroxLogger logger)
+        {
+            log = logger;
+        }
+
         public override void Process(ConstructorBeginCrafting packet)
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.ConstructorGuid);
@@ -36,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Could not find constructed object!");
+                log.Error("Could not find constructed object!");
             }
         }
     }

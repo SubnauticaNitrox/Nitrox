@@ -20,12 +20,14 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly INitroxLogger log;
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, INitroxLogger logger)
         {
             this.packetSender = packetSender;
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
+            log = logger;
         }
 
         public void CreateVehicle(VehicleModel vehicleModel)
@@ -49,7 +51,7 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    Log.Error("No prefab for tech type: " + techType);
+                    log.Error("No prefab for tech type: " + techType);
                 }
             }
         }

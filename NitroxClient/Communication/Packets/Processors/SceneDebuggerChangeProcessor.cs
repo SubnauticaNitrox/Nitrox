@@ -11,10 +11,12 @@ namespace NitroxClient.Communication.Packets.Processors
     class SceneDebuggerChangeProcessor : ClientPacketProcessor<SceneDebuggerChange>
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
 
-        public SceneDebuggerChangeProcessor(IPacketSender packetSender)
+        public SceneDebuggerChangeProcessor(IPacketSender packetSender, INitroxLogger logger)
         {
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public override void Process(SceneDebuggerChange sceneDebuggerChange)
@@ -35,7 +37,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 catch
                 {
-                    Log.Error("SceneDebuggerChange: SetValue has trown a error");
+                    log.Error("SceneDebuggerChange: SetValue has trown a error");
                 }
             }
             else

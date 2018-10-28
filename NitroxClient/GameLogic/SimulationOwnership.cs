@@ -12,13 +12,15 @@ namespace NitroxClient.GameLogic
 
         private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
         private readonly Dictionary<string, SimulationLockType> simulatedGuidsByLockType = new Dictionary<string, SimulationLockType>();
         private readonly Dictionary<string, LockRequestCompleted> completeFunctionsByGuid = new Dictionary<string, LockRequestCompleted>();
         
-        public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
+        public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender, INitroxLogger logger)
         {
             this.muliplayerSession = muliplayerSession;
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public bool HasAnyLockType(string guid)
@@ -47,7 +49,7 @@ namespace NitroxClient.GameLogic
 
         public void ReceivedSimulationLockResponse(string guid, bool lockAquired, SimulationLockType lockType)
         {
-            Log.Info("Received lock response, guid: " + guid + " " + lockAquired + " " + lockType);
+            log.Info($"Received lock response, guid: {guid} {lockAquired} {lockType}");
 
             if (lockAquired)
             {
@@ -63,7 +65,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Warn("Did not have an outstanding simulation request for " + guid + " maybe there were multiple outstanding requests?");
+                log.Warn($"Did not have an outstanding simulation request for {guid} maybe there were multiple outstanding requests?");
             }
         }
 

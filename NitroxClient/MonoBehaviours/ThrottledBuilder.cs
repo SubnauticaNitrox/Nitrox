@@ -29,10 +29,12 @@ namespace NitroxClient.MonoBehaviours
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
+        private INitroxLogger log;
 
         public void Start()
         {
             main = this;
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
             buildEvents = NitroxServiceLocator.LocateService<BuildThrottlingQueue>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         }
@@ -169,13 +171,13 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                Log.Error("Could not assign new base guid as no newly constructed base was found");
+                log.Error("Could not assign new base guid as no newly constructed base was found");
             }
         }
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            Log.Debug("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
+            log.Debug("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);
             Constructable constructable = constructing.GetComponent<Constructable>();
@@ -198,7 +200,7 @@ namespace NitroxClient.MonoBehaviours
         private void DeconstructionCompleted(DeconstructionCompletedEvent completed)
         {
             GameObject deconstructing = GuidHelper.RequireObjectFrom(completed.Guid);
-            UnityEngine.Object.Destroy(deconstructing);
+            Destroy(deconstructing);
         }
     }
 }

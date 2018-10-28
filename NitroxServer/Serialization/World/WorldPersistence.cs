@@ -22,7 +22,7 @@ namespace NitroxServer.Serialization.World
 
         public void Save(World world)
         {
-            Log.Info("Saving world state.");
+            StaticLogger.Instance.Info("Saving world state.");
 
             try
             {
@@ -41,11 +41,11 @@ namespace NitroxServer.Serialization.World
                     serializer.Serialize(stream, persistedData);
                 }
 
-                Log.Info("World state saved.");
+                StaticLogger.Instance.Info("World state saved.");
             }
             catch (Exception ex)
             {
-                Log.Info("Could not save world: " + ex.ToString());
+                StaticLogger.Instance.Info("Could not save world: " + ex.ToString());
             }
         }
 
@@ -78,11 +78,11 @@ namespace NitroxServer.Serialization.World
             }
             catch (FileNotFoundException ex)
             {
-                Log.Info("No previous save file found - creating a new one.");
+                StaticLogger.Instance.Info("No previous save file found - creating a new one.");
             }
             catch (Exception ex)
             {
-                Log.Info("Could not load world: " + ex.ToString() + " creating a new one.");
+                StaticLogger.Instance.Info("Could not load world: " + ex.ToString() + " creating a new one.");
             }
 
             return Optional<World>.Empty();

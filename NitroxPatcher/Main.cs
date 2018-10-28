@@ -23,20 +23,20 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages);
+            StaticLogger.Instance = new Log(Log.LogLevels.All, Console.Out);
 
             if (patches != null)
             {
-                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
+                StaticLogger.Instance.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
 
-            Log.Info("Registering Dependencies");
+            StaticLogger.Instance.Info("Registering Dependencies");
 
             // Our application's entry point. First, register client dependencies with AutoFac.
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
 
-            Log.Info("Patching Subnautica...");
+            StaticLogger.Instance.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
@@ -53,19 +53,19 @@ namespace NitroxPatcher
 
             splittedPatches.First(g => g.Key == "NitroxPatcher.Patches.Persistent").ForEach(p =>
             {
-                Log.Info("Applying persistent patch " + p.GetType());
+                StaticLogger.Instance.Info("Applying persistent patch " + p.GetType());
                 p.Patch(harmony);
             });
 
             patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ToArray();
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+            StaticLogger.Instance.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
-            Log.Info("Enabling developer console.");
+            StaticLogger.Instance.Info("Enabling developer console.");
             DevConsole.disableConsole = false;
             Application.runInBackground = true;
-            Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
+            StaticLogger.Instance.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
 
             ApplyNitroxBehaviours();
         }
@@ -81,7 +81,7 @@ namespace NitroxPatcher
 
             patches.ForEach(patch =>
             {
-                Log.Info("Applying " + patch.GetType());
+                StaticLogger.Instance.Info("Applying " + patch.GetType());
                 patch.Patch(harmony);
             });
 
@@ -102,7 +102,7 @@ namespace NitroxPatcher
 
             patches.ForEach(patch =>
             {
-                Log.Info("Restoring " + patch.GetType());
+                StaticLogger.Instance.Info("Restoring " + patch.GetType());
                 patch.Restore();
             });
 
@@ -111,13 +111,13 @@ namespace NitroxPatcher
 
         private static void ApplyNitroxBehaviours()
         {
-            Log.Info("Applying Nitrox behaviours..");
+            StaticLogger.Instance.Info("Applying Nitrox behaviours..");
 
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
 
-            Log.Info("Behaviours applied.");
+            StaticLogger.Instance.Info("Behaviours applied.");
         }
 
         [Conditional("DEBUG")]

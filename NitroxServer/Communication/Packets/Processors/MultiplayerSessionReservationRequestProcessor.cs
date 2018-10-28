@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(MultiplayerSessionReservationRequest packet, Connection connection)
         {
-            Log.Info("Processing reservation request...");
+            StaticLogger.Instance.Info("Processing reservation request...");
 
             string correlationId = packet.CorrelationId;
             PlayerSettings playerSettings = packet.PlayerSettings;
@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 authenticationContext,
                 correlationId);
 
-            Log.Info($"Reservation processed successfully: {reservation}...");
+            StaticLogger.Instance.Info($"Reservation processed successfully: {reservation}...");
 
             connection.SendPacket(reservation);
         }

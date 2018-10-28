@@ -45,6 +45,7 @@ namespace NitroxClient.MonoBehaviours
         };
 
         private Power powerBoardcaster;
+        private INitroxLogger log;
         private float runningDelta = 0;
         private float elapsedTime = 0;
         private float interpolationPeriod = 4.00f;
@@ -59,6 +60,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
             powerBoardcaster = NitroxServiceLocator.LocateService<Power>();
         }
 
@@ -96,8 +98,8 @@ namespace NitroxClient.MonoBehaviours
                 return isMethodActive;
             }
 
-            Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
-            Log.Error(new StackTrace().ToString());
+            log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+            log.Error(new StackTrace().ToString());
 
             return true;
         }

@@ -1,23 +1,30 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using System.Collections.Generic;
 
 namespace NitroxClient.GameLogic.Bases
 {
-    /**
-     * Build events normally can not happen within the same frame as they can cause
-     * changes to the surrounding environment.  This class encapsulates logic to 
-     * hold build events for future processing.  Incoming packets can be converted
-     * to more generic BuildEvent classes that can be re-used. Examples: we want
-     * to re-use logic for ConstructionCompleted packet and InitialPlayerSync build
-     * packets - this class helps faciliate that.
-     */
+    /// <summary>
+    ///     Build events normally can not happen within the same frame as they can cause
+    ///     changes to the surrounding environment.  This class encapsulates logic to
+    ///     hold build events for future processing.  Incoming packets can be converted
+    ///     to more generic BuildEvent classes that can be re-used. Examples: we want
+    ///     to re-use logic for ConstructionCompleted packet and InitialPlayerSync build
+    ///     packets - this class helps facilitate that.
+    /// </summary>
     public class BuildThrottlingQueue : Queue<BuildEvent>
     {
+        private readonly INitroxLogger log;
+
+        public BuildThrottlingQueue(INitroxLogger logger)
+        {
+            log = logger;
+        }
+
         public bool NextEventRequiresFreshFrame()
         {
-            if(Count > 0)
+            if (Count > 0)
             {
                 BuildEvent nextEvent = Peek();
                 return nextEvent.RequiresFreshFrame();
@@ -28,31 +35,31 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed " + basePiece.Guid + " " + basePiece.Guid);
+            log.Info("Enqueuing base piece to be placed " + basePiece.Guid + " " + basePiece.Guid);
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
         public void EnqueueConstructionCompleted(string guid, Optional<string> newBaseCreatedGuid)
         {
-            Log.Info("Enqueuing item to have construction completed " + guid);
+            log.Info("Enqueuing item to have construction completed " + guid);
             Enqueue(new ConstructionCompletedEvent(guid, newBaseCreatedGuid));
         }
 
         public void EnqueueAmountChanged(string guid, float amount)
         {
-            Log.Info("Enqueuing item to have construction amount changed " + guid);
+            log.Info("Enqueuing item to have construction amount changed " + guid);
             Enqueue(new ConstructionAmountChangedEvent(guid, amount));
         }
 
         public void EnqueueDeconstructionBegin(string guid)
         {
-            Log.Info("Enqueuing item to have deconstruction beginning " + guid);
+            log.Info("Enqueuing item to have deconstruction beginning " + guid);
             Enqueue(new DeconstructionBeginEvent(guid));
         }
 
         public void EnqueueDeconstructionCompleted(string guid)
         {
-            Log.Info("Enqueuing item to have deconstruction completed " + guid);
+            log.Info("Enqueuing item to have deconstruction completed " + guid);
             Enqueue(new DeconstructionCompletedEvent(guid));
         }
     }

@@ -14,10 +14,12 @@ namespace NitroxClient.GameLogic
     public class EquipmentSlots
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
 
-        public EquipmentSlots(IPacketSender packetSender)
+        public EquipmentSlots(IPacketSender packetSender, INitroxLogger logger)
         {
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
@@ -95,12 +97,12 @@ namespace NitroxClient.GameLogic
                     }
                     else
                     {
-                        Log.Info("Could not find equipment type for " + gameObject.name);
+                        log.Info("Could not find equipment type for " + gameObject.name);
                     }
                 }
                 else
                 {
-                    Log.Info("Could not find Container for " + gameObject.name);
+                    log.Info("Could not find Container for " + gameObject.name);
                 }
             }
         }

@@ -1,6 +1,7 @@
 ﻿#pragma warning disable // Disable all warnings for copied file
 
 using System.Collections.Generic;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -30,6 +31,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
             private set;
         }
 
+        private static INitroxLogger log;
+
         // Token: 0x06002B97 RID: 11159 RVA: 0x00103CE8 File Offset: 0x00101EE8
         private static void Initialize()
         {
@@ -37,6 +40,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 return;
             }
+
+            log = NitroxServiceLocator.LocateService<INitroxLogger>();
 
             MultiplayerBuilder.initialized = true;
             MultiplayerBuilder.placeLayerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("Trigger"));
@@ -98,7 +103,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (MultiplayerBuilder.CreateGhost())
             {
-                Log.Debug("Ghost Created!");
+                log.Debug("Ghost Created!");
             }
 
             MultiplayerBuilder.canPlace = MultiplayerBuilder.UpdateAllowed();
@@ -214,15 +219,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (component == null)
             {
-                Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
+                log.Error("Was unable to apply rotation metadata - no BaseGhost found");
             }
             else if (component.GetType() != rotationMetadata.GhostType)
             {
-                Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
+                log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
             }
             else if (component is BaseAddCorridorGhost)
             {
-                Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
+                log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
                 CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
                 BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
@@ -235,7 +240,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             else if (component is BaseAddMapRoomGhost)
             {
-                Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
+                log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
                 MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
                 BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);
@@ -347,7 +352,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 else
                 {
-                    Log.Error("Could not find base component on the given game object: " + targetBaseGameObject.name);
+                    log.Error("Could not find base component on the given game object: " + targetBaseGameObject.name);
                 }
             }
 

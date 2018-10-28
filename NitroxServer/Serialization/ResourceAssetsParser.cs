@@ -2,6 +2,7 @@
 using AssetsTools.NET;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UWE;
 
 namespace NitroxServer.Serialization
@@ -67,7 +68,12 @@ namespace NitroxServer.Serialization
 
         private static string FindPath()
         {
-            Optional<string> steamPath = SteamHelper.FindSubnauticaPath();
+            string errorMessage;
+            Optional<string> steamPath = SteamHelper.FindSubnauticaPath(out errorMessage);
+            if (steamPath.IsEmpty())
+            {
+                StaticLogger.Instance.Error(errorMessage);
+            }
 
             string gameResourcesPath = "";
 

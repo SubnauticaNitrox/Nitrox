@@ -248,7 +248,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Unity\Helper\DebugUtils.cs" />
     <Compile Include="Unity\Helper\GUISkinUtils.cs" />
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />

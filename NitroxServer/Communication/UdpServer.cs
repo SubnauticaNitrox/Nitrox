@@ -67,13 +67,13 @@ namespace NitroxServer.Communication
                         case NetIncomingMessageType.WarningMessage:
                         case NetIncomingMessageType.VerboseDebugMessage:
                             string message = im.ReadString();
-                            Log.Info("Networking: " + message);
+                            StaticLogger.Instance.Info("Networking: " + message);
                             break;
                         case NetIncomingMessageType.StatusChanged:
                             NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
 
                             string reason = im.ReadString();
-                            Log.Info("Identifier " + im.SenderConnection.RemoteUniqueIdentifier + " " + status + ": " + reason);
+                            StaticLogger.Instance.Info("Identifier " + im.SenderConnection.RemoteUniqueIdentifier + " " + status + ": " + reason);
 
                             ConnectionStatusChanged(status, im.SenderConnection);
                             break;
@@ -85,7 +85,7 @@ namespace NitroxServer.Communication
                             }
                             break;
                         default:
-                            Log.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
+                            StaticLogger.Instance.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
                             break;
                     }
                     server.Recycle(im);
@@ -103,7 +103,7 @@ namespace NitroxServer.Communication
             }
             catch (Exception ex)
             {
-                Log.Info("Exception while processing packet: " + packet + " " + ex);
+                StaticLogger.Instance.Info("Exception while processing packet: " + packet + " " + ex);
             }            
         }
 

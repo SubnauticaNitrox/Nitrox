@@ -9,10 +9,12 @@ namespace NitroxClient.GameLogic
     public class Crafting
     {
         private readonly IPacketSender packetSender;
+        private readonly INitroxLogger log;
 
-        public Crafting(IPacketSender packetSender)
+        public Crafting(IPacketSender packetSender, INitroxLogger logger)
         {
             this.packetSender = packetSender;
+            log = logger;
         }
 
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
@@ -28,7 +30,7 @@ namespace NitroxClient.GameLogic
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterGuid, techType);
             packetSender.Send(fabricatorItemPickup);
-            Log.Debug(fabricatorItemPickup);
+            log.Debug(fabricatorItemPickup.ToString());
         }
     }
 }
