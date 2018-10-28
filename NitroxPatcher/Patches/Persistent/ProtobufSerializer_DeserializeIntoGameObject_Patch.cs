@@ -70,14 +70,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(ProtobufSerializer.GameObjectData goData, UniqueIdentifier uid)
         {
-            if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
-            {
-                UnityEngine.Object.Destroy(uid.gameObject);
-            }
-            else
-            {
-                MonoBehaviour.print(goData + " : " + uid);
-            }
+            UnityEngine.Object.Destroy(uid.gameObject);
         }
 
         public override void Patch(HarmonyInstance harmony)
