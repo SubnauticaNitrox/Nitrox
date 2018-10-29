@@ -9,6 +9,8 @@ using System.Threading;
 using System.IO;
 using NitroxServer.GameLogic.Entities;
 using NitroxModel.DataStructures;
+using NitroxServer.ConfigParser;
+
 
 namespace NitroxServer.Communication
 {
@@ -22,13 +24,15 @@ namespace NitroxServer.Communication
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
         private readonly Thread thread;
+        private int PortNumber, MaxConn;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
+        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfigReader ConfigReader)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-
+            PortNumber = ConfigReader.serverPort;
+            MaxConn = ConfigReader.maxConn;
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
             thread = new Thread(Listen);
@@ -38,7 +42,8 @@ namespace NitroxServer.Communication
         {
             server.Start();
             thread.Start();
-
+            
+            
             isStopped = false;
         }
 
@@ -156,28 +161,6 @@ namespace NitroxServer.Communication
         private NetPeerConfiguration BuildNetworkConfig()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
-            string INIContents;
-            int PortNumber, MaxConn;
-            if (File.Exists(@".\config.ini"))
-            {
-                INIContents = File.ReadAllText(@".\config.ini");
-                Char Splitter = ';';
-                Char equals = '=';
-                string[] SplitINIContents = INIContents.Split(Splitter);
-                string[] ParseINIContents;
-                ParseINIContents=SplitINIContents[0].Split(equals);
-                PortNumber = int.Parse(ParseINIContents[1]);
-                ParseINIContents = SplitINIContents[1].Split(equals);
-                MaxConn = int.Parse(ParseINIContents[1]);
-            }
-            else
-            {
-                string NewINIContents;
-                NewINIContents = "[NetworkSettings]\nDefaultPortNumber=11000;\nMaxConnections=100;";
-                File.WriteAllText(@".\config.ini", NewINIContents);
-                PortNumber = 11000;
-                MaxConn = 100;
-            }
             config.Port = PortNumber;
             config.MaximumConnections = MaxConn;
             config.AutoFlushSendQueue = true;
