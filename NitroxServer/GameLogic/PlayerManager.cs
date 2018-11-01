@@ -17,6 +17,7 @@ namespace NitroxServer.GameLogic
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
         private readonly PlayerData playerData;
+        private readonly bool allowMultipleIds = true;
 
         public PlayerManager(PlayerData playerData)
         {
@@ -55,10 +56,22 @@ namespace NitroxServer.GameLogic
                     MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
+                
+                ulong playId = playerData.PlayerId(playerName, Convert.ToUInt64(correlationId));
+                if (allowMultipleIds) // Duplicate steam ids will be emulated as seperate players
+                {
+                    foreach (PlayerContext Context in reservations.Values)
+                    {
+                        if (Context.PlayerId == playId)
+                        {
+                            playId++;
+                        }
+                    }
+                }
 
                 reservedPlayerNames.Add(playerName);
 
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName, authenticationContext.SteamID), playerSettings);
+                PlayerContext playerContext = new PlayerContext(playerName, playId, playerSettings);
                 ulong playerId = playerContext.PlayerId;
                 string reservationKey = playerContext.PlayerId.ToString();
 

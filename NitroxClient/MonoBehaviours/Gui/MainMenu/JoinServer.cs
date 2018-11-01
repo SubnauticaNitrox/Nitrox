@@ -188,7 +188,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             SetCurrentPreference(playerName, playerColor);
 
             PlayerSettings playerSettings = new PlayerSettings(playerColor);
-            AuthenticationContext authenticationContext = new AuthenticationContext(playerName, Steamworks.SteamUser.GetSteamID().m_SteamID);
+            AuthenticationContext authenticationContext = new AuthenticationContext(playerName);
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);
         }
