@@ -166,10 +166,10 @@ namespace NitroxServer.GameLogic.Players
                 // Constructor for serialization purposes
             }
             
-            public PersistedPlayerData(string playerName, ulong lPlayerId)
+            public PersistedPlayerData(string playerName, ulong playerId)
             {
                 PlayerName = playerName;
-                PlayerId = lPlayerId;
+                PlayerId = playerId;
             }
         }
 

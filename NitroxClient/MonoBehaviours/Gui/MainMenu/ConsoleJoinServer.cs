@@ -100,7 +100,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
-                    AuthenticationContext authenticationContext = new AuthenticationContext(userName);
+                    AuthenticationContext authenticationContext = new AuthenticationContext(userName, Steamworks.SteamUser.GetSteamID().m_SteamID);
                     multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), authenticationContext);
                     break;
                 case MultiplayerSessionConnectionStage.SessionReserved:

@@ -245,7 +245,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
 
             InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
-            ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
+            ThrottledBuilder.Main.QueueDrained += itemAdder.AddItemsToInventories;
         }
         
         /*
@@ -270,7 +270,7 @@ namespace NitroxClient.Communication.Packets.Processors
             public void AddItemsToInventories(object sender, EventArgs eventArgs)
             {
                 Log.Info("Initial sync inventory items are clear to be added to inventories");
-                ThrottledBuilder.main.QueueDrained -= AddItemsToInventories;
+                ThrottledBuilder.Main.QueueDrained -= AddItemsToInventories;
 
                 using (packetSender.Suppress<ItemContainerAdd>())
                 {

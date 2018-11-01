@@ -66,8 +66,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private static void EstablishSessionPolicy(IMultiplayerSessionConnectionContext sessionConnectionContext, IClient client)
         {
-            ulong steamId = Steamworks.SteamUser.GetSteamID().m_SteamID;
-            string policyRequestCorrelationId = steamId.ToString();
+            string policyRequestCorrelationId = Guid.NewGuid().ToString();
 
             MultiplayerSessionPolicyRequest requestPacket = new MultiplayerSessionPolicyRequest(policyRequestCorrelationId);
             client.Send(requestPacket);

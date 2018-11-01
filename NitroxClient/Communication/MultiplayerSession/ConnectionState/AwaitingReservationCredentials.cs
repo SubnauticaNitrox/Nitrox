@@ -15,8 +15,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             try
             {
                 ValidateState(sessionConnectionContext);
-                ulong steamId = Steamworks.SteamUser.GetSteamID().m_SteamID;
-                string reservationCorrelationId = steamId.ToString();
+                string reservationCorrelationId = Guid.NewGuid().ToString();
                 RequestSessionReservation(sessionConnectionContext, reservationCorrelationId);
                 AwaitSessionReservation(sessionConnectionContext, reservationCorrelationId);
             }

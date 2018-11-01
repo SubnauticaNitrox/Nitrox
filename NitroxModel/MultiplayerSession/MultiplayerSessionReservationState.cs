@@ -18,7 +18,10 @@ namespace NitroxModel.MultiplayerSession
         ServerPlayerCapacityReached = 1 << 2,
 
         [Description("The password that you provided for the server is incorrect.")]
-        AuthenticationFailed = 1 << 3
+        AuthenticationFailed = 1 << 3,
+
+        [Description("The SteamID is already in use. Are you sure your not logged in?")]
+        UniqueSteamIdConstraintViolated = 1 << 4
     }
 
     public static class MultiplayerSessionReservationStateExtensions

@@ -63,7 +63,7 @@ namespace ClientTester
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
-                    multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName));
+                    multiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName, Steamworks.SteamUser.GetSteamID().m_SteamID));
                     break;
                 case MultiplayerSessionConnectionStage.SessionReserved:
                     multiplayerSession.JoinSession();

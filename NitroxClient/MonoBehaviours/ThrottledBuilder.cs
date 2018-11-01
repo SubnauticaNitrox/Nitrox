@@ -24,7 +24,7 @@ namespace NitroxClient.MonoBehaviours
      */
     public class ThrottledBuilder : MonoBehaviour
     {
-        public static ThrottledBuilder main;
+        public static ThrottledBuilder Main;
 
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
@@ -32,7 +32,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Start()
         {
-            main = this;
+            Main = this;
             buildEvents = NitroxServiceLocator.LocateService<BuildThrottlingQueue>();
             packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
         }

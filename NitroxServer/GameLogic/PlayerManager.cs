@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
         private readonly PlayerData playerData;
-        private readonly bool allowMultipleIds = true;
+        private readonly bool allowAuthenticationOfDuplicateSteamIds = true;
 
         public PlayerManager(PlayerData playerData)
         {
@@ -56,17 +56,12 @@ namespace NitroxServer.GameLogic
                     MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
-                
-                ulong playId = playerData.PlayerId(playerName, Convert.ToUInt64(correlationId));
-                if (allowMultipleIds) // Duplicate steam ids will be emulated as seperate players
+
+                ulong playId;
+                if (ResolveDuplicateSteamIds(authenticationContext, correlationId, out playId))
                 {
-                    foreach (PlayerContext Context in reservations.Values)
-                    {
-                        if (Context.PlayerId == playId)
-                        {
-                            playId++;
-                        }
-                    }
+                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniqueSteamIdConstraintViolated;
+                    return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
 
                 reservedPlayerNames.Add(playerName);
@@ -80,6 +75,31 @@ namespace NitroxServer.GameLogic
 
                 return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
             }
+        }
+
+        bool ResolveDuplicateSteamIds(AuthenticationContext authenticationContext, string correlationId, out ulong playId)
+        {
+            playId = authenticationContext.SteamId;
+            if (allowAuthenticationOfDuplicateSteamIds) // Duplicate steam ids will be emulated as seperate players
+            {
+                PlayerContext context;
+
+                if (reservations.TryGetValue(playId.ToString(), out context))
+                {
+                    playId++;
+                    return ResolveDuplicateSteamIds(authenticationContext, correlationId, out playId);
+                }
+            }
+            else
+            {
+                PlayerContext context;
+
+                if (reservations.TryGetValue(playId.ToString(), out context))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public Player CreatePlayer(Connection connection, string reservationKey)
