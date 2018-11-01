@@ -3,8 +3,7 @@ using NitroxModel.Logger;
 
 namespace NitroxServer
 {
-
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -12,8 +11,8 @@ namespace NitroxServer
 
             try
             {
-                Server _Server = new Server();
-                _Server.Start();
+                Server server = new Server();
+                server.Start();
             }
             catch (Exception e)
             {
