@@ -186,7 +186,6 @@
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="ServerLogger.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
     <Compile Include="UnityStubs\Transform.cs" />

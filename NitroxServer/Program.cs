@@ -7,9 +7,8 @@ namespace NitroxServer
     {
         static void Main(string[] args)
         {
-            ServerLogger log = new ServerLogger();
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
-
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug, true);
+            
             try
             {
                 Server server = new Server();

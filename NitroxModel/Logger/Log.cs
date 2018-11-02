@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace NitroxModel.Logger
 {
@@ -15,11 +16,15 @@ namespace NitroxModel.Logger
         }
 
         private static LogLevel level = LogLevel.Disabled;
+        private static bool logToFile = false;
+        public static string File = "output_log.txt";
+        private static StreamWriter stream = new StreamWriter(new FileStream(File, FileMode.Create));
 
         // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
-        public static void SetLevel(LogLevel level)
+        public static void SetLevel(LogLevel level, bool logToFile = false)
         {
             Log.level = level;
+            Log.logToFile = logToFile;
             Write("Log level set to " + Log.level);
         }
         
@@ -36,7 +41,16 @@ namespace NitroxModel.Logger
 
         private static void Write(string fmt, params object[] arg)
         {
-            Console.WriteLine("[Nitrox] " + fmt, arg);
+            if (!logToFile)
+            {
+                Console.WriteLine("[Nitrox] " + fmt, arg);
+            }
+            else
+            {
+                stream.WriteLine("[Nitrox] " + fmt, arg);
+                stream.Flush();
+                Console.WriteLine("[Nitrox] " + fmt, arg);
+            }
         }
 
         public static void Error(string fmt, params object[] arg)
