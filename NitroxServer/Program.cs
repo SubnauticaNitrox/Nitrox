@@ -5,8 +5,7 @@ using NitroxServer.ConfigParser;
 
 namespace NitroxServer
 {
-
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -16,8 +15,9 @@ namespace NitroxServer
             {
                 ServerConfigReader GetConfig = new ServerConfigReader();
                 GetConfig.ReadServerConfig(@".\config.ini");
-                Server _Server = new Server(GetConfig);
-                _Server.Start();
+                Server server = new Server(GetConfig);
+                server.Start();
+
             }
             catch (Exception e)
             {
