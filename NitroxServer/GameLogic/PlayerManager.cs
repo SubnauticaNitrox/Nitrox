@@ -86,8 +86,7 @@ namespace NitroxServer.GameLogic
 
                 if (reservations.TryGetValue(playId.ToString(), out context))
                 {
-                    playId++;
-                    return ResolveDuplicateSteamIds(authenticationContext, correlationId, out playId);
+                    playId += (ulong)System.Diagnostics.Stopwatch.GetTimestamp();
                 }
             }
             else
