@@ -10,6 +10,8 @@ namespace NitroxServer.ConfigParser
     {
         public int serverPort;
         public int maxConn;
+        private bool gotServerPort = false;
+        private bool gotMaxConn = false;
         public void ReadServerConfig(string configPath)
         {
             string INIContents;
@@ -19,11 +21,31 @@ namespace NitroxServer.ConfigParser
                 Char Splitter = ';';
                 Char equals = '=';
                 string[] SplitINIContents = INIContents.Split(Splitter);
-                string[] ParseINIContents;
-                ParseINIContents = SplitINIContents[0].Split(equals);
-                serverPort = int.Parse(ParseINIContents[1]);
-                ParseINIContents = SplitINIContents[1].Split(equals);
-                maxConn = int.Parse(ParseINIContents[1]);
+                foreach(string splitConfig in SplitINIContents)
+                {
+                    if (splitConfig.Contains("DefaultPortNumber"))
+                    {
+                        string[] parseINIContents;
+                        parseINIContents = splitConfig.Split(equals);
+                        serverPort = int.Parse(parseINIContents[1]);
+                        gotServerPort = true;
+                    }
+                    if (splitConfig.Contains("MaxConnections"))
+                    {
+                        string[] parseINIContents;
+                        parseINIContents = splitConfig.Split(equals);
+                        maxConn = int.Parse(parseINIContents[1]);
+                        gotMaxConn = true;
+                    }
+                }
+                if (gotMaxConn == false)
+                {
+                    maxConn = 100;
+                }
+                if (gotServerPort == false)
+                {
+                    serverPort = 11000;
+                }
                 return;
             }
             else
