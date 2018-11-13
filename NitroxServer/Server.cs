@@ -23,9 +23,9 @@ namespace NitroxServer
             worldPersistence.Save(world);
         }
 
-        public Server(ServerConfigReader ConfigReader)
+        public Server(ServerConfigReader configReader)
         {
-            ServerOptions = ConfigReader;
+            ServerOptions = configReader;
             Instance = this;
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();

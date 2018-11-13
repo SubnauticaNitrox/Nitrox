@@ -157,7 +157,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{serverPort.ToString()}");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{serverPort}");
                 OnCancelClick();
             }
         }

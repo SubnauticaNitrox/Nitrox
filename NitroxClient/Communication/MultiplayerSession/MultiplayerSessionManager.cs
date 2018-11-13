@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
-        public int serverPort{ get; private set; }
+        public int ServerPort{ get; private set; }
         public MultiplayerSessionPolicy SessionPolicy { get; private set; }
         public PlayerSettings PlayerSettings { get; private set; }
         public AuthenticationContext AuthenticationContext { get; private set; }
@@ -39,7 +39,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void Connect(string ipAddress,int port)
         {
             IpAddress = ipAddress;
-            serverPort = port;
+            ServerPort = port;
             CurrentState.NegotiateReservation(this);
         }
 
@@ -94,7 +94,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ClearSessionState()
         {
             IpAddress = null;
-            serverPort = 11000;
+            ServerPort = 11000;
             SessionPolicy = null;
             PlayerSettings = null;
             AuthenticationContext = null;
