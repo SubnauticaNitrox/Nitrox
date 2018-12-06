@@ -1,33 +1,32 @@
-﻿using System;
-using NitroxClient.Communication;
-using NitroxModel.Packets;
-using UnityEngine;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Crafting
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Crafting(PacketSender packetSender)
+        public Crafting(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
-            String crafterGuid = GuidHelper.GetGuid(crafter);
-            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(packetSender.PlayerId, crafterGuid, techType, duration);
+            string crafterGuid = GuidHelper.GetGuid(crafter);
+            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterGuid, techType, duration);
             packetSender.Send(fabricatorBeginCrafting);
         }
 
         public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
         {
-            String crafterGuid = GuidHelper.GetGuid(gameObject);
+            string crafterGuid = GuidHelper.GetGuid(gameObject);
 
-            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(packetSender.PlayerId, crafterGuid, techType);
+            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterGuid, techType);
             packetSender.Send(fabricatorItemPickup);
             Log.Debug(fabricatorItemPickup);
         }

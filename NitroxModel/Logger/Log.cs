@@ -22,38 +22,39 @@ namespace NitroxModel.Logger
             Log.level = level;
             Write("Log level set to " + Log.level);
         }
-
+        
         // For in-game notifications
-        public static void InGame(String msg)
+        public static void InGame(string msg)
         {
             if ((level & LogLevel.InGameMessages) != 0)
             {
                 ErrorMessage.AddMessage(msg);
             }
+
             Info(msg);
         }
 
-        private static void Write(String fmt, params Object[] arg)
+        private static void Write(string fmt, params object[] arg)
         {
             Console.WriteLine("[Nitrox] " + fmt, arg);
         }
 
-        public static void Error(String fmt, params Object[] arg)
+        public static void Error(string fmt, params object[] arg)
         {
             Write("E: " + fmt, arg);
         }
 
-        public static void Error(String msg, Exception ex)
+        public static void Error(string msg, Exception ex)
         {
             Error(msg + "\n{0}", (object)ex);
         }
 
-        public static void Warn(String fmt, params Object[] arg)
+        public static void Warn(string fmt, params object[] arg)
         {
             Write("W: " + fmt, arg);
         }
 
-        public static void Info(String fmt, params Object[] arg)
+        public static void Info(string fmt, params object[] arg)
         {
             if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
@@ -61,15 +62,15 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static void Info(Object o)
+        public static void Info(object o)
         {
-            String msg = (o == null) ? "null" : o.ToString();
+            string msg = (o == null) ? "null" : o.ToString();
             Info(msg);
         }
 
         // Only for debug prints. Should not be displayed to general user.
         // Should we print the calling method for this for more debug context?
-        public static void Debug(String fmt, params Object[] arg)
+        public static void Debug(string fmt, params object[] arg)
         {
             if ((level & LogLevel.ConsoleDebug) != 0)
             {
@@ -77,18 +78,18 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static void Debug(Object o)
+        public static void Debug(object o)
         {
-            String msg = (o == null) ? "null" : o.ToString();
+            string msg = (o == null) ? "null" : o.ToString();
             Debug(msg);
         }
 
-        public static void Trace(String fmt, params Object[] arg)
+        public static void Trace(string fmt, params object[] arg)
         {
             Trace(string.Format(fmt, arg));
         }
 
-        public static void Trace(String str = "")
+        public static void Trace(string str = "")
         {
             Write("T: {0}:\n{1}", str, new StackTrace(1));
         }

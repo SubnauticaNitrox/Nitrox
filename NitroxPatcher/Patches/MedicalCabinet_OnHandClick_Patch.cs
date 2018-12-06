@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,12 +13,12 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(MedicalCabinet __instance)
         {
-            Multiplayer.Logic.MedkitFabricator.Clicked(__instance);
+            NitroxServiceLocator.LocateService<MedkitFabricator>().Clicked(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

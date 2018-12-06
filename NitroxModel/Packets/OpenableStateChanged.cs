@@ -3,22 +3,22 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class OpenableStateChanged : AuthenticatedPacket
+    public class OpenableStateChanged : Packet
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public bool IsOpen { get; }
         public float Duration { get; }
 
-        public OpenableStateChanged(String playerId, String guid, bool isOpen, float duration) : base(playerId)
+        public OpenableStateChanged(string guid, bool isOpen, float duration)
         {
-            this.Guid = guid;
-            this.IsOpen = isOpen;
-            this.Duration = duration;
+            Guid = guid;
+            IsOpen = isOpen;
+            Duration = duration;
         }
 
         public override string ToString()
         {
-            return "[OpenableStateChanged - PlayerId: " + PlayerId + " Guid: " + Guid + " IsOpen: " + IsOpen + " Duration: " + Duration + "]";
+            return "[OpenableStateChanged - Guid: " + Guid + " IsOpen: " + IsOpen + " Duration: " + Duration + "]";
         }
     }
 }

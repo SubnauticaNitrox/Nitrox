@@ -1,21 +1,23 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     class ToggleLightsProcessor : ClientPacketProcessor<NitroxModel.Packets.ToggleLights>
     {
-        private readonly PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public ToggleLightsProcessor(PacketSender packetSender)
+        public ToggleLightsProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
         public override void Process(NitroxModel.Packets.ToggleLights packet)
         {
-            var gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
-            var toggleLights = gameObject.GetComponent<ToggleLights>();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
 
             if (toggleLights == null)
             {

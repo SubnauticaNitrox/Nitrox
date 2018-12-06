@@ -1,17 +1,16 @@
-﻿using NitroxModel.Packets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using NitroxModel.Packets;
 
 namespace NitroxTest.Model
 {
     [Serializable]
-    public class TestNonActionPacket : AuthenticatedPacket
+    public class TestNonActionPacket : Packet
     {
-        public TestNonActionPacket(string playerId) : base(playerId)
+        public ushort PlayerId { get; }
+
+        public TestNonActionPacket(ushort playerId)
         {
+            PlayerId = playerId;
         }
     }
 }

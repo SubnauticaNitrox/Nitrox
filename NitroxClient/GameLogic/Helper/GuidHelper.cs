@@ -1,13 +1,13 @@
 ﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using System;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Helper
 {
     public static class GuidHelper
     {
-        public static GameObject RequireObjectFrom(String guid)
+        public static GameObject RequireObjectFrom(string guid)
         {
             Optional<GameObject> gameObject = GetObjectFrom(guid);
             Validate.IsPresent(gameObject, "Game object required from guid: " + guid);
@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic.Helper
         }
 
         // Feature parity of UniqueIdentifierHelper.GetByName() except does not do the verbose logging
-        public static Optional<GameObject> GetObjectFrom(String guid)
+        public static Optional<GameObject> GetObjectFrom(string guid)
         {
             if (string.IsNullOrEmpty(guid))
             {
@@ -37,12 +37,12 @@ namespace NitroxClient.GameLogic.Helper
             return Optional<GameObject>.Of(uniqueIdentifier.gameObject);
         }
 
-        public static String GetGuid(GameObject gameObject)
+        public static string GetGuid(this GameObject gameObject)
         {
             return GetUniqueIdentifier(gameObject).Id;
         }
 
-        public static void SetNewGuid(GameObject gameObject, String guid)
+        public static void SetNewGuid(this GameObject gameObject, string guid)
         {
             GetUniqueIdentifier(gameObject).Id = guid;
         }

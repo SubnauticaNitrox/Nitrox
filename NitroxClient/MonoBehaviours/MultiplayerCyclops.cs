@@ -8,15 +8,15 @@ namespace NitroxClient.MonoBehaviours
     {
         private ISubTurnHandler[] subTurnHandlers;
         private ISubThrottleHandler[] subThrottleHandlers;
-        private float previousAbsYaw = 0f;
+        private float previousAbsYaw;
 
         internal RemotePlayer CurrentPlayer { get; set; }
 
         protected override void Awake()
         {
-            steeringControl = GetComponent<SubControl>();
-            subTurnHandlers = (ISubTurnHandler[])steeringControl.ReflectionGet("turnHandlers");
-            subThrottleHandlers = (ISubThrottleHandler[])steeringControl.ReflectionGet("throttleHandlers");
+            SteeringControl = GetComponent<SubControl>();
+            subTurnHandlers = (ISubTurnHandler[])SteeringControl.ReflectionGet("turnHandlers");
+            subThrottleHandlers = (ISubThrottleHandler[])SteeringControl.ReflectionGet("throttleHandlers");
             base.Awake();
         }
 
@@ -26,8 +26,8 @@ namespace NitroxClient.MonoBehaviours
             if (CurrentPlayer != null)
             {
                 // These values are set by the game code, but they do not seem to have any impact on animations.
-                CurrentPlayer.animationController.SetFloat("cyclops_yaw", smoothYaw.SmoothValue);
-                CurrentPlayer.animationController.SetFloat("cyclops_pitch", smoothPitch.SmoothValue);
+                CurrentPlayer.AnimationController.SetFloat("cyclops_yaw", SmoothYaw.SmoothValue);
+                CurrentPlayer.AnimationController.SetFloat("cyclops_pitch", SmoothPitch.SmoothValue);
             }
         }
 

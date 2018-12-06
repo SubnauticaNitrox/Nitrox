@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,13 +13,13 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(Pickupable __instance)
         {
-            Multiplayer.Logic.Item.PickedUp(__instance.gameObject, __instance.GetTechType().ToString());
+            NitroxServiceLocator.LocateService<Item>().PickedUp(__instance.gameObject, __instance.GetTechType());
             return true;
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPrefix(harmony, TARGET_METHOD);
+            PatchPrefix(harmony, TARGET_METHOD);
         }
     }
 }

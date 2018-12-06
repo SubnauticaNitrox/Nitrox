@@ -1,33 +1,49 @@
-﻿using NitroxModel.Helper;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System;
-using System.Collections.Generic;
+using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization.World;
+using NitroxServer.GameLogic.Bases;
+using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.GameLogic.Items;
+using NitroxServer.GameLogic.Players;
+using NitroxServer.GameLogic.Unlockables;
 
 namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
-        private Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
-        private Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
+        private readonly Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
 
-        private DefaultServerPacketProcessor defaultPacketProcessor;
+        private readonly DefaultServerPacketProcessor defaultPacketProcessor;
+        private readonly PlayerManager playerManager;
 
-        public PacketHandler(TcpServer tcpServer, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
+        public PacketHandler(World world)
         {
-            this.defaultPacketProcessor = new DefaultServerPacketProcessor(tcpServer);
-
-            var ProcessorArguments = new Dictionary<Type, object>
+            this.playerManager = world.PlayerManager;
+            defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
+            
+            Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {
-                {typeof(TcpServer), tcpServer },
-                {typeof(TimeKeeper), timeKeeper },
-                {typeof(SimulationOwnership), simulationOwnership },
-                {typeof(EscapePodManager), new EscapePodManager() }
+                {typeof(World), world },
+                {typeof(PlayerData), world.PlayerData },
+                {typeof(BaseData), world.BaseData },
+                {typeof(VehicleData), world.VehicleData },
+                {typeof(InventoryData), world.InventoryData },
+                {typeof(GameData), world.GameData },
+                {typeof(PDAStateData), world.GameData.PDAState },
+                {typeof(PlayerManager), playerManager },
+                {typeof(TimeKeeper), world.TimeKeeper },
+                {typeof(SimulationOwnershipData), world.SimulationOwnershipData },
+                {typeof(EscapePodManager), new EscapePodManager() },
+                {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
+                {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager) }
             };
 
             authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
@@ -35,11 +51,26 @@ namespace NitroxServer.Communication.Packets
             unauthenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(UnauthenticatedPacketProcessor<>));
         }
 
-        public void ProcessAuthenticated(Packet packet, Player player)
+        public void Process(Packet packet, Connection connection)
         {
-            if (authenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            Player player = playerManager.GetPlayer(connection);
+
+            if (player == null)
             {
-                authenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, player);
+                ProcessUnauthenticated(packet, connection);
+            }
+            else
+            {
+                ProcessAuthenticated(packet, player);
+            }
+        }
+        
+        private void ProcessAuthenticated(Packet packet, Player player)
+        {
+            PacketProcessor packetProcessor;
+            if (authenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
+            {
+                packetProcessor.ProcessPacket(packet, player);
             }
             else
             {
@@ -47,13 +78,12 @@ namespace NitroxServer.Communication.Packets
             }
         }
 
-        public void ProcessUnauthenticated(Packet packet, Connection connection)
+        private void ProcessUnauthenticated(Packet packet, Connection connection)
         {
-            Validate.IsFalse(packet is AuthenticatedPacket);
-
-            if (unauthenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            PacketProcessor packetProcessor;
+            if (unauthenticatedPacketProcessorsByType.TryGetValue(packet.GetType(), out packetProcessor))
             {
-                unauthenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, connection);
+                packetProcessor.ProcessPacket(packet, connection);
             }
             else
             {

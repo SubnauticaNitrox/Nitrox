@@ -4,18 +4,18 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DeconstructionCompleted : PlayerActionPacket
-    { 
-        public String Guid { get; }
+    public class DeconstructionCompleted : Packet
+    {
+        public string Guid { get; }
 
-        public DeconstructionCompleted(String playerId, Vector3 itemPosition, String guid) : base(playerId, itemPosition)
+        public DeconstructionCompleted(string guid)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()
         {
-            return "[DeconstructionCompleted( - playerId: " + PlayerId + " Guid: " + Guid + "]";
+            return "[DeconstructionCompleted Guid: " + Guid + "]";
         }
     }
 }

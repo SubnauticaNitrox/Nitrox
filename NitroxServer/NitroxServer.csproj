@@ -5,17 +5,17 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NitroxServer</RootNamespace>
     <AssemblyName>NitroxServer</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputType>Exe</OutputType>
+    <PlatformTarget>Any</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -34,7 +35,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_WPF|AnyCPU'">
+    <OutputType>WinExe</OutputType>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_WPF\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>6</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_WPF|AnyCPU'">
+    <OutputType>WinExe</OutputType>
+    <OutputPath>bin\Release_WPF\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>6</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
@@ -43,6 +67,16 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="LitJson">
+      <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
+    </Reference>
+    <Reference Include="AssetsTools.NET">
+      <HintPath>..\lib\AssetsTools.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="protobuf-net">
+      <HintPath>protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,29 +88,117 @@
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
+    <Compile Include="Program.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug_WPF' OR '$(Configuration)' == 'Release_WPF'">
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConsoleOverride.cs" />
+  </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\AuthenticatePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentAddItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\VisibleChunksChangedProcessor.cs" />
-    <Compile Include="Communication\PlayerConnection.cs" />
-    <Compile Include="Communication\TcpServer.cs" />
+    <Compile Include="Communication\UdpServer.cs" />
+    <Compile Include="GameLogic\Bases\BaseData.cs" />
+    <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
+    <Compile Include="GameLogic\GameData.cs" />
+    <Compile Include="GameLogic\ConnectionAssets.cs" />
+    <Compile Include="GameLogic\Entities\EntityData.cs" />
+    <Compile Include="GameLogic\Entities\EntityManager.cs" />
+    <Compile Include="GameLogic\Entities\EntitySimulator.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\BatchEntitySpawner.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\CrashFishBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackSpawnData.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPoint.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\IEntityBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\EventTriggerer.cs" />
+    <Compile Include="GameLogic\Items\InventoryData.cs" />
+    <Compile Include="GameLogic\PlayerManager.cs" />
+    <Compile Include="GameLogic\Players\PlayerData.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
+    <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
+    <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\BatchCellsParser.cs" />
+    <Compile Include="Serialization\GenericNode.cs" />
+    <Compile Include="Serialization\LootDistributionsParser.cs" />
+    <Compile Include="Serialization\ResourceAssets.cs" />
+    <Compile Include="Serialization\ResourceAssetsParser.cs" />
+    <Compile Include="Serialization\ServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\World\PersistedWorldData.cs" />
+    <Compile Include="Serialization\World\World.cs" />
+    <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="UnityStubs\GameObject.cs" />
+    <Compile Include="UnityStubs\Quaternion.cs" />
+    <Compile Include="UnityStubs\Transform.cs" />
+    <Compile Include="UnityStubs\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
+      <Name>Lidgren.Network</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>

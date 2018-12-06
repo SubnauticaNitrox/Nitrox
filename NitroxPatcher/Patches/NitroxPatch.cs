@@ -1,9 +1,7 @@
-﻿using Harmony;
-using NitroxModel.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using Harmony;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
@@ -54,8 +52,11 @@ namespace NitroxPatcher.Patches
 
         public void Restore()
         {
-            foreach (var patch in activePatches)
+            foreach (PatchProcessor patch in activePatches)
+            {
                 patch.Restore();
+            }
+
             activePatches.Clear();
         }
 
@@ -64,18 +65,6 @@ namespace NitroxPatcher.Patches
             MethodInfo method = GetType().GetMethod(methodName, BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
             Validate.NotNull(method, $"Patcher: Patch method \"{methodName}\" cannot be found");
             return new HarmonyMethod(method);
-        }
-
-        protected static int GetLocalVariableIndex<T>(MethodBase method)
-        {
-            LocalVariableInfo[] matchingVariables = method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T)).ToArray();
-
-            if (matchingVariables.Length != 1)
-            {
-                throw new ArgumentException($"{method} has {matchingVariables.Length} local variables of type {nameof(T)}");
-            }
-
-            return matchingVariables[0].LocalIndex;
         }
     }
 }

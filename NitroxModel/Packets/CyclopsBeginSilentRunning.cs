@@ -3,18 +3,18 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CyclopsBeginSilentRunning : AuthenticatedPacket
+    public class CyclopsBeginSilentRunning : Packet
     {
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public CyclopsBeginSilentRunning(String playerId, String guid) : base(playerId)
+        public CyclopsBeginSilentRunning(string guid)
         {
-            this.Guid = guid;
+            Guid = guid;
         }
 
         public override string ToString()
         {
-            return "[CyclopsBeginSilentRunning PlayerId: " + PlayerId + " Guid: " + Guid + "]";
+            return "[CyclopsBeginSilentRunning Guid: " + Guid + "]";
         }
     }
 }

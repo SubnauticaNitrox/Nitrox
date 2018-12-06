@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours
         private Vector3 smoothedVelocity = Vector3.zero;
         private float smoothViewPitch;
 
-        public void Start()
+        public void Awake()
         {
             animator = GetComponent<Animator>();
 
@@ -41,6 +41,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     viewPitch -= 360f;
                 }
+
                 viewPitch = -viewPitch;
                 smoothViewPitch = Mathf.Lerp(smoothViewPitch, viewPitch, 4f * Time.fixedDeltaTime);
                 animator.SetFloat("view_pitch", smoothViewPitch);

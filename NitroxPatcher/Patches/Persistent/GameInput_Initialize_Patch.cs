@@ -1,11 +1,11 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours.Gui.Input;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.MonoBehaviours.Gui.Input;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -37,13 +37,14 @@ namespace NitroxPatcher.Patches.Persistent
                     yield return new ValidatedCodeInstruction(OpCodes.Add);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Math).GetMethod("Max", new[] { typeof(int), typeof(int) }));
                 }
+
                 yield return instruction;
             }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchTranspiler(harmony, TARGET_METHOD);
+            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

@@ -1,20 +1,37 @@
-﻿using System;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
+using System;
 using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PickupItem : PlayerActionPacket
+    public class PickupItem : Packet
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public Vector3 ItemPosition { get; }
-        public String TechType { get; }
+        public TechType TechType { get; }
 
-        public PickupItem(String playerId, Vector3 itemPosition, String guid, String techType) : base(playerId, itemPosition)
+        public PickupItem(Vector3 itemPosition, string guid, TechType techType)
         {
-            this.ItemPosition = itemPosition;
-            this.Guid = guid;
-            this.TechType = techType;
+            ItemPosition = itemPosition;
+            Guid = guid;
+            TechType = techType;
+        }
+
+        public override Optional<AbsoluteEntityCell> GetDeferredCell()
+        {
+            // Items that are maintained in the global root should never have their pickup event
+            // deferred because other players should be able to see their state change.  An example
+            // of this is a player picking up a far away beacon.
+            if (Map.GLOBAL_ROOT_TECH_TYPES.Contains(TechType))
+            {
+                return Optional<AbsoluteEntityCell>.Empty();
+            }
+
+            // All other pickup events should only happen when the cell is loaded.  
+            return Optional<AbsoluteEntityCell>.Of(new AbsoluteEntityCell(ItemPosition, Map.ITEM_LEVEL_OF_DETAIL));
         }
 
         public override string ToString()

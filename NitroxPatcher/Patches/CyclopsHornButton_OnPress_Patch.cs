@@ -1,8 +1,9 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -13,13 +14,13 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsHornButton __instance)
         {
-            String guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            Multiplayer.Logic.Cyclops.ActivateHorn(guid);
+            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
+            NitroxServiceLocator.LocateService<Cyclops>().ActivateHorn(guid);
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

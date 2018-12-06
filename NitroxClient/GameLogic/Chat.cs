@@ -1,22 +1,21 @@
-﻿using NitroxClient.Communication;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
-using System;
 
 namespace NitroxClient.GameLogic
 {
     public class Chat
     {
-        private PacketSender packetSender;
+        private readonly IMultiplayerSession multiplayerSession;
 
-        public Chat(PacketSender packetSender)
+        public Chat(IMultiplayerSession multiplayerSession)
         {
-            this.packetSender = packetSender;
+            this.multiplayerSession = multiplayerSession;
         }
 
-        public void SendChatMessage(String text)
+        public void SendChatMessage(string text)
         {
-            ChatMessage message = new ChatMessage(packetSender.PlayerId, text);
-            packetSender.Send(message);
+            ChatMessage message = new ChatMessage(multiplayerSession.Reservation.PlayerId, text);
+            multiplayerSession.Send(message);
         }
     }
 }

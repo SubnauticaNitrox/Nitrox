@@ -1,11 +1,10 @@
-﻿using Harmony;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -35,11 +34,10 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.Logic.Crafting.FabricatorItemPickedUp(base.gameObject, techType);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Crafting", BindingFlags.Instance | BindingFlags.Public));
+                    yield return TranspilerHelper.LocateService<Crafting>();
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<TechType>(original));
+                    yield return original.Ldloc<TechType>();
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Crafting).GetMethod("FabricatorItemPickedUp", BindingFlags.Instance | BindingFlags.Public));
                 }
             }
@@ -47,7 +45,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchTranspiler(harmony, TARGET_METHOD);
+            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

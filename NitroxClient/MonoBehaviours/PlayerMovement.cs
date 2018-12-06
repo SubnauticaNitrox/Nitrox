@@ -1,8 +1,9 @@
-﻿using NitroxModel.DataStructures.ServerModel;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxClient.GameLogic.Helper;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -10,8 +11,14 @@ namespace NitroxClient.MonoBehaviours
     public class PlayerMovement : MonoBehaviour
     {
         public const float BROADCAST_INTERVAL = 0.05f;
+        private LocalPlayer localPlayer;
 
-        private float time = 0.0f;
+        private float time;
+
+        public void Awake()
+        {
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        }
 
         public void Update()
         {
@@ -31,26 +38,18 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleModel> vehicle = GetVehicleModel();
-                String subGuid = null;
+                Optional<VehicleMovementData> vehicle = GetVehicleModel();
 
-                SubRoot currentSub = Player.main.GetCurrentSub();
-
-                if (currentSub != null)
-                {
-                    subGuid = GuidHelper.GetGuid(currentSub.gameObject);
-                }
-
-                Multiplayer.PacketSender.UpdatePlayerLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<String>.OfNullable(subGuid));
+                localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }
 
-        private Optional<VehicleModel> GetVehicleModel()
+        private Optional<VehicleMovementData> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
 
-            String guid;
+            string guid;
             Vector3 position;
             Quaternion rotation;
             Vector3 velocity;
@@ -86,7 +85,7 @@ namespace NitroxClient.MonoBehaviours
                     }
                     else if (techType == TechType.Exosuit)
                     {
-                        var exosuit = vehicle as Exosuit;
+                        Exosuit exosuit = vehicle as Exosuit;
                         if (exosuit)
                         {
                             appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
@@ -104,17 +103,17 @@ namespace NitroxClient.MonoBehaviours
                 angularVelocity = rigidbody.angularVelocity;
                 techType = TechType.Cyclops;
 
-                var subControl = sub.GetComponent<SubControl>();
+                SubControl subControl = sub.GetComponent<SubControl>();
                 steeringWheelYaw = (float)subControl.ReflectionGet("steeringWheelYaw");
                 steeringWheelPitch = (float)subControl.ReflectionGet("steeringWheelPitch");
                 appliedThrottle = subControl.appliedThrottle && (bool)subControl.ReflectionGet("canAccel");
             }
             else
             {
-                return Optional<VehicleModel>.Empty();
+                return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleModel model = new VehicleModel(techType,
+            VehicleMovementData model = new VehicleMovementData(techType,
                                                   guid,
                                                   position,
                                                   rotation,
@@ -124,7 +123,7 @@ namespace NitroxClient.MonoBehaviours
                                                   steeringWheelPitch,
                                                   appliedThrottle);
 
-            return Optional<VehicleModel>.Of(model);
+            return Optional<VehicleMovementData>.Of(model);
         }
     }
 }

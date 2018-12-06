@@ -5,20 +5,20 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructionCompleted : PlayerActionPacket
-    { 
-        public String Guid { get; }
-        public Optional<String> NewBaseCreatedGuid { get; }
+    public class ConstructionCompleted : Packet
+    {
+        public string Guid { get; }
+        public Optional<string> NewBaseCreatedGuid { get; }
 
-        public ConstructionCompleted(String playerId, Vector3 itemPosition, String guid, Optional<String> newBaseCreatedGuid) : base(playerId, itemPosition)
+        public ConstructionCompleted(string guid, Optional<string> newBaseCreatedGuid)
         {
-            this.Guid = guid;
-            this.NewBaseCreatedGuid = newBaseCreatedGuid;
+            Guid = guid;
+            NewBaseCreatedGuid = newBaseCreatedGuid;
         }
 
         public override string ToString()
         {
-            return "[ConstructionCompleted( - playerId: " + PlayerId + " Guid: " + Guid + " NewBaseCreatedGuid: " + NewBaseCreatedGuid + "]";
+            return "[ConstructionCompleted Guid: " + Guid + " NewBaseCreatedGuid: " + NewBaseCreatedGuid + "]";
         }
     }
 }

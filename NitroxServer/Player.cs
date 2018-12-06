@@ -1,51 +1,85 @@
-﻿using NitroxModel.DataStructures;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using NitroxServer.Communication;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public String Id { get; }
+        private readonly Connection connection;
+        private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
+
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+        public PlayerContext PlayerContext { get; }
+        public ushort Id => PlayerContext.PlayerId;
+        public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
 
-        private HashSet<Chunk> visibleChunks;
-
-        public Player(String id)
+        public Player(PlayerContext playerContext, Connection connection)
         {
-            this.Id = id;
-            this.visibleChunks = new HashSet<Chunk>();
+            PlayerContext = playerContext;
+            this.connection = connection;
         }
 
-        public void AddChunks(IEnumerable<Chunk> chunks)
+        public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
-                    visibleChunks.Add(chunk);
+                    visibleCells.Add(cell);
                 }
             }
         }
 
-        public void RemoveChunks(IEnumerable<Chunk> chunks)
+        public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                foreach (Chunk chunk in chunks)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
-                    visibleChunks.Remove(chunk);
+                    visibleCells.Remove(cell);
                 }
             }
         }
 
-        public bool HasChunkLoaded(Chunk chunk)
+        public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
-            lock (visibleChunks)
+            lock (visibleCells)
             {
-                return visibleChunks.Contains(chunk);
+                return visibleCells.Contains(cell);
+            }
+        }
+
+        public void SendPacket(Packet packet)
+        {
+            connection.SendPacket(packet);            
+        }
+
+        public override bool Equals(object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Player player = (Player)obj;
+
+            return player.Id == Id;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 269;
+                hash = hash * 23 + Id.GetHashCode();
+                return hash;
             }
         }
     }

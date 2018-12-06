@@ -1,11 +1,13 @@
-﻿using NitroxClient.Communication.Packets.Processors;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
+using NitroxClient.Communication.Packets.Processors;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -22,8 +24,8 @@ namespace NitroxClient.MonoBehaviours
      */
     public class PowerMonitor : MonoBehaviour
     {
-        private static readonly int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
-        private static readonly int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
+        private const int POWER_POSITIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = 2;
+        private const int POWER_NEGATIVE_THRESHOLD_TO_TRIGGER_IMMEDIATE_PACKET = -2;
 
         /**
          * Since the code base does not differentiate between active and passive 
@@ -42,9 +44,10 @@ namespace NitroxClient.MonoBehaviours
             { typeof(PowerLevelChangedProcessor).GetMethod("Process", BindingFlags.Public | BindingFlags.Instance), false },
         };
 
+        private Power powerBoardcaster;
         private float runningDelta = 0;
         private float elapsedTime = 0;
-        public float interpolationPeriod = 4.00f;
+        private float interpolationPeriod = 4.00f;
 
         public void ChargeChanged(float amount, GameObject gameObject)
         {
@@ -54,8 +57,13 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
+        public void Awake()
+        {
+            powerBoardcaster = NitroxServiceLocator.LocateService<Power>();
+        }
+
         /**
-         * We allow small bursts of power to build up so we don't flood with packets.
+         * We allow small bursts of power to Build up so we don't flood with packets.
          * The buffer will be flushed upon reaching the timeout period or the threshold.
          */
         public void Update()
@@ -70,8 +78,8 @@ namespace NitroxClient.MonoBehaviours
 
                 if (runningDelta != 0)
                 {
-                    String guid = GuidHelper.GetGuid(this.gameObject);
-                    Multiplayer.Logic.Power.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
+                    string guid = GuidHelper.GetGuid(gameObject);
+                    powerBoardcaster.ChargeChanged(guid, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }
             }
@@ -82,15 +90,15 @@ namespace NitroxClient.MonoBehaviours
             StackFrame stackFrame = new StackFrame(5, true);
             MethodBase method = stackFrame.GetMethod();
 
-            if (isActiveFlagByWhiteListedEnergyInterfaceCallers.ContainsKey(method))
+            bool isMethodActive;
+            if (isActiveFlagByWhiteListedEnergyInterfaceCallers.TryGetValue(method, out isMethodActive))
             {
-                return isActiveFlagByWhiteListedEnergyInterfaceCallers[method];
+                return isMethodActive;
             }
-            else
-            {
-                Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
-                Log.Error(new StackTrace().ToString());
-            }
+
+            Log.Error("Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+            Log.Error(new StackTrace().ToString());
+
             return true;
         }
     }

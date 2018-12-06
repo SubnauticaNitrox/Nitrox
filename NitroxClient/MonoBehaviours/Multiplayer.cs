@@ -1,182 +1,138 @@
-﻿using NitroxClient.Communication;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.ChatUI;
-using NitroxClient.GameLogic.HUD;
-using NitroxClient.Map;
+using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxReloader;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
-        private static readonly String DEFAULT_IP_ADDRESS = "127.0.0.1";
+        public static Multiplayer Main;
 
-        public static Multiplayer main;
-
+        private IMultiplayerSession multiplayerSession;
+        private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
-
-        private static readonly LoadedChunks loadedChunks = new LoadedChunks();
-        private static readonly ChunkAwarePacketReceiver chunkAwarePacketReceiver = new ChunkAwarePacketReceiver(loadedChunks);
-        private static readonly TcpClient client = new TcpClient(chunkAwarePacketReceiver);
-        public static readonly PacketSender PacketSender = new PacketSender(client);
-        public static readonly Logic Logic = new Logic(PacketSender, loadedChunks, chunkAwarePacketReceiver);
-
-        private static bool hasLoadedMonoBehaviors;
-
-        private static readonly PlayerManager remotePlayerManager = new PlayerManager();
-        private static readonly PlayerVitalsManager remotePlayerVitalsManager = new PlayerVitalsManager();
-        private static readonly PlayerChatManager remotePlayerChatManager = new PlayerChatManager();
-
-        public static Dictionary<Type, PacketProcessor> packetProcessorsByType;
-
-        // List of arguments that can be used in a processor:
-        private static Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>()
-        {
-            { typeof(PlayerManager), remotePlayerManager },
-            { typeof(PlayerVitalsManager), remotePlayerVitalsManager },
-            { typeof(PlayerChatManager), remotePlayerChatManager },
-            { typeof(PacketSender), PacketSender }
-        };
-
-        static Multiplayer()
-        {
-            packetProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(ClientPacketProcessor<>));
-        }
-
-        public static void RemoveAllOtherPlayers()
-        {
-            remotePlayerManager.RemoveAllPlayers();
-        }
+        public static event Action OnAfterMultiplayerEnd;
 
         public void Awake()
         {
-            DevConsole.RegisterConsoleCommand(this, "mplayer", false);
-            DevConsole.RegisterConsoleCommand(this, "warpto", false);
-            DevConsole.RegisterConsoleCommand(this, "disconnect", false);
-
-            main = this;
+            Log.InGame("Multiplayer Client Loaded...");
+            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            Main = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         public void Update()
         {
             Reloader.ReloadAssemblies();
-            if (client != null && client.IsConnected())
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
                 ProcessPackets();
             }
         }
 
+        public bool IsMultiplayer()
+        {
+            return multiplayerSession.Client.IsConnected;
+        }
+
         public void ProcessPackets()
         {
-            Queue<Packet> packets = chunkAwarePacketReceiver.GetReceivedPackets();
+            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {
-                if (packetProcessorsByType.ContainsKey(packet.GetType()))
+                try
                 {
-                    try
-                    {
-                        PacketProcessor processor = packetProcessorsByType[packet.GetType()];
-                        processor.ProcessPacket(packet, null);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Error processing packet: " + packet, ex);
-                    }
+                    Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
+                    Type packetType = packet.GetType();
+                    Type packetProcessorType = clientPacketProcessorType.MakeGenericType(packetType);
+
+                    PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+                    processor.ProcessPacket(packet, null);
                 }
-                else
+                catch (Exception ex)
                 {
-                    Log.Debug("No packet processor for the given type: " + packet.GetType());
+                    Log.Error("Error processing packet: " + packet, ex);
                 }
             }
         }
 
-        public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
+        public void StartSession()
         {
-            if (client.IsConnected())
-            {
-                Log.InGame("Already connected to a server");
-            }
-            else if (n?.data?.Count > 0)
-            {
-                StartMultiplayer(n.data.Count >= 2 ? (string)n.data[1] : DEFAULT_IP_ADDRESS, (string)n.data[0]);
-            }
-            else
-            {
-                Log.InGame("Command syntax: mplayer USERNAME [SERVERIP]");
-            }
-        }
-
-        public void OnConsoleCommand_disconnect(NotificationCenter.Notification n)
-        {
-            if (n != null)
-            {
-                StopMultiplayer(); // TODO: More than just disconnect (clean up injections or something)
-            }
-        }
-
-        public void OnConsoleCommand_warpto(NotificationCenter.Notification n)
-        {
-            if (n?.data?.Count > 0)
-            {
-                string otherPlayerId = (string)n.data[0];
-                var opPlayer = remotePlayerManager.Find(otherPlayerId);
-                if (opPlayer.IsPresent())
-                {
-                    Player.main.SetPosition(opPlayer.Get().body.transform.position);
-                    Player.main.OnPlayerPositionCheat();
-                }
-            }
-        }
-
-        public void StartMultiplayer(string ipAddress, string playerName)
-        {
-            OnBeforeMultiplayerStart();
-
-            PacketSender.PlayerId = playerName;
-            StartMultiplayer(ipAddress);
+            DevConsole.RegisterConsoleCommand(this, "mpsave", false, false);
+            OnBeforeMultiplayerStart?.Invoke();
+            InitializeLocalPlayerState();
+            multiplayerSession.JoinSession();
             InitMonoBehaviours();
+            Utils.SetContinueMode(true);
+            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
-        public void StartMultiplayer(String ipAddress)
+        private void OnConsoleCommand_mpsave()
         {
-            client.Start(ipAddress);
-            if (client.IsConnected())
-            {
-                PacketSender.Active = true;
-                PacketSender.Authenticate();
-                Log.InGame("Connected to server");
-            }
-            else
-            {
-                Log.InGame("Unable to connect to server");
-            }
+            Log.Info("Save Request");
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
         }
 
-        private void StopMultiplayer()
+        private void InitializeLocalPlayerState()
         {
-            if (client.IsConnected())
-            {
-                client.Stop();
-            }
+            ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
+            playerModelDirector
+                .AddDiveSuit();
+
+            playerModelDirector.Construct();
         }
 
         public void InitMonoBehaviours()
         {
-            if (!hasLoadedMonoBehaviors)
+            // Gameplay.
+            gameObject.AddComponent<PlayerMovement>();
+            gameObject.AddComponent<PlayerDeathBroadcaster>();
+            gameObject.AddComponent<PlayerStatsBroadcaster>();
+            gameObject.AddComponent<AnimationSender>();
+            gameObject.AddComponent<EntityPositionBroadcaster>();
+            gameObject.AddComponent<ThrottledBuilder>();
+
+            // UI.
+            gameObject.AddComponent<LostConnectionModal>();
+        }
+
+        public void StopCurrentSession()
+        {
+            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+			
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
-                this.gameObject.AddComponent<Chat>();
-                this.gameObject.AddComponent<PlayerMovement>();
-                this.gameObject.AddComponent<PlayerStatsBroadcaster>();
-                this.gameObject.AddComponent<AnimationSender>();
-                hasLoadedMonoBehaviors = true;
+                multiplayerSession.Disconnect();
+            }
+			
+            OnAfterMultiplayerEnd?.Invoke();
+
+            //Always do this last.
+            NitroxServiceLocator.EndCurrentLifetimeScope();
+        }
+
+        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            if (scene.name == "XMenu")
+            {
+                // If we just disconnected from a multiplayer session, then we need to kill the connection here.
+                // Maybe a better place for this, but here works in a pinch.
+                StopCurrentSession();
             }
         }
     }

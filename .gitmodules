@@ -1,3 +1,6 @@
 [submodule "Harmony"]
 	path = Harmony
 	url = ../../SubnauticaNitrox/Harmony.git
+[submodule "lidgren-network-gen3"]
+	path = lidgren-network-gen3
+	url = https://github.com/SubnauticaNitrox/lidgren-network-gen3.git

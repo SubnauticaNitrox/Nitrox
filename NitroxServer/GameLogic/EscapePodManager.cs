@@ -1,6 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
@@ -10,18 +9,16 @@ namespace NitroxServer.GameLogic
         private const int PLAYERS_PER_ESCAPEPOD = 50;
         private const int ESCAPE_POD_X_OFFSET = 40;
 
-        private List<EscapePodModel> escapePods;
-        private Dictionary<String, EscapePodModel> escapePodsByPlayerId;
+        private readonly List<EscapePodModel> escapePods = new List<EscapePodModel>();
+        private readonly Dictionary<ushort, EscapePodModel> escapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
         private EscapePodModel podNotFullYet;
 
         public EscapePodManager()
         {
-            this.escapePods = new List<EscapePodModel>();
-            this.escapePodsByPlayerId = new Dictionary<String, EscapePodModel>();
-            this.podNotFullYet = CreateNewEscapePod();
+            podNotFullYet = CreateNewEscapePod();
         }
 
-        public void AssignPlayerToEscapePod(String playerId)
+        public void AssignPlayerToEscapePod(ushort playerId)
         {
             lock (escapePodsByPlayerId)
             {

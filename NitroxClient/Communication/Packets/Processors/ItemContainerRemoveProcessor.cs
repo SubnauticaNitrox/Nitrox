@@ -1,42 +1,24 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.Unity.Helper;
-using NitroxModel.Logger;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class ItemContainerRemoveProcessor : ClientPacketProcessor<ItemContainerRemove>
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
+        private readonly ItemContainers itemContainer;
 
-        public ItemContainerRemoveProcessor(PacketSender packetSender)
+        public ItemContainerRemoveProcessor(IPacketSender packetSender, ItemContainers itemContainer)
         {
             this.packetSender = packetSender;
+            this.itemContainer = itemContainer;
         }
 
         public override void Process(ItemContainerRemove packet)
         {
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
-            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);
-            Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
-
-            if (opContainer.IsPresent())
-            {
-                ItemsContainer container = opContainer.Get();
-                Pickupable pickupable = item.RequireComponent<Pickupable>();
-                
-                using (packetSender.Suppress<ItemContainerRemove>())
-                {
-                    container.RemoveItem(pickupable, true);
-                }
-            }
-            else
-            {
-                Log.Error("Could not find container field on object " + owner.name);
-            }
+            itemContainer.RemoveItem(packet.OwnerGuid, packet.ItemGuid);
         }
     }
 }

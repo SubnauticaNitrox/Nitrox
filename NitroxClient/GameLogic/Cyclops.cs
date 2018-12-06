@@ -1,58 +1,56 @@
-﻿using NitroxClient.Communication;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
-using System;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Cyclops
     {
-        private PacketSender packetSender;
+        private readonly IPacketSender packetSender;
 
-        public Cyclops(PacketSender packetSender)
+        public Cyclops(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public void ToggleInternalLight(String guid, bool isOn)
+        public void ToggleInternalLight(string guid, bool isOn)
         {
-            CyclopsToggleInternalLighting packet = new CyclopsToggleInternalLighting(packetSender.PlayerId, guid, isOn);
+            CyclopsToggleInternalLighting packet = new CyclopsToggleInternalLighting(guid, isOn);
             packetSender.Send(packet);
         }
 
-        public void ToggleFloodLights(String guid, bool isOn)
+        public void ToggleFloodLights(string guid, bool isOn)
         {
-            CyclopsToggleFloodLights packet = new CyclopsToggleFloodLights(packetSender.PlayerId, guid, isOn);
+            CyclopsToggleFloodLights packet = new CyclopsToggleFloodLights(guid, isOn);
             packetSender.Send(packet);
         }
 
-        public void BeginSilentRunning(String guid)
+        public void BeginSilentRunning(string guid)
         {
-            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(packetSender.PlayerId, guid);
+            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(guid);
             packetSender.Send(packet);
         }
 
-        public void ActivateHorn(String guid)
+        public void ChangeEngineMode(string guid, CyclopsMotorMode.CyclopsMotorModes mode)
         {
-            CyclopsActivateHorn packet = new CyclopsActivateHorn(packetSender.PlayerId, guid);
+            CyclopsChangeEngineMode packet = new CyclopsChangeEngineMode(guid, mode);
             packetSender.Send(packet);
         }
 
-        public void ActivateShield(String guid)
+        public void ToggleEngineState(string guid, bool isOn, bool isStarting)
         {
-            CyclopsActivateShield packet = new CyclopsActivateShield(packetSender.PlayerId, guid);
+            CyclopsToggleEngineState packet = new CyclopsToggleEngineState(guid, isOn, isStarting);
             packetSender.Send(packet);
         }
 
-        public void ChangeName(String guid, string name)
+        public void ActivateHorn(string guid)
         {
-            CyclopsChangeName packet = new CyclopsChangeName(packetSender.PlayerId, guid, name);
+            CyclopsActivateHorn packet = new CyclopsActivateHorn(guid);
             packetSender.Send(packet);
         }
 
-        public void ChangeColor(String guid, int index, Vector3 hsb, Color color)
+        public void ActivateShield(string guid)
         {
-            CyclopsChangeColor packet = new CyclopsChangeColor(packetSender.PlayerId, index, guid, hsb, color);
+            CyclopsActivateShield packet = new CyclopsActivateShield(guid);
             packetSender.Send(packet);
         }
     }

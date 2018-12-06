@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,15 +13,15 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
-            if(item != null && __instance.tr.parent.name != "EscapePod" && __instance.tr.parent.name != "Player")
+            if (item != null && __instance.tr.parent.name != "EscapePod" )
             {
-                Multiplayer.Logic.ItemContainers.RemoveItem(item.item, __instance.tr.parent.gameObject);
+                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemRemoval(item.item, __instance.tr);
             }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

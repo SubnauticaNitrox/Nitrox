@@ -1,19 +1,19 @@
 ﻿using NitroxClient.MonoBehaviours.Gui.Chat;
-using System;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.ChatUI
 {
+    // TODO: Naming? This class facilitates communication between the chat entry text box and the primary chat log. Manager doesn't really seem to describe that intent.
     public class PlayerChatManager
     {
-        private static PlayerChat chat;
+        private static PlayerChatLog chatLog;
         private static PlayerChatEntry chatEntry;
 
         public PlayerChatManager()
         {
-            if (chat == null)
+            if (chatLog == null)
             {
-                chat = new GameObject().AddComponent<PlayerChat>();
+                chatLog = new GameObject().AddComponent<PlayerChatLog>();
             }
 
             if (chatEntry == null)
@@ -22,9 +22,9 @@ namespace NitroxClient.GameLogic.ChatUI
             }
         }
 
-        public void WriteMessage(String message)
+        public void WriteChatLogEntry(ChatLogEntry chatLogEntry)
         {
-            chat.WriteMessage(message);
+            chatLog.WriteEntry(chatLogEntry);
         }
 
         public void ShowChat()

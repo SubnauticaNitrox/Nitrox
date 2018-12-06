@@ -1,9 +1,14 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Exceptions;
 
 namespace NitroxModel.Helper
 {
-    public class Validate
+    public static class Validate
     {
         public static void NotNull<T>(T o)
             // Prevent non-nullable valuetypes from getting boxed to object.
@@ -12,16 +17,32 @@ namespace NitroxModel.Helper
         {
             if (o == null)
             {
-                throw new ArgumentNullException();
+                Optional<string> paramName = GetParameterName<T>();
+                if (paramName.IsPresent())
+                {
+                    throw new ArgumentNullException(paramName.Get());
+                }
+                else
+                {
+                    throw new ArgumentNullException();
+                }
             }
         }
 
-        public static void NotNull<T>(T o, String message)
+        public static void NotNull<T>(T o, string message)
             where T : class
         {
             if (o == null)
             {
-                throw new ArgumentNullException(message);
+                Optional<string> paramName = GetParameterName<T>();
+                if (paramName.IsPresent())
+                {
+                    throw new ArgumentNullException(paramName.Get(), message);
+                }
+                else
+                {
+                    throw new ArgumentNullException(message);
+                }
             }
         }
 
@@ -33,7 +54,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsTrue(bool b, String message)
+        public static void IsTrue(bool b, string message)
         {
             if (!b)
             {
@@ -49,7 +70,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsFalse(bool b, String message)
+        public static void IsFalse(bool b, string message)
         {
             if (b)
             {
@@ -65,12 +86,27 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt, String message)
+        public static void IsPresent<T>(Optional<T> opt, string message)
         {
             if (opt.IsEmpty())
             {
                 throw new OptionalEmptyException<T>(message);
             }
+        }
+
+        public static void PacketCorrelation<T>(T packet, string expectedCorrelationId)
+            where T : CorrelatedPacket
+        {
+            if (!expectedCorrelationId.Equals(packet.CorrelationId))
+            {
+                throw new UncorrelatedPacketException(packet, expectedCorrelationId);
+            }
+        }
+
+        private static Optional<string> GetParameterName<TParam>()
+        {
+            ParameterInfo[] parametersOfMethodBeforeValidate = new StackFrame(2).GetMethod().GetParameters();
+            return Optional<string>.OfNullable(parametersOfMethodBeforeValidate.SingleOrDefault(pi => pi.ParameterType == typeof(TParam))?.Name);
         }
     }
 }

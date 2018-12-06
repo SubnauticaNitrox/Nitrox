@@ -1,28 +1,29 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class BroadcastEscapePodsProcessor : ClientPacketProcessor<BroadcastEscapePods>
     {
-        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
+        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
-        private String myEscapePodGuid;
-        private PacketSender packetSender;
-        private Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
-        private Dictionary<String, GameObject> escapePodsByGuid = new Dictionary<String, GameObject>();
+        private IMultiplayerSession multiplayerSession;
+        private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
+        private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
-        public BroadcastEscapePodsProcessor(PacketSender packetSender)
+        private string myEscapePodGuid;
+
+        public BroadcastEscapePodsProcessor(IMultiplayerSession multiplayerSession)
         {
-            this.packetSender = packetSender;
+            this.multiplayerSession = multiplayerSession;
         }
 
         public override void Process(BroadcastEscapePods packet)
@@ -39,7 +40,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (EscapePodModel model in packet.EscapePods)
             {
-                if (model.AssignedPlayers.Contains(packetSender.PlayerId))
+                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.PlayerId))
                 {
                     EscapePod.main.transform.position = model.Location;
                     EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
@@ -92,7 +93,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

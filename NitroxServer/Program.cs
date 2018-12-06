@@ -1,9 +1,9 @@
-﻿using NitroxModel.Logger;
-using System;
+﻿using System;
+using NitroxModel.Logger;
 
 namespace NitroxServer
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {

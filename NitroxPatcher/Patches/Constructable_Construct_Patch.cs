@@ -1,8 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
-using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -10,12 +10,12 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Construct");
-        
+
         public static bool Prefix(Constructable __instance)
         {
             if (!__instance._constructed && __instance.constructedAmount < 1.0f)
             {
-                Multiplayer.Logic.Building.ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
+                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
             }
 
             return true;
@@ -25,13 +25,13 @@ namespace NitroxPatcher.Patches
         {
             if (__result && __instance.constructedAmount >= 1.0f)
             {
-                Multiplayer.Logic.Building.ConstructionComplete(__instance.gameObject);
+                NitroxServiceLocator.LocateService<Building>().ConstructionComplete(__instance.gameObject);
             }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

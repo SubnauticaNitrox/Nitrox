@@ -1,7 +1,7 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
-using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
+using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input
 {

@@ -1,4 +1,6 @@
-﻿using NitroxClient.GameLogic.ChatUI;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -11,20 +13,28 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int INPUT_MARGIN = 15;
         private const string GUI_CHAT_NAME = "ChatInput";
 
-        private bool chatEnabled = false;
+        private bool chatEnabled;
         private string chatMessage = "";
         private PlayerChatManager chatManager;
-        
+        private IMultiplayerSession multiplayerSession;
+        private GameLogic.Chat chatBroadcaster;
+
+        public void Awake()
+        {
+            multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            chatBroadcaster = NitroxServiceLocator.LocateService<GameLogic.Chat>();
+        }
+
         public void OnGUI()
         {
-            if(chatEnabled)
+            if (chatEnabled)
             {
                 SetGUIStyle();
                 GUI.SetNextControlName(GUI_CHAT_NAME);
                 chatMessage = GUI.TextField(new Rect(INPUT_MARGIN, Screen.height - INPUT_HEIGHT - INPUT_MARGIN, INPUT_WIDTH, INPUT_HEIGHT), chatMessage, CHAR_LIMIT);
                 GUI.FocusControl(GUI_CHAT_NAME);
 
-                if (Event.current.isKey && Event.current.keyCode == KeyCode.Return) 
+                if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
                     SendMessage();
                     Hide();
@@ -48,11 +58,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chatManager != null && chatMessage.Length > 0)
             {
-                Multiplayer.Logic.Chat.SendChatMessage(chatMessage);
-                chatManager.WriteMessage("Me: " + chatMessage);
+                chatBroadcaster.SendChatMessage(chatMessage);
+                ChatLogEntry chatLogEntry = new ChatLogEntry("Me", chatMessage, multiplayerSession.PlayerSettings.PlayerColor);
+                chatManager.WriteChatLogEntry(chatLogEntry);
             }
         }
-        
+
         public void Show(PlayerChatManager currentChatManager)
         {
             chatManager = currentChatManager;

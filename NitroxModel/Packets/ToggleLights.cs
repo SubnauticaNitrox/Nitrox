@@ -3,20 +3,20 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ToggleLights : AuthenticatedPacket
+    public class ToggleLights : Packet
     {
-        public String Guid { get; private set; }
-        public bool IsOn { get; private set; }
+        public string Guid { get; }
+        public bool IsOn { get; }
 
-        public ToggleLights(String playerId, String guid, bool isOn) : base(playerId)
+        public ToggleLights(string guid, bool isOn)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
+            Guid = guid;
+            IsOn = isOn;
         }
 
         public override string ToString()
         {
-            return "[ToggleLightsPacket PlayerId: " + PlayerId + " Guid: " + Guid + " IsOn: " + IsOn + "]";
+            return "[ToggleLightsPacket Guid: " + Guid + " IsOn: " + IsOn + "]";
         }
     }
 }

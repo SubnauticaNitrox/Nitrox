@@ -1,5 +1,5 @@
-﻿using NitroxClient.Unity.Helper;
-using System;
+﻿using System;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -43,7 +43,7 @@ namespace NitroxClient.GameLogic
                 // This should be a one-off teleport.
                 gameObject.transform.position = remotePosition;
             }
-            //overcorrections can cause jitter when standing still.
+            // overcorrections can cause jitter when standing still.
             else if (distance > 0.001f)
             {
                 float maxAdjustment = (float)Math.Log10(distance) * 4f;
@@ -57,7 +57,8 @@ namespace NitroxClient.GameLogic
         {
             Quaternion delta = remoteRotation * gameObject.transform.rotation.GetInverse();
 
-            float angle; Vector3 axis;
+            float angle;
+            Vector3 axis;
             delta.ToAngleAxis(out angle, out axis);
 
             // We get an infinite axis in the event that our rotation is already aligned.

@@ -1,7 +1,6 @@
-﻿using Harmony;
+﻿using System.Reflection.Emit;
+using Harmony;
 using NitroxModel.Helper;
-using System;
-using System.Reflection.Emit;
 
 namespace NitroxPatcher
 {
@@ -16,7 +15,7 @@ namespace NitroxPatcher
             Validate.NotNull(operand);
         }
 
-        public ValidatedCodeInstruction(OpCode opcode, object operand, String errorMessage) : base(opcode, operand)
+        public ValidatedCodeInstruction(OpCode opcode, object operand, string errorMessage) : base(opcode, operand)
         {
             Validate.NotNull(operand, "operand : " + errorMessage);
         }

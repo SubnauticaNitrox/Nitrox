@@ -1,30 +1,46 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DroppedItem : PlayerActionPacket
+    public class DroppedItem : Packet
     {
-        public String Guid { get; }
-        public Optional<String> WaterParkGuid { get; }
+        public string Guid { get; }
+        public Optional<string> WaterParkGuid { get; }
         public TechType TechType { get; }
         public Vector3 ItemPosition { get; }
         public byte[] Bytes { get; }
 
-        public DroppedItem(String playerId, String guid, Optional<String> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes) : base(playerId, itemPosition)
+        public DroppedItem(string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, byte[] bytes)
         {
-            this.Guid = guid;
-            this.WaterParkGuid = waterParkGuid;
-            this.ItemPosition = itemPosition;
-            this.TechType = techType;
-            this.Bytes = bytes;
+            Guid = guid;
+            WaterParkGuid = waterParkGuid;
+            ItemPosition = itemPosition;
+            TechType = techType;
+            Bytes = bytes;
+        }
+
+        public override Optional<AbsoluteEntityCell> GetDeferredCell()
+        {
+            // Items that are maintained in the global root should never have their pickup event
+            // deferred because other players should be able to see their state change.  An example
+            // of this is a player picking up a far away beacon.
+            if (Map.GLOBAL_ROOT_TECH_TYPES.Contains(TechType))
+            {
+                return Optional<AbsoluteEntityCell>.Empty();
+            }
+
+            // All other pickup events should only happen when the cell is loaded.  
+            return Optional<AbsoluteEntityCell>.Of(new AbsoluteEntityCell(ItemPosition, Map.ITEM_LEVEL_OF_DETAIL));
         }
 
         public override string ToString()
         {
-            return "[DroppedItem - playerId: " + PlayerId + " guid: " + Guid + " WaterParkGuid: " + WaterParkGuid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
+            return "[DroppedItem - guid: " + Guid + " WaterParkGuid: " + WaterParkGuid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
         }
     }
 }

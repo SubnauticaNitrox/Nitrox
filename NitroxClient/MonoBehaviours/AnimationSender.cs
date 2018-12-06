@@ -1,16 +1,26 @@
-﻿using UnityEngine;
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class AnimationSender : MonoBehaviour
     {
-        AnimChangeState lastUnderwaterState = AnimChangeState.Unset;
+        private LocalPlayer localPlayer;
+
+        AnimChangeState lastUnderwaterState = AnimChangeState.UNSET;
+
+        public void Awake()
+        {
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        }
+
         public void Update()
         {
-            AnimChangeState underwaterState = (AnimChangeState)(Player.main.GetIsUnderwater() ? 1 : 0);
+            AnimChangeState underwaterState = (AnimChangeState)(Player.main.IsUnderwater() ? 1 : 0);
             if (lastUnderwaterState != underwaterState)
             {
-                Multiplayer.PacketSender.AnimationChange(AnimChangeType.Underwater, underwaterState);
+                localPlayer.AnimationChange(AnimChangeType.UNDERWATER, underwaterState);
                 lastUnderwaterState = underwaterState;
             }
         }
@@ -18,13 +28,13 @@ namespace NitroxClient.MonoBehaviours
 
     public enum AnimChangeState
     {
-        Off,
-        On,
-        Unset
+        OFF,
+        ON,
+        UNSET
     }
 
     public enum AnimChangeType
     {
-        Underwater
+        UNDERWATER
     }
 }

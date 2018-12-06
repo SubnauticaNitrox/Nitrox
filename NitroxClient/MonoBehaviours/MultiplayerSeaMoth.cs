@@ -2,12 +2,12 @@
 {
     class MultiplayerSeaMoth : MultiplayerVehicleControl<Vehicle>
     {
-        private bool lastThrottle = false;
+        private bool lastThrottle;
         private SeaMoth seamoth;
 
         protected override void Awake()
         {
-            steeringControl = seamoth = GetComponent<SeaMoth>();
+            SteeringControl = seamoth = GetComponent<SeaMoth>();
             base.Awake();
         }
 

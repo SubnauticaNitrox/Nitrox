@@ -3,8 +3,13 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class Disconnect : AuthenticatedPacket
+    public class Disconnect : Packet
     {
-        public Disconnect(String playerId) : base(playerId) {}
+        public ushort PlayerId { get; }
+
+        public Disconnect(ushort playerId)
+        {
+            PlayerId = playerId;
+        }
     }
 }

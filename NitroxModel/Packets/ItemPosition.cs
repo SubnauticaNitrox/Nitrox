@@ -4,24 +4,23 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemPosition : PlayerActionPacket
+    public class ItemPosition : Packet
     {
         public Vector3 Position { get; }
         public Quaternion Rotation { get; }
 
-        public String Guid { get; }
+        public string Guid { get; }
 
-        public ItemPosition(String playerId, String guid, Vector3 position, Quaternion rotation) : base(playerId, position)
+        public ItemPosition(string guid, Vector3 position, Quaternion rotation)
         {
-            this.Guid = guid;
-            this.Position = position;
-            this.Rotation = rotation;
-            this.PlayerMustBeInRangeToReceive = false;
+            Guid = guid;
+            Position = position;
+            Rotation = rotation;
         }
 
         public override string ToString()
         {
-            return "[ItemPosition - playerId: " + PlayerId + " position: " + Position + " Rotation: " + Rotation + " guid: " + Guid + "]";
+            return "[ItemPosition position: " + Position + " Rotation: " + Rotation + " guid: " + Guid + "]";
         }
     }
 }

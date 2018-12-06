@@ -1,25 +1,26 @@
 ﻿using System;
-using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class EquipmentRemoveItem : PlayerActionPacket
+    public class EquipmentRemoveItem : Packet
     {
-        public String OwnerGuid { get; private set; }
-        public String Slot { get; private set; }
-        public String ItemGuid { get; private set; }
+        public string OwnerGuid { get; }
+        public string Slot { get; }
+        public string ItemGuid { get; }
+        public bool IsPlayerEquipment { get; }
 
-        public EquipmentRemoveItem(String playerId, String ownerGuid, String slot, String itemGuid, Vector3 ownerPosition) : base(playerId, ownerPosition)
+        public EquipmentRemoveItem(string ownerGuid, string slot, string itemGuid, bool isPlayerEquipment)
         {
-            this.OwnerGuid = ownerGuid;
-            this.Slot = slot;
-            this.ItemGuid = itemGuid;
+            IsPlayerEquipment = isPlayerEquipment;
+            OwnerGuid = ownerGuid;
+            Slot = slot;
+            ItemGuid = itemGuid;
         }
 
         public override string ToString()
         {
-            return "[EquipmentRemoveItem - playerId: " + PlayerId + " OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " ItemGuid: " + ItemGuid + "]";
+            return "[EquipmentRemoveItem OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " ItemGuid: " + ItemGuid + " IsPlayerEquipment: " + IsPlayerEquipment + " ]";
         }
     }
 }

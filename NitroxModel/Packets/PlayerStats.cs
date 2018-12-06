@@ -1,28 +1,33 @@
-﻿using System;
+﻿using Lidgren.Network;
+using System;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlayerStats : AuthenticatedPacket
+    public class PlayerStats : Packet
     {
+        public ushort PlayerId { get; }
         public float Oxygen { get; }
         public float MaxOxygen { get; }
         public float Health { get; }
         public float Food { get; }
         public float Water { get; }
 
-        public PlayerStats(String playerId, float oxygen, float maxOxygen, float health, float food, float water) : base(playerId)
+        public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water)
         {
-            this.Oxygen = oxygen;
-            this.MaxOxygen = maxOxygen;
-            this.Health = health;
-            this.Food = food;
-            this.Water = water;
+            PlayerId = playerId;
+            Oxygen = oxygen;
+            MaxOxygen = maxOxygen;
+            Health = health;
+            Food = food;
+            Water = water;
+            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            UdpChannel = UdpChannelId.PLAYER_STATS;
         }
 
         public override string ToString()
         {
-            return "[PlayerStats - Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + "]";
+            return "[PlayerStats - PlayerId: " + PlayerId + " Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + "]";
         }
     }
 }

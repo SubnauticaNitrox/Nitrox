@@ -1,13 +1,17 @@
-﻿using NitroxModel.DataStructures.ServerModel;
-using NitroxModel.DataStructures.Util;
-using System;
+﻿using System;
 using System.Timers;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
 namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveCommand : NitroxCommand
     {
+        private readonly LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
         public MoveCommand()
         {
             Name = "move";
@@ -21,7 +25,10 @@ namespace ClientTester.Commands.DefaultCommands
         {
             Console.WriteLine("Mouse is now attached. Press any key to exit");
             Timer mouseTimer = new Timer();
-            mouseTimer.Elapsed += delegate { mouseTimerTick(client); };
+            mouseTimer.Elapsed += delegate
+            {
+                MouseTimerTick(client);
+            };
             mouseTimer.Interval = 50;
             mouseTimer.Start();
             Console.ReadKey();
@@ -30,7 +37,7 @@ namespace ClientTester.Commands.DefaultCommands
             mouseTimer.Stop();
         }
 
-        private void mouseTimerTick(MultiplayerClient client)
+        private void MouseTimerTick(MultiplayerClient client)
         {
             int curX = System.Windows.Forms.Cursor.Position.X;
             int curY = System.Windows.Forms.Cursor.Position.Y;
@@ -39,9 +46,10 @@ namespace ClientTester.Commands.DefaultCommands
                 float velX = curX - lastX;
                 float velY = curY - lastY;
                 Vector3 velocity = new Vector3(velX / 10f, 0, velY / 10f);
-                client.clientPos += velocity;
-                client.PacketSender.UpdatePlayerLocation(client.clientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<String>.Empty());
+                client.ClientPos += velocity;
+                localPlayer.UpdateLocation(client.ClientPos, velocity, Quaternion.identity, Quaternion.identity, Optional<VehicleMovementData>.Empty());
             }
+
             lastX = curX;
             lastY = curY;
         }

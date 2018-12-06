@@ -1,10 +1,10 @@
-﻿using Harmony;
+﻿using System;
+using System.Reflection;
+using Harmony;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using System;
-using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {
@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

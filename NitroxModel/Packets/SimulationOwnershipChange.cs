@@ -1,35 +1,37 @@
-﻿using NitroxModel.DataStructures;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class SimulationOwnershipChange : Packet
     {
-        public List<OwnedGuid> OwnedGuids { get; }
-        
-        public SimulationOwnershipChange(String guid, String owningPlayerId) : base()
+        public List<SimulatedEntity> Entities { get; }
+
+        public SimulationOwnershipChange(string guid, ushort owningPlayerId, SimulationLockType lockType)
         {
-            this.OwnedGuids = new List<OwnedGuid>();
-            this.OwnedGuids.Add(new OwnedGuid(guid, owningPlayerId));
+            Entities = new List<SimulatedEntity>
+            {
+                new SimulatedEntity(guid, owningPlayerId, false, lockType)
+            };
         }
 
-        public SimulationOwnershipChange(List<OwnedGuid> ownedGuids) : base()
+        public SimulationOwnershipChange(List<SimulatedEntity> entities)
         {
-            this.OwnedGuids = ownedGuids;
+            Entities = entities;
         }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("[SimulationOwnershipChange - ");
 
-            foreach(OwnedGuid ownedGuid in OwnedGuids)
+            foreach (SimulatedEntity entity in Entities)
             {
-                stringBuilder.Append(ownedGuid.ToString());
+                stringBuilder.Append(entity.ToString());
             }
-            
+
             stringBuilder.Append("]");
 
             return stringBuilder.ToString();

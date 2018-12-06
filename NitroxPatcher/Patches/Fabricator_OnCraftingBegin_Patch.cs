@@ -1,7 +1,8 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,12 +13,12 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Fabricator __instance, TechType techType, float duration)
         {
-            Multiplayer.Logic.Crafting.FabricatorCrafingStarted(__instance.gameObject, techType, duration);
+            NitroxServiceLocator.LocateService<Crafting>().FabricatorCrafingStarted(__instance.gameObject, techType, duration);
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            this.PatchPostfix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

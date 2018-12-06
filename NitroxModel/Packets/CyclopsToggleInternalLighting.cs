@@ -3,20 +3,20 @@
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class CyclopsToggleInternalLighting : AuthenticatedPacket
+    public class CyclopsToggleInternalLighting : Packet
     {
-        public String Guid { get; }
+        public string Guid { get; }
         public bool IsOn { get; }
 
-        public CyclopsToggleInternalLighting(String playerId, String guid, bool isOn) : base(playerId)
+        public CyclopsToggleInternalLighting(string guid, bool isOn)
         {
-            this.Guid = guid;
-            this.IsOn = isOn;
+            Guid = guid;
+            IsOn = isOn;
         }
-        
+
         public override string ToString()
         {
-            return "[CyclopsToggleInternalLighting PlayerId: " + PlayerId + " Guid: " + Guid + " IsOn: " + IsOn + "]";
+            return "[CyclopsToggleInternalLighting Guid: " + Guid + " IsOn: " + IsOn + "]";
         }
     }
 }

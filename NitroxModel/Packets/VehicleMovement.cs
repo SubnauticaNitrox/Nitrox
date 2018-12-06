@@ -1,40 +1,24 @@
-﻿using NitroxModel.DataStructures.Util;
-using System;
-using UnityEngine;
+﻿using System;
+using NitroxModel.DataStructures.GameLogic;
+using Lidgren.Network;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public TechType TechType { get; }
-        public Vector3 AngularVelocity { get; }
-        public String Guid { get; }
-        public float SteeringWheelYaw { get; }
-        public float SteeringWheelPitch { get; }
-        public bool AppliedThrottle { get; }
+        public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(String playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, String guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<String>.Empty())
+        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation)
         {
-            this.TechType = techType;
-            this.AngularVelocity = angularVelocity;
-            this.Guid = guid;
-
-            this.SteeringWheelYaw = steeringWheelYaw;
-            this.SteeringWheelPitch = steeringWheelPitch;
-            this.AppliedThrottle = appliedThrottle;
-
-            this.PlayerMustBeInRangeToReceive = false;
+            Vehicle = vehicle;
+            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
 
         public override string ToString()
         {
-            return "[VehicleMovement - TechType: " + TechType +
-                " AngularVelocity: " + AngularVelocity +
-                " Guid: " + Guid +
-                " SteeringWheelYaw: " + SteeringWheelYaw +
-                " SteeringWheelPitch: " + SteeringWheelPitch +
-                " AppliedThrottle: " + AppliedThrottle +
+            return "[VehicleMovement - vehicle: " + Vehicle +
                 "]\n\t" + base.ToString();
         }
     }

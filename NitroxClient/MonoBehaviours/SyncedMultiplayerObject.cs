@@ -1,28 +1,35 @@
-﻿using NitroxClient.GameLogic.Helper;
-using System;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class SyncedMultiplayerObject : MonoBehaviour
     {
-        private float time = 0.0f;
-        private float interpolationPeriod = 0.25f;
+        private Item itemBroadcaster;
+        private float time;
+        private const float INTERPOLATION_PERIOD = .25f;
+
+        public void Awake()
+        {
+            itemBroadcaster = NitroxServiceLocator.LocateService<Item>();
+        }
 
         public void Update()
         {
             time += Time.deltaTime;
 
             // Only do on a specific cadence to avoid hammering server
-            if (time >= interpolationPeriod)
+            if (time >= INTERPOLATION_PERIOD)
             {
                 time = 0;
 
-                String guid = GuidHelper.GetGuid(this.gameObject);
-                Vector3 currentPosition = this.gameObject.transform.position;
-                Quaternion rotation = this.gameObject.transform.rotation;
+                string guid = GuidHelper.GetGuid(gameObject);
+                Vector3 currentPosition = gameObject.transform.position;
+                Quaternion rotation = gameObject.transform.rotation;
 
-                Multiplayer.Logic.Item.UpdatePosition(guid, currentPosition, rotation);
+                itemBroadcaster.UpdatePosition(guid, currentPosition, rotation);
             }
         }
 
