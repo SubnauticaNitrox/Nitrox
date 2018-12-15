@@ -8,6 +8,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
     internal static class TestConstants
     {
         public const string TEST_IP_ADDRESS = "#.#.#.#";
+        public const int TEST_SERVER_PORT = 11000;
         public const ushort TEST_PLAYER_ID = 1;
         public const string TEST_PLAYER_NAME = "TEST";
         public const string TEST_RESERVATION_KEY = "@#*(&";

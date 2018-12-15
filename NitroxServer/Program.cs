@@ -1,5 +1,7 @@
 ﻿using System;
 using NitroxModel.Logger;
+using NitroxServer.ConfigParser;
+
 
 namespace NitroxServer
 {
@@ -11,8 +13,11 @@ namespace NitroxServer
 
             try
             {
-                Server server = new Server();
+                ServerConfigReader GetConfig = new ServerConfigReader();
+                GetConfig.ReadServerConfig(@".\config.ini");
+                Server server = new Server(GetConfig);
                 server.Start();
+
             }
             catch (Exception e)
             {
