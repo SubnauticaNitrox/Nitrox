@@ -54,7 +54,8 @@ namespace NitroxServer.Serialization
 
             if (subnauticaPath.IsEmpty())
             {
-                throw new InvalidOperationException("Could not locate subnautica root");
+                Log.Info("Could not locate subnautica root in steam using fallback");
+                subnauticaPath = Optional<string>.Of(Path.GetFullPath("."));
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
@@ -62,6 +63,7 @@ namespace NitroxServer.Serialization
 
             if (!File.Exists(fileName))
             {
+                Log.Info("Fallback path and Steam path failed! Please move SNUnmanagedData/Build18 to {0}", Path.Combine(Path.GetFullPath("."), "\\SNUnmanagedData\\Build18"));
                 return;
             }
 

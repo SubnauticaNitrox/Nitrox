@@ -20,8 +20,26 @@ namespace NitroxModel.Helper
         {
             if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)
             {
-                Log.Info("You either don't have steam installed or your registry variable isn't set.");
-                return Optional<string>.Empty();
+                Log.Info("You either don't have steam installed or your registry variable isn't set. Attempting to use \".\\path.txt\" fallback.");
+                string tmpPath = Path.Combine(Path.GetFullPath("."), "path.txt");
+                if (File.Exists(tmpPath))
+                {
+                    tmpPath = Path.Combine(tmpPath, "path.txt");
+                    StreamReader stream = new StreamReader(File.OpenRead(tmpPath));
+                    Optional<string> tmpString = Optional<string>.Of(stream.ReadLine());
+                    if (tmpString.IsEmpty())
+                    {
+                        Log.Info("File is empty creating a new one");
+                        tmpString = Optional<string>.Of(Path.GetFullPath("."));
+
+                        StreamWriter tmpStream = new StreamWriter(File.OpenWrite(tmpString.Get()), System.Text.Encoding.UTF8);
+                        tmpStream.WriteLine(Path.GetFullPath("."));
+                        tmpStream.Close();
+                        return tmpString;
+                    }
+
+                    return tmpString;
+                }
             }
 
             string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
@@ -31,6 +49,25 @@ namespace NitroxModel.Helper
                 return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
             }
 
+            if (File.Exists(Path.Combine(Path.GetFullPath("."), "path.txt")))
+            {
+                string tmpPath = Path.Combine(Path.GetFullPath("."), "path.txt");
+                StreamReader stream = new StreamReader(File.OpenRead(tmpPath));
+                Optional<string> tmpString = Optional<string>.Of(stream.ReadLine());
+                if (tmpString.IsEmpty())
+                {
+                    Log.Info("File is empty!");
+                    tmpString = Optional<string>.Of(Path.GetFullPath("."));
+
+                    StreamWriter tmpStream = new StreamWriter(File.OpenWrite(Path.Combine(tmpString.Get(), "path.txt")), System.Text.Encoding.UTF8);
+                    tmpStream.WriteLine(Path.GetFullPath("."));
+                    tmpStream.Close();
+                    return tmpString;
+                }
+
+                return tmpString;
+            }
+            
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
             if (path == null)
             {
@@ -41,7 +78,11 @@ namespace NitroxModel.Helper
                 return Optional<string>.Of(path);
             }
 
-            return Optional<string>.Empty();
+            StreamWriter streamW = new StreamWriter(File.OpenWrite(Path.Combine(Path.GetFullPath("."), "path.txt")), System.Text.Encoding.UTF8);
+            streamW.WriteLine(Path.GetFullPath("."));
+            streamW.Close();
+
+            return Optional<string>.Of(Path.GetFullPath("."));
         }
 
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
