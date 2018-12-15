@@ -7,6 +7,16 @@
   <?define NitroxReloader_TargetDir=$(var.NitroxReloader.TargetDir)?>
   <?define Harmony_TargetDir=$(var.Harmony.TargetDir)?>
   <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
+
+  <?if $(var.Platform) = x64 ?>
+  <?define ProductName = "Product Name (64 bit)" ?>
+  <?define Win64 = "yes" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+  <?else ?>
+  <?define ProductName = "Product Name" ?>
+  <?define Win64 = "no" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+  <?endif ?>
   
   <Product Id="*" Name="Nitrox" Language="1033" Version="1.0.0.0" Manufacturer="Nitrox" UpgradeCode="9ad745cb-3a52-4e99-adcc-ae5fc9c82ebd">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
@@ -36,7 +46,7 @@
   </Fragment>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <Directory Id="$(var.PlatformProgramFilesFolder)">
         <Directory Id="INSTALLFOLDER" Name="Nitrox Installer">
           <Directory Id="SubnauticaData" Name="Subnautica_Data">
             <Directory Id="SUBNAUTICAMANAGED" Name="Managed">
