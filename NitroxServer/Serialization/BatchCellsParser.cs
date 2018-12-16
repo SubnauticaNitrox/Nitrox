@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
@@ -50,12 +51,13 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath();
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
             if (subnauticaPath.IsEmpty())
             {
-                Log.Info("Could not locate subnautica root in steam using fallback");
-                subnauticaPath = Optional<string>.Of(Path.GetFullPath("."));
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                return;
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
