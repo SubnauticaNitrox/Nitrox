@@ -151,10 +151,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
-                property.SetValue(PAXTerrainController.main, false, null);
-                WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
-                waitScreen.ReflectionCall("Hide");
+                SetLoadingComplete();
             }
         }
 
@@ -164,9 +161,17 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.ShowImmediately();
             Main.StartSession();
             yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
+            WaitScreen.Remove(item);
+            SetLoadingComplete();
+        }
+
+        private static void SetLoadingComplete()
+        {
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
             property.SetValue(PAXTerrainController.main, false, null);
-            WaitScreen.Remove(item);
+
+            WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
+            waitScreen.ReflectionCall("Hide");
         }
     }
 }
