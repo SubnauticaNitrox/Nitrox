@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using System.Linq;
 using NitroxClient.MonoBehaviours;
 

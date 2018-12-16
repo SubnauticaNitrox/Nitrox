@@ -144,7 +144,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static void SubnauticaLoadingCompleted()
         {
-            if (Main.IsMultiplayer())
+            if (Main != null && Main.IsMultiplayer())
             {
                 Main.InitialSyncCompleted = false;
                 Main.StartCoroutine(LoadAsync());
