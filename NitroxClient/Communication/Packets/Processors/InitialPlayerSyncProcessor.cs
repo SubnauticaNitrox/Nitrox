@@ -14,6 +14,7 @@ using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -51,14 +52,25 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDALog(packet.PDAData.PDALogEntries);
             CreateRemotePlayers(packet.RemotePlayerData);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerSpawn(packet.PlayerSpawnData);
+            SetPlayerSpawn(packet.PlayerSpawnData, packet.PlayerSubRootGuid);
         }
 
         private void CreateRemotePlayers(List<InitialRemotePlayerData> remotePlayerData)
         {
             foreach(InitialRemotePlayerData playerData in remotePlayerData)
             {
-                remotePlayerManager.Create(playerData.PlayerContext);
+                RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext);
+
+                if (playerData.SubRootGuid.IsPresent())
+                {
+                    //TODO: require and run async after base pieces are loaded (similar to how items are added to inventories)
+                    Optional<GameObject> sub = GuidHelper.GetObjectFrom(playerData.SubRootGuid.Get());
+
+                    if(sub.IsPresent())
+                    {
+                        player.SetSubRoot(sub.Get().GetComponent<SubRoot>());
+                    }
+                } 
             }
         }
 
@@ -115,11 +127,22 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void SetPlayerSpawn(Vector3 position)
+        private void SetPlayerSpawn(Vector3 position, Optional<string> subRootGuid)
         {
             if (!(position.x == 0 && position.y == 0 && position.z == 0))
             {
                 Player.main.SetPosition(position);
+            }
+
+            if(subRootGuid.IsPresent())
+            {
+                //TODO: require and run async after base pieces are loaded (similar to how items are added to inventories)
+                Optional<GameObject> sub = GuidHelper.GetObjectFrom(subRootGuid.Get());
+
+                if (sub.IsPresent())
+                {
+                    Player.main.SetCurrentSub(sub.Get().GetComponent<SubRoot>());
+                }
             }
         }
 

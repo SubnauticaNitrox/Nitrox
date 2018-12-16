@@ -3,6 +3,7 @@ using NitroxModel.Packets;
 using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -78,6 +79,14 @@ namespace NitroxServer.GameLogic.Players
                 playersByPlayerName[playerName].PlayerSpawnData = position;
             }
         }
+        
+        public void UpdatePlayerSubRootGuid(string playerName, string subroot)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].SubRootGuid = subroot;
+            }
+        }
 
         public void PlayerStats(string playerName, PlayerStats statsData)
         {
@@ -115,6 +124,24 @@ namespace NitroxServer.GameLogic.Players
                 List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
                 ItemData.AddRange((new List<EquippedItemData>(ModulesItemsByGuid.Values)));
                 return ItemData;
+            }
+        }
+
+        public Vector3 GetPosition(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return playerPersistedData.PlayerSpawnData;
+            }
+        }
+
+        public Optional<string> GetSubRootGuid(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return Optional<string>.OfNullable(playerPersistedData.SubRootGuid);
             }
         }
 
@@ -163,6 +190,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(5)]
             public PlayerStatsData CurrentStats { get; set; }
+
+            [ProtoMember(6)]
+            public string SubRootGuid { get; set; }
 
             public PersistedPlayerData()
             {

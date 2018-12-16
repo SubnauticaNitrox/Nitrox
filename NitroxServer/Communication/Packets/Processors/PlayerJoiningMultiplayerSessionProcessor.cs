@@ -44,6 +44,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
                                                                        world.GameData.PDAState.GetInitialPdaData(),
                                                                        world.PlayerData.PlayerSpawn(player.Name),
+                                                                       world.PlayerData.GetSubRootGuid(player.Name),
                                                                        world.PlayerData.Stats(player.Name),
                                                                        getRemotePlayerData(player));
 
@@ -58,7 +59,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 if (!player.Equals(otherPlayer))
                 {
-                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position);
+                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootGuid);
                     playerData.Add(remotePlayer);
                 }
             }

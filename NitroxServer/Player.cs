@@ -5,6 +5,7 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using NitroxServer.Communication;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer
 {
@@ -18,11 +19,14 @@ namespace NitroxServer
         public ushort Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
+        public Optional<string> SubRootGuid { get; set; }
 
-        public Player(PlayerContext playerContext, Connection connection)
+        public Player(PlayerContext playerContext, Connection connection, Vector3 position, Optional<string> subRootGuid)
         {
             PlayerContext = playerContext;
             this.connection = connection;
+            Position = position;
+            SubRootGuid = subRootGuid;
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
