@@ -60,12 +60,11 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData\\Build18");
             string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
-                Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
                 return;
             }
 
