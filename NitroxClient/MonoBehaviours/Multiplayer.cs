@@ -89,7 +89,8 @@ namespace NitroxClient.MonoBehaviours
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)
         {
-            string[] args = (string[])n.data.Values;
+            string[] args = new string[n.data.Values.Count];
+            n.data.Values.CopyTo(args, 0);
 
             NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
         }

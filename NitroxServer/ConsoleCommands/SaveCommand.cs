@@ -7,7 +7,6 @@ namespace NitroxServer.ConsoleCommands
         public SaveCommand()
         {
             Name = "save";
-            Args = new string[] { "save" };
         }
 
         public override void RunCommand(string[] args)

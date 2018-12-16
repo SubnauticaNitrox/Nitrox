@@ -19,14 +19,20 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ChatMessage message)
         {
-            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.PlayerId);
-
-            if (remotePlayer.IsPresent())
+            if (message.PlayerId != ushort.MaxValue)
             {
-                RemotePlayer remotePlayerInstance = remotePlayer.Get();
-                ChatLogEntry chatLogEntry = new ChatLogEntry(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
-                chatManager.WriteChatLogEntry(chatLogEntry);
+                Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(message.PlayerId);
+
+                if (remotePlayer.IsPresent())
+                {
+                    RemotePlayer remotePlayerInstance = remotePlayer.Get();
+                    ChatLogEntry chatLogEntry = new ChatLogEntry(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
+                    chatManager.WriteChatLogEntry(chatLogEntry);
+                }
+                return;
             }
+            ChatLogEntry logEntry = new ChatLogEntry("Server", message.Text, new UnityEngine.Color32(0x8c, 0x00, 0xFF, 0xFF));
+            chatManager.WriteChatLogEntry(logEntry);
         }
     }
 }

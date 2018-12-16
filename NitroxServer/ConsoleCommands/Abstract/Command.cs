@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
         public string[] Args { get; protected set; }
-        public string Name { get; set; }
+        public string Name { get; protected set; }
+        public string[] Alias { get; protected set; }
 
         /// <summary>
         /// Runs your command

@@ -5,6 +5,7 @@ using NitroxServer.Serialization.World;
 using System.Timers;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxModel.Core;
 
 
 namespace NitroxServer
@@ -30,9 +31,10 @@ namespace NitroxServer
             Instance = this;
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
-            packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, serverConfiguration);
-            ConsoleCommandProcessor.RegisterCommands();
+            NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFaqRegistrar(world));
+            NitroxServiceLocator.BeginNewLifetimeScope();
+            udpServer = NitroxServiceLocator.LocateService<UdpServer>();
+            packetHandler = NitroxServiceLocator.LocateService<PacketHandler>();
 
             //Maybe add settings for the interval?
             saveTimer = new Timer();

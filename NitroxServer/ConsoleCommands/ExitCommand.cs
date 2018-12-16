@@ -1,4 +1,5 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
+using NitroxModel.Core;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -7,11 +8,13 @@ namespace NitroxServer.ConsoleCommands
         public ExitCommand()
         {
             Name = "exit";
+            Alias = new string[] { "stop", "halt" };
         }
 
         public override void RunCommand(string[] args)
         {
             Server.Instance.Stop();
+            //NitroxServiceLocator.EndCurrentLifetimeScope();
             Program.IsRunning = false;
         }
 
