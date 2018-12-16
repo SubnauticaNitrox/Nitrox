@@ -74,6 +74,10 @@
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
+    <Compile Include="Discovery\IFindGameInstallation.cs" />
+    <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
+    <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
@@ -91,7 +95,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
-    <Compile Include="Helper\SteamHelper.cs" />
+    <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
