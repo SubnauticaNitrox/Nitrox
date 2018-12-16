@@ -263,8 +263,6 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         itemContainers.AddItem(itemdata);
                     }
-
-
                 }
             }
 
@@ -303,6 +301,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             public void AddItemsToInventories(object sender, EventArgs eventArgs)
             {
+                Multiplayer.Main.InitialSyncCompleted = true;
                 Log.Info("Initial sync inventory items are clear to be added to inventories");
                 ThrottledBuilder.main.QueueDrained -= AddItemsToInventories;
 

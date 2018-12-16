@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
@@ -7,6 +10,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
@@ -24,6 +28,8 @@ namespace NitroxClient.MonoBehaviours
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
+
+        public bool InitialSyncCompleted;
 
         public void Awake()
         {
@@ -134,6 +140,33 @@ namespace NitroxClient.MonoBehaviours
                 // Maybe a better place for this, but here works in a pinch.
                 StopCurrentSession();
             }
+        }
+
+        public static void SubnauticaLoadingCompleted()
+        {
+            if (Main.IsMultiplayer())
+            {
+                Main.InitialSyncCompleted = false;
+                Main.StartCoroutine(LoadAsync());
+            }
+            else
+            {
+                PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
+                property.SetValue(PAXTerrainController.main, false, null);
+                WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
+                waitScreen.ReflectionCall("Hide");
+            }
+        }
+
+        public static IEnumerator LoadAsync()
+        {
+            WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
+            WaitScreen.ShowImmediately();
+            Main.StartSession();
+            yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
+            PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
+            property.SetValue(PAXTerrainController.main, false, null);
+            WaitScreen.Remove(item);
         }
     }
 }
