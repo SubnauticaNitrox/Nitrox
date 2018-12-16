@@ -24,14 +24,16 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly Vehicles vehicles;
         private readonly ItemContainers itemContainers;
         private readonly EquipmentSlots equipment;
+        private readonly PlayerManager remotePlayerManager;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.vehicles = vehicles;
             this.itemContainers = itemContainers;
             this.equipment = equipment;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(InitialPlayerSync packet)
@@ -46,9 +48,18 @@ namespace NitroxClient.Communication.Packets.Processors
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
-            SetPDALog(packet.PDAData.PDALogEntries);      
+            SetPDALog(packet.PDAData.PDALogEntries);
+            CreateRemotePlayers(packet.RemotePlayerData);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerSpawn(packet.PlayerSpawnData);            
+            SetPlayerSpawn(packet.PlayerSpawnData);
+        }
+
+        private void CreateRemotePlayers(List<InitialRemotePlayerData> remotePlayerData)
+        {
+            foreach(InitialRemotePlayerData playerData in remotePlayerData)
+            {
+                remotePlayerManager.Create(playerData.PlayerContext);
+            }
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)

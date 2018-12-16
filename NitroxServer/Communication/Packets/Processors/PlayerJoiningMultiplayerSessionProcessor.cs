@@ -1,4 +1,6 @@
-﻿using NitroxModel.Packets;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
@@ -42,18 +44,26 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
                                                                        world.GameData.PDAState.GetInitialPdaData(),
                                                                        world.PlayerData.PlayerSpawn(player.Name),
-                                                                       world.PlayerData.Stats(player.Name));
+                                                                       world.PlayerData.Stats(player.Name),
+                                                                       getRemotePlayerData(player));
 
             player.SendPacket(initialPlayerSync);
+        }
+
+        private List<InitialRemotePlayerData> getRemotePlayerData(Player player)
+        {
+            List<InitialRemotePlayerData> playerData = new List<InitialRemotePlayerData>();
 
             foreach (Player otherPlayer in playerManager.GetPlayers())
             {
                 if (!player.Equals(otherPlayer))
                 {
-                    playerJoinedPacket = new PlayerJoinedMultiplayerSession(otherPlayer.PlayerContext);
-                    player.SendPacket(playerJoinedPacket);
+                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position);
+                    playerData.Add(remotePlayer);
                 }
             }
+
+            return playerData;
         }
     }
 }
