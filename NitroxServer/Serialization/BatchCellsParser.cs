@@ -65,7 +65,7 @@ namespace NitroxServer.Serialization
 
             if (!File.Exists(fileName))
             {
-                Log.Info("Fallback path and Steam path failed! Please move SNUnmanagedData/Build18 to {0}", Path.Combine(Path.GetFullPath("."), "\\SNUnmanagedData\\Build18"));
+                Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
                 return;
             }
 
