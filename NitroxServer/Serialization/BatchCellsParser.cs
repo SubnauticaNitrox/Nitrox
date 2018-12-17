@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
@@ -50,11 +51,13 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath();
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
             if (subnauticaPath.IsEmpty())
             {
-                throw new InvalidOperationException("Could not locate subnautica root");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                return;
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
@@ -62,6 +65,7 @@ namespace NitroxServer.Serialization
 
             if (!File.Exists(fileName))
             {
+                Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
                 return;
             }
 

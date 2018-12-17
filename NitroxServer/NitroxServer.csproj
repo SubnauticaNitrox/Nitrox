@@ -15,7 +15,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputType>Exe</OutputType>
-    <PlatformTarget>Any</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -131,6 +131,7 @@
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SubRootChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
@@ -151,6 +152,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
+    <Compile Include="ConfigParser\ServerConfigReader.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\GameData.cs" />

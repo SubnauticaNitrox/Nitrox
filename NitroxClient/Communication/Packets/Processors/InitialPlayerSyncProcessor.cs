@@ -14,6 +14,7 @@ using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -24,14 +25,16 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly Vehicles vehicles;
         private readonly ItemContainers itemContainers;
         private readonly EquipmentSlots equipment;
+        private readonly PlayerManager remotePlayerManager;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
             this.vehicles = vehicles;
             this.itemContainers = itemContainers;
             this.equipment = equipment;
+            this.remotePlayerManager = remotePlayerManager;
         }
 
         public override void Process(InitialPlayerSync packet)
@@ -40,15 +43,19 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need Set Equipment On Vehicles before SpawnItemContainer because is Locker Is a Upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnItemContainer(packet.PlayerGuid, packet.InventoryItems); //Need Maintain SpawnItemContainer before SpawnBasePieces/SpawnInventoryItemsAfterBasePiecesFinish because is Locker already Place SpawnItemContainer Duplicated Same Item
-            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems);
             SpawnBasePieces(packet.BasePieces);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             SetKnownTech(packet.PDAData.KnownTechTypes);
-            SetPDALog(packet.PDAData.PDALogEntries);      
+            SetPDALog(packet.PDAData.PDALogEntries);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerSpawn(packet.PlayerSpawnData);            
+
+            bool hasBasePiecesToSpawn = packet.BasePieces.Count > 0;
+
+            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn);
+            SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
+            SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
@@ -101,14 +108,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
                 }
-            }
-        }
-
-        private void SetPlayerSpawn(Vector3 position)
-        {
-            if (!(position.x == 0 && position.y == 0 && position.z == 0))
-            {
-                Player.main.SetPosition(position);
             }
         }
 
@@ -229,8 +228,6 @@ namespace NitroxClient.Communication.Packets.Processors
                     {
                         itemContainers.AddItem(itemdata);
                     }
-
-
                 }
             }
 
@@ -240,12 +237,20 @@ namespace NitroxClient.Communication.Packets.Processors
          * Items should only be added after all base pieces spawn.  Since base pieces will spawn
          * gradually over multiple frames, we need to wait until that process has completely finished
          */
-        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems)
+        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems, bool basePiecesToSpawn)
         {
             Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
 
             InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
-            ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
+            
+            if (basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += itemAdder.AddItemsToInventories;
+            }
+            else
+            {
+                itemAdder.AddItemsToInventories(null, null);
+            }
         }
         
         /*
@@ -277,6 +282,111 @@ namespace NitroxClient.Communication.Packets.Processors
                     foreach (ItemData itemData in inventoryItems)
                     {
                         itemContainers.AddItem(itemData);
+                    }
+                }
+            }
+        }
+        
+        private void SetPlayerLocationAfterBasePiecesFinish(Vector3 position, Optional<string> subRootGuid, bool basePiecesToSpawn)
+        {
+            Log.Info("Received initial sync packet with location " + position + " and subroot " + subRootGuid);
+            PlayerSpawner playerSpawner = new PlayerSpawner(position, subRootGuid);
+                    
+            if (basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += playerSpawner.SetPlayerSpawn;
+            }
+            else
+            {
+                playerSpawner.SetPlayerSpawn(null, null);
+            }
+        }
+
+        private class PlayerSpawner
+        {
+            private Vector3 position;
+            private Optional<string> subRootGuid;
+
+            public PlayerSpawner(Vector3 position, Optional<string> subRootGuid)
+            {
+                this.position = position;
+                this.subRootGuid = subRootGuid;
+            }
+            
+            public void SetPlayerSpawn(object sender, EventArgs eventArgs)
+            {
+                Multiplayer.Main.InitialSyncCompleted = true;
+
+                ThrottledBuilder.main.QueueDrained -= SetPlayerSpawn;
+
+                if (!(position.x == 0 && position.y == 0 && position.z == 0))
+                {
+                    Player.main.SetPosition(position);
+                }
+
+                if (subRootGuid.IsPresent())
+                {
+                    Optional<GameObject> sub = GuidHelper.GetObjectFrom(subRootGuid.Get());
+
+                    if (sub.IsPresent())
+                    {
+                        Player.main.SetCurrentSub(sub.Get().GetComponent<SubRoot>());
+                    }
+                    else
+                    {
+                        Log.Error("Could not spawn player into subroot with guid: " + subRootGuid.Get());
+                    }
+                }
+            }
+        }
+
+        private void SpawnRemotePlayersAfterBasePiecesFinish(List<InitialRemotePlayerData> remotePlayerData, bool basePiecesToSpawn)
+        {
+            Log.Info("Received initial sync packet with " + remotePlayerData.Count + " remote players");
+
+            RemotePlayerCreator remotePlayerCreator = new RemotePlayerCreator(remotePlayerData, remotePlayerManager);
+
+            if(basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += remotePlayerCreator.CreateRemotePlayers;
+            }
+            else
+            {
+                remotePlayerCreator.CreateRemotePlayers(null, null);
+            }
+        }
+
+        private class RemotePlayerCreator
+        {
+            private List<InitialRemotePlayerData> remotePlayerData;
+            private PlayerManager remotePlayerManager;
+
+            public RemotePlayerCreator(List<InitialRemotePlayerData> remotePlayerData, PlayerManager remotePlayerManager)
+            {
+                this.remotePlayerData = remotePlayerData;
+                this.remotePlayerManager = remotePlayerManager;
+            }
+
+            public void CreateRemotePlayers(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= CreateRemotePlayers;
+
+                foreach (InitialRemotePlayerData playerData in remotePlayerData)
+                {
+                    RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext);
+
+                    if (playerData.SubRootGuid.IsPresent())
+                    {
+                        Optional<GameObject> sub = GuidHelper.GetObjectFrom(playerData.SubRootGuid.Get());
+
+                        if (sub.IsPresent())
+                        {
+                            player.SetSubRoot(sub.Get().GetComponent<SubRoot>());
+                        }
+                        else
+                        {
+                            Log.Error("Could not spawn remote player into subroot with guid: " + playerData.SubRootGuid.Get());
+                        }
                     }
                 }
             }

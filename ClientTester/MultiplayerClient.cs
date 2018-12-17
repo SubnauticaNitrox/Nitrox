@@ -34,11 +34,11 @@ namespace ClientTester
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
         }
 
-        public void Start(string ip)
+        public void Start(string ip,int port)
         {
             Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap();
             multiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
-            multiplayerSession.Connect(ip);
+            multiplayerSession.Connect(ip,port);
 
             for (int iterations = 0; iterations < 20; iterations++)
             {

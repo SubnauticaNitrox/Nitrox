@@ -9,6 +9,8 @@ using System.Threading;
 using System.IO;
 using NitroxServer.GameLogic.Entities;
 using NitroxModel.DataStructures;
+using NitroxServer.ConfigParser;
+
 
 namespace NitroxServer.Communication
 {
@@ -22,13 +24,15 @@ namespace NitroxServer.Communication
         private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
         private readonly NetServer server;
         private readonly Thread thread;
+        private int PortNumber, MaxConn;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation)
+        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfigReader ConfigReader)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-
+            PortNumber = ConfigReader.serverPort;
+            MaxConn = ConfigReader.maxConn;
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
             thread = new Thread(Listen);
@@ -38,7 +42,8 @@ namespace NitroxServer.Communication
         {
             server.Start();
             thread.Start();
-
+            
+            
             isStopped = false;
         }
 
@@ -156,8 +161,8 @@ namespace NitroxServer.Communication
         private NetPeerConfiguration BuildNetworkConfig()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
-            config.Port = 11000;
-            config.MaximumConnections = 100;
+            config.Port = PortNumber;
+            config.MaximumConnections = MaxConn;
             config.AutoFlushSendQueue = true;
 
             return config;

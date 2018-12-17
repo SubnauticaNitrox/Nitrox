@@ -28,7 +28,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
-
+        public int serverPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -153,11 +153,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(ServerIp);
+                multiplayerSession.Connect(ServerIp,serverPort);
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:11000");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{serverPort}");
                 OnCancelClick();
             }
         }
@@ -224,7 +224,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
-                    StartCoroutine(LaunchSession());
+
+                    IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+                    StartCoroutine(startNewGame);
 
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
@@ -239,7 +241,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp);
+                            multiplayerSession.Connect(ServerIp,serverPort);
                         });
 
                     break;
@@ -276,25 +278,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
             }
         }
-
-        //This is really expensive and creates a noticeable lag in the UI if loaded on-demand. 
-        //I suggest doing it this way to front-load this performance hit - which should result in a more attractive UX.
-        private IEnumerator LaunchSession()
-        {
-#pragma warning disable CS0618 // Type or member is obsolete
-            IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
-            StartCoroutine(startNewGame);
-
-            // Wait until game starts
-            yield return new WaitUntil(() => LargeWorldStreamer.main != null);
-            yield return new WaitUntil(() => LargeWorldStreamer.main.IsReady() || LargeWorldStreamer.main.IsWorldSettled());
-            yield return new WaitUntil(() => !PAXTerrainController.main.isWorking);
-
-            Multiplayer.Main.StartSession();
-
-            Destroy(gameObject);
-        }
-
+        
         //This method merges the cloned color picker element with the existing template for menus that appear in the "right side" region of Subnautica's main menu.
         private void InitializeJoinMenu()
         {

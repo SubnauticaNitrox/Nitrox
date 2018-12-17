@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using NitroxModel.Logger;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer
 {
@@ -41,7 +42,9 @@ namespace NitroxServer
 
             try
             {
-                _server = new Server();
+                ServerConfigReader GetConfig = new ServerConfigReader();
+                GetConfig.ReadServerConfig(@".\config.ini");
+                _server = new Server(GetConfig);
                 _server.Start();
             }
             catch (Exception ex)

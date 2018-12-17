@@ -63,6 +63,7 @@
     <Compile Include="DataStructures\GameLogic\Buildings\MapRoomRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\RotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
@@ -74,6 +75,10 @@
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
+    <Compile Include="Discovery\IFindGameInstallation.cs" />
+    <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
+    <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
@@ -91,7 +96,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
-    <Compile Include="Helper\SteamHelper.cs" />
+    <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
@@ -183,6 +188,11 @@
       <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="path.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

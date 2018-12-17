@@ -7,6 +7,8 @@ using NitroxModel.Packets;
 using NitroxServer.GameLogic.Players;
 using static NitroxServer.GameLogic.Players.PlayerData;
 using NitroxServer.Communication;
+using NitroxServer.UnityStubs;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic
 {
@@ -77,7 +79,11 @@ namespace NitroxServer.GameLogic
                 PlayerContext playerContext = reservations[reservationKey];
                 Validate.NotNull(playerContext);
 
-                Player player = new Player(playerContext, connection);
+                // Load previously persisted data for this player.
+                Vector3 position = playerData.GetPosition(playerContext.PlayerName);
+                Optional<string> subRootGuid = playerData.GetSubRootGuid(playerContext.PlayerName);
+
+                Player player = new Player(playerContext, connection, position, subRootGuid);
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);

@@ -1,40 +1,29 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 
-namespace NitroxModel.Helper
+namespace NitroxModel.Discovery.InstallationFinders
 {
-    public static class SteamHelper
+    public class SteamGameRegistryFinder : IFindGameInstallation
     {
-        public static readonly int SUBNAUTICA_APP_ID = 264710;
-        public static readonly string SUBNAUTICA_GAME_NAME = "Subnautica";
+        public const int SUBNAUTICA_APP_ID = 264710;
+        public const string SUBNAUTICA_GAME_NAME = "Subnautica";
 
-        public static Optional<string> FindSubnauticaPath()
+        public Optional<string> FindGame(List<string> errors)
         {
-            return FindSteamGamePath(SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
-        }
-
-        public static Optional<string> FindSteamGamePath(int appid, string gameName)
-        {
-            if (ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath") == null)
-            {
-                Log.Info("You either don't have steam installed or your registry variable isn't set.");
-                return Optional<string>.Empty();
-            }
-
             string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
 
-            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{appid}.acf")))
+            if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
-                return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), gameName));
+                return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), SUBNAUTICA_GAME_NAME));
             }
 
-            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), appid, gameName);
-            if (path == null)
+            string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
+            if (string.IsNullOrEmpty(path))
             {
-                Log.Info($"It appears you don't have {gameName} installed anywhere. The game files are needed to run the server.");
+                errors.Add($"It appears you don't have {SUBNAUTICA_GAME_NAME} installed anywhere. The game files are needed to run the server.");
             }
             else
             {
@@ -44,15 +33,21 @@ namespace NitroxModel.Helper
             return Optional<string>.Empty();
         }
 
+        /// <summary>
+        ///     Finds game install directory by iterating through all the steam game libraries configured and finding the appid
+        ///     that matches <see cref="SUBNAUTICA_APP_ID" />.
+        /// </summary>
+        /// <param name="libraryfolders"></param>
+        /// <param name="appid"></param>
+        /// <param name="gameName"></param>
+        /// <returns></returns>
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
         {
             StreamReader file = new StreamReader(libraryfolders);
             string line;
             while ((line = file.ReadLine()) != null)
             {
-                line.Trim();
-                line.Trim('\t');
-                line = Regex.Unescape(line);
+                line = Regex.Unescape(line.Trim().Trim('\t'));
                 Match regMatch = Regex.Match(line, "\"(.*)\"\t*\"(.*)\"");
                 string key = regMatch.Groups[1].Value;
                 string value = regMatch.Groups[2].Value;
