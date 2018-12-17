@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -31,7 +31,6 @@ namespace NitroxServer.Serialization
             /**
            * Implemented check to see if index.txt in our Build18 folder exists.
            * If it does, warnings for this check are then silenced on the console, and instead, missing files are dumped to a missing.txt file
-           * For this purpose and as a precautionary measure, path.txt is used.
            * Warnings can be turned back on by the presence of a nosilence.txt file. Could be later implemented as an option. */
             if (WarnSilence)
             {
@@ -41,12 +40,21 @@ namespace NitroxServer.Serialization
             {
                 return;
             }
-            string pathTXTFile = Path.Combine(Path.GetFullPath("."), "path.txt");
-            Log.Info("Using " + pathTXTFile + " as path to path.txt");
-            string PathToSub = File.ReadAllText(pathTXTFile);
+            string PathToSub;
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
+            if (subnauticaPath.IsEmpty())
+            {
+                string pathTXTFile = Path.Combine(Path.GetFullPath("."), "path.txt");
+                Log.Info("Using " + pathTXTFile + " as path to path.txt");
+                PathToSub = File.ReadAllText(pathTXTFile);
+            } else
+            {
+                PathToSub = subnauticaPath.Get();
+            }
             if (PathToSub.Length <= 1)
             {
-                Log.Warn("Empty Path.txt file! Can not continue executing method!");
+                Log.Warn("Empty Path.txt file or universal finder can't find game directory! Can not continue executing method!");
                 return;
             }
             string fileName = Path.Combine(PathToSub, "SNUnmanagedData\\Build18\\index.txt");
@@ -113,6 +121,7 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
+            CheckForIndexAndSilenceWarnings();
             List<string> errors = new List<string>();
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
