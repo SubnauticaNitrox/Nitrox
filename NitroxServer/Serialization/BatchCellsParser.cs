@@ -21,8 +21,70 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
+        public bool WarnSilence;
+        public bool DoNotAttempt;
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
+
+        public void CheckForIndexAndSilenceWarnings()
+        {
+            /**
+           * Implemented check to see if index.txt in our Build18 folder exists.
+           * If it does, warnings for this check are then silenced on the console, and instead, missing files are dumped to a missing.txt file
+           * For this purpose and as a precautionary measure, path.txt is used.
+           * Warnings can be turned back on by the presence of a nosilence.txt file. Could be later implemented as an option. */
+            if (WarnSilence)
+            {
+                return;
+            }
+            if (DoNotAttempt)
+            {
+                return;
+            }
+            string pathTXTFile = Path.Combine(Path.GetFullPath("."), "path.txt");
+            Log.Info("Using " + pathTXTFile + " as path to path.txt");
+            string PathToSub = File.ReadAllText(pathTXTFile);
+            if (PathToSub.Length <= 1)
+            {
+                Log.Warn("Empty Path.txt file! Can not continue executing method!");
+                return;
+            }
+            string fileName = Path.Combine(PathToSub, "SNUnmanagedData\\Build18\\index.txt");
+            Log.Info("Checking for " + fileName);
+            if (!File.Exists(fileName))
+            {
+                Log.Warn("Can not find index.txt!");
+                return;
+            }
+            fileName = Path.Combine(".\\", "nosilence.txt");
+            if (!File.Exists(fileName))
+            {
+                Log.Info("Index found! Warnings about missing files are silenced and missing filenames are now dumped to missing.txt!");
+                WarnSilence = true;
+            }
+            else
+            {
+                Log.Info("Not silencing warnings about missing files!");
+                DoNotAttempt = true;
+            }
+            return;
+        }
+        public void LogMissingFileName(string fileName)
+        {
+            string missingTXTFile = Path.Combine(Path.GetFullPath("."), "missing.txt");
+            if (!File.Exists(missingTXTFile))
+            {
+                StreamWriter missingtxt = File.CreateText(missingTXTFile);
+                missingtxt.WriteLine(fileName);
+                missingtxt.Close();
+            }
+            else
+            {
+                StreamWriter missingtxt = File.AppendText(missingTXTFile);
+                missingtxt.WriteLine(fileName);
+                missingtxt.Close();
+            }
+        }
 
         public BatchCellsParser()
         {
@@ -65,8 +127,16 @@ namespace NitroxServer.Serialization
 
             if (!File.Exists(fileName))
             {
-                Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
-                return;
+                if (WarnSilence)
+                {
+                    LogMissingFileName(fileName);
+                    return;
+                }
+                else
+                {
+                    Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
+                    return;
+                }
             }
 
             using (Stream stream = File.OpenRead(fileName))
