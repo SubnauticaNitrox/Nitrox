@@ -27,6 +27,16 @@ namespace NitroxClient.GameLogic.ChatUI
             chatLog.WriteEntry(chatLogEntry);
         }
 
+        public void ShowLog()
+        {
+            chatLog.Show();
+        }
+
+        public void HideLog()
+        {
+            chatLog.Hide();
+        }
+
         public void ShowChat()
         {
             chatEntry.Show(this);

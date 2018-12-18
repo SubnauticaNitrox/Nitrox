@@ -33,6 +33,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 GUI.SetNextControlName(GUI_CHAT_NAME);
                 chatMessage = GUI.TextField(new Rect(INPUT_MARGIN, Screen.height - INPUT_HEIGHT - INPUT_MARGIN, INPUT_WIDTH, INPUT_HEIGHT), chatMessage, CHAR_LIMIT);
                 GUI.FocusControl(GUI_CHAT_NAME);
+                chatManager.ShowLog();
 
                 if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
@@ -42,7 +43,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
                 if (Event.current.isKey && Event.current.keyCode == KeyCode.Escape)
                 {
-                    Hide();
+                    Hide(true);
                 }
             }
         }
@@ -70,8 +71,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatEnabled = true;
         }
 
-        public void Hide()
+        public void Hide(bool hideLog = false)
         {
+            if (hideLog)
+            {
+                chatManager.HideLog();
+            }
             chatEnabled = false;
             chatMessage = "";
         }
