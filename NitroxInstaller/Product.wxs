@@ -14,12 +14,12 @@
   <?define Win64 = "yes" ?>
   <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
   <?else ?>
-  <?define ProductName = "Product Name" ?>
+  <?define ProductName = "NitroxInstaller-!(bind.fileVersion.NitroxClient.dll)" ?>
   <?define Win64 = "no" ?>
   <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
   <?endif ?>
   
-  <Product Id="*" Name="Nitrox" Language="1033" Version="1.0.0.0" Manufacturer="Nitrox" UpgradeCode="9ad745cb-3a52-4e99-adcc-ae5fc9c82ebd">
+  <Product Id="*" Name="Nitrox" Language="1033" Version="$(var.TargetVersion)" Manufacturer="Nitrox" UpgradeCode="9ad745cb-3a52-4e99-adcc-ae5fc9c82ebd">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
@@ -88,7 +88,7 @@
       <Component Id="_0Harmony.dll" Guid="6c9dfcf3-f43a-4b75-bff0-e8bd75514fd5">
         <File Id="_0Harmony.dll" Name="0Harmony.dll" Source="$(var.Harmony_TargetDir)0Harmony.dll" />
       </Component>
-      <Component Id="NitroxClient.dll" Guid="9294ce3a-cdd3-4b01-9e1d-311e42a26a80">
+      <Component Id="NitroxClient" Guid="9294ce3a-cdd3-4b01-9e1d-311e42a26a80">
         <File Id="NitroxClient.dll" Name="NitroxClient.dll" Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />
       </Component>
       <Component Id="Autofac.Configuration.dll" Guid="e9cad602-b1d9-4234-a80a-1e19fe48c8d3">
