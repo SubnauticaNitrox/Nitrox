@@ -43,7 +43,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
                 if (Event.current.isKey && Event.current.keyCode == KeyCode.Escape)
                 {
-                    Hide(true);
+                    chatManager.HideLog();
+                    Hide();
                 }
             }
         }
@@ -71,12 +72,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatEnabled = true;
         }
 
-        public void Hide(bool hideLog = false)
+        public void Hide()
         {
-            if (hideLog)
-            {
-                chatManager.HideLog();
-            }
             chatEnabled = false;
             chatMessage = "";
         }
