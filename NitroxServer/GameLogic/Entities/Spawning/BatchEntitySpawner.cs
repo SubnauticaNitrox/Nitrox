@@ -81,7 +81,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData)
         {
-            float rollingProbabilityDensity = dstData.prefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
+            List<PrefabData> allowedPrefabs = filterAllowedPrefabs(dstData.prefabs, entitySpawnPoint);
+
+            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
             {
@@ -95,7 +97,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             
             double rollingProbability = 0;
-            PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
+            PrefabData selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
             {
                 if(prefab.probability == 0)
                 {
@@ -129,6 +131,27 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     }
                 }
             }
+        }
+
+        private List<PrefabData> filterAllowedPrefabs(List<PrefabData> prefabs, EntitySpawnPoint entitySpawnPoint)
+        {
+            List<PrefabData> allowedPrefabs = new List<PrefabData>();
+
+            foreach(PrefabData prefab in prefabs)
+            {
+                if (prefab.classId != "None")
+                {
+                    WorldEntityInfo worldEntityInfo;
+
+                    if (worldEntitiesByClassId.TryGetValue(prefab.classId, out worldEntityInfo) &&
+                        entitySpawnPoint.AllowedTypes.Contains(worldEntityInfo.slotType))
+                    {
+                        allowedPrefabs.Add(prefab);
+                    }
+                }
+            }
+
+            return allowedPrefabs;
         }
 
         private IEnumerable<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint)

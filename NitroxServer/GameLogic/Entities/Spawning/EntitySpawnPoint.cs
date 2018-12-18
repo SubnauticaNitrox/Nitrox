@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
@@ -13,6 +14,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public BiomeType BiomeType { get; private set; }
         public float Density { get; private set; }
         public bool CanSpawnCreature { get; private set; }
+        public List<EntitySlot.Type> AllowedTypes { get; private set; }
 
         public static EntitySpawnPoint From(Int3 batchId, GameObject go, CellManager.CellHeader cellHeader)
         {
@@ -31,6 +33,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 esp.BiomeType = entitySlot.biomeType;
                 esp.Density = entitySlot.density;
                 esp.CanSpawnCreature = entitySlot.IsCreatureSlot();
+                esp.AllowedTypes = entitySlot.allowedTypes;
             }
 
             esp.Rotation = go.GetComponent<Transform>().Rotation;

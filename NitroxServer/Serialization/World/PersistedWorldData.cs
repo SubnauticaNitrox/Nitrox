@@ -7,14 +7,17 @@ using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
 using System;
 using System.Collections.Generic;
+using NitroxModel.Logger;
 
 namespace NitroxServer.Serialization.World
 {
     [ProtoContract]
     public class PersistedWorldData
     {
+        private const long CURRENT_VERSION = 2;
+
         [ProtoMember(1)]
-        public long version { get; set; } = 1;
+        public long version { get; set; } = CURRENT_VERSION;
 
         [ProtoMember(2)]
         public List<Int3> ParsedBatchCells { get; set; }
@@ -42,6 +45,12 @@ namespace NitroxServer.Serialization.World
 
         public bool IsValid()
         {
+            if(version < CURRENT_VERSION)
+            {
+                Log.Error("Version " + version + " save file is no longer supported.  Creating world under version " + CURRENT_VERSION);
+                return false;
+            }
+
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (EntityData != null) &&
