@@ -105,15 +105,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
 
                 float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
 
-                if(isValidSpawn)
-                {
-                    rollingProbability += probabilityDensity;
-                    return rollingProbability >= randomNumber;
-                }
+                rollingProbability += probabilityDensity;
 
-                return false;
+                return rollingProbability >= randomNumber;
             });
 
             WorldEntityInfo worldEntityInfo;
@@ -190,17 +185,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     yield return childEntity;
                 }
             }
-        }
-
-        private bool IsValidSpawnType(string id, bool creatureSpawn)
-        {
-            WorldEntityInfo worldEntityInfo;
-            if (worldEntitiesByClassId.TryGetValue(id, out worldEntityInfo))
-            {
-                return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
-            }
-
-            return false;
         }
     }
 }
