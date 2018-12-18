@@ -23,6 +23,12 @@ namespace NitroxModel.Logger
             Write("Log level set to " + Log.level);
         }
         
+        // For chat logging
+        public static void ChatMsg(string name, string msg)
+        {
+            Console.WriteLine("{0}: {1}", name, msg);
+        }
+
         // For in-game notifications
         public static void InGame(string msg)
         {
