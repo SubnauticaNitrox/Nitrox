@@ -25,6 +25,8 @@ namespace NitroxInstallerActions
 
                 NitroxEntryPatch nitroxPatch = new NitroxEntryPatch(managedDirectory);
 
+                NitroxServerSetup.Init(managedDirectory);
+
                 if (!nitroxPatch.IsApplied)
                 {
                     nitroxPatch.Apply();
