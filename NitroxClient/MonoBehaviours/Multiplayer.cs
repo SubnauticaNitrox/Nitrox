@@ -160,7 +160,7 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
             WaitScreen.ShowImmediately();
             Main.StartSession();
-            yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
+            yield return new WaitUntil(() => Main.InitialSyncCompleted);
             WaitScreen.Remove(item);
             SetLoadingComplete();
         }
@@ -170,7 +170,7 @@ namespace NitroxClient.MonoBehaviours
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
             property.SetValue(PAXTerrainController.main, false, null);
 
-            WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
+            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
             waitScreen.ReflectionCall("Hide");
         }
     }

@@ -44,7 +44,7 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Info("Could not save world: " + ex.ToString());
+                Log.Info("Could not save world: " + ex);
             }
         }
 
