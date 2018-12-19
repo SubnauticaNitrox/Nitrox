@@ -16,15 +16,26 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             get
             {
+                List<Int3> parsed;
+                List<Int3> empty;
+
                 lock (parsedBatches)
                 {
-                    return new List<Int3>(parsedBatches);
+                    parsed = new List<Int3>(parsedBatches);
                 }
+
+                lock (emptyBatches)
+                {
+                    empty =  new List<Int3>(emptyBatches);
+                }
+
+                return parsed.Except(empty).ToList();
             }
             set { parsedBatches = new HashSet<Int3>(value); }
-        }
+        }        
 
         private HashSet<Int3> parsedBatches = new HashSet<Int3>();
+        private HashSet<Int3> emptyBatches = new HashSet<Int3>();
 
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
@@ -53,6 +64,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 {
                     return new List<Entity>();
                 }
+
                 parsedBatches.Add(batchId);
             }
 
@@ -76,6 +88,14 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
             }
 
+            if(entities.Count == 0)
+            {
+                lock(emptyBatches)
+                {
+                    emptyBatches.Add(batchId);
+                }
+            }
+            
             return entities;
         }
 

@@ -53,12 +53,13 @@ namespace NitroxServer.Serialization.World
 
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
-                   (EntityData != null) &&
                    (BaseData != null) &&
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
-                   (PlayerData != null);
+                   (PlayerData != null) &&
+                   (EntityData != null) &&
+                   (EntityData.SerializableEntitiesByGuid.Count > 0);
         }
     }
 }
