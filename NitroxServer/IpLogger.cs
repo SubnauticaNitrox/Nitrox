@@ -9,7 +9,7 @@ using NitroxModel.Logger;
 
 namespace NitroxServer
 {
-    public class IpLogger
+    public static class IpLogger
     {
         public static void PrintServerIps()
         {
