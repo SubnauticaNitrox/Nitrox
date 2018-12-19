@@ -26,13 +26,13 @@ namespace NitroxServer.Communication
         private readonly Thread thread;
         private int PortNumber, MaxConn;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig ConfigReader)
+        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-            PortNumber = ConfigReader.ServerPort;
-            MaxConn = ConfigReader.MaxConnections;
+            PortNumber = serverConfig.ServerPort;
+            MaxConn = serverConfig.MaxConnections;
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
             thread = new Thread(Listen);
