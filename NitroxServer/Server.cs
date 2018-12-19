@@ -6,6 +6,7 @@ using System.Timers;
 using NitroxServer.ConfigParser;
 using System.Net.NetworkInformation;
 using System.Net;
+using System.Linq;
 
 
 namespace NitroxServer
@@ -46,38 +47,30 @@ namespace NitroxServer
 
         public void Start()
         {
+            ListServerIPs();
+            udpServer.Start();
+            Log.Info("Nitrox Server Started");
+            EnablePeriodicSaving();
+        }
+        public void ListServerIPs()
+        {
             NetworkInterface[] allInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach(NetworkInterface eachInterface in allInterfaces)
+            foreach (NetworkInterface eachInterface in allInterfaces)
             {
                 if (eachInterface.Name == "Hamachi")
                 {
-                    string hamachiAddresses = "";
-                    int count = 0; //Multiple Hamachi IP's , IPv4 and IPv6
-                    foreach(IPAddressInformation hamachiIP in eachInterface.GetIPProperties().UnicastAddresses)
-                    {
-                        if (!hamachiIP.Address.ToString().Contains("fe80::"))
-                        {
-                            if (count > 0)
-                            {
-                                hamachiAddresses = hamachiAddresses + " or " + hamachiIP.Address.ToString();
-                            }
-                            else
-                            {
-                                hamachiAddresses = hamachiIP.Address.ToString();
-                            }
-                        }
-                        count += 1;
-                    }
-                    Log.Info("If using Hamachi, use the following IP: " + hamachiAddresses);
+                    var ips = eachInterface.GetIPProperties().UnicastAddresses
+                    .Select(address => address.Address.ToString())
+                    .Where(address => !address.ToString().Contains("fe80::"));
+                    Log.Info("If using Hamachi, use this IP: " + string.Join(" or ", ips));
                 }
-                if (!(eachInterface.GetIPProperties().GatewayAddresses.Count==0)) // To avoid VMWare / other virtual interfaces
+                if (!(eachInterface.GetIPProperties().GatewayAddresses.Count == 0)) // To avoid VMWare / other virtual interfaces
                 {
                     foreach (IPAddressInformation eachIP in eachInterface.GetIPProperties().UnicastAddresses)
                     {
-                        char splitter = '.';
-                        string[] splitIpParts = eachIP.Address.ToString().Split(splitter);
+                        string[] splitIpParts = eachIP.Address.ToString().Split('.');
                         int secondPart = 0;
-                        if (splitIpParts.Length>1)
+                        if (splitIpParts.Length > 1)
                         {
                             int.TryParse(splitIpParts[1], out secondPart);
                         }
@@ -87,15 +80,20 @@ namespace NitroxServer
                         }
                     }
                 }
-                
-            }
-            string externalIP = new WebClient().DownloadString("http://bot.whatismyipaddress.com"); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
-            Log.Info("If using port forwarding, use this IP: " + externalIP);
-            udpServer.Start();
-            Log.Info("Nitrox Server Started");
-            EnablePeriodicSaving();
-        }
 
+            }
+            using(Ping checkConnectivity = new Ping())
+            {
+                if (checkConnectivity.Send("8.8.8.8", 1000).Status == IPStatus.Success) //Test internet connectivity before getting public IP
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        string externalIP = client.DownloadString("http://bot.whatismyipaddress.com"); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
+                        Log.Info("If using port forwarding, use this IP: " + externalIP);
+                    }
+                }
+            }  
+        }
         public void Stop()
         {
             Log.Info("Nitrox Server Stopping...");
