@@ -47,53 +47,12 @@ namespace NitroxServer
 
         public void Start()
         {
-            ListServerIPs();
+            IpLogger.PrintServerIps();
             udpServer.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
-        public void ListServerIPs()
-        {
-            NetworkInterface[] allInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface eachInterface in allInterfaces)
-            {
-                if (eachInterface.Name == "Hamachi")
-                {
-                    var ips = eachInterface.GetIPProperties().UnicastAddresses
-                    .Select(address => address.Address.ToString())
-                    .Where(address => !address.ToString().Contains("fe80::"));
-                    Log.Info("If using Hamachi, use this IP: " + string.Join(" or ", ips));
-                }
-                if (!(eachInterface.GetIPProperties().GatewayAddresses.Count == 0)) // To avoid VMWare / other virtual interfaces
-                {
-                    foreach (IPAddressInformation eachIP in eachInterface.GetIPProperties().UnicastAddresses)
-                    {
-                        string[] splitIpParts = eachIP.Address.ToString().Split('.');
-                        int secondPart = 0;
-                        if (splitIpParts.Length > 1)
-                        {
-                            int.TryParse(splitIpParts[1], out secondPart);
-                        }
-                        if (splitIpParts[0] == "10" || (splitIpParts[0] == "192" && splitIpParts[1] == "168") || (splitIpParts[0] == "172" && (secondPart > 15 && secondPart < 32))) //To get if IP is private
-                        {
-                            Log.Info("If playing on LAN, use this IP: " + eachIP.Address.ToString());
-                        }
-                    }
-                }
-
-            }
-            using(Ping checkConnectivity = new Ping())
-            {
-                if (checkConnectivity.Send("8.8.8.8", 1000).Status == IPStatus.Success) //Test internet connectivity before getting public IP
-                {
-                    using (WebClient client = new WebClient())
-                    {
-                        string externalIP = client.DownloadString("http://bot.whatismyipaddress.com"); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
-                        Log.Info("If using port forwarding, use this IP: " + externalIP);
-                    }
-                }
-            }  
-        }
+        
         public void Stop()
         {
             Log.Info("Nitrox Server Stopping...");

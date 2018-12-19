@@ -177,6 +177,7 @@
     <Compile Include="GameLogic\TimeKeeper.cs" />
     <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
     <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
+    <Compile Include="IpLogger.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
