@@ -4,6 +4,9 @@ using NitroxServer.Communication.Packets;
 using NitroxServer.Serialization.World;
 using System.Timers;
 using NitroxServer.ConfigParser;
+using System.Net.NetworkInformation;
+using System.Net;
+using System.Linq;
 
 
 namespace NitroxServer
@@ -44,11 +47,12 @@ namespace NitroxServer
 
         public void Start()
         {
+            IpLogger.PrintServerIps();
             udpServer.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
-
+        
         public void Stop()
         {
             Log.Info("Nitrox Server Stopping...");
