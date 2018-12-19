@@ -15,7 +15,7 @@ namespace NitroxServer
         private readonly WorldPersistence worldPersistence;
         private readonly PacketHandler packetHandler;
         private readonly Timer saveTimer;
-        private ServerConfigReader ServerOptions;
+        private ServerConfig serverConfiguration;
         public static Server Instance;
 
         public void Save()
@@ -23,14 +23,14 @@ namespace NitroxServer
             worldPersistence.Save(world);
         }
 
-        public Server(ServerConfigReader configReader)
+        public Server(ServerConfig config)
         {
-            ServerOptions = configReader;
+            serverConfiguration = config;
             Instance = this;
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, ServerOptions);
+            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, serverConfiguration);
 
             //Maybe add settings for the interval?
             saveTimer = new Timer();

@@ -79,6 +79,7 @@
       <HintPath>protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -152,7 +153,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
-    <Compile Include="ConfigParser\ServerConfigReader.cs" />
+    <Compile Include="ConfigParser\ServerConfig.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\GameData.cs" />
