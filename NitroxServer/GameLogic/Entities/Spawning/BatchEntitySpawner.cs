@@ -67,9 +67,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                 parsedBatches.Add(batchId);
             }
-
-            Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
-
+            
             List<Entity> entities = new List<Entity>();
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
 

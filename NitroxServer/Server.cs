@@ -4,9 +4,6 @@ using NitroxServer.Communication.Packets;
 using NitroxServer.Serialization.World;
 using System.Timers;
 using NitroxServer.ConfigParser;
-using System.Net.NetworkInformation;
-using System.Net;
-using System.Linq;
 
 
 namespace NitroxServer
