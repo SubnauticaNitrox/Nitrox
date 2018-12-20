@@ -56,6 +56,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 alreadySpawnedGuids.Add(childEntity.Guid);
             }
+
+            if(gameObject.IsPresent())
+            {
+                gameObject.Get().AddComponent<NitroxEntity>();
+            }
         }
 
         private IEntitySpawner ResolveEntitySpawner(TechType techType)
