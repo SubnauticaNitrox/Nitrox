@@ -8,6 +8,7 @@
   <?define Harmony_TargetDir=$(var.Harmony.TargetDir)?>
   <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
   <?define NitroxServer_TargetDir=$(var.NitroxServer.TargetDir)?>
+  <?define NitroxServerWPF_TargetDir=$(var.NitroxServer.Wpf.TargetDir)?>
 
   <?if $(var.Platform) = x64 ?>
   <?define ProductName = "Product Name (64 bit)" ?>
@@ -104,6 +105,9 @@
     <ComponentGroup Id="SubServer_Files" Directory="SubServer">
       <Component Id="NitroxServer.exe" Guid="0fc864b0-694e-4fca-b78c-8ef98bc6f262">
         <File Id="NitroxServer.exe" Name="NitroxServer.exe" Source="$(var.NitroxServer_TargetDir)NitroxServer.exe" />
+      </Component>
+      <Component Id="NitroxServer_WPF.exe">
+          <File Id="NitroxServer_WPF.exe" Name="NitroxServer WPF.exe" Source="$(var.NitroxServerWPF_TargetDir)NitroxServer WPF.exe" />
       </Component>
       <Component Id="SubServer_NitroxModel.dll">
         <File Id="SubServer_NitroxModel.dll" Name="NitroxModel.dll" Source="$(var.NitroxModel_TargetDir)NitroxModel.dll" />
