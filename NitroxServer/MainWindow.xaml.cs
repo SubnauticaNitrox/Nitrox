@@ -42,9 +42,8 @@ namespace NitroxServer
 
             try
             {
-                ServerConfigReader GetConfig = new ServerConfigReader();
-                GetConfig.ReadServerConfig(@".\config.ini");
-                _server = new Server(GetConfig);
+                ServerConfig config = new ServerConfig();
+                _server = new Server(config);
                 _server.Start();
             }
             catch (Exception ex)
