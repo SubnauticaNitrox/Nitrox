@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
@@ -13,7 +14,14 @@ namespace NitroxModel.Discovery.InstallationFinders
 
         public Optional<string> FindGame(List<string> errors)
         {
-            string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
+            var steamPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
+            if (String.IsNullOrEmpty(steamPath))
+            {
+                errors.Add("Could not find a Steam installation");
+                return Optional<string>.Empty();
+            }
+
+            string appsPath = Path.Combine((string)steamPath, "steamapps");
 
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
