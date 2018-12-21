@@ -65,7 +65,7 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
-            UpdateDiscordRichPresence();
+            Multiplayer.DiscordRP.UpdateDRPDiving(GetPlayerCount() + 1);
             return player;
         }
 
@@ -91,12 +91,6 @@ namespace NitroxClient.GameLogic
                 return 0;
             }
             return playersById.Count;
-        }
-
-        private void UpdateDiscordRichPresence()
-        {
-            Multiplayer.DiscordRP.Presence.partySize = 1 + GetPlayerCount();
-            Multiplayer.DiscordRP.UpdatePresence();
         }
     }
 }

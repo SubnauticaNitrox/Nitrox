@@ -1,7 +1,9 @@
 ﻿using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class DiscordJoinEvent : UnityEngine.Events.UnityEvent<string> { }
@@ -26,10 +28,15 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public DiscordJoinEvent OnJoin;
         public DiscordJoinEvent OnSpectate;
         public DiscordJoinRequestEvent OnJoinRequest;
+        public bool ShowingWindow;
 
         DiscordRpc.JoinRequest lastJoinRequest;
-        bool showingWindow;
         DiscordRpc.EventHandlers handlers;
+
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }  
 
         public int CallbackCalls
         {
@@ -71,10 +78,21 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             ++CallbackCalls;
             Log.Info(string.Format("Discord: join ({0})", secret));
-            JoinServer joinServer = gameObject.AddComponent<JoinServer>();
-            joinServer.JoiningServer = false;
-            StartCoroutine(joinServer.NegotiateSession(secret));
-            OnJoin.Invoke(secret);
+            Log.Debug("Discord" + SceneManager.GetActiveScene().name);
+            if (SceneManager.GetActiveScene().name == "StartScreen")
+            {
+                NitroxServiceLocator.BeginNewLifetimeScope();
+                JoinServer.SaveGameMenuPrototype = FindObject(MainMenuRightSide.main.gameObject, "SavedGames");
+                JoinServer joinServer = gameObject.AddComponent<JoinServer>();
+                string[] serverIpPort = secret.Split(':');
+                joinServer.ServerIp = serverIpPort[0];
+                joinServer.serverPort = int.Parse(serverIpPort[1]);
+            }
+            else
+            {
+                Log.InGame("Please be in the mainmenu if you want to join a session.");
+                Log.Warn("Discord: Can't join a server outside of the mainmenu.");
+            }
         }
 
         public void SpectateCallback(string secret)
@@ -87,25 +105,18 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void RequestCallback(ref DiscordRpc.JoinRequest request)
         {
             ++CallbackCalls;
-            if (!showingWindow)
+            if (!ShowingWindow)
             {
                 Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
                 AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
                 acceptRequest.Request = request;
                 lastJoinRequest = request;
-                showingWindow = true;
+                ShowingWindow = true;
+            } else
+            {
+                Log.Info("Discord: Request window is allready active.");
             }
             OnJoinRequest.Invoke(request);
-        }
-
-        public void RequestCallbackTest()
-        {
-            if (!showingWindow)
-            {
-                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", "Thijmen", "Bal Bla", "#7494"));
-                AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
-                showingWindow = true;
-            }
         }
 
         void Update()
@@ -117,7 +128,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             Log.Info("Discord: init");
             CallbackCalls = 0;
-            showingWindow = false;
+            ShowingWindow = false;
 
             handlers = new DiscordRpc.EventHandlers();
             handlers.readyCallback = ReadyCallback;
@@ -135,9 +146,31 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             DiscordRpc.Shutdown();
         }
 
-
-        public void UpdatePresence()
+        public void InitDRPDiving(string username, int playercount, string ipAddressPort)
         {
+            Presence.state = "Diving in game";
+            Presence.details = "Playing as " + username;
+            Presence.startTimestamp = 0;
+            Presence.partyId = username;
+            Presence.partySize = playercount;
+            Presence.partyMax = 99;
+            Presence.joinSecret = ipAddressPort;
+            SendDRP();
+        }
+
+        public void InitDRPMenu()
+        {
+            Presence.state = "In menu";
+            SendDRP();
+        }
+
+        public void UpdateDRPDiving(int playerCount)
+        {
+            Presence.partySize = playerCount;
+            SendDRP();
+        }
+
+        private void SendDRP() {
             Presence.largeImageKey = "diving";
             Presence.instance = false;
             DiscordRpc.UpdatePresence(ref Presence);
@@ -146,6 +179,20 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void RespondLastJoinRequest(int accept)
         {
             DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply)accept);
+        }
+
+        private GameObject FindObject(GameObject parent, string name)
+        {
+            Component[] trs = parent.GetComponentsInChildren(typeof(Transform), true);
+            foreach (Component t in trs)
+            {
+                if (t.name == name)
+                {
+                    return t.gameObject;
+                }
+            }
+
+            return null;
         }
     }
 }
