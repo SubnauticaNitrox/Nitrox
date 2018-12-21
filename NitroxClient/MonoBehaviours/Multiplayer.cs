@@ -173,6 +173,9 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
             waitScreen.ReflectionCall("Hide");
+
+            HashSet<WaitScreen.Item> items = (HashSet<WaitScreen.Item>)waitScreen.ReflectionGet("items");
+            items.Clear();
         }
     }
 }
