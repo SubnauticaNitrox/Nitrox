@@ -61,7 +61,7 @@ namespace NitroxServer.Wpf
                 return;
             }
 
-            // TODO: Send close command to server when implemented.
+            WriteLine("exit");
             Process.CloseMainWindow();
             Process.WaitForExit(5000);
             if (!Process.HasExited)
