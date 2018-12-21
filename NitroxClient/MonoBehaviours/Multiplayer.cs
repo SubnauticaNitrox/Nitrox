@@ -124,12 +124,12 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-			
+
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
                 multiplayerSession.Disconnect();
             }
-			
+
             OnAfterMultiplayerEnd?.Invoke();
 
             //Always do this last.
