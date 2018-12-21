@@ -36,7 +36,7 @@ namespace NitroxServer.Wpf
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Process.GetProcessesByName("NitroxServer").Any())
+            if (Process.GetProcessesByName(nameof(NitroxServer)).Any())
             {
                 MessageBox.Show("Nitrox server has already been started. Please close it before starting a new server.");
                 Environment.Exit(1);
