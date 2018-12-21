@@ -58,23 +58,7 @@ namespace NitroxServer
                 {
                     using (WebClient client = new WebClient())
                     {
-                        string externalIP = client.DownloadString("http://bot.whatismyipaddress.com"); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
-                        if (externalIP.Contains(":"))
-                        {
-                          // If the externalIP we retrieved from bot.whatismyipaddress.com has colons in it, it's an IPV6 address.
-                          // If so, use backup source which more reliably retrieves the IPV4 address. This behavior can be
-                          // observed when connecting via Comcast, which supports allocation of both IPV4 and IPV6 addresses
-                          // simultaneously.
-                          // Basic idea came from: https://stackoverflow.com/a/7838551/1136388
-                          string ipPage = client.DownloadString("http://checkip.dyndns.org");
-                          int startIP = ipPage.IndexOf(": ") + 1;
-                          int endIP = ipPage.IndexOf("<", startIP);
-
-                          if (endIP - startIP > 0 && endIP > 0)
-                          {
-                            externalIP = ipPage.Substring(startIP, endIP - startIP);
-                          }
-                        }
+                        string externalIP = client.DownloadString("http://ipv4bot.whatismyipaddress.com/"); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
                         Log.Info("If using port forwarding, use this IP: " + externalIP);
                     }
                 }
