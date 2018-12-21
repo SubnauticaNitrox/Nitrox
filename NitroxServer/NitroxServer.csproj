@@ -126,7 +126,11 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
-    <Compile Include="ConfigParser\ServerConfig.cs" />
+    <Compile Include="ConfigParser\ServerConfigReader.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\ExitCommand.cs" />
+    <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
+    <Compile Include="ConsoleCommands\SaveCommand.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\GameData.cs" />
