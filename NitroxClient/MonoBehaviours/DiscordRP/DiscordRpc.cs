@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 namespace NitroxClient.MonoBehaviours.DiscordRP
 {
+    #pragma warning disable IDE1006 // Naming Styles
     public class DiscordRpc
     {
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

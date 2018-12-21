@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
@@ -30,7 +30,6 @@ namespace NitroxClient.MonoBehaviours
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
         public static DiscordController DiscordRP;
-
         public bool InitialSyncCompleted;
 
         public void Awake()
@@ -165,7 +164,6 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
             WaitScreen.ShowImmediately();
             Main.StartSession();
-            InitDiscordRichPresence("ip address");
             yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
             WaitScreen.Remove(item);
             SetLoadingComplete();
@@ -178,20 +176,9 @@ namespace NitroxClient.MonoBehaviours
 
             WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
             waitScreen.ReflectionCall("Hide");
-        }
 
-        private void InitDiscordRichPresence(string ipAddress)
-        {
-            DiscordRP.Presence.state = "In Game";
-            DiscordRP.Presence.partyId = "<Server Name>";
-            DiscordRP.Presence.partySize = 1 + remotePlayerManager.GetPlayerCount();
-            DiscordRP.Presence.partyMax = 99;
-            if (ipAddress != null)
-            {
-                DiscordRP.Presence.joinSecret = ipAddress;
-            }
-            DiscordRP.Presence.instance = false;
-            DiscordRP.UpdatePresence();
+            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            DiscordRP.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetPlayerCount() + 1, Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
     }
 }

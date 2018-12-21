@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             GUI.skin.label.alignment = TextAnchor.MiddleRight;
             GUI.skin.label.stretchHeight = true;
             GUI.skin.label.fixedWidth = 140;
-            GUI.skin.label.fixedHeight = 140;//change this when adding new labels that need more space.
+            GUI.skin.label.fixedHeight = 140;
 
             GUI.skin.button.fontSize = 14;
             GUI.skin.button.stretchHeight = true;
@@ -49,18 +49,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void DoDiscordWindow(int windowId)
         {
-            Event e = Event.current;
-            if (e.isKey)
-            {
-                switch (e.keyCode)
-                {
-                    case KeyCode.Escape:
-                        DiscordRp.RespondLastJoinRequest(0);
-                        Destroy(gameObject.GetComponent<AcceptRequest>());
-                        break;
-                }
-            }
-
             SetGUIStyle();
             using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
             {
@@ -74,17 +62,22 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     if (GUILayout.Button("Accept"))
                     {
-                        DiscordRp.RespondLastJoinRequest(1);
-                        Destroy(gameObject.GetComponent<AcceptRequest>());
+                        CloseWindow(1);
                     }
 
                     if (GUILayout.Button("Deny"))
                     {
-                        DiscordRp.RespondLastJoinRequest(0);
-                        Destroy(gameObject.GetComponent<AcceptRequest>());
+                        CloseWindow(0);
                     }
                 }
             }
+        }
+
+        private void CloseWindow(int respond)
+        {
+            DiscordRp.RespondLastJoinRequest(respond);
+            DiscordRp.ShowingWindow = false;
+            Destroy(gameObject.GetComponent<AcceptRequest>());
         }
 
         private IEnumerator LoadAvatar(string id, string avatar_id)
