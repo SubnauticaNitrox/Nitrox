@@ -126,7 +126,11 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
-    <Compile Include="ConfigParser\ServerConfigReader.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\ExitCommand.cs" />
+    <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
+    <Compile Include="ConsoleCommands\SaveCommand.cs" />
+    <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
@@ -188,9 +192,6 @@
       <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
       <Name>NitroxReloader</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ConsoleCommands\Abstract\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

@@ -31,7 +31,7 @@ namespace NitroxServer
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, ServerOptions);
+            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, serverConfiguration);
             ConsoleCommandProcessor.RegisterCommands();
 
             //Maybe add settings for the interval?
