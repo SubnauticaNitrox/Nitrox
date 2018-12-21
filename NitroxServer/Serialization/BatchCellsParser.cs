@@ -44,15 +44,6 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
 
-            if (spawnPoints.Count > 0)
-            {
-                Log.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
-            }
-            else
-            {
-                Log.Debug($"{spawnPoints.Count} entities in batch {batchId} skipping");
-            }
-
             return spawnPoints;
         }
 
@@ -78,12 +69,13 @@ namespace NitroxServer.Serialization
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-
+                
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
                     CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
+                    
                     ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-
+                    
                     for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
                     {
                         GameObject gameObject = DeserializeGameObject(stream);
