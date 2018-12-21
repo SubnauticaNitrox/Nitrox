@@ -126,10 +126,6 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
-    <Compile Include="ConsoleCommands\Abstract\Command.cs" />
-    <Compile Include="ConsoleCommands\ExitCommand.cs" />
-    <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
-    <Compile Include="ConsoleCommands\SaveCommand.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
