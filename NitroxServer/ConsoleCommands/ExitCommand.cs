@@ -17,11 +17,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override bool VerifyArgs(string[] args)
         {
-            if (args.Length == 1)
-            {
-                return true;
-            }
-            return false;
+            return (args.Length == 0);
         }
     }
 }

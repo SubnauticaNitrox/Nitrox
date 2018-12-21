@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.Logger;
 using System.Reflection;
@@ -41,17 +40,21 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
 
             Command cmd;
-            string[] args = msg.Split()
-                .Where(arg => !string.IsNullOrEmpty(arg))
-                .ToArray();
 
-            if (commands.TryGetValue(args[0], out cmd))
+            string[] parts = msg.Split()
+                                .Where(arg => !string.IsNullOrEmpty(arg))
+                                .ToArray();
+
+            if (commands.TryGetValue(parts[0], out cmd))
             {
+                string[] args = parts.Skip(1).ToArray();
+
                 if (cmd.VerifyArgs(args))
                 {
                     cmd.RunCommand(args);
                     return;
                 }
+
                 Log.Info("Command Invalid: {0}", cmd.Args);
             }
         }
