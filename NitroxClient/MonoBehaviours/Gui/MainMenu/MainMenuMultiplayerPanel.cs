@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using UnityEngine;
@@ -114,21 +112,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
-            char seperator = ':';
-
+            string seperator = ":";
             if (serverIp.Contains(seperator))
             {
-                string[] splitIP = serverIp.Split(seperator);
+                char splitter = ':';
+                string[] splitIP = serverIp.Split(splitter);
                 joinServerComponent.ServerIp = splitIP[0];
                 joinServerComponent.serverPort = int.Parse(splitIP[1]);
             }
             else
             {
-                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
-                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
+                joinServerComponent.ServerIp = serverIp;
                 joinServerComponent.serverPort = 11000;
             }
-
+            
         }
 
         public void ShowAddServerWindow()
