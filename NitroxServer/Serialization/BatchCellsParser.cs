@@ -44,8 +44,6 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
 
-            Log.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
-
             return spawnPoints;
         }
 
@@ -60,24 +58,24 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData\\Build18");
             string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
-                Log.Info($"Unable to find batch cells file '{fileName}'! Please move SNUnmanagedData\\Build18 to {Path.Combine(Directory.GetCurrentDirectory(), @"SNUnmanagedData\Build18")}.");
                 return;
             }
 
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-
+                
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
                     CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
+                    
                     ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-
+                    
                     for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
                     {
                         GameObject gameObject = DeserializeGameObject(stream);

@@ -49,6 +49,11 @@ namespace NitroxModel.Discovery.InstallationFinders
         /// <returns></returns>
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
         {
+            if (!File.Exists(libraryfolders))
+            {
+                return null;
+            }
+
             StreamReader file = new StreamReader(libraryfolders);
             string line;
             while ((line = file.ReadLine()) != null)

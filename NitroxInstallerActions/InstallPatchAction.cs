@@ -16,14 +16,16 @@ namespace NitroxInstallerActions
             try
             {
                 string managedDirectory = session.CustomActionData["MANAGEDDIR"];
-
+                                
                 if (!RequiredAssembliesExist(managedDirectory))
                 {
-                    MessageBox.Show("Error instaliing Nitrox to the specified directory. Please ensure the installer is pointing to your subnautica directory and try again.");
+                    MessageBox.Show("Error installing Nitrox to the specified directory. Please ensure the installer is pointing to your subnautica directory and try again.  Attempting to locate managed at: " + managedDirectory);
                     return ActionResult.Failure;
                 }
 
                 NitroxEntryPatch nitroxPatch = new NitroxEntryPatch(managedDirectory);
+
+                NitroxServerSetup.Init(managedDirectory);
 
                 if (!nitroxPatch.IsApplied)
                 {
@@ -32,6 +34,7 @@ namespace NitroxInstallerActions
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.Message);
                 session.Log(ex.Message);
                 return ActionResult.Failure;
             }

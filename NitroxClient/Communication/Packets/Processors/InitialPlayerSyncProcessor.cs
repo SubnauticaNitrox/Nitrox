@@ -211,23 +211,35 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 foreach (ItemData itemdata in inventoryItems)
                 {
-                    GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
-                    Pickupable pickupable = item.RequireComponent<Pickupable>();
-                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+                    GameObject item;
 
-                    if (itemdata.ContainerGuid == playerGuid)
+                    try
                     {
+                        item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                    }
+                    catch(Exception ex)
+                    {
+                        Log.Error("Error deserializing item data " + itemdata.Guid + " " + ex.Message);
+                        continue;
+                    }
+
+                    Pickupable pickupable = item.GetComponent<Pickupable>();
+
+                    if (pickupable != null && itemdata.ContainerGuid == playerGuid)
+                    {
+                        goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+
                         ItemsContainer container = Inventory.Get().container;
                         InventoryItem inventoryItem = new InventoryItem(pickupable);
                         inventoryItem.container = container;
                         inventoryItem.item.Reparent(container.tr);
-                        
+
                         container.UnsafeAdd(inventoryItem);
                     }
                     else
                     {
                         itemContainers.AddItem(itemdata);
-                    }
+                    }              
                 }
             }
 

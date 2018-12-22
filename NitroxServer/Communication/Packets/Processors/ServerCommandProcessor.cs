@@ -1,5 +1,6 @@
 ﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -7,7 +8,9 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         public override void Process(ServerCommand packet, Player player)
         {
-            Server.Instance.Save();
+            string msg = string.Join(" ", packet.CmdArgs);
+
+            ConsoleCommandProcessor.ProcessCommand(msg);
         }
     }
 }

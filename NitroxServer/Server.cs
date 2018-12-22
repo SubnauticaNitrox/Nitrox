@@ -4,6 +4,7 @@ using NitroxServer.Communication.Packets;
 using NitroxServer.Serialization.World;
 using System.Timers;
 using NitroxServer.ConfigParser;
+using NitroxServer.ConsoleCommands.Processor;
 
 
 namespace NitroxServer
@@ -15,7 +16,7 @@ namespace NitroxServer
         private readonly WorldPersistence worldPersistence;
         private readonly PacketHandler packetHandler;
         private readonly Timer saveTimer;
-        private ServerConfigReader ServerOptions;
+        private ServerConfig serverConfiguration;
         public static Server Instance;
 
         public void Save()
@@ -23,14 +24,15 @@ namespace NitroxServer
             worldPersistence.Save(world);
         }
 
-        public Server(ServerConfigReader configReader)
+        public Server(ServerConfig config)
         {
-            ServerOptions = configReader;
+            serverConfiguration = config;
             Instance = this;
             worldPersistence = new WorldPersistence();
             world = worldPersistence.Load();
             packetHandler = new PacketHandler(world);
-            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, ServerOptions);
+            udpServer = new UdpServer(packetHandler, world.PlayerManager, world.EntitySimulation, serverConfiguration);
+            ConsoleCommandProcessor.RegisterCommands();
 
             //Maybe add settings for the interval?
             saveTimer = new Timer();
@@ -44,11 +46,12 @@ namespace NitroxServer
 
         public void Start()
         {
+            IpLogger.PrintServerIps();
             udpServer.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
-
+        
         public void Stop()
         {
             Log.Info("Nitrox Server Stopping...");
