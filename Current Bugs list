@@ -1,0 +1,23 @@
+A proposed bug list for people to know what bugs are in and to prevent duplicate issues from being posted over and over!
+
+
+    * Exploding fish have a 80%ish percent chance of being stuck in their pods while the other 20% go after you and kill you just fine (terrifying)
+    * Sometimes Habitat storage will duplicate and have two in the same space
+    * Deconstruction appears not to save properly or sync between restarts (Tinnnnnny bit annoying)
+    * Seamoths Damage values need tobe sent to other clients along with if a client has done repairs on the seamoth
+    * Wearables sometimes disappear on relog (Currently using debug to spawn shit back in)
+    * 40% chance of the mobile vehicle bay despawning (unknown what triggers this)
+    * Storage in the life pod is not synced and resets itself every relog
+    * Deployable storage pods are not synced (minor)
+    * Sometimes the other players are a meter off the ground in the habitats (can be fixed by everyone relogging)
+    * The devs are doing a good job (not a bug it is a feature!)
+    * Infinite o2 bug (Fixed by reequiping tanks)
+    * Nuclear reactors break everything (Really annoying but thats why we backup)
+    * Bio reactors ^ (major problem)
+    * Scanner rooms are not synced and upgrades reset on restart of server (To be expected)
+    * Using grav gun on players can cause issues.... (funny issues)
+    * Prawn suit has same issue as sea moth with repairs not being sent to other players (you might need a sync event for this)
+    * Player animations do what you do (minor as all hell fix this last)
+    * Fish go inside habitats and become stuck on the floor ( free fish to eat really don't mind)
+    * Fish spawn numbers are over the top and appear to have no limit or are dupping (Might need to have a limit in place)
+    * stalker teeth do not drop (For now you will just have to enable the console and type "item stalkertooth")
