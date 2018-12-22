@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -117,16 +118,23 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
 
-            char seperator = ':';
-            if (serverIp.Contains(seperator))
+            if (Regex.IsMatch(serverIp, "^[0-9.:]+$"))
             {
-                string[] splitIP = serverIp.Split(seperator);
-                joinServerComponent.ServerIp = splitIP[0];
-                joinServerComponent.serverPort = int.Parse(splitIP[1]);
+                char seperator = ':';
+                if (serverIp.Contains(seperator))
+                {
+                    string[] splitIP = serverIp.Split(seperator);
+                    joinServerComponent.ServerIp = splitIP[0];
+                    joinServerComponent.serverPort = int.Parse(splitIP[1]);
+                }
+                else
+                {
+                    joinServerComponent.ServerIp = serverIp;
+                    joinServerComponent.serverPort = 11000;
+                }
             }
             else
             {
-
                 try
                 {
                     IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
@@ -138,9 +146,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     Log.Error($"Unable to resolve the address: {serverIp}");
                     Log.Error(e.ToString());
                 }
-
             }
-
         }
 
         public void ShowAddServerWindow()
