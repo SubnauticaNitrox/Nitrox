@@ -40,7 +40,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
-        private readonly Random random = new Random();
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
         public BatchEntitySpawner(ResourceAssets resourceAssets, List<Int3> loadedPreviousParsed)
@@ -68,6 +67,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 parsedBatches.Add(batchId);
             }
             
+            Random random = new Random(batchId.GetHashCode());
+
             List<Entity> entities = new List<Entity>();
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
 
@@ -78,7 +79,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     DstData dstData;
                     if (lootDistributionData.GetBiomeLoot(esp.BiomeType, out dstData))
                     {
-                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, dstData));
+                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, dstData, random));
                     }
                     else if(esp.ClassId != null)
                     {
@@ -102,7 +103,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             return entities;
         }
 
-        private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData)
+        private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData, Random random)
         {
             List<PrefabData> allowedPrefabs = filterAllowedPrefabs(dstData.prefabs, entitySpawnPoint);
 
