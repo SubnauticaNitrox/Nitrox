@@ -62,7 +62,15 @@ namespace NitroxClient.MonoBehaviours
             while (buildEvents.Count > 0 && !isNextEventFrameBlocked)
             {
                 BuildEvent nextEvent = buildEvents.Dequeue();
-                ActionBuildEvent(nextEvent);
+
+                try
+                {
+                    ActionBuildEvent(nextEvent);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Error processing buildEvent in ThrottledBuilder" + ex);
+                }
 
                 if (nextEvent.RequiresFreshFrame())
                 {

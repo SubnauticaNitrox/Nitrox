@@ -10,7 +10,6 @@ using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
