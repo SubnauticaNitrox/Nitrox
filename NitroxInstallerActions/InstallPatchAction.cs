@@ -34,7 +34,7 @@ namespace NitroxInstallerActions
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.ToString());
                 session.Log(ex.Message);
                 return ActionResult.Failure;
             }

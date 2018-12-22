@@ -68,7 +68,7 @@ namespace NitroxServer
 
         private static void PingOnPingCompleted(object sender, PingCompletedEventArgs e)
         {
-            if (e.Reply.Status != IPStatus.Success)
+            if (e.Reply == null || e.Reply.Status != IPStatus.Success)
             {
                 return;
             }
