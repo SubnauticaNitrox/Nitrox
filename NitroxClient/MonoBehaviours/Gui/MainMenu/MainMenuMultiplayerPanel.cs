@@ -4,6 +4,9 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using NitroxModel.Logger;
+using System;
+using System.Diagnostics;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -38,6 +41,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
 
             CreateButton("Add a server", ShowAddServerWindow);
+            CreateButton("Start local server", StartServer);
+
             using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
             {
                 string line;
@@ -135,6 +140,25 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             showingAddServer = true;
             shouldFocus = true;
         }
+
+        private void StartServer()
+        {
+            string path = Path.Combine(Environment.CurrentDirectory, "SubServer\\NitroxServer.exe");
+            Process[] servers = Process.GetProcessesByName("NitroxServer");
+
+            if (servers.Length == 0)
+            {
+                Log.Info("Attempting to start nitrox server at " + path + "...");
+                Process.Start(path);
+                Log.Info("Server started successfully!");
+            }
+            else
+            {
+                Log.Info("Nitrox Server already running!");
+                Log.InGame("Server already running!");
+            }
+        }
+
 
         public void HideAddServerWindow()
         {

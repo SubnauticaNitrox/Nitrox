@@ -38,17 +38,7 @@ namespace NitroxClient.GameLogic
 
             float distance = difference.magnitude;
 
-            if (distance > 20f)
-            {
-                // This should be a one-off teleport.
-                gameObject.transform.position = remotePosition;
-            }
-            // overcorrections can cause jitter when standing still.
-            else if (distance > 0.001f)
-            {
-                float maxAdjustment = (float)Math.Log10(distance) * 4f;
-                remoteVelocity += MathUtil.ClampMagnitude(velocityToMakeUpDifference - remoteVelocity, maxAdjustment, -maxAdjustment);
-            }
+            gameObject.transform.position = remotePosition;
 
             return remoteVelocity;
         }
