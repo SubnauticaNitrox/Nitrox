@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using NitroxHarmony;
 
 namespace NitroxPatcher.Patches
 {

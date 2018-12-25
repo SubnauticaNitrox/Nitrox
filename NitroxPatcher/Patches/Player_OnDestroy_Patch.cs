@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using Harmony;
+using NitroxHarmony;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;

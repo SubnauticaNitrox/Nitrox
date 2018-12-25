@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using NitroxHarmony;
 using NitroxClient.Communication.Packets.Processors;
 
 namespace NitroxPatcher.Patches

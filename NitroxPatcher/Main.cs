@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Harmony;
+using NitroxHarmony;
 using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -68,6 +68,10 @@ namespace NitroxPatcher
             Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
 
             ApplyNitroxBehaviours();
+
+            //Injecting QModManager
+            Log.Info("Injecting QModManager");
+            QModInstaller.QModPatcher.Patch();
         }
 
         public static void Apply()

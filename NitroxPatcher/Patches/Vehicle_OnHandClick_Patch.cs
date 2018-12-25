@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using NitroxHarmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.HUD;

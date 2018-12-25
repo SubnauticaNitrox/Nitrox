@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using System.Reflection.Emit;
-using Harmony;
+using NitroxHarmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 

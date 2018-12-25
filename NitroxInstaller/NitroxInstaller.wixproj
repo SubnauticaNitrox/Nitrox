@@ -38,8 +38,8 @@
     <Content Include="NitroxInstaller.wax" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Name>Harmony</Name>
+    <ProjectReference Include="..\Harmony\Harmony\NitroxHarmony.csproj">
+      <Name>NitroxHarmony</Name>
       <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>

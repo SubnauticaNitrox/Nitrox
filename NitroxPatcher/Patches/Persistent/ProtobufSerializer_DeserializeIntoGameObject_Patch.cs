@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using Harmony;
+using NitroxHarmony;
 using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
