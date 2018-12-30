@@ -18,6 +18,11 @@ namespace InstallerActions.Patches
             "LumenWorks.dll",
         };
 
+        private static string[] createdFiles = new string[]
+        {
+            "save.nitrox",
+        };
+
         // dir = (Subnautica Directory)\Subnautica_Data\Managed
         public static void Init(string dir)
         {
@@ -35,14 +40,34 @@ namespace InstallerActions.Patches
             File.WriteAllText(file, tmpDir);
         }
 
+        public static void Uninstall(string dir)
+        {
+            foreach (string tmpFile in files)
+            {
+                DeleteFile(tmpFile, dir);
+            }
+
+            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\path.txt");
+            if (File.Exists(file))
+            {
+                File.Delete(file);
+            }
+        }
+
         private static void CopyFile(string fileName, string dir)
+        {
+            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\" + fileName); // (Subnautica Directory)\SubServer\fileName
+            DeleteFile(fileName, dir);
+            File.Copy(dir + fileName, file);
+        }
+
+        private static void DeleteFile(string fileName, string dir)
         {
             string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\" + fileName); // (Subnautica Directory)\SubServer\fileName
             if (File.Exists(file))
             {
                 File.Delete(file);
             }
-            File.Copy(dir + fileName, file);
         }
 
     }
