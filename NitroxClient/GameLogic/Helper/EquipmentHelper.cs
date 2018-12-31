@@ -69,7 +69,7 @@ namespace NitroxClient.GameLogic.Helper
 
             Player equipmentplayer = owner.GetComponent<Player>();
 
-            if (equipmentplayer != null)
+            if (equipmentplayer != null || owner.name == "Player")
             {
                 return Optional<Equipment>.Of(Inventory.main.equipment);
             }

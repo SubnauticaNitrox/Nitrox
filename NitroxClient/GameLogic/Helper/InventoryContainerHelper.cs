@@ -21,6 +21,11 @@ namespace NitroxClient.GameLogic.Helper
                 return Optional<ItemsContainer>.Of(storageContainer.container);
             }
 
+            if (owner.name == "Player")
+            {
+                return Optional<ItemsContainer>.Of(Inventory.Get().container);
+            }
+
             return Optional<ItemsContainer>.Empty();
         }
     }
