@@ -46,7 +46,8 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.PlayerData.PlayerSpawn(player.Name),
                                                                        world.PlayerData.GetSubRootGuid(player.Name),
                                                                        world.PlayerData.Stats(player.Name),
-                                                                       getRemotePlayerData(player));
+                                                                       getRemotePlayerData(player),
+                                                                       world.EntityData.GetGlobalRootEntities());
 
             player.SendPacket(initialPlayerSync);
         }

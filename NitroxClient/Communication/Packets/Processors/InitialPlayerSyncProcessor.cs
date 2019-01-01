@@ -25,8 +25,9 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly ItemContainers itemContainers;
         private readonly EquipmentSlots equipment;
         private readonly PlayerManager remotePlayerManager;
+        private readonly Entities entities;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
@@ -34,6 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
             this.itemContainers = itemContainers;
             this.equipment = equipment;
             this.remotePlayerManager = remotePlayerManager;
+            this.entities = entities;
         }
 
         public override void Process(InitialPlayerSync packet)
@@ -42,6 +44,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
+            SpawnGlobalRootEntities(packet.GlobalRootEntities);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
@@ -54,6 +57,12 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
+        }
+
+        private void SpawnGlobalRootEntities(List<Entity> globalRootEntities)
+        {
+            Log.Info("Received initial sync packet with " + globalRootEntities.Count + " global root entities");
+            entities.Spawn(globalRootEntities);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)

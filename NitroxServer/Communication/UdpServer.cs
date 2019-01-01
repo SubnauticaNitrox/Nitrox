@@ -135,12 +135,12 @@ namespace NitroxServer.Communication
                     Disconnect disconnect = new Disconnect(player.Id);
                     playerManager.SendPacketToAllPlayers(disconnect);
 
-                    List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+                    List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
 
-                    if (revokedGuids.Count > 0)
+                    if (ownershipChanges.Count > 0)
                     {
-                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
-                        playerManager.SendPacketToAllPlayers(ownershipChange);
+                        SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(ownershipChanges);
+                        playerManager.SendPacketToAllPlayers(ownershipChangePacket);
                     }
                 }
             }

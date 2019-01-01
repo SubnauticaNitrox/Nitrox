@@ -107,7 +107,6 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemProcessor.cs" />
@@ -203,6 +202,7 @@
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
     <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
+    <Compile Include="GameLogic\Spawning\SerializedEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\NitroxEntity.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
@@ -241,7 +241,6 @@
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PowerMonitor.cs" />
-    <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\ThrottledBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
