@@ -89,8 +89,7 @@ namespace NitroxServer
             else
             {
                 Log.Warn("Could not get your external IP. You are on your own...");
-            }
-            
+            }            
         }
     }
 }
