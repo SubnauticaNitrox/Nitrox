@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.Helper
                 return Optional<ItemsContainer>.Of(seamothStorageContainer.container);
             }
 
-            StorageContainer storageContainer = owner.GetComponent<StorageContainer>();
+            StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>();
 
             if (storageContainer != null)
             {
