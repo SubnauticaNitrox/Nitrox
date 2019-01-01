@@ -91,5 +91,19 @@ namespace NitroxServer.GameLogic
                 return revokedGuids;
             }
         }
+
+        public bool RevokeOwnerOfGuid(string guid)
+        {
+            lock (playerLocksByGuid)
+            {
+                if(playerLocksByGuid.ContainsKey(guid))
+                {
+                    playerLocksByGuid.Remove(guid);
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
