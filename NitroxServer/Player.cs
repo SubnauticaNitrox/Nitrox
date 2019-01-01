@@ -59,6 +59,11 @@ namespace NitroxServer
             }
         }
 
+        public bool CanSee(Entity entity)
+        {
+            return (entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell));
+        }
+
         public void SendPacket(Packet packet)
         {
             connection.SendPacket(packet);            

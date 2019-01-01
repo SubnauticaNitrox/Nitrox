@@ -71,5 +71,10 @@ namespace NitroxClient.GameLogic
         {
             simulatedGuidsByLockType[guid] = lockType;
         }
+
+        public void StopSimulatingGuid(string guid)
+        {
+            simulatedGuidsByLockType.Remove(guid);
+        }
     }
 }

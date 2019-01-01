@@ -19,8 +19,9 @@ namespace NitroxModel.Packets
         public Optional<string> PlayerSubRootGuid { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
+        public List<Entity> GlobalRootEntities { get; }
 
-        public InitialPlayerSync(string playerGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData)
+        public InitialPlayerSync(string playerGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities)
         {
             PlayerGuid = playerGuid;
             EquippedItems = equipment;
@@ -32,6 +33,7 @@ namespace NitroxModel.Packets
             PlayerSubRootGuid = playerSubRootGuid;
             PlayerStatsData = playerStatsData;
             RemotePlayerData = remotePlayerData;
+            GlobalRootEntities = globalRootEntities;
         }
 
         public override string ToString()

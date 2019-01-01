@@ -55,6 +55,16 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             timer = StartCoroutine(DeactivateChat());
         }
 
+        public void Show()
+        {
+            chatText.enabled = true;
+        }
+
+        public void Hide()
+        {
+            chatText.enabled = false;
+        }
+
         private void AddChatMessage(ChatLogEntry chatLogEntry)
         {
             if (entries.Count == MESSAGE_LIMIT)

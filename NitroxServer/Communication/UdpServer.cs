@@ -26,13 +26,13 @@ namespace NitroxServer.Communication
         private readonly Thread thread;
         private int PortNumber, MaxConn;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfigReader ConfigReader)
+        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-            PortNumber = ConfigReader.serverPort;
-            MaxConn = ConfigReader.maxConn;
+            PortNumber = serverConfig.ServerPort;
+            MaxConn = serverConfig.MaxConnections;
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
             thread = new Thread(Listen);
@@ -135,12 +135,12 @@ namespace NitroxServer.Communication
                     Disconnect disconnect = new Disconnect(player.Id);
                     playerManager.SendPacketToAllPlayers(disconnect);
 
-                    List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
+                    List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
 
-                    if (revokedGuids.Count > 0)
+                    if (ownershipChanges.Count > 0)
                     {
-                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
-                        playerManager.SendPacketToAllPlayers(ownershipChange);
+                        SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(ownershipChanges);
+                        playerManager.SendPacketToAllPlayers(ownershipChangePacket);
                     }
                 }
             }

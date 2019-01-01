@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="InstallPatchAction.cs" />
     <Compile Include="Patches\NitroxEntryPatch.cs" />
+    <Compile Include="Patches\NitroxServerSetup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UninstallPatchAction.cs" />
     <Content Include="CustomAction.config" />

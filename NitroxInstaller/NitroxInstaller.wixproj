@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-	<Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProductVersion>3.10</ProductVersion>
-    <ProjectGuid>6f1bf4ab-c8d7-4bc5-85cc-e604cee43a09</ProjectGuid>
-    <SchemaVersion>2.0</SchemaVersion>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>1.0</ProductVersion>
+    <ProjectGuid>{6f1bf4ab-c8d7-4bc5-85cc-e604cee43a09}</ProjectGuid>
     <OutputName>NitroxInstaller</OutputName>
+    <SchemaVersion>2.0</SchemaVersion>
     <OutputType>Package</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -94,6 +94,22 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxServer.Wpf\NitroxServer.Wpf.csproj">
+      <Name>NitroxServer.Wpf</Name>
+      <Project>{decaad61-2567-468d-97dc-771fb46bd4da}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
+      <Name>NitroxServer</Name>
+      <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixUIExtension">
@@ -108,6 +124,30 @@
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets" Condition=" '$(WixTargetsPath)' == '' AND Exists('$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets') " />
   <Target Name="EnsureWixToolsetInstalled" Condition=" '$(WixTargetsImported)' != 'true' ">
     <Error Text="The WiX Toolset v3.11 (or newer) build tools must be installed to build this project. To download the WiX Toolset, see http://wixtoolset.org/releases/" />
+  </Target>
+  <Target Name="BeforeBuild">
+    <GetAssemblyIdentity AssemblyFiles="$(SolutionDir)bin\$(Configuration)\NitroxClient.dll">
+      <Output TaskParameter="Assemblies" ItemName="AsmInfo" />
+    </GetAssemblyIdentity>
+    <CreateProperty Value="%(AsmInfo.Version)">
+      <Output TaskParameter="Value" PropertyName="TargetVersion" />
+    </CreateProperty>
+    <PropertyGroup>
+      <DefineConstants>
+    TargetVersion=$(TargetVersion);
+  </DefineConstants>
+    </PropertyGroup>
+    <CreateProperty Value="$(OutputName)-$(TargetVersion)">
+      <Output TaskParameter="Value" PropertyName="TargetName" />
+    </CreateProperty>
+    <CreateProperty Value="$(TargetName)$(TargetExt)">
+      <Output TaskParameter="Value" PropertyName="TargetFileName" />
+    </CreateProperty>
+    <CreateProperty Value="$(TargetDir)$(TargetFileName)">
+      <Output TaskParameter="Value" PropertyName="TargetPath" />
+    </CreateProperty>
+  </Target>
+  <Target Name="AfterBuild">
   </Target>
   <!--
 	To modify your build process, add your task inside one of the targets below and uncomment it.

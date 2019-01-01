@@ -13,8 +13,14 @@ namespace NitroxModel.Discovery.InstallationFinders
 
         public Optional<string> FindGame(List<string> errors)
         {
-            string appsPath = Path.Combine((string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath"), "steamapps");
+            string steamPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
+            if (string.IsNullOrEmpty(steamPath))
+            {
+                errors.Add("It appears you don't have Steam installed.");
+                return Optional<string>.Empty();
+            }
 
+            string appsPath = Path.Combine(steamPath, "steamapps");
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
                 return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), SUBNAUTICA_GAME_NAME));
@@ -43,6 +49,11 @@ namespace NitroxModel.Discovery.InstallationFinders
         /// <returns></returns>
         private static string SearchAllInstallations(string libraryfolders, int appid, string gameName)
         {
+            if (!File.Exists(libraryfolders))
+            {
+                return null;
+            }
+
             StreamReader file = new StreamReader(libraryfolders);
             string line;
             while ((line = file.ReadLine()) != null)

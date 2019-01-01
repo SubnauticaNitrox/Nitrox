@@ -5,16 +5,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ServerCommand : Packet
     {
-        public enum Commands
-        {
-            SAVE
-        }
+        public string[] CmdArgs;
 
-        public Commands Command { get; }
-
-        public ServerCommand(Commands Command)
+        public ServerCommand(string[] args)
         {
-            this.Command = Command;
+            CmdArgs = args;
         }
     }
 }
