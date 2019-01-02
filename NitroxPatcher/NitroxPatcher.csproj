@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\BaseAddModuleGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
