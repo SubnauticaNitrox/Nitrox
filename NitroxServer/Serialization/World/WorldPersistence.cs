@@ -59,20 +59,20 @@ namespace NitroxServer.Serialization.World
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
 
-                if(persistedData == null || !persistedData.IsValid())
+                if (persistedData == null || !persistedData.IsValid())
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
 
                 World world = CreateWorld(persistedData.ServerStartTime,
-                                          persistedData.EntityData, 
+                                          persistedData.EntityData,
                                           persistedData.BaseData,
                                           persistedData.VehicleData,
                                           persistedData.InventoryData,
                                           persistedData.PlayerData,
                                           persistedData.GameData,
                                           persistedData.ParsedBatchCells);
-                
+
                 return Optional<World>.Of(world);
             }
             catch (FileNotFoundException ex)
@@ -98,14 +98,14 @@ namespace NitroxServer.Serialization.World
 
             return CreateFreshWorld();
         }
-        
+
         private World CreateFreshWorld()
         {
             return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>());
         }
 
-        private World CreateWorld(DateTime serverStartTime, 
-                                  EntityData entityData, 
+        private World CreateWorld(DateTime serverStartTime,
+                                  EntityData entityData,
                                   BaseData baseData,
                                   VehicleData vehicleData,
                                   InventoryData inventoryData,
@@ -126,6 +126,7 @@ namespace NitroxServer.Serialization.World
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
             world.GameData = gameData;
+            world.EscapePodManager = new EscapePodManager();
             world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();

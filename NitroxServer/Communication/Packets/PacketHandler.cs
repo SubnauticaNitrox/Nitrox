@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.Packets
         {
             this.playerManager = world.PlayerManager;
             defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
-            
+
             Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
             {
                 {typeof(World), world },
@@ -41,7 +41,7 @@ namespace NitroxServer.Communication.Packets
                 {typeof(PlayerManager), playerManager },
                 {typeof(TimeKeeper), world.TimeKeeper },
                 {typeof(SimulationOwnershipData), world.SimulationOwnershipData },
-                {typeof(EscapePodManager), new EscapePodManager() },
+                {typeof(EscapePodManager), world.EscapePodManager },
                 {typeof(EntityManager), new EntityManager(world.EntityData, world.BatchEntitySpawner)},
                 {typeof(EntitySimulation), new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager) }
             };
@@ -64,7 +64,7 @@ namespace NitroxServer.Communication.Packets
                 ProcessAuthenticated(packet, player);
             }
         }
-        
+
         private void ProcessAuthenticated(Packet packet, Player player)
         {
             PacketProcessor packetProcessor;
