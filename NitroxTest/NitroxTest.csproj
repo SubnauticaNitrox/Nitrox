@@ -37,6 +37,9 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\bin\Debug\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="0NitroxHarmony">
       <HintPath>..\bin\Debug\0NitroxHarmony.dll</HintPath>
     </Reference>

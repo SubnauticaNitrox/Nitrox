@@ -69,9 +69,9 @@ namespace NitroxPatcher
 
             ApplyNitroxBehaviours();
 
-            //Injecting QModManager
-            Log.Info("Injecting QModManager");
-            QModInstaller.QModPatcher.Patch();
+            //Loading QMods
+            Log.Info("Loading QMods");
+            QModManager.Patch();
         }
 
         public static void Apply()
