@@ -34,7 +34,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.InventoryData = world.InventoryData;
                 persistedData.PlayerData = world.PlayerData;
                 persistedData.GameData = world.GameData;
-                persistedData.EscapePodManager = world.EscapePodManager;
+                persistedData.EscapePodData = world.EscapePodData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -74,9 +74,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.PlayerData,
                                           persistedData.GameData,
                                           persistedData.ParsedBatchCells,
-                                          persistedData.EscapePodManager);
-
-                world.EscapePodManager.SetInventoryData(persistedData.InventoryData);
+                                          persistedData.EscapePodData);
 
                 return Optional<World>.Of(world);
             }
@@ -106,8 +104,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodManager());
-            world.EscapePodManager.InitEscapePodManager(world.InventoryData);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData());
             return world;
         }
 
@@ -119,7 +116,7 @@ namespace NitroxServer.Serialization.World
                                   PlayerData playerData,
                                   GameData gameData,
                                   List<Int3> ParsedBatchCells,
-                                  EscapePodManager escapePodManager)
+                                  EscapePodData escapePodData)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -134,7 +131,8 @@ namespace NitroxServer.Serialization.World
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
             world.GameData = gameData;
-            world.EscapePodManager = escapePodManager;
+            world.EscapePodData = escapePodData;
+            world.EscapePodManager = new EscapePodManager(escapePodData);
             world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();

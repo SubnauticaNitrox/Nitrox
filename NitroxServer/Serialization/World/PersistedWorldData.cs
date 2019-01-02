@@ -44,7 +44,7 @@ namespace NitroxServer.Serialization.World
         public GameData GameData { get; set; }
 
         [ProtoMember(10)]
-        public EscapePodManager EscapePodManager { get; set; }
+        public EscapePodData EscapePodData { get; set; }
 
         public bool IsValid()
         {
@@ -62,7 +62,8 @@ namespace NitroxServer.Serialization.World
                    (GameData != null) &&
                    (PlayerData != null) &&
                    (EntityData != null) &&
-                   (EntityData.SerializableEntitiesByGuid.Count > 0);
+                   (EntityData.SerializableEntitiesByGuid.Count > 0) &&
+                   (EscapePodData != null);
         }
     }
 }

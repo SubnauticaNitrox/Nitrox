@@ -10,33 +10,18 @@ namespace NitroxModel.DataStructures.GameLogic
     public class EscapePodModel
     {
         [ProtoMember(1)]
-        public List<ushort> SerializedAssignedPlayers
-        {
-            get
-            {
-                lock (AssignedPlayers)
-                {
-                    return AssignedPlayers;
-                }
-            }
-            set
-            {
-                AssignedPlayers = value;
-            }
-        }
-        [ProtoMember(2)]
         public string Guid { get; set; }
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public Vector3 Location { get; set; }
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public string FabricatorGuid { get; set; }
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public string MedicalFabricatorGuid { get; set; }
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         public string StorageContainerGuid { get; set; }
-        [ProtoMember(7)]
+        [ProtoMember(6)]
         public string RadioGuid { get; set; }
-        [ProtoIgnore]
+        [ProtoMember(7)]
         public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
 
         public void InitEscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
