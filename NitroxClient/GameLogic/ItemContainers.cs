@@ -88,6 +88,7 @@ namespace NitroxClient.GameLogic
             {
                 ItemsContainer container = opContainer.Get();
                 GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+                item.SetNewGuid(itemData.Guid);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
                 using (packetSender.Suppress<ItemContainerAdd>())

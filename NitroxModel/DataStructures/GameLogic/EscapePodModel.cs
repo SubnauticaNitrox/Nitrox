@@ -1,21 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProtoBuf;
 using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
+    [ProtoContract]
     public class EscapePodModel
     {
-        public string Guid { get; }
-        public Vector3 Location { get; }
-        public string FabricatorGuid { get; }
-        public string MedicalFabricatorGuid { get; }
-        public string StorageContainerGuid { get; }
-        public string RadioGuid { get; }
-        public List<ushort> AssignedPlayers { get; } = new List<ushort>();
+        [ProtoMember(1)]
+        public List<ushort> SerializedAssignedPlayers
+        {
+            get
+            {
+                lock (AssignedPlayers)
+                {
+                    return AssignedPlayers;
+                }
+            }
+            set
+            {
+                AssignedPlayers = value;
+            }
+        }
+        [ProtoMember(2)]
+        public string Guid { get; set; }
+        [ProtoMember(3)]
+        public Vector3 Location { get; set; }
+        [ProtoMember(4)]
+        public string FabricatorGuid { get; set; }
+        [ProtoMember(5)]
+        public string MedicalFabricatorGuid { get; set; }
+        [ProtoMember(6)]
+        public string StorageContainerGuid { get; set; }
+        [ProtoMember(7)]
+        public string RadioGuid { get; set; }
+        [ProtoIgnore]
+        public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
 
-        public EscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
+        public void InitEscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
         {
             Guid = guid;
             Location = location;
