@@ -86,8 +86,10 @@ namespace NitroxServer
             {
                 Log.Info($"If using port forwarding, use this IP: {e.Result}");
             }
-
-            Log.Warn("Could not get your external IP. You are on your own...");
+            else
+            {
+                Log.Warn("Could not get your external IP. You are on your own...");
+            }            
         }
     }
 }
