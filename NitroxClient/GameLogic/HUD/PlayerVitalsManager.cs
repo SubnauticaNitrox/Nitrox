@@ -1,37 +1,33 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using UnityEngine;
-using NitroxModel.Logger;
+
 namespace NitroxClient.GameLogic.HUD
 {
     public class PlayerVitalsManager
     {
         private readonly Dictionary<ushort, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<ushort, RemotePlayerVitals>();
+        private PlayerManager PlayerManager { get; }
 
-        public void RemovePlayer(ushort playerId)
+        public PlayerVitalsManager(PlayerManager playerManager)
         {
-            RemotePlayerVitals removedPlayerVitals = GetForPlayerId(playerId, null);
+            PlayerManager = playerManager;
+        }
+
+        public void RemoveForPlayer(ushort playerId)
+        {
+            RemotePlayerVitals removedPlayerVitals = CreateForPlayer(playerId);
             vitalsByPlayerId.Remove(playerId);
 
             Object.Destroy(removedPlayerVitals);
         }
 
-        public RemotePlayerVitals GetForPlayerId(ushort playerId, PlayerManager playerManager)
+        public RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
             RemotePlayerVitals vitals;
             if (!vitalsByPlayerId.TryGetValue(playerId, out vitals))
             {
-                vitals = new GameObject().AddComponent<RemotePlayerVitals>();
-
-                if (playerManager != null)
-                {
-                    vitals.CreateVitals(playerManager.Find(playerId).Get());
-                }
-                else
-                {
-                    Log.Info("PlayerManager doesn't exist are you sure this is what you want?");
-                }
-
+                vitals = RemotePlayerVitals.CreateForPlayer(playerId);
                 vitalsByPlayerId[playerId] = vitals;
             }
 

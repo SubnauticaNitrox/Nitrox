@@ -23,7 +23,7 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
 
             if (patches != null)
             {

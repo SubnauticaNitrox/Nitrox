@@ -9,17 +9,15 @@ namespace NitroxClient.Communication.Packets.Processors
     class PlayerStatsProcessor : ClientPacketProcessor<PlayerStats>
     {
         private readonly PlayerVitalsManager vitalsManager;
-        private readonly PlayerManager playerManager;
 
-        public PlayerStatsProcessor(PlayerVitalsManager vitalsManager, PlayerManager playerManager)
+        public PlayerStatsProcessor(PlayerVitalsManager vitalsManager)
         {
             this.vitalsManager = vitalsManager;
-            this.playerManager = playerManager;
         }
 
         public override void Process(PlayerStats playerStats)
         {
-            RemotePlayerVitals vitals = vitalsManager.GetForPlayerId(playerStats.PlayerId, playerManager);
+            RemotePlayerVitals vitals = vitalsManager.CreateForPlayer(playerStats.PlayerId);
 
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
             vitals.SetHealth(playerStats.Health);

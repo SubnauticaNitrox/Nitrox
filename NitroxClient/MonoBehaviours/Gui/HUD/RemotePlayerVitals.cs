@@ -1,10 +1,10 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
-using NitroxClient.GameLogic;
 
 namespace NitroxClient.MonoBehaviours.Gui.HUD
 {
@@ -18,46 +18,63 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Color FOOD_BAR_BORDER_COLOR = new Color(0.957f, 0.914f, 0.251f, 1.0f);
         private static readonly Color WATER_BAR_COLOR = new Color(0.212f, 0.663f, 0.855f, 1.0f);
         private static readonly Color WATER_BAR_BORDER_COLOR = new Color(0.227f, 0.949f, 0.969f, 1.0f);
-
-        private class Bar
-        {
-            public readonly GameObject GameObject;
-            public readonly SmoothedValue SmoothedValue;
-            public readonly string ValueUnit;
-
-            public Bar(GameObject gameObject, SmoothedValue smoothedValue, string valueUnit)
-            {
-                GameObject = gameObject;
-                SmoothedValue = smoothedValue;
-                ValueUnit = valueUnit;
-            }
-        }
-
-        private enum BarType
-        {
-            Health,
-            Oxygen,
-            Food,
-            Water
-        }
+        private Bar foodBar;
+        private Bar healthBar;
 
         private Bar oxygenBar;
-        private Bar healthBar;
-        private Bar foodBar;
-        private Bar waterBar;
 
         private string playerName;
+        private Bar waterBar;
 
-        public void CreateVitals(RemotePlayer remotePlayer)
+        /// <summary>
+        ///     Creates a player vitals UI elements for the player id.
+        /// </summary>
+        /// <param name="playerId">Unique player id to create the vitals UI elements for.</param>
+        /// <returns></returns>
+        public static RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
+            RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
+            RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Get();
 
-            Canvas vitalsCanvas = CreateCanvas(remotePlayer.Body.transform);
+            Canvas vitalsCanvas = vitals.CreateCanvas(remotePlayer.Body.transform);
+            vitals.playerName = remotePlayer.PlayerName;
+            vitals.CreatePlayerName(vitalsCanvas);
+            vitals.CreateStats(remotePlayer, vitalsCanvas);
 
-            playerName = remotePlayer.PlayerName;
+            return vitals;
+        }
 
-            CreatePlayerName(vitalsCanvas);
-            CreateStats(remotePlayer, vitalsCanvas);
+        public void SetOxygen(float oxygen, float maxOxygen, float smoothTime = 0.1f)
+        {
+            oxygenBar.SmoothedValue.TargetValue = oxygen;
+            oxygenBar.SmoothedValue.MaxValue = maxOxygen;
+            oxygenBar.SmoothedValue.SmoothTime = smoothTime;
+        }
 
+        public void SetHealth(float health, float smoothTime = 0.1f)
+        {
+            healthBar.SmoothedValue.TargetValue = health;
+            healthBar.SmoothedValue.SmoothTime = smoothTime;
+        }
+
+        public void SetFood(float food, float smoothTime = 0.1f)
+        {
+            foodBar.SmoothedValue.TargetValue = food;
+            foodBar.SmoothedValue.SmoothTime = smoothTime;
+        }
+
+        public void SetWater(float water, float smoothTime = 0.1f)
+        {
+            waterBar.SmoothedValue.TargetValue = water;
+            waterBar.SmoothedValue.SmoothTime = smoothTime;
+        }
+
+        public void LateUpdate()
+        {
+            UpdateSmoothValue(oxygenBar);
+            UpdateSmoothValue(healthBar);
+            UpdateSmoothValue(foodBar);
+            UpdateSmoothValue(waterBar);
         }
 
         private Canvas CreateCanvas(Transform playerTransform)
@@ -97,7 +114,6 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
             originalBar = FindObjectOfType<uGUI_WaterBar>().gameObject;
             waterBar = CreateBar(originalBar, BarType.Water, canvas);
-
         }
 
         private Bar CreateBar(GameObject originalBar, BarType type, Canvas canvas)
@@ -114,7 +130,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             string valueUnit = "%";
             switch (type)
             {
-                case (BarType.Health):
+                case BarType.Health:
                     newBar.color = HEALTH_BAR_COLOR;
                     newBar.borderColor = HEALTH_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.075f, 0.35f, 0f);
@@ -123,7 +139,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_HealthBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
-                case (BarType.Oxygen):
+                case BarType.Oxygen:
                     newBar.color = OXYGEN_BAR_COLOR;
                     newBar.borderColor = OXYGEN_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.025f, 0.35f, 0f);
@@ -133,7 +149,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_OxygenBar>());
                     cloned.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
                     break;
-                case (BarType.Food):
+                case BarType.Food:
                     newBar.color = FOOD_BAR_COLOR;
                     newBar.borderColor = FOOD_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.025f, 0.35f, 0f);
@@ -142,7 +158,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_FoodBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
-                case (BarType.Water):
+                case BarType.Water:
                     newBar.color = WATER_BAR_COLOR;
                     newBar.borderColor = WATER_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.075f, 0.35f, 0f);
@@ -184,39 +200,6 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             namePosition.sizeDelta = new Vector2(200, 100);
         }
 
-        public void SetOxygen(float oxygen, float maxOxygen, float smoothTime = 0.1f)
-        {
-            oxygenBar.SmoothedValue.TargetValue = oxygen;
-            oxygenBar.SmoothedValue.MaxValue = maxOxygen;
-            oxygenBar.SmoothedValue.SmoothTime = smoothTime;
-        }
-
-        public void SetHealth(float health, float smoothTime = 0.1f)
-        {
-            healthBar.SmoothedValue.TargetValue = health;
-            healthBar.SmoothedValue.SmoothTime = smoothTime;
-        }
-
-        public void SetFood(float food, float smoothTime = 0.1f)
-        {
-            foodBar.SmoothedValue.TargetValue = food;
-            foodBar.SmoothedValue.SmoothTime = smoothTime;
-        }
-
-        public void SetWater(float water, float smoothTime = 0.1f)
-        {
-            waterBar.SmoothedValue.TargetValue = water;
-            waterBar.SmoothedValue.SmoothTime = smoothTime;
-        }
-
-        public void LateUpdate()
-        {
-            UpdateSmoothValue(oxygenBar);
-            UpdateSmoothValue(healthBar);
-            UpdateSmoothValue(foodBar);
-            UpdateSmoothValue(waterBar);
-        }
-
         private void UpdateSmoothValue(Bar bar)
         {
             if (bar != null)
@@ -232,15 +215,36 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         {
             uGUI_CircularBar circularBar = bar.GameObject.GetComponentInChildren<uGUI_CircularBar>();
             circularBar.value = amount / max;
-            int rounded = Mathf.RoundToInt(amount);
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Destroy(oxygenBar.GameObject);
             Destroy(healthBar.GameObject);
             Destroy(foodBar.GameObject);
             Destroy(waterBar.GameObject);
+        }
+
+        private class Bar
+        {
+            public readonly GameObject GameObject;
+            public readonly SmoothedValue SmoothedValue;
+            public readonly string ValueUnit;
+
+            public Bar(GameObject gameObject, SmoothedValue smoothedValue, string valueUnit)
+            {
+                GameObject = gameObject;
+                SmoothedValue = smoothedValue;
+                ValueUnit = valueUnit;
+            }
+        }
+
+        private enum BarType
+        {
+            Health,
+            Oxygen,
+            Food,
+            Water
         }
     }
 }
