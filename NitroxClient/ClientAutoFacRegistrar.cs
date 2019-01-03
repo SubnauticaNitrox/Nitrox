@@ -47,7 +47,7 @@ namespace NitroxClient
             
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerChat>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<VisibleCells>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<DeferringPacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();

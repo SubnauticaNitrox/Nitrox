@@ -7,7 +7,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
     {
         public override void Execute()
         {
-            PlayerChatManager chatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+            PlayerChat chatManager = NitroxServiceLocator.LocateService<PlayerChat>();
             chatManager.ShowChat();
         }
     }

@@ -36,7 +36,7 @@ namespace NitroxServer.ConsoleCommands
 
         private void DisconnectPlayer(string[] args)
         {
-            Player player = playerManager.GetPlayers().Where(t => t.Name == args[0]).Single();
+            Player player = playerManager.GetPlayers().Single(t => t.Name == args[0]);
             args = args.Skip(1).ToArray();
 
             player.SendPacket(new PlayerKicked("You were kicked from the server! \n Reason: " + string.Join(" ", args))); // Notify player was kicked

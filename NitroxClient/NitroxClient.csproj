@@ -157,7 +157,7 @@
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
-    <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\ChatUI\PlayerChat.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
