@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxServer.GameLogic.Players;
-using static NitroxServer.GameLogic.Players.PlayerData;
 using NitroxServer.Communication;
+using NitroxServer.GameLogic.Players;
 using NitroxServer.UnityStubs;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic
 {
     // TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
-        private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
-        private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
         private readonly PlayerData playerData;
+        private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
+        private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
 
         public PlayerManager(PlayerData playerData)
         {
@@ -87,7 +86,7 @@ namespace NitroxServer.GameLogic
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);
-                
+
                 return player;
             }
         }

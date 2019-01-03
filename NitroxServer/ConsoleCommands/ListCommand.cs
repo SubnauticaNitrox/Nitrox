@@ -16,12 +16,6 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args)
         {
-            if (playerManager == null)
-            {
-                Log.Debug("No player manager found!");
-                return;
-            }
-
             if (playerManager.GetPlayers().Any())
             {
                 Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
