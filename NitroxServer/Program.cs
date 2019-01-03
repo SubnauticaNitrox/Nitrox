@@ -30,6 +30,7 @@ namespace NitroxServer
                 Log.Error(e.ToString());
                 return;
             }
+
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {

@@ -22,6 +22,11 @@ namespace NitroxServer
         private ServerConfig serverConfiguration;
         public static Server Instance;
 
+        public void Save()
+        {
+            worldPersistence.Save(world);
+        }
+
         public Server(WorldPersistence worldPersistence, World world, ServerConfig config, UdpServer udpServer, PacketHandler packetHandler)
         {
             serverConfiguration = config;
@@ -40,11 +45,6 @@ namespace NitroxServer
             {
                 Save();
             };
-        }
-
-        public void Save()
-        {
-            worldPersistence.Save(world);
         }
 
         public void Start()
