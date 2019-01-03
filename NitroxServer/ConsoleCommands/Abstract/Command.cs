@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -18,17 +15,24 @@ namespace NitroxServer.ConsoleCommands.Abstract
             {
                 args = name;
             }
+
             Args = args;
-            Alias = alias;
+            Alias = alias ?? new string[0];
         }
 
         /// <summary>
-        /// Runs your command
+        ///     Runs your command
         /// </summary>
         /// <param name="args">
-        /// Arguments passed to your command
+        ///     Arguments passed to your command
         /// </param>
         public abstract void RunCommand(string[] args);
+
         public abstract bool VerifyArgs(string[] args);
+
+        public override string ToString()
+        {
+            return $"{nameof(Name)}: {Name}, {nameof(Alias)}: {string.Join(", ", Alias)}";
+        }
     }
 }

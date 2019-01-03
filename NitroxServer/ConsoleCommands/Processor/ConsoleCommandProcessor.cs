@@ -1,20 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.Logger;
-using System.Reflection;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
-
-        public IEnumerable<Command> Commands;
+        private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
-            Commands = cmds;
+            foreach (Command cmd in cmds)
+            {
+                if (commands.ContainsKey(cmd.Name))
+                {
+                    throw new DuplicateRegistrationException($"Command {cmd.Name} is registered multiple times.");
+                }
+
+                commands[cmd.Name] = cmd;
+
+                foreach (string alias in cmd.Alias)
+                {
+                    if (commands.ContainsKey(alias))
+                    {
+                        throw new DuplicateRegistrationException($"Command {alias} is registered multiple times.");
+                    }
+
+                    commands[alias] = cmd;
+                }
+            }
         }
 
         public void ProcessCommand(string msg)
@@ -25,24 +42,16 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
 
             string[] parts = msg.Split()
-                                .Where(arg => !string.IsNullOrEmpty(arg))
-                                .ToArray();
+                .Where(arg => !string.IsNullOrEmpty(arg))
+                .ToArray();
 
-            foreach (Command command in Commands)
+            Command cmd;
+            if (!commands.TryGetValue(parts[0], out cmd))
             {
-                if (command.Name == parts[0])
-                {
-                    RunCommand(command, parts);
-                }
-                else if (command.Alias != null)
-                {
-                    int index = Array.IndexOf(command.Alias, parts[0]);
-                    if (index != -1)
-                    {
-                        RunCommand(command, parts);
-                    }
-                }
+                return;
             }
+
+            RunCommand(cmd, parts);
         }
 
         private void RunCommand(Command command, string[] parts)

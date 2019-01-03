@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic.Items;
+﻿using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
@@ -9,10 +6,11 @@ namespace NitroxServer.GameLogic
     public class EscapePodManager
     {
         public const int PLAYERS_PER_ESCAPEPOD = 50;
-        
+
         public const int ESCAPE_POD_X_OFFSET = 40;
 
         private readonly EscapePodData escapePodData;
+
         public EscapePodManager(EscapePodData escapePodData)
         {
             this.escapePodData = escapePodData;
@@ -56,15 +54,14 @@ namespace NitroxServer.GameLogic
 
                 EscapePodModel escapePod = new EscapePodModel();
                 escapePod.InitEscapePodModel("escapePod" + totalEscapePods,
-                                             new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
-                                             "escapePodFab" + totalEscapePods,
-                                             "escapePodMedFab" + totalEscapePods,
-                                             "escapePodStorageFab" + totalEscapePods,
-                                             "escapePodRadioFab" + totalEscapePods);
-
+                    new Vector3(-112.2f + ESCAPE_POD_X_OFFSET * totalEscapePods, 0.0f, -322.6f),
+                    "escapePodFab" + totalEscapePods,
+                    "escapePodMedFab" + totalEscapePods,
+                    "escapePodStorageFab" + totalEscapePods,
+                    "escapePodRadioFab" + totalEscapePods);
 
                 escapePodData.escapePods.Add(escapePod);
-                
+
                 return escapePod;
             }
         }

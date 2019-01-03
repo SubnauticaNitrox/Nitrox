@@ -138,6 +138,7 @@
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
+    <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
