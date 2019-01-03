@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
+using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class ListCommand : Command
+    internal class ListCommand : Command
     {
-        private PlayerManager playerManager;
+        private readonly PlayerManager playerManager;
 
         public ListCommand(PlayerManager playerManager) : base("list")
         {
@@ -37,7 +34,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override bool VerifyArgs(string[] args)
         {
-            return (args.Length == 0);
+            return args.Length == 0;
         }
     }
 }

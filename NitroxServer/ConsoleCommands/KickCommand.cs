@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.Logger;
-using NitroxModel.DataStructures;
 using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class KickCommand : Command
+    internal class KickCommand : Command
     {
-        private PlayerManager playerManager;
-        private EntitySimulation entitySimulation;
+        private readonly EntitySimulation entitySimulation;
+        private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", "kick The lowliest of cogs")
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Optional<string>.Of("<name>"), "Kick the lowliest of cogs")
         {
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
@@ -34,6 +34,11 @@ namespace NitroxServer.ConsoleCommands
             }
         }
 
+        public override bool VerifyArgs(string[] args)
+        {
+            return args.Length >= 1;
+        }
+
         private void DisconnectPlayer(string[] args)
         {
             Player player = playerManager.GetPlayers().Single(t => t.Name == args[0]);
@@ -48,12 +53,8 @@ namespace NitroxServer.ConsoleCommands
                 SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
                 playerManager.SendPacketToAllPlayers(ownershipChange);
             }
-            playerManager.SendPacketToOtherPlayers(new Disconnect(player.Id), player);
-        }
 
-        public override bool VerifyArgs(string[] args)
-        {
-            return (args.Length >= 1);
+            playerManager.SendPacketToOtherPlayers(new Disconnect(player.Id), player);
         }
     }
 }

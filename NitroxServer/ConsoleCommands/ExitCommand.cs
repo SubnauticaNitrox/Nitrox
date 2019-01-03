@@ -1,10 +1,11 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
+﻿using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
     public class ExitCommand : Command
     {
-        public ExitCommand() : base("exit", null, new[] {"stop", "halt", "quit", "abort"})
+        public ExitCommand() : base("exit", Optional<string>.Empty(), "Exits the server", new[] {"stop", "halt", "quit", "abort"})
         {
         }
 

@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class SayCommand : Command
+    internal class SayCommand : Command
     {
-        private PlayerManager playerManager;
+        private readonly PlayerManager playerManager;
 
-        public SayCommand(PlayerManager playerManager) : base("say", "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new string[] { "broadcast" })
+        public SayCommand(PlayerManager playerManager) : base("say", Optional<string>.Of("<message>"), "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
         {
             this.playerManager = playerManager;
         }
@@ -26,7 +23,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override bool VerifyArgs(string[] args)
         {
-            return (args.Length > 0);
+            return args.Length > 0;
         }
     }
 }
