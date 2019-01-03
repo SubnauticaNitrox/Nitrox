@@ -14,6 +14,7 @@ using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -48,9 +49,11 @@ namespace NitroxServer.Communication.Packets
             Type packetType = packet.GetType();
             Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
 
-            PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-            if (processor != null)
+            Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
+
+            if (opProcessor.IsPresent())
             {
+                PacketProcessor processor = (PacketProcessor)opProcessor.Get();
                 processor.ProcessPacket(packet, player);
             }
             else

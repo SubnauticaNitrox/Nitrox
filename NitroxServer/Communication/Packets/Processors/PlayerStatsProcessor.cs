@@ -18,8 +18,6 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerStats packet, Player player)
         {
-            NitroxModel.Logger.Log.Info(player + " sent PlayerStats packet");
-
             world.PlayerData.PlayerStats(player.Name, packet);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
