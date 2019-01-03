@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.ConfigParser
 {
@@ -16,7 +17,7 @@ namespace NitroxServer.ConfigParser
             get
             {
                 int configValue;
-                if (_serverPort == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SERVER_PORT_SETTING], out configValue))
+                if (_serverPort == null && int.TryParse(ConfigurationManager.AppSettings[DEFAULT_SERVER_PORT_SETTING], out configValue))
                 {
                     _serverPort = configValue;
                 }
@@ -30,7 +31,7 @@ namespace NitroxServer.ConfigParser
             get
             {
                 int configValue;
-                if(_maxConnections == null && Int32.TryParse(ConfigurationManager.AppSettings[MAX_CONNECTIONS_SETTING], out configValue))
+                if (_maxConnections == null && int.TryParse(ConfigurationManager.AppSettings[MAX_CONNECTIONS_SETTING], out configValue))
                 {
                     _maxConnections = configValue;
                 }

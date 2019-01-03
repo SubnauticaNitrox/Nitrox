@@ -1,62 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.Logger;
-using System.Reflection;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
-        private static Dictionary<string, Command> commands = new Dictionary<string, Command>();
+        private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
 
-        public static void RegisterCommands()
+        public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
-            IEnumerable<Command> discoveredCommands = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(p => typeof(Command).IsAssignableFrom(p) &&
-                            p.IsClass && !p.IsAbstract
-                      )
-                .Select(Activator.CreateInstance)
-                .Cast<Command>();
-
-            foreach (Command cmd in discoveredCommands)
+            foreach (Command cmd in cmds)
             {
-                RegisterCommand(cmd);
+                if (commands.ContainsKey(cmd.Name))
+                {
+                    throw new DuplicateRegistrationException($"Command {cmd.Name} is registered multiple times.");
+                }
+
+                commands[cmd.Name] = cmd;
+
+                foreach (string alias in cmd.Alias)
+                {
+                    if (commands.ContainsKey(alias))
+                    {
+                        throw new DuplicateRegistrationException($"Command {alias} is registered multiple times.");
+                    }
+
+                    commands[alias] = cmd;
+                }
             }
         }
 
-        public static void RegisterCommand(Command command)
-        {
-            commands.Add(command.Name, command);
-        }
-
-        public static void ProcessCommand(string msg)
+        public void ProcessCommand(string msg)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
                 return;
             }
 
-            Command cmd;
-
             string[] parts = msg.Split()
-                                .Where(arg => !string.IsNullOrEmpty(arg))
-                                .ToArray();
+                .Where(arg => !string.IsNullOrEmpty(arg))
+                .ToArray();
 
-            if (commands.TryGetValue(parts[0], out cmd))
+            Command cmd;
+            if (!commands.TryGetValue(parts[0], out cmd))
             {
-                string[] args = parts.Skip(1).ToArray();
-
-                if (cmd.VerifyArgs(args))
-                {
-                    cmd.RunCommand(args);
-                    return;
-                }
-
-                Log.Info("Command Invalid: {0}", cmd.Args);
+                return;
             }
+
+            RunCommand(cmd, parts);
+        }
+
+        private void RunCommand(Command command, string[] parts)
+        {
+            string[] args = parts.Skip(1).ToArray();
+
+            if (command.VerifyArgs(args))
+            {
+                command.RunCommand(args);
+                return;
+            }
+
+            Log.Info("Command Invalid: {0}", command.Args);
         }
     }
 }

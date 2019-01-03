@@ -133,6 +133,9 @@
       <Component Id="SubServer_LZ4.dll" Guid="*">
         <File Id="SubServer_LZ4.dll" Name="LZ4.dll" Source="$(var.NitroxServer_TargetDir)LZ4.dll" />
       </Component>
+      <Component Id="SubServerConfig">
+        <File Id="SubServerConfig" Name="NitroxServer.exe.config" Source="$(var.NitroxServer_TargetDir)NitroxServer.exe.config" />
+      </Component>
     </ComponentGroup>
   </Fragment>
 </Wix>

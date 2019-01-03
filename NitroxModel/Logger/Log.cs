@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace NitroxModel.Logger
 {
@@ -11,22 +12,24 @@ namespace NitroxModel.Logger
             Disabled = 0,
             InGameMessages = 1,
             ConsoleInfo = 2,
-            ConsoleDebug = 4
+            FileLog = 4,
+            ConsoleDebug = 8
         }
 
         private static LogLevel level = LogLevel.Disabled;
+        private static TextWriter writer;
 
         // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
-        public static void SetLevel(LogLevel level)
+        public static void SetLevel(LogLevel lvl)
         {
-            Log.level = level;
-            Write("Log level set to " + Log.level);
-        }
-        
-        // For chat logging
-        public static void ChatMsg(string name, string msg)
-        {
-            Console.WriteLine("{0}: {1}", name, msg);
+            if ((lvl & LogLevel.FileLog) != 0)
+            {
+                writer?.Close();
+                writer = LogFiles.Instance.CreateNew();
+            }
+
+            level = lvl;
+            Write("Log level set to " + level);
         }
 
         // For in-game notifications
@@ -38,11 +41,6 @@ namespace NitroxModel.Logger
             }
 
             Info(msg);
-        }
-
-        private static void Write(string fmt, params object[] arg)
-        {
-            Console.WriteLine("[Nitrox] " + fmt, arg);
         }
 
         public static void Error(string fmt, params object[] arg)
@@ -70,7 +68,7 @@ namespace NitroxModel.Logger
 
         public static void Info(object o)
         {
-            string msg = (o == null) ? "null" : o.ToString();
+            string msg = o == null ? "null" : o.ToString();
             Info(msg);
         }
 
@@ -86,7 +84,7 @@ namespace NitroxModel.Logger
 
         public static void Debug(object o)
         {
-            string msg = (o == null) ? "null" : o.ToString();
+            string msg = o == null ? "null" : o.ToString();
             Debug(msg);
         }
 
@@ -98,6 +96,19 @@ namespace NitroxModel.Logger
         public static void Trace(string str = "")
         {
             Write("T: {0}:\n{1}", str, new StackTrace(1));
+        }
+
+        private static void Write(string fmt, params object[] arg)
+        {
+            string msg = string.Format(fmt, arg);
+
+            if ((level & LogLevel.FileLog) != 0 && writer != null)
+            {
+                writer.WriteLine("[Nitrox] " + msg);
+                writer.Flush();
+            }
+
+            Console.WriteLine("[Nitrox] " + msg);
         }
     }
 }

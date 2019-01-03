@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
-            vitalsManager.RemovePlayer(disconnect.PlayerId);
+            vitalsManager.RemoveForPlayer(disconnect.PlayerId);
 
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
 
