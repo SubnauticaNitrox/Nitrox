@@ -14,7 +14,7 @@ namespace NitroxServer.Serialization.World
     [ProtoContract]
     public class PersistedWorldData
     {
-        private const long CURRENT_VERSION = 3;
+        private const long CURRENT_VERSION = 4;
 
         [ProtoMember(1)]
         public long version { get; set; } = CURRENT_VERSION;
@@ -43,6 +43,9 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(9)]
         public GameData GameData { get; set; }
 
+        [ProtoMember(10)]
+        public EscapePodData EscapePodData { get; set; }
+
         public bool IsValid()
         {
             if(version < CURRENT_VERSION)
@@ -59,7 +62,8 @@ namespace NitroxServer.Serialization.World
                    (GameData != null) &&
                    (PlayerData != null) &&
                    (EntityData != null) &&
-                   (EntityData.SerializableEntitiesByGuid.Count > 0);
+                   (EntityData.SerializableEntitiesByGuid.Count > 0) &&
+                   (EscapePodData != null);
         }
     }
 }

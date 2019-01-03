@@ -10,15 +10,13 @@ namespace NitroxServer.Communication.Packets.Processors
     public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
         private readonly TimeKeeper timeKeeper;
-        private readonly EscapePodManager escapePodManager;
         private readonly PlayerManager playerManager;
         private readonly World world;
 
-        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper, EscapePodManager escapePodManager,
+        public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper,
             PlayerManager playerManager, World world)
         {
             this.timeKeeper = timeKeeper;
-            this.escapePodManager = escapePodManager;
             this.playerManager = playerManager;
             this.world = world;
         }
@@ -29,9 +27,9 @@ namespace NitroxServer.Communication.Packets.Processors
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
 
-            escapePodManager.AssignPlayerToEscapePod(player.Id);
+            world.EscapePodManager.AssignPlayerToEscapePod(player.Id);
 
-            BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(escapePodManager.GetEscapePods());
+            BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(world.EscapePodManager.GetEscapePods());
             playerManager.SendPacketToAllPlayers(broadcastEscapePods);
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);

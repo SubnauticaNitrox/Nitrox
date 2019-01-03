@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 AssignPlayerToEscapePod(packet);
             }
 
-            Player.main.StartCoroutine(SyncEscapePodGuids(packet));
+            SyncEscapePodGuids(packet);
         }
 
         private void AssignPlayerToEscapePod(BroadcastEscapePods packet)
@@ -68,10 +68,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         // Done in a coroutine because we want to wait until the escape pod has fully loaded
         // at the beginning of the game.
-        private IEnumerator SyncEscapePodGuids(BroadcastEscapePods packet)
+        private void SyncEscapePodGuids(BroadcastEscapePods packet)
         {
-            yield return new WaitUntil(() => EscapePod.main.gameObject);
-
             foreach (EscapePodModel model in packet.EscapePods)
             {
                 if (!escapePodsByGuid.ContainsKey(model.Guid))
@@ -99,6 +97,7 @@ namespace NitroxClient.Communication.Packets.Processors
             escapePod.transform.position = model.Location;
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
+            storageContainer.container.Clear();
             GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
 
             MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();

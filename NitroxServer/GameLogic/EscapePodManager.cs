@@ -1,64 +1,70 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic.Items;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
 {
     public class EscapePodManager
     {
-        private const int PLAYERS_PER_ESCAPEPOD = 50;
-        private const int ESCAPE_POD_X_OFFSET = 40;
+        public const int PLAYERS_PER_ESCAPEPOD = 50;
+        
+        public const int ESCAPE_POD_X_OFFSET = 40;
 
-        private readonly List<EscapePodModel> escapePods = new List<EscapePodModel>();
-        private readonly Dictionary<ushort, EscapePodModel> escapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
-        private EscapePodModel podNotFullYet;
-
-        public EscapePodManager()
+        private readonly EscapePodData escapePodData;
+        public EscapePodManager(EscapePodData escapePodData)
         {
-            podNotFullYet = CreateNewEscapePod();
+            this.escapePodData = escapePodData;
+
+            if (escapePodData.podNotFullYet == null)
+                escapePodData.podNotFullYet = CreateNewEscapePod();
         }
 
         public void AssignPlayerToEscapePod(ushort playerId)
         {
-            lock (escapePodsByPlayerId)
+            lock (escapePodData.escapePodsByPlayerId)
             {
-                if (escapePodsByPlayerId.ContainsKey(playerId))
+                if (escapePodData.escapePodsByPlayerId.ContainsKey(playerId))
                 {
                     return;
                 }
 
-                if (podNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
+                if (escapePodData.podNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
                 {
-                    podNotFullYet = CreateNewEscapePod();
+                    escapePodData.podNotFullYet = CreateNewEscapePod();
                 }
 
-                podNotFullYet.AssignedPlayers.Add(playerId);
-                escapePodsByPlayerId[playerId] = podNotFullYet;
+                escapePodData.podNotFullYet.AssignedPlayers.Add(playerId);
+                escapePodData.escapePodsByPlayerId[playerId] = escapePodData.podNotFullYet;
             }
         }
 
         public EscapePodModel[] GetEscapePods()
         {
-            lock (escapePods)
+            lock (escapePodData.escapePods)
             {
-                return escapePods.ToArray();
+                return escapePodData.escapePods.ToArray();
             }
         }
 
         private EscapePodModel CreateNewEscapePod()
         {
-            lock (escapePods)
+            lock (escapePodData.escapePods)
             {
-                int totalEscapePods = escapePods.Count;
+                int totalEscapePods = escapePodData.escapePods.Count;
 
-                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods,
-                                                              new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
-                                                              "escapePodFab" + totalEscapePods,
-                                                              "escapePodMedFab" + totalEscapePods,
-                                                              "escapePodStorageFab" + totalEscapePods,
-                                                              "escapePodRadioFab" + totalEscapePods);
-                escapePods.Add(escapePod);
+                EscapePodModel escapePod = new EscapePodModel();
+                escapePod.InitEscapePodModel("escapePod" + totalEscapePods,
+                                             new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
+                                             "escapePodFab" + totalEscapePods,
+                                             "escapePodMedFab" + totalEscapePods,
+                                             "escapePodStorageFab" + totalEscapePods,
+                                             "escapePodRadioFab" + totalEscapePods);
 
+
+                escapePodData.escapePods.Add(escapePod);
+                
                 return escapePod;
             }
         }
