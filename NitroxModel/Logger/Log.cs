@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 
 namespace NitroxModel.Logger
 {
@@ -11,22 +12,23 @@ namespace NitroxModel.Logger
             Disabled = 0,
             InGameMessages = 1,
             ConsoleInfo = 2,
-            ConsoleDebug = 4
+            FileLog = 4,
+            ConsoleDebug = 8
         }
 
         private static LogLevel level = LogLevel.Disabled;
+        private static TextWriter writer;
+
+        static Log()
+        {
+            writer = new StreamWriter("nitroxLog.txt", false);
+        }
 
         // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
         public static void SetLevel(LogLevel level)
         {
             Log.level = level;
             Write("Log level set to " + Log.level);
-        }
-        
-        // For chat logging
-        public static void ChatMsg(string name, string msg)
-        {
-            Console.WriteLine("{0}: {1}", name, msg);
         }
 
         // For in-game notifications
@@ -42,7 +44,14 @@ namespace NitroxModel.Logger
 
         private static void Write(string fmt, params object[] arg)
         {
-            Console.WriteLine("[Nitrox] " + fmt, arg);
+            string msg = string.Format(fmt, arg);
+
+            if ((level & LogLevel.FileLog) != 0)
+            {
+                writer.WriteLine("[Nitrox] " + msg);
+                writer.Flush();
+            }
+            Console.WriteLine("[Nitrox] " + msg);
         }
 
         public static void Error(string fmt, params object[] arg)

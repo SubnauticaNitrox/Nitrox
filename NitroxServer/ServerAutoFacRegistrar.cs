@@ -9,16 +9,23 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets;
 using NitroxServer.ConfigParser;
+using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.Communication.Packets.Processors;
 
 namespace NitroxServer
 {
-    class ServerAutoFaqRegistrar : IAutoFacRegistrar
+    public class ServerAutoFacRegistrar : IAutoFacRegistrar
     {
+        private static WorldPersistence persistence;
         private static World world;
 
-        public ServerAutoFaqRegistrar(World world)
+        public ServerAutoFacRegistrar()
         {
-            ServerAutoFaqRegistrar.world = world;
+            if (persistence == null)
+            {
+                persistence = new WorldPersistence();
+                world = persistence.Load();
+            }
         }
 
         public void RegisterDependencies(ContainerBuilder containerBuilder)
@@ -29,6 +36,8 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterInstance(persistence).SingleInstance();
+
             containerBuilder.RegisterInstance(world).SingleInstance();
             containerBuilder.RegisterInstance(world.PlayerData).SingleInstance();
             containerBuilder.RegisterInstance(world.BaseData).SingleInstance();
@@ -43,20 +52,24 @@ namespace NitroxServer
             containerBuilder.RegisterInstance(world.BatchEntitySpawner).SingleInstance();
             containerBuilder.RegisterInstance(world.SimulationOwnershipData).SingleInstance();
 
-            containerBuilder.RegisterType<ServerConfig>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ServerConfig>().SingleInstance();
+            containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
+            containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketHandler>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityManager>().SingleInstance();
-            containerBuilder.RegisterType<EntitySimulation>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<UdpServer>().SingleInstance();
+            containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
         }
 
         private void RegisterCommands(ContainerBuilder containerBuilder)
         {
             containerBuilder
                 .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
-                .Where(t => t.Name.EndsWith("Command"))
+                .AssignableTo<Command>()
+                .As<Command>()
                 .InstancePerLifetimeScope();
 
             containerBuilder

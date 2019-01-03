@@ -9,7 +9,15 @@ namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
-        public static void ProcessCommand(string msg)
+
+        public IEnumerable<Command> Commands;
+
+        public ConsoleCommandProcessor(IEnumerable<Command> cmds)
+        {
+            Commands = cmds;
+        }
+
+        public void ProcessCommand(string msg)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
@@ -20,40 +28,24 @@ namespace NitroxServer.ConsoleCommands.Processor
                                 .Where(arg => !string.IsNullOrEmpty(arg))
                                 .ToArray();
 
-            IEnumerable<Command> discoveredCommands = FindCommands();
-
-            foreach (Command command in discoveredCommands)
+            foreach (Command command in Commands)
             {
                 if (command.Name == parts[0])
                 {
                     RunCommand(command, parts);
                 }
-                else
+                else if (command.Alias != null)
                 {
-                    if (command.Alias != null)
+                    int index = Array.IndexOf(command.Alias, parts[0]);
+                    if (index != -1)
                     {
-                        int index = Array.IndexOf(command.Alias, parts[0]);
-                        if (index != -1)
-                        {
-                            RunCommand(command, parts);
-                        }
+                        RunCommand(command, parts);
                     }
                 }
             }
         }
 
-        private static IEnumerable<Command> FindCommands()
-        {
-            return Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(p => typeof(Command).IsAssignableFrom(p) &&
-                            p.IsClass && !p.IsAbstract
-                      )
-                .Select(NitroxModel.Core.NitroxServiceLocator.LocateService)
-                .Cast<Command>();
-        }
-
-        private static void RunCommand(Command command, string[] parts)
+        private void RunCommand(Command command, string[] parts)
         {
             string[] args = parts.Skip(1).ToArray();
 

@@ -19,9 +19,18 @@ namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
+        private PlayerManager playerManager;
+        private DefaultServerPacketProcessor defaultServerPacketProcessor;
+
+        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
+        {
+            this.playerManager = playerManager;
+            defaultServerPacketProcessor = packetProcessor;
+        }
+
         public void Process(Packet packet, Connection connection)
         {
-            Player player = NitroxServiceLocator.LocateService<PlayerManager>().GetPlayer(connection);
+            Player player = playerManager.GetPlayer(connection);
 
             if (player == null)
             {
@@ -35,18 +44,18 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessAuthenticated(Packet packet, Player player)
         {
-            try
-            {
-                Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
-                Type packetType = packet.GetType();
-                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+            Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
+            Type packetType = packet.GetType();
+            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
 
-                PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+            PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+            if (processor != null)
+            {
                 processor.ProcessPacket(packet, player);
             }
-            catch
+            else
             {
-                new DefaultServerPacketProcessor(NitroxServiceLocator.LocateService<PlayerManager>()).ProcessPacket(packet, player);
+                defaultServerPacketProcessor.ProcessPacket(packet, player);
             }
         }
 
@@ -63,7 +72,8 @@ namespace NitroxServer.Communication.Packets
             }
             catch (Exception ex)
             {
-                Log.Error("Exception: ", ex);
+                Log.Info("Received invalid, unauthenticated packet: " + packet);
+                Log.Error("Exception:", ex);
             }
         }
     }

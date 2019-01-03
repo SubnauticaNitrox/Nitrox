@@ -23,20 +23,20 @@ namespace NitroxServer.Communication
 
         private readonly PacketHandler packetHandler;
         private readonly EntitySimulation entitySimulation;
-        private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
+        private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>();
+        private readonly PlayerManager playerManager;
         private readonly NetServer server;
         private readonly Thread thread;
         private int portNumber, maxConn;
-        private bool allowCheats;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
             this.entitySimulation = entitySimulation;
+            this.playerManager = playerManager;
 
             portNumber = serverConfig.ServerPort;
             maxConn = serverConfig.MaxConnections;
-            allowCheats = serverConfig.AllowCheats;
 
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
@@ -131,21 +131,21 @@ namespace NitroxServer.Communication
             else if (status == NetConnectionStatus.Disconnected)
             {
                 Connection connection = GetConnection(networkConnection.RemoteUniqueIdentifier);
-                Player player = NitroxServiceLocator.LocateService<PlayerManager>().GetPlayer(connection);
+                Player player = playerManager.GetPlayer(connection);
 
                 if (player != null)
                 {
-                    NitroxServiceLocator.LocateService<PlayerManager>().PlayerDisconnected(connection);
+                    playerManager.PlayerDisconnected(connection);
 
                     Disconnect disconnect = new Disconnect(player.Id);
-                    NitroxServiceLocator.LocateService<PlayerManager>().SendPacketToAllPlayers(disconnect);
+                    playerManager.SendPacketToAllPlayers(disconnect);
 
                     List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
 
                     if (ownershipChanges.Count > 0)
                     {
                         SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
-                        NitroxServiceLocator.LocateService<PlayerManager>().SendPacketToAllPlayers(ownershipChange);
+                        playerManager.SendPacketToAllPlayers(ownershipChange);
                     }
                 }
             }

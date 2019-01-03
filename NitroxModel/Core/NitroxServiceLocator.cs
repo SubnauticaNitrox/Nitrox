@@ -39,13 +39,21 @@ namespace NitroxModel.Core
             where T : class
         {
             CheckServiceResolutionViability();
-            return CurrentLifetimeScope.Resolve<T>();
+            if (CurrentLifetimeScope.IsRegistered<T>())
+            {
+                return CurrentLifetimeScope.Resolve<T>();
+            }
+            return null;
         }
 
         public static object LocateService(Type serviceType)
         {
             CheckServiceResolutionViability();
-            return CurrentLifetimeScope.Resolve(serviceType);
+            if (CurrentLifetimeScope.IsRegistered(serviceType))
+            {
+                return CurrentLifetimeScope.Resolve(serviceType);
+            }
+            return null;
         }
 
         private static void CheckServiceResolutionViability()

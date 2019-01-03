@@ -135,6 +135,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
@@ -178,7 +179,7 @@
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Server.cs" />
-    <Compile Include="ServerAutoFaqRegistrar.cs" />
+    <Compile Include="ServerAutoFacRegistrar.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
     <Compile Include="UnityStubs\Transform.cs" />

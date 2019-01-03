@@ -34,7 +34,7 @@ namespace NitroxPatcher
             Log.Info("Registering Dependencies");
 
             // Our application's entry point. First, register client dependencies with AutoFac.
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
             Log.Info("Patching Subnautica...");
 

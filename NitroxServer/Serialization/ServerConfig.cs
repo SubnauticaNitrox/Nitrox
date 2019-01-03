@@ -7,25 +7,9 @@ namespace NitroxServer.ConfigParser
     public class ServerConfig
     {
         private const int MAX_CONNECTIONS = 100;
-        private const string MAX_CONNECTIONS_SETTING = "MaxPlayers";
+        private const string MAX_CONNECTIONS_SETTING = "MaxConnections";
         private const int DEFAULT_SERVER_PORT = 11000;
-        private const string DEFAULT_SERVER_PORT_SETTING = "Port";
-        private const bool DEFAULT_ALLOW_CHEATS = false;
-        private const string DEFAULT_ALLOW_CHEATS_SETTING = "AllowCheats";
-
-        private bool? _allowCheats = null;
-        public bool AllowCheats
-        {
-            get
-            {
-                bool configValue;
-                if (_allowCheats == null && bool.TryParse(ConfigurationManager.AppSettings[DEFAULT_ALLOW_CHEATS_SETTING], out configValue))
-                {
-                    _allowCheats = configValue;
-                }
-                return _allowCheats ?? DEFAULT_ALLOW_CHEATS;
-            }
-        }
+        private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
 
         private int? _serverPort = null;
         public int ServerPort

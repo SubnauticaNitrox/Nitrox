@@ -7,9 +7,20 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
-        public string[] Args { get; protected set; }
+        public string Args { get; protected set; }
         public string Name { get; protected set; }
         public string[] Alias { get; protected set; }
+
+        protected Command(string name, string args = null, string[] alias = null)
+        {
+            Name = name;
+            if (args == null)
+            {
+                args = name;
+            }
+            Args = args;
+            Alias = alias;
+        }
 
         /// <summary>
         /// Runs your command

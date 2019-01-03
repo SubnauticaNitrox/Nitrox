@@ -12,37 +12,26 @@ namespace NitroxServer.ConsoleCommands
     {
         private PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager)
+        public ListCommand(PlayerManager playerManager) : base("list")
         {
-            Name = "list";
             this.playerManager = playerManager;
         }
 
         public override void RunCommand(string[] args)
         {
-            if (playerManager != null)
+            if (playerManager == null)
             {
-                string list = string.Empty;
-                Player[] players = playerManager.GetPlayers().ToArray();
-                foreach (Player player in players)
-                {
-                    if (string.IsNullOrEmpty(list))
-                    {
-                        list += "Players: " + player.Name;
-                    }
-                    else
-                    {
-                        list += ", " + player.Name;
-                    }
-                }
-                if (!string.IsNullOrEmpty(list))
-                {
-                    Log.Info(list);
-                }
-                else
-                {
-                    Log.Info("No players online");
-                }
+                Log.Debug("No player manager found!");
+                return;
+            }
+
+            if (playerManager.GetPlayers().Any())
+            {
+                Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
+            }
+            else
+            {
+                Log.Info("No players online");
             }
         }
 

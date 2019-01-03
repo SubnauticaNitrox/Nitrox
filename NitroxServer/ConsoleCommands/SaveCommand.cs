@@ -4,10 +4,8 @@ namespace NitroxServer.ConsoleCommands
 {
     class SaveCommand : Command
     {
-        public SaveCommand()
-        {
-            Name = "save";
-        }
+        public SaveCommand() : base("save")
+        {}
 
         public override void RunCommand(string[] args)
         {

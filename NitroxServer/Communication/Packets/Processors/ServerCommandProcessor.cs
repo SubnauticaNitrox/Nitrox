@@ -6,11 +6,18 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class ServerCommandProcessor : AuthenticatedPacketProcessor<ServerCommand>
     {
+        private readonly ConsoleCommandProcessor cmdProcessor;
+
+        public ServerCommandProcessor(ConsoleCommandProcessor cmdProcessor)
+        {
+            this.cmdProcessor = cmdProcessor;
+        }
+
         public override void Process(ServerCommand packet, Player player)
         {
             string msg = string.Join(" ", packet.CmdArgs);
 
-            ConsoleCommandProcessor.ProcessCommand(msg);
+            cmdProcessor.ProcessCommand(msg);
         }
     }
 }

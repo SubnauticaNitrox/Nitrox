@@ -15,7 +15,7 @@ using NitroxClient.GameLogic.Bases;
 
 namespace NitroxClient
 {
-    public class ClientAutoFaqRegistrar : IAutoFacRegistrar
+    public class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
         public void RegisterDependencies(ContainerBuilder containerBuilder)
         {

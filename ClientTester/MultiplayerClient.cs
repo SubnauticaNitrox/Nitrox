@@ -29,7 +29,7 @@ namespace ClientTester
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
             playerName = "Player" + playerId.ToString();
 
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
             packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
         }

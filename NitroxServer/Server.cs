@@ -25,16 +25,15 @@ namespace NitroxServer
             worldPersistence.Save(world);
         }
 
-        public Server(ServerConfig config)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig config, UdpServer udpServer, PacketHandler packetHandler)
         {
             serverConfiguration = config;
             Instance = this;
-            worldPersistence = new WorldPersistence();
-            world = worldPersistence.Load();
-            NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFaqRegistrar(world));
-            NitroxServiceLocator.BeginNewLifetimeScope();
-            udpServer = NitroxServiceLocator.LocateService<UdpServer>();
-            packetHandler = NitroxServiceLocator.LocateService<PacketHandler>();
+            this.worldPersistence = worldPersistence;
+            this.world = world;
+            
+            this.udpServer = udpServer;
+            this.packetHandler = packetHandler;
 
             //Maybe add settings for the interval?
             saveTimer = new Timer();

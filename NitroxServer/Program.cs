@@ -4,6 +4,7 @@ using System.Threading;
 using NitroxModel.Logger;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxModel.Core;
 
 
 namespace NitroxServer
@@ -11,27 +12,29 @@ namespace NitroxServer
     public static class Program
     {
         public static bool IsRunning = true;
-
+        public static ConsoleCommandProcessor CmdProcessor;
         static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
+
+            NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
+            NitroxServiceLocator.BeginNewLifetimeScope();
 
             configureCultureInfo();
 
             try
             {
-                ServerConfig config = new ServerConfig();
-                Server server = new Server(config);
+                Server server = NitroxServiceLocator.LocateService<Server>();
                 server.Start();
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
             }
-
+            CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (IsRunning)
             {
-                ConsoleCommandProcessor.ProcessCommand(Console.ReadLine());
+                CmdProcessor.ProcessCommand(Console.ReadLine());
             }
         }
 

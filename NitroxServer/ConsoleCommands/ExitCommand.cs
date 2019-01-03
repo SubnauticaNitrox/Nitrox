@@ -5,11 +5,8 @@ namespace NitroxServer.ConsoleCommands
 {
     public class ExitCommand : Command
     {
-        public ExitCommand()
-        {
-            Name = "exit";
-            Alias = new string[] { "stop", "halt" };
-        }
+        public ExitCommand() : base("exit", null, new string[] { "stop", "halt" })
+        {}
 
         public override void RunCommand(string[] args)
         {
