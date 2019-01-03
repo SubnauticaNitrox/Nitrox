@@ -16,42 +16,15 @@ namespace NitroxServer
 {
     public class ServerAutoFacRegistrar : IAutoFacRegistrar
     {
-        private static WorldPersistence persistence;
-        private static World world;
-
-        public ServerAutoFacRegistrar()
-        {
-            if (persistence == null)
-            {
-                persistence = new WorldPersistence();
-                world = persistence.Load();
-            }
-        }
-
         public void RegisterDependencies(ContainerBuilder containerBuilder)
         {
             RegisterCoreDependencies(containerBuilder);
+            RegisterWorld(containerBuilder);
             RegisterCommands(containerBuilder);
         }
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterInstance(persistence).SingleInstance();
-
-            containerBuilder.RegisterInstance(world).SingleInstance();
-            containerBuilder.RegisterInstance(world.PlayerData).SingleInstance();
-            containerBuilder.RegisterInstance(world.BaseData).SingleInstance();
-            containerBuilder.RegisterInstance(world.VehicleData).SingleInstance();
-            containerBuilder.RegisterInstance(world.InventoryData).SingleInstance();
-            containerBuilder.RegisterInstance(world.GameData).SingleInstance();
-            containerBuilder.RegisterInstance(world.GameData.PDAState).SingleInstance();
-            containerBuilder.RegisterInstance(world.PlayerManager).SingleInstance();
-            containerBuilder.RegisterInstance(world.TimeKeeper).SingleInstance();
-            containerBuilder.RegisterInstance(world.SimulationOwnershipData).SingleInstance();
-            containerBuilder.RegisterInstance(world.EntityData).SingleInstance();
-            containerBuilder.RegisterInstance(world.BatchEntitySpawner).SingleInstance();
-            containerBuilder.RegisterInstance(world.SimulationOwnershipData).SingleInstance();
-
             containerBuilder.RegisterType<ServerConfig>().SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
@@ -62,6 +35,23 @@ namespace NitroxServer
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<UdpServer>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
+        }
+
+        private void RegisterWorld(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<WorldPersistence>().SingleInstance();
+
+            containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load()).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().PlayerData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().BaseData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().VehicleData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().InventoryData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().EntityData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
         }
 
         private void RegisterCommands(ContainerBuilder containerBuilder)

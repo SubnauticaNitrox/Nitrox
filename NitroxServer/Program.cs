@@ -11,8 +11,6 @@ namespace NitroxServer
 {
     public static class Program
     {
-        public static bool IsRunning = true;
-        public static ConsoleCommandProcessor CmdProcessor;
         static void Main(string[] args)
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
@@ -21,18 +19,19 @@ namespace NitroxServer
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             configureCultureInfo();
-
+            Server server;
             try
             {
-                Server server = NitroxServiceLocator.LocateService<Server>();
+                server = NitroxServiceLocator.LocateService<Server>();
                 server.Start();
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
+                return;
             }
-            CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
-            while (IsRunning)
+            ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+            while (server.IsRunning)
             {
                 CmdProcessor.ProcessCommand(Console.ReadLine());
             }

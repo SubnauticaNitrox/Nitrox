@@ -11,8 +11,6 @@ namespace NitroxServer.ConsoleCommands
         public override void RunCommand(string[] args)
         {
             Server.Instance.Stop();
-            //NitroxServiceLocator.EndCurrentLifetimeScope();
-            Program.IsRunning = false;
         }
 
         public override bool VerifyArgs(string[] args)
