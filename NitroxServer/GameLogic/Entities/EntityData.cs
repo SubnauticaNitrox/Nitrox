@@ -37,7 +37,7 @@ namespace NitroxServer.GameLogic.Entities
         private Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
 
         [ProtoIgnore]
-        public Dictionary<string, Entity> GlobalRootEntitiesByGuid = new Dictionary<string, Entity>();
+        private Dictionary<string, Entity> globalRootEntitiesByGuid = new Dictionary<string, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
@@ -65,11 +65,11 @@ namespace NitroxServer.GameLogic.Entities
             
             if (entity.ExistsInGlobalRoot)
             {
-                lock (GlobalRootEntitiesByGuid)
+                lock (globalRootEntitiesByGuid)
                 {
-                    if (!GlobalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
                     {
-                        GlobalRootEntitiesByGuid.Add(entity.Guid, entity);
+                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
                     }
                     else
                     {
@@ -162,9 +162,9 @@ namespace NitroxServer.GameLogic.Entities
 
         public List<Entity> GetGlobalRootEntities()
         {
-            lock (GlobalRootEntitiesByGuid)
+            lock (globalRootEntitiesByGuid)
             {
-                return GlobalRootEntitiesByGuid.Values.ToList();
+                return globalRootEntitiesByGuid.Values.ToList();
             }
         }
 
@@ -180,6 +180,16 @@ namespace NitroxServer.GameLogic.Entities
                 }
             }
 
+            return result;
+        }
+
+        public bool RemoveGlobalRoot(string guid)
+        {
+            bool result;
+            lock (globalRootEntitiesByGuid)
+            {
+                result = globalRootEntitiesByGuid.Remove(guid);
+            }
             return result;
         }
     }
