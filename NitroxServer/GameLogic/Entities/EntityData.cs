@@ -95,9 +95,45 @@ namespace NitroxServer.GameLogic.Entities
 
         public void RemoveEntity(string guid)
         {
+            Entity entity = null;
+
             lock (entitiesByGuid)
             {
-                entitiesByGuid.Remove(guid);
+                entitiesByGuid.TryGetValue(guid, out entity);
+                entitiesByGuid.Remove(guid);                
+            }
+
+            if (entity != null)
+            {
+                if(entity.ExistsInGlobalRoot)
+                {
+                    RemoveEntityFromGlobalRoot(guid);
+                }
+                else
+                {
+                    RemoveEntityFromCell(entity);
+                }
+            }
+        }
+
+        private void RemoveEntityFromGlobalRoot(string guid)
+        {
+            lock (globalRootEntitiesByGuid)
+            {
+                globalRootEntitiesByGuid.Remove(guid);
+            }
+        }
+
+        private void RemoveEntityFromCell(Entity entity)
+        {
+            lock (phasingEntitiesByAbsoluteCell)
+            {
+                List<Entity> entities;
+
+                if(phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out entities))
+                {
+                    entities.Remove(entity);
+                }
             }
         }
 
@@ -180,16 +216,6 @@ namespace NitroxServer.GameLogic.Entities
                 }
             }
 
-            return result;
-        }
-
-        public bool RemoveGlobalRoot(string guid)
-        {
-            bool result;
-            lock (globalRootEntitiesByGuid)
-            {
-                result = globalRootEntitiesByGuid.Remove(guid);
-            }
             return result;
         }
     }
