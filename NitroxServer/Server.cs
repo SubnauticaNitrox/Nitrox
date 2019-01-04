@@ -36,7 +36,7 @@ namespace NitroxServer
 
             //Maybe add settings for the interval?
             saveTimer = new Timer();
-            saveTimer.Interval = 60000;
+            saveTimer.Interval = serverConfiguration.SaveInterval;
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate
             {
