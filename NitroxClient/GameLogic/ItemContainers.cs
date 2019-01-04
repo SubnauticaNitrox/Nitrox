@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -27,9 +28,14 @@ namespace NitroxClient.GameLogic
             string ownerGuid = null;
 
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod";
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else if (isEscapePodStorage)
+            {
+                ownerGuid = GetEscapePodStorageGuid(ownerTransform);
             }
             else
             {
@@ -48,9 +54,14 @@ namespace NitroxClient.GameLogic
             string ownerGuid = null;
 
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod";
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else if (isEscapePodStorage)
+            {
+                ownerGuid = GetEscapePodStorageGuid(ownerTransform);
             }
             else
             {
@@ -65,7 +76,7 @@ namespace NitroxClient.GameLogic
         {
             Optional<GameObject> owner = GuidHelper.GetObjectFrom(itemData.ContainerGuid);
 
-            if(owner.IsEmpty())
+            if (owner.IsEmpty())
             {
                 Log.Info("Unable to find inventory container with id: " + itemData.ContainerGuid);
                 return;
@@ -77,6 +88,7 @@ namespace NitroxClient.GameLogic
             {
                 ItemsContainer container = opContainer.Get();
                 GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+                item.SetNewGuid(itemData.Guid);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
                 using (packetSender.Suppress<ItemContainerAdd>())
@@ -135,7 +147,13 @@ namespace NitroxClient.GameLogic
             {
                 throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
             }
-            
+
+        }
+
+        public string GetEscapePodStorageGuid(Transform ownerTransform)
+        {
+            StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
+            return GuidHelper.GetGuid(SC.gameObject);
         }
     }
 }

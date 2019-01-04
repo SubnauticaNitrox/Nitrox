@@ -23,7 +23,7 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
 
             if (patches != null)
             {
@@ -34,7 +34,7 @@ namespace NitroxPatcher
             Log.Info("Registering Dependencies");
 
             // Our application's entry point. First, register client dependencies with AutoFac.
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFaqRegistrar());
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
             Log.Info("Patching Subnautica...");
 

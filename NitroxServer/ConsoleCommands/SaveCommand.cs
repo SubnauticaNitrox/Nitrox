@@ -2,12 +2,10 @@
 
 namespace NitroxServer.ConsoleCommands
 {
-    class SaveCommand : Command
+    internal class SaveCommand : Command
     {
-        public SaveCommand()
+        public SaveCommand() : base("save")
         {
-            Name = "save";
-            Args = new string[] { "save" };
         }
 
         public override void RunCommand(string[] args)
@@ -17,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override bool VerifyArgs(string[] args)
         {
-            return (args.Length == 0);
+            return args.Length == 0;
         }
     }
 }

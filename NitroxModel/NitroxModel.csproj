@@ -79,7 +79,9 @@
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Logger\LogFiles.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
+    <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleModel.cs" />
     <Compile Include="DataStructures\SimulationLock.cs" />

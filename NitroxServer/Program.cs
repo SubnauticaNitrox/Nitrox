@@ -4,34 +4,37 @@ using System.Threading;
 using NitroxModel.Logger;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxModel.Core;
 
 
 namespace NitroxServer
 {
     public static class Program
     {
-        public static bool IsRunning = true;
-
         static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
+
+            NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
+            NitroxServiceLocator.BeginNewLifetimeScope();
 
             configureCultureInfo();
-
+            Server server;
             try
             {
-                ServerConfig config = new ServerConfig();
-                Server server = new Server(config);
+                server = NitroxServiceLocator.LocateService<Server>();
                 server.Start();
             }
             catch (Exception e)
             {
                 Log.Error(e.ToString());
+                return;
             }
 
-            while (IsRunning)
+            ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+            while (server.IsRunning)
             {
-                ConsoleCommandProcessor.ProcessCommand(Console.ReadLine());
+                CmdProcessor.ProcessCommand(Console.ReadLine());
             }
         }
 

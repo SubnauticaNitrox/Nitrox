@@ -15,7 +15,7 @@ using NitroxClient.GameLogic.Bases;
 
 namespace NitroxClient
 {
-    public class ClientAutoFaqRegistrar : IAutoFacRegistrar
+    public class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
         public void RegisterDependencies(ContainerBuilder containerBuilder)
         {
@@ -47,7 +47,7 @@ namespace NitroxClient
             
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PlayerChat>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<VisibleCells>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<DeferringPacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
