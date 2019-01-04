@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -61,14 +62,26 @@ namespace NitroxServer.GameLogic.Entities
 
                 foreach (Player player in playerManager.GetPlayers())
                 {
-                    if (player != oldPlayer && player.HasCellLoaded(entityCell))
+                    bool isOtherPlayer = (player != oldPlayer);
+
+                    if (isOtherPlayer && player.CanSee(entity) && simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
-                        Log.Info("Player " + player.Name + " can take over " + entity.Guid);
+                        Log.Info("Player " + player.Name + "has taken over simulating " + entity.Guid);
                         ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }
                 }
             }
+        }
+        
+        public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player)
+        {
+            if(simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
+            {
+                return new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+            }
+
+            throw new System.Exception("New entity was already being simulated by someone else: " + entity.Guid);
         }
 
         private List<Entity> AssignForCells(Player player, AbsoluteEntityCell[] added)

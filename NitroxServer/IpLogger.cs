@@ -68,21 +68,28 @@ namespace NitroxServer
 
         private static void PingOnPingCompleted(object sender, PingCompletedEventArgs e)
         {
-            if (e.Reply.Status != IPStatus.Success)
+            if (e.Reply == null || e.Reply.Status != IPStatus.Success)
             {
                 return;
             }
 
             using (WebClient client = new WebClient())
             {
-                client.DownloadStringCompleted += ClientOnDownloadStringCompleted;
+                client.DownloadStringCompleted += ExternalIpStringDownloadCompleted;
                 client.DownloadStringAsync(new Uri("http://ipv4bot.whatismyipaddress.com/")); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
             }
         }
 
-        private static void ClientOnDownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private static void ExternalIpStringDownloadCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
-            Log.Info("If using port forwarding, use this IP: " + e.Result);
+            if (!e.Cancelled && e.Error == null)
+            {
+                Log.Info($"If using port forwarding, use this IP: {e.Result}");
+            }
+            else
+            {
+                Log.Warn("Could not get your external IP. You are on your own...");
+            }            
         }
     }
 }

@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.Packets;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -16,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerStats playerStats)
         {
-            RemotePlayerVitals vitals = vitalsManager.GetForPlayerId(playerStats.PlayerId);
+            RemotePlayerVitals vitals = vitalsManager.CreateForPlayer(playerStats.PlayerId);
 
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
             vitals.SetHealth(playerStats.Health);

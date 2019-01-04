@@ -23,6 +23,14 @@ namespace NitroxModel.Packets
             Entities = entities;
         }
 
+        public SimulationOwnershipChange(SimulatedEntity entity)
+        {
+            Entities = new List<SimulatedEntity>
+            {
+                entity
+            };
+        }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder("[SimulationOwnershipChange - ");

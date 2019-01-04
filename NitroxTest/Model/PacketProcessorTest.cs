@@ -8,12 +8,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
+using NitroxServer;
+using NitroxServer.Communication.Packets.Processors;
 
 namespace NitroxTest.Model
 {
@@ -43,7 +46,7 @@ namespace NitroxTest.Model
         public void RuntimeDetectsAllClientPacketProcessors()
         {
             ContainerBuilder containerBuilder = new ContainerBuilder();
-            ClientAutoFaqRegistrar clientDependencyRegistrar = new ClientAutoFaqRegistrar();
+            ClientAutoFacRegistrar clientDependencyRegistrar = new ClientAutoFacRegistrar();
             clientDependencyRegistrar.RegisterDependencies(containerBuilder);
             IContainer clientDependencyContainer = containerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
 
@@ -85,13 +88,19 @@ namespace NitroxTest.Model
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
             World world = new World();
-            PacketHandler ph = new PacketHandler(world);
-            Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-            Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-            int both = authenticatedPacketProcessorsByType.Count + unauthenticatedPacketProcessorsByType.Count;
+            ContainerBuilder serverContainerBuilder = new ContainerBuilder();
+            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
+            serverDependencyRegistrar.RegisterDependencies(serverContainerBuilder);
+            IContainer serverDependencyContainer = serverContainerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
+
+            List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
+                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList();
+
+            int both = packetTypes.Count;
             Assert.AreEqual(processors.Count(), both,
                 "Not all(Un) AuthenticatedPacketProcessors have been discovered by the runtime code " +
-                $"(auth: {authenticatedPacketProcessorsByType.Count} + unauth: {unauthenticatedPacketProcessorsByType.Count} = {both} out of {processors.Count()}). " +
+                $"(auth + unauth: {both} out of {processors.Count()}). " + // this is a small patch to keep this alive a little longer until its put out of its misery
                 "Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor " +
                 "(and will hence not be detected).");
         }
@@ -100,19 +109,18 @@ namespace NitroxTest.Model
         public void RuntimeDetectsAllServerPacketProcessors()
         {
             World world = new World();
-            PacketHandler ph = new PacketHandler(world);
 
-            Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-            Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-
-            HashSet<Type> runtimeProcessors = new HashSet<Type>(authenticatedPacketProcessorsByType.Concat(unauthenticatedPacketProcessorsByType).Select(p => p.Value.GetType()));
+            ContainerBuilder containerBuilder = new ContainerBuilder();
+            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
+            serverDependencyRegistrar.RegisterDependencies(containerBuilder);
+            IContainer serverDependencyContainer = containerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
 
             // Check if every PacketProcessor has been detected:
-            typeof(PacketHandler).Assembly.GetTypes()
+            typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(processor =>
-                    Assert.IsTrue(runtimeProcessors.Contains(processor),
+                    Assert.IsTrue(serverDependencyContainer.Resolve(processor.BaseType) != null,
                         $"{processor} has not been discovered by the runtime code!")
                 );
         }
@@ -121,18 +129,17 @@ namespace NitroxTest.Model
         public void AllPacketsAreHandled()
         {
             World world = new World();
-            PacketHandler ph = new PacketHandler(world);
+            ContainerBuilder serverContainerBuilder = new ContainerBuilder();
+            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
+            serverDependencyRegistrar.RegisterDependencies(serverContainerBuilder);
+            IContainer serverDependencyContainer = serverContainerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
 
-            Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("authenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-            Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType = (Dictionary<Type, PacketProcessor>)typeof(PacketHandler).GetField("unauthenticatedPacketProcessorsByType", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(ph);
-
-            HashSet<Type> packetTypes = new HashSet<Type>(
-                authenticatedPacketProcessorsByType
-                    .Concat(unauthenticatedPacketProcessorsByType)
-                    .Select(kvp => kvp.Key));
+            List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
+                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList();
 
             ContainerBuilder containerBuilder = new ContainerBuilder();
-            ClientAutoFaqRegistrar clientDependencyRegistrar = new ClientAutoFaqRegistrar();
+            ClientAutoFacRegistrar clientDependencyRegistrar = new ClientAutoFacRegistrar();
             clientDependencyRegistrar.RegisterDependencies(containerBuilder);
             IContainer clientDependencyContainer = containerBuilder.Build(ContainerBuildOptions.IgnoreStartableComponents);
 
@@ -140,14 +147,14 @@ namespace NitroxTest.Model
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(packet =>
-                    {
-                        Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
-                        Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
+                {
+                    Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
+                    Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
 
-                        Console.WriteLine("Checking handler for packet {0}...", packet);
-                        Assert.IsTrue(packetTypes.Contains(packet) || clientDependencyContainer.Resolve(clientProcessorType) != null,
-                            $"Runtime has not detected a handler for {packet}!");
-                    }
+                    Console.WriteLine("Checking handler for packet {0}...", packet);
+                    Assert.IsTrue(packetTypes.Contains(packet) || clientDependencyContainer.Resolve(clientProcessorType) != null,
+                        $"Runtime has not detected a handler for {packet}!");
+                }
                 );
         }
     }

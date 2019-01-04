@@ -11,7 +11,7 @@
   <?define NitroxServerWPF_TargetDir=$(var.NitroxServer.Wpf.TargetDir)?>
 
   <?if $(var.Platform) = x64 ?>
-  <?define ProductName = "Product Name (64 bit)" ?>
+  <?define ProductName = "NitroxInstaller-!(bind.fileVersion.NitroxClient.dll) (64 bit)" ?>
   <?define Win64 = "yes" ?>
   <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
   <?else ?>
@@ -22,7 +22,7 @@
   
   <Product Id="*" Name="Nitrox" Language="1033" Version="$(var.TargetVersion)" Manufacturer="Nitrox" UpgradeCode="9ad745cb-3a52-4e99-adcc-ae5fc9c82ebd">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MajorUpgrade AllowDowngrades="no" DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
     <MediaTemplate EmbedCab="yes" />
     <Feature Id="ProductFeature" Title="Nitrox_Installer" Level="1">
       <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
@@ -44,8 +44,8 @@
     <Binary Id="NitroxActionsBinary" SourceFile="$(var.NitroxInstallerActions.TargetDir)$(var.NitroxInstallerActions.TargetName).CA.dll"/>
     <CustomAction Id="SetInstallPath" Property="PatchGameAction" Value="MANAGEDDIR=[SUBNAUTICAMANAGED]"></CustomAction>
     <CustomAction Id="SetUninstallPath" Property="UnpatchGameAction" Value="MANAGEDDIR=[SUBNAUTICAMANAGED]"></CustomAction>
-    <CustomAction Id="PatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="InstallPatch" Execute="deferred" Return="check" />
-    <CustomAction Id="UnpatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="UninstallPatch" Execute="deferred" Return="check" />
+    <CustomAction Id="PatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="InstallPatch" Execute="deferred" Return="check" Impersonate="no"/>
+    <CustomAction Id="UnpatchGameAction" BinaryKey="NitroxActionsBinary" DllEntry="UninstallPatch" Execute="deferred" Return="check" Impersonate="no" />
   </Fragment>
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
@@ -71,31 +71,31 @@
   </Fragment>
   <Fragment>
     <ComponentGroup Id="SUBNAUTICAMANAGED_files" Directory="SUBNAUTICAMANAGED">
-      <Component Id="NitroxPatcher.dll" Guid="b50a7020-d69c-48af-bacd-cea78b2a2dad">
+      <Component Id="NitroxPatcher.dll" Guid="*">
         <File Id="NitroxPatcher.dll" Name="NitroxPatcher.dll" Source="$(var.NitroxPatcher_TargetDir)NitroxPatcher.dll" />
       </Component>
-      <Component Id="NitroxModel.dll" Guid="5d7afbad-137b-45db-8e11-3d6c99b4603d">
+      <Component Id="NitroxModel.dll" Guid="*">
         <File Id="NitroxModel.dll" Name="NitroxModel.dll" Source="$(var.NitroxModel_TargetDir)NitroxModel.dll" />
       </Component>
-      <Component Id="Autofac.dll" Guid="823a4e32-ae59-4b85-b09c-c3db1b8aa99e">
+      <Component Id="Autofac.dll" Guid="*">
         <File Id="Autofac.dll" Name="Autofac.dll" Source="$(var.NitroxPatcher_TargetDir)Autofac.dll" />
       </Component>
-      <Component Id="Lidgren.Network.dll" Guid="a6c71164-43a0-4832-a0c6-9036946d705f">
+      <Component Id="Lidgren.Network.dll" Guid="*">
         <File Id="Lidgren.Network.dll" Name="Lidgren.Network.dll" Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
       </Component>
-      <Component Id="NitroxReloader.dll" Guid="8c0b2ce2-6b38-4c23-a05b-615c71ed3062">
+      <Component Id="NitroxReloader.dll" Guid="*">
         <File Id="NitroxReloader.dll" Name="NitroxReloader.dll" Source="$(var.NitroxReloader_TargetDir)NitroxReloader.dll" />
       </Component>
-      <Component Id="_0Harmony.dll" Guid="6c9dfcf3-f43a-4b75-bff0-e8bd75514fd5">
+      <Component Id="_0Harmony.dll" Guid="*">
         <File Id="_0Harmony.dll" Name="0Harmony.dll" Source="$(var.Harmony_TargetDir)0Harmony.dll" />
       </Component>
-      <Component Id="NitroxClient" Guid="9294ce3a-cdd3-4b01-9e1d-311e42a26a80">
+      <Component Id="NitroxClient" Guid="*">
         <File Id="NitroxClient.dll" Name="NitroxClient.dll" Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />
       </Component>
-      <Component Id="Autofac.Configuration.dll" Guid="e9cad602-b1d9-4234-a80a-1e19fe48c8d3">
+      <Component Id="Autofac.Configuration.dll" Guid="*">
         <File Id="Autofac.Configuration.dll" Name="Autofac.Configuration.dll" Source="$(var.NitroxPatcher_TargetDir)Autofac.Configuration.dll" />
       </Component>
-      <Component Id="LZ4.dll">
+      <Component Id="LZ4.dll" Guid="*">
         <File Id="LZ4.dll" Name="LZ4.dll" Source="$(var.NitroxClient_TargetDir)LZ4.dll" />
       </Component>
     </ComponentGroup>
@@ -103,35 +103,38 @@
 
   <Fragment>
     <ComponentGroup Id="SubServer_Files" Directory="SubServer">
-      <Component Id="NitroxServer.exe" Guid="0fc864b0-694e-4fca-b78c-8ef98bc6f262">
+      <Component Id="NitroxServer.exe" Guid="*">
         <File Id="NitroxServer.exe" Name="NitroxServer.exe" Source="$(var.NitroxServer_TargetDir)NitroxServer.exe" />
       </Component>
-      <Component Id="NitroxServer_WPF.exe">
-          <File Id="NitroxServer_WPF.exe" Name="NitroxServer WPF.exe" Source="$(var.NitroxServerWPF_TargetDir)NitroxServer WPF.exe" />
+      <Component Id="NitroxServer_WPF.exe" Guid="*">
+        <File Id="NitroxServer_WPF.exe" Name="NitroxServer WPF.exe" Source="$(var.NitroxServerWPF_TargetDir)NitroxServer WPF.exe" />
       </Component>
-      <Component Id="SubServer_NitroxModel.dll">
+      <Component Id="SubServer_NitroxModel.dll" Guid="*">
         <File Id="SubServer_NitroxModel.dll" Name="NitroxModel.dll" Source="$(var.NitroxModel_TargetDir)NitroxModel.dll" />
       </Component>
-      <Component Id="SubServer_Autofac.dll">
+      <Component Id="SubServer_Autofac.dll" Guid="*">
         <File Id="SubServer_Autofac.dll" Name="Autofac.dll" Source="$(var.NitroxPatcher_TargetDir)Autofac.dll" />
       </Component>
-      <Component Id="SubServer_Lidgren.Network.dll">
+      <Component Id="SubServer_Lidgren.Network.dll" Guid="*">
         <File Id="SubServer_Lidgren.Network.dll" Name="Lidgren.Network.dll" Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
       </Component>
-      <Component Id="SubServer_NitroxReloader.dll">
+      <Component Id="SubServer_NitroxReloader.dll" Guid="*">
         <File Id="SubServer_NitroxReloader.dll" Name="NitroxReloader.dll" Source="$(var.NitroxReloader_TargetDir)NitroxReloader.dll" />
       </Component>
-      <Component Id="SubServer_NitroxClient.dll">
+      <Component Id="SubServer_NitroxClient.dll" Guid="*">
         <File Id="SubServer_NitroxClient.dll" Name="NitroxClient.dll" Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />
       </Component>
-      <Component Id="protobuf_net.dll">
+      <Component Id="protobuf_net.dll" Guid="*">
         <File Id="protobuf_net.dll" Name="protobuf-net.dll" Source="$(var.NitroxServer_TargetDir)protobuf-net.dll" />
       </Component>
-      <Component Id="AssetsTools.Net.dll">
+      <Component Id="AssetsTools.Net.dll" Guid="*">
         <File Id="AssetsTools.Net.dll" Name="AssetsTools.Net.dll" Source="$(var.NitroxServer_TargetDir)AssetsTools.Net.dll" />
       </Component>
-      <Component Id="SubServer_LZ4.dll">
+      <Component Id="SubServer_LZ4.dll" Guid="*">
         <File Id="SubServer_LZ4.dll" Name="LZ4.dll" Source="$(var.NitroxServer_TargetDir)LZ4.dll" />
+      </Component>
+      <Component Id="SubServerConfig">
+        <File Id="SubServerConfig" Name="NitroxServer.exe.config" Source="$(var.NitroxServer_TargetDir)NitroxServer.exe.config" />
       </Component>
     </ComponentGroup>
   </Fragment>

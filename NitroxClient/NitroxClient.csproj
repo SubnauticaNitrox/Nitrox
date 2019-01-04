@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientAutoFaqRegistrar.cs" />
+    <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="ClientExtensions.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
@@ -107,7 +107,6 @@
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DroppedItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemProcessor.cs" />
@@ -126,6 +125,7 @@
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerKickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
@@ -157,7 +157,7 @@
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
-    <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\ChatUI\PlayerChat.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
@@ -203,6 +203,7 @@
     <Compile Include="GameLogic\SeamothModulesEvent.cs" />
     <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
+    <Compile Include="GameLogic\Spawning\SerializedEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\NitroxEntity.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
@@ -241,7 +242,6 @@
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PowerMonitor.cs" />
-    <Compile Include="MonoBehaviours\SyncedMultiplayerObject.cs" />
     <Compile Include="MonoBehaviours\ThrottledBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

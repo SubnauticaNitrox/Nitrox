@@ -34,6 +34,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.InventoryData = world.InventoryData;
                 persistedData.PlayerData = world.PlayerData;
                 persistedData.GameData = world.GameData;
+                persistedData.EscapePodData = world.EscapePodData;
 
                 using (Stream stream = File.OpenWrite(fileName))
                 {
@@ -59,20 +60,22 @@ namespace NitroxServer.Serialization.World
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
 
-                if(persistedData == null || !persistedData.IsValid())
+                if (persistedData == null || !persistedData.IsValid())
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
+                
 
                 World world = CreateWorld(persistedData.ServerStartTime,
-                                          persistedData.EntityData, 
+                                          persistedData.EntityData,
                                           persistedData.BaseData,
                                           persistedData.VehicleData,
                                           persistedData.InventoryData,
                                           persistedData.PlayerData,
                                           persistedData.GameData,
-                                          persistedData.ParsedBatchCells);
-                
+                                          persistedData.ParsedBatchCells,
+                                          persistedData.EscapePodData);
+
                 return Optional<World>.Of(world);
             }
             catch (FileNotFoundException ex)
@@ -98,20 +101,22 @@ namespace NitroxServer.Serialization.World
 
             return CreateFreshWorld();
         }
-        
+
         private World CreateFreshWorld()
         {
-            return CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>());
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData());
+            return world;
         }
 
-        private World CreateWorld(DateTime serverStartTime, 
-                                  EntityData entityData, 
+        private World CreateWorld(DateTime serverStartTime,
+                                  EntityData entityData,
                                   BaseData baseData,
                                   VehicleData vehicleData,
                                   InventoryData inventoryData,
                                   PlayerData playerData,
                                   GameData gameData,
-                                  List<Int3> ParsedBatchCells)
+                                  List<Int3> ParsedBatchCells,
+                                  EscapePodData escapePodData)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -126,6 +131,8 @@ namespace NitroxServer.Serialization.World
             world.InventoryData = inventoryData;
             world.PlayerData = playerData;
             world.GameData = gameData;
+            world.EscapePodData = escapePodData;
+            world.EscapePodManager = new EscapePodManager(escapePodData);
             world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
