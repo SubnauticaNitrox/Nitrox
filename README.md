@@ -22,7 +22,7 @@ The following milestones have been completed:
 * Seamoth & Exosuit Syncing
 * Basic cyclops syncing
 * Installer
-* Publishing on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
+* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
 * Rudimentary chat system
 * New HUD for remote players
 * Basic player animations
