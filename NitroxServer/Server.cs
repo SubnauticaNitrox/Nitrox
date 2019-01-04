@@ -2,6 +2,7 @@
 using NitroxModel.Logger;
 using NitroxServer.Communication;
 using NitroxServer.Serialization.World;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer
 {
@@ -9,7 +10,7 @@ namespace NitroxServer
     {
         private readonly Timer saveTimer;
         private readonly UdpServer udpServer;
-
+        private readonly ServerConfig serverConfig;
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
         public bool IsRunning { get; private set; }
@@ -23,9 +24,8 @@ namespace NitroxServer
 
             this.udpServer = udpServer;
 
-            //Maybe add settings for the interval?
             saveTimer = new Timer();
-            saveTimer.Interval = serverConfiguration.SaveInterval;
+            saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
             saveTimer.Elapsed += delegate { Save(); };
         }
