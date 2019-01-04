@@ -3,13 +3,19 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.ChatUI
 {
-    // TODO: Naming? This class facilitates communication between the chat entry text box and the primary chat log. Manager doesn't really seem to describe that intent.
-    public class PlayerChatManager
+    public class PlayerChat
     {
+        /// <summary>
+        ///     The Unity object that holds a record of what was said in-game.
+        /// </summary>
         private static PlayerChatLog chatLog;
+
+        /// <summary>
+        ///     A text box where the player can enter something to add to the chat log.
+        /// </summary>
         private static PlayerChatEntry chatEntry;
 
-        public PlayerChatManager()
+        public PlayerChat()
         {
             if (chatLog == null)
             {

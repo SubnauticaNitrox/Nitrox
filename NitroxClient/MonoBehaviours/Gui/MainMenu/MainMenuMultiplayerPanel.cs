@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
+using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -112,11 +117,38 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
-            string seperator = ":";
+
+            if (Regex.IsMatch(serverIp, "^[0-9.:]+$"))
+            {
+                ResolveIpv4(joinServerComponent, serverIp);
+            }
+            else
+            {
+                ResolveHostName(joinServerComponent, serverIp);
+            }
+        }
+
+        private void ResolveHostName(JoinServer joinServerComponent, string serverIp)
+        {
+            try
+            {
+                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
+                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
+                joinServerComponent.serverPort = 11000;
+            }
+            catch (SocketException e)
+            {
+                Log.Error($"Unable to resolve the address: {serverIp}");
+                Log.Error(e.ToString());
+            }
+        }
+
+        private void ResolveIpv4(JoinServer joinServerComponent, string serverIp)
+        {
+            char seperator = ':';
             if (serverIp.Contains(seperator))
             {
-                char splitter = ':';
-                string[] splitIP = serverIp.Split(splitter);
+                string[] splitIP = serverIp.Split(seperator);
                 joinServerComponent.ServerIp = splitIP[0];
                 joinServerComponent.serverPort = int.Parse(splitIP[1]);
             }
@@ -125,7 +157,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 joinServerComponent.ServerIp = serverIp;
                 joinServerComponent.serverPort = 11000;
             }
-            
         }
 
         public void ShowAddServerWindow()

@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
-            if (item != null && __instance.tr.parent.name != "EscapePod" )
+            if (item != null)
             {
                 NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
             }

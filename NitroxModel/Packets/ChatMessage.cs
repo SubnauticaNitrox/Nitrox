@@ -7,6 +7,7 @@ namespace NitroxModel.Packets
     {
         public ushort PlayerId { get; }
         public string Text { get; }
+        public const ushort SERVER_ID = ushort.MaxValue;
 
         public ChatMessage(ushort playerId, string text)
         {

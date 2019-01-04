@@ -10,7 +10,10 @@ using System.IO;
 using NitroxServer.GameLogic.Entities;
 using NitroxModel.DataStructures;
 using NitroxServer.ConfigParser;
-
+using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel.Core;
+using NitroxServer.Communication.Packets.Processors;
 
 namespace NitroxServer.Communication
 {
@@ -19,20 +22,22 @@ namespace NitroxServer.Communication
         private bool isStopped = true;
 
         private readonly PacketHandler packetHandler;
-        private readonly PlayerManager playerManager;
         private readonly EntitySimulation entitySimulation;
-        private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>(); 
+        private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>();
+        private readonly PlayerManager playerManager;
         private readonly NetServer server;
         private readonly Thread thread;
-        private int PortNumber, MaxConn;
+        private int portNumber, maxConn;
 
         public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
         {
             this.packetHandler = packetHandler;
-            this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
-            PortNumber = serverConfig.ServerPort;
-            MaxConn = serverConfig.MaxConnections;
+            this.playerManager = playerManager;
+
+            portNumber = serverConfig.ServerPort;
+            maxConn = serverConfig.MaxConnections;
+
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
             thread = new Thread(Listen);
@@ -139,8 +144,8 @@ namespace NitroxServer.Communication
 
                     if (ownershipChanges.Count > 0)
                     {
-                        SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(ownershipChanges);
-                        playerManager.SendPacketToAllPlayers(ownershipChangePacket);
+                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
+                        playerManager.SendPacketToAllPlayers(ownershipChange);
                     }
                 }
             }
@@ -161,8 +166,8 @@ namespace NitroxServer.Communication
         private NetPeerConfiguration BuildNetworkConfig()
         {
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
-            config.Port = PortNumber;
-            config.MaximumConnections = MaxConn;
+            config.Port = portNumber;
+            config.MaximumConnections = maxConn;
             config.AutoFlushSendQueue = true;
 
             return config;

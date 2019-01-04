@@ -7,7 +7,10 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
-    class PlayerChatLog : MonoBehaviour
+    /// <summary>
+    ///     The Unity object that holds a record of what was said in-game.
+    /// </summary>
+    internal class PlayerChatLog : MonoBehaviour
     {
         private const int LINE_CHAR_LIMIT = 80;
         private const int MESSAGE_LIMIT = 6;
@@ -15,29 +18,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private GameObject chatEntry;
         private GUIText chatText;
-        private Coroutine timer;
         private List<ChatLogEntry> entries;
+        private Coroutine timer;
 
-        protected void Awake()
-        {
-            SetupChatMessagesComponent();
-            entries = new List<ChatLogEntry>();
-        }
-
-        private void SetupChatMessagesComponent()
-        {
-            chatEntry = new GameObject();
-            chatText = chatEntry.AddComponent<GUIText>();
-            chatEntry.AddComponent<GUITextShadow>();
-            chatText.name = "ChatText";
-            chatText.alignment = TextAlignment.Left;
-            chatText.fontSize = 18;
-            chatText.transform.position = new Vector3(0.05f, .5f, 1f);
-            chatText.enabled = false;
-            chatText.richText = true;
-        }
-
-        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for CHAT_VISIBILITY_TIME_LENGTH seconds
+        /// <summary>
+        ///     Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for
+        ///     CHAT_VISIBILITY_TIME_LENGTH seconds
+        /// </summary>
+        /// <param name="chatLogEntry"></param>
         public void WriteEntry(ChatLogEntry chatLogEntry)
         {
             if (timer != null)
@@ -63,6 +51,25 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         public void Hide()
         {
             chatText.enabled = false;
+        }
+
+        protected void Awake()
+        {
+            SetupChatMessagesComponent();
+            entries = new List<ChatLogEntry>();
+        }
+
+        private void SetupChatMessagesComponent()
+        {
+            chatEntry = new GameObject();
+            chatText = chatEntry.AddComponent<GUIText>();
+            chatEntry.AddComponent<GUITextShadow>();
+            chatText.name = "ChatText";
+            chatText.alignment = TextAlignment.Left;
+            chatText.fontSize = 18;
+            chatText.transform.position = new Vector3(0.05f, .5f, 1f);
+            chatText.enabled = false;
+            chatText.richText = true;
         }
 
         private void AddChatMessage(ChatLogEntry chatLogEntry)

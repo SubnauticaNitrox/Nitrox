@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientAutoFaqRegistrar.cs" />
+    <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="ClientExtensions.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
@@ -125,6 +125,7 @@
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerKickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
@@ -156,7 +157,7 @@
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
-    <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\ChatUI\PlayerChat.cs" />
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />

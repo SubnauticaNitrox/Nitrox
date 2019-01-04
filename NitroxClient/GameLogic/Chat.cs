@@ -3,6 +3,7 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
 {
+    // TODO: Refactor to some player API instead of this tiny class.
     public class Chat
     {
         private readonly IMultiplayerSession multiplayerSession;
