@@ -10,13 +10,12 @@ namespace NitroxServer
     {
         private readonly Timer saveTimer;
         private readonly UdpServer udpServer;
-        private readonly ServerConfig serverConfig;
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
         public bool IsRunning { get; private set; }
         public static Server Instance { get; private set; }
 
-        public Server(WorldPersistence worldPersistence, World world, UdpServer udpServer)
+        public Server(WorldPersistence worldPersistence, World world, UdpServer udpServer, ServerConfig serverConfig)
         {
             Instance = this;
             this.worldPersistence = worldPersistence;
