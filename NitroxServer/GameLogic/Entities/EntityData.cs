@@ -67,7 +67,10 @@ namespace NitroxServer.GameLogic.Entities
             {
                 lock (globalRootEntitiesByGuid)
                 {
-                    globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    {
+                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    }
                 }
             }
             else
