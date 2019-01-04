@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -15,14 +14,16 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
+        private readonly IPacketSender packetSender;
         private IMultiplayerSession multiplayerSession;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
         private string myEscapePodGuid;
 
-        public BroadcastEscapePodsProcessor(IMultiplayerSession multiplayerSession)
+        public BroadcastEscapePodsProcessor(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
         {
+            this.packetSender = packetSender;
             this.multiplayerSession = multiplayerSession;
         }
 
@@ -97,7 +98,12 @@ namespace NitroxClient.Communication.Packets.Processors
             escapePod.transform.position = model.Location;
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
-            storageContainer.container.Clear();
+
+            using (packetSender.Suppress<ItemContainerRemove>())
+            {
+                storageContainer.container.Clear();
+            }
+
             GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
 
             MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();

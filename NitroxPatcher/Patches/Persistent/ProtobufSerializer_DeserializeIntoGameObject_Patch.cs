@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Helper;
 
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
@@ -58,7 +59,7 @@ namespace NitroxPatcher.Patches.Persistent
         {
             bool isMultiplayer = (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer());
 
-            if (isMultiplayer && SpawnedWithoutServersPermission(goData, uid.gameObject))
+            if (isMultiplayer && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject))
             {
                 UnityEngine.Object.Destroy(uid.gameObject);
             }
