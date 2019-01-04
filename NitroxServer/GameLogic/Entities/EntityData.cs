@@ -62,12 +62,19 @@ namespace NitroxServer.GameLogic.Entities
             {
                 entitiesByGuid.Add(entity.Guid, entity);
             }
-
+            
             if (entity.ExistsInGlobalRoot)
             {
                 lock (globalRootEntitiesByGuid)
                 {
-                    globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    {
+                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    }
+                    else
+                    {
+                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType.AsString());
+                    }
                 }
             }
             else
@@ -173,6 +180,16 @@ namespace NitroxServer.GameLogic.Entities
                 }
             }
 
+            return result;
+        }
+
+        public bool RemoveGlobalRoot(string guid)
+        {
+            bool result;
+            lock (globalRootEntitiesByGuid)
+            {
+                result = globalRootEntitiesByGuid.Remove(guid);
+            }
             return result;
         }
     }

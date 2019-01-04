@@ -71,6 +71,7 @@ namespace NitroxServer.GameLogic.Entities
         public void PickUpEntity(string guid)
         {
             entityData.RemoveEntity(guid);
+            entityData.RemoveGlobalRoot(guid);
         }
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
