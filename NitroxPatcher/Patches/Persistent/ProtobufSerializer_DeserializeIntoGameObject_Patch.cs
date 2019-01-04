@@ -6,6 +6,8 @@ using NitroxClient.MonoBehaviours;
 using UnityEngine;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxClient.GameLogic;
 
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
@@ -66,10 +68,32 @@ namespace NitroxPatcher.Patches.Persistent
         }
 
         private static bool SpawnedWithoutServersPermission(ProtobufSerializer.GameObjectData goData, GameObject gameObject)
-        {
+        {           
+            if(!HAND_PLACED_ITEMS_ONLY_SPAWNABLE_BY_SERVER.Contains(goData.ClassId))
+            {
+                // If these items are not in the blacklist then the server is fine with it being spawned.
+                return false;
+            }
+
             NitroxEntity serverEntity = gameObject.GetComponent<NitroxEntity>();
 
-            return (serverEntity == null && HAND_PLACED_ITEMS_ONLY_SPAWNABLE_BY_SERVER.Contains(goData.ClassId));
+            if(serverEntity)
+            {
+                // if we have a NitroxEntity then the server is aware of this entity.
+                return false;
+            }
+
+            UniqueIdentifier identifier = gameObject.GetComponent<UniqueIdentifier>();
+            Entities entities = NitroxServiceLocator.LocateService<Entities>();
+
+            if (identifier != null && entities.WasSpawnedByServer(identifier.Id))
+            {
+                // Looks like this ran through the main entity spawning code - the server knows about it.
+                return true;
+            }
+
+            // We've exhausted all mechanisms of entity detection - this doesn't appear to be an entity that the server is aware of.
+            return true;
         }
 
         public override void Patch(HarmonyInstance harmony)
