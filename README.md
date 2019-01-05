@@ -3,6 +3,8 @@
 </p>
 
 # Subnautica Nitrox
+
+## Welcome to Nitrox!
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>. 
 
 ## FAQ
