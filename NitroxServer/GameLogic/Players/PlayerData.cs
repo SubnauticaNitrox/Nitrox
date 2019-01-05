@@ -80,11 +80,29 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        public Perms Permissions(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+
+                return playerPersistedData.Permissions;
+            }
+        }
+
         public void UpdatePlayerSpawn(string playerName, Vector3 position)
         {
             lock (playersByPlayerName)
             {
                 playersByPlayerName[playerName].PlayerSpawnData = position;
+            }
+        }
+
+        public void UpdatePlayerPermissions(string playerName, Perms permissions)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].Permissions = permissions;
             }
         }
         
@@ -201,6 +219,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(6)]
             public string SubRootGuid { get; set; }
+
+            [ProtoMember(7)]
+            public Perms Permissions { get; set; }
 
             public PersistedPlayerData()
             {

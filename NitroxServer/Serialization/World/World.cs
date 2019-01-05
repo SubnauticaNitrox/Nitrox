@@ -25,5 +25,6 @@ namespace NitroxServer.Serialization.World
         public InventoryData InventoryData { get; set; }
         public PlayerData PlayerData { get; set; }
         public GameData GameData { get; set; }
+        public GameModeOption GameMode { get; set; }
     }
 }

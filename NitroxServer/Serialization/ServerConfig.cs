@@ -12,6 +12,8 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
         private const int DEFAULT_SAVE_INTERVAL = 60000;
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
+        private const GameModeOption DEFAULT_GAMEMODE = GameModeOption.Survival;
+        private const string GAMEMODE_SETTING = "GameMode";
 
         private int? _serverPort = null;
         public int ServerPort
@@ -39,6 +41,50 @@ namespace NitroxServer.ConfigParser
                 }
                 return _maxConnections ?? MAX_CONNECTIONS;
             }
+        }
+
+        private GameModeOption? _gameMode = null;
+        public GameModeOption GameMode
+        {
+            get
+            {
+                if (_gameMode == null && ConfigurationManager.AppSettings[GAMEMODE_SETTING] != null)
+                {
+                    _gameMode = ParseGameMode(ConfigurationManager.AppSettings[GAMEMODE_SETTING]);
+                }
+                return _gameMode ?? DEFAULT_GAMEMODE;
+            }
+        }
+
+        GameModeOption ParseGameMode(string stringGameMode)
+        {
+            GameModeOption gameMode = GameModeOption.Survival;
+            stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits
+            switch (stringGameMode)
+            {
+                case ("survival"):
+                    {
+                        gameMode = GameModeOption.Survival;
+                        break;
+                    }
+                case ("creative"):
+                    {
+                        gameMode = GameModeOption.Creative;
+                        break;
+                    }
+                case ("hardcore"):
+                    {
+                        gameMode = GameModeOption.Hardcore;
+                        break;
+                    }
+                case ("permadeath"):
+                    {
+                        gameMode = GameModeOption.Survival | GameModeOption.Permadeath;
+                        break;
+                    }
+            }
+
+            return gameMode;
         }
 
         private int? _saveInterval = null;
