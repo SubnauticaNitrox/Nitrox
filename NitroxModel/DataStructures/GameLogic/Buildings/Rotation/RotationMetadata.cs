@@ -3,7 +3,7 @@ using NitroxModel.Helper;
 using ProtoBuf;
 using System;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings
+namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract, ProtoInclude(50, typeof(CorridorRotationMetadata)), ProtoInclude(60, typeof(MapRoomRotationMetadata))]

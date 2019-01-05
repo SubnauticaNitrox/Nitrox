@@ -153,6 +153,10 @@
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\NoOpBasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\BasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\GenericBasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\SignMetadataProcessor.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />

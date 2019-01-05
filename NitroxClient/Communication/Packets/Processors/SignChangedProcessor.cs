@@ -1,9 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
+using NitroxClient.GameLogic.Bases.Metadata;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -11,14 +9,10 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(SignChanged packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
-            uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>();
+            SignMetadata signMetadata = packet.SignMetadata;
 
-            sign.text = packet.NewText;
-            sign.colorIndex = packet.ColorIndex;
-            sign.elementsState = packet.Elements;
-            sign.scaleIndex = packet.ScaleIndex;
-            sign.SetBackground(packet.Background);
+            BasePieceMetadataProcessor metadataProcessor = BasePieceMetadataProcessor.FromMetaData(signMetadata);
+            metadataProcessor.UpdateMetadata(signMetadata.Guid, signMetadata);
         }
     }
 }
