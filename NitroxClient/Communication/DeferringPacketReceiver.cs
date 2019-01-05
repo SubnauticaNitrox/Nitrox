@@ -1,24 +1,27 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Map;
-using NitroxModel.DataStructures;
+using NitroxModel;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.Communication
 {
+    // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
     public class DeferringPacketReceiver
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;
         private const int DEFAULT_PACKET_PRIORITY = 1;
-        private const int DESIRED_CELL_MIN_LOD_FOR_ACTIONS = 1;
 
         private readonly Dictionary<AbsoluteEntityCell, Queue<Packet>> deferredPacketsByAbsoluteCell = new Dictionary<AbsoluteEntityCell, Queue<Packet>>();
-        private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
+        private readonly NitroxModel.DataStructures.PriorityQueue<Packet> receivedPackets;
         private readonly VisibleCells visibleCells;
 
         public DeferringPacketReceiver(VisibleCells visibleCells)
         {
             this.visibleCells = visibleCells;
+            receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
         }
 
         public void PacketReceived(Packet packet)
@@ -49,69 +52,52 @@ namespace NitroxClient.Communication
 
         private bool PacketWasDeferred(Packet packet)
         {
-            if (packet is PlayerActionPacket)
-            {
-                PlayerActionPacket playerAction = (PlayerActionPacket)packet;
+            Optional<AbsoluteEntityCell> deferLocation = packet.GetDeferredCell();
 
-                if (!playerAction.PlayerMustBeInRangeToReceive)
+            if (deferLocation.IsPresent())
+            {
+                AbsoluteEntityCell mustBeLoadedCell = deferLocation.Get();
+
+                if (visibleCells.Contains(mustBeLoadedCell))
                 {
                     return false;
                 }
 
-                AbsoluteEntityCell cell = new AbsoluteEntityCell(playerAction.ActionPosition);
-
-                bool cellLoaded = false;
-
-                for (int level = 0; level <= DESIRED_CELL_MIN_LOD_FOR_ACTIONS; level++)
-                {
-                    VisibleCell visibleCell = new VisibleCell(cell, level);
-
-                    if (visibleCells.HasVisibleCell(visibleCell))
-                    {
-                        cellLoaded = true;
-                        break;
-                    }
-                }
-
-                if (!cellLoaded)
-                {
-                    Log.Debug("Action was deferred, cell not loaded (with required lod): " + cell);
-                    AddPacketToDeferredMap(playerAction, cell);
-                    return true;
-                }
+                Log.Debug($"Packet {packet} was deferred, cell not loaded (with required lod): {mustBeLoadedCell}");
+                AddPacketToDeferredMap(packet, mustBeLoadedCell);
+                return true;
             }
 
             return false;
         }
 
-        private void AddPacketToDeferredMap(PlayerActionPacket playerAction, AbsoluteEntityCell cell)
+        private void AddPacketToDeferredMap(Packet deferred, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {
-                if (!deferredPacketsByAbsoluteCell.ContainsKey(cell))
+                Queue<Packet> queue;
+                if (!deferredPacketsByAbsoluteCell.TryGetValue(cell, out queue))
                 {
-                    deferredPacketsByAbsoluteCell.Add(cell, new Queue<Packet>());
+                    deferredPacketsByAbsoluteCell[cell] = queue = new Queue<Packet>();
                 }
 
-                deferredPacketsByAbsoluteCell[cell].Enqueue(playerAction);
+                queue.Enqueue(deferred);
             }
         }
 
-        public void CellLoaded(VisibleCell visibleCell)
+        public void CellLoaded(AbsoluteEntityCell absoluteEntityCell)
         {
-            if (visibleCell.Level > DESIRED_CELL_MIN_LOD_FOR_ACTIONS)
-            {
-                return;
-            }
-
             lock (deferredPacketsByAbsoluteCell)
             {
                 Queue<Packet> deferredPackets;
-                if (deferredPacketsByAbsoluteCell.TryGetValue(visibleCell.AbsoluteCellEntity, out deferredPackets))
+                if (deferredPacketsByAbsoluteCell.TryGetValue(absoluteEntityCell, out deferredPackets))
                 {
+                    Log.Debug("Loaded {0}; found {1} deferred packet(s):{2}\nAdding it back with high priority.",
+                        absoluteEntityCell,
+                        deferredPackets.Count,
+                        deferredPackets.PrefixWith("\n\t"));
                     while (deferredPackets.Count > 0)
                     {
-                        Log.Debug("Found deferred packet... adding it back with high priority.");
                         Packet packet = deferredPackets.Dequeue();
                         receivedPackets.Enqueue(EXPIDITED_PACKET_PRIORITY, packet);
                     }

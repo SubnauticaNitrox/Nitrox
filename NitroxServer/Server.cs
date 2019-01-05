@@ -1,29 +1,66 @@
-﻿using NitroxModel.Logger;
+﻿using System.Timers;
+using NitroxModel.Logger;
 using NitroxServer.Communication;
-using NitroxServer.Communication.Packets;
-using NitroxServer.GameLogic;
+using NitroxServer.Serialization.World;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer
 {
     public class Server
     {
-        private readonly TcpServer tcpServer;
+        private readonly Timer saveTimer;
+        private readonly UdpServer udpServer;
+        private readonly World world;
+        private readonly WorldPersistence worldPersistence;
+        public bool IsRunning { get; private set; }
+        public static Server Instance { get; private set; }
 
-        public Server()
+        public Server(WorldPersistence worldPersistence, World world, UdpServer udpServer, ServerConfig serverConfig)
         {
-            TimeKeeper timeKeeper = new TimeKeeper();
-            SimulationOwnership simulationOwnership = new SimulationOwnership();
-            PlayerManager playerManager = new PlayerManager();
-            PacketHandler packetHandler = new PacketHandler(playerManager, timeKeeper, simulationOwnership);
-            EventTriggerer eventTriggerer = new EventTriggerer(playerManager);
+            Instance = this;
+            this.worldPersistence = worldPersistence;
+            this.world = world;
 
-            tcpServer = new TcpServer(packetHandler, playerManager);
+            this.udpServer = udpServer;
+
+            saveTimer = new Timer();
+            saveTimer.Interval = serverConfig.SaveInterval;
+            saveTimer.AutoReset = true;
+            saveTimer.Elapsed += delegate { Save(); };
+        }
+
+        public void Save()
+        {
+            worldPersistence.Save(world);
         }
 
         public void Start()
         {
-            Log.Info("Starting Nitrox Server");
-            tcpServer.Start();
+            IsRunning = true;
+            IpLogger.PrintServerIps();
+            udpServer.Start();
+            Log.Info("Nitrox Server Started");
+            EnablePeriodicSaving();
+        }
+
+        public void Stop()
+        {
+            Log.Info("Nitrox Server Stopping...");
+            DisablePeriodicSaving();
+            Save();
+            udpServer.Stop();
+            Log.Info("Nitrox Server Stopped");
+            IsRunning = false;
+        }
+
+        private void EnablePeriodicSaving()
+        {
+            saveTimer.Start();
+        }
+
+        private void DisablePeriodicSaving()
+        {
+            saveTimer.Stop();
         }
     }
 }

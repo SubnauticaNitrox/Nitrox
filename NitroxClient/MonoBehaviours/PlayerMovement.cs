@@ -1,5 +1,7 @@
-﻿using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.ServerModel;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -9,8 +11,14 @@ namespace NitroxClient.MonoBehaviours
     public class PlayerMovement : MonoBehaviour
     {
         public const float BROADCAST_INTERVAL = 0.05f;
+        private LocalPlayer localPlayer;
 
-        private float time = 0.0f;
+        private float time;
+
+        public void Awake()
+        {
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        }
 
         public void Update()
         {
@@ -30,21 +38,13 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleModel> vehicle = GetVehicleModel();
-                string subGuid = null;
+                Optional<VehicleMovementData> vehicle = GetVehicleModel();
 
-                SubRoot currentSub = Player.main.GetCurrentSub();
-
-                if (currentSub != null)
-                {
-                    subGuid = GuidHelper.GetGuid(currentSub.gameObject);
-                }
-
-                Multiplayer.Logic.Player.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle, Optional<string>.OfNullable(subGuid));
+                localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }
 
-        private Optional<VehicleModel> GetVehicleModel()
+        private Optional<VehicleMovementData> GetVehicleModel()
         {
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
@@ -110,10 +110,10 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                return Optional<VehicleModel>.Empty();
+                return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleModel model = new VehicleModel(techType,
+            VehicleMovementData model = new VehicleMovementData(techType,
                                                   guid,
                                                   position,
                                                   rotation,
@@ -123,7 +123,7 @@ namespace NitroxClient.MonoBehaviours
                                                   steeringWheelPitch,
                                                   appliedThrottle);
 
-            return Optional<VehicleModel>.Of(model);
+            return Optional<VehicleMovementData>.Of(model);
         }
     }
 }

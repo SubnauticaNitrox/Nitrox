@@ -1,16 +1,17 @@
-﻿using NitroxClient.MonoBehaviours;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Harmony;
+using NitroxClient;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+using UnityEngine;
 
 namespace NitroxPatcher
 {
@@ -22,13 +23,18 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
 
             if (patches != null)
             {
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
+
+            Log.Info("Registering Dependencies");
+
+            // Our application's entry point. First, register client dependencies with AutoFac.
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
             Log.Info("Patching Subnautica...");
 
@@ -53,6 +59,7 @@ namespace NitroxPatcher
 
             patches = splittedPatches.First(g => g.Key == "NitroxPatcher.Patches").ToArray();
             Multiplayer.OnBeforeMultiplayerStart += Apply;
+            Multiplayer.OnAfterMultiplayerEnd += Restore;
             Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
 
             Log.Info("Enabling developer console.");
@@ -81,7 +88,6 @@ namespace NitroxPatcher
             isApplied = true;
         }
 
-
         /// <summary>
         /// If the player starts the main menu for the first time, or returns from a (multiplayer) session, get rid of all the patches if applicable.
         /// </summary>
@@ -106,11 +112,11 @@ namespace NitroxPatcher
         private static void ApplyNitroxBehaviours()
         {
             Log.Info("Applying Nitrox behaviours..");
+
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
 
-            CodePatchManager.Restore += (sender, e) => Restore();
             Log.Info("Behaviours applied.");
         }
 

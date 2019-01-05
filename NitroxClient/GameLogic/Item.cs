@@ -1,4 +1,4 @@
-﻿using NitroxClient.Communication;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(itemPosition);
         }
 
-        public void PickedUp(GameObject gameObject, string techType)
+        public void PickedUp(GameObject gameObject, TechType techType)
         {
             string guid = GuidHelper.GetGuid(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
@@ -31,8 +31,9 @@ namespace NitroxClient.GameLogic
             PickedUp(itemPosition, guid, techType);
         }
 
-        public void PickedUp(Vector3 itemPosition, string guid, string techType)
+        public void PickedUp(Vector3 itemPosition, string guid, TechType techType)
         {
+            Log.Info("PickedUp " + guid + " " + techType);
             PickupItem pickupItem = new PickupItem(itemPosition, guid, techType);
             packetSender.Send(pickupItem);
         }
@@ -42,12 +43,10 @@ namespace NitroxClient.GameLogic
             Optional<string> waterpark = GetCurrentWaterParkGuid();
             string guid = GuidHelper.GetGuid(gameObject);
             byte[] bytes = SerializationHelper.GetBytes(gameObject);
-
-            SyncedMultiplayerObject.ApplyTo(gameObject);
-
+            
             Log.Debug("Dropping item with guid: " + guid);
 
-            DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, bytes);
+            DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, gameObject.transform.rotation, bytes);
             packetSender.Send(droppedItem);
         }
 

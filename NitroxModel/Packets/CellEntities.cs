@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -12,6 +12,14 @@ namespace NitroxModel.Packets
         public CellEntities(List<Entity> entities)
         {
             Entities = entities;
+        }
+
+        public CellEntities(Entity entity)
+        {
+            Entities = new List<Entity>
+            {
+                entity
+            };
         }
 
         public override string ToString()

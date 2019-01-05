@@ -1,64 +1,68 @@
-﻿using System;
-using System.Collections.Generic;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
 {
     public class EscapePodManager
     {
-        private const int PLAYERS_PER_ESCAPEPOD = 50;
-        private const int ESCAPE_POD_X_OFFSET = 40;
+        public const int PLAYERS_PER_ESCAPEPOD = 50;
 
-        private readonly List<EscapePodModel> escapePods = new List<EscapePodModel>();
-        private readonly Dictionary<string, EscapePodModel> escapePodsByPlayerId = new Dictionary<string, EscapePodModel>();
-        private EscapePodModel podNotFullYet;
+        public const int ESCAPE_POD_X_OFFSET = 40;
 
-        public EscapePodManager()
+        private readonly EscapePodData escapePodData;
+
+        public EscapePodManager(EscapePodData escapePodData)
         {
-            podNotFullYet = CreateNewEscapePod();
+            this.escapePodData = escapePodData;
+
+
+            if (escapePodData.EscapePods.Count > 0)
+                escapePodData.PodNotFullYet = escapePodData.EscapePods.GetLast();
+
+            if (escapePodData.PodNotFullYet == null)
+                escapePodData.PodNotFullYet = CreateNewEscapePod();
         }
 
-        public void AssignPlayerToEscapePod(string playerId)
+        public string AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodModel> newlyCreatedPod)
         {
-            lock (escapePodsByPlayerId)
+            newlyCreatedPod = Optional<EscapePodModel>.Empty();
+            lock (escapePodData.EscapePodsByPlayerId)
             {
-                if (escapePodsByPlayerId.ContainsKey(playerId))
+                if (escapePodData.EscapePodsByPlayerId.ContainsKey(playerId))
                 {
-                    return;
+                    return escapePodData.EscapePodsByPlayerId[playerId].Guid;
                 }
 
-                if (podNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
+                if (escapePodData.PodNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
                 {
-                    podNotFullYet = CreateNewEscapePod();
+                    newlyCreatedPod = Optional<EscapePodModel>.Of(CreateNewEscapePod());
+                    escapePodData.PodNotFullYet = newlyCreatedPod.Get();
                 }
 
-                podNotFullYet.AssignedPlayers.Add(playerId);
-                escapePodsByPlayerId[playerId] = podNotFullYet;
+                escapePodData.PodNotFullYet.AssignedPlayers.Add(playerId);
+                escapePodData.EscapePodsByPlayerId[playerId] = escapePodData.PodNotFullYet;
             }
-        }
-
-        public EscapePodModel[] GetEscapePods()
-        {
-            lock (escapePods)
-            {
-                return escapePods.ToArray();
-            }
+            return escapePodData.PodNotFullYet.Guid;
         }
 
         private EscapePodModel CreateNewEscapePod()
         {
-            lock (escapePods)
+            lock (escapePodData.EscapePods)
             {
-                int totalEscapePods = escapePods.Count;
+                int totalEscapePods = escapePodData.EscapePods.Count;
 
-                EscapePodModel escapePod = new EscapePodModel("escapePod" + totalEscapePods,
-                                                              new Vector3(-112.2f + (ESCAPE_POD_X_OFFSET * totalEscapePods), 0.0f, -322.6f),
-                                                              "escapePodFab" + totalEscapePods,
-                                                              "escapePodMedFab" + totalEscapePods,
-                                                              "escapePodStorageFab" + totalEscapePods,
-                                                              "escapePodRadioFab" + totalEscapePods);
-                escapePods.Add(escapePod);
+                EscapePodModel escapePod = new EscapePodModel();
+                escapePod.InitEscapePodModel("escapePod" + totalEscapePods,
+                    new Vector3(-112.2f + ESCAPE_POD_X_OFFSET * totalEscapePods, 0.0f, -322.6f),
+                    "escapePodFab" + totalEscapePods,
+                    "escapePodMedFab" + totalEscapePods,
+                    "escapePodStorageFab" + totalEscapePods,
+                    "escapePodRadioFab" + totalEscapePods);
+
+                escapePodData.EscapePods.Add(escapePod);
+
 
                 return escapePod;
             }

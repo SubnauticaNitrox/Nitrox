@@ -1,15 +1,14 @@
 ﻿using System;
-using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemContainerRemove : PlayerActionPacket
+    public class ItemContainerRemove : Packet
     {
         public string OwnerGuid { get; }
         public string ItemGuid { get; }
 
-        public ItemContainerRemove(string ownerGuid, string itemGuid, Vector3 ownerPositon) : base(ownerPositon)
+        public ItemContainerRemove(string ownerGuid, string itemGuid)
         {
             OwnerGuid = ownerGuid;
             ItemGuid = itemGuid;

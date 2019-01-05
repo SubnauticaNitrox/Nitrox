@@ -5,7 +5,7 @@ namespace NitroxClient.MonoBehaviours
 {
     class MultiplayerExosuit : MultiplayerVehicleControl<Vehicle>
     {
-        private bool lastThrottle = false;
+        private bool lastThrottle;
         private float timeJetsChanged;
         private Exosuit exosuit;
 

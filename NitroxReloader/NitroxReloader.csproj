@@ -28,8 +28,10 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
+  <Import Project="$(SolutionDir)tasks\WriteAssemblyPathTask.targets" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

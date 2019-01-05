@@ -1,4 +1,6 @@
-﻿using NitroxModel.DataStructures.ServerModel;
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
 
@@ -6,6 +8,8 @@ namespace ClientTester.Commands.DefaultCommands
 {
     public class MoveyCommand : NitroxCommand
     {
+        private readonly LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
         public MoveyCommand()
         {
             Name = "movey";
@@ -19,7 +23,7 @@ namespace ClientTester.Commands.DefaultCommands
 
             float y = client.ClientPos.y;
             client.ClientPos.y = float.Parse(args[0]);
-            client.Logic.Player.UpdateLocation(client.ClientPos, new Vector3(0, client.ClientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleModel>.Empty(), Optional<string>.Empty());
+            localPlayer.UpdateLocation(client.ClientPos, new Vector3(0, client.ClientPos.y - y, 0), Quaternion.identity, Quaternion.identity, Optional<VehicleMovementData>.Empty());
         }
     }
 }

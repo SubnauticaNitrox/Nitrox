@@ -1,5 +1,4 @@
-﻿using NitroxModel.Logger;
-using NitroxModel.Packets;
+﻿using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 
@@ -8,25 +7,26 @@ namespace NitroxServer.Communication.Packets.Processors
     class SimulationOwnershipRequestProcessor : AuthenticatedPacketProcessor<SimulationOwnershipRequest>
     {
         private readonly PlayerManager playerManager;
-        private readonly SimulationOwnership simulationOwnership;
+        private readonly SimulationOwnershipData simulationOwnershipData;
 
-        public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnership simulationOwnership)
+        public SimulationOwnershipRequestProcessor(PlayerManager playerManager, SimulationOwnershipData simulationOwnershipData)
         {
             this.playerManager = playerManager;
-            this.simulationOwnership = simulationOwnership;
+            this.simulationOwnershipData = simulationOwnershipData;
         }
 
         public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
         {
-            Log.Debug(ownershipRequest);
-
-            if (simulationOwnership.TryToAcquire(ownershipRequest.Guid, player))
+            bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Guid, player, ownershipRequest.LockType);
+            
+            if (aquiredLock)
             {
-                // TODO: Distribute ownership in the `SimulationOwnership` class.
-                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id);
-                playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
-                Log.Debug("Sending: " + simulationOwnershipChange);
+                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id, ownershipRequest.LockType);
+                playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
             }
+
+            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(ownershipRequest.Guid, aquiredLock, ownershipRequest.LockType);
+            player.SendPacket(responseToPlayer);
         }
     }
 }

@@ -4,37 +4,34 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.HUD
 {
-    class PlayerVitalsManager
+    public class PlayerVitalsManager
     {
-        private readonly Dictionary<string, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<string, RemotePlayerVitals>();
+        private readonly Dictionary<ushort, RemotePlayerVitals> vitalsByPlayerId = new Dictionary<ushort, RemotePlayerVitals>();
+        private PlayerManager PlayerManager { get; }
 
-        public void RemovePlayer(string playerId)
+        public PlayerVitalsManager(PlayerManager playerManager)
         {
-            RemotePlayerVitals removedPlayerVitals = GetForPlayerId(playerId);
+            PlayerManager = playerManager;
+        }
+
+        public void RemoveForPlayer(ushort playerId)
+        {
+            RemotePlayerVitals removedPlayerVitals = CreateForPlayer(playerId);
             vitalsByPlayerId.Remove(playerId);
 
             Object.Destroy(removedPlayerVitals);
-
-            int i = 1;
-
-            foreach (RemotePlayerVitals vitals in vitalsByPlayerId.Values)
-            {
-                vitals.SetNewPosition(i++);
-            }
         }
 
-        public RemotePlayerVitals GetForPlayerId(string playerId)
+        public RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
-            if (!vitalsByPlayerId.ContainsKey(playerId))
+            RemotePlayerVitals vitals;
+            if (!vitalsByPlayerId.TryGetValue(playerId, out vitals))
             {
-                RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
-
-                vitals.CreateVitals(playerId, vitalsByPlayerId.Count);
-
+                vitals = RemotePlayerVitals.CreateForPlayer(playerId);
                 vitalsByPlayerId[playerId] = vitals;
             }
 
-            return vitalsByPlayerId[playerId];
+            return vitals;
         }
     }
 }

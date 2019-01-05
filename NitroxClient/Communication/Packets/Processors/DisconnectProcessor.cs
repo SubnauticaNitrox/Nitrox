@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 
@@ -19,13 +20,17 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(Disconnect disconnect)
         {
-            //TODO: don't remove right away... maybe grey out and start 
+            // TODO: don't remove right away... maybe grey out and start
             //      a coroutine to finally remove.
-            vitalsManager.RemovePlayer(disconnect.PlayerId);
+            vitalsManager.RemoveForPlayer(disconnect.PlayerId);
 
-            remotePlayerManager.RemovePlayer(disconnect.PlayerId);
+            Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
 
-            Log.InGame(disconnect.PlayerId + " disconnected");
+            if (remotePlayer.IsPresent())
+            {
+                remotePlayerManager.RemovePlayer(disconnect.PlayerId);
+                Log.InGame(remotePlayer.Get().PlayerName + " disconnected");
+            }
         }
     }
 }

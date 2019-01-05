@@ -1,4 +1,5 @@
-﻿using NitroxModel.Helper;
+﻿using System;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
@@ -27,6 +28,35 @@ namespace NitroxClient.Unity.Helper
             Validate.NotNull(component, o.name + " did not have a component of type " + typeof(T) + " in its parent");
 
             return component;
+        }
+
+        public static Transform RequireTransform(this Transform tf, string name)
+        {
+            Transform child = tf.Find(name);
+
+            if (child == null)
+            {
+#if DEBUG
+                tf.gameObject.DumpGameObject(dumpTransform: false);
+#endif
+                throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
+            }
+
+            return child;
+        }
+        public static Transform RequireTransform(this GameObject go, string name) => go.transform.RequireTransform(name);
+        public static Transform RequireTransform(this MonoBehaviour mb, string name) => mb.transform.RequireTransform(name);
+
+        public static GameObject RequireGameObject(this Transform tf, string name) => tf.RequireTransform(name).gameObject;
+        public static GameObject RequireGameObject(this GameObject go, string name) => go.transform.RequireGameObject(name);
+        public static GameObject RequireGameObject(this MonoBehaviour mb, string name) => mb.transform.RequireGameObject(name);
+
+        public static GameObject RequireGameObject(string name)
+        {
+            GameObject go = GameObject.Find(name);
+            Validate.NotNull(go, "No global GameObject found with " + name + "!");
+
+            return go;
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using Story;
@@ -7,6 +9,13 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class StoryEventHandler : ClientPacketProcessor<StoryEventSend>
     {
+        private readonly IPacketSender packetSender;
+
+        public StoryEventHandler(IPacketSender packetSender)
+        {
+            this.packetSender = packetSender;
+        }
+
         public override void Process(StoryEventSend packet)
         {
             switch (packet.StoryEventType)
@@ -15,7 +24,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 case StoryEventType.Radio:
                 case StoryEventType.Encyclopedia:
                 case StoryEventType.Story:
-                    StoryGoal.Execute(packet.Key, (Story.GoalType)packet.StoryEventType);
+                    using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<StoryEventSend>())
+                    {
+                        StoryGoal.Execute(packet.Key, (Story.GoalType)packet.StoryEventType);
+                    }
                     break;
                 case StoryEventType.Extra:
                     ExecuteExtraEvent(packet.Key);

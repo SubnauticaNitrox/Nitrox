@@ -1,10 +1,10 @@
-﻿using Harmony;
+﻿using System;
+using System.Reflection;
+using Harmony;
 using NitroxClient.MonoBehaviours.Gui.Input;
 using NitroxClient.MonoBehaviours.Gui.Input.KeyBindings;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using System;
-using System.Reflection;
 
 namespace NitroxPatcher.Patches
 {

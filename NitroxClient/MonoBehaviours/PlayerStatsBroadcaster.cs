@@ -1,11 +1,20 @@
-﻿using UnityEngine;
+﻿using NitroxClient.GameLogic;
+using NitroxModel.Core;
+using NitroxModel.Logger;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class PlayerStatsBroadcaster : MonoBehaviour
     {
-        private float time = 0.0f;
+        private float time;
         private const float INTERPOLATION_PERIOD = 4.00f;
+        private LocalPlayer localPlayer;
+
+        public void Awake()
+        {
+            localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+        }
 
         public void Update()
         {
@@ -15,10 +24,9 @@ namespace NitroxClient.MonoBehaviours
             if (time >= INTERPOLATION_PERIOD)
             {
                 time = 0;
-
                 Survival survival = Player.main.GetComponent<Survival>();
 
-                if (survival != null && !survival.freezeStats && GameModeUtils.IsOptionActive(GameModeOption.Survival))
+                if (survival != null && !survival.freezeStats)
                 {
                     float oxygen = Player.main.oxygenMgr.GetOxygenAvailable();
                     float maxOxygen = Player.main.oxygenMgr.GetOxygenCapacity();
@@ -26,7 +34,7 @@ namespace NitroxClient.MonoBehaviours
                     float food = survival.food;
                     float water = survival.water;
 
-                    Multiplayer.Logic.Player.BroadcastStats(oxygen, maxOxygen, health, food, water);
+                    localPlayer.BroadcastStats(oxygen, maxOxygen, health, food, water);
                 }
             }
         }

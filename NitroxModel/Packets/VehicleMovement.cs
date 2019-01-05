@@ -1,40 +1,24 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
-using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
+using Lidgren.Network;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleMovement : Movement
     {
-        public TechType TechType { get; }
-        public Vector3 AngularVelocity { get; }
-        public string Guid { get; }
-        public float SteeringWheelYaw { get; }
-        public float SteeringWheelPitch { get; }
-        public bool AppliedThrottle { get; }
+        public VehicleMovementData Vehicle { get; }
 
-        public VehicleMovement(string playerId, Vector3 playerPosition, Vector3 velocity, Quaternion rotation, Vector3 angularVelocity, TechType techType, string guid, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle) : base(playerId, playerPosition, velocity, rotation, rotation, Optional<string>.Empty())
+        public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation)
         {
-            TechType = techType;
-            AngularVelocity = angularVelocity;
-            Guid = guid;
-
-            SteeringWheelYaw = steeringWheelYaw;
-            SteeringWheelPitch = steeringWheelPitch;
-            AppliedThrottle = appliedThrottle;
-
-            PlayerMustBeInRangeToReceive = false;
+            Vehicle = vehicle;
+            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
 
         public override string ToString()
         {
-            return "[VehicleMovement - TechType: " + TechType +
-                " AngularVelocity: " + AngularVelocity +
-                " Guid: " + Guid +
-                " SteeringWheelYaw: " + SteeringWheelYaw +
-                " SteeringWheelPitch: " + SteeringWheelPitch +
-                " AppliedThrottle: " + AppliedThrottle +
+            return "[VehicleMovement - vehicle: " + Vehicle +
                 "]\n\t" + base.ToString();
         }
     }

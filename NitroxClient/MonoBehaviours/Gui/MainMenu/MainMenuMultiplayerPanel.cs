@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
+using NitroxModel.Logger;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
@@ -10,45 +16,44 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
         public const string SERVER_LIST_PATH = @".\servers";
-        public GameObject SavedGamesRef;
+        private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
+        private GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
+
+        private GameObject multiplayerButton;
+        private Transform savedGameAreaContent;
+        public GameObject SavedGamesRef;
+        private string serverHostInput;
+        private string serverNameInput;
 
         private bool shouldFocus;
         private bool showingAddServer;
-        private string serverNameInput;
-        private string serverHostInput;
-        private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
-
-        GameObject multiplayerButton;
-        Transform savedGameAreaContent;
 
         public void Awake()
         {
-            multiplayerButton = SavedGamesRef.transform.Find("SavedGameArea/SavedGameAreaContent/NewGame").gameObject;
-            savedGameAreaContent = LoadedMultiplayerRef.transform.Find("SavedGameArea/SavedGameAreaContent");
+            //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
+            //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
+            JoinServer.SaveGameMenuPrototype = SavedGamesRef;
+
+            multiplayerButton = SavedGamesRef.RequireGameObject("Scroll View/Viewport/SavedGameAreaContent/NewGame");
+            savedGameAreaContent = LoadedMultiplayerRef.RequireTransform("Scroll View/Viewport/SavedGameAreaContent");
+
             if (!File.Exists(SERVER_LIST_PATH))
             {
                 AddServer("local", "127.0.0.1");
             }
-            CreateButton("Add a server", ShowAddServerWindow);
-            using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    string[] lineData = line.Split('|');
-                    string serverName = lineData[0];
-                    string serverIp = lineData[1];
-                    CreateServerButton($"<b>{serverName}</b>\n{serverIp}", serverIp);
-                }
-            }
+
+            CreateButton("Add server IP", ShowAddServerWindow);
+            LoadSavedServers();
         }
 
-        public void CreateButton(string text, UnityEngine.Events.UnityAction clickEvent)
+        public void CreateButton(string text, UnityAction clickEvent)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
-            multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
-            Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
+            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+            txt.GetComponent<Text>().text = text;
+            DestroyObject(txt.GetComponent<TranslationLiveUpdate>());
+            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
             multiplayerButtonButton.onClick.AddListener(clickEvent);
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
@@ -58,12 +63,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
-            multiplayerButtonInst.transform.Find("NewGameButton/Text").GetComponent<Text>().text = text;
-            Button multiplayerButtonButton = multiplayerButtonInst.transform.Find("NewGameButton").GetComponent<Button>();
+            Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
+            txt.GetComponent<Text>().text = text;
+            DestroyObject(txt.GetComponent<TranslationLiveUpdate>());
+            Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() => JoinServer(joinIp));
+            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
-            
+
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
             Button deleteButtonButton = delete.GetComponent<Button>();
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
@@ -90,9 +97,26 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void JoinServer(string serverIp)
+        public void OpenJoinServerMenu(string serverIp)
         {
-            new GameObject().AddComponent<JoinServer>().ServerIp = serverIp;
+            NitroxServiceLocator.BeginNewLifetimeScope();
+
+            if (joinServerGameObject != null)
+            {
+                Destroy(joinServerGameObject);
+            }
+
+            joinServerGameObject = new GameObject();
+            JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
+
+            if (Regex.IsMatch(serverIp, "^[0-9.:]+$"))
+            {
+                ResolveIpv4(joinServerComponent, serverIp);
+            }
+            else
+            {
+                ResolveHostName(joinServerComponent, serverIp);
+            }
         }
 
         public void ShowAddServerWindow()
@@ -119,11 +143,56 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
         }
 
+        private void LoadSavedServers()
+        {
+            using (StreamReader sr = new StreamReader(SERVER_LIST_PATH))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] lineData = line.Split('|');
+                    string serverName = lineData[0];
+                    string serverIp = lineData[1];
+                    CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}", serverIp);
+                }
+            }
+        }
+
+        private void ResolveHostName(JoinServer joinServerComponent, string serverIp)
+        {
+            try
+            {
+                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
+                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
+                joinServerComponent.serverPort = 11000;
+            }
+            catch (SocketException e)
+            {
+                Log.Error($"Unable to resolve the address: {serverIp}");
+                Log.Error(e.ToString());
+            }
+        }
+
+        private void ResolveIpv4(JoinServer joinServerComponent, string serverIp)
+        {
+            char seperator = ':';
+            if (serverIp.Contains(seperator))
+            {
+                string[] splitIP = serverIp.Split(seperator);
+                joinServerComponent.ServerIp = splitIP[0];
+                joinServerComponent.serverPort = int.Parse(splitIP[1]);
+            }
+            else
+            {
+                joinServerComponent.ServerIp = serverIp;
+                joinServerComponent.serverPort = 11000;
+            }
+        }
 
         private void OnAddServerButtonClicked()
         {
             AddServer(serverNameInput, serverHostInput);
-            CreateServerButton($"<b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
+            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
             HideAddServerWindow();
         }
 
@@ -177,7 +246,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     {
                         GUILayout.Label("Name:");
                         GUI.SetNextControlName("serverNameField");
-                        //120 so users can't go too crazy.
+                        // 120 so users can't go too crazy.
                         serverNameInput = GUILayout.TextField(serverNameInput, 120);
                     }
 
@@ -185,7 +254,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     {
                         GUILayout.Label("Host:");
                         GUI.SetNextControlName("serverHostField");
-                        //120 so users can't go too crazy.
+                        // 120 so users can't go too crazy.
                         serverHostInput = GUILayout.TextField(serverHostInput, 120);
                     }
 

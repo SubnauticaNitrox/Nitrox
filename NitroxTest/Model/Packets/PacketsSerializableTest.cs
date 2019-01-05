@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.Packets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxModel.Packets;
 
 namespace NitroxTest.Model.Packets
 {
@@ -16,19 +16,13 @@ namespace NitroxTest.Model.Packets
         public void IsSerializable(Type t)
         {
             if (visitedTypes.Contains(t))
-                return;
-
-            if (!t.IsSerializable && !t.IsInterface)
             {
-                // We have our own surrogates to (de)serialize types that are not marked [Serializable]
-                // This code is very similar to how serializability is checked in:
-                // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
+                return;
+            }
 
-                ISurrogateSelector selector;
-                if (Packet.Serializer.SurrogateSelector.GetSurrogate(t, Packet.Serializer.Context, out selector) == null)
-                {
-                    Assert.Fail($"Type {t} is not serializable!");
-                }
+            if (!t.IsSerializable && !t.IsInterface && !Packet.IsTypeSerializable(t))
+            {
+                Assert.Fail($"Type {t} is not serializable!");
             }
 
             visitedTypes.Add(t);

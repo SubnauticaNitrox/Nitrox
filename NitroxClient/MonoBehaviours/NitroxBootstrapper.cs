@@ -9,10 +9,19 @@ namespace NitroxClient.MonoBehaviours
         {
             DontDestroyOnLoad(gameObject);
             gameObject.AddComponent<SceneCleanerPreserve>();
-
             gameObject.AddComponent<MainMenuMods>();
-            gameObject.AddComponent<CodePatchManager>();
+
+#if DEBUG
+            AttachMultiplayerConsole();
+#endif
+
             CreateDebugger();
+        }
+
+        private void AttachMultiplayerConsole()
+        {
+            GameObject consoleRoot = new GameObject();
+            consoleRoot.AddComponent<ConsoleJoinServer>();
         }
 
         private void CreateDebugger()

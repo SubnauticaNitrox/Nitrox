@@ -1,78 +1,107 @@
-﻿using System;
+﻿using ProtoBuf;
+using System;
 
 namespace NitroxModel.DataStructures.Util
 {
     [Serializable]
-    public struct Optional<T>
+    public class HasValueOptional<T> : Optional<T>
     {
-        private T value;
+        private readonly T value;
 
-        private Optional(T value)
+        public HasValueOptional(T value)
         {
             this.value = value;
         }
 
-        public static Optional<T> Empty()
+        public override T Get()
         {
-            return new Optional<T>();
-        }
-
-        public static Optional<T> Of(T value)
-        {
-            if (value.Equals(default(T)))
-            {
-                throw new ArgumentNullException("Value cannot be null");
-            }
-
-            return new Optional<T>(value);
-        }
-
-        public static Optional<T> OfNullable(T value)
-        {
-            return new Optional<T>(value);
-        }
-
-        public T Get()
-        {
-            if (IsEmpty())
-            {
-                throw new InvalidOperationException("Optional did not have a value");
-            }
-
             return value;
         }
 
-        public bool IsPresent()
+        public override bool IsPresent()
         {
-            return !IsEmpty();
+            return true;
         }
 
-        public bool IsEmpty()
+        public override bool IsEmpty()
         {
-            return value == null || value.Equals(default(T));
+            return false;
         }
 
-        public T OrElse(T elseValue)
+        public override T OrElse(T elseValue)
         {
-            if (IsPresent())
-            {
-                return value;
-            }
+            return value;
+        }
 
+        public override string ToString()
+        {
+            return $"Optional[{Get()}]";
+        }
+    }
+
+    [Serializable]
+    public class NoValueOptional<T> : Optional<T>
+    {
+        public override T Get()
+        {
+            throw new InvalidOperationException("Optional did not have a value");
+        }
+
+        public override bool IsPresent()
+        {
+            return false;
+        }
+
+        public override bool IsEmpty()
+        {
+            return true;
+        }
+
+        public override T OrElse(T elseValue)
+        {
             return elseValue;
         }
 
         public override string ToString()
         {
-            if (IsEmpty())
-            {
-                return "Optional<" + typeof(T) + ">.Empty()";
-            }
-
-            return "Optional[" + Get().ToString() + "]";
+            return $"Optional<{typeof(T)}>.Empty()";
         }
     }
 
+    [Serializable]
+    public abstract class Optional<T>
+    {
+        public static Optional<T> Empty()
+        {
+            return new NoValueOptional<T>();
+        }
+
+        public static Optional<T> Of(T value)
+        {
+            if (value == null || value.Equals(default(T)))
+            {
+                throw new ArgumentNullException(nameof(value), "Value cannot be null");
+            }
+
+            return new HasValueOptional<T>(value);
+        }
+
+        public static Optional<T> OfNullable(T value)
+        {
+            if (value == null || value.Equals(default(T)))
+            {
+                return new NoValueOptional<T>();
+            }
+
+            return new HasValueOptional<T>(value);
+        }
+
+        public abstract T Get();
+        public abstract bool IsPresent();
+        public abstract bool IsEmpty();
+        public abstract T OrElse(T elseValue);
+    }
+    
     [Serializable]
     public sealed class OptionalEmptyException<T> : Exception
     {
@@ -80,7 +109,7 @@ namespace NitroxModel.DataStructures.Util
         {
         }
 
-        public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t" + message)
+        public OptionalEmptyException(string message) : base($"Optional <{nameof(T)}> is empty:\n\t{message}")
         {
         }
     }

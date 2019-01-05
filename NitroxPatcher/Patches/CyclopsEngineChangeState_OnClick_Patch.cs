@@ -1,9 +1,10 @@
-﻿using Harmony;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
@@ -15,7 +16,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsEngineChangeState __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            Multiplayer.Logic.Cyclops.ToggleEngineState(guid, __instance.motorMode.engineOn, (bool)__instance.ReflectionGet("startEngine"));
+            NitroxServiceLocator.LocateService<Cyclops>().ToggleEngineState(guid, __instance.motorMode.engineOn, (bool)__instance.ReflectionGet("startEngine"));
         }
 
         public override void Patch(HarmonyInstance harmony)

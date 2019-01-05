@@ -1,23 +1,21 @@
-﻿using System;
-using UnityEngine;
+﻿using NitroxModel.DataStructures.GameLogic;
+using System;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ItemContainerAdd : PlayerActionPacket
+    public class ItemContainerAdd : Packet
     {
-        public string OwnerGuid { get; }
-        public byte[] ItemData { get; }
+        public ItemData ItemData { get; }
 
-        public ItemContainerAdd(string ownerGuid, byte[] itemData, Vector3 ownerPositon) : base(ownerPositon)
+        public ItemContainerAdd(ItemData itemData)
         {
-            OwnerGuid = ownerGuid;
             ItemData = itemData;
         }
 
         public override string ToString()
         {
-            return "[ItemContainerAdd OwnerGuid: " + OwnerGuid + " Total Bytes: " + ItemData.Length + "]";
+            return "[ItemContainerAdd ItemData: " + ItemData + "]";
         }
     }
 }

@@ -1,28 +1,30 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Map;
-using NitroxModel.DataStructures;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using NitroxClient.Communication;
+using NitroxClient.Map;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
+using NitroxClient.Communication.Abstract;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
     public class Terrain
     {
-        private IPacketSender packetSender;
-        private VisibleCells visibleCells;
-        private DeferringPacketReceiver packetReceiver;
+        private readonly IMultiplayerSession multiplayerSession;
+        private readonly IPacketSender packetSender;
+        private readonly VisibleCells visibleCells;
+        private readonly DeferringPacketReceiver packetReceiver;
 
-        private bool cellsPendingSync = false;
+        private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
 
-        private List<VisibleCell> added = new List<VisibleCell>();
-        private List<VisibleCell> removed = new List<VisibleCell>();
+        private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
+        private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
-        public Terrain(IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
         {
+            this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
             this.visibleCells = visibleCells;
             this.packetReceiver = packetReceiver;
@@ -31,36 +33,36 @@ namespace NitroxClient.GameLogic
         public void CellLoaded(Int3 batchId, Int3 cellId, int level)
         {
             LargeWorldStreamer.main.StartCoroutine(WaitAndAddCell(batchId, cellId, level));
-            markCellsReadyForSync(0.5f);
+            MarkCellsReadyForSync(0.5f);
         }
-        
+
         private IEnumerator WaitAndAddCell(Int3 batchId, Int3 cellId, int level)
         {
             yield return new WaitForSeconds(0.5f);
 
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
 
             if (!visibleCells.Contains(cell))
             {
                 visibleCells.Add(cell);
                 added.Add(cell);
                 packetReceiver.CellLoaded(cell);
-            }            
+            }
         }
 
         public void CellUnloaded(Int3 batchId, Int3 cellId, int level)
         {
-            VisibleCell cell = new VisibleCell(batchId, cellId, level);
+            AbsoluteEntityCell cell = new AbsoluteEntityCell(batchId, cellId, level);
 
             if (visibleCells.Contains(cell))
             {
                 visibleCells.Remove(cell);
                 removed.Add(cell);
-                markCellsReadyForSync(0);
-            }     
+                MarkCellsReadyForSync(0);
+            }
         }
 
-        private void markCellsReadyForSync(float delay)
+        private void MarkCellsReadyForSync(float delay)
         {
             if (cellsPendingSync == false)
             {
@@ -81,7 +83,7 @@ namespace NitroxClient.GameLogic
 
                 if (elapsed >= 0.1)
                 {
-                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(packetSender.PlayerId, added.ToArray(), removed.ToArray());
+                    CellVisibilityChanged cellsChanged = new CellVisibilityChanged(multiplayerSession.Reservation.PlayerId, added.ToArray(), removed.ToArray());
                     packetSender.Send(cellsChanged);
 
                     added.Clear();
@@ -94,6 +96,5 @@ namespace NitroxClient.GameLogic
                 yield return new WaitForSeconds(0.05f);
             }
         }
-
     }
 }

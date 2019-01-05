@@ -1,49 +1,57 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Tcp;
 using UnityEngine;
+using NitroxServer.Communication;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public string Id { get; }
+        public Connection connection { get; private set; }
+        private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
+
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+        public PlayerContext PlayerContext { get; }
+        public ushort Id => PlayerContext.PlayerId;
+        public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
+        public Optional<string> SubRootGuid { get; set; }
 
-        private readonly Connection connection;
-        private readonly HashSet<VisibleCell> visibleCells = new HashSet<VisibleCell>();
-
-        public Player(string id, Connection connection)
+        public Player(PlayerContext playerContext, Connection connection, Vector3 position, Optional<string> subRootGuid)
         {
-            Id = id;
+            PlayerContext = playerContext;
             this.connection = connection;
+            Position = position;
+            SubRootGuid = subRootGuid;
         }
 
-        public void AddCells(IEnumerable<VisibleCell> cells)
+        public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
             lock (visibleCells)
             {
-                foreach (VisibleCell cell in cells)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
                     visibleCells.Add(cell);
                 }
             }
         }
 
-        public void RemoveCells(IEnumerable<VisibleCell> cells)
+        public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
             lock (visibleCells)
             {
-                foreach (VisibleCell cell in cells)
+                foreach (AbsoluteEntityCell cell in cells)
                 {
                     visibleCells.Remove(cell);
                 }
             }
         }
 
-        public bool HasCellLoaded(VisibleCell cell)
+        public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
             lock (visibleCells)
             {
@@ -51,12 +59,19 @@ namespace NitroxServer
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool CanSee(Entity entity)
+        {
+            return (entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell));
+        }
+
         public void SendPacket(Packet packet)
         {
-            if (connection.Open)
-            {
-                connection.SendPacket(packet, null);
-            }
+            connection.SendPacket(packet);            
         }
 
         public override bool Equals(object obj)
@@ -69,7 +84,7 @@ namespace NitroxServer
 
             Player player = (Player)obj;
 
-            return (player.Id == Id);
+            return player.Id == Id;
         }
 
         public override int GetHashCode()

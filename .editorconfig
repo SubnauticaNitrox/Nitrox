@@ -45,34 +45,34 @@ csharp_preserve_single_line_statements = false
 csharp_preserve_single_line_blocks = true
 
 # Avoid `this.` when not necessary
-dotnet_style_qualification_for_field = false:error
-dotnet_style_qualification_for_property = false:error
-dotnet_style_qualification_for_method = false:error
-dotnet_style_qualification_for_event = false:error
+dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_property = false:warning
+dotnet_style_qualification_for_method = false:warning
+dotnet_style_qualification_for_event = false:warning
 
 # Use language keywords instead of framework type names for type references
-dotnet_style_predefined_type_for_locals_parameters_members = true:error
-dotnet_style_predefined_type_for_member_access = true:error
+dotnet_style_predefined_type_for_locals_parameters_members = true:warning
+dotnet_style_predefined_type_for_member_access = true:warning
 
 # Expression-level preferences
-dotnet_style_object_initializer = false:error
-dotnet_style_collection_initializer = true:error
+dotnet_style_object_initializer = false:warning
+dotnet_style_collection_initializer = true:warning
 dotnet_style_coalesce_expression = true:suggestion # Prefer a ?? b
-dotnet_style_null_propagation = false:error # Do not prefer foo?.bar
+dotnet_style_null_propagation = false:warning # Do not prefer foo?.bar
 
 # Implicit and explicity styles (disallow use of `var` - types have to be specified explicitly)
-csharp_style_var_for_built_in_types = false:error
-csharp_style_var_when_type_is_apparent = false:error
-csharp_style_var_elsewhere = false:error
+csharp_style_var_for_built_in_types = false:warning
+csharp_style_var_when_type_is_apparent = false:warning
+csharp_style_var_elsewhere = false:warning
 
 # Expression-bodied members
 csharp_style_expression_bodied_methods = false:none
 
 # Null checking preferences
-csharp_style_conditional_delegate_call = false:error # Do not prefer foo?.Invoke(bar); over if (foo != null) { foo(bar); }, with all it's newlines.
+csharp_style_conditional_delegate_call = false:warning # Do not prefer foo?.Invoke(bar); over if (foo != null) { foo(bar); }, with all it's newlines.
 
 # Code block preferences
-csharp_prefer_braces = true:error # Wrap everything in braces.
+csharp_prefer_braces = true:warning # Wrap everything in braces.
 
 # Put `using System.` on top
 dotnet_sort_system_directives_first = true
@@ -95,7 +95,7 @@ dotnet_naming_symbols.types.applicable_accessibilities = *
 dotnet_naming_symbols.parameters.applicable_kinds = parameter
 
 # Styles for naming conventions
-dotnet_naming_style.publicfield_and_properties_and_methods_style.capitalization = pascal_case
+dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
 dotnet_naming_style.camel_case_style.capitalization = camel_case
 
@@ -115,6 +115,10 @@ dotnet_naming_rule.parameters.symbols  = parameters
 dotnet_naming_rule.parameters.style    = camel_case_style
 dotnet_naming_rule.parameters.severity = warning
 
-dotnet_naming_rule.uses_pascal_case.symbols  = public_fields, types
-dotnet_naming_rule.uses_pascal_case.style    = publicfield_and_properties_and_methods_style
-dotnet_naming_rule.uses_pascal_case.severity = warning
+dotnet_naming_rule.public_fields.symbols  = public_fields
+dotnet_naming_rule.public_fields.style    = pascal_case_style
+dotnet_naming_rule.public_fields.severity = warning
+
+dotnet_naming_rule.general_types.symbols  = types
+dotnet_naming_rule.general_types.style    = pascal_case_style
+dotnet_naming_rule.general_types.severity = warning

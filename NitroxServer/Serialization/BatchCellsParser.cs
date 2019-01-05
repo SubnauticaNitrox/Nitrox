@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxServer.GameLogic.Spawning;
+using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization
@@ -21,9 +21,6 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        public static readonly Int3 MAP_DIMENSIONS = new Int3(26, 19, 26);
-        public static readonly Int3 BATCH_DIMENSIONS = new Int3(160, 160, 160);
-
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -34,35 +31,6 @@ namespace NitroxServer.Serialization
             surrogateTypes.Add("UnityEngine.Transform", typeof(Transform));
             surrogateTypes.Add("UnityEngine.Vector3", typeof(Vector3));
             surrogateTypes.Add("UnityEngine.Quaternion", typeof(Quaternion));
-        }
-
-        public List<EntitySpawnPoint> GetEntitySpawnPoints()
-        {
-            Log.Info("Loading batch data...");
-
-            List<EntitySpawnPoint> entitySpawnPoints = new List<EntitySpawnPoint>();
-
-            Parallel.ForEach(Enumerable.Range(1, Map.DIMENSIONS_IN_BATCHES.x), x =>
-            {
-                for (int y = 1; y <= Map.DIMENSIONS_IN_BATCHES.y; y++)
-                {
-                    for (int z = 1; z <= Map.DIMENSIONS_IN_BATCHES.z; z++)
-                    {
-                        Int3 batchId = new Int3(x, y, z);
-
-                        List<EntitySpawnPoint> batchSpawnPoints = ParseBatchData(batchId);
-
-                        lock (entitySpawnPoints)
-                        {
-                            entitySpawnPoints.AddRange(batchSpawnPoints);
-                        }
-                    }
-                }
-            });
-
-            Log.Info("Batch data loaded!");
-
-            return entitySpawnPoints;
         }
 
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
@@ -81,14 +49,16 @@ namespace NitroxServer.Serialization
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamFinder.FindSteamGamePath(264710, "Subnautica");
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
             if (subnauticaPath.IsEmpty())
             {
-                throw new InvalidOperationException("Could not locate subnautica root");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData\\Build18");
             string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
@@ -99,12 +69,13 @@ namespace NitroxServer.Serialization
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-
+                
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
                     CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
+                    
                     ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-
+                    
                     for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
                     {
                         GameObject gameObject = DeserializeGameObject(stream);

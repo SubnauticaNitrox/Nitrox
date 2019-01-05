@@ -1,13 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
+using NitroxModel.MultiplayerSession;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerManager
     {
-        private readonly Dictionary<string, RemotePlayer> playersById = new Dictionary<string, RemotePlayer>();
+        private readonly ILocalNitroxPlayer localPlayer;
+        private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
-        public Optional<RemotePlayer> Find(string playerId)
+        public PlayerManager(ILocalNitroxPlayer localPlayer)
+        {
+            this.localPlayer = localPlayer;
+        }
+
+        public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
 
@@ -19,19 +31,44 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public RemotePlayer FindOrCreate(string playerId)
+        internal Optional<RemotePlayer> FindByName(string playerName)
         {
-            RemotePlayer player;
-
-            if (!playersById.TryGetValue(playerId, out player))
+            foreach (RemotePlayer player in playersById.Values)
             {
-                player = playersById[playerId] = new RemotePlayer(playerId);
+                if (player.PlayerName == playerName)
+                {
+                    return Optional<RemotePlayer>.Of(player);
+                }
             }
+
+            return Optional<RemotePlayer>.Empty();
+        }
+
+        public RemotePlayer Create(PlayerContext playerContext)
+        {
+            Validate.NotNull(playerContext);
+
+            if (playersById.ContainsKey(playerContext.PlayerId))
+            {
+                throw new Exception("The playerId has already been used.");
+            }
+
+            GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
+            RemotePlayer player = new RemotePlayer(remotePlayerBody, playerContext);
+
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
+            playerModelDirector
+                .AddPing()
+                .AddDiveSuit();
+
+            playerModelDirector.Construct();
+
+            playersById.Add(player.PlayerId, player);
 
             return player;
         }
 
-        public void RemovePlayer(string playerId)
+        public void RemovePlayer(ushort playerId)
         {
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.IsPresent())
@@ -41,12 +78,9 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void RemoveAllPlayers()
+        private GameObject CloneLocalPlayerBodyPrototype()
         {
-            foreach (string playerId in playersById.Keys)
-            {
-                RemovePlayer(playerId);
-            }
-        }
+            return Object.Instantiate(localPlayer.BodyPrototype);
+        }        
     }
 }

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient.Communication;
 using NitroxClient.Map;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxTest.Model;
 using UnityEngine;
@@ -12,15 +12,16 @@ namespace NitroxTest.Client.Communication
     [TestClass]
     public class DeferredPacketReceiverTest
     {
-        private VisibleCells visibleCells;
+        private readonly VisibleCells visibleCells = new VisibleCells();
         private DeferringPacketReceiver packetReceiver;
 
         // Test Data
-        private const string PLAYER_ID = "TestPlayer";
+        private const ushort PLAYER_ID = 1;
+        private const int CELL_LEVEL = 3;
         private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
-        private VisibleCell loadedCell;
-        private VisibleCell unloadedCell;
+        private AbsoluteEntityCell loadedCell;
+        private AbsoluteEntityCell unloadedCell;
         private Int3 cellId = Int3.zero;
 
         [TestInitialize]
@@ -28,11 +29,8 @@ namespace NitroxTest.Client.Communication
         {
             packetReceiver = new DeferringPacketReceiver(visibleCells);
 
-            Int3 loadedBatchId = LargeWorldStreamer.main.GetContainingBatch(loadedActionPosition);
-            Int3 unloadedBatchId = LargeWorldStreamer.main.GetContainingBatch(unloadedActionPosition);
-
-            loadedCell = new VisibleCell(loadedBatchId, cellId, 3);
-            unloadedCell = new VisibleCell(unloadedBatchId, cellId, 3);
+            loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
+            unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
 
             visibleCells.Add(loadedCell);
         }
@@ -52,7 +50,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInLoadedCell()
         {
-            Packet packet = new TestActionPacket(loadedActionPosition);
+            Packet packet = new TestDeferrablePacket(loadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -64,7 +62,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void ActionPacketInUnloadedCell()
         {
-            Packet packet = new TestActionPacket(unloadedActionPosition);
+            Packet packet = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet);
 
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -75,7 +73,7 @@ namespace NitroxTest.Client.Communication
         [TestMethod]
         public void PacketPrioritizedAfterBeingDeferred()
         {
-            Packet packet1 = new TestActionPacket(unloadedActionPosition);
+            Packet packet1 = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
             packetReceiver.PacketReceived(packet1);
 
             Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);

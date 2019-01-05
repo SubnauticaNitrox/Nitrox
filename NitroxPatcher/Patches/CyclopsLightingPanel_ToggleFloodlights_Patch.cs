@@ -1,8 +1,9 @@
-﻿using Harmony;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.Helper;
-using System;
+﻿using System;
 using System.Reflection;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -22,7 +23,7 @@ namespace NitroxPatcher.Patches
             if (__state != __instance.floodlightsOn)
             {
                 string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
-                Multiplayer.Logic.Cyclops.ToggleFloodLights(guid, __instance.floodlightsOn);
+                NitroxServiceLocator.LocateService<Cyclops>().ToggleFloodLights(guid, __instance.floodlightsOn);
             }
         }
 

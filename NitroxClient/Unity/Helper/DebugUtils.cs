@@ -1,23 +1,25 @@
-﻿using System.Text;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.Unity.Helper
 {
     public static class DebugUtils
     {
-        public static void DumpGameObject(this GameObject gameObject, string indent = "")
+        public static void DumpGameObject(this GameObject gameObject, string indent = "", bool dumpTransform = true)
         {
             Log.Info("{0}+{1}", indent, gameObject.name);
 
-            foreach (Component component in gameObject.GetComponents<Component>())
+            if (dumpTransform)
             {
-                DumpComponent(component, indent + "  ");
+                foreach (Component component in gameObject.GetComponents<Component>())
+                {
+                    DumpComponent(component, indent + "  ");
+                }
             }
 
             foreach (Transform child in gameObject.transform)
             {
-                DumpGameObject(child.gameObject, indent + "  ");
+                DumpGameObject(child.gameObject, indent + "  ", dumpTransform);
             }
         }
 

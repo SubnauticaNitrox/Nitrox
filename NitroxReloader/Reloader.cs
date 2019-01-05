@@ -35,6 +35,7 @@ namespace NitroxReloader
                 {
                     return false;
                 }
+
                 return assemblyWhitelist.Contains(Path.GetFileName(location));
             })
             .Select(assembly =>
@@ -46,7 +47,7 @@ namespace NitroxReloader
 
             FileSystemWatcher watcher = new FileSystemWatcher()
             {
-                Path = ReloaderSettings.Path,
+                Path = ReloaderSettings.PATH,
                 Filter = "*.dll",
                 NotifyFilter = NotifyFilters.CreationTime
                 | NotifyFilters.LastWrite
@@ -66,7 +67,7 @@ namespace NitroxReloader
             watcher.Created += handler;
             watcher.Changed += handler;
             watcher.EnableRaisingEvents = true;
-            Console.WriteLine("[NITROX] Reloader set up to watch " + ReloaderSettings.Path);
+            Console.WriteLine("[NITROX] Reloader set up to watch " + ReloaderSettings.PATH);
         }
 
         [Conditional("DEBUG")]

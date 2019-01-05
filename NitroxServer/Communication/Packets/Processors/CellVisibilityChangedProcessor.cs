@@ -1,21 +1,23 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     class CellVisibilityChangedProcessor : AuthenticatedPacketProcessor<CellVisibilityChanged>
     {
         private readonly EntityManager entityManager;
+        private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public CellVisibilityChangedProcessor(EntityManager entityManager, PlayerManager playerManager)
+        public CellVisibilityChangedProcessor(EntityManager entityManager, EntitySimulation entitySimulation, PlayerManager playerManager)
         {
             this.entityManager = entityManager;
+            this.entitySimulation = entitySimulation;
             this.playerManager = playerManager;
         }
 
@@ -26,13 +28,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
             SendNewlyVisibleEntities(player, packet.Added);
 
-            List<OwnedGuid> ownershipChanges = new List<OwnedGuid>();
-            AssignLoadedCellEntitySimulation(player, packet.Added, ownershipChanges);
-            ReassignRemovedCellEntitySimulation(player, packet.Removed, ownershipChanges);
+            List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromCellSwitch(player, packet.Added, packet.Removed);
             BroadcastSimulationChanges(ownershipChanges);
         }
 
-        private void SendNewlyVisibleEntities(Player player, VisibleCell[] visibleCells)
+        private void SendNewlyVisibleEntities(Player player, AbsoluteEntityCell[] visibleCells)
         {
             List<Entity> newlyVisibleEntities = entityManager.GetVisibleEntities(visibleCells);
 
@@ -43,36 +43,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
         }
 
-        private void AssignLoadedCellEntitySimulation(Player player, VisibleCell[] addedCells, List<OwnedGuid> ownershipChanges)
-        {
-            List<Entity> entities = entityManager.AssignEntitySimulation(player, addedCells);
-
-            foreach (Entity entity in entities)
-            {
-                ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
-            }
-        }
-
-        private void ReassignRemovedCellEntitySimulation(Player sendingPlayer, VisibleCell[] removedCells, List<OwnedGuid> ownershipChanges)
-        {
-            List<Entity> revokedEntities = entityManager.RevokeEntitySimulationFor(sendingPlayer, removedCells);
-
-            foreach (Entity entity in revokedEntities)
-            {
-                VisibleCell entityCell = new VisibleCell(entity.Position, entity.Level);
-
-                foreach (Player player in playerManager.GetPlayers())
-                {
-                    if (player != sendingPlayer && player.HasCellLoaded(entityCell))
-                    {
-                        Log.Info("player " + player.Id + " can take over " + entity.Guid);
-                        ownershipChanges.Add(new OwnedGuid(entity.Guid, player.Id, true));
-                    }
-                }
-            }
-        }
-
-        private void BroadcastSimulationChanges(List<OwnedGuid> ownershipChanges)
+        private void BroadcastSimulationChanges(List<SimulatedEntity> ownershipChanges)
         {
             if (ownershipChanges.Count > 0)
             {

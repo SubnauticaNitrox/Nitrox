@@ -5,11 +5,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ChatMessage : Packet
     {
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
         public string Text { get; }
+        public const ushort SERVER_ID = ushort.MaxValue;
 
-        public ChatMessage(string playerId, string text)
+        public ChatMessage(ushort playerId, string text)
         {
+            PlayerId = playerId;
             Text = text;
         }
     }

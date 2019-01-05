@@ -1,11 +1,10 @@
-﻿using Harmony;
-using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours;
-using NitroxModel.Helper;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
+using NitroxClient.GameLogic;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -30,9 +29,8 @@ namespace NitroxPatcher.Patches
                     /*
                      * Multiplayer.Logic.Building.DeconstructionBegin(constructable.gameObject);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Building", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldloc_S, GetLocalVariableIndex<Constructable>(original));
+                    yield return TranspilerHelper.LocateService<Building>();
+                    yield return original.Ldloc<Constructable>();
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }

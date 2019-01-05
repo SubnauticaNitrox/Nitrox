@@ -1,84 +1,93 @@
-﻿using NitroxClient.Communication;
-using NitroxClient.Communication.Packets.Processors;
-using NitroxClient.GameLogic;
-using NitroxClient.Map;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using NitroxModel.Packets.Processors.Abstract;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using NitroxClient;
+using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.Packets.Processors;
+using NitroxModel.Core;
+using NitroxModel.Logger;
+using NitroxModel.MultiplayerSession;
+using NitroxModel.Packets;
+using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 
 namespace ClientTester
 {
     public class MultiplayerClient
     {
-        public IPacketSender PacketSender { get; }
-        public ClientBridge ClientBridge { get; }
-        public Logic Logic { get; }
-        public object PacketProcessorsByType { get; private set; }
-
-        public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
-
-        private readonly VisibleCells visibleCells;
-        private readonly DeferringPacketReceiver packetReceiver;
-        private readonly TcpClient client;
         private readonly string playerName;
 
-        public MultiplayerClient(string playerId)
+        public Vector3 ClientPos = new Vector3(-50f, -2f, -38f);
+        private DeferringPacketReceiver PacketReceiver { get; }
+        private IMultiplayerSession MultiplayerSession { get; }
+
+        public MultiplayerClient(ushort playerId)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug);
-            playerName = playerId;
-            visibleCells = new VisibleCells();
-            packetReceiver = new DeferringPacketReceiver(visibleCells);
-            client = new TcpClient(packetReceiver);
-            ClientBridge = new ClientBridge(client);
-            PacketSender = ClientBridge;
-            Logic = new Logic(ClientBridge, visibleCells, packetReceiver);
+            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
+            playerName = "Player" + playerId;
+
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
+            PacketReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            MultiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
         }
 
-        public void Start(string ip)
+        public void Start(string ip, int port)
         {
-            ClientBridge.Connect(ip, playerName);
+            Dictionary<Type, PacketProcessor> packetProcessorMap = GeneratePacketProcessorMap();
+            MultiplayerSession.ConnectionStateChanged += ConnectionStateChangedHandler;
+            MultiplayerSession.Connect(ip, port);
 
-            var iterations = 0;
-            do
+            for (int iterations = 0; iterations < 20; iterations++)
             {
                 Thread.Sleep(250);
-                ProcessPackets();
+                ProcessPackets(packetProcessorMap);
+            }
+        }
 
-                iterations++;
-                if (iterations >= 20)
-                {
-                    break;
-                }
-            } while (ClientBridge.CurrentState == ClientBridgeState.WaitingForRerservation);
-
-            switch (ClientBridge.CurrentState)
+        private Dictionary<Type, PacketProcessor> GeneratePacketProcessorMap()
+        {
+            Dictionary<Type, PacketProcessor> packetProcessorMap = new Dictionary<Type, PacketProcessor>
             {
-                case ClientBridgeState.Reserved:
-                    ClientBridge.ClaimReservation();
-                    Log.InGame("Connected to server");
+                {typeof(MultiplayerSessionPolicy), new MultiplayerSessionPolicyProcessor(MultiplayerSession)},
+                {typeof(MultiplayerSessionReservation), new MultiplayerSessionReservationProcessor(MultiplayerSession)}
+            };
+
+            return packetProcessorMap;
+        }
+
+        private void ConnectionStateChangedHandler(IMultiplayerSessionConnectionState state)
+        {
+            switch (state.CurrentStage)
+            {
+                case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
+                    MultiplayerSession.RequestSessionReservation(new PlayerSettings(RandomColorGenerator.GenerateColor()), new AuthenticationContext(playerName));
                     break;
-                default:
+                case MultiplayerSessionConnectionStage.SessionReserved:
+                    MultiplayerSession.JoinSession();
+                    MultiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
+                    Log.InGame("SessionJoined to server");
+                    break;
+                case MultiplayerSessionConnectionStage.SessionReservationRejected:
                     Log.InGame("Unable to connect to server");
+                    MultiplayerSession.ConnectionStateChanged -= ConnectionStateChangedHandler;
                     break;
             }
         }
 
-        private void ProcessPackets()
+        private void ProcessPackets(Dictionary<Type, PacketProcessor> packetProcessorMap)
         {
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
+            Queue<Packet> packets = PacketReceiver.GetReceivedPackets();
 
             foreach (Packet packet in packets)
             {
-                if (packet.GetType() == typeof(PlayerSlotReservation))
+                PacketProcessor packetProcessor;
+                if (packetProcessorMap.TryGetValue(packet.GetType(), out packetProcessor))
                 {
                     try
                     {
-                        PacketProcessor processor = new PlayerSlotReservationProcessor(ClientBridge);
-                        processor.ProcessPacket(packet, null);
+                        packetProcessor.ProcessPacket(packet, null);
                     }
                     catch (Exception ex)
                     {

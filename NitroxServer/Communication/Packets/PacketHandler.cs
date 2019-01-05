@@ -3,38 +3,30 @@ using System.Collections.Generic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Tcp;
 using NitroxServer.Communication.Packets.Processors;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization.World;
+using NitroxServer.GameLogic.Bases;
+using NitroxServer.GameLogic.Vehicles;
+using NitroxServer.GameLogic.Items;
+using NitroxServer.GameLogic.Players;
+using NitroxServer.GameLogic.Unlockables;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
-        private readonly Dictionary<Type, PacketProcessor> authenticatedPacketProcessorsByType;
-        private readonly Dictionary<Type, PacketProcessor> unauthenticatedPacketProcessorsByType;
+        private PlayerManager playerManager;
+        private DefaultServerPacketProcessor defaultServerPacketProcessor;
 
-        private readonly DefaultServerPacketProcessor defaultPacketProcessor;
-        private readonly PlayerManager playerManager;
-
-        public PacketHandler(PlayerManager playerManager, TimeKeeper timeKeeper, SimulationOwnership simulationOwnership)
+        public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
         {
             this.playerManager = playerManager;
-            defaultPacketProcessor = new DefaultServerPacketProcessor(playerManager);
-
-            Dictionary<Type, object> ProcessorArguments = new Dictionary<Type, object>
-            {
-                {typeof(PlayerManager), playerManager },
-                {typeof(TimeKeeper), timeKeeper },
-                {typeof(SimulationOwnership), simulationOwnership },
-                {typeof(EscapePodManager), new EscapePodManager() },
-                {typeof(EntityManager), new EntityManager(new EntitySpawner(), simulationOwnership) }
-            };
-
-            authenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(AuthenticatedPacketProcessor<>));
-
-            unauthenticatedPacketProcessorsByType = PacketProcessor.GetProcessors(ProcessorArguments, p => p.BaseType.IsGenericType && p.BaseType.GetGenericTypeDefinition() == typeof(UnauthenticatedPacketProcessor<>));
+            defaultServerPacketProcessor = packetProcessor;
         }
 
         public void Process(Packet packet, Connection connection)
@@ -53,25 +45,38 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessAuthenticated(Packet packet, Player player)
         {
-            if (authenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
+            Type packetType = packet.GetType();
+            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+
+            Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
+
+            if (opProcessor.IsPresent())
             {
-                authenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, player);
+                PacketProcessor processor = (PacketProcessor)opProcessor.Get();
+                processor.ProcessPacket(packet, player);
             }
             else
             {
-                defaultPacketProcessor.ProcessPacket(packet, player);
+                defaultServerPacketProcessor.ProcessPacket(packet, player);
             }
         }
 
         private void ProcessUnauthenticated(Packet packet, Connection connection)
         {
-            if (unauthenticatedPacketProcessorsByType.ContainsKey(packet.GetType()))
+            try
             {
-                unauthenticatedPacketProcessorsByType[packet.GetType()].ProcessPacket(packet, connection);
+                Type serverPacketProcessorType = typeof(UnauthenticatedPacketProcessor<>);
+                Type packetType = packet.GetType();
+                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+
+                PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
+                processor.ProcessPacket(packet, connection);
             }
-            else
+            catch (Exception ex)
             {
                 Log.Info("Received invalid, unauthenticated packet: " + packet);
+                Log.Error("Exception:", ex);
             }
         }
     }

@@ -1,45 +1,80 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 
 namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        private readonly IPacketSender packetSender;
-        private readonly Dictionary<string, string> ownedGuidsToPlayer = new Dictionary<string, string>();
-        private readonly HashSet<string> requestedGuids = new HashSet<string>();
+        public delegate void LockRequestCompleted(string guid, bool lockAquired);
 
-        public SimulationOwnership(IPacketSender packetSender)
+        private readonly IMultiplayerSession muliplayerSession;
+        private readonly IPacketSender packetSender;
+        private readonly Dictionary<string, SimulationLockType> simulatedGuidsByLockType = new Dictionary<string, SimulationLockType>();
+        private readonly Dictionary<string, LockRequestCompleted> completeFunctionsByGuid = new Dictionary<string, LockRequestCompleted>();
+        
+        public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
+            this.muliplayerSession = muliplayerSession;
             this.packetSender = packetSender;
         }
 
-        public bool HasOwnership(string guid)
+        public bool HasAnyLockType(string guid)
         {
-            string owningPlayerId;
+            return simulatedGuidsByLockType.ContainsKey(guid);
+        }
 
-            if (ownedGuidsToPlayer.TryGetValue(guid, out owningPlayerId))
+        public bool HasExclusiveLock(string guid)
+        {
+            SimulationLockType activeLockType;
+
+            if (simulatedGuidsByLockType.TryGetValue(guid, out activeLockType))
             {
-                return owningPlayerId == packetSender.PlayerId;
+                return (activeLockType == SimulationLockType.EXCLUSIVE);
             }
 
             return false;
         }
 
-        public void TryToRequestOwnership(string guid)
+        public void RequestSimulationLock(string guid, SimulationLockType lockType, LockRequestCompleted whenCompleted)
         {
-            if (!ownedGuidsToPlayer.ContainsKey(guid) && !requestedGuids.Contains(guid))
+            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid, lockType);
+            packetSender.Send(ownershipRequest);
+            completeFunctionsByGuid[guid] = whenCompleted;
+        }
+
+        public void ReceivedSimulationLockResponse(string guid, bool lockAquired, SimulationLockType lockType)
+        {
+            Log.Info("Received lock response, guid: " + guid + " " + lockAquired + " " + lockType);
+
+            if (lockAquired)
             {
-                SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(packetSender.PlayerId, guid);
-                packetSender.Send(ownershipRequest);
-                requestedGuids.Add(guid);
+                SimulateGuid(guid, lockType);
+            }
+
+            LockRequestCompleted requestCompleted = null;
+
+            if (completeFunctionsByGuid.TryGetValue(guid, out requestCompleted) && requestCompleted != null)
+            {
+                completeFunctionsByGuid.Remove(guid);
+                requestCompleted(guid, lockAquired);
+            }
+            else
+            {
+                Log.Warn("Did not have an outstanding simulation request for " + guid + " maybe there were multiple outstanding requests?");
             }
         }
 
-        public void AddOwnedGuid(string guid, string playerId)
+        public void SimulateGuid(string guid, SimulationLockType lockType)
         {
-            ownedGuidsToPlayer[guid] = playerId;
+            simulatedGuidsByLockType[guid] = lockType;
+        }
+
+        public void StopSimulatingGuid(string guid)
+        {
+            simulatedGuidsByLockType.Remove(guid);
         }
     }
 }

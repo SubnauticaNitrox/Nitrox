@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -15,13 +15,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
-        private readonly List<Type> interactiveChildTypes = new List<Type>() // we must sync guids of these types when creating vehicles (mainly cyclops)
-        {
-            { typeof(Openable) },
-            { typeof(CyclopsLocker) },
-            { typeof(Fabricator) },
-            { typeof(FireExtinguisherHolder) }
-        };
+        
 
         public MobileVehicleBay(IPacketSender packetSender)
         {
@@ -40,39 +34,15 @@ namespace NitroxClient.GameLogic
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
-                List<InteractiveChildObjectIdentifier> childIdentifiers = ExtractGuidsOfInteractiveChildren(constructedObject);
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
-
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation);
                 packetSender.Send(beginCrafting);
             }
             else
             {
                 Log.Error("Could not send packet because there wasn't a corresponding constructed object!");
             }
-        }
-
-        private List<InteractiveChildObjectIdentifier> ExtractGuidsOfInteractiveChildren(GameObject constructedObject)
-        {
-            List<InteractiveChildObjectIdentifier> ids = new List<InteractiveChildObjectIdentifier>();
-
-            string constructedObjectsName = constructedObject.GetFullName() + "/";
-
-            foreach (Type type in interactiveChildTypes)
-            {
-                Component[] components = constructedObject.GetComponentsInChildren(type, true);
-
-                foreach (Component component in components)
-                {
-                    string guid = GuidHelper.GetGuid(component.gameObject);
-                    string componentName = component.gameObject.GetFullName();
-                    string relativePathName = componentName.Replace(constructedObjectsName, "");
-
-                    ids.Add(new InteractiveChildObjectIdentifier(guid, relativePathName));
-                }
-            }
-
-            return ids;
         }
     }
 }

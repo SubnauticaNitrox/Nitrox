@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -12,7 +13,7 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(EntityCell __instance)
         {
-            Multiplayer.Logic.Terrain.CellUnloaded(__instance.BatchId, __instance.CellId, __instance.Level);
+            NitroxServiceLocator.LocateService<Terrain>().CellUnloaded(__instance.BatchId, __instance.CellId, __instance.Level);
             return true;
         }
 

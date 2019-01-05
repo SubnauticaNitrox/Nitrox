@@ -5,7 +5,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}</ProjectGuid>
-    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NitroxServer</RootNamespace>
     <AssemblyName>NitroxServer</AssemblyName>
@@ -15,6 +14,7 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -25,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputType>Exe</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
@@ -34,7 +35,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject />
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_WPF|AnyCPU'">
+    <OutputType>WinExe</OutputType>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug_WPF\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>6</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_WPF|AnyCPU'">
+    <OutputType>WinExe</OutputType>
+    <OutputPath>bin\Release_WPF\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>6</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
@@ -43,6 +67,12 @@
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="LitJson">
       <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
@@ -55,16 +85,20 @@
       <HintPath>protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
+    <Compile Include="Program.cs" />
+  </ItemGroup>
   <ItemGroup>
+    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
@@ -72,29 +106,85 @@
     <Compile Include="Communication\Packets\Processors\ClaimPlayerSlotReservationProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireHealthChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SignChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentAddItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EquipmentRemoveItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PickupItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SubRootChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ReservePlayerSlotProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionPolicyRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
-    <Compile Include="Communication\TcpServer.cs" />
-    <Compile Include="GameLogic\EntityManager.cs" />
+    <Compile Include="Communication\UdpServer.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\KickCommand.cs" />
+    <Compile Include="ConsoleCommands\ListCommand.cs" />
+    <Compile Include="ConsoleCommands\SayCommand.cs" />
+    <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
+    <Compile Include="GameLogic\EscapePodData.cs" />
+    <Compile Include="Serialization\ServerConfig.cs" />
+    <Compile Include="ConsoleCommands\ExitCommand.cs" />
+    <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
+    <Compile Include="ConsoleCommands\SaveCommand.cs" />
+    <Compile Include="GameLogic\Bases\BaseData.cs" />
+    <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
+    <Compile Include="GameLogic\GameData.cs" />
+    <Compile Include="GameLogic\ConnectionAssets.cs" />
+    <Compile Include="GameLogic\Entities\EntityData.cs" />
+    <Compile Include="GameLogic\Entities\EntityManager.cs" />
+    <Compile Include="GameLogic\Entities\EntitySimulator.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\BatchEntitySpawner.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\CrashFishBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackSpawnData.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPoint.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\IEntityBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\EventTriggerer.cs" />
+    <Compile Include="GameLogic\Items\InventoryData.cs" />
     <Compile Include="GameLogic\PlayerManager.cs" />
+    <Compile Include="GameLogic\Players\PlayerData.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
-    <Compile Include="GameLogic\Spawning\EntitySpawnPoint.cs" />
-    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
     <Compile Include="GameLogic\TimeKeeper.cs" />
+    <Compile Include="GameLogic\Unlockables\PDAStateData.cs" />
+    <Compile Include="GameLogic\Vehicles\VehicleData.cs" />
+    <Compile Include="IpLogger.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\GenericNode.cs" />
     <Compile Include="Serialization\LootDistributionsParser.cs" />
+    <Compile Include="Serialization\ResourceAssets.cs" />
+    <Compile Include="Serialization\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
-    <Compile Include="Serialization\WorldEntityDataParser.cs" />
+    <Compile Include="Serialization\World\PersistedWorldData.cs" />
+    <Compile Include="Serialization\World\World.cs" />
+    <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="ServerAutoFacRegistrar.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />
     <Compile Include="UnityStubs\Quaternion.cs" />
     <Compile Include="UnityStubs\Transform.cs" />
@@ -102,8 +192,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
+      <Name>Lidgren.Network</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
@@ -113,7 +208,6 @@
       <Name>NitroxReloader</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

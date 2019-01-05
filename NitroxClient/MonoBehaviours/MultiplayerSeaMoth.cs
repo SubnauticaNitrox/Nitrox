@@ -2,7 +2,7 @@
 {
     class MultiplayerSeaMoth : MultiplayerVehicleControl<Vehicle>
     {
-        private bool lastThrottle = false;
+        private bool lastThrottle;
         private SeaMoth seamoth;
 
         protected override void Awake()

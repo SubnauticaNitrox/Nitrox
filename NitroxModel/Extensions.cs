@@ -1,8 +1,8 @@
-﻿using NitroxModel.PlayerSlot;
-using System;
-using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace NitroxModel
 {
@@ -20,30 +20,20 @@ namespace NitroxModel
                 .SingleOrDefault();
         }
 
-        public static bool HasStateFlag(this PlayerSlotReservationState currentState, PlayerSlotReservationState checkedState)
+        public static string AsHexString(this Color32 color)
         {
-            return (currentState & checkedState) == checkedState;
+            return $"#{color.r:X2}{color.g:X2}{color.b:X2}";
         }
 
-        public static string Describe(this PlayerSlotReservationState currentState)
+        public static string PrefixWith<T>(this IEnumerable<T> items, string prefix)
         {
-            StringBuilder descriptionBuilder = new StringBuilder();
-
-            foreach(string reservationStateName in Enum.GetNames(typeof(PlayerSlotReservationState)))
+            StringBuilder sb = new StringBuilder();
+            foreach (T i in items)
             {
-                PlayerSlotReservationState reservationState = (PlayerSlotReservationState)Enum.Parse(typeof(PlayerSlotReservationState), reservationStateName);
-                if (currentState.HasStateFlag(reservationState))
-                {
-                    DescriptionAttribute descriptionAttribute = reservationState.GetAttribute<DescriptionAttribute>();
-
-                    if(!string.IsNullOrEmpty(descriptionAttribute?.Description))
-                    {
-                        descriptionBuilder.AppendLine(descriptionAttribute.Description);
-                    }
-                }
+                sb.Append(prefix);
+                sb.Append(i);
             }
-
-            return descriptionBuilder.ToString();
+            return sb.ToString();
         }
     }
 }

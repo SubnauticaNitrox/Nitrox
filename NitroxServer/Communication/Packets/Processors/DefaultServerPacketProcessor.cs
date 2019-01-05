@@ -17,8 +17,8 @@ namespace NitroxServer.Communication.Packets.Processors
             typeof(VehicleMovement),
             typeof(ItemPosition),
             typeof(PlayerStats),
+            typeof(PowerLevelChanged),
             typeof(VehicleColorChange),
-            typeof(StoryEventRecieve),
             typeof(StoryEventSend)
         };
 

@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -11,37 +13,58 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class SimulationOwnershipChangeProcessor : ClientPacketProcessor<SimulationOwnershipChange>
     {
-        private readonly IPacketSender packetSender;
+        private readonly IMultiplayerSession multiplayerSession;
+        private readonly SimulationOwnership simulationOwnershipManager;
 
-        public SimulationOwnershipChangeProcessor(IPacketSender packetSender)
+        public SimulationOwnershipChangeProcessor(IMultiplayerSession multiplayerSession, SimulationOwnership simulationOwnershipManager)
         {
-            this.packetSender = packetSender;
+            this.multiplayerSession = multiplayerSession;
+            this.simulationOwnershipManager = simulationOwnershipManager;
         }
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
-            foreach(OwnedGuid ownedGuid in simulationOwnershipChange.OwnedGuids)
+            foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
-                if (packetSender.PlayerId == ownedGuid.PlayerId && ownedGuid.IsEntity)
+                if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)
                 {
-                    SimulateEntity(ownedGuid);
-                }
+                    if(simulatedEntity.ChangesPosition)
+                    {
+                        StartBroadcastingEntityPosition(simulatedEntity.Guid);
+                    }
 
-                Multiplayer.Logic.SimulationOwnership.AddOwnedGuid(ownedGuid.Guid, ownedGuid.PlayerId);
+                    simulationOwnershipManager.SimulateGuid(simulatedEntity.Guid, SimulationLockType.TRANSIENT);
+                }
+                else if(simulationOwnershipManager.HasAnyLockType(simulatedEntity.Guid))
+                {
+                    // The server has forcibly removed this lock from the client.  This is generally fine for
+                    // transient locks because it is only broadcasting position.  However, exclusive locks may
+                    // need additional cleanup (such as a person piloting a vehicle - they need to be kicked out)
+                    // We can later add a forcibly removed callback but as of right now we have no use-cases for
+                    // forcibly removing an exclusive lock.  Just log it if it happens....
+
+                    if(simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Guid))
+                    {
+                        Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Guid);
+                    }
+
+                    simulationOwnershipManager.StopSimulatingGuid(simulatedEntity.Guid);
+                    EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Guid);
+                }
             }
         }
 
-        private void SimulateEntity(OwnedGuid ownedGuid)
+        private void StartBroadcastingEntityPosition(string guid)
         {
-            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(ownedGuid.Guid);
+            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(guid);
 
-            if(gameObject.IsPresent())
+            if (gameObject.IsPresent())
             {
-                EntityPositionBroadcaster.WatchEntity(ownedGuid.Guid, gameObject.Get());
+                EntityPositionBroadcaster.WatchEntity(guid, gameObject.Get());
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + ownedGuid.Guid);
+                Log.Error("Expected to simulate an unknown entity: " + guid);
             }
         }
     }

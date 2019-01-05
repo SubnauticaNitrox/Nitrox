@@ -6,9 +6,9 @@ namespace NitroxTest.Model
     [Serializable]
     public class TestNonActionPacket : Packet
     {
-        public string PlayerId { get; }
+        public ushort PlayerId { get; }
 
-        public TestNonActionPacket(string playerId)
+        public TestNonActionPacket(ushort playerId)
         {
             PlayerId = playerId;
         }

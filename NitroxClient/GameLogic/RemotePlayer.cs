@@ -1,62 +1,56 @@
 ﻿using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.MultiplayerSession;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
-    public class RemotePlayer
+    public class RemotePlayer : INitroxPlayer
     {
-        public readonly GameObject Body;
-        public readonly GameObject PlayerView;
-        public readonly AnimationController AnimationController;
-        public readonly ArmsController ArmsController;
-        public readonly Rigidbody RigidBody;
+        public PlayerContext PlayerContext { get; }
+        public GameObject Body { get; set; }
+        public GameObject PlayerModel { get; set; }
+        public Rigidbody RigidBody { get; }
+        public ArmsController ArmsController { get; }
+        public AnimationController AnimationController { get; }
+
+        public ushort PlayerId => PlayerContext.PlayerId;
+        public string PlayerName => PlayerContext.PlayerName;
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 
         public Vehicle Vehicle { get; private set; }
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public string PlayerId { get; }
-
-        public RemotePlayer(string playerId)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext)
         {
-            PlayerId = playerId;
-            GameObject originalBody = GameObject.Find("body");
-
-            //Cheap fix for showing head, much easier since male_geo contains many different heads
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
-            Body = Object.Instantiate(originalBody);
-            originalBody.GetComponentInParent<Player>().head.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
-
+            Body = playerBody;
+            PlayerContext = playerContext;
 
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 
-            //Get player
-            PlayerView = Body.transform.Find("player_view").gameObject;
+            // Get player
+            PlayerModel = Body.RequireGameObject("player_view");
 
-            //Move variables to keep player animations from mirroring and for identification
-            ArmsController = PlayerView.GetComponent<ArmsController>();
+            // Move variables to keep player animations from mirroring and for identification
+            ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
             ArmsController.smoothSpeedAboveWater = 0;
 
-            //Sets up a copy from the xSignal template for the signal
-            //todo: settings menu to disable this?
-            GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
-            signalBase.name = "signal" + playerId;
-            signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
-            signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
-            signalBase.transform.SetParent(PlayerView.transform, false);
-            PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Player " + playerId);
-            ping.pingType = PingType.Signal;
+            AnimationController = PlayerModel.AddComponent<AnimationController>();
 
-            AnimationController = PlayerView.AddComponent<AnimationController>();
-
-            ErrorMessage.AddMessage($"{playerId} joined the game.");
+            ErrorMessage.AddMessage($"{PlayerName} joined the game.");
+        }
+        
+        public void ResetModel(ILocalNitroxPlayer localPlayer)
+        {
+            Body = Object.Instantiate(localPlayer.BodyPrototype);
+            PlayerModel = Body.RequireGameObject("player_view");
         }
 
         public void Attach(Transform transform, bool keepWorldTransform = false)
@@ -74,21 +68,13 @@ namespace NitroxClient.GameLogic
             Body.transform.parent = null;
         }
 
-        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<string> opSubGuid)
+        public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             Body.SetActive(true);
-
-            SubRoot subRoot = null;
-            if (opSubGuid.IsPresent())
-            {
-                GameObject sub = GuidHelper.RequireObjectFrom(opSubGuid.Get());
-                subRoot = sub.GetComponent<SubRoot>();
-            }
-
+            
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-            SetSubRoot(subRoot);
 
             RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
@@ -123,7 +109,8 @@ namespace NitroxClient.GameLogic
                     mpCyclops.CurrentPlayer = null;
                     mpCyclops.Exit();
                 }
-                RigidBody.isKinematic = AnimationController["cyclops_steering"] = (newPilotingChair != null);
+
+                RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
             }
         }
 
@@ -179,8 +166,7 @@ namespace NitroxClient.GameLogic
 
         public void Destroy()
         {
-            ErrorMessage.AddMessage($"{PlayerId} left the game.");
-            Body.SetActive(false);
+            ErrorMessage.AddMessage($"{PlayerName} left the game.");
             Object.DestroyImmediate(Body);
         }
 

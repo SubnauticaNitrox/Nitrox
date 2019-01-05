@@ -1,9 +1,9 @@
-﻿using Harmony;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using NitroxTest.Patcher.Test;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace NitroxTest.Patcher.Patches
 {

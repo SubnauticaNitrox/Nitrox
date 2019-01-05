@@ -1,9 +1,10 @@
-﻿using NitroxModel.DataStructures;
-using NitroxModel.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using System.Collections.Generic;
+using NitroxServer.GameLogic.Entities;
 using static NitroxModel.Packets.EntityTransformUpdates;
 
 namespace NitroxServer.Communication.Packets.Processors
@@ -45,15 +46,21 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate update in updates)
             {
-                Entity entity = entityManager.UpdateEntityPosition(update.Guid, update.Position, update.Rotation);
-                VisibleCell visibleCell = new VisibleCell(entity.Position, entity.Level);
+                Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Guid, update.Position, update.Rotation);
+
+                if(currentCell.IsEmpty())
+                {
+                    // Normal behaviour if the entity was removed at the same time as someone trying to simulate a postion update.
+                    // we log an info inside entityManager.UpdateEntityPosition just in case.
+                    continue;
+                }
 
                 foreach (KeyValuePair<Player, List<EntityTransformUpdate>> playerUpdates in visibleUpdatesByPlayer)
                 {
                     Player player = playerUpdates.Key;
                     List<EntityTransformUpdate> visibleUpdates = playerUpdates.Value;
 
-                    if (player.HasCellLoaded(visibleCell))
+                    if (player.HasCellLoaded(currentCell.Get()))
                     {
                         visibleUpdates.Add(update);
                     }

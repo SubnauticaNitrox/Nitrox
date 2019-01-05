@@ -29,10 +29,27 @@ namespace NitroxServer.UnityStubs
             this.w = w;
         }
 
+        public Quaternion(UnityEngine.Quaternion quaternion)
+        {
+            x = quaternion.x;
+            y = quaternion.y;
+            z = quaternion.z;
+            w = quaternion.w;
+        }
+
+        public static implicit operator Quaternion(UnityEngine.Quaternion quaternion)
+        {
+            return new Quaternion(quaternion);
+        }
+
+        public static implicit operator UnityEngine.Quaternion(Quaternion quaternion)
+        {
+            return new UnityEngine.Quaternion(quaternion.x, quaternion.y, quaternion.z, quaternion.w);
+        }
+
         public override string ToString()
         {
             return "[Quaternion - {" + x + ", " + y + ", " + z + "," + w + "}]";
         }
     }
-
 }

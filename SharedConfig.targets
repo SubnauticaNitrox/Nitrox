@@ -7,6 +7,11 @@
     <LangVersion>6</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsGameLibrary>false</IsGameLibrary>
+    <IsGameLibrary Condition="'$(OutputType)' == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">true</IsGameLibrary>
+  </PropertyGroup>
+
   <Import Project="$(DevVarsLoc)" Condition="Exists($(DevVarsLoc))" />
 
   <Target Name="MaybeCopyDevVars" Condition="!Exists($(SubnauticaDir)) and !Exists($(DevVarsLoc))">
@@ -15,25 +20,21 @@
   </Target>
 
   <Target Name="DevVarsInvalid" Condition="!Exists($(SubnauticaDir)) and Exists($(DevVarsLoc))">
-    <!--If the default path is overriden in DevVars, and it doesn't exist-->
+    <!-- If the default path is overriden in DevVars, and it doesn't exist -->
     <Error Text="Your Subnautica installation folder has not been found at the path defined in $(DevVars). Please set it correctly." Condition="Exists($(DevVarsLoc))" />
-  </Target>
-
-  <!--Using DependsOnTarget with Conditional targets as an if else structure...-->
-  <Target Name="TestSubnauticaFolder" DependsOnTargets="MaybeCopyDevVars;DevVarsInvalid" Condition="!Exists($(SubnauticaDir))">
   </Target>
 
   <PropertyGroup>
     <SubnauticaManaged>$(SubnauticaDir)\Subnautica_Data\Managed</SubnauticaManaged>
   </PropertyGroup>
 
-  <PropertyGroup Condition="$(Configuration) == 'Debug' and $(OutputType) == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">
-    <OutputPath>$(SolutionDir)\bin\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(Configuration) == 'Release' and $(OutputType) == 'Library' and '$(MSBuildProjectName)' != 'NitroxTest'">
-    <OutputPath>$(SolutionDir)\bin\Release\</OutputPath>
+  <!-- Using DependsOnTarget with Conditional targets as an if else structure... -->
+  <!-- Note that this is the first target, called by InitialTargets -->
+  <Target Name="TestSubnauticaFolder" DependsOnTargets="MaybeCopyDevVars;DevVarsInvalid" Condition="!Exists($(SubnauticaDir))" />
+
+  <PropertyGroup >
+    <OutputPath Condition="$(IsGameLibrary)">$(SolutionDir)\bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
 
-  <Import Project="$(SolutionDir)PreBuildTasks.targets" />
-  <Import Project="$(SolutionDir)PostBuildTasks.targets" />
+  <Import Project="$(SolutionDir)tasks\DeployTask.targets" />
 </Project>
