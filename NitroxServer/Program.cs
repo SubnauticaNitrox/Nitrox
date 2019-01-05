@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Globalization;
 using System.Threading;
 using NitroxModel.Logger;
@@ -31,11 +32,15 @@ namespace NitroxServer
                 return;
             }
 
-            ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
-            while (server.IsRunning)
+            if (Environment.UserInteractive)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine());
+                ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+                while (server.IsRunning)
+                {
+                    CmdProcessor.ProcessCommand(Console.ReadLine());
+                }
             }
+
         }
 
         /**
