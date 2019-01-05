@@ -72,7 +72,6 @@
     <Compile Include="Patches\Fire_Douse_Patch.cs" />
     <Compile Include="Patches\SubRoot_OnTakeDamage_Patch.cs" />
     <Compile Include="Patches\SubFire_OnTakeDamage_Patch.cs" />
-    <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Constructable_Construct_Patch.cs" />
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
