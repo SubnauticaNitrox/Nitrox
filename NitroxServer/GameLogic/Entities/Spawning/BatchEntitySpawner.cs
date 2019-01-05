@@ -16,20 +16,30 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             get
             {
+                List<Int3> parsed;
+                List<Int3> empty;
+
                 lock (parsedBatches)
                 {
-                    return new List<Int3>(parsedBatches);
+                    parsed = new List<Int3>(parsedBatches);
                 }
+
+                lock (emptyBatches)
+                {
+                    empty =  new List<Int3>(emptyBatches);
+                }
+
+                return parsed.Except(empty).ToList();
             }
             set { parsedBatches = new HashSet<Int3>(value); }
-        }
+        }        
 
         private HashSet<Int3> parsedBatches = new HashSet<Int3>();
+        private HashSet<Int3> emptyBatches = new HashSet<Int3>();
 
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
         private readonly LootDistributionData lootDistributionData;
         private readonly BatchCellsParser batchCellsParser;
-        private readonly Random random = new Random();
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
         public BatchEntitySpawner(ResourceAssets resourceAssets, List<Int3> loadedPreviousParsed)
@@ -53,21 +63,23 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 {
                     return new List<Entity>();
                 }
+
                 parsedBatches.Add(batchId);
             }
-
-            Log.Debug("Batch {0} not parsed yet; parsing...", batchId);
+            
+            Random random = new Random(batchId.GetHashCode());
 
             List<Entity> entities = new List<Entity>();
+            List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
 
-            foreach (EntitySpawnPoint esp in batchCellsParser.ParseBatchData(batchId))
+            foreach (EntitySpawnPoint esp in spawnPoints)
             {
                 if (esp.Density > 0)
                 {
                     DstData dstData;
                     if (lootDistributionData.GetBiomeLoot(esp.BiomeType, out dstData))
                     {
-                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, dstData));
+                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, dstData, random));
                     }
                     else if(esp.ClassId != null)
                     {
@@ -76,12 +88,26 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
             }
 
+            if(entities.Count == 0)
+            {
+                lock(emptyBatches)
+                {
+                    emptyBatches.Add(batchId);
+                }
+            }
+            else
+            {
+                Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
+            }
+
             return entities;
         }
 
-        private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData)
+        private IEnumerable<Entity> SpawnEntitiesUsingRandomDistribution(EntitySpawnPoint entitySpawnPoint, DstData dstData, Random random)
         {
-            float rollingProbabilityDensity = dstData.prefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
+            List<PrefabData> allowedPrefabs = filterAllowedPrefabs(dstData.prefabs, entitySpawnPoint);
+
+            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => prefab.probability / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
             {
@@ -95,7 +121,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             
             double rollingProbability = 0;
-            PrefabData selectedPrefab = dstData.prefabs.FirstOrDefault(prefab =>
+            PrefabData selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
             {
                 if(prefab.probability == 0)
                 {
@@ -103,15 +129,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
 
                 float probabilityDensity = prefab.probability / entitySpawnPoint.Density;
-                bool isValidSpawn = IsValidSpawnType(prefab.classId, entitySpawnPoint.CanSpawnCreature);
 
-                if(isValidSpawn)
-                {
-                    rollingProbability += probabilityDensity;
-                    return rollingProbability >= randomNumber;
-                }
+                rollingProbability += probabilityDensity;
 
-                return false;
+                return rollingProbability >= randomNumber;
             });
 
             WorldEntityInfo worldEntityInfo;
@@ -129,6 +150,27 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     }
                 }
             }
+        }
+
+        private List<PrefabData> filterAllowedPrefabs(List<PrefabData> prefabs, EntitySpawnPoint entitySpawnPoint)
+        {
+            List<PrefabData> allowedPrefabs = new List<PrefabData>();
+
+            foreach(PrefabData prefab in prefabs)
+            {
+                if (prefab.classId != "None")
+                {
+                    WorldEntityInfo worldEntityInfo;
+
+                    if (worldEntitiesByClassId.TryGetValue(prefab.classId, out worldEntityInfo) &&
+                        entitySpawnPoint.AllowedTypes.Contains(worldEntityInfo.slotType))
+                    {
+                        allowedPrefabs.Add(prefab);
+                    }
+                }
+            }
+
+            return allowedPrefabs;
         }
 
         private IEnumerable<Entity> SpawnEntitiesStaticly(EntitySpawnPoint entitySpawnPoint)
@@ -167,17 +209,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     yield return childEntity;
                 }
             }
-        }
-
-        private bool IsValidSpawnType(string id, bool creatureSpawn)
-        {
-            WorldEntityInfo worldEntityInfo;
-            if (worldEntitiesByClassId.TryGetValue(id, out worldEntityInfo))
-            {
-                return (creatureSpawn == (worldEntityInfo.slotType == EntitySlot.Type.Creature));
-            }
-
-            return false;
         }
     }
 }

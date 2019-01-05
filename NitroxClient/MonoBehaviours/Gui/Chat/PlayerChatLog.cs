@@ -7,7 +7,10 @@ using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
-    class PlayerChatLog : MonoBehaviour
+    /// <summary>
+    ///     The Unity object that holds a record of what was said in-game.
+    /// </summary>
+    internal class PlayerChatLog : MonoBehaviour
     {
         private const int LINE_CHAR_LIMIT = 80;
         private const int MESSAGE_LIMIT = 6;
@@ -15,8 +18,40 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private GameObject chatEntry;
         private GUIText chatText;
-        private Coroutine timer;
         private List<ChatLogEntry> entries;
+        private Coroutine timer;
+
+        /// <summary>
+        ///     Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for
+        ///     CHAT_VISIBILITY_TIME_LENGTH seconds
+        /// </summary>
+        /// <param name="chatLogEntry"></param>
+        public void WriteEntry(ChatLogEntry chatLogEntry)
+        {
+            if (timer != null)
+            {
+                // cancel hiding chat entries because a new one was recently posted
+                StopCoroutine(timer);
+            }
+
+            chatLogEntry.MessageText = SanitizeMessage(chatLogEntry.MessageText);
+            AddChatMessage(chatLogEntry);
+            BuildChatText();
+
+            chatText.enabled = true;
+
+            timer = StartCoroutine(DeactivateChat());
+        }
+
+        public void Show()
+        {
+            chatText.enabled = true;
+        }
+
+        public void Hide()
+        {
+            chatText.enabled = false;
+        }
 
         protected void Awake()
         {
@@ -35,24 +70,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.transform.position = new Vector3(0.05f, .5f, 1f);
             chatText.enabled = false;
             chatText.richText = true;
-        }
-
-        // Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for CHAT_VISIBILITY_TIME_LENGTH seconds
-        public void WriteEntry(ChatLogEntry chatLogEntry)
-        {
-            if (timer != null)
-            {
-                // cancel hiding chat entries because a new one was recently posted
-                StopCoroutine(timer);
-            }
-
-            chatLogEntry.MessageText = SanitizeMessage(chatLogEntry.MessageText);
-            AddChatMessage(chatLogEntry);
-            BuildChatText();
-
-            chatText.enabled = true;
-
-            timer = StartCoroutine(DeactivateChat());
         }
 
         private void AddChatMessage(ChatLogEntry chatLogEntry)

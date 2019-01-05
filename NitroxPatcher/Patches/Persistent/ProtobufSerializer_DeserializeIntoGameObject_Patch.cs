@@ -3,6 +3,11 @@ using System.Reflection;
 using Harmony;
 using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
+using UnityEngine;
+using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
+using NitroxClient.GameLogic;
 
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
@@ -19,7 +24,7 @@ namespace NitroxPatcher.Patches.Persistent
          * Some day if we want all items to be authoritative by the server we can
          * parse Build18/cellCache/.
          */
-        public static List<string> blacklistedHandPlacedClassIds = new List<string>()
+        public static List<string> HAND_PLACED_ITEMS_ONLY_SPAWNABLE_BY_SERVER = new List<string>()
         {
             "61a5e0e6-01d5-4ae2-aea6-1186cd769025", // Coral_reef_purple_mushrooms_01_01
             "fc7c1098-13af-417a-8038-0053b65498e5", // Coral_reef_purple_mushrooms_01_02 
@@ -54,10 +59,41 @@ namespace NitroxPatcher.Patches.Persistent
 
         public static void Postfix(ProtobufSerializer.GameObjectData goData, UniqueIdentifier uid)
         {
-            if (blacklistedHandPlacedClassIds.Contains(goData.ClassId) && Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer())
+            bool isMultiplayer = (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer());
+
+            if (isMultiplayer && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject))
             {
                 UnityEngine.Object.Destroy(uid.gameObject);
             }
+        }
+
+        private static bool SpawnedWithoutServersPermission(ProtobufSerializer.GameObjectData goData, GameObject gameObject)
+        {           
+            if(!HAND_PLACED_ITEMS_ONLY_SPAWNABLE_BY_SERVER.Contains(goData.ClassId))
+            {
+                // If these items are not in the blacklist then the server is fine with it being spawned.
+                return false;
+            }
+
+            NitroxEntity serverEntity = gameObject.GetComponent<NitroxEntity>();
+
+            if(serverEntity)
+            {
+                // if we have a NitroxEntity then the server is aware of this entity.
+                return false;
+            }
+
+            UniqueIdentifier identifier = gameObject.GetComponent<UniqueIdentifier>();
+            Entities entities = NitroxServiceLocator.LocateService<Entities>();
+
+            if (identifier != null && entities.WasSpawnedByServer(identifier.Id))
+            {
+                // Looks like this ran through the main entity spawning code - the server knows about it.
+                return true;
+            }
+
+            // We've exhausted all mechanisms of entity detection - this doesn't appear to be an entity that the server is aware of.
+            return true;
         }
 
         public override void Patch(HarmonyInstance harmony)

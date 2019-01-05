@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
@@ -15,14 +14,16 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
 
+        private readonly IPacketSender packetSender;
         private IMultiplayerSession multiplayerSession;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
         private string myEscapePodGuid;
 
-        public BroadcastEscapePodsProcessor(IMultiplayerSession multiplayerSession)
+        public BroadcastEscapePodsProcessor(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
         {
+            this.packetSender = packetSender;
             this.multiplayerSession = multiplayerSession;
         }
 
@@ -33,7 +34,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 AssignPlayerToEscapePod(packet);
             }
 
-            Player.main.StartCoroutine(SyncEscapePodGuids(packet));
+            SyncEscapePodGuids(packet);
         }
 
         private void AssignPlayerToEscapePod(BroadcastEscapePods packet)
@@ -68,10 +69,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         // Done in a coroutine because we want to wait until the escape pod has fully loaded
         // at the beginning of the game.
-        private IEnumerator SyncEscapePodGuids(BroadcastEscapePods packet)
+        private void SyncEscapePodGuids(BroadcastEscapePods packet)
         {
-            yield return new WaitUntil(() => EscapePod.main.gameObject);
-
             foreach (EscapePodModel model in packet.EscapePods)
             {
                 if (!escapePodsByGuid.ContainsKey(model.Guid))
@@ -99,6 +98,12 @@ namespace NitroxClient.Communication.Packets.Processors
             escapePod.transform.position = model.Location;
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
+
+            using (packetSender.Suppress<ItemContainerRemove>())
+            {
+                storageContainer.container.Clear();
+            }
+
             GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
 
             MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();

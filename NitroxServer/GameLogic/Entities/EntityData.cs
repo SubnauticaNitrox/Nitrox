@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using ProtoBufNet;
 using NitroxModel.Logger;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -22,33 +22,28 @@ namespace NitroxServer.GameLogic.Entities
             }
             set
             {
-                entitiesByGuid = value;
-
-                foreach(Entity entity in entitiesByGuid.Values)
+                foreach (Entity entity in value.Values)
                 {
-                    List<Entity> absoluteEntityCellEntities = null;
-
-                    if(!entitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out absoluteEntityCellEntities))
-                    {
-                        absoluteEntityCellEntities = entitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<Entity>();
-                    }
-
-                    absoluteEntityCellEntities.Add(entity);
+                    AddEntity(entity);
                 }
             }
         }
-
+        
+        // Phasing entities can disappear if you go out of range.  This is in contrast to global root entities that are always visible.
         [ProtoIgnore]
-        private Dictionary<AbsoluteEntityCell, List<Entity>> entitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
+        private Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
         
         [ProtoIgnore]
         private Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
+
+        [ProtoIgnore]
+        private Dictionary<string, Entity> globalRootEntitiesByGuid = new Dictionary<string, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
             lock (entitiesByGuid)
             {
-                lock (entitiesByAbsoluteCell)
+                lock (phasingEntitiesByAbsoluteCell)
                 {
                     foreach (Entity entity in entities)
                     {
@@ -61,6 +56,87 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
+        public void AddEntity(Entity entity)
+        {
+            lock (entitiesByGuid)
+            {
+                entitiesByGuid.Add(entity.Guid, entity);
+            }
+            
+            if (entity.ExistsInGlobalRoot)
+            {
+                lock (globalRootEntitiesByGuid)
+                {
+                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    {
+                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    }
+                    else
+                    {
+                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType.AsString());
+                    }
+                }
+            }
+            else
+            {
+                lock (phasingEntitiesByAbsoluteCell)
+                {
+                    List<Entity> phasingEntitiesInCell = null;
+
+                    if (!phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out phasingEntitiesInCell))
+                    {
+                        phasingEntitiesInCell = phasingEntitiesByAbsoluteCell[entity.AbsoluteEntityCell] = new List<Entity>();
+                    }
+
+                    phasingEntitiesInCell.Add(entity);
+                }
+            }
+        }
+
+        public void RemoveEntity(string guid)
+        {
+            Entity entity = null;
+
+            lock (entitiesByGuid)
+            {
+                entitiesByGuid.TryGetValue(guid, out entity);
+                entitiesByGuid.Remove(guid);                
+            }
+
+            if (entity != null)
+            {
+                if(entity.ExistsInGlobalRoot)
+                {
+                    RemoveEntityFromGlobalRoot(guid);
+                }
+                else
+                {
+                    RemoveEntityFromCell(entity);
+                }
+            }
+        }
+
+        private void RemoveEntityFromGlobalRoot(string guid)
+        {
+            lock (globalRootEntitiesByGuid)
+            {
+                globalRootEntitiesByGuid.Remove(guid);
+            }
+        }
+
+        private void RemoveEntityFromCell(Entity entity)
+        {
+            lock (phasingEntitiesByAbsoluteCell)
+            {
+                List<Entity> entities;
+
+                if(phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out entities))
+                {
+                    entities.Remove(entity);
+                }
+            }
+        }
+
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
             return EntitiesFromCell(absoluteEntityCell).ToList();
@@ -68,7 +144,13 @@ namespace NitroxServer.GameLogic.Entities
 
         public void EntitySwitchedCells(Entity entity, AbsoluteEntityCell oldCell, AbsoluteEntityCell newCell)
         {
-            lock (entitiesByAbsoluteCell)
+            if(entity.ExistsInGlobalRoot)
+            {
+                // We don't care what cell a global root entity resides in.  Only phasing entities.
+                return;
+            }
+
+            lock (phasingEntitiesByAbsoluteCell)
             {
                 List<Entity> oldList = EntitiesFromCell(oldCell);
                 oldList.Remove(entity);
@@ -78,7 +160,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public Entity GetEntityByGuid(string guid)
+        public Optional<Entity> GetEntityByGuid(string guid)
         {
             Entity entity = null;
 
@@ -87,9 +169,7 @@ namespace NitroxServer.GameLogic.Entities
                 entitiesByGuid.TryGetValue(guid, out entity);
             }
 
-            Validate.NotNull(entity);
-
-            return entity;
+            return Optional<Entity>.OfNullable(entity);
         }
 
         public List<Entity> GetEntitiesByGuids(List<string> guids)
@@ -116,15 +196,23 @@ namespace NitroxServer.GameLogic.Entities
             return entities;
         }
 
+        public List<Entity> GetGlobalRootEntities()
+        {
+            lock (globalRootEntitiesByGuid)
+            {
+                return globalRootEntitiesByGuid.Values.ToList();
+            }
+        }
+
         private List<Entity> EntitiesFromCell(AbsoluteEntityCell absoluteEntityCell)
         {
             List<Entity> result;
 
-            lock (entitiesByAbsoluteCell)
+            lock (phasingEntitiesByAbsoluteCell)
             {
-                if (!entitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
+                if (!phasingEntitiesByAbsoluteCell.TryGetValue(absoluteEntityCell, out result))
                 {
-                    result = entitiesByAbsoluteCell[absoluteEntityCell] = new List<Entity>();
+                    result = phasingEntitiesByAbsoluteCell[absoluteEntityCell] = new List<Entity>();
                 }
             }
 

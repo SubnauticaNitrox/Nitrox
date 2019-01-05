@@ -79,7 +79,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void StartSession()
         {
-            DevConsole.RegisterConsoleCommand(this, "mpsave", false, false);
+            DevConsole.RegisterConsoleCommand(this, "execute", false, false);
             OnBeforeMultiplayerStart?.Invoke();
             InitializeLocalPlayerState();
             multiplayerSession.JoinSession();
@@ -88,10 +88,12 @@ namespace NitroxClient.MonoBehaviours
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
-        private void OnConsoleCommand_mpsave()
+        private void OnConsoleCommand_execute(NotificationCenter.Notification n)
         {
-            Log.Info("Save Request");
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(ServerCommand.Commands.SAVE));
+            string[] args = new string[n.data.Values.Count];
+            n.data.Values.CopyTo(args, 0);
+
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
         }
 
         private void InitializeLocalPlayerState()
@@ -164,7 +166,7 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
             WaitScreen.ShowImmediately();
             Main.StartSession();
-            yield return new WaitUntil(() => Main.InitialSyncCompleted == true);
+            yield return new WaitUntil(() => Main.InitialSyncCompleted);
             WaitScreen.Remove(item);
             SetLoadingComplete();
         }
@@ -174,8 +176,11 @@ namespace NitroxClient.MonoBehaviours
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
             property.SetValue(PAXTerrainController.main, false, null);
 
-            WaitScreen waitScreen = (WaitScreen)typeof(WaitScreen).ReflectionGet("main", false, true);
+            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
             waitScreen.ReflectionCall("Hide");
+
+            HashSet<WaitScreen.Item> items = (HashSet<WaitScreen.Item>)waitScreen.ReflectionGet("items");
+            items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             DiscordRP.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetPlayerCount() + 1, Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);

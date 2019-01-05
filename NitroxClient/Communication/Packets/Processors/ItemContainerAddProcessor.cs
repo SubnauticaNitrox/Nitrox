@@ -1,8 +1,11 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -20,7 +23,13 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(ItemContainerAdd packet)
         {
             ItemData itemData = packet.ItemData;
-            itemContainer.AddItem(itemData);
+            GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+
+            // Mark this entity as spawned by the server
+            item.AddComponent<NitroxEntity>();
+            item.SetNewGuid(itemData.Guid);
+            
+            itemContainer.AddItem(item, itemData.ContainerGuid);
         }
     }
 }

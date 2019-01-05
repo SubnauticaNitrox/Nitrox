@@ -1,6 +1,7 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Helper;
+﻿using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Helper;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,129 +18,30 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private static readonly Color FOOD_BAR_BORDER_COLOR = new Color(0.957f, 0.914f, 0.251f, 1.0f);
         private static readonly Color WATER_BAR_COLOR = new Color(0.212f, 0.663f, 0.855f, 1.0f);
         private static readonly Color WATER_BAR_BORDER_COLOR = new Color(0.227f, 0.949f, 0.969f, 1.0f);
-
-        private static readonly Vector2 OXYGEN_BAR_POSITION_OFFSET = new Vector2(200, 160);
-        private static readonly Vector2 HEALTH_BAR_POSITION_OFFSET = new Vector2(150, 160);
-        private static readonly Vector2 FOOD_BAR_POSITION_OFFSET = new Vector2(100, 160);
-        private static readonly Vector2 WATER_BAR_POSITION_OFFSET = new Vector2(50, 160);
-
-        private string playerName;
-        private int position;
-
-        private class Bar
-        {
-            public readonly GameObject GameObject;
-            public readonly SmoothedValue SmoothedValue;
-            public readonly string ValueUnit;
-
-            public Bar(GameObject gameObject, SmoothedValue smoothedValue, string valueUnit)
-            {
-                GameObject = gameObject;
-                SmoothedValue = smoothedValue;
-                ValueUnit = valueUnit;
-            }
-        }
+        private Bar foodBar;
+        private Bar healthBar;
 
         private Bar oxygenBar;
-        private Bar healthBar;
-        private Bar foodBar;
+
+        private string playerName;
         private Bar waterBar;
 
-        private GameObject background;
-        private GameObject playerNameText;
-
-        public void CreateVitals(ushort playerId, int position)
+        /// <summary>
+        ///     Creates a player vitals UI elements for the player id.
+        /// </summary>
+        /// <param name="playerId">Unique player id to create the vitals UI elements for.</param>
+        /// <returns></returns>
+        public static RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
-            this.playerName = playerId.ToString();
-            this.position = position;
+            RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
+            RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Get();
 
-            uGUI_HealthBar originalBar = FindObjectOfType<uGUI_HealthBar>();
+            Canvas vitalsCanvas = vitals.CreateCanvas(remotePlayer.Body.transform);
+            vitals.playerName = remotePlayer.PlayerName;
+            vitals.CreatePlayerName(vitalsCanvas);
+            vitals.CreateStats(remotePlayer, vitalsCanvas);
 
-            if (originalBar == null)
-            {
-                Log.Warn("uGUI_HealthBar does not exist. Are you playing on creative?");
-                // TODO: Make sure it works when the world changes back to survival.
-                return;
-            }
-
-            oxygenBar = CreateBar(originalBar, OXYGEN_BAR_COLOR, OXYGEN_BAR_BORDER_COLOR, "s");
-            healthBar = CreateBar(originalBar, HEALTH_BAR_COLOR, HEALTH_BAR_BORDER_COLOR, "%");
-            foodBar = CreateBar(originalBar, FOOD_BAR_COLOR, FOOD_BAR_BORDER_COLOR, "%");
-            waterBar = CreateBar(originalBar, WATER_BAR_COLOR, WATER_BAR_BORDER_COLOR, "%");
-
-            Canvas canvas = oxygenBar.GameObject.GetComponentInParent<Canvas>();
-            GameObject componentParent = oxygenBar.GameObject.transform.parent.gameObject;
-            Quaternion rotation = oxygenBar.GameObject.transform.localRotation;
-
-            CreateBackground(canvas, componentParent, rotation);
-            CreatePlayerNameText();
-            SetNewPosition(position);
-        }
-
-        private Bar CreateBar(uGUI_HealthBar originalBar, Color color, Color borderColor, string smoothedValueUnit)
-        {
-            GameObject cloned = Instantiate(originalBar.gameObject);
-            cloned.transform.SetParent(originalBar.gameObject.transform.parent.transform);
-            Destroy(cloned.GetComponent<uGUI_HealthBar>());
-
-            cloned.transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
-            cloned.transform.localRotation = originalBar.gameObject.transform.localRotation;
-            cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 180, 0f);
-
-            Canvas canvas = originalBar.gameObject.GetComponentInParent<Canvas>();
-
-            // Not sure why this is needed, but if a initial transform is not set
-            // then it will be in a weird, inconsistent state.
-            SetBarPostion(cloned.gameObject, new Vector2(0, 0), canvas);
-
-            uGUI_CircularBar newBar = cloned.GetComponentInChildren<uGUI_CircularBar>();
-            newBar.texture = originalBar.bar.texture;
-            newBar.overlay = originalBar.bar.overlay;
-            newBar.color = color;
-            newBar.borderColor = borderColor;
-
-            return new Bar(cloned, new SmoothedValue(100, 100, 100, 100), smoothedValueUnit);
-        }
-
-        private void CreateBackground(Canvas canvas, GameObject parent, Quaternion rotation)
-        {
-            background = new GameObject();
-            Image image = background.AddComponent<Image>();
-            image.transform.SetParent(parent.transform);
-            image.sprite = GetPlayerBackgroundSprite();
-
-            Vector2 screenPosition = new Vector2(Screen.width - 120, Screen.height - (150 * position));
-            Vector2 worldPosition;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
-            background.transform.position = canvas.transform.TransformPoint(worldPosition);
-            background.SetActive(true);
-            background.transform.localScale = new Vector3(2.7f, 1.2f, 1);
-            background.transform.localRotation = rotation;
-            background.transform.SetAsFirstSibling();
-        }
-
-        private void CreatePlayerNameText()
-        {
-            playerNameText = new GameObject();
-            GUIText GUIText = playerNameText.AddComponent<GUIText>();
-            playerNameText.AddComponent<GUITextShadow>();
-            GUIText.name = "RemotePlayer" + playerName;
-            GUIText.alignment = TextAlignment.Center;
-            GUIText.fontSize = 18;
-            GUIText.text = playerName;
-            ErrorMessage em = (ErrorMessage)ReflectionHelper.ReflectionGet<ErrorMessage>(null, "main", false, true);
-            playerNameText.layer = em.gameObject.layer;
-            playerNameText.layer = em.gameObject.layer;
-            // em does not have a parent anymore on latest stable, so the stats position is incorrect.
-            playerNameText.transform.parent = em.transform;//.parent.transform;
-        }
-
-        private Sprite GetPlayerBackgroundSprite()
-        {
-            byte[] FileData = Properties.Resources.playerBackgroundImage;
-            Texture2D circleSquare = new Texture2D(2, 2, TextureFormat.ARGB32, false);
-            circleSquare.LoadImage(FileData);
-            return Sprite.Create(circleSquare, new Rect(0, 0, circleSquare.width, circleSquare.height), new Vector2(0, 0), 100);
+            return vitals;
         }
 
         public void SetOxygen(float oxygen, float maxOxygen, float smoothTime = 0.1f)
@@ -175,6 +77,129 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             UpdateSmoothValue(waterBar);
         }
 
+        private Canvas CreateCanvas(Transform playerTransform)
+        {
+            GameObject vitals;
+            Canvas vitalsCanvas;
+
+            // Canvas
+            vitals = new GameObject();
+            vitals.name = "RemotePlayerVitals";
+            vitals.AddComponent<Canvas>();
+            vitals.transform.SetParent(playerTransform, false);
+            vitals.transform.localPosition = new Vector3(0, 0, 0);
+            vitals.transform.rotation = Quaternion.Euler(playerTransform.rotation.eulerAngles.x, playerTransform.rotation.eulerAngles.y + 180, playerTransform.rotation.eulerAngles.z);
+
+            vitalsCanvas = vitals.GetComponent<Canvas>();
+            vitalsCanvas.renderMode = RenderMode.WorldSpace;
+
+            CanvasScaler scaler = vitals.AddComponent<CanvasScaler>();
+            scaler.dynamicPixelsPerUnit = 100;
+
+            vitals.AddComponent<GraphicRaycaster>();
+
+            return vitalsCanvas;
+        }
+
+        private void CreateStats(RemotePlayer remotePlayer, Canvas canvas)
+        {
+            GameObject originalBar = FindObjectOfType<uGUI_HealthBar>().gameObject;
+            healthBar = CreateBar(originalBar, BarType.Health, canvas);
+
+            originalBar = FindObjectOfType<uGUI_OxygenBar>().gameObject;
+            oxygenBar = CreateBar(originalBar, BarType.Oxygen, canvas);
+
+            originalBar = FindObjectOfType<uGUI_FoodBar>().gameObject;
+            foodBar = CreateBar(originalBar, BarType.Food, canvas);
+
+            originalBar = FindObjectOfType<uGUI_WaterBar>().gameObject;
+            waterBar = CreateBar(originalBar, BarType.Water, canvas);
+        }
+
+        private Bar CreateBar(GameObject originalBar, BarType type, Canvas canvas)
+        {
+            GameObject cloned = Instantiate(originalBar);
+            cloned.transform.SetParent(canvas.transform);
+
+            cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
+            cloned.transform.rotation = canvas.transform.rotation;
+
+            uGUI_CircularBar newBar = cloned.GetComponentInChildren<uGUI_CircularBar>();
+            newBar.texture = originalBar.GetComponentInChildren<uGUI_CircularBar>().texture;
+            newBar.overlay = originalBar.GetComponentInChildren<uGUI_CircularBar>().overlay;
+            string valueUnit = "%";
+            switch (type)
+            {
+                case BarType.Health:
+                    newBar.color = HEALTH_BAR_COLOR;
+                    newBar.borderColor = HEALTH_BAR_BORDER_COLOR;
+                    cloned.transform.localPosition = new Vector3(-0.075f, 0.35f, 0f);
+                    cloned.name = playerName + "'s Health";
+                    cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
+                    Destroy(cloned.GetComponent<uGUI_HealthBar>());
+                    cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
+                    break;
+                case BarType.Oxygen:
+                    newBar.color = OXYGEN_BAR_COLOR;
+                    newBar.borderColor = OXYGEN_BAR_BORDER_COLOR;
+                    cloned.transform.localPosition = new Vector3(-0.025f, 0.35f, 0f);
+                    valueUnit = "s";
+                    cloned.name = playerName + "'s Oxygen";
+                    cloned.RequireTransform("OxygenTextLabel").localRotation = Quaternion.Euler(0f, 270f, 0f);
+                    Destroy(cloned.GetComponent<uGUI_OxygenBar>());
+                    cloned.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
+                    break;
+                case BarType.Food:
+                    newBar.color = FOOD_BAR_COLOR;
+                    newBar.borderColor = FOOD_BAR_BORDER_COLOR;
+                    cloned.transform.localPosition = new Vector3(0.025f, 0.35f, 0f);
+                    cloned.name = playerName + "'s Food";
+                    cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
+                    Destroy(cloned.GetComponent<uGUI_FoodBar>());
+                    cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
+                    break;
+                case BarType.Water:
+                    newBar.color = WATER_BAR_COLOR;
+                    newBar.borderColor = WATER_BAR_BORDER_COLOR;
+                    cloned.transform.localPosition = new Vector3(0.075f, 0.35f, 0f);
+                    cloned.name = playerName + "'s Water";
+                    cloned.RequireTransform("Icon").localRotation = Quaternion.Euler(0f, 0f, 0f);
+                    Destroy(cloned.GetComponent<uGUI_WaterBar>());
+                    cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
+                    break;
+                default:
+                    Log.Info("Unhandled bar type: " + type);
+                    break;
+            }
+
+            return new Bar(newBar.gameObject, new SmoothedValue(100, 100, 100, 100), valueUnit);
+        }
+
+        private void CreatePlayerName(Canvas canvas)
+        {
+            GameObject name;
+            Text nameText;
+            RectTransform namePosition;
+
+            // Text
+            name = new GameObject();
+            name.transform.parent = canvas.transform;
+            name.name = "RemotePlayerName";
+
+            nameText = name.AddComponent<Text>();
+            nameText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            nameText.text = playerName;
+            nameText.transform.localScale = new Vector3(0.01f, 0.01f, 1f);
+            nameText.transform.rotation = canvas.transform.rotation;
+            nameText.fontSize = 14;
+            nameText.alignment = TextAnchor.MiddleCenter;
+
+            // Text position
+            namePosition = name.GetComponent<RectTransform>();
+            namePosition.localPosition = new Vector3(0, 0.4f, 0);
+            namePosition.sizeDelta = new Vector2(200, 100);
+        }
+
         private void UpdateSmoothValue(Bar bar)
         {
             if (bar != null)
@@ -190,41 +215,36 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         {
             uGUI_CircularBar circularBar = bar.GameObject.GetComponentInChildren<uGUI_CircularBar>();
             circularBar.value = amount / max;
-
-            int rounded = Mathf.RoundToInt(amount);
-
-            Text text = bar.GameObject.GetComponentInChildren<Text>();
-            text.text = ((int)rounded).ToString() + bar.ValueUnit;
         }
 
-        public void SetNewPosition(int newPosition)
-        {
-            Canvas canvas = healthBar.GameObject.GetComponentInParent<Canvas>();
-            SetBarPostion(oxygenBar.GameObject, OXYGEN_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(healthBar.GameObject, HEALTH_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(foodBar.GameObject, FOOD_BAR_POSITION_OFFSET, canvas);
-            SetBarPostion(waterBar.GameObject, WATER_BAR_POSITION_OFFSET, canvas);
-
-            GUIText gUIText = playerNameText.GetComponent<GUIText>();
-            gUIText.transform.position = new Vector3(0.91f, 0.90f - ((position - 1) * 0.15f), 1f);
-        }
-
-        private void SetBarPostion(GameObject barGameObject, Vector2 positionOffset, Canvas canvas)
-        {
-            Vector2 screenPosition = new Vector2(Screen.width - positionOffset.x, Screen.height - (positionOffset.y * position));
-            Vector2 worldPosition;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.transform as RectTransform, screenPosition, Camera.main, out worldPosition);
-            barGameObject.transform.position = canvas.transform.TransformPoint(worldPosition);
-        }
-
-        void OnDestroy()
+        private void OnDestroy()
         {
             Destroy(oxygenBar.GameObject);
             Destroy(healthBar.GameObject);
             Destroy(foodBar.GameObject);
             Destroy(waterBar.GameObject);
-            Destroy(background);
-            Destroy(playerNameText);
+        }
+
+        private class Bar
+        {
+            public readonly GameObject GameObject;
+            public readonly SmoothedValue SmoothedValue;
+            public readonly string ValueUnit;
+
+            public Bar(GameObject gameObject, SmoothedValue smoothedValue, string valueUnit)
+            {
+                GameObject = gameObject;
+                SmoothedValue = smoothedValue;
+                ValueUnit = valueUnit;
+            }
+        }
+
+        private enum BarType
+        {
+            Health,
+            Oxygen,
+            Food,
+            Water
         }
     }
 }

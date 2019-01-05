@@ -3,6 +3,8 @@ using NitroxServer.GameLogic.Entities.Spawning;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -32,22 +34,43 @@ namespace NitroxServer.GameLogic.Entities
             return entities;
         }
 
-        public AbsoluteEntityCell UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
         {
-            Entity entity = entityData.GetEntityByGuid(guid);
-            AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
+            Optional<Entity> opEntity = entityData.GetEntityByGuid(guid);
 
-            entity.Position = position;
-            entity.Rotation = rotation;
-
-            AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
-
-            if (oldCell != newCell)
+            if(opEntity.IsPresent())
             {
-                entityData.EntitySwitchedCells(entity, oldCell, newCell);
+                Entity entity = opEntity.Get();
+                AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
+
+                entity.Position = position;
+                entity.Rotation = rotation;
+
+                AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
+
+                if (oldCell != newCell)
+                {
+                    entityData.EntitySwitchedCells(entity, oldCell, newCell);
+                }
+
+                return Optional<AbsoluteEntityCell>.Of(newCell);
+            }
+            else
+            {
+                Log.Info("Could not update entity position because it was not found (maybe it was recently picked up)");
             }
 
-            return newCell;
+            return Optional<AbsoluteEntityCell>.Empty();
+        }
+
+        public void RegisterNewEntity(Entity entity)
+        {
+            entityData.AddEntity(entity);
+        }
+
+        public void PickUpEntity(string guid)
+        {
+            entityData.RemoveEntity(guid);
         }
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)

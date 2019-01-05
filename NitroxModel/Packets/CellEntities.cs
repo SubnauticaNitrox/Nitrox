@@ -14,6 +14,14 @@ namespace NitroxModel.Packets
             Entities = entities;
         }
 
+        public CellEntities(Entity entity)
+        {
+            Entities = new List<Entity>
+            {
+                entity
+            };
+        }
+
         public override string ToString()
         {
             string toString = "[CellEntities ";

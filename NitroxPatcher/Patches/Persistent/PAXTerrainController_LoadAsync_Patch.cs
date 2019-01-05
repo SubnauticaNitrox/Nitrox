@@ -35,7 +35,7 @@ namespace NitroxPatcher.Patches.Persistent
                    if (oneInstructionOut.opcode.Equals(INJECTION_OPCODE) && oneInstructionOut.operand.Equals(INJECTION_OPERAND))
                    {
                         //Call our injection code and set paxTerratinController.setIsWorking(true); (this keeps up the loading screen)
-                        yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod("SubnauticaLoadingCompleted", BindingFlags.Public | BindingFlags.Static));
+                        yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
                         yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_1, instruction.labels);
                    }
                    else

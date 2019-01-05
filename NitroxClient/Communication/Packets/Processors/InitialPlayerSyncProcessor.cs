@@ -10,11 +10,11 @@ using NitroxModel.Packets;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using NitroxClient.Unity.Helper;
 using Story;
 using System.Reflection;
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxClient.GameLogic.Spawning;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -26,8 +26,9 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly ItemContainers itemContainers;
         private readonly EquipmentSlots equipment;
         private readonly PlayerManager remotePlayerManager;
+        private readonly Entities entities;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
@@ -35,15 +36,16 @@ namespace NitroxClient.Communication.Packets.Processors
             this.itemContainers = itemContainers;
             this.equipment = equipment;
             this.remotePlayerManager = remotePlayerManager;
+            this.entities = entities;
         }
 
         public override void Process(InitialPlayerSync packet)
         {
             SetPlayerGuid(packet.PlayerGuid);
             SpawnVehicles(packet.Vehicles);
-            SpawnPlayerEquipment(packet.EquippedItems); //Need Set Equipment On Vehicles before SpawnItemContainer because is Locker Is a Upgrade (VehicleStorageModule Seamoth / Prawn)
-            SpawnItemContainer(packet.PlayerGuid, packet.InventoryItems); //Need Maintain SpawnItemContainer before SpawnBasePieces/SpawnInventoryItemsAfterBasePiecesFinish because is Locker already Place SpawnItemContainer Duplicated Same Item
+            SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
+            SpawnGlobalRootEntities(packet.GlobalRootEntities);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
@@ -53,9 +55,15 @@ namespace NitroxClient.Communication.Packets.Processors
 
             bool hasBasePiecesToSpawn = packet.BasePieces.Count > 0;
 
-            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn);
+            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
+        }
+
+        private void SpawnGlobalRootEntities(List<Entity> globalRootEntities)
+        {
+            Log.Info("Received initial sync packet with " + globalRootEntities.Count + " global root entities");
+            entities.Spawn(globalRootEntities);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
@@ -200,48 +208,15 @@ namespace NitroxClient.Communication.Packets.Processors
 
         }
 
-        private void SpawnItemContainer(string playerGuid, List<ItemData> inventoryItems)
-        {
-            Log.Info("Received initial sync packet with " + inventoryItems.Count + " ItemContainer");
-
-            using (packetSender.Suppress<ItemContainerAdd>())
-            {
-                ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
-                Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
-
-                foreach (ItemData itemdata in inventoryItems)
-                {
-                    GameObject item = SerializationHelper.GetGameObject(itemdata.SerializedData);
-                    Pickupable pickupable = item.RequireComponent<Pickupable>();
-                    goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
-
-                    if (itemdata.ContainerGuid == playerGuid)
-                    {
-                        ItemsContainer container = Inventory.Get().container;
-                        InventoryItem inventoryItem = new InventoryItem(pickupable);
-                        inventoryItem.container = container;
-                        inventoryItem.item.Reparent(container.tr);
-                        
-                        container.UnsafeAdd(inventoryItem);
-                    }
-                    else
-                    {
-                        itemContainers.AddItem(itemdata);
-                    }
-                }
-            }
-
-        }
-
         /*
          * Items should only be added after all base pieces spawn.  Since base pieces will spawn
          * gradually over multiple frames, we need to wait until that process has completely finished
          */
-        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems, bool basePiecesToSpawn)
+        private void SpawnInventoryItemsAfterBasePiecesFinish(List<ItemData> inventoryItems, bool basePiecesToSpawn, string playerGuid)
         {
             Log.Info("Received initial sync packet with " + inventoryItems.Count + " inventory items");
 
-            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems);
+            InventoryItemAdder itemAdder = new InventoryItemAdder(packetSender, itemContainers, inventoryItems, playerGuid);
             
             if (basePiecesToSpawn)
             {
@@ -264,24 +239,59 @@ namespace NitroxClient.Communication.Packets.Processors
             private IPacketSender packetSender;
             private ItemContainers itemContainers;
             private List<ItemData> inventoryItems;
+            private string playerGuid;
 
-            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems)
+            public InventoryItemAdder(IPacketSender packetSender, ItemContainers itemContainers, List<ItemData> inventoryItems, string playerGuid)
             {
                 this.packetSender = packetSender;
                 this.itemContainers = itemContainers;
                 this.inventoryItems = inventoryItems;
+                this.playerGuid = playerGuid;
             }
 
             public void AddItemsToInventories(object sender, EventArgs eventArgs)
             {
-                Log.Info("Initial sync inventory items are clear to be added to inventories");
                 ThrottledBuilder.main.QueueDrained -= AddItemsToInventories;
 
                 using (packetSender.Suppress<ItemContainerAdd>())
                 {
-                    foreach (ItemData itemData in inventoryItems)
+                    ItemGoalTracker itemGoalTracker = (ItemGoalTracker)typeof(ItemGoalTracker).GetField("main", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+                    Dictionary<TechType, List<ItemGoal>> goals = (Dictionary<TechType, List<ItemGoal>>)(typeof(ItemGoalTracker).GetField("goals", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(itemGoalTracker));
+
+                    foreach (ItemData itemdata in inventoryItems)
                     {
-                        itemContainers.AddItem(itemData);
+                        GameObject item;
+
+                        try
+                        {
+                            item = SerializationHelper.GetGameObject(itemdata.SerializedData);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error("Error deserializing item data " + itemdata.Guid + " " + ex.Message);
+                            continue;
+                        }
+
+                        // Mark this entity as spawned by the server
+                        item.AddComponent<NitroxEntity>();
+
+                        Pickupable pickupable = item.GetComponent<Pickupable>();
+
+                        if (pickupable != null && itemdata.ContainerGuid == playerGuid)
+                        {
+                            goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
+
+                            ItemsContainer container = Inventory.Get().container;
+                            InventoryItem inventoryItem = new InventoryItem(pickupable);
+                            inventoryItem.container = container;
+                            inventoryItem.item.Reparent(container.tr);
+
+                            container.UnsafeAdd(inventoryItem);
+                        }
+                        else
+                        {
+                            itemContainers.AddItem(item, itemdata.ContainerGuid);
+                        }
                     }
                 }
             }
