@@ -10,6 +10,7 @@ namespace NitroxModel.Packets
     public class InitialPlayerSync : Packet
     {
         public List<EscapePodModel> EscapePodsData { get; }
+        public string AssignedEscapePodGuid;
         public List<EquippedItemData> EquippedItems { get; }
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
@@ -22,9 +23,10 @@ namespace NitroxModel.Packets
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
         public List<Entity> GlobalRootEntities { get; }
 
-        public InitialPlayerSync(string playerGuid, List<EscapePodModel> escapePodsData, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities)
+        public InitialPlayerSync(string playerGuid, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities)
         {
             EscapePodsData = escapePodsData;
+            AssignedEscapePodGuid = assignedEscapePodGuid;
             PlayerGuid = playerGuid;
             EquippedItems = equipment;
             BasePieces = basePieces;

@@ -25,26 +25,26 @@ namespace NitroxServer.GameLogic
                 escapePodData.PodNotFullYet = CreateNewEscapePod();
         }
 
-        public Optional<EscapePodModel> AssignPlayerToEscapePod(ushort playerId)
+        public string AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodModel> newlyCreatedPod)
         {
-            Optional<EscapePodModel> escapePod = Optional<EscapePodModel>.Empty();
+            newlyCreatedPod = Optional<EscapePodModel>.Empty();
             lock (escapePodData.EscapePodsByPlayerId)
             {
                 if (escapePodData.EscapePodsByPlayerId.ContainsKey(playerId))
                 {
-                    return escapePod;
+                    return escapePodData.EscapePodsByPlayerId[playerId].Guid;
                 }
 
                 if (escapePodData.PodNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
                 {
-                    escapePod = Optional<EscapePodModel>.Of(CreateNewEscapePod());
-                    escapePodData.PodNotFullYet = escapePod.Get();
+                    newlyCreatedPod = Optional<EscapePodModel>.Of(CreateNewEscapePod());
+                    escapePodData.PodNotFullYet = newlyCreatedPod.Get();
                 }
 
                 escapePodData.PodNotFullYet.AssignedPlayers.Add(playerId);
                 escapePodData.EscapePodsByPlayerId[playerId] = escapePodData.PodNotFullYet;
             }
-            return escapePod;
+            return escapePodData.PodNotFullYet.Guid;
         }
 
         private EscapePodModel CreateNewEscapePod()

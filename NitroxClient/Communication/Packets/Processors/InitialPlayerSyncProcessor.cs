@@ -43,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetEscapePodInfo(packet.EscapePodsData);
+            SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
@@ -69,13 +69,9 @@ namespace NitroxClient.Communication.Packets.Processors
             entities.Spawn(globalRootEntities);
         }
 
-        private void SetEscapePodInfo(List<EscapePodModel> escapePodsData)
+        private void SetEscapePodInfo(List<EscapePodModel> escapePodsData, string assignedEscapePodGuid)
         {
-            if (escapePodManager.MyEscapePodGuid == null)
-            {
-                escapePodManager.AssignPlayerToEscapePod(escapePodsData);
-            }
-
+            escapePodManager.AssignPlayerToEscapePod(escapePodsData, assignedEscapePodGuid);
             escapePodManager.SyncEscapePodGuids(escapePodsData);
         }
 

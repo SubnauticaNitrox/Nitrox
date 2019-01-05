@@ -26,34 +26,29 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
         }
 
-        public void AssignPlayerToEscapePod(List<EscapePodModel> escapePods)
+        public void AssignPlayerToEscapePod(List<EscapePodModel> escapePods, string assignedEscapePodGuid)
         {
-            foreach (EscapePodModel model in escapePods)
+            EscapePodModel escapePod = escapePods.Find(x => x.Guid == assignedEscapePodGuid);
+
+            EscapePod.main.transform.position = escapePod.Location;
+            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition;
+
+            Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
+
+            if (rigidbody != null)
             {
-                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.PlayerId))
-                {
-                    EscapePod.main.transform.position = model.Location;
-                    EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
-
-                    Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
-
-                    if (rigidbody != null)
-                    {
-                        Log.Debug("Freezing escape pod rigidbody");
-                        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-                    }
-                    else
-                    {
-                        Log.Error("Escape pod did not have a rigid body!");
-                    }
-
-                    Player.main.transform.position = EscapePod.main.playerSpawn.position;
-                    Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
-                    MyEscapePodGuid = model.Guid;
-                    break;
-                }
+                Log.Debug("Freezing escape pod rigidbody");
+                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
+            else
+            {
+                Log.Error("Escape pod did not have a rigid body!");
+            }
+
+            Player.main.transform.position = EscapePod.main.playerSpawn.position;
+            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            MyEscapePodGuid = escapePod.Guid;
         }
 
         public void AddNewEscapePod(EscapePodModel escapePod)

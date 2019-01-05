@@ -17,7 +17,6 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix()
         {
-            //EscapePodManager.STOP_SENDING_PACKETS = true;
             IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             multiplayerSession.Disconnect();
         }

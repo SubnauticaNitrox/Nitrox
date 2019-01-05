@@ -27,10 +27,11 @@ namespace NitroxServer.Communication.Packets.Processors
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
-            Optional<EscapePodModel> escapePod = world.EscapePodManager.AssignPlayerToEscapePod(player.Id);
-            if(escapePod.IsPresent())
+            Optional<EscapePodModel> newlyCreatedEscapePod;
+            string assignedEscapePodGuid = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
+            if(newlyCreatedEscapePod.IsPresent())
             {
-                AddEscapePod addEscapePod = new AddEscapePod(escapePod.Get());
+                AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Get());
                 playerManager.SendPacketToOtherPlayers(addEscapePod, player);
             }
             
@@ -39,6 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
                                                                        world.EscapePodData.EscapePods,
+                                                                       assignedEscapePodGuid,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
