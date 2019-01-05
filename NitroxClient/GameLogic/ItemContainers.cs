@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = null;
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod" || ownerTransform.parent.name == "EscapePod(Clone)";
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
             string ownerGuid = null;
 
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod" || ownerTransform.parent.name == "EscapePod(Clone)";
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);

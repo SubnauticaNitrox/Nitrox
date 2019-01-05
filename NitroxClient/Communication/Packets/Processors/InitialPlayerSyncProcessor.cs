@@ -71,7 +71,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SetEscapePodInfo(List<EscapePodModel> escapePodsData, string assignedEscapePodGuid)
         {
-            escapePodManager.AssignPlayerToEscapePod(escapePodsData, assignedEscapePodGuid);
+            EscapePodModel escapePod = escapePodsData.Find(x => x.Guid == assignedEscapePodGuid);
+            escapePodManager.AssignPlayerToEscapePod(escapePod);
             escapePodManager.SyncEscapePodGuids(escapePodsData);
         }
 

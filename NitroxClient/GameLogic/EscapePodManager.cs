@@ -26,10 +26,8 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
         }
 
-        public void AssignPlayerToEscapePod(List<EscapePodModel> escapePods, string assignedEscapePodGuid)
+        public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
-            EscapePodModel escapePod = escapePods.Find(x => x.Guid == assignedEscapePodGuid);
-
             EscapePod.main.transform.position = escapePod.Location;
             EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition;
 
