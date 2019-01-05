@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -26,16 +27,18 @@ namespace NitroxServer.Communication.Packets.Processors
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
-
-            world.EscapePodManager.AssignPlayerToEscapePod(player.Id);
-
-            BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(world.EscapePodManager.GetEscapePods());
-            playerManager.SendPacketToAllPlayers(broadcastEscapePods);
-
+            Optional<EscapePodModel> escapePod = world.EscapePodManager.AssignPlayerToEscapePod(player.Id);
+            if(escapePod.IsPresent())
+            {
+                AddEscapePod addEscapePod = new AddEscapePod(escapePod.Get());
+                playerManager.SendPacketToOtherPlayers(addEscapePod, player);
+            }
+            
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
+                                                                       world.EscapePodData.EscapePods,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),

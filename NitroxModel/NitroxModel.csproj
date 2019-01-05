@@ -108,7 +108,7 @@
     <Compile Include="MultiplayerSession\PlayerSettings.cs" />
     <Compile Include="MultiplayerSession\RandomColorGenerator.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
-    <Compile Include="Packets\BroadcastEscapePods.cs" />
+    <Compile Include="Packets\AddEscapePod.cs" />
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />

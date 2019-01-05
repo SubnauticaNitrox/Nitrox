@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 
@@ -13,14 +12,14 @@ namespace NitroxServer.GameLogic
         {
             get
             {
-                lock (escapePods)
+                lock (EscapePods)
                 {
-                    return escapePods;
+                    return EscapePods;
                 }
             }
             set
             {
-                escapePods = value;
+                EscapePods = value;
             }
         }
 
@@ -29,24 +28,24 @@ namespace NitroxServer.GameLogic
         {
             get
             {
-                lock (escapePodsByPlayerId)
+                lock (EscapePodsByPlayerId)
                 {
-                    return new Dictionary<ushort, EscapePodModel>(escapePodsByPlayerId);
+                    return new Dictionary<ushort, EscapePodModel>(EscapePodsByPlayerId);
                 }
             }
             set
             {
-                escapePodsByPlayerId = value;
+                EscapePodsByPlayerId = value;
             }
         }
 
         [ProtoMember(3)]
-        public EscapePodModel podNotFullYet;
+        public EscapePodModel PodNotFullYet;
 
         [ProtoIgnore]
-        public List<EscapePodModel> escapePods = new List<EscapePodModel>();
+        public List<EscapePodModel> EscapePods = new List<EscapePodModel>();
 
         [ProtoIgnore]
-        public Dictionary<ushort, EscapePodModel> escapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
+        public Dictionary<ushort, EscapePodModel> EscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
     }
 }
