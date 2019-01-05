@@ -1,10 +1,5 @@
 ﻿using Harmony;
-using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Core;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using System;
 using System.Reflection;
 using UnityEngine;
