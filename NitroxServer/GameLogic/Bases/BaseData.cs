@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -113,6 +114,18 @@ namespace NitroxServer.GameLogic.Bases
                     }
 
                     basePiecesByGuid.Remove(guid);
+                }
+            }
+        }
+
+        public void UpdateBasePieceMetadata(string guid, BasePieceMetadata metadata)
+        {
+            BasePiece basePiece;
+            lock (basePiecesByGuid)
+            {
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                {
+                    basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
                 }
             }
         }

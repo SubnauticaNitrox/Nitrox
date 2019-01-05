@@ -4,7 +4,8 @@ using System.Reflection;
 using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
-using NitroxModel.DataStructures.GameLogic.Buildings;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.Serialization
 {
@@ -52,6 +53,9 @@ namespace NitroxServer.Serialization
             MetaType metaType = model.Add(typeof(RotationMetadata), false);
             metaType.AddSubType(50, typeof(CorridorRotationMetadata));
             metaType.AddSubType(60, typeof(MapRoomRotationMetadata));
+
+            MetaType metadataType = model.Add(typeof(BasePieceMetadata), false);
+            metadataType.AddSubType(50, typeof(SignMetadata));
         }
         
         private void RegisterAssemblyClasses(string assemblyName)
