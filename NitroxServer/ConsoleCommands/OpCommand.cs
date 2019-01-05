@@ -6,6 +6,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic.Players;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -14,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
 
-        public OpCommand(PlayerData playerData, PlayerManager playerManager) : base("op", "Did you really forget the players name?", new string[] {})
+        public OpCommand(PlayerData playerData, PlayerManager playerManager) : base("op", Optional<string>.Of("<name>"))
         {
             this.playerData = playerData;
             this.playerManager = playerManager;
