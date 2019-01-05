@@ -27,8 +27,9 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly EquipmentSlots equipment;
         private readonly PlayerManager remotePlayerManager;
         private readonly Entities entities;
+        private readonly EscapePodManager escapePodManager;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities, EscapePodManager escapePodManager)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
@@ -37,10 +38,12 @@ namespace NitroxClient.Communication.Packets.Processors
             this.equipment = equipment;
             this.remotePlayerManager = remotePlayerManager;
             this.entities = entities;
+            this.escapePodManager = escapePodManager;
         }
 
         public override void Process(InitialPlayerSync packet)
         {
+            SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
@@ -64,6 +67,13 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Received initial sync packet with " + globalRootEntities.Count + " global root entities");
             entities.Spawn(globalRootEntities);
+        }
+
+        private void SetEscapePodInfo(List<EscapePodModel> escapePodsData, string assignedEscapePodGuid)
+        {
+            EscapePodModel escapePod = escapePodsData.Find(x => x.Guid == assignedEscapePodGuid);
+            escapePodManager.AssignPlayerToEscapePod(escapePod);
+            escapePodManager.SyncEscapePodGuids(escapePodsData);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
