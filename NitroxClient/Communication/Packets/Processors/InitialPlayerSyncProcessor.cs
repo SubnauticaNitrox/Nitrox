@@ -14,6 +14,7 @@ using Story;
 using System.Reflection;
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxClient.GameLogic.Spawning;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -271,6 +272,9 @@ namespace NitroxClient.Communication.Packets.Processors
                             continue;
                         }
 
+                        // Mark this entity as spawned by the server
+                        item.AddComponent<NitroxEntity>();
+
                         Pickupable pickupable = item.GetComponent<Pickupable>();
 
                         if (pickupable != null && itemdata.ContainerGuid == playerGuid)
@@ -286,7 +290,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         }
                         else
                         {
-                            itemContainers.AddItem(itemdata);
+                            itemContainers.AddItem(item, itemdata.ContainerGuid);
                         }
                     }
                 }

@@ -8,6 +8,7 @@ using UnityEngine;
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxClient.GameLogic.Spawning;
 
 namespace NitroxClient.GameLogic
 {
@@ -69,6 +70,10 @@ namespace NitroxClient.GameLogic
             foreach (EquippedItemData equippedItem in equippedItems)
             {
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
+
+                // Mark this entity as spawned by the server
+                gameObject.AddComponent<NitroxEntity>();
+
                 Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
 
                 Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(equippedItem.ContainerGuid);
