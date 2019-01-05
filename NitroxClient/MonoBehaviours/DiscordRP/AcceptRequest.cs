@@ -7,7 +7,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class AcceptRequest : MonoBehaviour
     {
         public DiscordController DiscordRp;
-        public DiscordRpc.JoinRequest Request;
+        public DiscordRpc.DiscordUser Request;
 
         Rect discordWindowRect = new Rect(Screen.width / 2 - 250, 100, 500, 250);
         Texture avatar;
@@ -56,7 +56,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     GUILayout.Label(avatar);
                     GUILayout.Label("Player " + Request.username + " wants to join your server.");
-                    //GUILayout.TextArea("Player Jannify wants to join your server.");
                 }
                 using (GUILayout.HorizontalScope b = new GUILayout.HorizontalScope())
                 {
@@ -77,19 +76,28 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             DiscordRp.RespondLastJoinRequest(respond);
             DiscordRp.ShowingWindow = false;
-            Destroy(gameObject.GetComponent<AcceptRequest>());
+            Destroy(this);
         }
 
         private IEnumerator LoadAvatar(string id, string avatar_id)
         {
-            NitroxModel.Logger.Log.Debug("Test");
-            string url = "https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png";
-            WWW imageURLWWW = new WWW(url);
-            yield return imageURLWWW;
+            WWW avatarURL = new WWW("https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png");
+            yield return avatarURL;
 
-            if (imageURLWWW.texture != null)
+            if (avatarURL.texture != null)
             {
-                avatar = imageURLWWW.texture;
+                avatar = avatarURL.texture;
+            }
+            else
+            {
+                //using (WWW standardAvatarURL = new WWW("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png"))
+                //{
+                //    yield return standardAvatarURL;
+                //    if (standardAvatarURL.texture != null)
+                //    {
+                //        avatar = standardAvatarURL.texture;
+                //    }
+                //}
             }
 
             yield return null;

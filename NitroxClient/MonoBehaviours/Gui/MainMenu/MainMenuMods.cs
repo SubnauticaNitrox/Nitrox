@@ -8,8 +8,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMods : MonoBehaviour
     {
-        DiscordController discordRP;
-
         private void OnEnable()
         {
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -25,8 +23,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             if (scene.name == "XMenu")
             {
                 MultiplayerMenuMods();
-                discordRP = gameObject.AddComponent<DiscordController>();
-                discordRP.InitDRPMenu();
+                DiscordController.Main.InitDRPMenu();
             }
         }
 

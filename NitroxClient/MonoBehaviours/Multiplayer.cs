@@ -29,7 +29,6 @@ namespace NitroxClient.MonoBehaviours
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
-        public static DiscordController DiscordRP;
         public bool InitialSyncCompleted;
 
         public void Awake()
@@ -118,9 +117,6 @@ namespace NitroxClient.MonoBehaviours
 
             // UI.
             gameObject.AddComponent<LostConnectionModal>();
-
-            // Utilities
-            DiscordRP = gameObject.AddComponent<DiscordController>();
         }
 
         public void StopCurrentSession()
@@ -183,7 +179,7 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            DiscordRP.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetPlayerCount() + 1, Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetPlayerCount() + 1, Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
     }
 }

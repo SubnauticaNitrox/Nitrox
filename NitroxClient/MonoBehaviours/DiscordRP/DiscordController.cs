@@ -1,82 +1,60 @@
-﻿using NitroxClient.MonoBehaviours.DiscordRP;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-[System.Serializable]
-public class DiscordJoinEvent : UnityEngine.Events.UnityEvent<string> { }
-
-[System.Serializable]
-public class DiscordSpectateEvent : UnityEngine.Events.UnityEvent<string> { }
-
-[System.Serializable]
-public class DiscordJoinRequestEvent : UnityEngine.Events.UnityEvent<DiscordRpc.JoinRequest> { }
-
 namespace NitroxClient.MonoBehaviours.DiscordRP
 {
     public class DiscordController : MonoBehaviour
     {
-        public DiscordRpc.RichPresence Presence;
-        public string ApplicationId = "405122994348752896";
-        public string OptionalSteamId = "264710";
-        private int callbackCalls;
-        public int ClickCounter;
-        public UnityEngine.Events.UnityEvent OnConnect;
-        public UnityEngine.Events.UnityEvent OnDisconnect;
-        public DiscordJoinEvent OnJoin;
-        public DiscordJoinEvent OnSpectate;
-        public DiscordJoinRequestEvent OnJoinRequest;
+        public DiscordRpc.RichPresence Presence = new DiscordRpc.RichPresence();
         public bool ShowingWindow;
 
-        DiscordRpc.JoinRequest lastJoinRequest;
-        DiscordRpc.EventHandlers handlers;
+        private string applicationId = "405122994348752896";
+        private string optionalSteamId = "264710";
+        private string lastJoinRequestUserID;
+        private DiscordRpc.EventHandlers handlers;
+        private static  DiscordController main;
+
+        public static DiscordController Main
+        {
+            get
+            {
+                if(main == null)
+                {
+                    main = new GameObject("DiscordController").AddComponent<DiscordController>();
+                }
+                return main;
+            }
+            private set
+            {
+                main = value;
+            }
+        }
 
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
-        }  
-
-        public int CallbackCalls
-        {
-            get
-            {
-                return callbackCalls;
-            }
-
-            set
-            {
-                callbackCalls = value;
-            }
         }
 
-        public void ReadyCallback()
+        public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
         {
-            ++CallbackCalls;
             Log.Info("Discord: ready");
-            if (OnConnect != null)
-            {
-                OnConnect.Invoke();
-            }
         }
 
         public void DisconnectedCallback(int errorCode, string message)
         {
-            ++CallbackCalls;
             Log.Info(string.Format("Discord: disconnect {0}: {1}", errorCode, message));
-            OnDisconnect.Invoke();
         }
 
         public void ErrorCallback(int errorCode, string message)
         {
-            ++CallbackCalls;
             Log.Error(string.Format("Discord: error {0}: {1}", errorCode, message));
         }
 
         public void JoinCallback(string secret)
         {
-            ++CallbackCalls;
             Log.Info(string.Format("Discord: join ({0})", secret));
             Log.Debug("Discord" + SceneManager.GetActiveScene().name);
             if (SceneManager.GetActiveScene().name == "StartScreen")
@@ -97,26 +75,23 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void SpectateCallback(string secret)
         {
-            ++CallbackCalls;
             Log.Info(string.Format("Discord: spectate ({0})", secret));
-            OnSpectate.Invoke(secret);
         }
 
-        public void RequestCallback(ref DiscordRpc.JoinRequest request)
+        public void RequestCallback(ref DiscordRpc.DiscordUser request)
         {
-            ++CallbackCalls;
             if (!ShowingWindow)
             {
                 Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
                 AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
                 acceptRequest.Request = request;
-                lastJoinRequest = request;
+                lastJoinRequestUserID = request.userId;
                 ShowingWindow = true;
-            } else
+            }
+            else
             {
                 Log.Info("Discord: Request window is allready active.");
             }
-            OnJoinRequest.Invoke(request);
         }
 
         void Update()
@@ -127,9 +102,6 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         void OnEnable()
         {
             Log.Info("Discord: init");
-            CallbackCalls = 0;
-            ShowingWindow = false;
-
             handlers = new DiscordRpc.EventHandlers();
             handlers.readyCallback = ReadyCallback;
             handlers.disconnectedCallback += DisconnectedCallback;
@@ -137,7 +109,9 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             handlers.joinCallback += JoinCallback;
             handlers.spectateCallback += SpectateCallback;
             handlers.requestCallback += RequestCallback;
-            DiscordRpc.Initialize(ApplicationId, ref handlers, true, OptionalSteamId);
+            DiscordRpc.Initialize(applicationId, ref handlers, true, optionalSteamId);
+
+            ShowingWindow = false;
         }
 
         void OnDisable()
@@ -170,15 +144,17 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             SendDRP();
         }
 
-        private void SendDRP() {
+        private void SendDRP()
+        {
             Presence.largeImageKey = "diving";
             Presence.instance = false;
-            DiscordRpc.UpdatePresence(ref Presence);
+            DiscordRpc.UpdatePresence(Presence);
         }
 
         public void RespondLastJoinRequest(int accept)
         {
-            DiscordRpc.Respond(lastJoinRequest.userId, (DiscordRpc.Reply)accept);
+            Log.Info("Discord: responding to Join request => " + (accept.Equals("1") ? "true" : "false"));
+            DiscordRpc.Respond(lastJoinRequestUserID, (DiscordRpc.Reply)accept);
         }
 
         private GameObject FindObject(GameObject parent, string name)

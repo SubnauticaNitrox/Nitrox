@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using NitroxClient.MonoBehaviours.DiscordRP;
 
 namespace NitroxClient.GameLogic
 {
@@ -65,7 +66,7 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
-            Multiplayer.DiscordRP.UpdateDRPDiving(GetPlayerCount() + 1);
+            DiscordController.Main.UpdateDRPDiving(GetPlayerCount() + 1);
             return player;
         }
 
