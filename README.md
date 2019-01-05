@@ -20,13 +20,13 @@ The following milestones have been completed:
 * Most furniture interactions (containers / medkit fabricators / chargers / etc)
 * Power management
 * Seamoth & Exosuit Syncing
-* Basic cyclops syncing
-* Installer
-* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
-* Rudimentary chat system
+* Cyclops syncing
+* Chat system
 * New HUD for remote players
 * Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
+* Friendly Installer
+* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
 
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. There will be issues & bugs which you can refer to the <a href="https://github.com/SubnauticaNitrox/Nitrox/issues">issues tab</a> to reference your issue or comment on a pre-existing issue.
