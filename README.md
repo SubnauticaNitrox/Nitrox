@@ -19,7 +19,7 @@ The following milestones have been completed:
 * Long-range world syncing
 * Base building 
 * Furniture building
-* Most furniture interactions (containers / medkit fabricators / chargers / etc)
+* Most furniture interactions (containers / medkit fabricators / chargers / etc.)
 * Power management
 * Seamoth & Exosuit Syncing
 * Cyclops syncing
@@ -27,6 +27,8 @@ The following milestones have been completed:
 * New HUD for remote players
 * Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
+* Basic command system
+* Server presistance
 * Friendly Installer
 * Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
 
