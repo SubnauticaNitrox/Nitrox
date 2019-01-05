@@ -47,7 +47,6 @@ namespace NitroxServer
         {
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
-            Save();
             udpServer.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
