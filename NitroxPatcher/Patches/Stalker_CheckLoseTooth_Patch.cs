@@ -11,23 +11,19 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(Stalker);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("CheckLoseTooth", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        //GetComponent<HardnessMixin> was returning null for everything instead of a HardnessMixin with a hardness value. Since this component 
+        //isn't used for anything else than the stalker teeth drop, we hard-code the values and bingo.
         public static bool Prefix(Stalker __instance, GameObject target)
         {
-            float hardness = 0f;
+            float dropProbability = 0f;
             TechType techType = CraftData.GetTechType(target);
-            LiveMixin liveMixin = target.GetComponent<LiveMixin>();
             
-            if (techType == TechType.ScrapMetal || techType == TechType.Titanium
-             || techType == TechType.Seamoth || techType == TechType.Exosuit)
+            if (techType == TechType.ScrapMetal)
             {
-                hardness = 0.3f; //15% probability
-            }
-            else if(liveMixin != null && liveMixin.IsAlive())
-            {
-                hardness = 0.1f; //5% probability
+                dropProbability = 0.15f; //15% probability
             }
 
-            if (UnityEngine.Random.value < hardness && UnityEngine.Random.value < 0.5f)
+            if (UnityEngine.Random.value < dropProbability)
             {
                 __instance.ReflectionCall("LoseTooth");
             }
