@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Threading;
 using NitroxModel.Logger;
@@ -36,6 +36,10 @@ namespace NitroxServer
             {
                 CmdProcessor.ProcessCommand(Console.ReadLine());
             }
+            
+            Log.Info("Server's program finished.");
+            Console.WriteLine("PRESS ANY KEY TO CONTINUE...");
+            Console.ReadKey(true);
         }
 
         /**
