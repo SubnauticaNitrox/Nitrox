@@ -84,22 +84,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             WWW avatarURL = new WWW("https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png");
             yield return avatarURL;
 
-            if (avatarURL.texture != null)
+            if (avatarURL.texture != null && avatarURL.texture.height >= 128)
             {
                 avatar = avatarURL.texture;
             }
             else
             {
-                //using (WWW standardAvatarURL = new WWW("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png"))
-                //{
-                //    yield return standardAvatarURL;
-                //    if (standardAvatarURL.texture != null)
-                //    {
-                //        avatar = standardAvatarURL.texture;
-                //    }
-                //}
-            }
+                WWW standardAvatarURL = new WWW("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png");
+                yield return standardAvatarURL;
 
+                if (standardAvatarURL.texture != null)
+                {
+                    avatar = standardAvatarURL.texture;
+                }
+            }
             yield return null;
         }
     }

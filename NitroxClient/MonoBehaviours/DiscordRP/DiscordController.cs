@@ -1,4 +1,6 @@
-﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
+﻿using System.IO;
+using System.Net;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -15,13 +17,13 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         private string optionalSteamId = "264710";
         private string lastJoinRequestUserID;
         private DiscordRpc.EventHandlers handlers;
-        private static  DiscordController main;
+        private static DiscordController main;
 
         public static DiscordController Main
         {
             get
             {
-                if(main == null)
+                if (main == null)
                 {
                     main = new GameObject("DiscordController").AddComponent<DiscordController>();
                 }
@@ -128,7 +130,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             Presence.partyId = username;
             Presence.partySize = playercount;
             Presence.partyMax = 99;
-            Presence.joinSecret = ipAddressPort;
+            Presence.joinSecret = CheckIP(ipAddressPort);
             SendDRP();
         }
 
@@ -169,6 +171,26 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             }
 
             return null;
+        }
+
+        private string CheckIP(string ipPort)
+        {
+            string ip = ipPort.Split(':')[0];
+            string port = ipPort.Split(':')[1];
+
+            if (ip == "127.0.0.1")
+            {
+                WebRequest req = WebRequest.Create("http://checkip.dyndns.org");
+                WebResponse resp = req.GetResponse();
+                StreamReader sr = new StreamReader(resp.GetResponseStream());
+
+                string publicIp = sr.ReadToEnd().Trim().Split(':')[1].Substring(1).Split('<')[0];
+                return publicIp + ":" + port;
+            }
+            else
+            {
+                return ipPort;
+            }
         }
     }
 }

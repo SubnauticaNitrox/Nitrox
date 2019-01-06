@@ -288,7 +288,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="MonoBehaviours\DiscordRP\discord-rpc.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

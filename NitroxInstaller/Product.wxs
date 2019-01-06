@@ -26,6 +26,7 @@
     <MediaTemplate EmbedCab="yes" />
     <Feature Id="ProductFeature" Title="Nitrox_Installer" Level="1">
       <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
+      <ComponentGroupRef Id="SUBNAUTICAMONO_files" />
       <ComponentGroupRef Id="SubServer_Files" />
     </Feature>
     <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
@@ -55,6 +56,8 @@
           </Directory>
           <Directory Id="SubnauticaData" Name="Subnautica_Data">
             <Directory Id="SUBNAUTICAMANAGED" Name="Managed">
+            </Directory>
+            <Directory Id="SUBNAUTICAMONO" Name="Mono">
             </Directory>
           </Directory>
         </Directory>
@@ -97,6 +100,14 @@
       </Component>
       <Component Id="LZ4.dll" Guid="*">
         <File Id="LZ4.dll" Name="LZ4.dll" Source="$(var.NitroxClient_TargetDir)LZ4.dll" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+  
+  <Fragment>
+    <ComponentGroup Id="SUBNAUTICAMONO_files" Directory="SUBNAUTICAMONO">
+      <Component Id="discordRPC.dll" Guid="*">
+        <File Id="discordRPC.dll" Name="discord-rpc.dll" Source="$(var.NitroxClient_TargetDir)MonoBehaviours/DiscordRP/discord-rpc.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>

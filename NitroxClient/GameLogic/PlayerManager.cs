@@ -77,6 +77,7 @@ namespace NitroxClient.GameLogic
             {
                 opPlayer.Get().Destroy();
                 playersById.Remove(playerId);
+                DiscordController.Main.UpdateDRPDiving(GetPlayerCount() + 1);
             }
         }
 
