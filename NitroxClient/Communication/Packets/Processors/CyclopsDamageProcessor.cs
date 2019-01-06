@@ -1,5 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;

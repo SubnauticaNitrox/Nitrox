@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -20,7 +22,7 @@ namespace NitroxPatcher.Patches
             Vector3 spawnPosition = (Vector3)__instance.ReflectionGet("spawnPosition");
             Quaternion spawnRotation = (Quaternion)__instance.ReflectionGet("spawnRotation");
 
-            Multiplayer.Logic.Cyclops.SpawnNew(__instance.GetLastCreatedSub(), spawnPosition, spawnRotation);
+            NitroxServiceLocator.LocateService<Cyclops>().SpawnNew(__instance.GetLastCreatedSub(), spawnPosition, spawnRotation);
         }
 
         public override void Patch(HarmonyInstance harmony)

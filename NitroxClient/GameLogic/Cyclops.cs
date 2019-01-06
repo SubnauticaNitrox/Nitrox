@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -80,8 +80,11 @@ namespace NitroxClient.GameLogic
         public void SpawnNew(GameObject subRoot, Vector3 position, Quaternion rotation)
         {
             string guid = GuidHelper.GetGuid(subRoot.gameObject);
-            VehicleMovement packet = new VehicleMovement(packetSender.PlayerId, position, Vector3.zero, rotation, Vector3.zero, TechType.Cyclops, guid, 0, 0, false);
-            packetSender.Send(packet);
+
+            // TODO: Refactor
+            //VehicleMovement packet = new VehicleMovement(packetSender
+            //VehicleMovement packet = new VehicleMovement(packetSender.PlayerId, position, Vector3.zero, rotation, Vector3.zero, TechType.Cyclops, guid, 0, 0, false);
+            //packetSender.Send(packet);
         }
 
         /// <summary>

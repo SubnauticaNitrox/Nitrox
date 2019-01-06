@@ -68,9 +68,6 @@
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireHealthChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlayerSlotReservationProcessor.cs" />
-    <Compile Include="Communication\ClientBridge.cs" />
-    <Compile Include="Communication\ClientBridgeState.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />

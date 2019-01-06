@@ -39,9 +39,9 @@ namespace NitroxPatcher.Patches
                     && instruction.opcode.Equals(SECOND_INJECTION_OPCODE))
                 {
                     // Multiplayer.Logic.Cyclops.FireCreated(gameObject, DamageInfo, CyclopsRooms)
-
                     yield return new ValidatedCodeInstruction(OpCodes.Ldsfld, typeof(Multiplayer).GetField("Logic", BindingFlags.Static | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Cyclops", BindingFlags.Instance | BindingFlags.Public));
+                    // TODO: Rewrite Logic to new location
+                    // yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Logic).GetMethod("get_Cyclops", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_0);
                     yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
                     yield return new ValidatedCodeInstruction(OpCodes.Ldarg_1);

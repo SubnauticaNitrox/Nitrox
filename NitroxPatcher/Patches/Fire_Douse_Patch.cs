@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,11 +18,11 @@ namespace NitroxPatcher.Patches
         {
             if (!__instance.livemixin.IsAlive() && !__instance.IsExtinguished())
             {
-                Multiplayer.Logic.Cyclops.OnFireDoused(__instance,__instance.fireSubRoot, 10000);
+                NitroxServiceLocator.LocateService<Cyclops>().OnFireDoused(__instance,__instance.fireSubRoot, 10000);
             }
             else
             {
-                Multiplayer.Logic.Cyclops.OnFireDoused(__instance, __instance.fireSubRoot, amount);
+                NitroxServiceLocator.LocateService<Cyclops>().OnFireDoused(__instance, __instance.fireSubRoot, amount);
             }
         }
 
