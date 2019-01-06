@@ -39,6 +39,7 @@ namespace NitroxServer.Communication.Packets.Processors
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
+                                                                       world.PlayerData.currentPlayerFirstConnecting,
                                                                        world.EscapePodData.EscapePods,
                                                                        assignedEscapePodGuid,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),

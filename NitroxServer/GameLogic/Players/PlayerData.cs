@@ -39,6 +39,9 @@ namespace NitroxServer.GameLogic.Players
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
 
+        [ProtoIgnore]
+        public bool currentPlayerFirstConnecting = false;
+
         public Dictionary<string, EquippedItemData> ModulesItemsByGuid = new Dictionary<string, EquippedItemData>();
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
@@ -70,6 +73,11 @@ namespace NitroxServer.GameLogic.Players
 
                 return playerPersistedData.PlayerSpawnData;
             }
+        }
+
+        public void InitPlayerFirstTimeConnecting(string playerName)
+        {
+            currentPlayerFirstConnecting = !playersByPlayerName.ContainsKey(playerName);
         }
 
         public void UpdatePlayerSpawn(string playerName, Vector3 position)
