@@ -1,25 +1,16 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class SignChanged : Packet
     {
-        public string Guid { get; }
-        public string NewText { get; }
-        public int ColorIndex { get; }
-        public int ScaleIndex { get; }
-        public bool[] Elements { get; }
-        public bool Background { get; }
+        public SignMetadata SignMetadata { get; }
 
-        public SignChanged(string guid, string newText, int colorIndex, int scaleIndex, bool[] elements, bool backgroundToggle)
+        public SignChanged(SignMetadata signMetadata)
         {
-            Guid = guid;
-            NewText = newText;
-            ColorIndex = colorIndex;
-            ScaleIndex = scaleIndex;
-            Elements = elements;
-            Background = backgroundToggle;
+            SignMetadata = signMetadata;
         }
     }
 }

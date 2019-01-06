@@ -1,8 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -19,7 +17,8 @@ namespace NitroxClient.GameLogic
         {
             string guid = sign.gameObject.FindAncestor<PrefabIdentifier>().Id;
 
-            SignChanged signChanged = new SignChanged(guid, sign.text, sign.colorIndex, sign.scaleIndex, sign.elementsState, sign.IsBackground());
+            SignMetadata signMetadata = new SignMetadata(guid, sign.text, sign.colorIndex, sign.scaleIndex, sign.elementsState, sign.IsBackground());
+            SignChanged signChanged = new SignChanged(signMetadata);
             packetSender.Send(signChanged);
         }
     }
