@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -10,9 +11,22 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using System.Threading;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
+    public class ServerInfo : IComparable<ServerInfo>
+    {
+        public string Name;
+        public string Address;
+        public int Ping;
+
+        public int CompareTo(ServerInfo other)
+        {
+            return Ping.CompareTo(other.Ping);
+        }
+    }
+
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
         public const string SERVER_LIST_PATH = @".\servers";
@@ -26,8 +40,18 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private string serverHostInput;
         private string serverNameInput;
 
-        private bool shouldFocus;
-        private bool showingAddServer;
+        private bool addServerOnFocus = false;
+        private bool showingAddServer = false;
+
+        private bool onlineServersOnFocus = false;
+        private bool showingOnlineServers = false;
+        private Rect onlineServerWindowRect = new Rect(50, 50, 1000, 600);
+        private string serverListText = "";
+        private List<ServerInfo> serverInfoList = new List<ServerInfo>();
+        private string serverFilter = "";
+        private bool serverLoadFinished = false;
+        private Vector2 scrollPos = new Vector2();
+        private int serverQueryThreadedNum = 0;
 
         public void Awake()
         {
@@ -43,6 +67,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 AddServer("local", "127.0.0.1");
             }
 
+            CreateButton("<color=red>Online Servers</color>", ToggleOnlineServers);
             CreateButton("Add server IP", ShowAddServerWindow);
             LoadSavedServers();
         }
@@ -124,23 +149,32 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             serverNameInput = "local";
             serverHostInput = "127.0.0.1";
             showingAddServer = true;
-            shouldFocus = true;
+            addServerOnFocus = true;
         }
 
         public void HideAddServerWindow()
         {
             showingAddServer = false;
-            shouldFocus = true;
+            addServerOnFocus = true;
+        }
+
+        public void ToggleOnlineServers()
+        {
+            showingOnlineServers = !showingOnlineServers;
+            onlineServersOnFocus = !onlineServersOnFocus;
         }
 
         public void OnGUI()
         {
-            if (!showingAddServer)
+            if (showingAddServer)
             {
-                return;
+                addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
+            }
+            if (showingOnlineServers)
+            {
+                onlineServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), onlineServerWindowRect, DoOnlineServersWindow, "Online Servers");
             }
 
-            addServerWindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), addServerWindowRect, DoAddServerWindow, "Add server");
         }
 
         private void LoadSavedServers()
@@ -219,8 +253,32 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                 s.button.fontSize = 14;
                 s.button.stretchHeight = true;
+                
             });
         }
+
+        private GUISkin GetServerListGUISkin()
+        {
+            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
+            {
+                s.textField.fontSize = 14;
+                s.textField.richText = false;
+                s.textField.alignment = TextAnchor.MiddleLeft;
+                s.textField.wordWrap = false;
+                s.textField.stretchHeight = false;
+                s.textField.padding = new RectOffset(10, 10, 5, 5);
+
+                s.label.fontSize = 14;
+                s.label.alignment = TextAnchor.MiddleLeft;
+                s.label.stretchHeight = false;
+                s.label.wordWrap = false;
+
+                s.button.fontSize = 14;
+                s.button.stretchHeight = false;
+
+            });
+        }
+
 
         private void DoAddServerWindow(int windowId)
         {
@@ -237,6 +295,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         break;
                 }
             }
+
+            GUI.DragWindow(new Rect(0, 0, 500, 20));
 
             GUISkinUtils.RenderWithSkin(GetGUISkin(), () =>
             {
@@ -270,11 +330,210 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             });
 
-            if (shouldFocus)
+            if (addServerOnFocus)
             {
                 GUI.FocusControl("serverNameField");
-                shouldFocus = false;
+                addServerOnFocus = false;
             }
         }
+
+
+        private int checkServerLatency(string serverAddrStr)
+        {
+            string serverAddr = serverAddrStr.Split(':')[0];
+            IPAddress serverIp = null;
+            if (Regex.IsMatch(serverAddr, @"^[:0-9.a-fA-F\[\]]+$"))
+            {
+                serverIp = IPAddress.Parse(serverAddr);
+            }
+            else
+            {
+                serverIp = Dns.GetHostEntry(serverAddr).AddressList[0];
+            }
+            /*
+             * System.Net.NetworkInformation.Ping just does not work here.
+             * It throws errors of IPv6 IPEndPoint and IPv4 socket mismatch problem.
+             * I spent many hours and still unable to solve it
+             * So I will re-implement instead.
+             */
+            Ping ping = null;
+            try
+            {
+                ping = new Ping(serverIp.ToString());
+                while(!ping.isDone)
+                {
+                    Thread.Sleep(50);
+                }
+                Log.Info($"PING ERROR: {ping.ip}  {ping.isDone}  {ping.time}");
+                return (int)ping.time;
+
+            }catch(Exception e)
+            {
+                if(ping != null)
+                {
+                    Log.Error($"PING ERROR: {ping.ip}  {ping.isDone}  {ping.time}");
+                }
+                return 9999;
+            }
+
+        }
+
+        private void checkServerInfoThreaded(string serverStr)
+        {
+            if(serverStr == "" || !serverStr.Contains("|"))
+            {
+                serverQueryThreadedNum -= 1;
+                return;
+            }
+
+            new Thread(new ThreadStart(() =>
+            {
+                while (serverQueryThreadedNum>=20)
+                {
+                    Thread.Sleep(50);
+                }
+                string[] serverInfo = serverStr.TrimEnd('\r').Split('|');
+                ServerInfo info = new ServerInfo();
+                info.Name = serverInfo[0];
+                info.Address = serverInfo[1];
+                info.Ping = checkServerLatency(info.Address);
+                serverQueryThreadedNum -= 1;
+                if (info.Ping == -1)
+                {
+                    return;
+                }
+
+                lock (serverInfoList)
+                {
+                    serverInfoList.Add(info);
+                    serverInfoList.Sort();
+                }
+                
+            })).Start();
+
+        }
+
+
+        private void DoOnlineServersWindow(int windowId)
+        {
+            Event e = Event.current;
+            if (e.isKey)
+            {
+                switch (e.keyCode)
+                {
+                    case KeyCode.Escape:
+                        OnCancelButtonClicked();
+                        break;
+                }
+            }
+
+            GUI.DragWindow(new Rect(0, 0, 1000, 20));
+
+            GUISkinUtils.RenderWithSkin(GetServerListGUISkin(), () =>
+            {
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.Label("Search:", GUILayout.Width(200));
+                        GUI.SetNextControlName("serverFilter");
+                        serverFilter = GUILayout.TextField(serverFilter, 120, GUILayout.Width(400));
+
+                        if (GUILayout.Button("Refresh", GUILayout.Width(100)))
+                        {
+                            serverLoadFinished = false;
+                        }
+                        if (GUILayout.Button("Close", GUILayout.Width(100)))
+                        {
+                            showingOnlineServers = false;
+                        }
+                    }
+
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        GUILayout.Label("Name", GUILayout.Width(400));
+                        GUILayout.Label("Address", GUILayout.Width(300));
+                        GUILayout.Label("Latency", GUILayout.Width(100));
+                        GUILayout.Label("Connect");
+                    }
+
+                    using (var sv = new GUILayout.ScrollViewScope(scrollPos))
+                    {
+                        scrollPos = sv.scrollPosition;
+
+                        if (!serverLoadFinished)
+                        {
+                            if (serverListText == "")
+                            {
+                                // get server list
+                                //serverListText = "QAQ|qaq.link\r\nlocal|127.0.0.1\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link";
+                                try
+                                {
+                                    WebClient MyWebClient = new WebClient();
+                                    MyWebClient.Credentials = CredentialCache.DefaultCredentials;
+                                    // TODO: update the link of server list
+                                    byte[] pageData = MyWebClient.DownloadData("http://nitrox.qaq.link/server");
+                                    serverListText = System.Text.Encoding.UTF8.GetString(pageData);
+                                }
+                                catch(Exception)
+                                {
+                                    serverListText = "";
+                                }
+                            }
+
+                            serverInfoList.Clear();
+
+                            foreach (string i in serverListText.Split('\n'))
+                            {
+                                serverQueryThreadedNum += 1;
+                                checkServerInfoThreaded(i);
+                            }
+                            serverLoadFinished = true;
+                        }
+                        lock (serverInfoList)
+                        { 
+                            foreach (ServerInfo sinfo in serverInfoList)
+                            {
+                                if (serverFilter != "" &&
+                                    sinfo.Name.IndexOf(serverFilter, StringComparison.OrdinalIgnoreCase) < 0 &&
+                                    sinfo.Address.IndexOf(serverFilter, StringComparison.OrdinalIgnoreCase) < 0)
+                                {
+                                    continue;
+                                }
+                                using (new GUILayout.HorizontalScope())
+                                {
+                                    GUILayout.Label(sinfo.Name, GUILayout.Width(400));
+                                    GUILayout.Label(sinfo.Address, GUILayout.Width(300));
+
+                                    string color = "green";
+                                    if (sinfo.Ping < 100)
+                                        color = "green";
+                                    else if (sinfo.Ping < 200)
+                                        color = "yellow";
+                                    else
+                                        color = "red";
+                                    
+                                    if(sinfo.Ping == 9999)
+                                        GUILayout.Label($"<color=red>Unknown</color>", GUILayout.Width(100));
+                                    else
+                                        GUILayout.Label($"<color={color}>{sinfo.Ping}ms</color>", GUILayout.Width(100));
+
+                                    if (GUILayout.Button("Connect"))
+                                    {
+                                        showingOnlineServers = false;
+                                        OpenJoinServerMenu(sinfo.Address);
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+
+                }
+            });
+        }
+
+        
+
     }
 }
