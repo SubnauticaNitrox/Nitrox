@@ -1,14 +1,14 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
-using System.Collections.Generic;
-using UnityEngine;
-using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxClient.GameLogic.Spawning;
+using NitroxModel.Packets;
+using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -25,17 +25,17 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            pickupable.gameObject.transform.SetParent(null); // On Deserialized Function Try to find non-existent Parent set null to prevent that bug
+            pickupable.gameObject.transform.SetParent(owner.transform); // On Deserialized Function Try to find non-existent Parent set null to prevent that bug
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid,childIdentifiers);
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
-            
+
 
             EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
 
@@ -62,7 +62,7 @@ namespace NitroxClient.GameLogic
             EquipmentRemoveItem equipPacket = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, isPlayerEquipment);
             packetSender.Send(equipPacket);
         }
-       
+
         public void AddItems(List<EquippedItemData> equippedItems)
         {
             ItemsContainer container = Inventory.Get().container;
