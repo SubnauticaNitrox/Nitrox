@@ -47,6 +47,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
+            AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
@@ -77,6 +78,21 @@ namespace NitroxClient.Communication.Packets.Processors
             EscapePodModel escapePod = escapePodsData.Find(x => x.Guid == assignedEscapePodGuid);
             escapePodManager.AssignPlayerToEscapePod(escapePod);
             escapePodManager.SyncEscapePodGuids(escapePodsData);
+        }
+
+        private void AddStartingItemsToPlayer(bool firstTimeConnecting)
+        {
+            if (firstTimeConnecting)
+            {
+                foreach (TechType techType in LootSpawner.main.GetEscapePodStorageTechTypes())
+                {
+                    GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
+                    Pickupable pickupable = gameObject.GetComponent<Pickupable>();
+                    pickupable = pickupable.Initialize();
+                    itemContainers.AddItem(pickupable.gameObject, GuidHelper.GetGuid(Player.main.transform.gameObject));
+                    itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
+                }
+            }
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
