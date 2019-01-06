@@ -61,18 +61,19 @@ namespace NitroxClient.GameLogic
         
         private void Spawn(Entity entity, Optional<GameObject> parent)
         {
+            alreadySpawnedGuids.Add(entity.Guid);
+
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
-            alreadySpawnedGuids.Add(entity.Guid);
 
             foreach (Entity childEntity in entity.ChildEntities)
             {
+                alreadySpawnedGuids.Add(childEntity.Guid);
+
                 if (!entitySpawner.SpawnsOwnChildren())
                 {
                     Spawn(childEntity, gameObject);
                 }
-
-                alreadySpawnedGuids.Add(childEntity.Guid);
             }
 
             if (gameObject.IsPresent())
@@ -109,6 +110,11 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error("Entity was already spawned but not found(is it in another chunk?) guid: " + entity.Guid + " " + entity.TechType + " " + entity.ClassId);
             }
+        }
+
+        public bool WasSpawnedByServer(string guid)
+        {
+            return alreadySpawnedGuids.Contains(guid);
         }
 
     }

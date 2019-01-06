@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Threading.Tasks;
 using NitroxModel.Logger;
 
 namespace NitroxServer
@@ -11,14 +10,24 @@ namespace NitroxServer
     {
         public static void PrintServerIps()
         {
-            NetworkInterface[] allInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface eachInterface in allInterfaces)
+            try
             {
-                PrintIfHamachi(eachInterface);
-                PrintIfLan(eachInterface);
-            }
+                NetworkInterface[] allInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface eachInterface in allInterfaces)
+                {
+                    PrintIfHamachi(eachInterface);
+                    PrintIfLan(eachInterface);
+                }
 
-            PrintIfExternal();
+                PrintIfExternal();
+            }
+            catch (Exception ex)
+            {
+                // This is technically an error but will scare most users into thinking the server is not working
+                // generally this can happen on Mac / Wine due to issues fetching networking interfaces.  Simply
+                // ignore as this is not a big deal.  They can look these up themselves.
+                Log.Info("Unable to resolve IP Addresses... you are on your own.");
+            }
         }
 
         private static void PrintIfHamachi(NetworkInterface _interface)
