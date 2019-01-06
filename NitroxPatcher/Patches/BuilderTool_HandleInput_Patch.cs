@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
         public static readonly object INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
-
+        
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);

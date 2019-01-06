@@ -15,7 +15,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
-        public const string SERVER_LIST_PATH = @".\servers";
+        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
