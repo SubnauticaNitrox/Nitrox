@@ -33,7 +33,7 @@ namespace NitroxServer
 
             // If the server is being run in the foreground, accept input for commands.
             // Otherwise if the server is being run in the background, do not.
-            // Timers in Server.cs should block the application thread.
+            // Application does not terminate here, since there's a new foreground thread started in Communication/UdpServer.cs
             if (Environment.UserInteractive)
             {
                 ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
