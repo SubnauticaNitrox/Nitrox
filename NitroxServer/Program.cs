@@ -37,7 +37,7 @@ namespace NitroxServer
                 CmdProcessor.ProcessCommand(Console.ReadLine());
             }
             
-            Log.Info("Server's program finished.");
+            Log.Warn("SERVER HALTED!");
             Console.WriteLine("PRESS ANY KEY TO CONTINUE...");
             Console.ReadKey(true);
         }
