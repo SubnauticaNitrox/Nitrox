@@ -195,7 +195,7 @@ namespace NitroxClient.GameLogic
                 string guid = GuidHelper.GetGuid(vehicle.gameObject);
                 LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
 
-                VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(guid, localPlayer.PlayerName, vehicle.GetPilotingMode());
+                VehicleDestroyed vehicleDestroyed = new VehicleDestroyed(guid, localPlayer.PlayerContext.PlayerName, vehicle.GetPilotingMode());
                 packetSender.Send(vehicleDestroyed);
 
                 // Remove vehicle guid (Detach Player From Vehicle Call OnPilotMode Event if Guid is Empty Dont Send That Event)

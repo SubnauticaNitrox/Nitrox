@@ -1,17 +1,18 @@
 ﻿using System;
 using UnityEngine;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PlayerDeathEvent : Packet
     {
-        public ushort PlayerId { get; }
+        public PlayerContext PlayerContext;
         public Vector3 DeathPosition { get; }
 
-        public PlayerDeathEvent(ushort playerId, Vector3 deathPosition)
+        public PlayerDeathEvent(PlayerContext playerContext, Vector3 deathPosition)
         {
-            PlayerId = playerId;
+            PlayerContext = playerContext;
             DeathPosition = deathPosition;
         }
     }

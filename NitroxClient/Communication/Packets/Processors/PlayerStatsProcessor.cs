@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerStats playerStats)
         {
-            RemotePlayerVitals vitals = vitalsManager.CreateForPlayer(playerStats.PlayerId);
+            RemotePlayerVitals vitals = vitalsManager.CreateForPlayer(playerStats.PlayerContext.PlayerId);
 
             vitals.SetOxygen(playerStats.Oxygen, playerStats.MaxOxygen);
             vitals.SetHealth(playerStats.Health);

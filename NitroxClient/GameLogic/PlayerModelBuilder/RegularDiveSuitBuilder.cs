@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             float playerSaturation;
             float playerVibrance;
 
-            Color.RGBToHSV(player.PlayerSettings.PlayerColor, out playerHue, out playerSaturation, out playerVibrance);
+            Color.RGBToHSV(player.PlayerContext.PlayerSettings.PlayerColor, out playerHue, out playerSaturation, out playerVibrance);
 
             float minVibrance = playerVibrance >= 0.75f
                 ? 23f
