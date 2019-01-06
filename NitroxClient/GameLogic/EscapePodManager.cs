@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -8,70 +7,59 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
-namespace NitroxClient.Communication.Packets.Processors
+namespace NitroxClient.GameLogic
 {
-    public class BroadcastEscapePodsProcessor : ClientPacketProcessor<BroadcastEscapePods>
+    public class EscapePodManager
     {
-        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
-
         private readonly IPacketSender packetSender;
-        private IMultiplayerSession multiplayerSession;
+        private readonly IMultiplayerSession multiplayerSession;
+
+        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
 
-        private string myEscapePodGuid;
+        public string MyEscapePodGuid;
 
-        public BroadcastEscapePodsProcessor(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+        public EscapePodManager(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
         {
             this.packetSender = packetSender;
             this.multiplayerSession = multiplayerSession;
         }
 
-        public override void Process(BroadcastEscapePods packet)
+        public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
-            if (myEscapePodGuid == null)
+            EscapePod.main.transform.position = escapePod.Location;
+            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition;
+
+            Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
+
+            if (rigidbody != null)
             {
-                AssignPlayerToEscapePod(packet);
+                Log.Debug("Freezing escape pod rigidbody");
+                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+            }
+            else
+            {
+                Log.Error("Escape pod did not have a rigid body!");
             }
 
-            SyncEscapePodGuids(packet);
+            Player.main.transform.position = EscapePod.main.playerSpawn.position;
+            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            MyEscapePodGuid = escapePod.Guid;
         }
 
-        private void AssignPlayerToEscapePod(BroadcastEscapePods packet)
+        public void AddNewEscapePod(EscapePodModel escapePod)
         {
-            foreach (EscapePodModel model in packet.EscapePods)
+            if (!escapePodsByGuid.ContainsKey(escapePod.Guid))
             {
-                if (model.AssignedPlayers.Contains(multiplayerSession.Reservation.PlayerId))
-                {
-                    EscapePod.main.transform.position = model.Location;
-                    EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition;
-
-                    Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
-
-                    if (rigidbody != null)
-                    {
-                        Log.Debug("Freezing escape pod rigidbody");
-                        rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-                    }
-                    else
-                    {
-                        Log.Error("Escape pod did not have a rigid body!");
-                    }
-
-                    Player.main.transform.position = EscapePod.main.playerSpawn.position;
-                    Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
-                    myEscapePodGuid = model.Guid;
-                    break;
-                }
+                escapePodsByGuid[escapePod.Guid] = CreateNewEscapePod(escapePod);
             }
         }
 
-        // Done in a coroutine because we want to wait until the escape pod has fully loaded
-        // at the beginning of the game.
-        private void SyncEscapePodGuids(BroadcastEscapePods packet)
+        public void SyncEscapePodGuids(List<EscapePodModel> escapePods)
         {
-            foreach (EscapePodModel model in packet.EscapePods)
+            foreach (EscapePodModel model in escapePods)
             {
                 if (!escapePodsByGuid.ContainsKey(model.Guid))
                 {
@@ -80,13 +68,13 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private GameObject CreateNewEscapePod(EscapePodModel model)
+        public GameObject CreateNewEscapePod(EscapePodModel model)
         {
             SURPRESS_ESCAPE_POD_AWAKE_METHOD = true;
 
             GameObject escapePod;
 
-            if (model.Guid == myEscapePodGuid)
+            if (model.Guid == MyEscapePodGuid)
             {
                 escapePod = EscapePod.main.gameObject;
             }
@@ -96,6 +84,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             escapePod.transform.position = model.Location;
+
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();
 

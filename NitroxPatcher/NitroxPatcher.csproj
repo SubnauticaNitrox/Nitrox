@@ -53,6 +53,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="Patches\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\BaseAddModuleGhost_UpdatePlacement_Patch.cs" />
+    <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
+    <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
@@ -115,9 +117,9 @@
     <Compile Include="Patches\KnownTech_NotifyAdd_Patch.cs" />
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
-    <Compile Include="Patches\Player_OnDestroy_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
     <Compile Include="Patches\uGUI_SignInput_OnDeselect_Patch.cs" />
+    <Compile Include="Patches\Stalker_CheckLoseTooth_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnColorChange_Patch.cs" />
     <Compile Include="Patches\SubNameInput_OnNameChange_Patch.cs" />

@@ -19,13 +19,20 @@ namespace NitroxClient.GameLogic
         public GameObject Body { get; }
         public GameObject PlayerModel { get; }
         public GameObject BodyPrototype { get; }
-        public string PlayerName => multiplayerSession.AuthenticationContext.Username;
-        public PlayerSettings PlayerSettings => multiplayerSession.PlayerSettings;
+        public PlayerContext PlayerContext { get; }
 
         public LocalPlayer(IMultiplayerSession multiplayerSession, IPacketSender packetSender)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
+
+            // get player information
+            string username = this.multiplayerSession.AuthenticationContext.Username;
+            ushort playerid = this.multiplayerSession.Reservation.PlayerId;
+            PlayerSettings settings = this.multiplayerSession.PlayerSettings;
+
+            // encapsulate player info in a PlayerContext so it can be accessed and passed along easily.
+            PlayerContext = new PlayerContext(username, playerid, settings);
 
             Body = Player.main.RequireGameObject("body");
             PlayerModel = Body.RequireGameObject("player_view");
@@ -35,7 +42,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
         {
-            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water);
+            PlayerStats playerStats = new PlayerStats(PlayerContext, oxygen, maxOxygen, health, food, water);
             packetSender.Send(playerStats);
         }
 
@@ -45,11 +52,11 @@ namespace NitroxClient.GameLogic
 
             if (vehicle.IsPresent())
             {
-                movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Get());
+                movement = new VehicleMovement(PlayerContext, vehicle.Get());
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
+                movement = new Movement(PlayerContext, location, velocity, bodyRotation, aimingRotation);
             }
 
             packetSender.Send(movement);
@@ -57,19 +64,19 @@ namespace NitroxClient.GameLogic
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
         {
-            AnimationChangeEvent animEvent = new AnimationChangeEvent(multiplayerSession.Reservation.PlayerId, (int)type, (int)state);
+            AnimationChangeEvent animEvent = new AnimationChangeEvent(PlayerContext, (int)type, (int)state);
             packetSender.Send(animEvent);
         }
 
         public void BroadcastDeath(Vector3 deathPosition)
         {
-            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition);
+            PlayerDeathEvent playerDeath = new PlayerDeathEvent(PlayerContext, deathPosition);
             packetSender.Send(playerDeath);
         }
 
         public void BroadcastSubrootChange(Optional<string> subrootGuid)
         {
-            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootGuid);
+            SubRootChanged packet = new SubRootChanged(PlayerContext, subrootGuid);
             packetSender.Send(packet);
         }
 

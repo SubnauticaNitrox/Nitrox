@@ -6,7 +6,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UWE;
-using NitroxModel.DataStructures.GameLogic.Buildings;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {

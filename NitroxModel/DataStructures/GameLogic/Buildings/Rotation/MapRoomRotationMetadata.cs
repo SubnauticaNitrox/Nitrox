@@ -1,7 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings
+namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract]

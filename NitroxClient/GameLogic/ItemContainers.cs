@@ -27,9 +27,8 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(Pickupable pickupable, Transform ownerTransform)
         {
             string ownerGuid = null;
-
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod";
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
@@ -42,6 +41,7 @@ namespace NitroxClient.GameLogic
             {
                 ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
             }
+
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
             string ownerGuid = null;
 
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
-            bool isEscapePodStorage = ownerTransform.parent.name == "EscapePod";
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
@@ -68,6 +68,7 @@ namespace NitroxClient.GameLogic
             {
                 ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
             }
+
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
             packetSender.Send(remove);

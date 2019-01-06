@@ -12,13 +12,13 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         public void Build(INitroxPlayer player)
         {
             GameObject signalBase = Object.Instantiate(Resources.Load("VFX/xSignal")) as GameObject;
-            signalBase.name = "signal" + player.PlayerName;
+            signalBase.name = "signal" + player.PlayerContext.PlayerName;
             signalBase.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBase.transform.localPosition += new Vector3(0, 0.8f, 0);
             signalBase.transform.SetParent(player.PlayerModel.transform, false);
 
             PingInstance ping = signalBase.GetComponent<PingInstance>();
-            ping.SetLabel("Player " + player.PlayerName);
+            ping.SetLabel("Player " + player.PlayerContext.PlayerName);
             ping.pingType = PingType.Signal;
 
             UpdateLocalPlayerPda(player, ping);
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
             Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>) pingTabEntriesField.GetValue(pingTab);
             uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
-            pingEntry.icon.color = player.PlayerSettings.PlayerColor;
+            pingEntry.icon.color = player.PlayerContext.PlayerSettings.PlayerColor;
 
             GameObject pingEntryGameObject = pingEntry.gameObject;
             pingEntryGameObject.transform.Find("ColorToggle").gameObject.SetActive(false);
@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
 
             MethodInfo setColor = typeof(uGUI_Pings).GetMethod("OnColor", BindingFlags.NonPublic | BindingFlags.Instance);
-            setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerSettings.PlayerColor});
+            setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerContext.PlayerSettings.PlayerColor});
         }
     }
 }

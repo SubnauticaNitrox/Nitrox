@@ -40,14 +40,13 @@ namespace NitroxServer.Communication
 
             NetPeerConfiguration config = BuildNetworkConfig();
             server = new NetServer(config);
-            thread = new Thread(Listen);
+            thread = new Thread(Listen); // thread runs in the foreground
         }
 
         public void Start()
         {
             server.Start();
             thread.Start();
-            
             
             isStopped = false;
         }

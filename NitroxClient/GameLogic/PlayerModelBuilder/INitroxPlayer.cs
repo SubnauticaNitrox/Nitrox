@@ -7,7 +7,6 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
     {
         GameObject Body { get; }
         GameObject PlayerModel { get; }
-        string PlayerName { get; }
-        PlayerSettings PlayerSettings { get; }
+        PlayerContext PlayerContext { get; }
     }
 }

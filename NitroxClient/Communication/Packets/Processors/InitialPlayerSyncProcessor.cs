@@ -15,6 +15,8 @@ using System.Reflection;
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Spawning;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxClient.GameLogic.Bases.Metadata;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -27,8 +29,9 @@ namespace NitroxClient.Communication.Packets.Processors
         private readonly EquipmentSlots equipment;
         private readonly PlayerManager remotePlayerManager;
         private readonly Entities entities;
+        private readonly EscapePodManager escapePodManager;
 
-        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue, Vehicles vehicles, ItemContainers itemContainers, EquipmentSlots equipment, PlayerManager remotePlayerManager, Entities entities, EscapePodManager escapePodManager)
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
@@ -37,10 +40,12 @@ namespace NitroxClient.Communication.Packets.Processors
             this.equipment = equipment;
             this.remotePlayerManager = remotePlayerManager;
             this.entities = entities;
+            this.escapePodManager = escapePodManager;
         }
 
         public override void Process(InitialPlayerSync packet)
         {
+            SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
@@ -58,12 +63,20 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
+            AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
         }
 
         private void SpawnGlobalRootEntities(List<Entity> globalRootEntities)
         {
             Log.Info("Received initial sync packet with " + globalRootEntities.Count + " global root entities");
             entities.Spawn(globalRootEntities);
+        }
+
+        private void SetEscapePodInfo(List<EscapePodModel> escapePodsData, string assignedEscapePodGuid)
+        {
+            EscapePodModel escapePod = escapePodsData.Find(x => x.Guid == assignedEscapePodGuid);
+            escapePodManager.AssignPlayerToEscapePod(escapePod);
+            escapePodManager.SyncEscapePodGuids(escapePodsData);
         }
 
         private void SetPDALog(List<PDALogEntry> logEntries)
@@ -398,6 +411,54 @@ namespace NitroxClient.Communication.Packets.Processors
                             Log.Error("Could not spawn remote player into subroot with guid: " + playerData.SubRootGuid.Get());
                         }
                     }
+                }
+            }
+        }
+
+        private void AssignBasePieceMetadataAfterBuildingsComplete(List<BasePiece> basePieces)
+        {
+            if(basePieces.Count == 0)
+            {
+                // No base pieces means no meta data to assign
+                return;
+            }
+
+            Dictionary<string, BasePieceMetadata> metadataByBasePieceGuid = new Dictionary<string, BasePieceMetadata>();
+            
+            foreach(BasePiece basePiece in basePieces)
+            {
+                if(basePiece.Metadata.IsPresent())
+                {
+                    metadataByBasePieceGuid.Add(basePiece.Guid, basePiece.Metadata.Get());
+                }
+            }
+            
+            Log.Info("Received initial sync packet with " + metadataByBasePieceGuid.Count + " base piece meta data");
+
+            BasePieceMetadataAssigner metadataAssigner = new BasePieceMetadataAssigner(metadataByBasePieceGuid);
+            ThrottledBuilder.main.QueueDrained += metadataAssigner.AssignBasePieceMetadata;
+        }
+
+        private class BasePieceMetadataAssigner
+        {
+            private Dictionary<string, BasePieceMetadata> metadataByBasePieceGuid;
+
+            public BasePieceMetadataAssigner(Dictionary<string, BasePieceMetadata> metadataByBasePieceGuid)
+            {
+                this.metadataByBasePieceGuid = metadataByBasePieceGuid;
+            }
+
+            public void AssignBasePieceMetadata(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= AssignBasePieceMetadata;
+
+                foreach (KeyValuePair<string, BasePieceMetadata> guidWithMetadata in metadataByBasePieceGuid)
+                {
+                    string guid = guidWithMetadata.Key;
+                    BasePieceMetadata metadata = guidWithMetadata.Value;
+                    
+                    BasePieceMetadataProcessor metadataProcessor = BasePieceMetadataProcessor.FromMetaData(metadata);
+                    metadataProcessor.UpdateMetadata(guid, metadata);
                 }
             }
         }
