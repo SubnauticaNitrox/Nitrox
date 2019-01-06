@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             string msg = string.Join(" ", packet.CmdArgs);
 
-            if (playerData.Permissions(player.Name) >= Perms.Admin)
+            if (playerData.GetPermissions(player.Name) >= Perms.Admin)
             {
                 cmdProcessor.ProcessCommand(msg);
             }

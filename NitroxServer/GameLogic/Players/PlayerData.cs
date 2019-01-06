@@ -52,7 +52,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public ushort PlayerId(string playerName)
+        public ushort GetPlayerId(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -62,7 +62,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Vector3 PlayerSpawn(string playerName)
+        public Vector3 GetPlayerSpawn(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -80,7 +80,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Perms Permissions(string playerName)
+        public Perms GetPermissions(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -114,7 +114,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public void PlayerStats(string playerName, PlayerStats statsData)
+        public void SetPlayerStats(string playerName, PlayerStats statsData)
         {
             lock (playersByPlayerName)
             {
@@ -123,7 +123,7 @@ namespace NitroxServer.GameLogic.Players
                 playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
             }
         }
-        public PlayerStatsData Stats(string playerName)
+        public PlayerStatsData GetPlayerStats(string playerName)
         {
             lock (playersByPlayerName)
             {
