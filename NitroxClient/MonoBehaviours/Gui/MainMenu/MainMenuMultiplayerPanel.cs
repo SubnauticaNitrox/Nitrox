@@ -23,13 +23,20 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public int CompareTo(ServerInfo other)
         {
-            return Ping.CompareTo(other.Ping);
+            if(Ping == other.Ping)
+            {
+                return Name.CompareTo(other.Name);
+            }
+            else
+            {
+                return Ping.CompareTo(other.Ping);
+            }
         }
     }
 
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
-        public const string SERVER_LIST_PATH = @".\servers";
+        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
@@ -364,15 +371,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     Thread.Sleep(50);
                 }
-                Log.Info($"PING ERROR: {ping.ip}  {ping.isDone}  {ping.time}");
                 return (int)ping.time;
 
-            }catch(Exception e)
+            }catch(Exception)
             {
-                if(ping != null)
-                {
-                    Log.Error($"PING ERROR: {ping.ip}  {ping.isDone}  {ping.time}");
-                }
                 return 9999;
             }
 
@@ -435,7 +437,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("Search:", GUILayout.Width(200));
+                        GUILayout.Label(" Search:", GUILayout.Width(200));
                         GUI.SetNextControlName("serverFilter");
                         serverFilter = GUILayout.TextField(serverFilter, 120, GUILayout.Width(400));
 
@@ -451,10 +453,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     using (new GUILayout.HorizontalScope())
                     {
-                        GUILayout.Label("Name", GUILayout.Width(400));
-                        GUILayout.Label("Address", GUILayout.Width(300));
-                        GUILayout.Label("Latency", GUILayout.Width(100));
-                        GUILayout.Label("Connect");
+                        GUILayout.Label(" Server Name", GUILayout.Width(400));
+                        GUILayout.Label(" Server Address", GUILayout.Width(300));
+                        GUILayout.Label(" Latency", GUILayout.Width(100));
+                        GUILayout.Label(" Connect");
                     }
 
                     using (var sv = new GUILayout.ScrollViewScope(scrollPos))
@@ -465,8 +467,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         {
                             if (serverListText == "")
                             {
-                                // get server list
-                                //serverListText = "QAQ|qaq.link\r\nlocal|127.0.0.1\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link\r\nQAQ|qaq.link";
                                 try
                                 {
                                     WebClient MyWebClient = new WebClient();
