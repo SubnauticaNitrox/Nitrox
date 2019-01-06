@@ -24,7 +24,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
         {
-            Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
+            bool wasBrandNewPlayer;
+            Player player = playerManager.CreatePlayer(connection, packet.ReservationKey, out wasBrandNewPlayer);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
             Optional<EscapePodModel> newlyCreatedEscapePod;
@@ -39,7 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
-                                                                       world.PlayerData.currentPlayerFirstConnecting,
+                                                                       wasBrandNewPlayer,
                                                                        world.EscapePodData.EscapePods,
                                                                        assignedEscapePodGuid,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
