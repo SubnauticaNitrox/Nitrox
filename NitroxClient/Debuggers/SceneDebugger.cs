@@ -17,6 +17,8 @@ namespace NitroxClient.Debuggers
 {
     public class SceneDebugger : BaseDebugger
     {
+        public readonly KeyCode RayCastKey = KeyCode.F9;
+
         private Vector2 gameObjectScrollPos;
         private Vector2 hierarchyScrollPos;
         private Vector2 monoBehaviourScrollPos;
@@ -39,6 +41,26 @@ namespace NitroxClient.Debuggers
             AddTab("Hierarchy", RenderTabHierarchy);
             AddTab("GameObject", RenderTabGameObject);
             AddTab("MonoBehaviour", RenderTabMonoBehaviour);
+        }
+
+        public override void Update()
+        {
+            if (Input.GetKeyDown(RayCastKey))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit[] hits = Physics.RaycastAll(ray, float.MaxValue, int.MaxValue);
+                
+                foreach (RaycastHit hit in hits)
+                {
+                    // Not using the player layer mask as we should be able to hit remote players.  Simply filter local player.
+                    if (hit.transform.gameObject.name != "Player")
+                    {
+                        selectedObject = hit.transform.gameObject;
+                        ActiveTab = GetTab("Hierarchy").Get();
+                        break;
+                    }
+                }
+            }
         }
 
         protected override void OnSetSkin(GUISkin skin)
@@ -540,6 +562,7 @@ namespace NitroxClient.Debuggers
                 }
             }
             return childNumber;
-        }
+        }        
+
     }
 }

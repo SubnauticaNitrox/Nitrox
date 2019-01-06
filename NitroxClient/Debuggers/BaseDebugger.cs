@@ -111,6 +111,11 @@ namespace NitroxClient.Debuggers
             return Optional<DebuggerTab>.OfNullable(tab);
         }
 
+        public virtual void Update()
+        {
+            // Defaults to a no-op but can be overriden
+        }
+
         /// <summary>
         /// Call this inside a <see cref="MonoBehaviour.OnGUI"/> method.
         /// </summary>
