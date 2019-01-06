@@ -17,9 +17,34 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class ServerInfo : IComparable<ServerInfo>
     {
-        public string Name;
-        public string Address;
-        public int Ping;
+        private bool _isValid = false;
+        public bool IsValid { get { return _isValid; } set { } }
+
+        public readonly string Name;      // title
+        public readonly string Address;   // domain or ip. directly from serverStr
+
+        // LAZY LOAD
+
+        // only domain name. no port
+        private string _host = null;
+        public string Host { get { if(_host == null) LazyLoad(); return _host; } }
+
+        // parsed ip address
+        private string _ip = null;
+        public string Ip { get { if (_ip == null) LazyLoad(); return _ip; } }
+        
+        private int _port = 0;
+        public int Port { get { if (_port == 0) LazyLoad(); return _port; } }
+
+        public int _ping = -1;  // do not use 0 here. because localhost = 0 and it is corrent
+        public int Ping { get { if (_ping == -1) UpdateLatency(); return _ping; }  set { _ping = value; } }
+
+        public ServerInfo(string serverStr)
+        {
+            string[] lineData = serverStr.Split('|');
+            Name = lineData[0];
+            Address = lineData[1];
+        }
 
         public int CompareTo(ServerInfo other)
         {
@@ -30,6 +55,78 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             else
             {
                 return Ping.CompareTo(other.Ping);
+            }
+        }
+
+        private void LazyLoad()
+        {
+            try
+            {
+                if (Regex.IsMatch(Address, @"^[:0-9.a-fA-F\[\]]+$")) // IPv.4  or  IPv.4:port  or  [IPv:6] or [IPv:6]:port
+                {
+                    if (Address.Contains('[') && Address.Contains(':') && Address.Contains(']')) // IPv6
+                    {
+                        _ip = Address.Substring(0, Address.IndexOf("]") + 1);
+                        _host = _ip;
+                        if (!int.TryParse(Address.Substring(Address.IndexOf("]") + 2), out _port)) // try to parse empty if no port specified
+                        {
+                            _port = 11000;
+                        }
+                    }
+                    else  // IPv4
+                    {
+                        string[] ip_port = Address.Split(':');
+                        _ip = ip_port[0];
+                        _host = _ip;
+                        if (ip_port.Length > 1 && (!int.TryParse(ip_port[1], out _port)))
+                        {
+                            _port = 11000;
+                        }
+                    }
+
+                }
+                else
+                {
+                    string[] host_port = Address.Split(':');
+                    _host = host_port[0];
+                    _ip = Dns.GetHostEntry(_host).AddressList[0].ToString();
+                    if (host_port.Length > 1 && (!int.TryParse(host_port[1], out _port)))
+                    {
+                        _port = 11000;
+                    }
+                }
+
+                // last check
+                if(_port <= 0 || _port >= 65535)
+                {
+                    _port = 11000;
+                }
+                _isValid = true;
+
+            }
+            catch (Exception e)
+            {
+                Log.Error("Failed to parse server " + Address);
+                _isValid = false;
+            }
+        }
+
+        public void UpdateLatency()
+        {
+            Ping ping = null;
+            try
+            {
+                ping = new Ping(Ip);
+                while (!ping.isDone)
+                {
+                    Thread.Sleep(50);
+                }
+                _ping = ping.time;
+
+            }
+            catch (Exception)
+            {
+                _ping = 9999;
             }
         }
     }
@@ -91,7 +188,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
         }
 
-        public void CreateServerButton(string text, string joinIp)
+        public void CreateServerButton(string text, ServerInfo sinfo)
         {
             GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
@@ -100,7 +197,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             DestroyObject(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
+            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(sinfo));
             multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
@@ -108,7 +205,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             deleteButtonButton.onClick = new Button.ButtonClickedEvent();
             deleteButtonButton.onClick.AddListener(() =>
             {
-                RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 1);
+                RemoveServer(multiplayerButtonInst.transform.GetSiblingIndex() - 2);
                 Destroy(multiplayerButtonInst);
             });
             delete.transform.SetParent(multiplayerButtonInst.transform, false);
@@ -129,7 +226,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             File.WriteAllLines(SERVER_LIST_PATH, serverLines.ToArray());
         }
 
-        public void OpenJoinServerMenu(string serverIp)
+        public void OpenJoinServerMenu(ServerInfo serverInfo)
         {
             NitroxServiceLocator.BeginNewLifetimeScope();
 
@@ -140,15 +237,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
+            joinServerComponent.ServerIp = serverInfo.Ip;
+            joinServerComponent.serverPort = serverInfo.Port;
 
-            if (Regex.IsMatch(serverIp, "^[0-9.:]+$"))
-            {
-                ResolveIpv4(joinServerComponent, serverIp);
-            }
-            else
-            {
-                ResolveHostName(joinServerComponent, serverIp);
-            }
         }
 
         public void ShowAddServerWindow()
@@ -191,49 +282,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    string[] lineData = line.Split('|');
-                    string serverName = lineData[0];
-                    string serverIp = lineData[1];
-                    CreateServerButton($"Connect to <b>{serverName}</b>\n{serverIp}", serverIp);
+                    ServerInfo sinfo = new ServerInfo(line);
+                    CreateServerButton($"Connect to <b>{sinfo.Name}</b>\n{sinfo.Address}", sinfo);
                 }
             }
         }
 
-        private void ResolveHostName(JoinServer joinServerComponent, string serverIp)
-        {
-            try
-            {
-                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
-                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
-                joinServerComponent.serverPort = 11000;
-            }
-            catch (SocketException e)
-            {
-                Log.Error($"Unable to resolve the address: {serverIp}");
-                Log.Error(e.ToString());
-            }
-        }
-
-        private void ResolveIpv4(JoinServer joinServerComponent, string serverIp)
-        {
-            char seperator = ':';
-            if (serverIp.Contains(seperator))
-            {
-                string[] splitIP = serverIp.Split(seperator);
-                joinServerComponent.ServerIp = splitIP[0];
-                joinServerComponent.serverPort = int.Parse(splitIP[1]);
-            }
-            else
-            {
-                joinServerComponent.ServerIp = serverIp;
-                joinServerComponent.serverPort = 11000;
-            }
-        }
 
         private void OnAddServerButtonClicked()
         {
             AddServer(serverNameInput, serverHostInput);
-            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
+            CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}", new ServerInfo($"{serverNameInput}|{serverHostInput}"));
             HideAddServerWindow();
         }
 
@@ -266,7 +325,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private GUISkin GetServerListGUISkin()
         {
-            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
+            return GUISkinUtils.RegisterDerivedOnce("menus.serverlist", s =>
             {
                 s.textField.fontSize = 14;
                 s.textField.richText = false;
@@ -343,42 +402,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 addServerOnFocus = false;
             }
         }
-
-
-        private int checkServerLatency(string serverAddrStr)
-        {
-            string serverAddr = serverAddrStr.Split(':')[0];
-            IPAddress serverIp = null;
-            if (Regex.IsMatch(serverAddr, @"^[:0-9.a-fA-F\[\]]+$"))
-            {
-                serverIp = IPAddress.Parse(serverAddr);
-            }
-            else
-            {
-                serverIp = Dns.GetHostEntry(serverAddr).AddressList[0];
-            }
-            /*
-             * System.Net.NetworkInformation.Ping just does not work here.
-             * It throws errors of IPv6 IPEndPoint and IPv4 socket mismatch problem.
-             * I spent many hours and still unable to solve it
-             * So I will re-implement instead.
-             */
-            Ping ping = null;
-            try
-            {
-                ping = new Ping(serverIp.ToString());
-                while(!ping.isDone)
-                {
-                    Thread.Sleep(50);
-                }
-                return (int)ping.time;
-
-            }catch(Exception)
-            {
-                return 9999;
-            }
-
-        }
+        
 
         private void checkServerInfoThreaded(string serverStr)
         {
@@ -394,17 +418,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     Thread.Sleep(50);
                 }
-                string[] serverInfo = serverStr.TrimEnd('\r').Split('|');
-                ServerInfo info = new ServerInfo();
-                info.Name = serverInfo[0];
-                info.Address = serverInfo[1];
-                info.Ping = checkServerLatency(info.Address);
+                ServerInfo info = new ServerInfo(serverStr.TrimEnd('\r'));
+                info.UpdateLatency();
                 serverQueryThreadedNum -= 1;
                 if (info.Ping == -1)
                 {
                     return;
                 }
-
                 lock (serverInfoList)
                 {
                     serverInfoList.Add(info);
@@ -521,7 +541,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                                     if (GUILayout.Button("Connect"))
                                     {
                                         showingOnlineServers = false;
-                                        OpenJoinServerMenu(sinfo.Address);
+                                        OpenJoinServerMenu(sinfo);
                                     }
                                 }
 
