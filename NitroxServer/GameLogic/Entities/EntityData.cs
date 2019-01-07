@@ -62,12 +62,19 @@ namespace NitroxServer.GameLogic.Entities
             {
                 entitiesByGuid.Add(entity.Guid, entity);
             }
-
+            
             if (entity.ExistsInGlobalRoot)
             {
                 lock (globalRootEntitiesByGuid)
                 {
-                    globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    {
+                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                    }
+                    else
+                    {
+                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType.AsString());
+                    }
                 }
             }
             else
@@ -88,9 +95,45 @@ namespace NitroxServer.GameLogic.Entities
 
         public void RemoveEntity(string guid)
         {
+            Entity entity = null;
+
             lock (entitiesByGuid)
             {
-                entitiesByGuid.Remove(guid);
+                entitiesByGuid.TryGetValue(guid, out entity);
+                entitiesByGuid.Remove(guid);                
+            }
+
+            if (entity != null)
+            {
+                if(entity.ExistsInGlobalRoot)
+                {
+                    RemoveEntityFromGlobalRoot(guid);
+                }
+                else
+                {
+                    RemoveEntityFromCell(entity);
+                }
+            }
+        }
+
+        private void RemoveEntityFromGlobalRoot(string guid)
+        {
+            lock (globalRootEntitiesByGuid)
+            {
+                globalRootEntitiesByGuid.Remove(guid);
+            }
+        }
+
+        private void RemoveEntityFromCell(Entity entity)
+        {
+            lock (phasingEntitiesByAbsoluteCell)
+            {
+                List<Entity> entities;
+
+                if(phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out entities))
+                {
+                    entities.Remove(entity);
+                }
             }
         }
 

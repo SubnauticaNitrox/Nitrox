@@ -90,7 +90,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\ClientPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\InitialPlayerSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\AnimationProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\BroadcastEscapePodsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\AddEscapePodProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
@@ -153,6 +153,10 @@
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
     <Compile Include="GameLogic\AI.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\NoOpBasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\BasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\GenericBasePieceMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Metadata\SignMetadataProcessor.cs" />
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\Chat.cs" />
@@ -164,6 +168,7 @@
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
+    <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\Helper\VehicleChildObjectIdentifierHelper.cs" />
     <Compile Include="GameLogic\HUD\DenyOwnershipHand.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />

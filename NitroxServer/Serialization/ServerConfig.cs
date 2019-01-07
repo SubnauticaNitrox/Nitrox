@@ -10,6 +10,8 @@ namespace NitroxServer.ConfigParser
         private const string MAX_CONNECTIONS_SETTING = "MaxConnections";
         private const int DEFAULT_SERVER_PORT = 11000;
         private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
+        private const int DEFAULT_SAVE_INTERVAL = 60000;
+        private const string DEFAULT_SAVE_SETTING = "SaveInterval";
 
         private int? _serverPort = null;
         public int ServerPort
@@ -36,6 +38,20 @@ namespace NitroxServer.ConfigParser
                     _maxConnections = configValue;
                 }
                 return _maxConnections ?? MAX_CONNECTIONS;
+            }
+        }
+
+        private int? _saveInterval = null;
+        public int SaveInterval
+        {
+            get
+            {
+                int configValue;
+                if (_saveInterval == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SAVE_SETTING], out configValue))
+                {
+                    _saveInterval = configValue;
+                }
+                return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
             }
         }
     }

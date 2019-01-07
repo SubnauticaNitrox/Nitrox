@@ -9,6 +9,7 @@ namespace NitroxClient.MonoBehaviours
     public class NitroxDebugManager : MonoBehaviour
     {
         public readonly KeyCode EnableDebuggerHotkey = KeyCode.F7;
+
         public readonly List<BaseDebugger> Debuggers;
         private readonly HashSet<BaseDebugger> prevActiveDebuggers = new HashSet<BaseDebugger>();
         private bool isDebugging;
@@ -55,6 +56,14 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 CheckDebuggerHotkeys();
+
+                foreach (BaseDebugger debugger in Debuggers)
+                {
+                    if (debugger.Enabled)
+                    {
+                        debugger.Update();
+                    }
+                }
             }
         }
 

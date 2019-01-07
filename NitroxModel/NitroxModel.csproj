@@ -60,9 +60,11 @@
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\MapRoomRotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\CorridorRotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\RotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Metadata\SignMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\MapRoomRotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\CorridorRotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
@@ -108,7 +110,7 @@
     <Compile Include="MultiplayerSession\PlayerSettings.cs" />
     <Compile Include="MultiplayerSession\RandomColorGenerator.cs" />
     <Compile Include="Packets\AnimationChangeEvent.cs" />
-    <Compile Include="Packets\BroadcastEscapePods.cs" />
+    <Compile Include="Packets\AddEscapePod.cs" />
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
@@ -196,6 +198,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -23,19 +24,25 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
         {
-            Player player = playerManager.CreatePlayer(connection, packet.ReservationKey);
+            bool wasBrandNewPlayer;
+            Player player = playerManager.CreatePlayer(connection, packet.ReservationKey, out wasBrandNewPlayer);
             player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
 
-
-            world.EscapePodManager.AssignPlayerToEscapePod(player.Id);
-
-            BroadcastEscapePods broadcastEscapePods = new BroadcastEscapePods(world.EscapePodManager.GetEscapePods());
-            playerManager.SendPacketToAllPlayers(broadcastEscapePods);
-
+            Optional<EscapePodModel> newlyCreatedEscapePod;
+            string assignedEscapePodGuid = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
+            if(newlyCreatedEscapePod.IsPresent())
+            {
+                AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Get());
+                playerManager.SendPacketToOtherPlayers(addEscapePod, player);
+            }
+            
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
+                                                                       wasBrandNewPlayer,
+                                                                       world.EscapePodData.EscapePods,
+                                                                       assignedEscapePodGuid,
                                                                        world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),

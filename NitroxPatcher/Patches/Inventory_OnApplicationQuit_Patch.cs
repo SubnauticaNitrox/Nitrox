@@ -10,10 +10,10 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
-    public class Player_OnDestroy_Patch : NitroxPatch
+    public class Inventory_OnApplicationQuit_Patch : NitroxPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Player);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnDestroy", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly Type TARGET_CLASS = typeof(Inventory);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnApplicationQuit", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Prefix()
         {
