@@ -16,6 +16,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         // simple parse
         public readonly string Name;      // title
         public readonly string Address;   // domain or ip. directly from serverStr
+        public readonly int PlayerNum;
 
         // LAZY LOAD considering network latency
         public string Host { get { if(_host == null) LazyLoad(); return _host; } }
@@ -33,15 +34,24 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public ServerInfo(string serverStr)
         {
             string[] lineData = serverStr.Split('|');
-            if(lineData.Length == 1)
+            if (lineData.Length == 1) // suppose this is pure address
             {
-                Name = "";
                 Address = lineData[0].Trim();
+                Name = Address;
+                PlayerNum = -1;
+            }
+            else if (lineData.Length == 2)
+            {
+                Name = lineData[0];
+                Address = lineData[1].Trim();
+                PlayerNum = -1;
             }
             else
             {
                 Name = lineData[0];
                 Address = lineData[1].Trim();
+                if (!int.TryParse(lineData[2], out PlayerNum))
+                    PlayerNum = -1;
             }
         }
 

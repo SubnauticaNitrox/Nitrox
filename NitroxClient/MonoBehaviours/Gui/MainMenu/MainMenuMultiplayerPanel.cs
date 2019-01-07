@@ -359,7 +359,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     using (new GUILayout.HorizontalScope())
                     {
                         GUILayout.Label(" Server Name", GUILayout.Width(400));
-                        GUILayout.Label(" Server Address", GUILayout.Width(300));
+                        GUILayout.Label(" Server Address", GUILayout.Width(200));
+                        GUILayout.Label(" # Players", GUILayout.Width(100));
                         GUILayout.Label(" Latency", GUILayout.Width(100));
                         GUILayout.Label(" Connect");
                     }
@@ -407,7 +408,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                                 using (new GUILayout.HorizontalScope())
                                 {
                                     GUILayout.Label(sinfo.Name, GUILayout.Width(400));
-                                    GUILayout.Label(sinfo.Address, GUILayout.Width(300));
+                                    GUILayout.Label(sinfo.Address, GUILayout.Width(200));
+                                    string playernum_text = sinfo.PlayerNum == -1 ? "Unknown" : sinfo.PlayerNum.ToString();
+                                    GUILayout.Label($"<color=blue><b>{playernum_text}</b></color>", GUILayout.Width(100));
 
                                     string color = "green";
                                     if (sinfo.Ping < 100)

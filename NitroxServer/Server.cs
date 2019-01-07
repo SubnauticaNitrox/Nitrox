@@ -37,7 +37,7 @@ namespace NitroxServer
             saveTimer.Elapsed += delegate { Save(); };
             
             pingTimer = new Timer();
-            pingTimer.Interval = 600000;
+            pingTimer.Interval = 10*60*1000;
             pingTimer.AutoReset = true;
             pingTimer.Elapsed += delegate { Ping(true); };
 
@@ -98,14 +98,14 @@ namespace NitroxServer
                     if (externalIP == null || externalIP == "") return;
 
                     string broadcastServerName = serverConfig.BroadcastServerName == "" ? externalIP : serverConfig.BroadcastServerName;
-                    string escaped_serverinfo = System.Uri.EscapeDataString($"{broadcastServerName}|{externalIP}:{serverConfig.ServerPort}");
-                    string notifyurl = $"{serverInfoApi}/{op}/{pingerGUID}/{escaped_serverinfo}/{playerNum}";
+                    string escaped_serverinfo = System.Uri.EscapeDataString($"{broadcastServerName}|{externalIP}:{serverConfig.ServerPort}|{playerNum}");
+                    string notifyurl = $"{serverInfoApi}/{op}/{pingerGUID}/{escaped_serverinfo}";
                     try
                     {
                         string ret = client.DownloadString(new System.Uri(notifyurl));
                         Log.Info("Broadcast Server: " + ret);
                     }
-                    catch { Log.Error("Failed to connect to broadcast server"); }
+                    catch { Log.Error("Broadcast server error"); }
                 }
             }).Start();
         }

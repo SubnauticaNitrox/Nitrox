@@ -81,7 +81,10 @@ namespace NitroxServer.ConfigParser
             {
                 if(_broadcastServerName == null)
                 {
-                    _broadcastServerName = ConfigurationManager.AppSettings[BROADCAST_SERVER_NAME_SETTING];
+                    _broadcastServerName = ConfigurationManager.AppSettings[BROADCAST_SERVER_NAME_SETTING]
+                        .Replace("|", "")
+                        .Replace("\r", "")
+                        .Replace("\n", "");
                 }
                 return _broadcastServerName;
             }
