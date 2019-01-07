@@ -10,6 +10,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -503,7 +504,18 @@ namespace NitroxClient.Debuggers
                         // TODO: Allow methods with parameters to be called.
                         if (!method.GetParameters().Any())
                         {
-                            GUILayout.Button("Invoke");
+                            if (GUILayout.Button("Invoke"))
+                            {
+                                object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
+                                if (result != null)
+                                {
+                                    Log.Info($"Invoked method {method.Name} which returned result: '{result}'.");
+                                }
+                                else
+                                {
+                                    Log.Info($"Invoked method {method.Name}. Return value was NULL.");
+                                }
+                            }
                         }
                     }
                 }
