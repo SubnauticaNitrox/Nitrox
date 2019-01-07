@@ -86,7 +86,7 @@ namespace NitroxServer
                         {
                             try
                             {
-                                externalIP = client.DownloadString(new System.Uri("http://ipv6bot.whatismyipaddress.com/"));
+                                externalIP = '[' + client.DownloadString(new System.Uri("http://ipv6bot.whatismyipaddress.com/")) + "]";
                             }
                             catch
                             {
