@@ -47,11 +47,11 @@ namespace NitroxServer.ConfigParser
             get
             {
                 int configValue;
-                if (_saveInterval == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SAVE_SETTING], out configValue))
+                if (_saveInterval == null && Int32.TryParse(Properties.ServerSessionSettings.Default.SaveInterval, out configValue))
                 {
                     _saveInterval = configValue;
                 }
-                return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
+                return _saveInterval * 1000 ?? DEFAULT_SAVE_INTERVAL;
             }
         }
     }

@@ -171,6 +171,21 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void OnJoinClick()
         {
+
+        }
+
+        private void OnLoginClick()
+        {
+
+        }
+
+        private void OnRegisterClick()
+        {
+
+        }
+
+        private void OnLoginSuccess()
+        {
             Text playerNameText = playerSettingsPanel.RequireTransform("InputField/Text").GetComponent<Text>();
 
             string playerName = playerNameText.text;
@@ -191,6 +206,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             AuthenticationContext authenticationContext = new AuthenticationContext(playerName);
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);
+        }
+
+        private void OnLoginFail()
+        {
+
         }
 
         private void SetCurrentPreference(string playerName, Color playerColor)
@@ -324,7 +344,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             InitializePlayerSettingsPanelElement(joinServerBackground, playerSettingsPanel);
             InitializeBaseTabElement(joinServerBackground, playerSettingsPanel);
             InitializeLowerDetailElement(playerSettingsPanel);
-            InitializePlayerNameInputElement(playerSettingsPanel);
+            InitializeUserLogin_RegisterForm(playerSettingsPanel);
             InitializeColorPickerComponent(playerSettingsPanel);
             InitializeColorPickerElement(playerSettingsPanel);
             InitializeButtonElements(joinServerBackground, playerSettingsPanel);
@@ -476,6 +496,35 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             inputFieldPlaceholderText.text = "Enter Player Name";
         }
 
+        private static void InitializeUserLogin_RegisterForm(GameObject playerLoginPanel)
+        {
+            //User/Player Name
+            GameObject playerNameInputFieldGameObject = playerLoginPanel.RequireGameObject("InputField");
+            RectTransform inputFieldRectTransform = (RectTransform)playerNameInputFieldGameObject.transform;
+            inputFieldRectTransform.anchoredPosition = new Vector2(inputFieldRectTransform.anchoredPosition.x, inputFieldRectTransform.anchoredPosition.y - 15f);
+
+            uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
+            playerNameInputField.selectionColor = Color.white;
+            
+
+            GameObject inputFieldPlaceholder = inputFieldRectTransform.RequireGameObject("Placeholder");
+            Text inputFieldPlaceholderText = inputFieldPlaceholder.GetComponent<Text>();
+            inputFieldPlaceholderText.text = "Enter Username";
+
+            //Password requires hashing 
+            GameObject playerPassInputFieldGameObject = playerLoginPanel.RequireGameObject("InputField");
+            RectTransform inputPassFieldRectTransform = (RectTransform)playerNameInputFieldGameObject.transform;
+            inputFieldRectTransform.anchoredPosition = new Vector2(inputFieldRectTransform.anchoredPosition.x, inputFieldRectTransform.anchoredPosition.y - 15f);
+
+            uGUI_InputField playerPassInputField = playerPassInputFieldGameObject.GetComponent<uGUI_InputField>();
+            playerPassInputField.selectionColor = Color.white;
+            playerPassInputField.inputType = InputField.InputType.Password;
+
+            GameObject inputPassFieldPlaceholder = inputPassFieldRectTransform.RequireGameObject("Placeholder");
+            Text inputPassFieldPlaceholderText = inputPassFieldPlaceholder.GetComponent<Text>();
+            inputFieldPlaceholderText.text = "Enter Password";
+        }
+
         //This is the "service" that manages the click and drag events on the color picture RectTransform.
         private static void InitializeColorPickerComponent(GameObject playerSettingsPanel)
         {
@@ -503,6 +552,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject cancelButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
             GameObject joinButtonGameObject = Instantiate(cancelButtonGameObject, playerSettingsPanel.transform, false);
+            GameObject registerButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
+            GameObject loginButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
 
             //Click events
             Button cancelButton = cancelButtonGameObject.GetComponent<Button>();
@@ -510,6 +561,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             Button joinButton = joinButtonGameObject.GetComponent<Button>();
             joinButton.onClick.AddListener(OnJoinClick);
+
+            Button registerButton = registerButtonGameObject.GetComponent<Button>();
+            joinButton.onClick.AddListener(OnLoginClick);
+
+            Button loginButton = loginButtonGameObject.GetComponent<Button>();
+            joinButton.onClick.AddListener(OnRegisterClick);
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
             GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
@@ -525,6 +582,26 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.anchoredPosition = new Vector2(
                 joinServerBackground.rect.width / 2f - joinButtonTransform.rect.width / 2f + 20f,
                 -1f * (joinServerBackground.rect.height / 2f) + joinButtonTransform.rect.height / 2f + 3f);
+
+            RectTransform registerButtonTransform = (RectTransform)registerButtonGameObject.transform;
+            GameObject registerButtonTextGameObject = registerButtonTransform.RequireGameObject("Text");
+            Text registerButtonText = registerButtonGameObject.GetComponent<Text>();
+            registerButtonText.text = "Register";
+
+            registerButtonTransform.sizeDelta = new Vector2(registerButtonTransform.rect.width * 0.85f, registerButtonTransform.rect.height);
+            registerButtonTransform.anchoredPosition = new Vector2(
+                -1f * joinServerBackground.rect.width / 2f + registerButtonTransform.rect.width / 2f,
+                -1f * (joinServerBackground.rect.height / 2f) + registerButtonTransform.rect.height / 2f + 3f);
+
+            RectTransform loginButtonTransform = (RectTransform)loginButtonGameObject.transform;
+            GameObject loginButtonTextGameObject = loginButtonTransform.RequireGameObject("Text");
+            Text loginButtonText = loginButtonGameObject.GetComponent<Text>();
+            loginButtonText.text = "Login";
+
+            loginButtonTransform.sizeDelta = new Vector2(loginButtonTransform.rect.width * 0.85f, loginButtonTransform.rect.height);
+            loginButtonTransform.anchoredPosition = new Vector2(
+                -1f * joinServerBackground.rect.width / 2f + loginButtonTransform.rect.width / 2f,
+                -1f * (joinServerBackground.rect.height / 2f) + loginButtonTransform.rect.height / 2f + 3f);
 
             //Flip the button over
             joinButtonTransform.sizeDelta = new Vector2(joinButtonTransform.rect.width * 0.85f, joinButtonTransform.rect.height);
