@@ -19,10 +19,10 @@ namespace NitroxClient.Debuggers
 {
     public class SceneDebugger : BaseDebugger
     {
-        public readonly KeyCode RayCastKey = KeyCode.F9;
         private readonly List<DebuggerAction> actionList = new List<DebuggerAction>();
-        private bool editMode;
         private readonly BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+        public readonly KeyCode RayCastKey = KeyCode.F9;
+        private bool editMode;
         private Vector2 gameObjectScrollPos;
 
         /// <summary>
@@ -31,9 +31,9 @@ namespace NitroxClient.Debuggers
         private string gameObjectSearch = "";
 
         private string gameObjectSearchCache = "";
-        private List<GameObject> gameObjectSearchResult = new List<GameObject>();
         private bool gameObjectSearchIsSearching;
         private string gameObjectSearchPatternInvalidMessage = "";
+        private List<GameObject> gameObjectSearchResult = new List<GameObject>();
 
         private Vector2 hierarchyScrollPos;
         private Vector2 monoBehaviourScrollPos;
@@ -509,11 +509,11 @@ namespace NitroxClient.Debuggers
                                 object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
                                 if (result != null)
                                 {
-                                    Log.Info($"Invoked method {method.Name} which returned result: '{result}'.");
+                                    Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
                                 }
                                 else
                                 {
-                                    Log.Info($"Invoked method {method.Name}. Return value was NULL.");
+                                    Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
                                 }
                             }
                         }
