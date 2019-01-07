@@ -11,8 +11,6 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(DeconstructionBegin packet)
         {
-            TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Guid);
-
             GameObject deconstructing = GuidHelper.RequireObjectFrom(packet.Guid);
             Constructable constructable = deconstructing.RequireComponent<Constructable>();
 

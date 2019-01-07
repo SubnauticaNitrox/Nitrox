@@ -205,28 +205,38 @@ namespace NitroxClient.MonoBehaviours
             Log.Info("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);
-            
-            ConstructableBase constructableBase = constructing.GetComponentInChildren<ConstructableBase>();
-            Constructable constructable;
+            BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
 
-            // Bases don't properly send a deconstruct being packet.  So, we'll just make sure
+            // Bases don't  send a deconstruct being packet.  Instead, we just make sure
             // that if we are changing the amount that we set it into deconstruction mode
-            // `constructableBase.SetState(false, false);` - TODO: fix this behaviour
-            if (constructableBase != null)
+            // if it still has a BaseDeconstructable object on it.
+            if (baseDeconstructable != null)
             {
-                constructableBase.SetState(false, false);
-                constructable = constructableBase;
+                baseDeconstructable.Deconstruct();
+
+                // After we have begun the deconstructing for a base piece, we need to transfer the guid
+                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE);
+
+                if(opGhost.IsPresent())
+                {
+                    GameObject ghost = (GameObject)opGhost.Get();
+                    UnityEngine.Object.Destroy(constructing);
+                    GuidHelper.SetNewGuid(ghost, amountChanged.Guid);
+                }
+                else
+                {
+                    Log.Info("Could not find newly created ghost to set deconstructed guid ");
+                }
             }
             else
             {
-                constructable = constructing.GetComponentInChildren<Constructable>();
-            }
+                Constructable constructable = constructing.GetComponentInChildren<Constructable>();
+                constructable.constructedAmount = amountChanged.Amount;
 
-            constructable.constructedAmount = amountChanged.Amount;
-            
-            using (packetSender.Suppress<ConstructionAmountChanged>())
-            {
-                constructable.Construct();
+                using (packetSender.Suppress<ConstructionAmountChanged>())
+                {
+                    constructable.Construct();
+                }
             }
         }
 
