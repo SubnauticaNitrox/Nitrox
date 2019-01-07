@@ -476,18 +476,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             inputFieldPlaceholderText.text = "Enter Player Name";
         }
 
-        private static void InitializeUserLogin_RegisterForm(GameObject playerLoginPanel)
-        {
-            //User/Player Name
-            GameObject playerNameInputFieldGameObject = playerLoginPanel.RequireGameObject("InputField");
-            RectTransform inputFieldRectTransform = (RectTransform)playerNameInputFieldGameObject.transform;
-            inputFieldRectTransform.anchoredPosition = new Vector2(inputFieldRectTransform.anchoredPosition.x, inputFieldRectTransform.anchoredPosition.y - 15f);
-
-            uGUI_InputField playerNameInputField = playerNameInputFieldGameObject.GetComponent<uGUI_InputField>();
-            playerNameInputField.selectionColor = Color.white;
-            
-        }
-
         //This is the "service" that manages the click and drag events on the color picture RectTransform.
         private static void InitializeColorPickerComponent(GameObject playerSettingsPanel)
         {
@@ -515,16 +503,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         {
             GameObject cancelButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
             GameObject joinButtonGameObject = Instantiate(cancelButtonGameObject, playerSettingsPanel.transform, false);
-            GameObject registerButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
-            GameObject loginButtonGameObject = playerSettingsPanel.RequireGameObject("Button");
-
             //Click events
             Button cancelButton = cancelButtonGameObject.GetComponent<Button>();
             cancelButton.onClick.AddListener(OnCancelClick);
 
             Button joinButton = joinButtonGameObject.GetComponent<Button>();
             joinButton.onClick.AddListener(OnJoinClick);
-
 
             RectTransform cancelButtonTransform = (RectTransform)cancelButtonGameObject.transform;
             GameObject cancelButtonTextGameObject = cancelButtonTransform.RequireGameObject("Text");
@@ -540,7 +524,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinButtonTransform.anchoredPosition = new Vector2(
                 joinServerBackground.rect.width / 2f - joinButtonTransform.rect.width / 2f + 20f,
                 -1f * (joinServerBackground.rect.height / 2f) + joinButtonTransform.rect.height / 2f + 3f);
-
             //Flip the button over
             joinButtonTransform.sizeDelta = new Vector2(joinButtonTransform.rect.width * 0.85f, joinButtonTransform.rect.height);
             joinButtonTransform.Rotate(Vector3.forward * -180);
