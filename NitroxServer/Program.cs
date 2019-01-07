@@ -34,7 +34,7 @@ namespace NitroxServer
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine());
+                //CmdProcessor.ProcessCommand(Console.ReadLine()); I dont think is is required ...
             }
         }
 

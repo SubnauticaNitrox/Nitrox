@@ -50,7 +50,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
         /// <param name="args">
         ///     Arguments passed to your command
         /// </param>
-        public abstract void RunCommand(string[] args);
+        /// 
+        public abstract void RunCommand(string[] args, Player player);
 
         public abstract bool VerifyArgs(string[] args);
 

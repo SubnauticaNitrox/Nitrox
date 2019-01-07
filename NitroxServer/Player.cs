@@ -20,7 +20,8 @@ namespace NitroxServer
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
         public Optional<string> SubRootGuid { get; set; }
-
+        public bool isAdmin { get; set; }
+        
         public Player(PlayerContext playerContext, Connection connection, Vector3 position, Optional<string> subRootGuid)
         {
             PlayerContext = playerContext;

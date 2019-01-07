@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.Logger;
+using NitroxServer.Communication;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
+using NitroxServer.GameLogic;
+using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
@@ -13,6 +16,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
+
             foreach (Command cmd in cmds)
             {
                 if (commands.ContainsKey(cmd.Name))
@@ -34,7 +38,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        public void ProcessCommand(string msg)
+        public void ProcessCommand(string msg, Player player)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
@@ -51,20 +55,27 @@ namespace NitroxServer.ConsoleCommands.Processor
                 return;
             }
 
-            RunCommand(cmd, parts);
+            RunCommand(cmd, parts, player);
         }
 
-        private void RunCommand(Command command, string[] parts)
+        private void RunCommand(Command command, string[] parts, Player player)
         {
-            string[] args = parts.Skip(1).ToArray();
-
-            if (command.VerifyArgs(args))
+            //Verify is an admin or attempting to login
+            if (player.isAdmin || (command.Name == "login"))
             {
-                command.RunCommand(args);
-                return;
-            }
+                string[] args = parts.Skip(1).ToArray();
 
-            Log.Info("Command Invalid: {0}", command.Args);
+                if (command.VerifyArgs(args))
+                {
+                    command.RunCommand(args, player);
+                    return;
+                } else
+                {
+                    Log.Info("Command Invalid: {0}", command.Args);
+                    return;
+                }
+            } 
+            Log.Info("Someone without the required permissions attempted a command");
         }
     }
 }

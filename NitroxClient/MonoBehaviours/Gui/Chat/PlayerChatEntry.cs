@@ -1,6 +1,8 @@
-﻿using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -76,9 +78,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chat != null && chatMessage.Length > 0)
             {
-                chatBroadcaster.SendChatMessage(chatMessage);
-                ChatLogEntry chatLogEntry = new ChatLogEntry("Me", chatMessage, multiplayerSession.PlayerSettings.PlayerColor);
-                chat.WriteChatLogEntry(chatLogEntry);
+                if(chatMessage.Substring(0, 1) == "/")
+                {
+                    string[] args = { chatMessage.Substring(1) };
+                    NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
+                }
+                else
+                {
+                    chatBroadcaster.SendChatMessage(chatMessage);
+                    ChatLogEntry chatLogEntry = new ChatLogEntry("Me", chatMessage, multiplayerSession.PlayerSettings.PlayerColor);
+                    chat.WriteChatLogEntry(chatLogEntry);
+                }
             }
         }
     }

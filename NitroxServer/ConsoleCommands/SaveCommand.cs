@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
         {
         }
 
-        public override void RunCommand(string[] args)
+        public override void RunCommand(string[] args, Player player)
         {
             Server.Instance.Save();
         }

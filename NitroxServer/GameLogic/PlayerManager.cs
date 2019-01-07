@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.Util;
@@ -50,6 +50,7 @@ namespace NitroxServer.GameLogic
                 }
 
                 string playerName = authenticationContext.Username;
+                bool IsAdmin = false; // Force login on each reconnect.
 
                 if (reservedPlayerNames.Contains(playerName))
                 {
@@ -60,7 +61,7 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
 
                 bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
+                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings, IsAdmin);
                 ushort playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 

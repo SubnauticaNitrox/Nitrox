@@ -15,9 +15,10 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ServerCommand packet, Player player)
         {
+
             string msg = string.Join(" ", packet.CmdArgs);
 
-            cmdProcessor.ProcessCommand(msg);
+            cmdProcessor.ProcessCommand(msg, player);
         }
     }
 }

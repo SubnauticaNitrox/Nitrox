@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args)
+        public override void RunCommand(string[] args, Player player)
         {
             playerManager.SendPacketToAllPlayers(new ChatMessage(ushort.MaxValue, string.Join(" ", args)));
             Log.Info("Server says: " + string.Join(" ", args));

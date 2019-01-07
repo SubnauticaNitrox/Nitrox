@@ -140,6 +140,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />

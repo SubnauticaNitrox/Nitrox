@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
             this.entitySimulation = entitySimulation;
         }
 
-        public override void RunCommand(string[] args)
+        public override void RunCommand(string[] args, Player player)
         {
             try
             {

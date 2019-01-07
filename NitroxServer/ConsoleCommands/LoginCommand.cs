@@ -1,34 +1,37 @@
 ﻿using System.Linq;
 using NitroxModel.Logger;
+using NitroxServer.Communication;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class ListCommand : Command
+    internal class LoginCommand : Command
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list")
+        public LoginCommand(PlayerManager playerManager) : base("login")
         {
             this.playerManager = playerManager;
         }
 
         public override void RunCommand(string[] args, Player player)
         {
-            if (playerManager.GetPlayers().Any())
+            if (args[0] == Properties.ServerSessionSettings.Default.ServerAdminPassword)
             {
-                Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
+                player.isAdmin = true;
+                Log.Info("Admin Logged In");
             }
             else
             {
-                Log.Info("No players online");
+                Log.Info("Incorrect Admin Password Attempt");
             }
         }
 
         public override bool VerifyArgs(string[] args)
         {
-            return args.Length == 0;
+            return args.Length == 1;
         }
     }
 }
+
