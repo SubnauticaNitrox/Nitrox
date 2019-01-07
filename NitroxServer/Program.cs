@@ -31,9 +31,29 @@ namespace NitroxServer
             }
 
             // Catch Exit Event
-            consoleHandler = new ConsoleEventDelegate(ConsoleEventCallback);
-            SetConsoleCtrlHandler(consoleHandler, true);
+            PlatformID platid = Environment.OSVersion.Platform;
+            switch(platid)
+            {
+                case PlatformID.Unix:
+                case PlatformID.MacOSX:
+                    // using *nix signal system to catch Ctrl+C
+                    Console.CancelKeyPress += new ConsoleCancelEventHandler(OnCtrlCPressed);
+                    break;
+                case PlatformID.Win32NT:
+                    Console.CancelKeyPress += new ConsoleCancelEventHandler(OnCtrlCPressed);
+                    // better catch using WinAPI. This will handled process kill
+                    consoleHandler = new ConsoleEventDelegate(ConsoleEventCallback);
+                    SetConsoleCtrlHandler(consoleHandler, true);
+                    break;
+                default:
+                    if((int)platid == 128) // mono
+                    {
+                        Console.CancelKeyPress += new ConsoleCancelEventHandler(OnCtrlCPressed);
+                    }
+                    break;
 
+            }
+            
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
@@ -67,7 +87,7 @@ namespace NitroxServer
         private delegate bool ConsoleEventDelegate(int eventType);
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-        static bool ConsoleEventCallback(int eventType)
+        private static bool ConsoleEventCallback(int eventType)
         {
             if (eventType == 2)
             {
@@ -75,6 +95,11 @@ namespace NitroxServer
                 Server.Instance.Stop();
             }
             return false;
+        }
+        private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
+        {
+            Log.Info("Exiting ...");
+            Server.Instance.Stop();
         }
 
     }
