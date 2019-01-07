@@ -12,6 +12,11 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
         private const int DEFAULT_SAVE_INTERVAL = 60000;
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
+        private const bool BROADCAST_SERVER = false;
+        private const string BROADCAST_SERVER_SETTING = "BroadcastServer";
+        private const string BROADCAST_SERVER_NAME = "";
+        private const string BROADCAST_SERVER_NAME_SETTING = "BroadcastServerName";
+
 
         private int? _serverPort = null;
         public int ServerPort
@@ -54,5 +59,33 @@ namespace NitroxServer.ConfigParser
                 return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
             }
         }
+        
+        private bool? _broadcastServer = null;
+        public bool BroadcastServer
+        {
+            get
+            {
+                bool configValue;
+                if (_broadcastServer == null && bool.TryParse(ConfigurationManager.AppSettings[BROADCAST_SERVER_SETTING], out configValue))
+                {
+                    _broadcastServer = configValue;
+                }
+                return _broadcastServer ?? BROADCAST_SERVER;
+            }
+        }
+
+        private string _broadcastServerName;
+        public string BroadcastServerName 
+        {
+            get
+            {
+                if(_broadcastServerName == null)
+                {
+                    _broadcastServerName = ConfigurationManager.AppSettings[BROADCAST_SERVER_NAME_SETTING];
+                }
+                return _broadcastServerName;
+            }
+        }
+
     }
 }

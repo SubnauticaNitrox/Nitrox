@@ -87,8 +87,15 @@ namespace NitroxServer.GameLogic
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);
 
+                OnCreatePlayer();
+
                 return player;
             }
+        }
+
+        public void OnCreatePlayer()
+        {
+            Server.Instance.Ping(true);
         }
 
         public void PlayerDisconnected(Connection connection)

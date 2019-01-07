@@ -2,10 +2,9 @@
 using System.Globalization;
 using System.Threading;
 using NitroxModel.Logger;
-using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxModel.Core;
-
+using System.Runtime.InteropServices;
 
 namespace NitroxServer
 {
@@ -30,6 +29,10 @@ namespace NitroxServer
                 Log.Error(e.ToString());
                 return;
             }
+
+            // Catch Exit Event
+            consoleHandler = new ConsoleEventDelegate(ConsoleEventCallback);
+            SetConsoleCtrlHandler(consoleHandler, true);
 
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
@@ -58,5 +61,21 @@ namespace NitroxServer
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
         }
+        
+        // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
+        static ConsoleEventDelegate consoleHandler;
+        private delegate bool ConsoleEventDelegate(int eventType);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+        static bool ConsoleEventCallback(int eventType)
+        {
+            if (eventType == 2)
+            {
+                Log.Info("Exiting ...");
+                Server.Instance.Stop();
+            }
+            return false;
+        }
+
     }
 }
