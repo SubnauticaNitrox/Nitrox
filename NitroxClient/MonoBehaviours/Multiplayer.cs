@@ -179,7 +179,7 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetPlayerCount() + 1, Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
     }
 }

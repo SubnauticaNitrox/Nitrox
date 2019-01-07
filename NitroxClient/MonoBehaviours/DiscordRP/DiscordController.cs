@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.Net;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
+﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -85,7 +84,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             if (!ShowingWindow)
             {
                 Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
-                AcceptRequest acceptRequest = gameObject.AddComponent<AcceptRequest>();
+                DiscordJoinRequestGui acceptRequest = gameObject.AddComponent<DiscordJoinRequestGui>();
                 acceptRequest.Request = request;
                 lastJoinRequestUserID = request.userId;
                 ShowingWindow = true;
@@ -180,12 +179,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
             if (ip == "127.0.0.1")
             {
-                WebRequest req = WebRequest.Create("http://checkip.dyndns.org");
-                WebResponse resp = req.GetResponse();
-                StreamReader sr = new StreamReader(resp.GetResponseStream());
-
-                string publicIp = sr.ReadToEnd().Trim().Split(':')[1].Substring(1).Split('<')[0];
-                return publicIp + ":" + port;
+                return IPHelper.GetPublicIP() + ":" + port;
             }
             else
             {

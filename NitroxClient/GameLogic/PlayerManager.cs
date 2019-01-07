@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
-            DiscordController.Main.UpdateDRPDiving(GetPlayerCount() + 1);
+            DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
             return player;
         }
 
@@ -77,7 +77,7 @@ namespace NitroxClient.GameLogic
             {
                 opPlayer.Get().Destroy();
                 playersById.Remove(playerId);
-                DiscordController.Main.UpdateDRPDiving(GetPlayerCount() + 1);
+                DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
             }
         }
 
@@ -86,13 +86,9 @@ namespace NitroxClient.GameLogic
             return Object.Instantiate(localPlayer.BodyPrototype);
         }
 
-        public int GetPlayerCount()
+        public int GetTotalPlayerCount()
         {
-            if (playersById == null)
-            {
-                return 0;
-            }
-            return playersById.Count;
+            return playersById.Count + 1; //Multiplayer-player(s) + you
         }
     }
 }

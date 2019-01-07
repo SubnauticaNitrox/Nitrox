@@ -9,6 +9,7 @@
   <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
   <?define NitroxServer_TargetDir=$(var.NitroxServer.TargetDir)?>
   <?define NitroxServerWPF_TargetDir=$(var.NitroxServer.Wpf.TargetDir)?>
+  <?define discordRPC_TargetDir=$(var.SolutionDir)lib\?>
 
   <?if $(var.Platform) = x64 ?>
   <?define ProductName = "NitroxInstaller-!(bind.fileVersion.NitroxClient.dll) (64 bit)" ?>
@@ -107,7 +108,7 @@
   <Fragment>
     <ComponentGroup Id="SUBNAUTICAMONO_files" Directory="SUBNAUTICAMONO">
       <Component Id="discordRPC.dll" Guid="*">
-        <File Id="discordRPC.dll" Name="discord-rpc.dll" Source="$(var.NitroxClient_TargetDir)MonoBehaviours/DiscordRP/discord-rpc.dll" />
+        <File Id="discordRPC.dll" Name="discord-rpc.dll" Source="$(var.discordRPC_TargetDir)discord-rpc.dll" />
       </Component>
     </ComponentGroup>
   </Fragment>

@@ -216,7 +216,7 @@
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
-    <Compile Include="MonoBehaviours\DiscordRP\AcceptRequest.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordJoinRequestGui.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLog.cs" />
@@ -285,11 +285,6 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\playerBackgroundImage" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="MonoBehaviours\DiscordRP\discord-rpc.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
