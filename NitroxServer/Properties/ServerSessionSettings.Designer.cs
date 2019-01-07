@@ -12,7 +12,7 @@ namespace NitroxServer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.9.0.0")]
     internal sealed partial class ServerSessionSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static ServerSessionSettings defaultInstance = ((ServerSessionSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new ServerSessionSettings())));
@@ -25,18 +25,6 @@ namespace NitroxServer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("test123")]
-        public string ServerAdminPassword {
-            get {
-                return ((string)(this["ServerAdminPassword"]));
-            }
-            set {
-                this["ServerAdminPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("60")]
         public string SaveInterval {
             get {
@@ -44,6 +32,18 @@ namespace NitroxServer.Properties {
             }
             set {
                 this["SaveInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("yourpassword")]
+        public string ServerAdminPassword {
+            get {
+                return ((string)(this["ServerAdminPassword"]));
+            }
+            set {
+                this["ServerAdminPassword"] = value;
             }
         }
     }

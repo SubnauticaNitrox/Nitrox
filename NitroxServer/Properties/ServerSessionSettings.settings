@@ -2,11 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NitroxServer.Properties" GeneratedClassName="ServerSessionSettings">
   <Profiles />
   <Settings>
-    <Setting Name="ServerAdminPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">test123</Value>
-    </Setting>
     <Setting Name="SaveInterval" Type="System.String" Scope="User">
       <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="ServerAdminPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)">yourpassword</Value>
     </Setting>
   </Settings>
 </SettingsFile>
