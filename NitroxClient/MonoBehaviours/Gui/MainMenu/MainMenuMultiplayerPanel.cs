@@ -285,7 +285,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         }
         
 
-        private void checkServerInfoThreaded(string serverStr)
+        private void CheckServerInfoThreaded(string serverStr)
         {
             if(serverStr == "" || !serverStr.Contains("|"))
             {
@@ -314,6 +314,28 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 
             })).Start();
 
+        }
+
+
+        private void OnServerListFetched(object sender, DownloadDataCompletedEventArgs e)
+        {
+            if (!e.Cancelled && e.Error == null)
+            {
+                serverListText = System.Text.Encoding.UTF8.GetString(e.Result);
+                lock (serverInfoList)
+                {
+                    serverInfoList.Clear();
+                }
+                foreach (string i in serverListText.Split('\n'))
+                {
+                    serverQueryThreadedNum += 1;
+                    CheckServerInfoThreaded(i);
+                }
+            }
+            else
+            {
+                serverListText = "";
+            }
         }
 
 
@@ -371,30 +393,22 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                         if (!serverLoadFinished)
                         {
-                            if (serverListText == "")
+                            using (WebClient client = new WebClient())
                             {
                                 try
                                 {
-                                    WebClient MyWebClient = new WebClient();
-                                    MyWebClient.Credentials = CredentialCache.DefaultCredentials;
-                                    byte[] pageData = MyWebClient.DownloadData(serverInfoLink);
-                                    serverListText = System.Text.Encoding.UTF8.GetString(pageData);
+                                    // this might freeze game for hundreds milliseconds
+                                    client.DownloadDataCompleted += new DownloadDataCompletedEventHandler(OnServerListFetched);
+                                    client.DownloadDataAsync(new Uri(serverInfoLink));
                                 }
-                                catch(Exception)
+                                catch (Exception)
                                 {
                                     serverListText = "";
                                 }
                             }
-
-                            serverInfoList.Clear();
-
-                            foreach (string i in serverListText.Split('\n'))
-                            {
-                                serverQueryThreadedNum += 1;
-                                checkServerInfoThreaded(i);
-                            }
                             serverLoadFinished = true;
                         }
+
                         lock (serverInfoList)
                         { 
                             foreach (ServerInfo sinfo in serverInfoList)
