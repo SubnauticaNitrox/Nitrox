@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Text.RegularExpressions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -15,122 +11,6 @@ using System.Threading;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
-    public class ServerInfo : IComparable<ServerInfo>
-    {
-        private bool _isValid = false;
-        public bool IsValid { get { return _isValid; } set { } }
-
-        public readonly string Name;      // title
-        public readonly string Address;   // domain or ip. directly from serverStr
-
-        // LAZY LOAD
-
-        // only domain name. no port
-        private string _host = null;
-        public string Host { get { if(_host == null) LazyLoad(); return _host; } }
-
-        // parsed ip address
-        private string _ip = null;
-        public string Ip { get { if (_ip == null) LazyLoad(); return _ip; } }
-        
-        private int _port = 0;
-        public int Port { get { if (_port == 0) LazyLoad(); return _port; } }
-
-        public int _ping = -1;  // do not use 0 here. because localhost = 0 and it is corrent
-        public int Ping { get { if (_ping == -1) UpdateLatency(); return _ping; }  set { _ping = value; } }
-
-        public ServerInfo(string serverStr)
-        {
-            string[] lineData = serverStr.Split('|');
-            Name = lineData[0];
-            Address = lineData[1];
-        }
-
-        public int CompareTo(ServerInfo other)
-        {
-            if(Ping == other.Ping)
-            {
-                return Name.CompareTo(other.Name);
-            }
-            else
-            {
-                return Ping.CompareTo(other.Ping);
-            }
-        }
-
-        private void LazyLoad()
-        {
-            try
-            {
-                if (Regex.IsMatch(Address, @"^[:0-9.a-fA-F\[\]]+$")) // IPv.4  or  IPv.4:port  or  [IPv:6] or [IPv:6]:port
-                {
-                    if (Address.Contains('[') && Address.Contains(':') && Address.Contains(']')) // IPv6
-                    {
-                        _ip = Address.Substring(0, Address.IndexOf("]") + 1);
-                        _host = _ip;
-                        if (!int.TryParse(Address.Substring(Address.IndexOf("]") + 2), out _port)) // try to parse empty if no port specified
-                        {
-                            _port = 11000;
-                        }
-                    }
-                    else  // IPv4
-                    {
-                        string[] ip_port = Address.Split(':');
-                        _ip = ip_port[0];
-                        _host = _ip;
-                        if (ip_port.Length > 1 && (!int.TryParse(ip_port[1], out _port)))
-                        {
-                            _port = 11000;
-                        }
-                    }
-
-                }
-                else
-                {
-                    string[] host_port = Address.Split(':');
-                    _host = host_port[0];
-                    _ip = Dns.GetHostEntry(_host).AddressList[0].ToString();
-                    if (host_port.Length > 1 && (!int.TryParse(host_port[1], out _port)))
-                    {
-                        _port = 11000;
-                    }
-                }
-
-                // last check
-                if(_port <= 0 || _port >= 65535)
-                {
-                    _port = 11000;
-                }
-                _isValid = true;
-
-            }
-            catch (Exception e)
-            {
-                Log.Error("Failed to parse server " + Address);
-                _isValid = false;
-            }
-        }
-
-        public void UpdateLatency()
-        {
-            Ping ping = null;
-            try
-            {
-                ping = new Ping(Ip);
-                while (!ping.isDone)
-                {
-                    Thread.Sleep(50);
-                }
-                _ping = ping.time;
-
-            }
-            catch (Exception)
-            {
-                _ping = 9999;
-            }
-        }
-    }
-
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
         public string SERVER_LIST_PATH = Path.Combine(".", "servers");
@@ -156,6 +36,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private bool serverLoadFinished = false;
         private Vector2 scrollPos = new Vector2();
         private int serverQueryThreadedNum = 0;
+        private readonly string serverInfoLink = "http://nitrox.qaq.link/server";
 
         public void Awake()
         {
@@ -443,6 +324,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 switch (e.keyCode)
                 {
+                    case KeyCode.Return:
+                        serverLoadFinished = false;
+                        break;
+
                     case KeyCode.Escape:
                         OnCancelButtonClicked();
                         break;
@@ -491,8 +376,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                                 {
                                     WebClient MyWebClient = new WebClient();
                                     MyWebClient.Credentials = CredentialCache.DefaultCredentials;
-                                    // TODO: update the link of server list
-                                    byte[] pageData = MyWebClient.DownloadData("http://nitrox.qaq.link/server");
+                                    byte[] pageData = MyWebClient.DownloadData(serverInfoLink);
                                     serverListText = System.Text.Encoding.UTF8.GetString(pageData);
                                 }
                                 catch(Exception)

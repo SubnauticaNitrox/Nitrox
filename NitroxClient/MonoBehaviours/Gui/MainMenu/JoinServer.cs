@@ -28,7 +28,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
-        public int serverPort = 0;
+        public int serverPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
