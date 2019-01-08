@@ -31,12 +31,12 @@ namespace InstallerActions.Patches
                 CopyFile(tmpFile, dir);
             }
 
-            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\path.txt");
+            string file = Path.Combine(Path.GetFullPath(dir), "..", "..", "SubServer", "path.txt");
             if (File.Exists(file))
             {
                 File.Delete(file);
             }
-            string tmpDir = dir.Replace("\\Subnautica_Data\\Managed", "");
+            string tmpDir = dir.Replace("\\Subnautica_Data\\Managed", "").Replace("/Subnautica_Data/Managed", "") ;
             File.WriteAllText(file, tmpDir);
         }
 
@@ -47,7 +47,7 @@ namespace InstallerActions.Patches
                 DeleteFile(tmpFile, dir);
             }
 
-            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\path.txt");
+            string file = Path.Combine(Path.GetFullPath(dir), "..", "..", "SubServer", "path.txt");
             if (File.Exists(file))
             {
                 File.Delete(file);
@@ -56,14 +56,14 @@ namespace InstallerActions.Patches
 
         private static void CopyFile(string fileName, string dir)
         {
-            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\" + fileName); // (Subnautica Directory)\SubServer\fileName
+            string file = Path.Combine(Path.GetFullPath(dir), "..", "..", "SubServer", fileName); // (Subnautica Directory)\SubServer\fileName
             DeleteFile(fileName, dir);
             File.Copy(dir + fileName, file);
         }
 
         private static void DeleteFile(string fileName, string dir)
         {
-            string file = Path.Combine(Path.GetFullPath(dir), "..\\..\\SubServer\\" + fileName); // (Subnautica Directory)\SubServer\fileName
+            string file = Path.Combine(Path.GetFullPath(dir), "..", "..", "SubServer", fileName); // (Subnautica Directory)\SubServer\fileName
             if (File.Exists(file))
             {
                 File.Delete(file);
