@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
-        public int ServerPort{ get; private set; }
+        public int ServerPort { get; private set; }
         public MultiplayerSessionPolicy SessionPolicy { get; private set; }
         public PlayerSettings PlayerSettings { get; private set; }
         public AuthenticationContext AuthenticationContext { get; private set; }
@@ -37,7 +37,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public IMultiplayerSessionConnectionState CurrentState { get; private set; }
         public MultiplayerSessionReservation Reservation { get; private set; }
 
-        public void Connect(string ipAddress,int port)
+        public void Connect(string ipAddress, int port)
         {
             IpAddress = ipAddress;
             ServerPort = port;
@@ -49,10 +49,12 @@ namespace NitroxClient.Communication.MultiplayerSession
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
             if(SessionPolicy.NitroxVersionAllowed != typeof(NitroxModel.Extensions).Assembly.FullName)
+            Log.Debug($"Nitrox Model versions\n" +
+                $"    Server - {SessionPolicy.NitroxVersionAllowed}\n" +
+                $"    Client - {typeof(NitroxModel.Extensions).Assembly.FullName}");
+            // validate that the required version is contained in the client version full name
+            if (!typeof(NitroxModel.Extensions).Assembly.FullName.Contains(SessionPolicy.NitroxVersionAllowed))
             {
-                Log.Warn($"Nitrox Model versions do not match.\n" +
-                    $"    Server - {SessionPolicy.NitroxVersionAllowed}\n" +
-                    $"    Client - {typeof(NitroxModel.Extensions).Assembly.FullName}");
                 Log.InGame("The server is using a different version of Nitrox. Please contact the server admin to install the same version.");
                 CurrentState.Disconnect(this);
             }
