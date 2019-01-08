@@ -60,11 +60,25 @@ namespace NitroxServer.ConsoleCommands.Processor
 
         private void RunCommand(Command command, string[] parts, Player player)
         {
+            // Should probably refactor this to be a bit more efficient...any input? 
+            string[] args = parts.Skip(1).ToArray();
+
+            if (player == null) // Something is either very wrong with this player or its the server console... Maybe add a server console check here?
+            {
+                if (command.VerifyArgs(args))
+                {
+                    command.RunCommand(args, player);
+                    return;
+                }
+                else
+                {
+                    Log.Info("Command Invalid: {0}", command.Args);
+                    return;
+                }
+            }
             //Verify is an admin or attempting to login
             if (player.isAdmin || (command.Name == "login"))
             {
-                string[] args = parts.Skip(1).ToArray();
-
                 if (command.VerifyArgs(args))
                 {
                     command.RunCommand(args, player);
