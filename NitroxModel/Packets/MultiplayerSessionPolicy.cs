@@ -18,7 +18,10 @@ namespace NitroxModel.Packets
             // This is done intentionally. It is only a stub for future extension.
             RequiresServerPassword = false;
             AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.Server;
+            // get the full version name
             NitroxVersionAllowed = typeof(MultiplayerSessionPolicy).Assembly.FullName;
+            // restrict to only the major and minor version number is required
+            NitroxVersionAllowed = System.Text.RegularExpressions.Regex.Match(NitroxVersionAllowed, @"(\d+\.\d+)").Value;
         }
     }
 }
