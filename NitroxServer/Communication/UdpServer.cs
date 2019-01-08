@@ -172,5 +172,10 @@ namespace NitroxServer.Communication
 
             return config;
         }
+
+        public int GetPlayerCount()
+        {
+            return playerManager.GetPlayers().Count;
+        }
     }
 }

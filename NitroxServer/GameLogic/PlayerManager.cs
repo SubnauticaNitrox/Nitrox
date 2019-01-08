@@ -90,8 +90,15 @@ namespace NitroxServer.GameLogic
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);
 
+                OnPlayerCountChange();
+
                 return player;
             }
+        }
+
+        public void OnPlayerCountChange()
+        {
+            Server.Instance.Ping(true);
         }
 
         public void PlayerDisconnected(Connection connection)
@@ -121,6 +128,8 @@ namespace NitroxServer.GameLogic
 
                 assetsByConnection.Remove(connection);
             }
+
+            OnPlayerCountChange();
         }
 
         public Player GetPlayer(Connection connection)
