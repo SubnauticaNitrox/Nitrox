@@ -11,6 +11,8 @@ namespace NitroxModel.Packets
 
         public MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; }
 
+        public string NitroxVersionAllowed { get; }
+
         public MultiplayerSessionPolicy(string correlationId, bool disableConsole)
             : base(correlationId)
         {
@@ -18,6 +20,7 @@ namespace NitroxModel.Packets
             RequiresServerPassword = false;
             AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.Server;
             DisableConsole = disableConsole;
+            NitroxVersionAllowed = typeof(MultiplayerSessionPolicy).Assembly.FullName;
         }
     }
 }
