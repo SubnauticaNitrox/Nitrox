@@ -1,8 +1,10 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -83,19 +85,30 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void ConstructionComplete(GameObject gameObject)
+        public void ConstructionComplete(GameObject ghost)
         {
             Optional<string> newlyConstructedBaseGuid = Optional<string>.Empty();
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+
+            string guid = GuidHelper.GetGuid(ghost);
 
             if (opConstructedBase.IsPresent())
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Get();
                 newlyConstructedBaseGuid = Optional<string>.Of(GuidHelper.GetGuid(constructedBase));
             }
-            
-            string guid = GuidHelper.GetGuid(gameObject);
 
+            // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
+            // Furniture just uses the same game object as the ghost for the final product.
+            if(ghost.GetComponent<ConstructableBase>() != null)
+            {
+                Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
+                GameObject finishedPiece = (GameObject)opBasePiece.Get();
+                
+                UnityEngine.Object.Destroy(ghost);
+                GuidHelper.SetNewGuid(finishedPiece, guid);
+            }
+            
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(guid, newlyConstructedBaseGuid);
             packetSender.Send(constructionCompleted);
         }

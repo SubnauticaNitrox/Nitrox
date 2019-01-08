@@ -4,36 +4,48 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
+using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using NitroxModel.Core;
-using NitroxClient.GameLogic;
 
 namespace NitroxClient.Debuggers
 {
     public class SceneDebugger : BaseDebugger
     {
+        private readonly List<DebuggerAction> actionList = new List<DebuggerAction>();
+        private readonly BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
         public readonly KeyCode RayCastKey = KeyCode.F9;
-
+        private bool editMode;
         private Vector2 gameObjectScrollPos;
+
+        /// <summary>
+        ///     Search used in hierarchy view to find gameobjects with the given name.
+        /// </summary>
+        private string gameObjectSearch = "";
+
+        private string gameObjectSearchCache = "";
+        private bool gameObjectSearchIsSearching;
+        private string gameObjectSearchPatternInvalidMessage = "";
+        private List<GameObject> gameObjectSearchResult = new List<GameObject>();
+
         private Vector2 hierarchyScrollPos;
         private Vector2 monoBehaviourScrollPos;
-        private GameObject selectedObject;
         private MonoBehaviour selectedMonoBehaviour;
-        private Scene selectedScene;
-        private List<DebuggerAction> actionList = new List<DebuggerAction>();
-        private bool editMode;
-        private bool sendToServer;
-        private BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
+        private GameObject selectedObject;
 
         private bool selectedObjectActiveSelf;
         private Vector3 selectedObjectPos;
         private Quaternion selectedObjectRot;
         private Vector3 selectedObjectScale;
+        private Scene selectedScene;
+        private bool sendToServer;
 
         public SceneDebugger() : base(500, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
@@ -49,7 +61,7 @@ namespace NitroxClient.Debuggers
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit[] hits = Physics.RaycastAll(ray, float.MaxValue, int.MaxValue);
-                
+
                 foreach (RaycastHit hit in hits)
                 {
                     // Not using the player layer mask as we should be able to hit remote players.  Simply filter local player.
@@ -69,17 +81,14 @@ namespace NitroxClient.Debuggers
 
             skin.SetCustomStyle("sceneLoaded", skin.label, s =>
             {
-                s.normal = new GUIStyleState()
+                s.normal = new GUIStyleState
                 {
                     textColor = Color.green
                 };
                 s.fontStyle = FontStyle.Bold;
             });
 
-            skin.SetCustomStyle("loadScene", skin.button, s =>
-            {
-                s.fixedWidth = 60;
-            });
+            skin.SetCustomStyle("loadScene", skin.button, s => { s.fixedWidth = 60; });
 
             skin.SetCustomStyle("mainScene", skin.label, s =>
             {
@@ -114,98 +123,51 @@ namespace NitroxClient.Debuggers
                 s.fixedWidth = 200;
                 s.margin = new RectOffset(8, 8, 4, 4);
             });
-            skin.SetCustomStyle("options_label", skin.label, s =>
+            skin.SetCustomStyle("options_label", skin.label, s => { s.alignment = TextAnchor.MiddleLeft; });
+
+            skin.SetCustomStyle("bold", skin.label, s => { s.fontStyle = FontStyle.Bold; });
+            skin.SetCustomStyle("error", skin.label, s =>
             {
-                s.alignment = TextAnchor.MiddleLeft;
+                s.fontStyle = FontStyle.Bold;
+                s.normal.textColor = Color.red;
             });
         }
 
-        private void RenderTabGameObject()
+        private void RenderTabScenes()
         {
             using (new GUILayout.VerticalScope("Box"))
             {
-                if (selectedObject)
+                GUILayout.Label("All scenes", "header");
+                for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
                 {
-                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(gameObjectScrollPos))
+                    Scene currentScene = SceneManager.GetSceneByBuildIndex(i);
+                    string path = SceneUtility.GetScenePathByBuildIndex(i);
+                    bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
+                    bool isLoaded = currentScene.isLoaded;
+
+                    using (new GUILayout.HorizontalScope("Box"))
                     {
-                        gameObjectScrollPos = scroll.scrollPosition;
-                        RenderToggleButtons($"GameObject: {selectedObject.name}");
-                        
-                        using (new GUILayout.VerticalScope("Box"))
+                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {path.TruncateLeft(35)}", isLoaded ? "sceneLoaded" : "label"))
                         {
-                            using (new GUILayout.HorizontalScope())
-                            {
-                                selectedObjectActiveSelf = GUILayout.Toggle(selectedObjectActiveSelf, "Active");
-                            }
-                            GUILayout.Label("Position");
-                            using (new GUILayout.HorizontalScope())
-                            {
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.z);
-                            }
-                            GUILayout.Label("Rotation");
-                            using (new GUILayout.HorizontalScope())
-                            {
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.z);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.w);
-                            }
-                            GUILayout.Label("Scale");
-                            using (new GUILayout.HorizontalScope())
-                            {
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.z);
-                            }
+                            selectedScene = currentScene;
+                            ActiveTab = GetTab("Hierarchy").Get();
                         }
 
-                        using (new GUILayout.VerticalScope("Box"))
+                        if (isLoaded)
                         {
-                            foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
+                            if (GUILayout.Button("Load", "loadScene"))
                             {
-                                Type script = behaviour.GetType();
-
-                                using (new GUILayout.HorizontalScope("Box"))
-                                {
-                                    if (GUILayout.Button(script.Name))
-                                    {
-                                        selectedMonoBehaviour = behaviour;
-                                        ActiveTab = GetTab("MonoBehaviour").Get();
-                                    }
-                                }
+                                SceneManager.UnloadSceneAsync(i);
+                            }
+                        }
+                        else
+                        {
+                            if (GUILayout.Button("Unload", "loadScene"))
+                            {
+                                SceneManager.LoadSceneAsync(i);
                             }
                         }
                     }
-                }
-                else
-                {
-                    GUILayout.Label($"No selected GameObject\nClick on an object in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
-                }
-            }
-        }
-
-        private void RenderTabMonoBehaviour()
-        {
-            using (new GUILayout.VerticalScope("Box"))
-            {
-                if (selectedMonoBehaviour)
-                {
-                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(monoBehaviourScrollPos))
-                    {
-                        monoBehaviourScrollPos = scroll.scrollPosition;
-                        RenderToggleButtons($"MonoBehaviour: {selectedMonoBehaviour.GetType().Name}");
-
-                        using (new GUILayout.VerticalScope("Box"))
-                        {
-                            DisplayAllPublicValues(selectedMonoBehaviour);
-                        }
-                    }
-                }
-                else
-                {
-                    GUILayout.Label($"No selected MonoBehaviour\nClick on an object in '{GetTab("MonoBehaviour").Get().Name}'", "fillMessage");
                 }
             }
         }
@@ -247,100 +209,226 @@ namespace NitroxClient.Debuggers
                 }
             }
 
+            // GameObject search textbox.
+            using (new GUILayout.HorizontalScope("Box"))
+            {
+                gameObjectSearch = GUILayout.TextField(gameObjectSearch);
+
+                // Disable searching if text is cleared after a search has happened.
+                if (gameObjectSearchIsSearching && string.IsNullOrEmpty(gameObjectSearch))
+                {
+                    gameObjectSearchIsSearching = false;
+                }
+
+                if (gameObjectSearch.Length > 0)
+                {
+                    if (GUILayout.Button("Search", "button", GUILayout.Width(80)))
+                    {
+                        gameObjectSearchIsSearching = true;
+                    }
+                    else if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
+                    {
+                        gameObjectSearchIsSearching = true;
+                    }
+                }
+            }
+
+            if (!gameObjectSearchIsSearching)
+            {
+                // Not searching, just select game objects from selected scene (if any).
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    if (selectedScene.IsValid())
+                    {
+                        using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
+                        {
+                            hierarchyScrollPos = scroll.scrollPosition;
+                            List<GameObject> showObjects = new List<GameObject>();
+                            if (selectedObject == null)
+                            {
+                                showObjects = selectedScene.GetRootGameObjects().ToList();
+                            }
+                            else
+                            {
+                                foreach (Transform t in selectedObject.transform)
+                                {
+                                    showObjects.Add(t.gameObject);
+                                }
+                            }
+
+                            foreach (GameObject child in showObjects)
+                            {
+                                string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
+                                if (GUILayout.Button($"{child.name}", guiStyle))
+                                {
+                                    selectedObject = child.gameObject;
+                                    selectedObjectActiveSelf = selectedObject.activeSelf;
+                                    selectedObjectPos = selectedObject.transform.position;
+                                    selectedObjectRot = selectedObject.transform.rotation;
+                                    selectedObjectScale = selectedObject.transform.localScale;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                    }
+                }
+            }
+            else
+            {
+                // Searching. Return all gameobjects with matching type name.
+                if (gameObjectSearch != gameObjectSearchCache)
+                {
+                    try
+                    {
+                        Regex.IsMatch("", gameObjectSearch);
+                        gameObjectSearchPatternInvalidMessage = "";
+                    }
+                    catch (Exception ex)
+                    {
+                        gameObjectSearchPatternInvalidMessage = ex.Message;
+                    }
+
+                    if (string.IsNullOrEmpty(gameObjectSearchPatternInvalidMessage))
+                    {
+                        gameObjectSearchResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch)).OrderBy(go => go.name).ToList();
+                        gameObjectSearchCache = gameObjectSearch;
+                    }
+                    else
+                    {
+                        GUILayout.Label(gameObjectSearchPatternInvalidMessage, "error");
+                    }
+                }
+
+                using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
+                {
+                    hierarchyScrollPos = scroll.scrollPosition;
+
+                    foreach (GameObject item in gameObjectSearchResult)
+                    {
+                        string guiStyle = item.transform.childCount > 0 ? "bold" : "label";
+                        if (GUILayout.Button($"{item.name}", guiStyle))
+                        {
+                            selectedObject = item.gameObject;
+                            selectedObjectActiveSelf = selectedObject.activeSelf;
+                            selectedObjectPos = selectedObject.transform.position;
+                            selectedObjectRot = selectedObject.transform.rotation;
+                            selectedObjectScale = selectedObject.transform.localScale;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void RenderTabGameObject()
+        {
             using (new GUILayout.VerticalScope("Box"))
             {
-                if (selectedScene.IsValid())
+                if (selectedObject)
                 {
-                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
+                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(gameObjectScrollPos))
                     {
-                        hierarchyScrollPos = scroll.scrollPosition;
-                        List<GameObject> showObjects = new List<GameObject>();
-                        if (selectedObject == null)
+                        gameObjectScrollPos = scroll.scrollPosition;
+                        RenderToggleButtons($"GameObject: {selectedObject.name}");
+
+                        using (new GUILayout.VerticalScope("Box"))
                         {
-                            showObjects = selectedScene.GetRootGameObjects().ToList();
-                        }
-                        else
-                        {
-                            foreach (Transform t in selectedObject.transform)
+                            using (new GUILayout.HorizontalScope())
                             {
-                                showObjects.Add(t.gameObject);
+                                selectedObjectActiveSelf = GUILayout.Toggle(selectedObjectActiveSelf, "Active");
+                            }
+
+                            GUILayout.Label("Position");
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                float.TryParse(GUILayout.TextField(selectedObjectPos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectPos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.z);
+                            }
+
+                            GUILayout.Label("Rotation");
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                float.TryParse(GUILayout.TextField(selectedObjectRot.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.z);
+                                float.TryParse(GUILayout.TextField(selectedObjectRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.w);
+                            }
+
+                            GUILayout.Label("Scale");
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.z);
                             }
                         }
 
-                        foreach (GameObject child in showObjects)
+                        foreach (MonoBehaviour behaviour in selectedObject.GetComponents<MonoBehaviour>())
                         {
-                            if (GUILayout.Button($"{child.name}", "label"))
+                            using (new GUILayout.HorizontalScope("Box"))
                             {
-                                selectedObject = child.gameObject;
-                                selectedObjectActiveSelf = selectedObject.activeSelf;
-                                selectedObjectPos = selectedObject.transform.position;
-                                selectedObjectRot = selectedObject.transform.rotation;
-                                selectedObjectScale = selectedObject.transform.localScale;
+                                if (GUILayout.Button(behaviour.GetType().Name))
+                                {
+                                    selectedMonoBehaviour = behaviour;
+                                    ActiveTab = GetTab("MonoBehaviour").Get();
+                                }
                             }
                         }
                     }
                 }
                 else
                 {
-                    GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                    GUILayout.Label($"No selected GameObject\nClick on an object in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
                 }
             }
         }
 
-        private void RenderTabScenes()
+        private void RenderTabMonoBehaviour()
         {
-            Scene scene = SceneManager.GetActiveScene();
             using (new GUILayout.VerticalScope("Box"))
             {
-                GUILayout.Label("All scenes", "header");
-                for (int i = 0; i < SceneManager.sceneCountInBuildSettings; i++)
+                if (selectedMonoBehaviour)
                 {
-                    Scene currentScene = SceneManager.GetSceneByBuildIndex(i);
-                    string path = SceneUtility.GetScenePathByBuildIndex(i);
-                    bool isSelected = selectedScene.IsValid() && currentScene == selectedScene;
-                    bool isLoaded = currentScene.isLoaded;
-
-                    using (new GUILayout.HorizontalScope("Box"))
+                    using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(monoBehaviourScrollPos))
                     {
-                        if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {path.TruncateLeft(35)}", isLoaded ? "sceneLoaded" : "label"))
-                        {
-                            selectedScene = currentScene;
-                            ActiveTab = GetTab("Hierarchy").Get();
-                        }
+                        monoBehaviourScrollPos = scroll.scrollPosition;
+                        RenderToggleButtons($"MonoBehaviour: {selectedMonoBehaviour.GetType().Name}");
 
-                        if (GUILayout.Button(isLoaded ? "Unload" : "Load", "loadScene"))
+                        using (new GUILayout.VerticalScope("Box"))
                         {
-                            if (isLoaded)
-                            {
-                                SceneManager.UnloadSceneAsync(i);
-                            }
-                            else
-                            {
-                                SceneManager.LoadSceneAsync(i);
-                            }
+                            GUILayout.Label("Fields", "header");
+                            RenderAllMonoBehaviourFields(selectedMonoBehaviour);
+                            GUILayout.Label("Methods", "header");
+                            RenderAllMonoBehaviourMethods(selectedMonoBehaviour);
                         }
                     }
                 }
+                else
+                {
+                    GUILayout.Label($"No selected MonoBehaviour\nClick on an object in '{GetTab("MonoBehaviour").Get().Name}'", "fillMessage");
+                }
             }
         }
 
-        private void DisplayAllPublicValues(MonoBehaviour mono)
+        private void RenderAllMonoBehaviourFields(MonoBehaviour mono)
         {
             FieldInfo[] fields = mono.GetType().GetFields(flags);
             foreach (FieldInfo field in fields)
             {
                 using (new GUILayout.HorizontalScope("box"))
                 {
-                    string[] FieldTypeNames = field.FieldType.ToString().Split('.');
-                    GUILayout.Label("[" + FieldTypeNames[FieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
+                    string[] fieldTypeNames = field.FieldType.ToString().Split('.');
+                    GUILayout.Label("[" + fieldTypeNames[fieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
                     if (field.FieldType == typeof(bool))
                     {
-                        bool i = bool.Parse(GetValue(field, selectedMonoBehaviour));
-                        if (GUILayout.Button(i.ToString()))
+                        bool boolVal = bool.Parse(GetValue(field, selectedMonoBehaviour));
+                        if (GUILayout.Button(boolVal.ToString()))
                         {
-                            RegistrateChanges(field, selectedMonoBehaviour, !i);
+                            RegisterFieldChanges(field, selectedMonoBehaviour, !boolVal);
                         }
-
                     }
                     else if (field.FieldType.BaseType == typeof(MonoBehaviour))
                     {
@@ -348,7 +436,6 @@ namespace NitroxClient.Debuggers
                         {
                             selectedMonoBehaviour = (MonoBehaviour)field.GetValue(selectedMonoBehaviour);
                         }
-
                     }
                     else if (field.FieldType == typeof(GameObject))
                     {
@@ -357,7 +444,6 @@ namespace NitroxClient.Debuggers
                             selectedObject = (GameObject)field.GetValue(selectedMonoBehaviour);
                             ActiveTab = GetTab("GameObject").Get();
                         }
-
                     }
                     else if (field.FieldType == typeof(Text))
                     {
@@ -381,6 +467,7 @@ namespace NitroxClient.Debuggers
                         {
                             img = (Texture)field.GetValue(selectedMonoBehaviour);
                         }
+
                         GUIStyle style = new GUIStyle("box");
                         style.fixedHeight = 250 * (img.width / img.height);
                         style.fixedWidth = 250;
@@ -393,7 +480,7 @@ namespace NitroxClient.Debuggers
                         {
                             //Check if convert work to prevent two TextFields
                             Convert.ChangeType(field.GetValue(selectedMonoBehaviour).ToString(), field.FieldType);
-                            RegistrateChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, selectedMonoBehaviour), "options"), field.FieldType));
+                            RegisterFieldChanges(field, selectedMonoBehaviour, Convert.ChangeType(GUILayout.TextField(GetValue(field, selectedMonoBehaviour), "options"), field.FieldType));
                         }
                         catch
                         {
@@ -404,11 +491,42 @@ namespace NitroxClient.Debuggers
             }
         }
 
+        private void RenderAllMonoBehaviourMethods(MonoBehaviour mono)
+        {
+            MethodInfo[] methods = mono.GetType().GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy).OrderBy(m => m.Name).ToArray();
+            foreach (MethodInfo method in methods)
+            {
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    GUILayout.Label(method.ToString());
+                    using (new GUILayout.HorizontalScope())
+                    {
+                        // TODO: Allow methods with parameters to be called.
+                        if (!method.GetParameters().Any())
+                        {
+                            if (GUILayout.Button("Invoke"))
+                            {
+                                object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
+                                if (result != null)
+                                {
+                                    Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
+                                }
+                                else
+                                {
+                                    Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private void RenderToggleButtons(string label)
         {
             using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label(label, "header");
+                GUILayout.Label(label, "bold");
                 editMode = GUILayout.Toggle(editMode, "EditMode");
                 sendToServer = Multiplayer.Main != null && GUILayout.Toggle(sendToServer, "Send to server");
                 if (GUILayout.Button("Save"))
@@ -418,7 +536,7 @@ namespace NitroxClient.Debuggers
             }
         }
 
-        private void RegistrateChanges(FieldInfo field, Component component, object value)
+        private void RegisterFieldChanges(FieldInfo field, Component component, object value)
         {
             if (editMode)
             {
@@ -446,6 +564,7 @@ namespace NitroxClient.Debuggers
                     }
                 }
             }
+
             return field.GetValue(instance).ToString();
         }
 
@@ -471,6 +590,7 @@ namespace NitroxClient.Debuggers
                     action.SendValueChangeToServer();
                 }
             }
+
             actionList.Clear();
         }
     }
@@ -492,23 +612,6 @@ namespace NitroxClient.Debuggers
             Field = field;
             Obj = obj;
             Value = value;
-        }
-
-
-        public void SaveFieldValue()
-        {
-            Field.SetValue(Obj, Value);
-        }
-
-        public void SendValueChangeToServer()
-        {
-            if (Multiplayer.Main != null)
-            {
-                string guid = GetGameObjectPath(Component.gameObject);
-                int objectNumber = Component.gameObject.transform.GetSiblingIndex();
-                int componentNumber = GetComponentChildNumber(Component);
-                NitroxServiceLocator.LocateService<Debugger>().SceneDebuggerChange(guid, objectNumber, componentNumber, Field.Name, Value);
-            }
         }
 
         public static void SendValueChangeToServer(Component component, string fieldName, object value)
@@ -534,8 +637,24 @@ namespace NitroxClient.Debuggers
                     return item;
                 }
             }
+
             return null;
-            //return list.First(item => item.Field == field);
+        }
+
+        public void SaveFieldValue()
+        {
+            Field.SetValue(Obj, Value);
+        }
+
+        public void SendValueChangeToServer()
+        {
+            if (Multiplayer.Main != null)
+            {
+                string guid = GetGameObjectPath(Component.gameObject);
+                int objectNumber = Component.gameObject.transform.GetSiblingIndex();
+                int componentNumber = GetComponentChildNumber(Component);
+                NitroxServiceLocator.LocateService<Debugger>().SceneDebuggerChange(guid, objectNumber, componentNumber, Field.Name, Value);
+            }
         }
 
         private static string GetGameObjectPath(GameObject gameObject)
@@ -547,6 +666,7 @@ namespace NitroxClient.Debuggers
                 parent = parent.parent;
                 path.Insert(1, parent.name + "/");
             }
+
             return path.ToString();
         }
 
@@ -561,8 +681,8 @@ namespace NitroxClient.Debuggers
                     childNumber = i;
                 }
             }
-            return childNumber;
-        }        
 
+            return childNumber;
+        }
     }
 }
