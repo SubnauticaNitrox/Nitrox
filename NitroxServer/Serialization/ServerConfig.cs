@@ -12,6 +12,8 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
         private const int DEFAULT_SAVE_INTERVAL = 60000;
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
+        private const string DEFAULT_SERVER_PASSWORD = "yourpassword";
+        private const string DEFAULT_PASSWORD_SETTING = "ServerAdminPassword";
 
         private int? _serverPort = null;
         public int ServerPort
@@ -47,11 +49,24 @@ namespace NitroxServer.ConfigParser
             get
             {
                 int configValue;
-                if (_saveInterval == null && Int32.TryParse(Properties.ServerSessionSettings.Default.SaveInterval, out configValue))
+                if (_saveInterval == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SAVE_SETTING], out configValue))
                 {
                     _saveInterval = configValue;
                 }
                 return _saveInterval * 1000 ?? DEFAULT_SAVE_INTERVAL;
+            }
+        }
+
+        public string ServerAdminPassword
+        {
+            get
+            {
+                string _ServerAdminPassword = null;
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING]))
+                {
+                    _ServerAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                }
+                return _ServerAdminPassword ?? DEFAULT_SERVER_PASSWORD;
             }
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.Util;
@@ -61,7 +61,7 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
 
                 bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings, IsAdmin);
+                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
                 ushort playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 

@@ -75,7 +75,7 @@ namespace NitroxServer.ConsoleCommands.Processor
                     return;
                 }
             } 
-            Log.Info("Someone without the required permissions attempted a command");
+            Log.Info(player.Name + " attempted a command");
         }
     }
 }

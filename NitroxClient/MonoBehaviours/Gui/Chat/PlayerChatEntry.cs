@@ -1,4 +1,4 @@
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -19,17 +19,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const string GUI_CHAT_NAME = "ChatInput";
         private PlayerChat chat;
         private GameLogic.Chat chatBroadcaster;
-
+        private IPacketSender serverPacket;
         private bool chatEnabled;
         private string chatMessage = "";
+        
         private IMultiplayerSession multiplayerSession;
 
         public void Awake()
         {
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             chatBroadcaster = NitroxServiceLocator.LocateService<GameLogic.Chat>();
+            serverPacket = NitroxServiceLocator.LocateService<IPacketSender>();
         }
-
+        
         public void OnGUI()
         {
             if (chatEnabled)
@@ -78,10 +80,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (chat != null && chatMessage.Length > 0)
             {
-                if(chatMessage.Substring(0, 1) == "/")
+                if(chatMessage[0] == '/')
                 {
-                    string[] args = { chatMessage.Substring(1) };
-                    NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
+                    string[] cmdMessage = { chatMessage.Substring(1) };
+                    serverPacket.Send(new ServerCommand(cmdMessage));
                 }
                 else
                 {
