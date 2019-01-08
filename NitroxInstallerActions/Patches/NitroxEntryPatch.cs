@@ -14,12 +14,12 @@ namespace InstallerActions.Patches
         public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
         private const string NITROX_ENTRY_TYPE_NAME = "Main";
-        private const string NITROX_ENTRY_METHOD_NAME = "Execute";
+        private const string NITROX_ENTRY_METHOD_NAME = "ExecuteIfEnabled";
 
         private const string GAME_INPUT_TYPE_NAME = "GameInput";
         private const string GAME_INPUT_METHOD_NAME = "Awake";
 
-        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
+        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::ExecuteIfEnabled()";
 
         private readonly string subnauticaBasePath;
 

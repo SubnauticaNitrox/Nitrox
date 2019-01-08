@@ -12,6 +12,7 @@ using NitroxModel.Logger;
 using NitroxPatcher.Patches;
 using NitroxReloader;
 using UnityEngine;
+using System.IO;
 
 namespace NitroxPatcher
 {
@@ -20,7 +21,22 @@ namespace NitroxPatcher
         private static NitroxPatch[] patches;
         private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
         private static bool isApplied;
-
+        public static void ExecuteIfEnabled()
+        {
+            if (File.Exists(@".\nitrox.enabled"))
+            {
+                string fileContents = File.ReadAllText(@".\nitrox.enabled").ToLower();
+                if (fileContents == "true")
+                {
+                    Execute();
+                }
+            }
+            else
+            {
+                File.WriteAllText(@".\nitrox.enabled", "true");
+                Execute();
+            }
+        }
         public static void Execute()
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
