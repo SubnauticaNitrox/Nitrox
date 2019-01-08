@@ -235,10 +235,10 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMods.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuMultiplayerPanel.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\MainMenuNotification.cs" />
+    <Compile Include="MonoBehaviours\Gui\MainMenu\ServerInfo.cs" />
     <Compile Include="MonoBehaviours\Multiplayer.cs" />
     <Compile Include="MonoBehaviours\MultiplayerCyclops.cs" />
-    <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />
-    <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
+    <Compile Include="MonoBehaviours\MultiplayerExosuit.cs" />    <Compile Include="MonoBehaviours\MultiplayerSeaMoth.cs" />
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
     <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
     <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
