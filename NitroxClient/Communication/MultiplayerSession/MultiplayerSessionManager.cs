@@ -46,6 +46,14 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
         {
             SessionPolicy = policy;
+            if(SessionPolicy.NitroxVersionAllowed != typeof(NitroxModel.Extensions).Assembly.FullName)
+            {
+                Log.Warn($"Nitrox Model versions do not match.\n" +
+                    $"    Server - {SessionPolicy.NitroxVersionAllowed}\n" +
+                    $"    Client - {typeof(NitroxModel.Extensions).Assembly.FullName}");
+                Log.InGame("The server is using a different version of Nitrox. Please contact the server admin to install the same version.");
+                CurrentState.Disconnect(this);
+            }
             CurrentState.NegotiateReservation(this);
         }
 
