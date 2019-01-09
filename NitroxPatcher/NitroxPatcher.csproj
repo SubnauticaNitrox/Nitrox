@@ -122,7 +122,7 @@
     <Compile Include="Patches\Pickupable_Drop_Patch.cs" />
     <Compile Include="Patches\Pickupable_Pickup_Patch.cs" />
     <Compile Include="Patches\Player_Update_Patch.cs" />
-    <Compile Include="Patches\SubConsoleCommand_OnSubPrefabLoaded_Patch.cs" />
+    <Compile Include="Patches\SubConsoleCommand_OnConsoleCommand_sub_Patch.cs" />
     <Compile Include="Patches\uGUI_SignInput_OnDeselect_Patch.cs" />
     <Compile Include="Patches\Stalker_CheckLoseTooth_Patch.cs" />
     <Compile Include="Patches\StoryGoal_Execute_Patch.cs" />

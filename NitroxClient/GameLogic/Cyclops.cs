@@ -3,7 +3,9 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -71,20 +73,6 @@ namespace NitroxClient.GameLogic
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(guid);
             packetSender.Send(packet);
-        }
-
-        /// <summary>
-        /// Spawn a new Cyclops. <paramref name="subRoot"/> will not have its position or rotation declared upon spawning. You must pull those values from
-        /// elsewhere.
-        /// </summary>
-        public void SpawnNew(GameObject subRoot, Vector3 position, Quaternion rotation)
-        {
-            string guid = GuidHelper.GetGuid(subRoot.gameObject);
-
-            // TODO: Refactor
-            //VehicleMovement packet = new VehicleMovement(packetSender
-            //VehicleMovement packet = new VehicleMovement(packetSender.PlayerId, position, Vector3.zero, rotation, Vector3.zero, TechType.Cyclops, guid, 0, 0, false);
-            //packetSender.Send(packet);
         }
 
         /// <summary>

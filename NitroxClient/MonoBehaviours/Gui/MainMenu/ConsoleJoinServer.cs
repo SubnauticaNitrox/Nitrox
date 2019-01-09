@@ -1,8 +1,12 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
@@ -33,6 +37,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             DevConsole.RegisterConsoleCommand(this, "mplayer", false);
             DevConsole.RegisterConsoleCommand(this, "warpto", false);
             DevConsole.RegisterConsoleCommand(this, "disconnect", false);
+            DevConsole.RegisterConsoleCommand(this, "sub", false);
         }
 
         public void OnConsoleCommand_mplayer(NotificationCenter.Notification n)
@@ -88,6 +93,24 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     Player.main.SetPosition(opPlayer.Get().Body.transform.position);
                     Player.main.OnPlayerPositionCheat();
+                }
+            }
+        }
+
+        public void OnConsoleCommand_sub(NotificationCenter.Notification n)
+        {
+            if (n?.data?.Count > 0)
+            {
+                string subName = (string)n.data[0];
+
+                switch (subName.ToLowerInvariant())
+                {
+                    case "cyclops":
+                        NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Cyclops, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                        break;
+                    case "beetle":
+                        NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Seamoth, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                        break;
                 }
             }
         }

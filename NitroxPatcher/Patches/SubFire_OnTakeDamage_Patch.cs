@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
+    /*
     /// <summary>
     /// Hook onto <see cref="SubFire.OnTakeDamage(DamageInfo)"/>. If the function made it to the end, that means it created a new fire.
     /// </summary>
@@ -55,5 +56,5 @@ namespace NitroxPatcher.Patches
         {
             PatchTranspiler(harmony, TARGET_METHOD);
         }
-    }
+    }*/
 }

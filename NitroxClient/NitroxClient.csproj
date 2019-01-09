@@ -130,6 +130,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerKickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
