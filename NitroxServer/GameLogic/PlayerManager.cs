@@ -59,7 +59,8 @@ namespace NitroxServer.GameLogic
 
                 reservedPlayerNames.Add(playerName);
 
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), playerSettings);
+                bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
+                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
                 ushort playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 
@@ -70,13 +71,15 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public Player CreatePlayer(Connection connection, string reservationKey)
+        public Player CreatePlayer(Connection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             lock (assetsByConnection)
             {
                 ConnectionAssets assetPackage = assetsByConnection[connection];
                 PlayerContext playerContext = reservations[reservationKey];
                 Validate.NotNull(playerContext);
+
+                wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
 
                 // Load previously persisted data for this player.
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);

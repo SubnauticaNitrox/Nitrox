@@ -53,6 +53,9 @@
     <Compile Include="Main.cs" />
     <Compile Include="Patches\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\BaseAddModuleGhost_UpdatePlacement_Patch.cs" />
+    <Compile Include="Patches\BaseDeconstructable_Deconstructor_Patch.cs" />
+    <Compile Include="Patches\BaseDeconstructable_Constructor_Patch.cs" />
+    <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
