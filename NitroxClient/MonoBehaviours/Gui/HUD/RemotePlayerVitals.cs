@@ -26,6 +26,8 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private string playerName;
         private Bar waterBar;
 
+        private Canvas canvas;
+
         /// <summary>
         ///     Creates a player vitals UI elements for the player id.
         /// </summary>
@@ -36,10 +38,11 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
             RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Get();
 
-            Canvas vitalsCanvas = vitals.CreateCanvas(remotePlayer.Body.transform);
+            vitals.canvas = vitals.CreateCanvas(remotePlayer.Body.transform);
+
             vitals.playerName = remotePlayer.PlayerName;
-            vitals.CreatePlayerName(vitalsCanvas);
-            vitals.CreateStats(remotePlayer, vitalsCanvas);
+            vitals.CreatePlayerName(vitals.canvas);
+            vitals.CreateStats(remotePlayer, vitals.canvas);
 
             return vitals;
         }
@@ -75,28 +78,25 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             UpdateSmoothValue(healthBar);
             UpdateSmoothValue(foodBar);
             UpdateSmoothValue(waterBar);
+
+            // Make canvas face camera.
+            canvas.transform.forward = Camera.main.transform.forward;
         }
 
         private Canvas CreateCanvas(Transform playerTransform)
         {
-            GameObject vitals;
-            Canvas vitalsCanvas;
-
             // Canvas
-            vitals = new GameObject();
+            GameObject vitals = new GameObject();
             vitals.name = "RemotePlayerVitals";
             vitals.AddComponent<Canvas>();
             vitals.transform.SetParent(playerTransform, false);
             vitals.transform.localPosition = new Vector3(0, 0, 0);
-            vitals.transform.rotation = Quaternion.Euler(playerTransform.rotation.eulerAngles.x, playerTransform.rotation.eulerAngles.y + 180, playerTransform.rotation.eulerAngles.z);
 
-            vitalsCanvas = vitals.GetComponent<Canvas>();
+            Canvas vitalsCanvas = vitals.GetComponent<Canvas>();
             vitalsCanvas.renderMode = RenderMode.WorldSpace;
 
             CanvasScaler scaler = vitals.AddComponent<CanvasScaler>();
             scaler.dynamicPixelsPerUnit = 100;
-
-            vitals.AddComponent<GraphicRaycaster>();
 
             return vitalsCanvas;
         }

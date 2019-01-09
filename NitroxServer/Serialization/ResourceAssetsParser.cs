@@ -82,16 +82,16 @@ namespace NitroxServer.Serialization
 
             if (!subnauticaPath.IsEmpty())
             {
-                gameResourcesPath = Path.Combine(subnauticaPath.Get(), "Subnautica_Data/resources.assets");
+                gameResourcesPath = Path.Combine(subnauticaPath.Get(), "Subnautica_Data", "resources.assets");
             }
 
             if (File.Exists(gameResourcesPath))
             {
                 return gameResourcesPath;
             }
-            else if (File.Exists("../resources.assets"))
+            else if (File.Exists(Path.Combine("..", "resources.assets")))
             {
-                return Path.GetFullPath("../resources.assets");
+                return Path.GetFullPath(Path.Combine("..", "resources.assets"));
             }
             else if (File.Exists("resources.assets"))
             {

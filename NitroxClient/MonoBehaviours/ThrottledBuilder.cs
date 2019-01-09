@@ -12,6 +12,7 @@ using NitroxModel.Packets;
 using System;
 using System.Reflection;
 using UnityEngine;
+using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -155,10 +156,28 @@ namespace NitroxClient.MonoBehaviours
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
             GameObject constructing = GuidHelper.RequireObjectFrom(constructionCompleted.Guid);
-            Constructable constructable = constructing.GetComponent<Constructable>();
-            constructable.constructedAmount = 1f;
-            constructable.SetState(true, true);
 
+            ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
+
+            // For bases, we need to transfer the GUID off of the ghost and onto the finished piece.
+            // Furniture just re-uses the same piece.
+            if(constructableBase)
+            {
+                constructableBase.constructedAmount = 1f;
+                constructableBase.SetState(true, true);
+                
+                Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
+                GameObject finishedPiece = (GameObject)opBasePiece.Get();
+                UnityEngine.Object.Destroy(constructableBase.gameObject);
+                GuidHelper.SetNewGuid(finishedPiece, constructionCompleted.Guid);
+            }
+            else
+            {
+                Constructable constructable = constructing.GetComponent<Constructable>();
+                constructable.constructedAmount = 1f;
+                constructable.SetState(true, true);
+            }           
+            
             if (constructionCompleted.NewBaseCreatedGuid.IsPresent())
             {
                 string newBaseGuid = constructionCompleted.NewBaseCreatedGuid.Get();
@@ -183,15 +202,41 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            Log.Debug("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
+            Log.Info("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
 
             GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);
-            Constructable constructable = constructing.GetComponent<Constructable>();
-            constructable.constructedAmount = amountChanged.Amount;
+            BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
 
-            using (packetSender.Suppress<ConstructionAmountChanged>())
+            // Bases don't  send a deconstruct being packet.  Instead, we just make sure
+            // that if we are changing the amount that we set it into deconstruction mode
+            // if it still has a BaseDeconstructable object on it.
+            if (baseDeconstructable != null)
             {
-                constructable.Construct();
+                baseDeconstructable.Deconstruct();
+
+                // After we have begun the deconstructing for a base piece, we need to transfer the guid
+                Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE);
+
+                if(opGhost.IsPresent())
+                {
+                    GameObject ghost = (GameObject)opGhost.Get();
+                    UnityEngine.Object.Destroy(constructing);
+                    GuidHelper.SetNewGuid(ghost, amountChanged.Guid);
+                }
+                else
+                {
+                    Log.Info("Could not find newly created ghost to set deconstructed guid ");
+                }
+            }
+            else
+            {
+                Constructable constructable = constructing.GetComponentInChildren<Constructable>();
+                constructable.constructedAmount = amountChanged.Amount;
+
+                using (packetSender.Suppress<ConstructionAmountChanged>())
+                {
+                    constructable.Construct();
+                }
             }
         }
 

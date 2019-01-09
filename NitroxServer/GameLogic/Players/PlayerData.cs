@@ -72,6 +72,14 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        public bool hasSeenPlayerBefore(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                return playersByPlayerName.ContainsKey(playerName);
+            }
+        }
+
         public void UpdatePlayerSpawn(string playerName, Vector3 position)
         {
             lock (playersByPlayerName)

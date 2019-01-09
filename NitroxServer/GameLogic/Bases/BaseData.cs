@@ -58,6 +58,11 @@ namespace NitroxServer.GameLogic.Bases
                 if (basePiecesByGuid.TryGetValue(guid, out basePiece))
                 {
                     basePiece.ConstructionAmount = constructionAmount;
+
+                    if(basePiece.ConstructionCompleted)
+                    {
+                        basePiece.ConstructionCompleted = false;
+                    }
                 }
             }
         }

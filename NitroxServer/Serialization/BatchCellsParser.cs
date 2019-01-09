@@ -39,7 +39,7 @@ namespace NitroxServer.Serialization
 
             ParseFile(batchId, "", "loot-slots", spawnPoints);
             ParseFile(batchId, "", "creature-slots", spawnPoints);
-            ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
+            ParseFile(batchId, "Generated", "slots", spawnPoints);  // Very expensive to load
             ParseFile(batchId, "", "loot", spawnPoints);
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
@@ -58,11 +58,12 @@ namespace NitroxServer.Serialization
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData\\Build18");
-            string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
+            string fileName = Path.Combine(path, pathPrefix, "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
+                // Log.Debug("File not exists: " + fileName)
                 return;
             }
 
