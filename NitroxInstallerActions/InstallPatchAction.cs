@@ -16,7 +16,7 @@ namespace NitroxInstallerActions
             try
             {
                 string managedDirectory = session.CustomActionData["MANAGEDDIR"];
-                string gameDir = Path.GetDirectoryName(Path.Combine(Path.GetFullPath(managedDirectory), "..\\..\\Subnautica.exe"));
+                string gameDir = Path.GetDirectoryName(Path.Combine(Path.GetFullPath(managedDirectory), "..","..","Subnautica.exe"));
                 if (!RequiredAssembliesExist(managedDirectory))
                 {
                     MessageBox.Show("Error installing Nitrox to the specified directory. Please ensure the installer is pointing to your subnautica directory and try again.  Attempting to locate managed at: " + managedDirectory);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
 
 namespace InstallerActions.Patches
 {
@@ -33,11 +34,11 @@ namespace InstallerActions.Patches
                     }
                     if (item == "ProgramServer")
                     {
-                        setFirewallRulesStartInfo.Arguments = "advfirewall firewall add rule name=" + quotation + "Nitrox Multiplayer Mod Server" + quotation + " dir=in action=allow program=" + quotation + SubPath + @"\SubServer\NitroxServer.exe" + quotation + " enable=yes";
+                        setFirewallRulesStartInfo.Arguments = "advfirewall firewall add rule name=" + quotation + "Nitrox Multiplayer Mod Server" + quotation + " dir=in action=allow program=" + quotation +Path.Combine(SubPath,"SubServer","NitroxServer.exe") + quotation + " enable=yes";
                     }
                     if (item == "ProgramClient")
                     {
-                        setFirewallRulesStartInfo.Arguments = "advfirewall firewall add rule name=" + quotation + "Nitrox Multiplayer Mod Client" + quotation + " dir=in action=allow program=" + quotation + SubPath + @"\Subnautica.exe" + quotation + " enable=yes";
+                        setFirewallRulesStartInfo.Arguments = "advfirewall firewall add rule name=" + quotation + "Nitrox Multiplayer Mod Client" + quotation + " dir=in action=allow program=" + quotation + Path.Combine(SubPath,"Subnautica.exe") + quotation + " enable=yes";
                     }
                     setFirewallRules.StartInfo = setFirewallRulesStartInfo;
                     setFirewallRules.Start();
