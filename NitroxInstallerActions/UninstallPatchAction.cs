@@ -1,6 +1,7 @@
 ﻿using System;
 using InstallerActions.Patches;
 using Microsoft.Deployment.WindowsInstaller;
+using System.Windows.Forms;
 
 namespace NitroxInstallerActions
 {
@@ -22,6 +23,12 @@ namespace NitroxInstallerActions
                 }
 
                 NitroxServerSetup.Uninstall(managedDirectory);
+                string[] installedRules = FirewallRules.GetInstalledRules();
+                string status = FirewallRules.RemoveFirewallRules(installedRules);
+                if (status == "fail")
+                {
+                    MessageBox.Show("You may need to remove some firewall exceptions manually");
+                }
             }
             catch (Exception ex)
             {
