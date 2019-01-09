@@ -31,6 +31,7 @@ namespace NitroxServer.ConsoleCommands
             catch (Exception ex)
             {
                 Log.Error("Error attempting to kick: " + args[0], ex);
+                player.SendPacket(new InGameMessageEvent("Error attempting to kick: " + args[0] + ex));
             }
         }
 

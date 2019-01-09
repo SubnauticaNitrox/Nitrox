@@ -4,6 +4,7 @@ using NitroxServer.Communication;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.ConfigParser;
+using NitroxModel.Packets;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -22,10 +23,13 @@ namespace NitroxServer.ConsoleCommands
             {
                 player.isAdmin = true;
                 Log.Info(player.Name + " logged in as Admin");
+                player.SendPacket(new InGameMessageEvent("Successful Login"));
+
             }
             else
             {
                 Log.Info(player.Name + " attempted to login as admin using " + args[0]);
+                player.SendPacket(new InGameMessageEvent("Incorrect Password"));
             }
         }
 

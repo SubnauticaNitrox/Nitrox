@@ -1,4 +1,5 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
+﻿using NitroxModel.Packets;
+using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,6 +12,7 @@ namespace NitroxServer.ConsoleCommands
         public override void RunCommand(string[] args, Player player)
         {
             Server.Instance.Save();
+            player.SendPacket(new InGameMessageEvent("Saving World State"));
         }
 
         public override bool VerifyArgs(string[] args)

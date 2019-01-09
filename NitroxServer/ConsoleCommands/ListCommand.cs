@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 
@@ -19,10 +20,12 @@ namespace NitroxServer.ConsoleCommands
             if (playerManager.GetPlayers().Any())
             {
                 Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
+                player.SendPacket(new InGameMessageEvent("Players: " + string.Join(", ", playerManager.GetPlayers()))); 
             }
             else
             {
                 Log.Info("No players online");
+                player.SendPacket(new InGameMessageEvent("No players online"));
             }
         }
 
