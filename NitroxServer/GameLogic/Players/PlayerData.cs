@@ -221,7 +221,7 @@ namespace NitroxServer.GameLogic.Players
             public string SubRootGuid { get; set; }
 
             [ProtoMember(7)]
-            public Perms Permissions { get; set; }
+            public Perms Permissions { get; set; } = Perms.Player;
 
             public PersistedPlayerData()
             {
