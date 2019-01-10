@@ -31,8 +31,11 @@ namespace NitroxClient.Communication.Packets.Processors
     /// there's a chance a fire will start.
     /// </para><para>
     /// Cyclops fire extinguishing is handled at <see cref="Fire.Douse(float)"/>. A large douse amount triggers the private <see cref="Fire.Extinguish()"/> method.
-    /// </para><para>
-    /// Currently this does a full re-sync of damage points and fires due to having no set owner. Any client can call for an change of the Cyclops' health state.
+    /// </para>
+    /// <para>
+    /// Clients only receive this packet. Owners will broadcast this packet whenever it takes damage, or it receives a <see cref="CyclopsFireHealthChanged"/> 
+    /// or <see cref="CyclopsDamagePointHealthChanged"/> packet from a client. The absolute health state of the Cyclops is maintained solely by the owner, but any client can participate 
+    /// in repairing the Cyclops.
     /// </para>
     /// </summary>
     public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
@@ -260,7 +263,11 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<CyclopsDamage>())
             {
-                damageManager.RepairPoint(damageManager.damagePoints[damagePointsIndex]);
+                using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+                {
+                    damageManager.damagePoints[damagePointsIndex].OnRepair();
+                    // damageManager.RepairPoint(damageManager.damagePoints[damagePointsIndex]);
+                }
             }
         }
 

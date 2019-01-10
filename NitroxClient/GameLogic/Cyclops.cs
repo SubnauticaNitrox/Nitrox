@@ -16,6 +16,7 @@ namespace NitroxClient.GameLogic
     public class Cyclops
     {
         private readonly IPacketSender packetSender;
+        private readonly SimulationOwnership simulationOwnershipManager;
 
         /// <summary>
         /// KeyValuePair<Guid, douseAmount>. Used in <see cref="OnFireDoused(Fire, SubRoot, float)"/> to reduce
@@ -28,9 +29,10 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private const float FIRE_DOUSE_AMOUNT_TRIGGER = 12f;
 
-        public Cyclops(IPacketSender packetSender)
+        public Cyclops(IPacketSender packetSender, SimulationOwnership simulationOwnershipManager)
         {
             this.packetSender = packetSender;
+            this.simulationOwnershipManager = simulationOwnershipManager;
         }
 
         public void ToggleInternalLight(string guid, bool isOn)
@@ -81,6 +83,13 @@ namespace NitroxClient.GameLogic
         public void OnTakeDamage(SubRoot subRoot, DamageInfo info)
         {
             string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
+
+            // If it isn't the owner, we don't care what happened
+            if (!simulationOwnershipManager.HasExclusiveLock(subGuid))
+            {
+                return;
+            }
+
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
 
             SerializableDamageInfo damageInfo = null;
@@ -109,7 +118,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                // Only a client side damage event can trigger this.
+                // RIP
                 Log.Debug("[CyclopsDestroyedProcessor Guid: " + subGuid + " received OnTakeDamage after health is 0, packet sent.]");
 
                 CyclopsDestroyed packet = new CyclopsDestroyed(subGuid);
@@ -118,11 +127,48 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Called externally when the player repairs a <see cref="CyclopsDamagePoint"/>.
+        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. If it's the owner, they need to send a full state update
         /// </summary>
-        public void OnDamagePointRepaired(SubRoot subRoot)
+        public void OnDamagePointRepaired(CyclopsDamagePoint damagePoint, SubRoot subRoot, float repairAmount)
         {
-            OnTakeDamage(subRoot, null);
+            string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
+
+            for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
+            {
+                if (subRoot.damageManager.damagePoints[i] == damagePoint)
+                {
+                    CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
+                    packetSender.Send(packet);
+                    Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " received OnDamagePointRepaired to index " + i.ToString() + ".]");
+
+                    // The owner needs to send out a state update if they were the one to repair the point
+                    if (simulationOwnershipManager.HasExclusiveLock(subGuid))
+                    {
+                        Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " this user is the owner. Broadcasting new damage state update.]");
+                        OnTakeDamage(subRoot, null);
+                    }
+
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Repairs a damage point.
+        /// </summary>
+        /// <param name="damageManager">The <see cref="CyclopsExternalDamageManager"/> located in <see cref="SubRoot.damageManager"/></param>
+        /// <param name="damagePointsIndex">The index of the <see cref="CyclopsDamagePoint"/></param>
+        public void RepairDamagePoint(CyclopsExternalDamageManager damageManager, int damagePointsIndex, float amount)
+        {
+            using (packetSender.Suppress<CyclopsDamage>())
+            {
+                using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+                {
+                    // If the amount is high enough, it'll heal full
+                    damageManager.damagePoints[damagePointsIndex].liveMixin.AddHealth(amount);
+                    // damageManager.RepairPoint(damageManager.damagePoints[damagePointsIndex]);
+                }
+            }
         }
 
         /// <summary>

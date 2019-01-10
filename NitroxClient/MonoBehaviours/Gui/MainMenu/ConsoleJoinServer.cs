@@ -108,9 +108,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     case "cyclops":
                         NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Cyclops, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
                         break;
-                    case "beetle":
-                        NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Seamoth, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
-                        break;
+                    // Doesn't actually work in the game. Despite "beetle" being an option, it's only "cyclops" that works. Doesn't mean we can't add it ourselves later
+                    // case "seamoth":
+                    //    NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Seamoth, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                    //    break;
                 }
             }
         }

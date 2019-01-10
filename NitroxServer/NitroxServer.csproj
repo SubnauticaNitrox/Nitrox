@@ -103,6 +103,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsDamagePointHealthChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireHealthChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SignChangedPacketProcessor.cs" />
