@@ -20,15 +20,8 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(ServerCommand packet, Player player)
         {
             string msg = string.Join(" ", packet.CmdArgs);
-
-            if (playerData.GetPermissions(player.Name) >= Perms.Admin)
-            {
-                cmdProcessor.ProcessCommand(msg);
-            }
-            else
-            {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have permission for this command!"));
-            }
+            
+            cmdProcessor.ProcessPlayerCommand(msg, player, playerData.GetPermissions(player.Name));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
 
-        public DeopCommand(PlayerData playerData, PlayerManager playerManager) : base("deop", Optional<string>.Of("<name>"))
+        public DeopCommand(PlayerData playerData, PlayerManager playerManager) : base("deop", Perms.Admin, Optional<string>.Of("<name>"))
         {
             this.playerData = playerData;
             this.playerManager = playerManager;
@@ -28,17 +28,8 @@ namespace NitroxServer.ConsoleCommands
 
         public override bool VerifyArgs(string[] args)
         {
-            bool playerFound = false;
-            foreach (Player player in playerManager.GetPlayers())
-            {
-                if (player.Name == args[0])
-                {
-                    playerFound = true;
-                    break;
-                }
-            }
-
-            return playerFound;
+            Player player;
+            return playerManager.TryGetPlayerByName(args[0], out player);
         }
     }
 }

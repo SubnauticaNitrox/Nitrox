@@ -1,10 +1,11 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class SaveCommand : Command
     {
-        public SaveCommand() : base("save")
+        public SaveCommand() : base("save", Perms.Admin)
         {
         }
 

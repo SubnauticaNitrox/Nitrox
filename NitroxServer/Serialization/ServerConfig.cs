@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.ConfigParser
@@ -14,6 +15,15 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
         private const GameModeOption DEFAULT_GAMEMODE = GameModeOption.Survival;
         private const string GAMEMODE_SETTING = "GameMode";
+
+        private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
+        {
+            {"survival", GameModeOption.Survival},
+            {"creative", GameModeOption.Creative},
+            {"hardcore", GameModeOption.Hardcore},
+            {"permadeath", GameModeOption.Permadeath}
+
+        };
 
         private int? _serverPort = null;
         public int ServerPort
@@ -60,30 +70,7 @@ namespace NitroxServer.ConfigParser
         {
             GameModeOption gameMode = GameModeOption.Survival;
             stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits
-            switch (stringGameMode)
-            {
-                case ("survival"):
-                    {
-                        gameMode = GameModeOption.Survival;
-                        break;
-                    }
-                case ("creative"):
-                    {
-                        gameMode = GameModeOption.Creative;
-                        break;
-                    }
-                case ("hardcore"):
-                    {
-                        gameMode = GameModeOption.Hardcore;
-                        break;
-                    }
-                case ("permadeath"):
-                    {
-                        gameMode = GameModeOption.Survival | GameModeOption.Permadeath;
-                        break;
-                    }
-            }
-
+            gameModeByConfig.TryGetValue(stringGameMode, out gameMode);
             return gameMode;
         }
 

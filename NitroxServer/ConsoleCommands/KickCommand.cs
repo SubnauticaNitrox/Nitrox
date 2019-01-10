@@ -8,6 +8,7 @@ using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -16,7 +17,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Optional<string>.Of("<name>"), "Kick the lowliest of cogs")
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.Admin, Optional<string>.Of("<name>"), "Kick the lowliest of cogs")
         {
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;

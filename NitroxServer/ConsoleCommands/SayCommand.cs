@@ -3,6 +3,7 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -10,15 +11,20 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public SayCommand(PlayerManager playerManager) : base("say", Optional<string>.Of("<message>"), "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
+        public SayCommand(PlayerManager playerManager) : base("say", NitroxModel.DataStructures.GameLogic.Perms.Admin, Optional<string>.Of("<message>"), "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
         {
             this.playerManager = playerManager;
+            SupportsClientSide = true;
         }
 
         public override void RunCommand(string[] args)
         {
-            playerManager.SendPacketToAllPlayers(new ChatMessage(ushort.MaxValue, string.Join(" ", args)));
-            Log.Info("Server says: " + string.Join(" ", args));
+            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, string.Join(" ", args)));
+        }
+
+        public override void RunCommand(string[] args, Player player)
+        {
+            playerManager.SendPacketToAllPlayers(new ChatMessage(player.Id, string.Join(" ", args)));
         }
 
         public override bool VerifyArgs(string[] args)

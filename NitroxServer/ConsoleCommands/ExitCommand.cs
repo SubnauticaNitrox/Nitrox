@@ -1,11 +1,12 @@
 ﻿using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
     public class ExitCommand : Command
     {
-        public ExitCommand() : base("exit", Optional<string>.Empty(), "Exits the server", new[] {"stop", "halt", "quit", "abort"})
+        public ExitCommand() : base("exit", Perms.Admin, Optional<string>.Empty(), "Exits the server", new[] {"stop", "halt", "quit", "abort"})
         {
         }
 
