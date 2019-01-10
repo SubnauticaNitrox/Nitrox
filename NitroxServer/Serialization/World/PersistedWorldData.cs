@@ -50,6 +50,11 @@ namespace NitroxServer.Serialization.World
         {
             if(version < CURRENT_VERSION)
             {
+                if (version == 4)
+                {
+                    return true;
+
+                }
                 Log.Error("Version " + version + " save file is no longer supported.  Creating world under version " + CURRENT_VERSION);
                 return false;
             }

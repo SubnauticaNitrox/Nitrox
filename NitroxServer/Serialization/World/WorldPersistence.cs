@@ -54,7 +54,7 @@ namespace NitroxServer.Serialization.World
             try
             {
                 PersistedWorldData persistedData;
-
+                World world = null;
                 using (Stream stream = File.OpenRead(fileName))
                 {
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
@@ -64,9 +64,11 @@ namespace NitroxServer.Serialization.World
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
-                
 
-                World world = CreateWorld(persistedData.ServerStartTime,
+                // IF SaveFile Version 4 CreateWorld with new EscapePodData and Set Version to 5
+                if (persistedData.version == 4)
+                {
+                    world = CreateWorld(persistedData.ServerStartTime,
                                           persistedData.EntityData,
                                           persistedData.BaseData,
                                           persistedData.VehicleData,
@@ -74,7 +76,24 @@ namespace NitroxServer.Serialization.World
                                           persistedData.PlayerData,
                                           persistedData.GameData,
                                           persistedData.ParsedBatchCells,
-                                          persistedData.EscapePodData);
+                                          new EscapePodData());
+
+                    persistedData.version = 5;
+
+                    Log.Info("Save file Version 4 Upgradet to Version 5, EXPERIMENTAL!!");
+                }
+                else
+                {
+                    world = CreateWorld(persistedData.ServerStartTime,
+                                        persistedData.EntityData,
+                                        persistedData.BaseData,
+                                        persistedData.VehicleData,
+                                        persistedData.InventoryData,
+                                        persistedData.PlayerData,
+                                        persistedData.GameData,
+                                        persistedData.ParsedBatchCells,
+                                        persistedData.EscapePodData);
+                }
 
                 return Optional<World>.Of(world);
             }
