@@ -57,11 +57,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             chat = currentChat;
             chatEnabled = true;
+            UWE.Utils.lockCursor = false;
         }
 
         public void Hide()
         {
             chatEnabled = false;
+            UWE.Utils.lockCursor = true;
             chatMessage = "";
         }
 
