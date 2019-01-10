@@ -75,15 +75,18 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void SendMessage()
         {
-            if (chat != null && chatMessage.Length > 0 && chatMessage[0] != '/')
+            if (chat != null && chatMessage.Length > 0)
             {
-                chatBroadcaster.SendChatMessage(chatMessage);
-                ChatLogEntry chatLogEntry = new ChatLogEntry("Me", chatMessage, multiplayerSession.PlayerSettings.PlayerColor);
-                chat.WriteChatLogEntry(chatLogEntry);
-            }
-            else if (chat != null && chatMessage.Length > 0 && chatMessage[0] == '/')
-            {
-                multiplayerSession.Send(new ServerCommand(chatMessage.Remove(0, 1).Split(' '))); // Remove "/" and split message
+                if (chatMessage[0] == '/')
+                {
+                    multiplayerSession.Send(new ServerCommand(chatMessage.Remove(0, 1).Split(' '))); // Remove "/" and split message
+                }
+                else
+                {
+                    chatBroadcaster.SendChatMessage(chatMessage);
+                    ChatLogEntry chatLogEntry = new ChatLogEntry("Me", chatMessage, multiplayerSession.PlayerSettings.PlayerColor);
+                    chat.WriteChatLogEntry(chatLogEntry);
+                }
             }
         }
     }
