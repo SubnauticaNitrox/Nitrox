@@ -40,7 +40,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
                 if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
-                    chat.HideLog();
                     SendMessage();
                     Hide();
                 }

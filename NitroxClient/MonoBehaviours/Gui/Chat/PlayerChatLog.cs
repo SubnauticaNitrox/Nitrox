@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel;
+using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
@@ -14,7 +19,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
     /// </summary>
     internal class PlayerChatLog : MonoBehaviour
     {
-        private const int LINE_CHAR_LIMIT = 80;
+        private const int LINE_CHAR_LIMIT = 255;
         private const int MESSAGE_LIMIT = 255;
         private const float CHAT_VISIBILITY_TIME_LENGTH = 7f;
 
@@ -25,6 +30,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private GameObject SomeScrollRect;
         private GameObject mainChatLog;
         AssetBundleCreateRequest asset;
+ 
         /// <summary>
         ///     Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for
         ///     CHAT_VISIBILITY_TIME_LENGTH seconds
@@ -47,17 +53,18 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public void Show()
         {
-            if(SomeScrollRect != null)
+            if(mainChatLog != null)
             {
                 mainChatLog.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(SomeScrollRect);
             }  
         }
 
         public void Hide()
         {
-            if (SomeScrollRect != null)
+            if (mainChatLog != null)
             {
-                mainChatLog.SetActive(true);
+                mainChatLog.SetActive(false);
             }
         }
 
@@ -72,9 +79,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText = SomeScrollRect.AddComponent<Text>();
             chatText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
             chatText.name = "ChatText";
+            chatText.alignByGeometry = true;
+            chatText.horizontalOverflow = HorizontalWrapMode.Overflow;
+            chatText.verticalOverflow = VerticalWrapMode.Truncate;
             chatText.fontSize = 12;
-            chatText.alignment = TextAnchor.MiddleLeft;
-            Log.Info("SCROLLRECT: " + SomeScrollRect + "ChatText: " + chatText);
+            chatText.lineSpacing = 1f;
         }
 
         private void AddChatMessage(ChatLogEntry chatLogEntry)
@@ -94,7 +103,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 .ToArray();
 
             chatText.text = string.Join("\n", formattedEntries);
-            Log.Info(" NEW ChatText: " + chatText.text);
         }
 
         private string SanitizeMessage(string message)
@@ -112,9 +120,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private IEnumerator DeactivateChat()
         {
             yield return new WaitForSeconds(CHAT_VISIBILITY_TIME_LENGTH);
-            if (SomeScrollRect != null)
+            if (mainChatLog != null)
             {
-                SomeScrollRect.SetActive(true);
+                mainChatLog.SetActive(false);
             }
             timer = null;
         }
