@@ -15,7 +15,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
         public const string TEST_CORRELATION_ID = "CORRELATED";
         public const MultiplayerSessionReservationState TEST_REJECTION_STATE = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
         public static readonly AuthenticationContext TEST_AUTHENTICATION_CONTEXT = new AuthenticationContext(TEST_PLAYER_NAME);
-        public static readonly MultiplayerSessionPolicy TEST_SESSION_POLICY = new MultiplayerSessionPolicy(TEST_CORRELATION_ID);
+        public static readonly MultiplayerSessionPolicy TEST_SESSION_POLICY = new MultiplayerSessionPolicy(TEST_CORRELATION_ID, false);
         public static readonly PlayerSettings TEST_PLAYER_SETTINGS = new PlayerSettings(RandomColorGenerator.GenerateColor());
         public static readonly IMultiplayerSessionConnectionState TEST_CONNECTION_STATE = Substitute.For<IMultiplayerSessionConnectionState>();
     }

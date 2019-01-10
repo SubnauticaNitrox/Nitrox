@@ -15,6 +15,8 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
         private const GameModeOption DEFAULT_GAMEMODE = GameModeOption.Survival;
         private const string GAMEMODE_SETTING = "GameMode";
+        private const bool DEFAULT_DISABLECONSOLE = true;
+        private const string DISABLECONSOLE_SETTING = "DisableConsole";
 
         private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
         {
@@ -53,6 +55,20 @@ namespace NitroxServer.ConfigParser
             }
         }
 
+        private bool? _disableConsole = null;
+        public bool DisableConsole
+        {
+            get
+            {
+                bool configValue;
+                if (_disableConsole == null && bool.TryParse(ConfigurationManager.AppSettings[DISABLECONSOLE_SETTING], out configValue))
+                {
+                    _disableConsole = configValue;
+                }
+                return _disableConsole ?? DEFAULT_DISABLECONSOLE;
+            }
+        }
+
         private GameModeOption? _gameMode = null;
         public GameModeOption GameMode
         {
@@ -70,6 +86,7 @@ namespace NitroxServer.ConfigParser
         {
             GameModeOption gameMode = GameModeOption.Survival;
             stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits
+
             gameModeByConfig.TryGetValue(stringGameMode, out gameMode);
             return gameMode;
         }

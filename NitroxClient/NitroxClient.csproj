@@ -165,6 +165,7 @@
     <Compile Include="GameLogic\Constructor.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
+    <Compile Include="GameLogic\DevConsole.cs" />
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
