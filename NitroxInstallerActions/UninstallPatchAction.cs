@@ -2,6 +2,7 @@
 using InstallerActions.Patches;
 using Microsoft.Deployment.WindowsInstaller;
 using System.Windows.Forms;
+using System.IO;
 
 namespace NitroxInstallerActions
 {
@@ -15,6 +16,7 @@ namespace NitroxInstallerActions
             try
             {
                 string managedDirectory = session.CustomActionData["MANAGEDDIR"];
+                string gameDir = Path.GetDirectoryName(Path.Combine(Path.GetFullPath(managedDirectory), "..", "..", "Subnautica.exe"));
                 NitroxEntryPatch nitroxPatch = new NitroxEntryPatch(managedDirectory);
 
                 if (nitroxPatch.IsApplied)
@@ -23,9 +25,9 @@ namespace NitroxInstallerActions
                 }
 
                 NitroxServerSetup.Uninstall(managedDirectory);
-                string[] installedRules = FirewallRules.GetInstalledRules();
-                string status = FirewallRules.RemoveFirewallRules(installedRules);
-                if (status == "fail")
+                FirewallRules removeRules = new FirewallRules(gameDir);
+                bool status=removeRules.RemoveInstalledRules();
+                if (!status)
                 {
                     MessageBox.Show("You may need to remove some firewall exceptions manually");
                 }

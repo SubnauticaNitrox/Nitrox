@@ -31,9 +31,9 @@ namespace NitroxInstallerActions
                 {
                     nitroxPatch.Apply();
                 }
-                string[] requiredRules = FirewallRules.GetRequiredRules();
-                string status = FirewallRules.SetFirewallRules(requiredRules, gameDir);
-                if (status == "fail")
+                FirewallRules addRules = new FirewallRules(gameDir);
+                bool status = addRules.InstallRequiredRules();
+                if (!status)
                 {
                     MessageBox.Show("You may need to add firewall exceptions manually");
                 }
