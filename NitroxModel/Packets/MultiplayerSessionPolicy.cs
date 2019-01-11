@@ -7,15 +7,17 @@ namespace NitroxModel.Packets
     public class MultiplayerSessionPolicy : CorrelatedPacket
     {
         public bool RequiresServerPassword { get; }
+        public bool DisableConsole { get; }
 
         public MultiplayerSessionAuthenticationAuthority AuthenticationAuthority { get; }
 
-        public MultiplayerSessionPolicy(string correlationId)
+        public MultiplayerSessionPolicy(string correlationId, bool disableConsole)
             : base(correlationId)
         {
             // This is done intentionally. It is only a stub for future extension.
             RequiresServerPassword = false;
             AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.Server;
+            DisableConsole = disableConsole;
         }
     }
 }

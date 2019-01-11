@@ -6,7 +6,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
 {
     class ReefbackBootstrapper : IEntityBootstrapper
     {
-        private System.Random random = new System.Random();
         private float creatureProbabiltySum = 0;
 
         public ReefbackBootstrapper()
@@ -17,12 +16,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
             }
         }
 
-        public void Prepare(Entity parentEntity)
+        public void Prepare(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             for(int spawnPointCounter = 0; spawnPointCounter < LocalCreatureSpawnPoints.Count; spawnPointCounter++)
             {
                 Vector3 localSpawnPosition = LocalCreatureSpawnPoints[spawnPointCounter];
-                float targetProbabilitySum = (float)random.NextDouble() * creatureProbabiltySum;
+                float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * creatureProbabiltySum;
                 float probabilitySum = 0;
 
                 foreach (ReefbackEntity creature in SpawnableCreatures)
@@ -31,11 +30,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
 
                     if(probabilitySum >= targetProbabilitySum)
                     {
-                        int totalToSpawn = random.Next(creature.minNumber, creature.maxNumber + 1);
+                        int totalToSpawn = deterministicBatchGenerator.NextInt(creature.minNumber, creature.maxNumber + 1);
 
                         for(int i = 0; i < totalToSpawn; i++)
                         {
-                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, creature.techType, parentEntity.Level, parentEntity.ClassId, true);
+                            string guid = deterministicBatchGenerator.NextGuid();
+                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, creature.techType, parentEntity.Level, parentEntity.ClassId, true, guid);
                             parentEntity.ChildEntities.Add(child);
                         }
 

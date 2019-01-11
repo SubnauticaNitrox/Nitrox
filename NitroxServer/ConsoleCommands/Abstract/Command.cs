@@ -1,5 +1,7 @@
 ﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -9,26 +11,28 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string Name { get; protected set; }
         public string[] Alias { get; protected set; }
         public string Description { get; protected set; }
+        public Perms RequiredPermLevel { get; protected set; } = Perms.Admin;
 
-        protected Command(string name) : this(name, Optional<string>.Empty(), "", null)
+        protected Command(string name, Perms requiredPermLevel) : this(name, requiredPermLevel, Optional<string>.Empty(), "", null)
         {
+            RequiredPermLevel = requiredPermLevel;
             Name = name;
         }
 
-        protected Command(string name, Optional<string> args) : this(name, args, "", null)
+        protected Command(string name, Perms requiredPermLevel, Optional<string> args) : this(name, requiredPermLevel, args, "", null)
         {
             Args = args;
             Name = name;
         }
 
-        protected Command(string name, Optional<string> args, string description) : this(name, args, "", null)
+        protected Command(string name, Perms requiredPermLevel, Optional<string> args, string description) : this(name, requiredPermLevel, args, "", null)
         {
             Args = args;
             Name = name;
             Description = description;
         }
 
-        protected Command(string name, Optional<string> args, string description, string[] alias)
+        protected Command(string name, Perms requiredPermLevel, Optional<string> args, string description, string[] alias)
         {
             Validate.NotNull(name);
             Validate.NotNull(args);
@@ -44,13 +48,17 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Alias = alias ?? new string[0];
         }
 
-        /// <summary>
-        ///     Runs your command
-        /// </summary>
-        /// <param name="args">
-        ///     Arguments passed to your command
-        /// </param>
-        public abstract void RunCommand(string[] args);
+        public virtual void RunCommand(string[] args, Optional<Player> player)
+        {
+            if (player.IsPresent())
+            {
+                Log.Info("Unimplemented command!");
+            }
+            else
+            {
+                Log.Info("Unimplemented player command!");
+            }
+        }
 
         public abstract bool VerifyArgs(string[] args);
 

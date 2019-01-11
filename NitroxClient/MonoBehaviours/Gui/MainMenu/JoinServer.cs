@@ -147,6 +147,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             if (multiplayerClient == null)
             {
                 multiplayerClient = new GameObject();
+                multiplayerClient.name = "Multiplayer Client"; // Its always nice to name things
                 multiplayerClient.AddComponent<Multiplayer>();
                 multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
             }

@@ -48,11 +48,13 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
                                                                        world.GameData.PDAState.GetInitialPdaData(),
-                                                                       world.PlayerData.PlayerSpawn(player.Name),
+                                                                       world.PlayerData.GetPlayerSpawn(player.Name),
                                                                        world.PlayerData.GetSubRootGuid(player.Name),
-                                                                       world.PlayerData.Stats(player.Name),
+                                                                       world.PlayerData.GetPlayerStats(player.Name),
                                                                        getRemotePlayerData(player),
-                                                                       world.EntityData.GetGlobalRootEntities());
+                                                                       world.EntityData.GetGlobalRootEntities(),
+                                                                       world.GameMode,
+                                                                       world.PlayerData.GetPermissions(player.Name));
 
             player.SendPacket(initialPlayerSync);
         }

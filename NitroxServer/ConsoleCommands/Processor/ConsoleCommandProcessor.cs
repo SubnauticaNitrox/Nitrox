@@ -4,15 +4,21 @@ using System.Linq;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
+using NitroxServer.GameLogic;
+using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
         private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
+        private readonly PlayerManager playerManager;
 
-        public ConsoleCommandProcessor(IEnumerable<Command> cmds)
+        public ConsoleCommandProcessor(IEnumerable<Command> cmds, PlayerManager playerManager)
         {
+            this.playerManager = playerManager;
             foreach (Command cmd in cmds)
             {
                 if (commands.ContainsKey(cmd.Name))
@@ -34,12 +40,14 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        public void ProcessCommand(string msg)
+        public void ProcessCommand(string msg, Player player, Perms perms)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
                 return;
             }
+
+            Optional<Player> optionalPlayer = Optional<Player>.OfNullable(player);
 
             string[] parts = msg.Split()
                 .Where(arg => !string.IsNullOrEmpty(arg))
@@ -48,23 +56,52 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
+                if (optionalPlayer.IsPresent())
+                {
+                    optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Command not found!"));
+                }
+                else
+                {
+                    Log.Info(string.Format("Command not found!"));
+                }
                 return;
             }
-
-            RunCommand(cmd, parts);
+            if (perms >= cmd.RequiredPermLevel)
+            {
+                RunCommand(cmd, parts, optionalPlayer);
+            }
+            else
+            {
+                if (optionalPlayer.IsPresent())
+                {
+                    optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have the required permissions for this command!"));
+                }
+                else
+                {
+                    Log.Info(string.Format("You do not have the required permissions for this command!"));
+                }
+            }
         }
 
-        private void RunCommand(Command command, string[] parts)
+        private void RunCommand(Command command, string[] parts, Optional<Player> player)
         {
             string[] args = parts.Skip(1).ToArray();
 
             if (command.VerifyArgs(args))
             {
-                command.RunCommand(args);
-                return;
+                command.RunCommand(args, player);
             }
-
-            Log.Info("Command Invalid: {0}", command.Args);
+            else
+            {
+                if (player.IsPresent())
+                {
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+                }
+                else
+                {
+                    Log.Info(string.Format("Command Invalid: {0}", command.Args.Get()));
+                }
+            }
         }
     }
 }

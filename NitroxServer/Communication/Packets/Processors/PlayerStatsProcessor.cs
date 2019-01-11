@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerStats packet, Player player)
         {
-            world.PlayerData.PlayerStats(player.Name, packet);
+            world.PlayerData.SetPlayerStats(player.Name, packet);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
