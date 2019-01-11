@@ -26,7 +26,7 @@ namespace NitroxServer.ConsoleCommands
             if (playerManager.TryGetPlayerByName(args[0], out foundPlayer))
             {
                 args = args.Skip(1).ToArray();
-                if (!player.IsEmpty())
+                if (player.IsPresent())
                 {
                     foundPlayer.SendPacket(new ChatMessage(player.Get().Id, string.Join(" ", args)));
                 }
@@ -37,7 +37,7 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                if (!player.IsEmpty())
+                if (player.IsPresent())
                 {
                     player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Player not found!"));
                 }

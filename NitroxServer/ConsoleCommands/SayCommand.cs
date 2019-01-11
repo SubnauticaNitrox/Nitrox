@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> player)
         {
-            if (!player.IsEmpty())
+            if (player.IsPresent())
             {
                 player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Saying: " + string.Join(" ", args)));
             }

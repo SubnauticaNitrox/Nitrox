@@ -56,7 +56,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
-                if (!optionalPlayer.IsEmpty())
+                if (optionalPlayer.IsPresent())
                 {
                     optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Command not found!"));
                 }
@@ -72,7 +72,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                if (!optionalPlayer.IsEmpty())
+                if (optionalPlayer.IsPresent())
                 {
                     optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have the required permissions for this command!"));
                 }
@@ -93,7 +93,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                if (!player.IsEmpty())
+                if (player.IsPresent())
                 {
                     player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
                 }

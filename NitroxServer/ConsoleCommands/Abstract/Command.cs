@@ -50,7 +50,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public virtual void RunCommand(string[] args, Optional<Player> player)
         {
-            if (!player.IsEmpty())
+            if (player.IsPresent())
             {
                 Log.Info("Unimplemented command!");
             }

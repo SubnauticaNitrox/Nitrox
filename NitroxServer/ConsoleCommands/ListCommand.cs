@@ -33,7 +33,7 @@ namespace NitroxServer.ConsoleCommands
                 players.Remove(player.Get()); // We don't want to report about us being online now do we?
 
                 string playerList = "Players: " + string.Join(", ", players);
-                if (!player.IsEmpty())
+                if (player.IsPresent())
                 {
                     player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, playerList));
                 }
@@ -44,7 +44,7 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                if (!player.IsEmpty())
+                if (player.IsPresent())
                 {
                     player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "No players online"));
                 }
