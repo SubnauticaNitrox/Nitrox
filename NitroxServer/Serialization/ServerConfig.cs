@@ -82,7 +82,7 @@ namespace NitroxServer.ConfigParser
             }
         }
 
-        GameModeOption ParseGameMode(string stringGameMode)
+        private GameModeOption ParseGameMode(string stringGameMode)
         {
             GameModeOption gameMode = GameModeOption.Survival;
             stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits

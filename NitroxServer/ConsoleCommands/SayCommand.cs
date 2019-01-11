@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public SayCommand(PlayerManager playerManager) : base("say", NitroxModel.DataStructures.GameLogic.Perms.Admin, Optional<string>.Of("<message>"), "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
+        public SayCommand(PlayerManager playerManager) : base("say", Perms.Admin, Optional<string>.Of("<message>"), "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
         {
             this.playerManager = playerManager;
             SupportsClientSide = true;

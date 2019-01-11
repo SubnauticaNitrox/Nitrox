@@ -122,14 +122,7 @@ namespace NitroxServer.GameLogic
                 assetsByConnection.Remove(connection);
             }
         }
-
-
-        /// <summary>
-        /// Trys to return a player by name
-        /// </summary>
-        /// <param name="playerName">The player to find</param>
-        /// <param name="foundPlayer">Will be null if return value is false</param>
-        /// <returns>true if the player was found false otherwise</returns>
+        
         public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
         {
             lock (assetsByConnection)
@@ -140,10 +133,11 @@ namespace NitroxServer.GameLogic
                     if (player.Name == playerName)
                     {
                         foundPlayer = player;
+                        return true;
                     }
                 }
 
-                return (foundPlayer != null);
+                return false;
             }
         }
 

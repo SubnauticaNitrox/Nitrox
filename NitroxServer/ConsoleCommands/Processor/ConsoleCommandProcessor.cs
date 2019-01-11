@@ -53,6 +53,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
+                Log.Info("Command not found!");
                 return;
             }
 
@@ -73,6 +74,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Command not found!"));
                 return;
             }
 
@@ -99,10 +101,11 @@ namespace NitroxServer.ConsoleCommands.Processor
             if (command.VerifyArgs(args))
             {
                 command.RunCommand(args);
-                return;
             }
-
-            Log.Info("Command Invalid: {0}", command.Args);
+            else
+            {
+                Log.Info("Command Invalid: {0}", command.Args);
+            }
         }
 
         private void RunPlayerCommand(Command command, string[] parts, Player player)
@@ -112,10 +115,11 @@ namespace NitroxServer.ConsoleCommands.Processor
             if (command.VerifyArgs(args))
             {
                 command.RunCommand(args, player);
-                return;
             }
-
-            player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+            else
+            {
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+            }
         }
     }
 }
