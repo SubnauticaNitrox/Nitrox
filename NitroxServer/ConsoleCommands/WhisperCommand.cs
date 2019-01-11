@@ -7,6 +7,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -29,7 +30,14 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Player not found!"));
+                if (player.Id != ChatMessage.SERVER_ID)
+                {
+                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Player not found!"));
+                }
+                else
+                {
+                    Log.Info("Player not found!");
+                }
             }
         }
 
