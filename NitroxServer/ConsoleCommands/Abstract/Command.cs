@@ -13,8 +13,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string Description { get; protected set; }
         public Perms RequiredPermLevel { get; protected set; } = Perms.Admin;
 
-        public bool SupportsClientSide = false;
-
         protected Command(string name, Perms requiredPermLevel) : this(name, requiredPermLevel, Optional<string>.Empty(), "", null)
         {
             RequiredPermLevel = requiredPermLevel;

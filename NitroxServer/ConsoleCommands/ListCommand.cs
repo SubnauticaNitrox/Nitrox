@@ -15,7 +15,6 @@ namespace NitroxServer.ConsoleCommands
         public ListCommand(PlayerManager playerManager) : base("list", Perms.Player)
         {
             this.playerManager = playerManager;
-            SupportsClientSide = true;
         }
 
         public override void RunCommand(string[] args, Player player)
