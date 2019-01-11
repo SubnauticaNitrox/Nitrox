@@ -31,6 +31,8 @@ namespace NitroxClient.GameLogic
             Body = playerBody;
             PlayerContext = playerContext;
 
+            Body.name = PlayerName;
+
             RigidBody = Body.AddComponent<Rigidbody>();
             RigidBody.useGravity = false;
 

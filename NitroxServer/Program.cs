@@ -5,7 +5,11 @@ using NitroxModel.Logger;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxModel.Core;
-
+using NitroxModel.MultiplayerSession;
+using UnityEngine;
+using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer
 {
@@ -34,7 +38,7 @@ namespace NitroxServer
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine());
+                CmdProcessor.ProcessCommand(Console.ReadLine(), null, Perms.Console);
             }
         }
 

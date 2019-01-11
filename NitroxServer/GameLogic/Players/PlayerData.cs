@@ -52,7 +52,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public ushort PlayerId(string playerName)
+        public ushort GetPlayerId(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -62,7 +62,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Vector3 PlayerSpawn(string playerName)
+        public Vector3 GetPlayerSpawn(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -80,11 +80,29 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        public Perms GetPermissions(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+
+                return playerPersistedData.Permissions;
+            }
+        }
+
         public void UpdatePlayerSpawn(string playerName, Vector3 position)
         {
             lock (playersByPlayerName)
             {
                 playersByPlayerName[playerName].PlayerSpawnData = position;
+            }
+        }
+
+        public void UpdatePlayerPermissions(string playerName, Perms permissions)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].Permissions = permissions;
             }
         }
         
@@ -96,7 +114,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public void PlayerStats(string playerName, PlayerStats statsData)
+        public void SetPlayerStats(string playerName, PlayerStats statsData)
         {
             lock (playersByPlayerName)
             {
@@ -105,7 +123,7 @@ namespace NitroxServer.GameLogic.Players
                 playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
             }
         }
-        public PlayerStatsData Stats(string playerName)
+        public PlayerStatsData GetPlayerStats(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -201,6 +219,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(6)]
             public string SubRootGuid { get; set; }
+
+            [ProtoMember(7)]
+            public Perms Permissions { get; set; } = Perms.Player;
 
             public PersistedPlayerData()
             {

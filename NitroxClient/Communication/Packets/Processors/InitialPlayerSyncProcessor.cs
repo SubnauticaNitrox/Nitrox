@@ -58,6 +58,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SetKnownTech(packet.PDAData.KnownTechTypes);
             SetPDALog(packet.PDAData.PDALogEntries);
             SetPlayerStats(packet.PlayerStatsData);
+            SetPlayerGameMode(packet.GameMode);
 
             bool hasBasePiecesToSpawn = packet.BasePieces.Count > 0;
 
@@ -224,6 +225,12 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                 }
             }
+        }
+
+        private void SetPlayerGameMode(GameModeOption gameMode)
+        {
+            Log.Info("Recieved initial sync packet with game mode " + gameMode);
+            GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
         }
 
         private void SpawnVehicles(List<VehicleModel> vehicleModels)

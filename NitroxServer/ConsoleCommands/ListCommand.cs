@@ -2,6 +2,10 @@
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
+using System.Collections.Generic;
+using NitroxModel.Packets;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -9,20 +13,45 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list")
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.Player)
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
-            if (playerManager.GetPlayers().Any())
+            List<Player> players = playerManager.GetPlayers();
+            int playerCount = players.Count;
+
+            if (player.IsEmpty())
             {
-                Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
+                playerCount++;
+            }
+
+            if (playerCount > 1)
+            {
+                players.Remove(player.Get()); // We don't want to report about us being online now do we?
+
+                string playerList = "Players: " + string.Join(", ", players);
+                if (player.IsPresent())
+                {
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, playerList));
+                }
+                else
+                {
+                    Log.Info(playerList);
+                }
             }
             else
             {
-                Log.Info("No players online");
+                if (player.IsPresent())
+                {
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "No players online"));
+                }
+                else
+                {
+                    Log.Info("No players online");
+                }
             }
         }
 
