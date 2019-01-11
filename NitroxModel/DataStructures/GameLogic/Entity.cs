@@ -50,12 +50,12 @@ namespace NitroxModel.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId, bool spawnedByServer)
+        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId, bool spawnedByServer, string guid)
         {
             Position = position;
             Rotation = rotation;
             TechType = techType;
-            Guid = System.Guid.NewGuid().ToString();
+            Guid = guid;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
