@@ -78,14 +78,57 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// After the damage is calculated and all of the <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s have been set, it's packaged and sent out to the server.
+        /// After the damage is calculated and all of the <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s have been set, it's packaged and sent out to the server
+        /// if the player is the owner of the Cyclops
         /// </summary>
-        public void OnTakeDamage(SubRoot subRoot, DamageInfo info)
+        public void OnTakeDamage(SubRoot subRoot, Optional<DamageInfo> info)
+        {
+            BroadcastDamageChange(subRoot, info);
+        }
+
+        /// <summary>
+        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to do so.
+        /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
+        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/> to catch when something repairs a damage point, which I don't believe is worth the effort.
+        /// At least not yet
+        /// </summary>
+        /// <param name="applyHealthChange">I want to avoid replacing as much code as possible. If this is false, it means the game already made the health change, and
+        /// all that needs to be done is a broadcasting of that health change</param>
+        public void OnDamagePointHealthChanged(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount, bool applyHealthChange)
         {
             string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
 
-            // If it isn't the owner, we don't care what happened
-            if (!simulationOwnershipManager.HasExclusiveLock(subGuid))
+            for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
+            {
+                if (subRoot.damageManager.damagePoints[i] == damagePoint)
+                {
+                    if (applyHealthChange)
+                    {
+                        subRoot.damageManager.damagePoints[i].liveMixin.AddHealth(repairAmount);
+                    }
+
+                    CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
+                    packetSender.Send(packet);
+                    Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " received OnDamagePointHealthChanged to index " + i.ToString() + ".]");
+
+                    BroadcastDamageChange(subRoot, Optional<DamageInfo>.Empty());
+
+                    return;
+                }
+            }
+        }
+
+        /// <summary>
+        /// This is run during every major state change
+        /// </summary>
+        /// <param name="subRoot"></param>
+        /// <param name="info"></param>
+        private void BroadcastDamageChange(SubRoot subRoot, Optional<DamageInfo> info)
+        {
+            string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
+
+            // If it isn't the owner, we don't want to broadcast
+            if (!simulationOwnershipManager.HasAnyLockType(subGuid))
             {
                 return;
             }
@@ -94,17 +137,19 @@ namespace NitroxClient.GameLogic
 
             SerializableDamageInfo damageInfo = null;
 
-            if (info != null)
+            if (info.IsPresent())
             {
+                DamageInfo damage = info.Get();
+
                 // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                 // visual effects should be used.
                 SerializableDamageInfo serializedDamageInfo = new SerializableDamageInfo()
                 {
-                    OriginalDamage = info.originalDamage,
-                    Damage = info.damage,
-                    Position = info.position,
-                    Type = info.type,
-                    DealerGuid = info.dealer != null ? GuidHelper.GetGuid(info.dealer) : string.Empty
+                    OriginalDamage = damage.originalDamage,
+                    Damage = damage.damage,
+                    Position = damage.position,
+                    Type = damage.type,
+                    DealerGuid = damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty
                 };
             }
 
@@ -127,51 +172,6 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. If it's the owner, they need to send a full state update
-        /// </summary>
-        public void OnDamagePointRepaired(CyclopsDamagePoint damagePoint, SubRoot subRoot, float repairAmount)
-        {
-            string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
-
-            for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
-            {
-                if (subRoot.damageManager.damagePoints[i] == damagePoint)
-                {
-                    CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
-                    packetSender.Send(packet);
-                    Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " received OnDamagePointRepaired to index " + i.ToString() + ".]");
-
-                    // The owner needs to send out a state update if they were the one to repair the point
-                    if (simulationOwnershipManager.HasExclusiveLock(subGuid))
-                    {
-                        Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " this user is the owner. Broadcasting new damage state update.]");
-                        OnTakeDamage(subRoot, null);
-                    }
-
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Repairs a damage point.
-        /// </summary>
-        /// <param name="damageManager">The <see cref="CyclopsExternalDamageManager"/> located in <see cref="SubRoot.damageManager"/></param>
-        /// <param name="damagePointsIndex">The index of the <see cref="CyclopsDamagePoint"/></param>
-        public void RepairDamagePoint(CyclopsExternalDamageManager damageManager, int damagePointsIndex, float amount)
-        {
-            using (packetSender.Suppress<CyclopsDamage>())
-            {
-                using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
-                {
-                    // If the amount is high enough, it'll heal full
-                    damageManager.damagePoints[damagePointsIndex].liveMixin.AddHealth(amount);
-                    // damageManager.RepairPoint(damageManager.damagePoints[damagePointsIndex]);
-                }
-            }
-        }
-
-        /// <summary>
         /// Get all of the index locations of <see cref="CyclopsDamagePoint"/>s in <see cref="CyclopsExternalDamageManager.damagePoints"/>.
         /// </summary>
         public IEnumerable<int> GetActiveDamagePoints(SubRoot subRoot)
@@ -188,9 +188,9 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Placeholder for fire creation interception when ownership is implemented.
         /// </summary>
-        public void OnFireCreated(GameObject subFire, DamageInfo damageInfo, CyclopsRooms room)
+        public void OnCreateFire(SubFire subFire, SubFire.RoomFire startInRoom)
         {
-
+            OnTakeDamage(subFire.subRoot, null);
         }
 
         /// <summary>
@@ -261,10 +261,10 @@ namespace NitroxClient.GameLogic
                         }
                     }
 
-                    Log.Error("[Cyclops.OnFireDoused could not locate fire!"
-                                        + " Sub Guid: " + GuidHelper.GetGuid(subRoot.gameObject)
-                                        + " Fire Guid: " + fireGuid
-                                        + "]");
+                    Log.Warn("[Cyclops.OnFireDoused could not locate fire!"
+                        + " Sub Guid: " + GuidHelper.GetGuid(subRoot.gameObject)
+                        + " Fire Guid: " + fireGuid
+                        + "]");
                 }
                 else
                 {

@@ -17,7 +17,8 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsDamagePoint __instance)
         {
-            NitroxServiceLocator.LocateService<Cyclops>().OnDamagePointRepaired(__instance, __instance.GetComponentInParent<SubRoot>(), 999);
+            // If the amount is high enough, it'll heal full
+            NitroxServiceLocator.LocateService<Cyclops>().OnDamagePointHealthChanged(__instance.GetComponentInParent<SubRoot>(), __instance, 999, false);
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -18,16 +18,16 @@ namespace NitroxClient.Communication.Packets.Processors
             this.packetSender = packetSender;
         }
 
-        /// <summary>
-        /// Finds and executes <see cref="Fire.Douse(float)"/>. If the fire is extinguished, it will pass a large float to trigger the private
-        /// <see cref="Fire.Extinguish()"/> method.
-        /// </summary>
         public override void Process(CyclopsDamagePointHealthChanged packet)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
-            CyclopsExternalDamageManager damageManager = cyclops.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>();
+            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            SubRoot cyclops = GameObjectHelper.RequireComponent<SubRoot>(gameObject);
+            CyclopsDamagePoint damagePoint = cyclops.damageManager.damagePoints[packet.DamagePointIndex];
 
-            NitroxServiceLocator.LocateService<Cyclops>().RepairDamagePoint(damageManager, packet.DamagePointIndex, packet.RepairAmount);
+            using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+            {
+                NitroxServiceLocator.LocateService<Cyclops>().OnDamagePointHealthChanged(cyclops, damagePoint, packet.RepairAmount, true);
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,7 +18,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(SubRoot __instance, DamageInfo info)
         {
-            NitroxServiceLocator.LocateService<Cyclops>().OnTakeDamage(__instance, info);
+            NitroxServiceLocator.LocateService<Cyclops>().OnTakeDamage(__instance, Optional<DamageInfo>.OfNullable(info));
         }
 
         public override void Patch(HarmonyInstance harmony)
