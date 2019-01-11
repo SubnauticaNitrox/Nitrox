@@ -98,12 +98,19 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public void UpdatePlayerPermissions(string playerName, Perms permissions)
+        public bool UpdatePlayerPermissions(string playerName, Perms permissions)
         {
             lock (playersByPlayerName)
             {
-                playersByPlayerName[playerName].Permissions = permissions;
+                PersistedPlayerData player;
+
+                if (playersByPlayerName.TryGetValue(playerName, out player)) {
+                    player.Permissions = permissions;
+                    return true;
+                }
             }
+
+            return false;
         }
         
         public void UpdatePlayerSubRootGuid(string playerName, string subroot)
@@ -221,7 +228,7 @@ namespace NitroxServer.GameLogic.Players
             public string SubRootGuid { get; set; }
 
             [ProtoMember(7)]
-            public Perms Permissions { get; set; } = Perms.Player;
+            public Perms Permissions { get; set; } = Perms.PLAYER;
 
             public PersistedPlayerData()
             {

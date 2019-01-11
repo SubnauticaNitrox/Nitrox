@@ -1,9 +1,7 @@
-﻿using System.Linq;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using System.Collections.Generic;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 
@@ -13,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list", Perms.Player)
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER)
         {
             this.playerManager = playerManager;
         }
@@ -21,38 +19,16 @@ namespace NitroxServer.ConsoleCommands
         public override void RunCommand(string[] args, Optional<Player> player)
         {
             List<Player> players = playerManager.GetPlayers();
-            int playerCount = players.Count;
 
-            if (player.IsEmpty())
+            string playerList = "List Command Result: " + string.Join(", ", players);
+
+            if(players.Count == 0)
             {
-                playerCount++;
+                playerList += "No Players Online";
             }
 
-            if (playerCount > 1)
-            {
-                players.Remove(player.Get()); // We don't want to report about us being online now do we?
-
-                string playerList = "Players: " + string.Join(", ", players);
-                if (player.IsPresent())
-                {
-                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, playerList));
-                }
-                else
-                {
-                    Log.Info(playerList);
-                }
-            }
-            else
-            {
-                if (player.IsPresent())
-                {
-                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "No players online"));
-                }
-                else
-                {
-                    Log.Info("No players online");
-                }
-            }
+            Log.Info(playerList);
+            SendServerMessageIfPlayerIsPresent(player, playerList);
         }
 
         public override bool VerifyArgs(string[] args)
