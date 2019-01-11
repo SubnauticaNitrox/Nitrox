@@ -39,7 +39,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        public void ProcessCommand(string msg)
+        public void ProcessCommand(string msg, Player player, Perms perms)
         {
             if (string.IsNullOrWhiteSpace(msg))
             {
@@ -53,62 +53,27 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
-                Log.Info("Command not found!");
+                if (player.Id != ChatMessage.SERVER_ID)
+                {
+                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command not found!")));
+                }
+                else
+                {
+                    Log.Info(string.Format("Command not found!"));
+                }
                 return;
             }
-
-            RunCommand(cmd, parts);
-        }
-
-        public void ProcessPlayerCommand(string msg, Player player, Perms perms)
-        {
-            if (string.IsNullOrWhiteSpace(msg))
+            if (perms >= cmd.RequiredPermLevel)
             {
-                return;
-            }
-
-            string[] parts = msg.Split()
-                .Where(arg => !string.IsNullOrEmpty(arg))
-                .ToArray();
-
-            Command cmd;
-            if (!commands.TryGetValue(parts[0], out cmd))
-            {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Command not found!"));
-                return;
-            }
-
-            if (cmd.RequiredPermLevel > perms)
-            {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have permission for this command!"));
-                return;
-            }
-
-            if (cmd.SupportsClientSide)
-            {
-                RunPlayerCommand(cmd, parts, player);
+                RunCommand(cmd, parts, player);
             }
             else
             {
-                RunCommand(cmd, parts);
+                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have the required permissions for this command!"));
             }
         }
 
-        private void RunCommand(Command command, string[] parts)
-        {
-            string[] args = parts.Skip(1).ToArray();
-
-            if (command.VerifyArgs(args))
-            {
-                command.RunCommand(args);
-            }
-            else
-            {
-                Log.Info("Command Invalid: {0}", command.Args);
-            }
-        }
-
-        private void RunPlayerCommand(Command command, string[] parts, Player player)
+        private void RunCommand(Command command, string[] parts, Player player)
         {
             string[] args = parts.Skip(1).ToArray();
 
@@ -118,7 +83,14 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+                if (player.Id != ChatMessage.SERVER_ID)
+                {
+                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+                }
+                else
+                {
+                    Log.Info(string.Format("Command Invalid: {0}", command.Args.Get()));
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using NitroxServer.Communication;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer
 {
@@ -71,7 +72,21 @@ namespace NitroxServer
 
         public void SendPacket(Packet packet)
         {
-            connection.SendPacket(packet);            
+            if (Id == ChatMessage.SERVER_ID) // this is probably just a small hack
+            {
+                if (packet.GetType() == typeof(ChatMessage))
+                {
+                    Log.Info(((ChatMessage)packet).Text);
+                }
+                else
+                {
+                    Log.Info("Server tried sending itself this packet: " + packet.ToString());
+                }
+            }
+            else
+            {
+                connection.SendPacket(packet);
+            }
         }
 
         public override bool Equals(object obj)

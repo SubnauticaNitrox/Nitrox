@@ -18,22 +18,17 @@ namespace NitroxServer.ConsoleCommands
             SupportsClientSide = true;
         }
 
-        public override void RunCommand(string[] args)
-        {
-            if (playerManager.GetPlayers().Any())
-            {
-                Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
-            }
-            else
-            {
-                Log.Info("No players online");
-            }
-        }
-
         public override void RunCommand(string[] args, Player player)
         {
             List<Player> players = playerManager.GetPlayers();
-            if (players.Count > 1)
+            int playerCount = players.Count;
+
+            if (player.Id == ChatMessage.SERVER_ID)
+            {
+                playerCount++;
+            }
+
+            if (playerCount > 1)
             {
                 players.Remove(player); // We don't want to report about us being online now do we?
 

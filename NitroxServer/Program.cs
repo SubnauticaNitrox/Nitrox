@@ -5,7 +5,11 @@ using NitroxModel.Logger;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxModel.Core;
-
+using NitroxModel.MultiplayerSession;
+using UnityEngine;
+using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer
 {
@@ -31,10 +35,12 @@ namespace NitroxServer
                 return;
             }
 
+            Player serverPlayer = new Player(new PlayerContext("Console", ChatMessage.SERVER_ID, false, new PlayerSettings(new Color32(0x8c, 0x00, 0xFF, 0xFF))), null, new Vector3(), Optional<string>.Empty());
+
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine());
+                CmdProcessor.ProcessCommand(Console.ReadLine(), serverPlayer, Perms.Console);
             }
         }
 

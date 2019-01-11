@@ -50,20 +50,16 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Alias = alias ?? new string[0];
         }
 
-        /// <summary>
-        ///     Runs your command
-        /// </summary>
-        /// <param name="args">
-        ///     Arguments passed to your command
-        /// </param>
-        public virtual void RunCommand(string[] args)
-        {
-            Log.Info("Unimplemented command!");
-        }
-
         public virtual void RunCommand(string[] args, Player player)
         {
-            Log.Info("Unimplemented player command!");
+            if (player == null)
+            {
+                Log.Info("Unimplemented command!");
+            }
+            else
+            {
+                Log.Info("Unimplemented player command!");
+            }
         }
 
         public abstract bool VerifyArgs(string[] args);

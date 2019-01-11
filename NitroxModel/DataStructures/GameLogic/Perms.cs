@@ -10,6 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic
         Player,
         Moderator,
         Admin,
-        Owner
+        Owner,
+        Console
     }
 }

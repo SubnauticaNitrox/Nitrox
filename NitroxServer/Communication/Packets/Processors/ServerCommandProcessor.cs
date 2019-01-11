@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             string msg = string.Join(" ", packet.CmdArgs);
             
-            cmdProcessor.ProcessPlayerCommand(msg, player, playerData.GetPermissions(player.Name));
+            cmdProcessor.ProcessCommand(msg, player, playerData.GetPermissions(player.Name));
         }
     }
 }

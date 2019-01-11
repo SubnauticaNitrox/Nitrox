@@ -141,6 +141,7 @@
     <Compile Include="ConsoleCommands\ListCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
+    <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />

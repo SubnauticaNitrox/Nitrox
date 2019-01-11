@@ -10,11 +10,13 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         private readonly PlayerManager remotePlayerManager;
         private readonly PlayerChat playerChat;
+        private readonly LocalPlayer localPlayer;
 
-        public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChat playerChat)
+        public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChat playerChat, LocalPlayer localPlayer)
         {
             this.remotePlayerManager = remotePlayerManager;
             this.playerChat = playerChat;
+            this.localPlayer = localPlayer;
         }
 
         public override void Process(ChatMessage message)
