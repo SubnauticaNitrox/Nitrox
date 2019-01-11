@@ -157,7 +157,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     SerializableRoomFire roomFire = roomFires.FirstOrDefault(x => x.Room == keyValuePair.Key);
 
-                    Log.Debug("[Cyclops.SetActiveRoomFires"
+                    Log.Info("[Cyclops.SetActiveRoomFires"
                         + " Room matched: " + roomFire.Room.ToString()
                         + " FireNodeIndexes: " + string.Join(", ", roomFire.ActiveRoomFireNodes.Select(x => x.ToString()).ToArray()) + "]");
 
@@ -168,7 +168,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             int fireCount = roomFire.ActiveRoomFireNodes.FirstOrDefault(x => x.NodeIndex == nodesIndex).FireCount;
 
-                            Log.Debug("[Cyclops.SetActiveRoomFires"
+                            Log.Info("[Cyclops.SetActiveRoomFires"
                                 + " NodeIndexes match: " + nodesIndex.ToString()
                                 + " Expected Children: " + keyValuePair.Value.spawnNodes[nodesIndex].childCount.ToString()
                                 + " Actual Children: " + fireCount.ToString() + "]");
@@ -181,7 +181,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                                 for (int i = 0; i < fireCountToAdd; i++)
                                 {
-                                    Log.Debug("[Cyclops.SetActiveRoomFires"
+                                    Log.Info("[Cyclops.SetActiveRoomFires"
                                     + " Creating Fire number: " + i.ToString()
                                     + " Expected fires: " + fireCountToAdd.ToString() + "]");
 
@@ -200,7 +200,7 @@ namespace NitroxClient.Communication.Packets.Processors
                                     // for loop, it does not compare i to continue looping, it compares fireCountToRemove.
                                     for (int i = keyValuePair.Value.spawnNodes[nodesIndex].childCount - 1; fireCountToRemove > 0; i--)
                                     {
-                                        Log.Debug("[Cyclops.SetActiveRoomFires"
+                                        Log.Info("[Cyclops.SetActiveRoomFires"
                                         + " Extinguishing Fire number: " + (keyValuePair.Value.spawnNodes[nodesIndex].childCount < 1).ToString()
                                         + " Expected fires: " + fireCount.ToString() + "]");
 
@@ -228,7 +228,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log.Debug("[Cyclops.SetActiveRoomFires No fires found in room:" + keyValuePair.Key + ". Extinguishing all fires]");
+                    Log.Info("[Cyclops.SetActiveRoomFires No fires found in room:" + keyValuePair.Key + ". Extinguishing all fires]");
 
                     // Remove all of the fires in here, they shouldn't exist.
                     for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
