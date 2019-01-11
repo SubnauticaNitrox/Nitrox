@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
         public override void RunCommand(string[] args)
         {
             Log.Info("Showing all commands...\n"); // Extra "\n" for bigger gap.
-            Command[] commands = new Command[] { this, new ListCommand(null), new ExitCommand(), new KickCommand(null, null), new SaveCommand(), new SayCommand(null) };
+            Command[] commands = new Command[] { this, new ListCommand(null), new ExitCommand(), new KickCommand(null, null), new SaveCommand(), new SayCommand(null), new IpconfigCommand() };
             foreach(Command cmd in commands)
             {
                 Console.WriteLine("Command: "+cmd.Name+":\n-----\nInfo: "+cmd.Description+"\nArgs: "+cmd.Args.Get()+"\n"+
