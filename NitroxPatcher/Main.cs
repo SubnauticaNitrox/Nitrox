@@ -18,15 +18,9 @@ namespace NitroxPatcher
     public static class Main
     {
         private static NitroxPatch[] patches;
-        private static readonly HarmonyInstance harmony;
+        private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
         private static bool isApplied;
-
-        static Main()
-        {
-            HarmonyInstance.DEBUG = true;
-            harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
-        }
-
+        
         public static void Execute()
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
