@@ -20,19 +20,26 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
             Player foundPlayer;
             if (playerManager.TryGetPlayerByName(args[0], out foundPlayer))
             {
                 args = args.Skip(1).ToArray();
-                foundPlayer.SendPacket(new ChatMessage(player.Id, string.Join(" ", args)));
+                if (!player.IsEmpty())
+                {
+                    foundPlayer.SendPacket(new ChatMessage(player.Get().Id, string.Join(" ", args)));
+                }
+                else
+                {
+                    foundPlayer.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Join(" ", args)));
+                }
             }
             else
             {
-                if (player.Id != ChatMessage.SERVER_ID)
+                if (!player.IsEmpty())
                 {
-                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Player not found!"));
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Player not found!"));
                 }
                 else
                 {

@@ -35,12 +35,10 @@ namespace NitroxServer
                 return;
             }
 
-            Player serverPlayer = new Player(new PlayerContext("Console", ChatMessage.SERVER_ID, false, new PlayerSettings(new Color32(0x8c, 0x00, 0xFF, 0xFF))), null, new Vector3(), Optional<string>.Empty());
-
             ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine(), serverPlayer, Perms.Console);
+                CmdProcessor.ProcessCommand(Console.ReadLine(), null, Perms.Console);
             }
         }
 

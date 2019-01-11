@@ -16,17 +16,17 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
-            if (player.Id != ChatMessage.SERVER_ID)
+            if (!player.IsEmpty())
             {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Saying: " + string.Join(" ", args)));
+                player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Saying: " + string.Join(" ", args)));
             }
             else
             {
                 Log.Info("Saying: " + string.Join(" ", args));
             }
-            playerManager.SendPacketToAllPlayers(new ChatMessage(player.Id, string.Join(" ", args)));
+            playerManager.SendPacketToAllPlayers(new ChatMessage(player.Get().Id, string.Join(" ", args)));
         }
 
         public override bool VerifyArgs(string[] args)

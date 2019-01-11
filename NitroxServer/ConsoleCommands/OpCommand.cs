@@ -21,7 +21,7 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
             playerData.UpdatePlayerPermissions(args[0], Perms.Admin);
         }

@@ -7,6 +7,7 @@ using NitroxServer.Exceptions;
 using NitroxServer.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
@@ -46,6 +47,8 @@ namespace NitroxServer.ConsoleCommands.Processor
                 return;
             }
 
+            Optional<Player> optionalPlayer = Optional<Player>.OfNullable(player);
+
             string[] parts = msg.Split()
                 .Where(arg => !string.IsNullOrEmpty(arg))
                 .ToArray();
@@ -53,9 +56,9 @@ namespace NitroxServer.ConsoleCommands.Processor
             Command cmd;
             if (!commands.TryGetValue(parts[0], out cmd))
             {
-                if (player.Id != ChatMessage.SERVER_ID)
+                if (!optionalPlayer.IsEmpty())
                 {
-                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command not found!")));
+                    optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "Command not found!"));
                 }
                 else
                 {
@@ -65,15 +68,22 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             if (perms >= cmd.RequiredPermLevel)
             {
-                RunCommand(cmd, parts, player);
+                RunCommand(cmd, parts, optionalPlayer);
             }
             else
             {
-                player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have the required permissions for this command!"));
+                if (!optionalPlayer.IsEmpty())
+                {
+                    optionalPlayer.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "You do not have the required permissions for this command!"));
+                }
+                else
+                {
+                    Log.Info(string.Format("You do not have the required permissions for this command!"));
+                }
             }
         }
 
-        private void RunCommand(Command command, string[] parts, Player player)
+        private void RunCommand(Command command, string[] parts, Optional<Player> player)
         {
             string[] args = parts.Skip(1).ToArray();
 
@@ -83,9 +93,9 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                if (player.Id != ChatMessage.SERVER_ID)
+                if (!player.IsEmpty())
                 {
-                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, string.Format("Command Invalid: {0}", command.Args)));
                 }
                 else
                 {

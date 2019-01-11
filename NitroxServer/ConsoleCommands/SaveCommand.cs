@@ -1,5 +1,6 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -9,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
         {
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
             Server.Instance.Save();
         }

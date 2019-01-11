@@ -48,9 +48,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Alias = alias ?? new string[0];
         }
 
-        public virtual void RunCommand(string[] args, Player player)
+        public virtual void RunCommand(string[] args, Optional<Player> player)
         {
-            if (player == null)
+            if (player.IsEmpty())
             {
                 Log.Info("Unimplemented command!");
             }

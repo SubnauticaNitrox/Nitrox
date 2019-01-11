@@ -10,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
         {
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
             Server.Instance.Stop();
         }

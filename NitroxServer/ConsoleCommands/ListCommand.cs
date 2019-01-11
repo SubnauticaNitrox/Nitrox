@@ -5,6 +5,7 @@ using NitroxServer.GameLogic;
 using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -17,24 +18,24 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Player player)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
             List<Player> players = playerManager.GetPlayers();
             int playerCount = players.Count;
 
-            if (player.Id == ChatMessage.SERVER_ID)
+            if (player.IsEmpty())
             {
                 playerCount++;
             }
 
             if (playerCount > 1)
             {
-                players.Remove(player); // We don't want to report about us being online now do we?
+                players.Remove(player.Get()); // We don't want to report about us being online now do we?
 
                 string playerList = "Players: " + string.Join(", ", players);
-                if (player.Id != ChatMessage.SERVER_ID)
+                if (player.IsEmpty())
                 {
-                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, playerList));
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, playerList));
                 }
                 else
                 {
@@ -43,9 +44,9 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                if (player.Id != ChatMessage.SERVER_ID)
+                if (player.IsEmpty())
                 {
-                    player.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "No players online"));
+                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, "No players online"));
                 }
                 else
                 {
