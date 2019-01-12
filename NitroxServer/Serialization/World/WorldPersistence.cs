@@ -112,7 +112,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), GameModeOption.Survival);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
@@ -147,6 +147,8 @@ namespace NitroxServer.Serialization.World
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);
+
+            Log.Info("World GameMode " + gameMode);
 
             return world;
         }
