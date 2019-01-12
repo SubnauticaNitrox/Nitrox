@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
@@ -38,44 +39,44 @@ namespace NitroxServer.Serialization
 
             ParseFile(batchId, "", "loot-slots", spawnPoints);
             ParseFile(batchId, "", "creature-slots", spawnPoints);
-            ParseFile(batchId, @"Generated\", "slots", spawnPoints);  // Very expensive to load
+            ParseFile(batchId, "Generated", "slots", spawnPoints);  // Very expensive to load
             ParseFile(batchId, "", "loot", spawnPoints);
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
-
-            Log.Debug($"Loaded {spawnPoints.Count} entity-spawn-points for batch {batchId}");
 
             return spawnPoints;
         }
 
         public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
-            Optional<string> subnauticaPath = SteamHelper.FindSubnauticaPath();
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
             if (subnauticaPath.IsEmpty())
             {
-                Log.Info("Could not locate subnautica root in steam using fallback");
-                subnauticaPath = Optional<string>.Of(Path.GetFullPath("."));
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData/Build18");
-            string fileName = Path.Combine(path, pathPrefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
+            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
+            string fileName = Path.Combine(path, pathPrefix, "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
-                Log.Info("Fallback path and Steam path failed! Please move SNUnmanagedData/Build18 to {0}", Path.Combine(Path.GetFullPath("."), "\\SNUnmanagedData\\Build18"));
+                // Log.Debug("File not exists: " + fileName)
                 return;
             }
 
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-
+                
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
                     CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
+                    
                     ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-
+                    
                     for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
                     {
                         GameObject gameObject = DeserializeGameObject(stream);

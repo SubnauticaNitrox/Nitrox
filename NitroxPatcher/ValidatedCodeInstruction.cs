@@ -1,4 +1,5 @@
-﻿using System.Reflection.Emit;
+﻿using System.Collections.Generic;
+using System.Reflection.Emit;
 using Harmony;
 using NitroxModel.Helper;
 
@@ -13,6 +14,12 @@ namespace NitroxPatcher
         public ValidatedCodeInstruction(OpCode opcode, object operand) : base(opcode, operand)
         {
             Validate.NotNull(operand);
+        }
+
+        public ValidatedCodeInstruction(OpCode opcode, object operand, List<Label> labels) : base(opcode, operand)
+        {
+            Validate.NotNull(operand);
+            this.labels = labels;
         }
 
         public ValidatedCodeInstruction(OpCode opcode, object operand, string errorMessage) : base(opcode, operand)

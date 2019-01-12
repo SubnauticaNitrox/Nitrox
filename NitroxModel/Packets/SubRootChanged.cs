@@ -14,5 +14,10 @@ namespace NitroxModel.Packets
             PlayerId = playerId;
             SubRootGuid = subRootGuid;
         }
+
+        public override string ToString()
+        {
+            return "[SubRootChanged - PlayerId: " + PlayerId + " SubRootGuid: " + SubRootGuid + "]";
+        }
     }
 }

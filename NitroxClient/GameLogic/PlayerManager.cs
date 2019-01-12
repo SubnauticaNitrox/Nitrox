@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public void Create(PlayerContext playerContext)
+        public RemotePlayer Create(PlayerContext playerContext)
         {
             Validate.NotNull(playerContext);
 
@@ -64,6 +64,8 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
+
+            return player;
         }
 
         public void RemovePlayer(ushort playerId)

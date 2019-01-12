@@ -3,6 +3,7 @@ using NitroxModel.Packets;
 using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -51,7 +52,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public ushort PlayerId(string playerName)
+        public ushort GetPlayerId(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -61,13 +62,31 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Vector3 PlayerSpawn(string playerName)
+        public Vector3 GetPlayerSpawn(string playerName)
         {
             lock (playersByPlayerName)
             {
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
 
                 return playerPersistedData.PlayerSpawnData;
+            }
+        }
+
+        public bool hasSeenPlayerBefore(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                return playersByPlayerName.ContainsKey(playerName);
+            }
+        }
+
+        public Perms GetPermissions(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+
+                return playerPersistedData.Permissions;
             }
         }
 
@@ -79,7 +98,30 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public void PlayerStats(string playerName, PlayerStats statsData)
+        public bool UpdatePlayerPermissions(string playerName, Perms permissions)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData player;
+
+                if (playersByPlayerName.TryGetValue(playerName, out player)) {
+                    player.Permissions = permissions;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        
+        public void UpdatePlayerSubRootGuid(string playerName, string subroot)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].SubRootGuid = subroot;
+            }
+        }
+
+        public void SetPlayerStats(string playerName, PlayerStats statsData)
         {
             lock (playersByPlayerName)
             {
@@ -88,7 +130,7 @@ namespace NitroxServer.GameLogic.Players
                 playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
             }
         }
-        public PlayerStatsData Stats(string playerName)
+        public PlayerStatsData GetPlayerStats(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -115,6 +157,24 @@ namespace NitroxServer.GameLogic.Players
                 List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
                 ItemData.AddRange((new List<EquippedItemData>(ModulesItemsByGuid.Values)));
                 return ItemData;
+            }
+        }
+
+        public Vector3 GetPosition(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return playerPersistedData.PlayerSpawnData;
+            }
+        }
+
+        public Optional<string> GetSubRootGuid(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return Optional<string>.OfNullable(playerPersistedData.SubRootGuid);
             }
         }
 
@@ -163,6 +223,12 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(5)]
             public PlayerStatsData CurrentStats { get; set; }
+
+            [ProtoMember(6)]
+            public string SubRootGuid { get; set; }
+
+            [ProtoMember(7)]
+            public Perms Permissions { get; set; } = Perms.PLAYER;
 
             public PersistedPlayerData()
             {

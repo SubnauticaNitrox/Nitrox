@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -12,10 +13,9 @@ namespace NitroxPatcher.Patches.Persistent
         public static bool Prefix(IEntitySlot slot, out EntitySlot.Filler __result)
         {
             __result = default(EntitySlot.Filler);
-
-            // NOTE: We currently only disable spawning of creature but we can later extend this to all slot types to make the server the authority.
-            return false;
-            // return (!slot.IsCreatureSlot());
+            
+            bool isMultiplayer = (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer());
+            return !isMultiplayer;
         }
 
         public override void Patch(HarmonyInstance harmony)

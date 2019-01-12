@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -25,16 +27,21 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(Pickupable pickupable, Transform ownerTransform)
         {
             string ownerGuid = null;
-
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else if (isEscapePodStorage)
+            {
+                ownerGuid = GetEscapePodStorageGuid(ownerTransform);
             }
             else
             {
                 ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
             }
+
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
@@ -48,26 +55,32 @@ namespace NitroxClient.GameLogic
             string ownerGuid = null;
 
             bool isCyclopsLocker = Regex.IsMatch(ownerTransform.gameObject.name, @"Locker0([0-9])StorageRoot$", RegexOptions.IgnoreCase);
+            bool isEscapePodStorage = ownerTransform.parent.name.StartsWith("EscapePod");
             if (isCyclopsLocker)
             {
                 ownerGuid = GetCyclopsLockerGuid(ownerTransform);
+            }
+            else if (isEscapePodStorage)
+            {
+                ownerGuid = GetEscapePodStorageGuid(ownerTransform);
             }
             else
             {
                 ownerGuid = GuidHelper.GetGuid(ownerTransform.transform.parent.gameObject);
             }
+
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
             ItemContainerRemove remove = new ItemContainerRemove(ownerGuid, itemGuid);
             packetSender.Send(remove);
         }
 
-        public void AddItem(ItemData itemData)
+        public void AddItem(GameObject item, string containerGuid)
         {
-            Optional<GameObject> owner = GuidHelper.GetObjectFrom(itemData.ContainerGuid);
+            Optional<GameObject> owner = GuidHelper.GetObjectFrom(containerGuid);
 
-            if(owner.IsEmpty())
+            if (owner.IsEmpty())
             {
-                Log.Info("Unable to find inventory container with id: " + itemData.ContainerGuid);
+                Log.Info("Unable to find inventory container with id: " + containerGuid);
                 return;
             }
 
@@ -76,7 +89,6 @@ namespace NitroxClient.GameLogic
             if (opContainer.IsPresent())
             {
                 ItemsContainer container = opContainer.Get();
-                GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
 
                 using (packetSender.Suppress<ItemContainerAdd>())
@@ -89,7 +101,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Could not find container field on object " + owner.Get().name);
             }
         }
-
+        
         public void RemoveItem(string ownerGuid, string itemGuid)
         {
             GameObject owner = GuidHelper.RequireObjectFrom(ownerGuid);
@@ -135,7 +147,13 @@ namespace NitroxClient.GameLogic
             {
                 throw new Exception("Could not find Locker Object: submarine_locker_01_0" + LockerId);
             }
-            
+
+        }
+
+        public string GetEscapePodStorageGuid(Transform ownerTransform)
+        {
+            StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
+            return GuidHelper.GetGuid(SC.gameObject);
         }
     }
 }

@@ -5,12 +5,14 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using NitroxServer.Communication;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly Connection connection;
+        public Connection connection { get; private set; }
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -18,11 +20,14 @@ namespace NitroxServer
         public ushort Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
+        public Optional<string> SubRootGuid { get; set; }
 
-        public Player(PlayerContext playerContext, Connection connection)
+        public Player(PlayerContext playerContext, Connection connection, Vector3 position, Optional<string> subRootGuid)
         {
             PlayerContext = playerContext;
             this.connection = connection;
+            Position = position;
+            SubRootGuid = subRootGuid;
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -55,9 +60,19 @@ namespace NitroxServer
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
+        public bool CanSee(Entity entity)
+        {
+            return (entity.ExistsInGlobalRoot || HasCellLoaded(entity.AbsoluteEntityCell));
+        }
+
         public void SendPacket(Packet packet)
         {
-            connection.SendPacket(packet);            
+            connection.SendPacket(packet);
         }
 
         public override bool Equals(object obj)

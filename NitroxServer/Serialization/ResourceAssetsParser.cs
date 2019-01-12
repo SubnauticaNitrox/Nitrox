@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using AssetsTools.NET;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UWE;
 
 namespace NitroxServer.Serialization
@@ -67,22 +71,27 @@ namespace NitroxServer.Serialization
 
         private static string FindPath()
         {
-            Optional<string> steamPath = SteamHelper.FindSubnauticaPath();
-
+            List<string> errors = new List<string>();
+            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
+            if (subnauticaPath.IsEmpty())
+            {
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+            }
+            
             string gameResourcesPath = "";
 
-            if (!steamPath.IsEmpty())
+            if (!subnauticaPath.IsEmpty())
             {
-                gameResourcesPath = Path.Combine(steamPath.Get(), "Subnautica_Data/resources.assets");
+                gameResourcesPath = Path.Combine(subnauticaPath.Get(), "Subnautica_Data", "resources.assets");
             }
 
             if (File.Exists(gameResourcesPath))
             {
                 return gameResourcesPath;
             }
-            else if (File.Exists("../resources.assets"))
+            else if (File.Exists(Path.Combine("..", "resources.assets")))
             {
-                return Path.GetFullPath("../resources.assets");
+                return Path.GetFullPath(Path.Combine("..", "resources.assets"));
             }
             else if (File.Exists("resources.assets"))
             {

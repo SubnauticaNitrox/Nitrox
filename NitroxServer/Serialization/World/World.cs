@@ -13,6 +13,7 @@ namespace NitroxServer.Serialization.World
         public PlayerManager PlayerManager { get; set; }
         public TimeKeeper TimeKeeper { get; set; }
         public SimulationOwnershipData SimulationOwnershipData { get; set; }
+        public EscapePodData EscapePodData { get; set; }
         public EscapePodManager EscapePodManager { get; set; }
         public BatchEntitySpawner BatchEntitySpawner { get; set; }
         public EntityData EntityData { get; set; }
@@ -24,5 +25,6 @@ namespace NitroxServer.Serialization.World
         public InventoryData InventoryData { get; set; }
         public PlayerData PlayerData { get; set; }
         public GameData GameData { get; set; }
+        public GameModeOption GameMode { get; set; }
     }
 }

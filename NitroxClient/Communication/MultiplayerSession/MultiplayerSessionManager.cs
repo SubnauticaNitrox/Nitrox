@@ -5,6 +5,7 @@ using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {
@@ -46,6 +47,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ProcessSessionPolicy(MultiplayerSessionPolicy policy)
         {
             SessionPolicy = policy;
+            NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
             CurrentState.NegotiateReservation(this);
         }
 

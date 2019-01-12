@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
+using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

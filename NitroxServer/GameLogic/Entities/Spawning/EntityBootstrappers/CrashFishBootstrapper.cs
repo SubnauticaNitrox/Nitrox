@@ -4,13 +4,20 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
 {
     class CrashFishBootstrapper : IEntityBootstrapper
     {
-        public void Prepare(Entity parentEntity)
+        public void Prepare(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            Entity crashFish = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.Crash, parentEntity.Level, parentEntity.ClassId, true);
-            Entity sulfur = new Entity(parentEntity.Position, parentEntity.Rotation, TechType.CrashPowder, parentEntity.Level, parentEntity.ClassId, true);
-
+            Entity crashFish = SpawnChild(parentEntity, deterministicBatchGenerator, TechType.Crash);
             parentEntity.ChildEntities.Add(crashFish);
-            parentEntity.ChildEntities.Add(sulfur);
+
+            Entity crashPower = SpawnChild(parentEntity, deterministicBatchGenerator, TechType.CrashPowder);
+            parentEntity.ChildEntities.Add(crashPower);
+        }
+
+        private Entity SpawnChild(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator, TechType techType)
+        {
+            string guid = deterministicBatchGenerator.NextGuid();
+
+            return new Entity(parentEntity.Position, parentEntity.Rotation, techType, parentEntity.Level, parentEntity.ClassId, true, guid);
         }
     }
 }

@@ -20,6 +20,8 @@ namespace NitroxInstallerActions
                 {
                     nitroxPatch.Remove();
                 }
+
+                NitroxServerSetup.Uninstall(managedDirectory);
             }
             catch (Exception ex)
             {
