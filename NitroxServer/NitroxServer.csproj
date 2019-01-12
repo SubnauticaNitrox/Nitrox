@@ -124,6 +124,7 @@
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />

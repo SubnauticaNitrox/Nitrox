@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxClient.GameLogic.Bases.Metadata;
+using System.Linq;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -48,7 +49,6 @@ namespace NitroxClient.Communication.Packets.Processors
             SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
             SpawnGlobalRootEntities(packet.GlobalRootEntities);
@@ -64,6 +64,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
+            SpawnVehiclesAfterBasePiecesFinish(packet.Vehicles, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
             AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
         }
@@ -236,6 +237,15 @@ namespace NitroxClient.Communication.Packets.Processors
         private void SpawnVehicles(List<VehicleModel> vehicleModels)
         {
             Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
+
+            List<VehicleModel> cyclopses = vehicleModels
+                .Where(x => x.TechType == TechType.Cyclops)
+                .ToList();
+
+            foreach(VehicleModel cyclops in cyclopses)
+            {
+                vehicles.CreateVehicle(cyclops);
+            }
 
             foreach (VehicleModel vehicle in vehicleModels)
             {
@@ -434,6 +444,62 @@ namespace NitroxClient.Communication.Packets.Processors
                             Log.Error("Could not spawn remote player into subroot with guid: " + playerData.SubRootGuid.Get());
                         }
                     }
+                }
+            }
+        }
+
+        private void SpawnVehiclesAfterBasePiecesFinish(List<VehicleModel> vehicleModels, bool basePiecesToSpawn)
+        {
+            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles.");
+
+            if (vehicleModels.Count == 0)
+            {
+                return;
+            }
+
+            VehicleCreator vehicleCreator = new VehicleCreator(vehicleModels, vehicles);
+
+            if(basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += vehicleCreator.CreateVehicles;
+            }
+            else
+            {
+                vehicleCreator.CreateVehicles(null, null);
+            }
+        }
+
+        private class VehicleCreator
+        {
+            private List<VehicleModel> vehicleModels;
+            private Vehicles vehicles;
+
+            public VehicleCreator(List<VehicleModel> vehicleModels, Vehicles vehicles)
+            {
+                this.vehicleModels = vehicleModels;
+                this.vehicles = vehicles;
+            }
+
+            public void CreateVehicles(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= CreateVehicles;
+
+                List<VehicleModel> cyclopses = vehicleModels
+                    .Where(x => x.TechType == TechType.Cyclops)
+                    .ToList();
+
+                List<VehicleModel> nonCyclopses = vehicleModels
+                    .Where(x => !cyclopses.Any(x2 => x2.TechType == x2.TechType))
+                    .ToList();
+
+                foreach(VehicleModel vehicle in cyclopses)
+                {
+                    vehicles.CreateVehicle(vehicle);
+                }
+
+                foreach(VehicleModel vehicle in nonCyclopses)
+                {
+                    vehicles.CreateVehicle(vehicle);
                 }
             }
         }

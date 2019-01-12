@@ -9,7 +9,7 @@ namespace NitroxServer.GameLogic.Vehicles
     public class VehicleData
     {
         [ProtoMember(1)]
-        public Dictionary<string, VehicleModel> SerializableBasePiecesByGuid
+        public Dictionary<string, VehicleModel> SerializableVehiclesByGuid
         {
             get
             {
@@ -72,6 +72,23 @@ namespace NitroxServer.GameLogic.Vehicles
             lock(vehiclesByGuid)
             {
                 return new List<VehicleModel>(vehiclesByGuid.Values);
+            }
+        }
+
+        public Optional<VehicleModel> GetVehicleModel(string guid)
+        {
+            lock(vehiclesByGuid)
+            {
+                VehicleModel vehicleModel;
+
+                if(vehiclesByGuid.TryGetValue(guid, out vehicleModel))
+                {
+                    return Optional<VehicleModel>.OfNullable(vehicleModel);
+                }
+                else
+                {
+                    return Optional<VehicleModel>.Empty();
+                }
             }
         }
 
