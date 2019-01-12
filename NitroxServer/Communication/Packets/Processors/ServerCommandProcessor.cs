@@ -1,8 +1,8 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures.Util;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic.Players;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -21,7 +21,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             string msg = string.Join(" ", packet.CmdArgs);
             
-            cmdProcessor.ProcessCommand(msg, player, playerData.GetPermissions(player.Name));
+            cmdProcessor.ProcessCommand(msg, Optional<Player>.Of(player), playerData.GetPermissions(player.Name));
         }
     }
 }

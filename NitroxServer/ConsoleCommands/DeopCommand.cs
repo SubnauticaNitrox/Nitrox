@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxServer.ConsoleCommands.Abstract;
+﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic.Players;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -15,7 +12,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
 
-        public DeopCommand(PlayerData playerData, PlayerManager playerManager) : base("deop", Perms.Admin, Optional<string>.Of("<name>"))
+        public DeopCommand(PlayerData playerData, PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>")
         {
             this.playerData = playerData;
             this.playerManager = playerManager;
@@ -23,13 +20,25 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> player)
         {
-            playerData.UpdatePlayerPermissions(args[0], Perms.Player);
+            string playerName = args[0];
+            string message;
+
+            if (playerData.UpdatePlayerPermissions(playerName, Perms.PLAYER))
+            {
+                message = "Updated " + playerName + " permissions to player";
+            }
+            else
+            {
+                message = "Could not update permissions on unknown player " + playerName;
+            }
+
+            Log.Info(message);
+            SendServerMessageIfPlayerIsPresent(player, message);
         }
 
         public override bool VerifyArgs(string[] args)
         {
-            Player player;
-            return playerManager.TryGetPlayerByName(args[0], out player);
+            return args.Length == 1;
         }
     }
 }

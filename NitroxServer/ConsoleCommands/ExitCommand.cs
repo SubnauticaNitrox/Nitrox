@@ -6,7 +6,7 @@ namespace NitroxServer.ConsoleCommands
 {
     public class ExitCommand : Command
     {
-        public ExitCommand() : base("exit", Perms.Admin, Optional<string>.Empty(), "Exits the server", new[] {"stop", "halt", "quit", "abort"})
+        public ExitCommand() : base("exit", Perms.ADMIN, "", "Exits the server", new[] {"stop", "halt", "quit", "abort"})
         {
         }
 
