@@ -38,7 +38,7 @@ If you want to follow the development progress exactly on each pull request. Ref
 You can find the mod here on <a href="https://www.nexusmods.com/subnautica/mods/159">NexusMods</a>.
 
 ### How can I contribute?
-Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/sF8ynqc">Nitrox Discord channel</a>.
+Simply submit a pull request. Full documentation can be found on the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a>.  Feel free to join us in the <a href="https://discord.gg/sF8ynqc">Nitrox Discord channel</a>.  Make sure to check out or contributing guidlines found <a href="https://github.com/SubnauticaNitrox/Nitrox/blob/master/CONTRIBUTING.md">here</a>.
 
 ### How can I donate?
 We do not accept donations to the mod.  Those wishing to give money can do so here: https://www.doctorswithoutborders.org/ 
