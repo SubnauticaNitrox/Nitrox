@@ -22,11 +22,13 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
             SubRoot cyclops = GameObjectHelper.RequireComponent<SubRoot>(gameObject);
-            CyclopsDamagePoint damagePoint = cyclops.damageManager.damagePoints[packet.DamagePointIndex];
 
-            using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+            using (packetSender.Suppress<CyclopsDamage>())
             {
-                NitroxServiceLocator.LocateService<Cyclops>().OnDamagePointHealthChanged(cyclops, damagePoint, packet.RepairAmount, true);
+                using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+                {
+                    NitroxServiceLocator.LocateService<Cyclops>().SetDamagePointHealth(cyclops, packet.DamagePointIndex, packet.RepairAmount);
+                }
             }
         }
     }

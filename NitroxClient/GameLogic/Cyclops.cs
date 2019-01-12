@@ -3,7 +3,6 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -78,8 +77,8 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// After the damage is calculated and all of the <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s have been set, it's packaged and sent out to the server
-        /// if the player is the owner of the Cyclops
+        /// Called when the Cyclops takes damage. After the damage is calculated and all of the <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s have been set, 
+        /// it's packaged and sent out to the server if the player is the current owner of the Cyclops. This can trigger sending <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void OnTakeDamage(SubRoot subRoot, Optional<DamageInfo> info)
         {
@@ -87,14 +86,13 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to do so.
+        /// Called when the player repairs a <see cref="CyclopsDamagePoint"/>. Right now it's not possible to partially repair because it would be difficult to implement.
         /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
-        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/> to catch when something repairs a damage point, which I don't believe is worth the effort.
-        /// At least not yet
+        /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't 
+        /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending 
+        /// <see cref="CyclopsDamagePointHealthChanged"/> and <see cref="CyclopsDamage"/> packets
         /// </summary>
-        /// <param name="applyHealthChange">I want to avoid replacing as much code as possible. If this is false, it means the game already made the health change, and
-        /// all that needs to be done is a broadcasting of that health change</param>
-        public void OnDamagePointHealthChanged(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount, bool applyHealthChange)
+        public void OnDamagePointHealthChanged(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
             string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
 
@@ -102,14 +100,8 @@ namespace NitroxClient.GameLogic
             {
                 if (subRoot.damageManager.damagePoints[i] == damagePoint)
                 {
-                    if (applyHealthChange)
-                    {
-                        subRoot.damageManager.damagePoints[i].liveMixin.AddHealth(repairAmount);
-                    }
-
                     CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
                     packetSender.Send(packet);
-                    Log.Debug("[Cyclops Guid: " + GuidHelper.GetGuid(subRoot.gameObject) + " received OnDamagePointHealthChanged to index " + i.ToString() + ".]");
 
                     BroadcastDamageChange(subRoot, Optional<DamageInfo>.Empty());
 
@@ -119,10 +111,18 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// This is run during every major state change
+        /// Set the health of a <see cref="CyclopsDamagePoint"/>. This can trigger sending <see cref="CyclopsDamagePointHealthChanged"/>
+        /// and <see cref="CyclopsDamage"/> packets
         /// </summary>
-        /// <param name="subRoot"></param>
-        /// <param name="info"></param>
+        /// <param name="repairAmount">The max health of the point is 1. 999 is passed to trigger a full repair of the <see cref="CyclopsDamagePoint"/></param>
+        public void SetDamagePointHealth(SubRoot subRoot, int damagePointIndex, float repairAmount)
+        {
+            subRoot.damageManager.damagePoints[damagePointIndex].liveMixin.AddHealth(repairAmount);
+        }
+
+        /// <summary>
+        /// This is run during every major state change. If this player is the current owner, a <see cref="CyclopsDamage"/> packet will be sent out
+        /// </summary>
         private void BroadcastDamageChange(SubRoot subRoot, Optional<DamageInfo> info)
         {
             string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
@@ -164,8 +164,6 @@ namespace NitroxClient.GameLogic
             else
             {
                 // RIP
-                Log.Debug("[CyclopsDestroyedProcessor Guid: " + subGuid + " received OnTakeDamage after health is 0, packet sent.]");
-
                 CyclopsDestroyed packet = new CyclopsDestroyed(subGuid);
                 packetSender.Send(packet);
             }
@@ -186,7 +184,80 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Placeholder for fire creation interception when ownership is implemented.
+        /// Add/remove <see cref="CyclopsDamagePoint"/>s until it matches the <paramref name="damagePointIndexes"/> array passed. This can trigger sending 
+        /// <see cref="CyclopsDamagePointHealthChanged"/> and <see cref="CyclopsDamage"/> packets
+        /// </summary>
+        public void SetActiveDamagePoints(SubRoot cyclops, int[] damagePointIndexes, float subHealth, float damageManagerHealth, float subFireHealth)
+        {
+            CyclopsExternalDamageManager damageManager = cyclops.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>();
+            List<CyclopsDamagePoint> unusedDamagePoints = (List<CyclopsDamagePoint>)damageManager.ReflectionGet("unusedDamagePoints");
+
+            // CyclopsExternalDamageManager.damagePoints is an unchanged list. It will never have items added/removed from it. Since packet.DamagePointIndexes is also an array
+            // generated in an ordered manner, we can match them without worrying about unordered items.
+            if (damagePointIndexes != null && damagePointIndexes.Length > 0)
+            {
+                int packetDamagePointsIndex = 0;
+
+                for (int damagePointsIndex = 0; damagePointsIndex < damageManager.damagePoints.Length; damagePointsIndex++)
+                {
+                    // Loop over all of the packet.DamagePointIndexes as long as there's more to match
+                    if (packetDamagePointsIndex < damagePointIndexes.Length
+                        && damagePointIndexes[packetDamagePointsIndex] == damagePointsIndex)
+                    {
+                        if (!damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
+                        {
+                            // Copied from CyclopsExternalDamageManager.CreatePoint(), except without the random index pick.
+                            damageManager.damagePoints[damagePointsIndex].gameObject.SetActive(true);
+                            damageManager.damagePoints[damagePointsIndex].RestoreHealth();
+                            GameObject prefabGo = damageManager.fxPrefabs[UnityEngine.Random.Range(0, damageManager.fxPrefabs.Length - 1)];
+                            damageManager.damagePoints[damagePointsIndex].SpawnFx(prefabGo);
+                            unusedDamagePoints.Remove(damageManager.damagePoints[damagePointsIndex]);
+                        }
+
+                        packetDamagePointsIndex++;
+                    }
+                    else
+                    {
+                        // If it's active, but not in the list, it must have been repaired.
+                        if (damageManager.damagePoints[damagePointsIndex].gameObject.activeSelf)
+                        {
+                            SetDamagePointHealth(cyclops, damagePointsIndex, 999);
+                        }
+                    }
+                }
+
+                // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
+                if (packetDamagePointsIndex < damagePointIndexes.Length)
+                {
+                    Log.Error("[CyclopsDamageProcessor packet.DamagePointGuids did not fully iterate! Guid: " + damagePointIndexes[packetDamagePointsIndex].ToString()
+                        + " had no matching Guid in damageManager.damagePoints, or the order is incorrect!]");
+                }
+            }
+            else
+            {
+                // None should be active.
+                for (int i = 0; i < damageManager.damagePoints.Length; i++)
+                {
+                    if (damageManager.damagePoints[i].gameObject.activeSelf)
+                    {
+                        SetDamagePointHealth(cyclops, i, 999);
+                    }
+                }
+            }
+
+            cyclops.gameObject.RequireComponent<LiveMixin>().health = subHealth;
+            damageManager.subLiveMixin.health = damageManagerHealth;
+            cyclops.gameObject.RequireComponent<SubFire>().liveMixin.health = subFireHealth;
+
+            // unusedDamagePoints is checked against damagePoints to determine if there's enough damage points. Failing to set the new list
+            // of unusedDamagePoints will cause random DamagePoints to appear.
+            damageManager.ReflectionSet("unusedDamagePoints", unusedDamagePoints);
+            // Visual update only to show the water leaking through the window and various hull points based on missing health.
+            damageManager.ReflectionCall("ToggleLeakPointsBasedOnDamage", false, false, null);
+        }
+
+        /// <summary>
+        /// A new fire is a state change to the Cyclops. If it's the owner, the other players need to be updated
         /// </summary>
         public void OnCreateFire(SubFire subFire, SubFire.RoomFire startInRoom)
         {
@@ -194,17 +265,36 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Called when <see cref="Fire.Douse(float)"/> is called.
+        /// Create a new fire in a specific room and node. Calling <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> would just cause it to use 
+        /// a random number generator to choose the node. This can trigger sending <see cref="CyclopsFireHealthChanged"/>
+        /// and <see cref="CyclopsDamage"/> packets
+        /// </summary>
+        public void CreateFire(SubRoot subRoot, KeyValuePair<CyclopsRooms, SubFire.RoomFire> fireRoom, int nodeIndex)
+        {
+            Transform transform2 = fireRoom.Value.spawnNodes[nodeIndex];
+            fireRoom.Value.fireValue++;
+            PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
+            if (component == null)
+            {
+                return;
+            }
+            GameObject gameObject = component.SpawnManual();
+            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
+            if (componentInChildren)
+            {
+                componentInChildren.fireSubRoot = subRoot;
+            }
+        }
+
+        /// <summary>
+        /// Called when <see cref="Fire.Douse(float)"/> is called. This can trigger sending <see cref="CyclopsFireHealthChanged"/>
+        /// and <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void OnFireDoused(Fire fire, SubRoot subRoot, float douseAmount)
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
             string fireGuid = GuidHelper.GetGuid(fire.gameObject);
-
-            Log.Debug("[Cyclops.OnFireDoused"
-                + " Guid: " + fireGuid
-                + " Amount: " + douseAmount.ToTwoDecimalString());
 
             if (!fireDouseAmount.ContainsKey(fireGuid))
             {
@@ -239,13 +329,6 @@ namespace NitroxClient.GameLogic
                             {
                                 if (fires[j] == fire)
                                 {
-                                    Log.Debug("[Cyclops.OnFireDoused packet sent"
-                                        + " DouseAmount: " + summedDouseAmount.ToTwoDecimalString()
-                                        + " RoomFire: " + kvp.Key.ToString()
-                                        + " FireNodeIndex: " + i.ToString()
-                                        + " FireIndex: " + j.ToString()
-                                        + "]");
-
                                     CyclopsFireHealthChanged patch = new CyclopsFireHealthChanged(
                                         GuidHelper.GetGuid(subRoot.gameObject),
                                         kvp.Key,
@@ -271,6 +354,38 @@ namespace NitroxClient.GameLogic
                     fireDouseAmount[fireGuid] = summedDouseAmount;
                 }
             }
+        }
+
+        /// <summary>
+        /// Executes the logic in <see cref="Fire.Douse(float)"/> while not calling the method itself to avoid endless looped calls. 
+        /// If the fire is extinguished (no health left), it will pass a large float to trigger the private <see cref="Fire.Extinguish()"/> method.
+        /// This can trigger sending <see cref="CyclopsFireHealthChanged"/> and <see cref="CyclopsDamage"/> packets
+        /// </summary>
+        public void DouseFire(SubFire fireManager, CyclopsRooms room, int fireTransformIndex, int fireIndex, float douseAmount)
+        {
+            Dictionary <CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)fireManager.ReflectionGet("roomFires");
+
+            // What a beautiful monster this is.
+            if (roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>()?.Length <= fireIndex)
+            {
+                Log.Warn("[Cyclops.DouseFire fireIndex larger than number of Fires fireIndex: " + fireIndex.ToString()
+                    + " Fire Count: " + roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>().Length.ToString()
+                    + "]");
+
+                return;
+            }
+
+            Fire fire = roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>()?[fireIndex];
+            if (fire == null)
+            {
+                Log.Warn("[Cyclops.DouseFire could not pull Fire object at index: " + fireIndex.ToString()
+                    + " Fire Index Count: " + roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>().Length.ToString()
+                    + "]");
+
+                return;
+            }
+
+            fire.Douse(douseAmount);
         }
 
         /// <summary>
@@ -312,6 +427,100 @@ namespace NitroxClient.GameLogic
             }
 
             subFire.ReflectionSet("roomFires", roomFires);
+        }
+
+        /// <summary>
+        /// Add/remove fires until it matches the <paramref name="roomFires"/> array.
+        /// </summary>
+        public void SetActiveRoomFires(SubRoot subRoot, SerializableRoomFire[] roomFires, float subHealth, float damageManagerHealth, float subFireHealth)
+        {
+            SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
+            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+
+            // We can do a look for fires that shouldn't be around by looping through GetAllFires.
+            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
+            {
+                if (roomFires != null && roomFires.Any(x => x.Room == keyValuePair.Key))
+                {
+                    SerializableRoomFire roomFire = roomFires.FirstOrDefault(x => x.Room == keyValuePair.Key);
+
+                    // There's fires that are supposed to be here.
+                    for (int nodesIndex = 0; nodesIndex < keyValuePair.Value.spawnNodes.Length; nodesIndex++)
+                    {
+                        if (roomFire.ActiveRoomFireNodes.Any(x => x.NodeIndex == nodesIndex))
+                        {
+                            int fireCount = roomFire.ActiveRoomFireNodes.FirstOrDefault(x => x.NodeIndex == nodesIndex).FireCount;
+
+                            // There's fewer fires than what there should be. Create new ones
+                            if (keyValuePair.Value.spawnNodes[nodesIndex].childCount < fireCount)
+                            {
+                                // A while statement was locking the game. I'm figuring the process of creating a fire does not happen
+                                // on the same thread.
+                                int fireCountToAdd = fireCount - keyValuePair.Value.spawnNodes[nodesIndex].childCount;
+
+                                for (int i = 0; i < fireCountToAdd; i++)
+                                {
+                                    CreateFire(subRoot, keyValuePair, nodesIndex);
+                                }
+                            }
+                            else
+                            {
+                                if (keyValuePair.Value.spawnNodes[nodesIndex].childCount > fireCount)
+                                {
+                                    // A while statement was locking the game. I'm guessing calling a douse was doing something on a different thread
+                                    // and the object wasn't getting destroyed before the loop checked again.
+                                    int fireCountToRemove = keyValuePair.Value.spawnNodes[nodesIndex].childCount - fireCount;
+
+                                    // I don't want to extinguish fires in the middle of the stack. The order can still matter. Note the conditions in the
+                                    // for loop, it does not compare i to continue looping, it compares fireCountToRemove.
+                                    for (int i = keyValuePair.Value.spawnNodes[nodesIndex].childCount - 1; fireCountToRemove > 0; i--)
+                                    {
+                                        DouseFire(subFire, keyValuePair.Key, nodesIndex, i, 10000);
+
+                                        fireCountToRemove--;
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // None for this node. Remove any that are there.
+                            if (keyValuePair.Value.spawnNodes[nodesIndex].childCount > 0)
+                            {
+                                Fire[] fires = keyValuePair.Value.spawnNodes[nodesIndex].GetAllComponentsInChildren<Fire>();
+
+                                for (int i = fires.Length - 1; i >= 0; i--)
+                                {
+                                    DouseFire(subFire, keyValuePair.Key, nodesIndex, i, 10000);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Remove all of the fires in here
+                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes?.Length; nodeIndex++)
+                    {
+                        if (keyValuePair.Value.spawnNodes[nodeIndex] != null && keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
+                        {
+                            Fire[] fires = keyValuePair.Value.spawnNodes[nodeIndex].GetAllComponentsInChildren<Fire>();
+
+                            for (int i = fires.Length - 1; i >= 0; i--)
+                            {
+                                DouseFire(subFire, keyValuePair.Key, nodeIndex, i, 10000);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Update the health of the Cyclops
+            subRoot.GetComponent<LiveMixin>().health = subHealth;
+            subRoot.GetComponent<CyclopsExternalDamageManager>().subLiveMixin.health = damageManagerHealth;
+            subFire.liveMixin.health = subFireHealth;
+
+            subFire.ReflectionSet("roomFires", roomFiresDict);
         }
     }
 }

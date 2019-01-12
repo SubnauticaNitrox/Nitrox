@@ -2,12 +2,13 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
     /// <summary>
-    /// Both owners and non-owners will be able to douse fires on a ship.
+    /// Both owners and non-owners can douse fires on a ship.
     /// </summary>
     public class Fire_Douse_Patch : NitroxPatch
     {
@@ -16,9 +17,11 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Fire __instance, float amount)
         {
-            if (!__instance.livemixin.IsAlive() && !__instance.IsExtinguished())
+            SubRoot subRoot = __instance.gameObject.RequireComponentInParent<SubRoot>();
+
+            if (!__instance.livemixin.IsAlive() || __instance.IsExtinguished())
             {
-                NitroxServiceLocator.LocateService<Cyclops>().OnFireDoused(__instance,__instance.fireSubRoot, 10000);
+                NitroxServiceLocator.LocateService<Cyclops>().OnFireDoused(__instance, __instance.fireSubRoot, 10000);
             }
             else
             {
