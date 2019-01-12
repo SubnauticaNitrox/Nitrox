@@ -48,15 +48,18 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
-            if(SessionPolicy.NitroxVersionAllowed != typeof(NitroxModel.Extensions).Assembly.FullName)
-            Log.Debug($"Nitrox Model versions\n" +
-                $"    Server - {SessionPolicy.NitroxVersionAllowed}\n" +
-                $"    Client - {typeof(NitroxModel.Extensions).Assembly.FullName}");
-            // validate that the required version is contained in the client version full name
-            if (!typeof(NitroxModel.Extensions).Assembly.FullName.Contains(SessionPolicy.NitroxVersionAllowed))
+            Version localVersion = typeof(NitroxModel.Extensions).Assembly.GetName().Version;
+            localVersion = new Version(localVersion.Major, localVersion.Minor);
+            switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
-                Log.InGame("The server is using a different version of Nitrox. Please contact the server admin to install the same version.");
-                CurrentState.Disconnect(this);
+                case -1:
+                    Log.InGame($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    CurrentState.Disconnect(this);
+                    return;
+                case 1:
+                    Log.InGame($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    CurrentState.Disconnect(this);
+                    return;
             }
             CurrentState.NegotiateReservation(this);
         }
