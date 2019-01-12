@@ -234,26 +234,6 @@ namespace NitroxClient.Communication.Packets.Processors
             GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
         }
 
-        private void SpawnVehicles(List<VehicleModel> vehicleModels)
-        {
-            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
-
-            List<VehicleModel> cyclopses = vehicleModels
-                .Where(x => x.TechType == TechType.Cyclops)
-                .ToList();
-
-            foreach(VehicleModel cyclops in cyclopses)
-            {
-                vehicles.CreateVehicle(cyclops);
-            }
-
-            foreach (VehicleModel vehicle in vehicleModels)
-            {
-                vehicles.CreateVehicle(vehicle);
-            }
-
-        }
-
         /*
          * Items should only be added after all base pieces spawn.  Since base pieces will spawn
          * gradually over multiple frames, we need to wait until that process has completely finished
