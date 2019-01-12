@@ -74,7 +74,7 @@ namespace NitroxClient.Unity.Helper
             Component[] allComponents = gameObject.GetComponents<Component>();
             foreach (Component c in allComponents)
             {
-                Log.Debug("{0}   =Component NAME={1}", c.name);
+                Log.Debug("{0}   =Component NAME={1}", linePrefix, c.name);
             }
         }
     }
