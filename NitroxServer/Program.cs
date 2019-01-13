@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Globalization;
 using System.Threading;
-using NitroxModel.Logger;
-using NitroxServer.ConfigParser;
-using NitroxServer.ConsoleCommands.Processor;
 using NitroxModel.Core;
-using NitroxModel.MultiplayerSession;
-using UnityEngine;
-using NitroxModel.Packets;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
+using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer
 {
     public static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
+            Log.SetLevel(Log.LogLevel.Info | Log.LogLevel.Debug);
 
             NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            configureCultureInfo();
+            ConfigureCultureInfo();
             Server server;
             try
             {
@@ -35,10 +31,10 @@ namespace NitroxServer
                 return;
             }
 
-            ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+            ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine(), Optional<Player>.Empty(), Perms.CONSOLE);
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<Player>.Empty(), Perms.CONSOLE);
             }
         }
 
@@ -50,7 +46,7 @@ namespace NitroxServer
          * throughout the entire application.  This originally manifested itself as a duplicate spawning
          * issue for players in Europe.  This was due to incorrect parsing of probability tables.
          */
-        static void configureCultureInfo()
+        private static void ConfigureCultureInfo()
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
