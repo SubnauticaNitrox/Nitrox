@@ -2,12 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -28,7 +29,6 @@ namespace NitroxClient.MonoBehaviours
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
-
         public bool InitialSyncCompleted;
 
         public void Awake()
@@ -122,12 +122,12 @@ namespace NitroxClient.MonoBehaviours
         public void StopCurrentSession()
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-			
+
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
                 multiplayerSession.Disconnect();
             }
-			
+
             OnAfterMultiplayerEnd?.Invoke();
 
             //Always do this last.
@@ -177,6 +177,9 @@ namespace NitroxClient.MonoBehaviours
 
             HashSet<WaitScreen.Item> items = (HashSet<WaitScreen.Item>)waitScreen.ReflectionGet("items");
             items.Clear();
+
+            PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
     }
 }
