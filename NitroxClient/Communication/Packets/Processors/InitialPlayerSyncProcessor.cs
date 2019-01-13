@@ -469,7 +469,7 @@ namespace NitroxClient.Communication.Packets.Processors
                     .ToList();
 
                 List<VehicleModel> nonCyclopses = vehicleModels
-                    .Where(x => !cyclopses.Any(x2 => x2.TechType == x2.TechType))
+                    .Where(x => x.TechType != TechType.Cyclops)
                     .ToList();
 
                 foreach(VehicleModel vehicle in cyclopses)
