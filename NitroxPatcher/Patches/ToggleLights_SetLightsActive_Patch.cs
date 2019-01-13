@@ -54,7 +54,6 @@ namespace NitroxPatcher.Patches
                 if (!gameObject)
                 {
                     Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
-                    DebugUtils.DumpComponent(__instance);
                 }
 
                 string guid = GuidHelper.GetGuid(gameObject);
