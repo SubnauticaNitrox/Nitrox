@@ -21,13 +21,13 @@ namespace NitroxTest.Patcher.Test
             return instructions;
         }
 
-        public static List<CodeInstruction> GetInstructionsFromMethod(MethodInfo targetMethod)
+        public static List<CodeInstruction> GetInstructionsFromMethod(DynamicMethod targetMethod)
         {
             Validate.NotNull(targetMethod);
 
             List<CodeInstruction> instructions = new List<CodeInstruction>();
 
-            foreach (ILInstruction instruction in MethodBodyReader.GetInstructions(targetMethod))
+            foreach (ILInstruction instruction in MethodBodyReader.GetInstructions(targetMethod.GetILGenerator(), targetMethod))
             {
                 instructions.Add(instruction.GetCodeInstruction());
             }

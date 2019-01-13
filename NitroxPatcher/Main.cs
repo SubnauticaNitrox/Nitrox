@@ -20,7 +20,7 @@ namespace NitroxPatcher
         private static NitroxPatch[] patches;
         private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
         private static bool isApplied;
-
+        
         public static void Execute()
         {
             Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.InGameMessages | Log.LogLevel.FileLog);
@@ -103,7 +103,7 @@ namespace NitroxPatcher
             patches.ForEach(patch =>
             {
                 Log.Info("Restoring " + patch.GetType());
-                patch.Restore();
+                patch.Restore(harmony);
             });
 
             isApplied = false;

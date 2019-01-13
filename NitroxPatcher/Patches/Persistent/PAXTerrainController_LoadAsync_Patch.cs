@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
+using NitroxModel.Logger;
 using Harmony;
 using NitroxModel.Helper;
 using System.Linq;
@@ -36,8 +37,8 @@ namespace NitroxPatcher.Patches.Persistent
                    {
                         //Call our injection code and set paxTerratinController.setIsWorking(true); (this keeps up the loading screen)
                         yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
-                        yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_1, instruction.labels);
-                   }
+                        yield return new CodeInstruction(OpCodes.Ldc_I4_1) { labels = instruction.labels };
+                    }
                    else
                    {
                         yield return instruction;
