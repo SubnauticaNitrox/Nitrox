@@ -114,15 +114,8 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             CurrentState = sessionConnectionState;
 
-            var handler = ConnectionStateChanged;
-            if (handler != null)
-            {
-                handler.Invoke(CurrentState);
-            }
-            else
-            {
-                throw new NullReferenceException($"ConnectionStateChanged has no handlers added for connection stage: {sessionConnectionState.CurrentStage}.");
-            }
+            // Last connection state changed will not have any handlers
+            ConnectionStateChanged?.Invoke(CurrentState);
         }
 
         public void ClearSessionState()
