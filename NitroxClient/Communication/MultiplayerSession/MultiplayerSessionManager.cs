@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
-        public int ServerPort{ get; private set; }
+        public int ServerPort { get; private set; }
         public MultiplayerSessionPolicy SessionPolicy { get; private set; }
         public PlayerSettings PlayerSettings { get; private set; }
         public AuthenticationContext AuthenticationContext { get; private set; }
@@ -37,7 +37,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         public IMultiplayerSessionConnectionState CurrentState { get; private set; }
         public MultiplayerSessionReservation Reservation { get; private set; }
 
-        public void Connect(string ipAddress,int port)
+        public void Connect(string ipAddress, int port)
         {
             IpAddress = ipAddress;
             ServerPort = port;
@@ -48,6 +48,19 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
+            Version localVersion = typeof(NitroxModel.Extensions).Assembly.GetName().Version;
+            localVersion = new Version(localVersion.Major, localVersion.Minor);
+            switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
+            {
+                case -1:
+                    Log.InGame($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    CurrentState.Disconnect(this);
+                    return;
+                case 1:
+                    Log.InGame($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    CurrentState.Disconnect(this);
+                    return;
+            }
             CurrentState.NegotiateReservation(this);
         }
 
