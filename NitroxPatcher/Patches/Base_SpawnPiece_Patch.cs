@@ -25,8 +25,10 @@ namespace NitroxPatcher.Patches
             }
    
             string guid;
-            
-            if (Base_ClearGeometry_Patch.LastClearedCellsByPosition.TryGetValue(__result.position, out guid))
+
+            string key = Base_ClearGeometry_Patch.getObjectKey(__result.name, __result.position);
+
+            if (Base_ClearGeometry_Patch.GuidByObjectKey.TryGetValue(key, out guid))
             {
                 GuidHelper.SetNewGuid(__result.gameObject, guid);
             }
