@@ -25,7 +25,7 @@ namespace ClientTester
 
         public MultiplayerClient(ushort playerId)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
+            Log.SetLevel(Log.LogLevel.Info | Log.LogLevel.Debug);
             playerName = "Player" + playerId;
 
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());

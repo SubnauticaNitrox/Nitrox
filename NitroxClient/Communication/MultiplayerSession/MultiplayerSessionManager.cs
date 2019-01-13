@@ -2,16 +2,27 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
+using NitroxClient.GameLogic;
+using NitroxModel;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+
+        public IClient Client { get; }
+        public string IpAddress { get; private set; }
+        public int ServerPort { get; private set; }
+        public MultiplayerSessionPolicy SessionPolicy { get; private set; }
+        public PlayerSettings PlayerSettings { get; private set; }
+        public AuthenticationContext AuthenticationContext { get; private set; }
+        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
+        public MultiplayerSessionReservation Reservation { get; private set; }
 
         public MultiplayerSessionManager(IClient client)
         {
@@ -27,15 +38,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             CurrentState = initialState;
         }
 
-        public IClient Client { get; }
-        public string IpAddress { get; private set; }
-        public int ServerPort { get; private set; }
-        public MultiplayerSessionPolicy SessionPolicy { get; private set; }
-        public PlayerSettings PlayerSettings { get; private set; }
-        public AuthenticationContext AuthenticationContext { get; private set; }
         public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
-        public IMultiplayerSessionConnectionState CurrentState { get; private set; }
-        public MultiplayerSessionReservation Reservation { get; private set; }
 
         public void Connect(string ipAddress, int port)
         {
@@ -48,7 +51,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
-            Version localVersion = typeof(NitroxModel.Extensions).Assembly.GetName().Version;
+            Version localVersion = typeof(Extensions).Assembly.GetName().Version;
             localVersion = new Version(localVersion.Major, localVersion.Minor);
             switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
@@ -61,6 +64,7 @@ namespace NitroxClient.Communication.MultiplayerSession
                     CurrentState.Disconnect(this);
                     return;
             }
+
             CurrentState.NegotiateReservation(this);
         }
 
@@ -102,7 +106,15 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
+            Validate.NotNull(sessionConnectionState);
+
+            string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
+            string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
+            Log.Info($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
+
             CurrentState = sessionConnectionState;
+
+            // Last connection state changed will not have any handlers
             ConnectionStateChanged?.Invoke(CurrentState);
         }
 

@@ -7,6 +7,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     public class SessionReserved : ConnectionNegotiatedState
     {
         public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.SessionReserved;
+
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
             try
@@ -19,6 +20,14 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             {
                 Disconnect(sessionConnectionContext);
                 throw;
+            }
+        }
+
+        private static void ValidateState(IMultiplayerSessionConnectionContext sessionConnectionContext)
+        {
+            if (!sessionConnectionContext.Client.IsConnected)
+            {
+                throw new InvalidOperationException("The client is not connected.");
             }
         }
 
@@ -37,14 +46,6 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
         {
             SessionJoined nextState = new SessionJoined();
             sessionConnectionContext.UpdateConnectionState(nextState);
-        }
-
-        private static void ValidateState(IMultiplayerSessionConnectionContext sessionConnectionContext)
-        {
-            if (!sessionConnectionContext.Client.IsConnected)
-            {
-                throw new InvalidOperationException("The client is not connected.");
-            }
         }
     }
 }
