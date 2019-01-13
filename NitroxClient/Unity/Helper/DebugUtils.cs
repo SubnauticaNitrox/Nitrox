@@ -7,18 +7,6 @@ namespace NitroxClient.Unity.Helper
 {
     public static class DebugUtils
     {
-        [Obsolete("Please use PrintHierarchy")]
-        public static void DumpGameObject(this GameObject gameObject, string indent = "", bool dumpTransform = true)
-        {
-            PrintHierarchy(gameObject, false, 0, true);
-        }
-
-        [Obsolete("Please use PrintHierarchy")]
-        public static void DumpComponent(this Component component, string indent = "")
-        {
-            Log.Info("{0}{1}", indent, (component == null ? "(null)" : component.GetType().Name + ": " + component.ToString()));
-        }
-
         public static void PrintHierarchy(GameObject gameObject, bool startAtRoot = false, int parentsUpwards = 1, bool listComponents = false, bool travelDown = true)
         {
             GameObject startHierarchy = gameObject;

@@ -37,7 +37,7 @@ namespace NitroxClient.Unity.Helper
             if (child == null)
             {
 #if DEBUG
-                tf.gameObject.DumpGameObject(dumpTransform: false);
+                DebugUtils.PrintHierarchy(tf.gameObject, false, 0, true);
 #endif
                 throw new ArgumentNullException(tf + " does not contain \"" + name + "\"");
             }
