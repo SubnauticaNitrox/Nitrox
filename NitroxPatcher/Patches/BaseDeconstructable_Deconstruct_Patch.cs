@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using Harmony;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 

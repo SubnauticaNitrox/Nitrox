@@ -67,7 +67,7 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
-        public void BasePieceConstructionCompleted(string guid, Optional<string> newlyCreatedParentGuid)
+        public void BasePieceConstructionCompleted(string guid, string baseGuid)
         {
             BasePiece basePiece;
 
@@ -77,14 +77,10 @@ namespace NitroxServer.GameLogic.Bases
                 {
                     basePiece.ConstructionAmount = 1.0f;
                     basePiece.ConstructionCompleted = true;
-                    basePiece.NewBaseGuid = newlyCreatedParentGuid;
+                    basePiece.BaseGuid = baseGuid;
+                    basePiece.ParentGuid = Optional<string>.OfNullable(baseGuid);
 
-                    if (newlyCreatedParentGuid.IsPresent())
-                    {
-                        basePiece.ParentGuid = Optional<string>.Empty();
-                    }
-
-                    lock(completedBasePieceHistory)
+                    lock (completedBasePieceHistory)
                     {
                         completedBasePieceHistory.Add(basePiece);
                     }
