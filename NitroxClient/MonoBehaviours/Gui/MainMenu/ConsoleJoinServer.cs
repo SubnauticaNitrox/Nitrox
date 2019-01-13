@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic;
@@ -106,7 +107,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 switch (subName.ToLowerInvariant())
                 {
                     case "cyclops":
-                        NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(TechType.Cyclops, Optional<string>.Empty(), MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                        string guid = Guid.NewGuid().ToString();
+                        VehicleModel newVehicle = new VehicleModel(TechType.Cyclops, guid, MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                        NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(newVehicle);
+                        NitroxServiceLocator.LocateService<Vehicles>().BroadcastCreatedVehicle(newVehicle);
                         break;
                     // Doesn't actually work in the game. Despite "beetle" being an option, it's only "cyclops" that works. Doesn't mean we can't add it ourselves later
                     // case "seamoth":

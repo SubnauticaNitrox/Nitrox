@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(SubRoot __instance, DamageInfo info)
         {
-            NitroxServiceLocator.LocateService<Cyclops>().OnTakeDamage(__instance, Optional<DamageInfo>.OfNullable(info));
+            // NitroxServiceLocator.LocateService<Cyclops>().OnTakeDamage(__instance, Optional<DamageInfo>.OfNullable(info));
         }
 
         public override void Patch(HarmonyInstance harmony)

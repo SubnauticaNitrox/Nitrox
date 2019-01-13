@@ -30,14 +30,14 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, Optional<string>.OfNullable(vehicleModel.Guid), vehicleModel.Position, vehicleModel.Rotation,vehicleModel.InteractiveChildIdentifiers);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers);
         }
 
-        public void CreateVehicle(TechType techType, Optional<string> guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, techType, guid, position, rotation, interactiveChildIdentifiers));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, techType, guid, position, rotation, interactiveChildIdentifiers);
+                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers);
                 }
                 else
                 {
@@ -112,34 +112,20 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, TechType techType, Optional<string> guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
+        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
             gameObject.transform.rotation = spawnRotation;
             gameObject.SetActive(true);
             gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
-            LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
-
+            GuidHelper.SetNewGuid(gameObject, guid);
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
-            }
-
-            // If there's a Gui, it's an existing vehicle, otherwise it is a new one
-            if (guid.IsPresent())
-            {
-                GuidHelper.SetNewGuid(gameObject, guid.Get());
-            }
-            else
-            {
-                string newGuid = GuidHelper.GetGuid(gameObject);
-                SubConsoleCommand.main.ReflectionSet("lastCreatedSub", gameObject);
-                VehicleModel newVehicle = new VehicleModel(techType, newGuid, spawnPosition, spawnRotation, interactiveChildIdentifiers);
-                BroadcastCreatedVehicle(newVehicle);
             }
         }
 

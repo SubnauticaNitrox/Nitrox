@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches
         {
             if (__state)
             {
-                NitroxServiceLocator.LocateService<Cyclops>().OnCreateFire(__instance, startInRoom);
+                NitroxServiceLocator.LocateService<Cyclops>().OnCreateFire(__instance.subRoot, startInRoom);
             }
         }
 

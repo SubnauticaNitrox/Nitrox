@@ -76,13 +76,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        /// <summary>
-        /// Called when the Cyclops takes damage. After the damage is calculated and all of the <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s have been set, 
-        /// it's packaged and sent out to the server if the player is the current owner of the Cyclops. This can trigger sending <see cref="CyclopsDamage"/> packets
-        /// </summary>
-        public void OnTakeDamage(SubRoot subRoot, Optional<DamageInfo> info)
+        public void OnCreatePoint(SubRoot subRoot)
         {
-            BroadcastDamageChange(subRoot, info);
+            BroadcastDamageChange(subRoot, Optional<DamageInfo>.Empty());
         }
 
         /// <summary>
@@ -103,16 +99,13 @@ namespace NitroxClient.GameLogic
                     CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
                     packetSender.Send(packet);
 
-                    BroadcastDamageChange(subRoot, Optional<DamageInfo>.Empty());
-
                     return;
                 }
             }
         }
 
         /// <summary>
-        /// Set the health of a <see cref="CyclopsDamagePoint"/>. This can trigger sending <see cref="CyclopsDamagePointHealthChanged"/>
-        /// and <see cref="CyclopsDamage"/> packets
+        /// Set the health of a <see cref="CyclopsDamagePoint"/>. This can trigger sending <see cref="CyclopsDamagePointHealthChanged"/> packets
         /// </summary>
         /// <param name="repairAmount">The max health of the point is 1. 999 is passed to trigger a full repair of the <see cref="CyclopsDamagePoint"/></param>
         public void SetDamagePointHealth(SubRoot subRoot, int damagePointIndex, float repairAmount)
@@ -121,40 +114,32 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// This is run during every major state change. If this player is the current owner, a <see cref="CyclopsDamage"/> packet will be sent out
+        /// Send out a <see cref="CyclopsDamage"/> packet
         /// </summary>
         private void BroadcastDamageChange(SubRoot subRoot, Optional<DamageInfo> info)
         {
             string subGuid = GuidHelper.GetGuid(subRoot.gameObject);
-
-            // If it isn't the owner, we don't want to broadcast
-            if (!simulationOwnershipManager.HasAnyLockType(subGuid))
-            {
-                return;
-            }
-
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
-
-            SerializableDamageInfo damageInfo = null;
-
-            if (info.IsPresent())
-            {
-                DamageInfo damage = info.Get();
-
-                // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
-                // visual effects should be used.
-                SerializableDamageInfo serializedDamageInfo = new SerializableDamageInfo()
-                {
-                    OriginalDamage = damage.originalDamage,
-                    Damage = damage.damage,
-                    Position = damage.position,
-                    Type = damage.type,
-                    DealerGuid = damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty
-                };
-            }
-
+            
             if (subHealth.health > 0)
             {
+                SerializableDamageInfo damageInfo = null;
+
+                if (info.IsPresent())
+                {
+                    DamageInfo damage = info.Get();
+                    // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
+                    // visual effects should be used.
+                    SerializableDamageInfo serializedDamageInfo = new SerializableDamageInfo()
+                    {
+                        OriginalDamage = damage.originalDamage,
+                        Damage = damage.damage,
+                        Position = damage.position,
+                        Type = damage.type,
+                        DealerGuid = damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty
+                    };
+                }
+
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
                 SerializableRoomFire[] firePointIndexes = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
@@ -184,8 +169,7 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Add/remove <see cref="CyclopsDamagePoint"/>s until it matches the <paramref name="damagePointIndexes"/> array passed. This can trigger sending 
-        /// <see cref="CyclopsDamagePointHealthChanged"/> and <see cref="CyclopsDamage"/> packets
+        /// Add/remove <see cref="CyclopsDamagePoint"/>s until it matches the <paramref name="damagePointIndexes"/> array passed
         /// </summary>
         public void SetActiveDamagePoints(SubRoot cyclops, int[] damagePointIndexes, float subHealth, float damageManagerHealth, float subFireHealth)
         {
@@ -256,18 +240,14 @@ namespace NitroxClient.GameLogic
             damageManager.ReflectionCall("ToggleLeakPointsBasedOnDamage", false, false, null);
         }
 
-        /// <summary>
-        /// A new fire is a state change to the Cyclops. If it's the owner, the other players need to be updated
-        /// </summary>
-        public void OnCreateFire(SubFire subFire, SubFire.RoomFire startInRoom)
+        public void OnCreateFire(SubRoot subRoot, SubFire.RoomFire startInRoom)
         {
-            OnTakeDamage(subFire.subRoot, null);
+            BroadcastDamageChange(subRoot, Optional<DamageInfo>.Empty());
         }
 
         /// <summary>
         /// Create a new fire in a specific room and node. Calling <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> would just cause it to use 
-        /// a random number generator to choose the node. This can trigger sending <see cref="CyclopsFireHealthChanged"/>
-        /// and <see cref="CyclopsDamage"/> packets
+        /// a random number generator to choose the node. This can trigger sending <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void CreateFire(SubRoot subRoot, KeyValuePair<CyclopsRooms, SubFire.RoomFire> fireRoom, int nodeIndex)
         {
@@ -287,8 +267,7 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Called when <see cref="Fire.Douse(float)"/> is called. This can trigger sending <see cref="CyclopsFireHealthChanged"/>
-        /// and <see cref="CyclopsDamage"/> packets
+        /// Called when <see cref="Fire.Douse(float)"/> is called. This can trigger sending <see cref="CyclopsFireHealthChanged"/> packets
         /// </summary>
         public void OnFireDoused(Fire fire, SubRoot subRoot, float douseAmount)
         {
@@ -298,13 +277,6 @@ namespace NitroxClient.GameLogic
 
             if (!fireDouseAmount.ContainsKey(fireGuid))
             {
-                // 500 fires in a single session? Are they trying to cook Peepers on open fires? Yes, I've tried to do it, and to my disappointment it
-                // doesn't cook them.
-                if (fireDouseAmount.Count > 500)
-                {
-                    fireDouseAmount.Clear();
-                }
-
                 fireDouseAmount.Add(fireGuid, douseAmount);
             }
             else
