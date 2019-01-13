@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches
          * them so that we can update the newly placed pieces with the proper id.  The new
          * pieces are added by Base.SpawnPiece (see that patch)
          */
-        public static Dictionary<Int3, string> LastClearedCellsByGuid = new Dictionary<Int3, string>();
+        public static Dictionary<Vector3, string> LastClearedCellsByPosition = new Dictionary<Vector3, string>();
 
         public static void Prefix(Base __instance)
         {
@@ -43,14 +43,12 @@ namespace NitroxPatcher.Patches
                     {
                         Transform child = cellObject.GetChild(i);
 
-                        if(child != null && child.gameObject != null)
+                        if (child != null && child.gameObject != null)
                         {
-                            Int3 cell = __instance.WorldToGrid(child.position);
-
-                            if(cell != Int3.zero && child.gameObject.GetComponent<UniqueIdentifier>() != null)
+                            if(child.gameObject.GetComponent<UniqueIdentifier>() != null)
                             {
                                 string guid = child.gameObject.GetComponent<UniqueIdentifier>().Id;
-                                LastClearedCellsByGuid[cell] = guid;
+                                LastClearedCellsByPosition[child.position] = guid;
                             }
                         }
                     }

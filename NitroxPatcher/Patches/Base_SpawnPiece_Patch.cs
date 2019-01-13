@@ -24,11 +24,9 @@ namespace NitroxPatcher.Patches
                 return;
             }
    
-            Int3 cell = __instance.WorldToGrid(__result.position);
-
             string guid;
             
-            if (Base_ClearGeometry_Patch.LastClearedCellsByGuid.TryGetValue(cell, out guid))
+            if (Base_ClearGeometry_Patch.LastClearedCellsByPosition.TryGetValue(__result.position, out guid))
             {
                 GuidHelper.SetNewGuid(__result.gameObject, guid);
             }

@@ -108,6 +108,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void BuildBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
+            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Guid + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType);
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
@@ -124,7 +125,7 @@ namespace NitroxClient.MonoBehaviours
             
             if(basePiece.ParentGuid.IsPresent())
             {
-                parentBase = GuidHelper.RequireObjectFrom(basePiece.ParentGuid.Get());
+                parentBase = GuidHelper.GetObjectFrom(basePiece.ParentGuid.Get()).OrElse(null);
             }
             
             Constructable constructable;
@@ -155,6 +156,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
+            Log.Info("Constructed completed " + constructionCompleted.Guid);
             GameObject constructing = GuidHelper.RequireObjectFrom(constructionCompleted.Guid);
 
             ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
@@ -176,12 +178,12 @@ namespace NitroxClient.MonoBehaviours
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = 1f;
                 constructable.SetState(true, true);
-            }           
+            }
             
-            if (constructionCompleted.NewBaseCreatedGuid.IsPresent())
+            if (constructionCompleted.BaseGuid != null && GuidHelper.GetObjectFrom(constructionCompleted.BaseGuid).IsEmpty())
             {
-                string newBaseGuid = constructionCompleted.NewBaseCreatedGuid.Get();
-                ConfigureNewlyConstructedBase(newBaseGuid);
+                Log.Info("Creating base: " + constructionCompleted.BaseGuid);
+                ConfigureNewlyConstructedBase(constructionCompleted.BaseGuid);
             }
         }
 
