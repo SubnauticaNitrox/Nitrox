@@ -9,7 +9,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.Serialization
 {
-    class ServerProtobufSerializer
+    public class ServerProtobufSerializer
     {
         private readonly RuntimeTypeModel model;
 
@@ -84,11 +84,12 @@ namespace NitroxServer.Serialization
 
                         try
                         {
+                            Log.Info(type + ": " + tag + ": " + property.Name);
                             model[type].Add(tag, property.Name);
                         }
                         catch (Exception ex)
                         {
-                            if(typeof(Peeper) != type) // srsly peeper we know you are broken...
+                            if(typeof(Peeper) == type) // srsly peeper we know you are broken...
                             {
                                 Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name + " " + ex);
                             }
