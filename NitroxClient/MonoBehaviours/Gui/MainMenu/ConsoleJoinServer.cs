@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -112,7 +113,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     break;
                 case MultiplayerSessionConnectionStage.SessionReserved:
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
-                    Multiplayer.Main.StartSession();
+                    CoroutineRunner(Multiplayer.Main.StartSession());
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
                     Log.InGame($"Cannot join server: {multiplayerSession.Reservation.ReservationState.ToString()}");
@@ -124,6 +125,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 default:
                     Log.InGame($"Current Stage: {multiplayerSession.CurrentState.CurrentStage}");
                     break;
+            }
+        }
+
+        private static void CoroutineRunner(IEnumerator coroutine)
+        {
+            while (coroutine.MoveNext())
+            {
             }
         }
 

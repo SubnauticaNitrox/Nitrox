@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -56,18 +57,22 @@ namespace NitroxClient.GameLogic
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer player = new RemotePlayer(remotePlayerBody, playerContext);
+            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext);
 
-            PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
+            RemotePlayerColorApplicator colorApplicator = remotePlayerBody.AddComponent<RemotePlayerColorApplicator>();
+            colorApplicator.AttachRemotePlayer(remotePlayer);
+
+            PlayerModelDirector playerModelDirector = new PlayerModelDirector(remotePlayer);
             playerModelDirector
                 .AddPing()
                 .AddDiveSuit();
 
             playerModelDirector.Construct();
 
-            playersById.Add(player.PlayerId, player);
             DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
-            return player;
+            playersById.Add(remotePlayer.PlayerId, remotePlayer);
+
+            return remotePlayer;
         }
 
         public void RemovePlayer(ushort playerId)

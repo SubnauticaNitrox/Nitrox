@@ -1,61 +1,24 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel
 {
     public class HsvColorFilter
     {
-        private readonly float replacementAlpha;
-        private readonly float replacementHue;
-        private readonly float replacementSaturation;
-        private readonly float replacementVibrancy;
-        private ColorValueRange alphaValueRange;
-
+        private readonly IColorSwapStrategy colorSwapStrategy;
         private ColorValueRange hueValueRange;
         private ColorValueRange saturationValueRange;
         private ColorValueRange vibrancyValueRange;
-
-        //public HsvColorFilter(float replacementHue, float replacementSaturation, float replacementVibrancy, float replacementAlpha)
-        //{
-        //    this.replacementHue = replacementHue < 1f ? replacementHue : replacementHue / 360f;
-        //    this.replacementSaturation = replacementSaturation <= 1f ? replacementSaturation : replacementSaturation / 100f;
-        //    this.replacementVibrancy = replacementVibrancy <= 1f ? replacementVibrancy : replacementVibrancy / 100f;
-        //    this.replacementAlpha = replacementAlpha < 1f ? replacementAlpha : replacementAlpha / 255f;
-        //}
-
-        public HsvColorFilter()
+        private ColorValueRange alphaValueRange;
+        
+        public HsvColorFilter(IColorSwapStrategy colorSwapStrategy)
         {
-            hueValueRange = new ColorValueRange(0f, 360f);
-            saturationValueRange = new ColorValueRange(0f, 100f);
-            vibrancyValueRange = new ColorValueRange(0f, 100f);
-            alphaValueRange = new ColorValueRange(0f, 255f);
-        }
-
-        public Color FilterColor(Color color)
-        {
-            float hue;
-            float saturation;
-            float vibrancy;
-            float alpha = color.a;
-
-            Color.RGBToHSV(color, out hue, out saturation, out vibrancy);
-
-            if (hueValueRange.Covers(hue) &&
-                saturationValueRange.Covers(saturation) &&
-                vibrancyValueRange.Covers(vibrancy) &&
-                alphaValueRange.Covers(alpha))
-            {
-                float newHue = replacementHue >= 0f ? replacementHue : hue;
-                float newSaturation = replacementSaturation >= 0f ? replacementSaturation : saturation;
-                float newVibrancy = replacementVibrancy >= 0f ? replacementVibrancy : vibrancy;
-                float newAlpha = replacementAlpha >= 0f ? replacementAlpha : alpha;
-
-                return Color
-                    .HSVToRGB(newHue, newSaturation, newVibrancy)
-                    .WithAlpha(newAlpha);
-            }
-
-            return color;
+            this.colorSwapStrategy = colorSwapStrategy;
+            hueValueRange = new ColorValueRange(0f, 1f);
+            saturationValueRange = new ColorValueRange(0f, 1f);
+            vibrancyValueRange = new ColorValueRange(0f, 1f);
+            alphaValueRange = new ColorValueRange(0f, 1f);
         }
 
         public void SetHueRange(float minHue, float maxHue)
@@ -108,6 +71,28 @@ namespace NitroxClient.GameLogic.PlayerModel
                     alphaValueRange.Covers(alpha))
                 {
                     yield return pixelIndex;
+                }
+            }
+        }
+
+        public void SwapColors(Color[] texturePixels)
+        {
+            for (int pixelIndex = 0; pixelIndex < texturePixels.Length; pixelIndex++)
+            {
+                Color pixel = texturePixels[pixelIndex];
+                float hue;
+                float saturation;
+                float vibrancy;
+                float alpha = pixel.a;
+
+                Color.RGBToHSV(pixel, out hue, out saturation, out vibrancy);
+
+                if (hueValueRange.Covers(hue) &&
+                    saturationValueRange.Covers(saturation) &&
+                    vibrancyValueRange.Covers(vibrancy) &&
+                    alphaValueRange.Covers(alpha))
+                {
+                    texturePixels[pixelIndex] = colorSwapStrategy.SwapColor(pixel);
                 }
             }
         }

@@ -4,6 +4,9 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -428,10 +431,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //This removes the extra "tabs" from the base texture.
             Texture2D newBaseTabTexture = baseTabBackgroundImage.sprite.texture.Clone();
-            HsvColorFilter baseTabBackgroundColorFilter = new HsvColorFilter(-1f, -1f, -1f, 0f);
+            TextureBlock textureBlock = new TextureBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f));
+            IColorSwapStrategy alphaChannelSwapper = new AlphaChannelSwapper(0f);
+            HsvColorFilter baseTabBackgroundColorFilter = new HsvColorFilter(alphaChannelSwapper);
             baseTabBackgroundColorFilter.SetHueRange(185f, 215f);
             baseTabBackgroundColorFilter.SetAlphaRange(0f, 175f);
-            newBaseTabTexture.ApplyFiltersToBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f), baseTabBackgroundColorFilter);
+            newBaseTabTexture.SwapTextureColors(baseTabBackgroundColorFilter, textureBlock);
             baseTabBackgroundImage.sprite = Sprite.Create(newBaseTabTexture, new Rect(baseTabBackgroundImage.sprite.textureRect), new Vector2(0f, 0f));
         }
 

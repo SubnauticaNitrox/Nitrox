@@ -11,6 +11,7 @@ using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 
 namespace NitroxClient
@@ -21,6 +22,7 @@ namespace NitroxClient
         {
             RegisterCoreDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
+            RegisterColorSwapManagers(containerBuilder);
         }
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
@@ -81,6 +83,15 @@ namespace NitroxClient
             containerBuilder
                 .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
                 .AsClosedTypesOf(typeof(ClientPacketProcessor<>))
+                .InstancePerLifetimeScope();
+        }
+
+        private void RegisterColorSwapManagers(ContainerBuilder containerBuilder)
+        {
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
+                .AssignableTo<IColorSwapManager>()
+                .As<IColorSwapManager>()
                 .InstancePerLifetimeScope();
         }
     }

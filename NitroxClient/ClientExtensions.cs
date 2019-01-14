@@ -1,4 +1,7 @@
-﻿using NitroxClient.GameLogic.PlayerModel;
+﻿using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 
 namespace NitroxClient
@@ -37,37 +40,39 @@ namespace NitroxClient
             // "clonedTexture" now has the same pixels from "texture" and it's readable.
         }
 
-        public static void ApplyFilters(this Texture2D texture, params HsvColorFilter[] filters)
+        //This applies a color filter to a specific region of a 2D texture.
+        public static void SwapTextureColors(
+            this Texture2D texture,
+            HsvColorFilter filter,
+            TextureBlock textureBlock)
         {
-            Color[] pixels = texture.GetPixels();
-            FilterPixels(filters, pixels);
+            Color[] pixels = texture.GetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight);
+            
+            filter.SwapColors(pixels);
 
-            texture.SetPixels(pixels);
+            texture.SetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight, pixels);
             texture.Apply();
+        }
+
+        public static void UpdateMainTextureColors(this Material material, Color[] pixels)
+        {
+            Texture2D mainTexture = (Texture2D)material.mainTexture;
+            mainTexture.SetPixels(pixels);
+            mainTexture.Apply();
         }
 
         //This applies a color filter to a specific region of a 2D texture.
-        public static void ApplyFiltersToBlock(
-            this Texture2D texture,
-            int x,
-            int y,
-            int blockWidth,
-            int blockHeight,
-            params HsvColorFilter[] filters)
-        {
-            Color[] pixels = texture.GetPixels(x, y, blockWidth, blockHeight);
-            FilterPixels(filters, pixels);
-
-            texture.SetPixels(x, y, blockWidth, blockHeight, pixels);
-            texture.Apply();
-        }
-
-        public static void ApplyFiltersToMainTexture(this Material material, params HsvColorFilter[] filters)
+        public static void UpdateMainTextureColors(
+            this Material material,
+            Color[] pixels, 
+            //IColorSwapStrategy colorSwapStrategy,
+            TextureBlock textureBlock)
         {
             Texture2D mainTexture = (Texture2D)material.mainTexture;
-            Texture2D clonedTexture = mainTexture.Clone();
-            material.mainTexture = clonedTexture;
-            clonedTexture.ApplyFilters(filters);
+            //Color[] pixels = mainTexture.GetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight);
+            //pixelIndexes.ForEach(pixelIndex => pixels[pixelIndex] = colorSwapStrategy.SwapColor(pixels[pixelIndex]));
+            mainTexture.SetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight, pixels);
+            mainTexture.Apply();
         }
 
         public static void ApplyClonedTexture(this Material material)
@@ -93,33 +98,11 @@ namespace NitroxClient
         }
 
         public static Color[] GetMainTexturePixelBlock(
-            this Material material, 
-            int x,
-            int y,
-            int blockWidth,
-            int blockHeight)
+            this Material material,
+            TextureBlock textureBlock)
         {
             Texture2D mainTexture = (Texture2D)material.mainTexture;
-            return mainTexture.GetPixels(x, y, blockWidth, blockHeight);
-        }
-
-        private static void FilterPixels(HsvColorFilter[] filters, Color[] pixels)
-        {
-            for (int index = 0; index < pixels.Length; index++)
-            {
-                Color currentPixel = pixels[index];
-
-                foreach (HsvColorFilter filter in filters)
-                {
-                    Color filteredPixel = filter.FilterColor(currentPixel);
-
-                    if (filteredPixel != currentPixel)
-                    {
-                        pixels[index] = filteredPixel;
-                        break;
-                    }
-                }
-            }
+            return mainTexture.GetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight);
         }
     }
 }
