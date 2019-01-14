@@ -2,10 +2,8 @@
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -27,8 +25,15 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubRoot subRoot = GuidHelper.RequireObjectFrom(packet.Guid).GetComponent<SubRoot>();
 
-            SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
-            SetActiveRoomFires(subRoot, packet.RoomFires);
+            using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+            {
+                SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
+            }
+
+            using (packetSender.Suppress<CyclopsFireHealthChanged>())
+            {
+                SetActiveRoomFires(subRoot, packet.RoomFires);
+            }
 
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
 
@@ -43,11 +48,16 @@ namespace NitroxClient.Communication.Packets.Processors
                 subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullCriticalNotification, true, false);
             }
 
-            subRoot.ReflectionSet("oldHPPercent", subHealth.GetHealthFraction());
+            using (packetSender.Suppress<CyclopsDamage>())
+            {
+                // Not necessary, but used by above code whenever damage is done
+                subRoot.ReflectionSet("oldHPPercent", subHealth.GetHealthFraction());
 
-            subRoot.gameObject.RequireComponent<LiveMixin>().health = packet.SubHealth;
-            subRoot.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>().subLiveMixin.health = packet.DamageManagerHealth;
-            subRoot.gameObject.RequireComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
+                // Apply the actual health changes
+                subRoot.gameObject.RequireComponent<LiveMixin>().health = packet.SubHealth;
+                subRoot.gameObject.RequireComponentInChildren<CyclopsExternalDamageManager>().subLiveMixin.health = packet.DamageManagerHealth;
+                subRoot.gameObject.RequireComponent<SubFire>().liveMixin.health = packet.SubFireHealth;
+            }
         }
 
         /// <summary>
@@ -236,7 +246,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             subRoot.damageManager.damagePoints[damagePointIndex].liveMixin.AddHealth(repairAmount);
         }
-
 
         /// <summary>
         /// Executes the logic in <see cref="Fire.Douse(float)"/> while not calling the method itself to avoid endless looped calls. 

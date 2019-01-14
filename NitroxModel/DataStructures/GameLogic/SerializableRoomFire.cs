@@ -19,7 +19,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override bool Equals(object obj)
         {
-            if (obj is SerializableRoomFire)
+            if (obj != null && obj is SerializableRoomFire)
             {
                 return Room == ((SerializableRoomFire)obj).Room;
             }
