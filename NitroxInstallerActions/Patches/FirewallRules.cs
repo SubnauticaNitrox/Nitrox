@@ -149,7 +149,7 @@ namespace InstallerActions.Patches
                 FirewallRule rule = new FirewallRule();
                 if(!rule.CreateRule(eachType, subPath, portNumber))
                 {
-                    MessageBox.Show("Error in modifying Windows Firewall. You may have to add some exceptions manually");
+                    MessageBox.Show("Error in modifying Windows Firewall. You may have to add / remove some exceptions manually");
                 }
                 rules.Add(rule);
             }
