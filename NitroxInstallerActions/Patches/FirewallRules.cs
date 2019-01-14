@@ -8,27 +8,8 @@ using System.IO;
 
 namespace InstallerActions.Patches
 {
-    public class FirewallRules
+    public struct FirewallRule
     {
-        string subPath;
-        int portNumber;
-        public FirewallRules(string GamePath, int PortNumber=11000)
-        {
-            subPath = GamePath;
-            portNumber = PortNumber;
-        }
-        public bool InstallRequiredRules()
-        {
-            List<string> requiredRules = GetRequiredRules();
-            bool status = SetFirewallRules(requiredRules, subPath, portNumber);
-            return status;
-        }
-        public bool RemoveInstalledRules()
-        {
-            List<string> installedRules = GetInstalledRules();
-            bool status = RemoveFirewallRules(installedRules, portNumber);
-            return status;
-        }
         string RunNetshCommand(string Argument)
         {
             string output = "";
@@ -46,112 +27,146 @@ namespace InstallerActions.Patches
             netshProcess.Close();
             return output;
         }
-        bool SetFirewallRules(List<string> RulesArray, string SubPath, int PortNumber)
+        public string addCommand;
+        public string removeCommand;
+        public string name;
+        public bool isInstalled;
+        string[] GetAddRemoveCommand(string RuleName, string GamePath, int Port = 11000)
+        {
+            string[] commands = new string[2] { "", "" };
+            if (RuleName == "PortsUDP")
+            {
+                commands[0] = "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod UDP\x22 dir=in action=allow protocol=UDP localport=" + Port;
+                commands[1] = "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod UDP\x22 protocol=UDP localport=" + Port;
+            }
+            if (RuleName == "ProgramServer")
+            {
+                commands[0] = "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod Server\x22 dir=in action=allow program=\x22" + Path.Combine(GamePath, "SubServer", "NitroxServer.exe") + "\x22 enable=yes";
+                commands[1] = "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod Server\x22";
+            }
+            if (RuleName == "ProgramClient")
+            {
+                commands[0] = "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod Client\x22 dir=in action=allow program=\x22" + Path.Combine(GamePath, "Subnautica.exe") + "\x22 enable=yes";
+                commands[1] = "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod Client\x22";
+            }
+            return commands;
+        }
+        bool GetRuleInstalled(string RuleName)
+        {
+            string command = "", output = "";
+            if (RuleName == "PortsUDP")
+            {
+                command = "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod UDP\x22";
+            }
+            if (RuleName == "ProgramServer")
+            {
+                command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Server\x22";
+            }
+            if (RuleName == "ProgramClient")
+            {
+                command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Client\x22";
+            }
+            output = RunNetshCommand(command);
+            if(output.Contains("No rules match the specified criteria"))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public void CreateRule(string RuleName, string GamePath, int Port = 11000)
+        {
+            if (RuleName == "PortsUDP" || RuleName == "ProgramServer" || RuleName == "ProgramClient")
+            {
+                isInstalled = GetRuleInstalled(RuleName);
+                string[] commands = GetAddRemoveCommand(RuleName, GamePath, Port);
+                addCommand = commands[0];
+                removeCommand = commands[1];
+                name = RuleName;
+            }
+            else
+            {
+                throw new ArgumentException("Invalid rule type given. Rule type given was " + RuleName + ". It must be PortsUDP, ProgramServer, or ProgramClient");
+            }
+        }
+        public bool Apply(bool IsInstalling)
+        {
+            if (IsInstalling)
+            {
+                if (isInstalled)
+                {
+                    return true;
+                }
+                string output = RunNetshCommand(addCommand);
+                if (output.Contains("Ok."))
+                {
+                    return true;
+                }
+                return false;
+            }
+            else
+            {
+                if (!isInstalled)
+                {
+                    return true;
+                }
+                string output = RunNetshCommand(removeCommand);
+                if (output.Contains("Ok."))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+    }
+    public class FirewallRules
+    {
+        string subPath;
+        int portNumber;
+        List<FirewallRule> allRules;
+        public FirewallRules(string GamePath, int PortNumber = 11000)
+        {
+            subPath = GamePath;
+            portNumber = PortNumber;
+            allRules = Init();
+        }
+        List<FirewallRule> Init()
+        {
+            List<FirewallRule> rules = new List<FirewallRule>();
+            string[] ruleNames = new string[3] { "PortsUDP", "ProgramServer", "ProgramClient" };
+            foreach(string eachName in ruleNames)
+            {
+                FirewallRule rule = new FirewallRule();
+                rule.CreateRule(eachName, subPath, portNumber);
+                rules.Add(rule);
+            }
+            return rules;
+        }
+        public bool InstallRequiredRules()
         {
             bool status = true;
-            foreach(string item in RulesArray)
+            foreach(FirewallRule rule in allRules)
             {
-                string command = "nothing";
-                if (item == "PortsUDP")
+                if (!rule.Apply(true))
                 {
-                    command= "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod UDP\x22 dir=in action=allow protocol=UDP localport=" + PortNumber;
-                }
-                if (item == "ProgramServer")
-                {
-                    command= "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod Server\x22 dir=in action=allow program=\x22" + Path.Combine(SubPath, "SubServer", "NitroxServer.exe") + "\x22 enable=yes";
-                }
-                if (item == "ProgramClient")
-                {
-                    command= "advfirewall firewall add rule name=\x22Nitrox Multiplayer Mod Client\x22 dir=in action=allow program=\x22" + Path.Combine(SubPath, "Subnautica.exe") + "\x22 enable=yes";
-                }
-                if (!(command == "nothing"))
-                {
-                    string output = RunNetshCommand(command);
-                    if (!output.Contains("Ok."))
-                    {
-                        status = false;
-                    }
+                    status = false;
                 }
             }
             return status;
         }
-        bool RemoveFirewallRules(List<string> RulesArray, int PortNumber)
+        public bool RemoveInstalledRules()
         {
-            bool status=true;
-            foreach(string item in RulesArray)
+            bool status = true;
+            foreach(FirewallRule rule in allRules)
             {
-                string command = "nothing";
-                if (item == "PortsUDP")
+                if (!rule.Apply(false))
                 {
-                    command= "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod UDP\x22 protocol=UDP localport=" + PortNumber;
-                }
-                if (item == "ProgramServer")
-                {
-                    command= "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod Server\x22";
-                }
-                if (item == "ProgramClient")
-                {
-                    command= "advfirewall firewall delete rule name=\x22Nitrox Multiplayer Mod Client\x22";
-                }
-                if (!(command == "nothing"))
-                {
-                    string output = RunNetshCommand(command);
-                    if (!output.Contains("Ok."))
-                    {
-                        status = false;
-                    }
+                    status = false;
                 }
             }
             return status;
-        }
-        List<string> GetInstalledRules()
-        {
-            List<string> installedRules = new List<string>();
-            string command="", output="";
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod UDP\x22";
-            output = RunNetshCommand(command);
-            if (!output.Contains("No rules match the specified criteria"))
-            {
-                installedRules.Add("PortsUDP");
-            }
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Server\x22";
-            output = RunNetshCommand(command);
-            if(!output.Contains("No rules match the specified criteria"))
-            {
-                installedRules.Add("ProgramServer");
-            }
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Client\x22";
-            output = RunNetshCommand(command);
-            if(!output.Contains("No rules match the specified criteria"))
-            {
-                installedRules.Add("ProgramClient");
-            }
-            return installedRules;
-        }
-
-        List<string> GetRequiredRules()
-        {
-            List<string> requiredNitroxRules=new List<string>();
-            string command = "", output = "";
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod UDP\x22";
-            output = RunNetshCommand(command);
-            if(output.Contains("No rules match the specified criteria"))
-            {
-                requiredNitroxRules.Add("PortsUDP");
-            }
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Server\x22";
-            output = RunNetshCommand(command);
-            if(output.Contains("No rules match the specified criteria"))
-            {
-                requiredNitroxRules.Add("ProgramServer");
-            }
-            command= "advfirewall firewall show rule name=\x22Nitrox Multiplayer Mod Client\x22";
-            output = RunNetshCommand(command);
-            if(output.Contains("No rules match the specified criteria"))
-            {
-                requiredNitroxRules.Add("ProgramClient");
-            }
-            return requiredNitroxRules;
         }
     }
 }
