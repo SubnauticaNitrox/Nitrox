@@ -20,11 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(CyclopsDamage packet, Player simulatingPlayer)
         {
-            Log.Debug("[CyclopsDamageProcessor PlayerId: " + simulatingPlayer.Id 
-                + " Guid: " + packet.Guid 
-                + " DamagePointIndexes: " + string.Join(", ", packet.DamagePointIndexes.Select(x => x.ToString()).ToArray())
-                + " Rooms on fire: " + packet.RoomFires.Length.ToString()
-                + " RoomFires: " + string.Join(", ", packet.RoomFires.Select(x => x.Room.ToString() + ": " + string.Join(", ", x.ActiveRoomFireNodes.Select(y => y.ToString()).ToArray())).ToArray()));
+            Log.Debug("New cyclops damage from " + simulatingPlayer.Id + " " + packet);
 
             playerManager.SendPacketToOtherPlayers(packet, simulatingPlayer);
         }

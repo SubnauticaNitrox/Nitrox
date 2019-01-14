@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
                 {
-                    NitroxServiceLocator.LocateService<Cyclops>().SetDamagePointHealth(cyclops, packet.DamagePointIndex, packet.RepairAmount);
+                    cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
                 }
             }
         }
