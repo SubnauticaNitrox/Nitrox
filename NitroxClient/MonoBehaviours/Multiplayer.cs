@@ -2,13 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -96,6 +98,16 @@ namespace NitroxClient.MonoBehaviours
         private void InitializeLocalPlayerState()
         {
             ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
+            GameObject playerModel = localPlayer.PlayerModel;
+
+            IPixelIndexer pixelIndexer = NitroxServiceLocator.LocateService<IPixelIndexer>();
+            IndexPixelsAsyncOperation indexingOperation = pixelIndexer.IndexPixelsAsync(playerModel);
+
+            while (!indexingOperation.IsComplete())
+            {
+                Thread.Sleep(100);
+            }
+
             PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
             playerModelDirector
                 .AddDiveSuit();

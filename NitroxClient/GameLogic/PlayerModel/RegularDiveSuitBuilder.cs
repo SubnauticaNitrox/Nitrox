@@ -1,8 +1,8 @@
-﻿using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+﻿using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModel
 {
     public class RegularDiveSuitBuilder : IPlayerModelBuilder
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModel.Abstract
 {
     public interface ILocalNitroxPlayer : INitroxPlayer
     {

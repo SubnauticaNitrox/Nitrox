@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
-using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModel
 {
     public class PlayerPingBuilder : IPlayerModelBuilder
     {

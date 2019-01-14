@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModel
 {
     public class HsvColorFilter
     {
@@ -14,13 +15,16 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
         private ColorValueRange saturationValueRange;
         private ColorValueRange vibrancyValueRange;
 
-        public HsvColorFilter(float replacementHue, float replacementSaturation, float replacementVibrancy, float replacementAlpha)
-        {
-            this.replacementHue = replacementHue < 1f ? replacementHue : replacementHue / 360f;
-            this.replacementSaturation = replacementSaturation <= 1f ? replacementSaturation : replacementSaturation / 100f;
-            this.replacementVibrancy = replacementVibrancy <= 1f ? replacementVibrancy : replacementVibrancy / 100f;
-            this.replacementAlpha = replacementAlpha < 1f ? replacementAlpha : replacementAlpha / 255f;
+        //public HsvColorFilter(float replacementHue, float replacementSaturation, float replacementVibrancy, float replacementAlpha)
+        //{
+        //    this.replacementHue = replacementHue < 1f ? replacementHue : replacementHue / 360f;
+        //    this.replacementSaturation = replacementSaturation <= 1f ? replacementSaturation : replacementSaturation / 100f;
+        //    this.replacementVibrancy = replacementVibrancy <= 1f ? replacementVibrancy : replacementVibrancy / 100f;
+        //    this.replacementAlpha = replacementAlpha < 1f ? replacementAlpha : replacementAlpha / 255f;
+        //}
 
+        public HsvColorFilter()
+        {
             hueValueRange = new ColorValueRange(0f, 360f);
             saturationValueRange = new ColorValueRange(0f, 100f);
             vibrancyValueRange = new ColorValueRange(0f, 100f);
@@ -84,6 +88,28 @@ namespace NitroxClient.GameLogic.PlayerModelBuilder
             float newFilterMaxValue = maxAlpha < 1f ? maxAlpha : maxAlpha / 255f;
 
             alphaValueRange = new ColorValueRange(newFilterMinValue, newFilterMaxValue);
+        }
+
+        public IEnumerable<int> GetPixelIndexes(Color[] pixels)
+        {
+            for (int pixelIndex = 0; pixelIndex < pixels.Length; pixelIndex++)
+            {
+                Color pixel = pixels[pixelIndex];
+                float hue;
+                float saturation;
+                float vibrancy;
+                float alpha = pixel.a;
+
+                Color.RGBToHSV(pixel, out hue, out saturation, out vibrancy);
+
+                if (hueValueRange.Covers(hue) &&
+                    saturationValueRange.Covers(saturation) &&
+                    vibrancyValueRange.Covers(vibrancy) &&
+                    alphaValueRange.Covers(alpha))
+                {
+                    yield return pixelIndex;
+                }
+            }
         }
     }
 }

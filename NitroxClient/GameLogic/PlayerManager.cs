@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using NitroxClient.MonoBehaviours.DiscordRP;
 
 namespace NitroxClient.GameLogic
 {

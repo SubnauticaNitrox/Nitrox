@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerModelBuilder.Abstract;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.Unity.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModel
 {
     //TODO: Refactor this into something that is event driven.
     public class PlayerModelDirector

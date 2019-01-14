@@ -7,11 +7,11 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
-using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxClient.GameLogic.Bases;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 
 namespace NitroxClient
 {

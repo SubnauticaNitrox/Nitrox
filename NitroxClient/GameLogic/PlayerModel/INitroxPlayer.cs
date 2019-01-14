@@ -1,7 +1,7 @@
 ﻿using NitroxModel.MultiplayerSession;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModelBuilder
+namespace NitroxClient.GameLogic.PlayerModelBuilder.Abstract
 {
     public interface INitroxPlayer
     {

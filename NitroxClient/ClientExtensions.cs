@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic.PlayerModelBuilder;
+﻿using NitroxClient.GameLogic.PlayerModel;
 using UnityEngine;
 
 namespace NitroxClient
@@ -64,10 +64,43 @@ namespace NitroxClient
 
         public static void ApplyFiltersToMainTexture(this Material material, params HsvColorFilter[] filters)
         {
-            Texture2D mainTexture = (Texture2D) material.mainTexture;
+            Texture2D mainTexture = (Texture2D)material.mainTexture;
             Texture2D clonedTexture = mainTexture.Clone();
             material.mainTexture = clonedTexture;
             clonedTexture.ApplyFilters(filters);
+        }
+
+        public static void ApplyClonedTexture(this Material material)
+        {
+            Texture2D mainTexture = (Texture2D)material.mainTexture;
+            Texture2D clonedTexture = mainTexture.Clone();
+            material.mainTexture = clonedTexture;
+        }
+
+        public static SkinnedMeshRenderer GetRenderer(this GameObject playerModel, string equipmentGameObjectName)
+        {
+            return playerModel
+                .transform
+                .Find(equipmentGameObjectName)
+                .gameObject
+                .GetComponent<SkinnedMeshRenderer>();
+        }
+
+        public static Color[] GetMainTexturePixels(this Material material)
+        {
+            Texture2D mainTexture = (Texture2D)material.mainTexture;
+            return mainTexture.GetPixels();
+        }
+
+        public static Color[] GetMainTexturePixelBlock(
+            this Material material, 
+            int x,
+            int y,
+            int blockWidth,
+            int blockHeight)
+        {
+            Texture2D mainTexture = (Texture2D)material.mainTexture;
+            return mainTexture.GetPixels(x, y, blockWidth, blockHeight);
         }
 
         private static void FilterPixels(HsvColorFilter[] filters, Color[] pixels)

@@ -1,4 +1,4 @@
-﻿namespace NitroxClient.GameLogic.PlayerModelBuilder.Abstract
+﻿namespace NitroxClient.GameLogic.PlayerModel.Abstract
 {
     public interface IPlayerModelBuilder
     {
