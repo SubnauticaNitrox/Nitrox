@@ -84,12 +84,12 @@ namespace NitroxServer.Serialization
 
                         try
                         {
-                            Log.Info(type + ": " + tag + ": " + property.Name);
+                            //Log.Info(type + ": " + tag + ": " + property.Name); // ignore this
                             model[type].Add(tag, property.Name);
                         }
                         catch (Exception ex)
                         {
-                            if(typeof(Peeper) == type) // srsly peeper we know you are broken...
+                            if(typeof(Peeper) != type) // srsly peeper we know you are broken...
                             {
                                 Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name + " " + ex);
                             }
