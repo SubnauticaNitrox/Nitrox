@@ -276,10 +276,6 @@
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
-      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
-      <Name>NitroxReloader</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

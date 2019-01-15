@@ -86,22 +86,6 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
-      <Name>NitroxReloader</Name>
-      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxServer.Wpf\NitroxServer.Wpf.csproj">
-      <Name>NitroxServer.Wpf</Name>
-      <Project>{decaad61-2567-468d-97dc-771fb46bd4da}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Name>NitroxServer</Name>
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>

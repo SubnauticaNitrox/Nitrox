@@ -4,11 +4,9 @@
   <?define NitroxPatcher_TargetDir=$(var.NitroxPatcher.TargetDir)?>
   <?define NitroxModel_TargetDir=$(var.NitroxModel.TargetDir)?>
   <?define Lidgren.Network_TargetDir=$(var.Lidgren.Network.TargetDir)?>
-  <?define NitroxReloader_TargetDir=$(var.NitroxReloader.TargetDir)?>
   <?define Harmony_TargetDir=$(var.Harmony.TargetDir)?>
   <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
   <?define NitroxServer_TargetDir=$(var.NitroxServer.TargetDir)?>
-  <?define NitroxServerWPF_TargetDir=$(var.NitroxServer.Wpf.TargetDir)?>
   <?define discordRPC_TargetDir=$(var.SolutionDir)lib\?>
 
   <?if $(var.Platform) = x64 ?>
@@ -87,9 +85,6 @@
       <Component Id="Lidgren.Network.dll" Guid="*">
         <File Id="Lidgren.Network.dll" Name="Lidgren.Network.dll" Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
       </Component>
-      <Component Id="NitroxReloader.dll" Guid="*">
-        <File Id="NitroxReloader.dll" Name="NitroxReloader.dll" Source="$(var.NitroxReloader_TargetDir)NitroxReloader.dll" />
-      </Component>
       <Component Id="_0Harmony.dll" Guid="*">
         <File Id="_0Harmony.dll" Name="0Harmony.dll" Source="$(var.Harmony_TargetDir)0Harmony.dll" />
       </Component>
@@ -118,9 +113,6 @@
       <Component Id="NitroxServer.exe" Guid="*">
         <File Id="NitroxServer.exe" Name="NitroxServer.exe" Source="$(var.NitroxServer_TargetDir)NitroxServer.exe" />
       </Component>
-      <Component Id="NitroxServer_WPF.exe" Guid="*">
-        <File Id="NitroxServer_WPF.exe" Name="NitroxServer WPF.exe" Source="$(var.NitroxServerWPF_TargetDir)NitroxServer WPF.exe" />
-      </Component>
       <Component Id="SubServer_NitroxModel.dll" Guid="*">
         <File Id="SubServer_NitroxModel.dll" Name="NitroxModel.dll" Source="$(var.NitroxModel_TargetDir)NitroxModel.dll" />
       </Component>
@@ -129,9 +121,6 @@
       </Component>
       <Component Id="SubServer_Lidgren.Network.dll" Guid="*">
         <File Id="SubServer_Lidgren.Network.dll" Name="Lidgren.Network.dll" Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
-      </Component>
-      <Component Id="SubServer_NitroxReloader.dll" Guid="*">
-        <File Id="SubServer_NitroxReloader.dll" Name="NitroxReloader.dll" Source="$(var.NitroxReloader_TargetDir)NitroxReloader.dll" />
       </Component>
       <Component Id="SubServer_NitroxClient.dll" Guid="*">
         <File Id="SubServer_NitroxClient.dll" Name="NitroxClient.dll" Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />

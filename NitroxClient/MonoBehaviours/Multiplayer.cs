@@ -15,7 +15,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxReloader;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,7 +41,6 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            Reloader.ReloadAssemblies();
             if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
             {
                 ProcessPackets();

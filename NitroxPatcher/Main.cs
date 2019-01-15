@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Harmony;
@@ -10,7 +9,6 @@ using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Patches;
-using NitroxReloader;
 using UnityEngine;
 
 namespace NitroxPatcher
@@ -118,22 +116,6 @@ namespace NitroxPatcher
             nitroxRoot.AddComponent<NitroxBootstrapper>();
 
             Log.Info("Behaviours applied.");
-        }
-
-        [Conditional("DEBUG")]
-        private static void InitializeReloader(bool serverPatching)
-        {
-            // Whitelist needs to be split, as both game instances load all four libraries
-            // (because this patcher references both server and client, so no matter what instance we are on,
-            //  AppDomain.CurrentDomain.GetAssemblies() returns both).
-            if (serverPatching)
-            {
-                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxServer.dll");
-            }
-            else
-            {
-                Reloader.Initialize("NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll");
-            }
         }
     }
 }

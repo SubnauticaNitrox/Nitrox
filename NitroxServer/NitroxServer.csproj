@@ -38,28 +38,6 @@
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug_WPF|AnyCPU'">
-    <OutputType>WinExe</OutputType>
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\Debug_WPF\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>6</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release_WPF|AnyCPU'">
-    <OutputType>WinExe</OutputType>
-    <OutputPath>bin\Release_WPF\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <LangVersion>6</LangVersion>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -203,10 +181,6 @@
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
-      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
-      <Name>NitroxReloader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
