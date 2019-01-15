@@ -28,6 +28,7 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.localRotation = entity.Rotation;
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
+            gameObject.AddComponent<Rigidbody>();
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
 
