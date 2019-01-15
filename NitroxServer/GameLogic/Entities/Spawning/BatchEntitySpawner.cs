@@ -196,6 +196,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                               entitySpawnPoint.Rotation,
+                                              entitySpawnPoint.Scale,
                                               techType,
                                               (int)cellLevel,
                                               classId,
