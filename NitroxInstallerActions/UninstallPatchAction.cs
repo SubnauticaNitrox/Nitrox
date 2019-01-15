@@ -26,8 +26,9 @@ namespace NitroxInstallerActions
 
                 NitroxServerSetup.Uninstall(managedDirectory);
                 FirewallRules removeRules = new FirewallRules(gameDir);
+                bool result = removeRules.Init();
                 bool status=removeRules.RemoveInstalledRules();
-                if (!status)
+                if (!status || !result)
                 {
                     MessageBox.Show("You may need to remove some firewall exceptions manually");
                 }

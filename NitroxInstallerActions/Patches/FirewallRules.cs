@@ -15,6 +15,7 @@ namespace InstallerActions.Patches
         ProgramServer=1,
         ProgramClient=2
     }
+
     public struct FirewallRule
     {
         string RunNetshCommand(string Argument)
@@ -34,10 +35,12 @@ namespace InstallerActions.Patches
             netshProcess.Close();
             return output;
         }
+
         public FirewallRuleType ruleType;
         public string addCommand;
         public string removeCommand;
         public bool isInstalled;
+
         string[] GetAddRemoveCommand(FirewallRuleType RuleType, string GamePath, int Port = 11000)
         {
             string[] commands = new string[2] { "", "" };
@@ -58,6 +61,7 @@ namespace InstallerActions.Patches
             }
             return commands;
         }
+
         bool GetRuleInstalled(FirewallRuleType RuleType)
         {
             string command = "", output = "";
@@ -83,6 +87,7 @@ namespace InstallerActions.Patches
                 return true;
             }
         }
+
         public bool CreateRule(FirewallRuleType NewRuleType, string GamePath, int Port = 11000)
         {
             try
@@ -99,6 +104,7 @@ namespace InstallerActions.Patches
                 return false;
             }
         }
+
         public bool Apply(bool IsInstalling)
         {
             if (IsInstalling)
@@ -129,32 +135,36 @@ namespace InstallerActions.Patches
             }
         }
     }
+
     public class FirewallRules
     {
         string subPath;
         int portNumber;
         List<FirewallRule> allRules;
+
         public FirewallRules(string GamePath, int PortNumber = 11000)
         {
             subPath = GamePath;
             portNumber = PortNumber;
-            allRules = Init();
         }
-        List<FirewallRule> Init()
+        
+        public bool Init()
         {
-            List<FirewallRule> rules = new List<FirewallRule>();
+            allRules = new List<FirewallRule>();
+            bool status = true;
             FirewallRuleType[] ruleTypes = new FirewallRuleType[3] { FirewallRuleType.PortsUDP, FirewallRuleType.ProgramServer, FirewallRuleType.ProgramClient};
             foreach(FirewallRuleType eachType in ruleTypes)
             {
                 FirewallRule rule = new FirewallRule();
                 if(!rule.CreateRule(eachType, subPath, portNumber))
                 {
-                    MessageBox.Show("Error in modifying Windows Firewall. You may have to add / remove some exceptions manually");
+                    status=false;
                 }
-                rules.Add(rule);
+                allRules.Add(rule);
             }
-            return rules;
+            return status;
         }
+
         public bool InstallRequiredRules()
         {
             bool status = true;
@@ -167,6 +177,7 @@ namespace InstallerActions.Patches
             }
             return status;
         }
+
         public bool RemoveInstalledRules()
         {
             bool status = true;
