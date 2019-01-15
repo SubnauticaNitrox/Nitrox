@@ -84,7 +84,7 @@ namespace NitroxServer.Serialization
 
                         try
                         {
-                            //Log.Info(type + ": " + tag + ": " + property.Name); // ignore this
+
                             model[type].Add(tag, property.Name);
                         }
                         catch (Exception ex)
