@@ -31,8 +31,8 @@ namespace NitroxPatcher.Patches
                      */
                     yield return TranspilerHelper.LocateService<Building>();
                     yield return original.Ldloc<Constructable>();
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }
             }
         }

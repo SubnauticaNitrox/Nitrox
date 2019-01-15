@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Harmony;
 using NitroxModel.Core;
 
 namespace NitroxPatcher
@@ -12,9 +13,9 @@ namespace NitroxPatcher
         private static readonly MethodInfo serviceLocator = typeof(NitroxServiceLocator)
             .GetMethod("LocateService", BindingFlags.Static | BindingFlags.Public, null, new Type[] { }, null);
 
-        public static ValidatedCodeInstruction LocateService<T>()
+        public static CodeInstruction LocateService<T>()
         {
-            return new ValidatedCodeInstruction(OpCodes.Call, serviceLocator.MakeGenericMethod(typeof(T)));
+            return new CodeInstruction(OpCodes.Call, serviceLocator.MakeGenericMethod(typeof(T)));
         }
 
         private static IEnumerable<LocalVariableInfo> GetMatchingLocalVariables<T>(MethodBase method)
@@ -43,26 +44,26 @@ namespace NitroxPatcher
         /// <summary>
         /// Returns the shortest possible Ldloc instruction for the given local variable index <paramref name="i"/>.
         /// </summary>
-        private static ValidatedCodeInstruction Ldloc(int i)
+        private static CodeInstruction Ldloc(int i)
         {
             switch (i)
             {
                 case 0:
-                    return new ValidatedCodeInstruction(OpCodes.Ldloc_0);
+                    return new CodeInstruction(OpCodes.Ldloc_0);
                 case 1:
-                    return new ValidatedCodeInstruction(OpCodes.Ldloc_1);
+                    return new CodeInstruction(OpCodes.Ldloc_1);
                 case 2:
-                    return new ValidatedCodeInstruction(OpCodes.Ldloc_2);
+                    return new CodeInstruction(OpCodes.Ldloc_2);
                 case 3:
-                    return new ValidatedCodeInstruction(OpCodes.Ldloc_3);
+                    return new CodeInstruction(OpCodes.Ldloc_3);
                 default:
                     if (i <= 0xFF)
                     {
-                        return new ValidatedCodeInstruction(OpCodes.Ldloc_S, (byte)i);
+                        return new CodeInstruction(OpCodes.Ldloc_S, (byte)i);
                     }
                     else
                     {
-                        return new ValidatedCodeInstruction(OpCodes.Ldloc, (ushort)i);
+                        return new CodeInstruction(OpCodes.Ldloc, (ushort)i);
                     }
             }
         }
@@ -72,7 +73,7 @@ namespace NitroxPatcher
         /// </summary>
         /// <typeparam name="T">The type to locate</typeparam>
         /// <param name="method">The method in which to locate the local variable</param>
-        public static ValidatedCodeInstruction Ldloc<T>(this MethodBase method)
+        public static CodeInstruction Ldloc<T>(this MethodBase method)
         {
             return Ldloc(method.GetLocalVariableIndex<T>());
         }
@@ -83,7 +84,7 @@ namespace NitroxPatcher
         /// <typeparam name="T">The type to locate</typeparam>
         /// <param name="method">The method in which to locate the local variable</param>
         /// <param name="i">Index of the local variable to load, in a list of only variables of type <typeparamref name="T"/></param>
-        public static ValidatedCodeInstruction Ldloc<T>(this MethodBase method, int i)
+        public static CodeInstruction Ldloc<T>(this MethodBase method, int i)
         {
             return Ldloc(method.GetLocalVariableIndex<T>(i));
         }
