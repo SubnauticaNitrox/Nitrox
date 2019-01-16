@@ -430,7 +430,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void SpawnVehiclesAfterBasePiecesFinish(List<VehicleModel> vehicleModels, bool basePiecesToSpawn)
         {
-            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles.");
+            Log.Info("Received initial sync packet with {0} vehicles", vehicleModels.Count);
 
             if (vehicleModels.Count == 0)
             {
@@ -464,20 +464,8 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 ThrottledBuilder.main.QueueDrained -= CreateVehicles;
 
-                List<VehicleModel> cyclopses = vehicleModels
-                    .Where(x => x.TechType == TechType.Cyclops)
-                    .ToList();
-
-                List<VehicleModel> nonCyclopses = vehicleModels
-                    .Where(x => x.TechType != TechType.Cyclops)
-                    .ToList();
-
-                foreach(VehicleModel vehicle in cyclopses)
-                {
-                    vehicles.CreateVehicle(vehicle);
-                }
-
-                foreach(VehicleModel vehicle in nonCyclopses)
+                // TODO: Wait for Cyclops to spawn, as it is not instantaneous but rather async.
+                foreach(VehicleModel vehicle in vehicleModels)
                 {
                     vehicles.CreateVehicle(vehicle);
                 }
