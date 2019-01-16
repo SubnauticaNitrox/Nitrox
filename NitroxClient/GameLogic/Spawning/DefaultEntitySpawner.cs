@@ -29,6 +29,12 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.localRotation = entity.Rotation;
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
+            // Makes movable objects movable... we can probably do this before the server sends the spawner packet?
+            if(gameObject.GetComponent<Rigidbody>() ==  null)
+            {
+                gameObject.AddComponent<Rigidbody>();
+            }
+
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
 
