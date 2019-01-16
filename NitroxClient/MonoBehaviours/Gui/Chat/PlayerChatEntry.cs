@@ -41,7 +41,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
                 if (Event.current.isKey && Event.current.keyCode == KeyCode.Return)
                 {
-                    chat.HideLog();
                     SendMessage();
                     Hide();
                 }
@@ -58,11 +57,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             chat = currentChat;
             chatEnabled = true;
+            UWE.Utils.lockCursor = false;
         }
 
         public void Hide()
         {
             chatEnabled = false;
+            UWE.Utils.lockCursor = true;
             chatMessage = "";
         }
 

@@ -4,3 +4,6 @@
 [submodule "lidgren-network-gen3"]
 	path = lidgren-network-gen3
 	url = https://github.com/SubnauticaNitrox/lidgren-network-gen3.git
+[submodule "NitroxUnity"]
+	path = NitroxUnity
+	url = https://github.com/SubnauticaNitrox/NitroxUnity
