@@ -23,8 +23,8 @@ namespace NitroxServer.ConfigParser
             {"survival", GameModeOption.Survival},
             {"creative", GameModeOption.Creative},
             {"hardcore", GameModeOption.Hardcore},
-            {"permadeath", GameModeOption.Permadeath}
-
+            {"permadeath", GameModeOption.Permadeath},
+            {"freedom", GameModeOption.Freedom},
         };
 
         private int? _serverPort = null;
