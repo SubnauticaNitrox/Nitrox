@@ -146,7 +146,7 @@ namespace NitroxServer.Serialization.World
             world.GameMode = gameMode;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);
+            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
 
             Log.Info("World GameMode " + gameMode);
 

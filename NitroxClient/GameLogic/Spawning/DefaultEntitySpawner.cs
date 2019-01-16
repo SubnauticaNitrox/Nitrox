@@ -19,6 +19,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefabForTechType, null);
             gameObject.transform.position = entity.Position;
+            gameObject.transform.localScale = entity.Scale;
 
             if (parent.IsPresent())
             {

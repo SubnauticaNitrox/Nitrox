@@ -15,6 +15,7 @@ namespace NitroxClient.GameLogic.Spawning
             GameObject gameObject = SerializationHelper.GetGameObject(entity.SerializedGameObject);
             gameObject.transform.position = entity.Position;
             gameObject.transform.rotation = entity.Rotation;
+            gameObject.transform.localScale = entity.Scale;
             
             if (entity.WaterParkGuid != null)
             {

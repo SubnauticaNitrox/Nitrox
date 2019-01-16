@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using UWE;
+using NitroxModel.Core;
 using static LootDistributionData;
 using NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers;
 
@@ -42,11 +43,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly BatchCellsParser batchCellsParser;
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType = new Dictionary<TechType, IEntityBootstrapper>();
 
-        public BatchEntitySpawner(ResourceAssets resourceAssets, List<Int3> loadedPreviousParsed)
+        public BatchEntitySpawner(ResourceAssets resourceAssets, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer)
         {
             parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
             worldEntitiesByClassId = resourceAssets.WorldEntitiesByClassId;
-            batchCellsParser = new BatchCellsParser();
+            batchCellsParser = new BatchCellsParser(serializer);
 
             LootDistributionsParser lootDistributionsParser = new LootDistributionsParser();
             lootDistributionData = lootDistributionsParser.GetLootDistributionData(resourceAssets.LootDistributionsJson);
@@ -195,6 +196,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                               entitySpawnPoint.Rotation,
+                                              entitySpawnPoint.Scale,
                                               techType,
                                               (int)cellLevel,
                                               classId,
