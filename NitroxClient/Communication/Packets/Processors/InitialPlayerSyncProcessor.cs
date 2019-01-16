@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxClient.GameLogic.Bases.Metadata;
+using System.Linq;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -48,7 +49,6 @@ namespace NitroxClient.Communication.Packets.Processors
             SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            SpawnVehicles(packet.Vehicles);
             SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
             SpawnGlobalRootEntities(packet.GlobalRootEntities);
@@ -64,6 +64,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
+            SpawnVehiclesAfterBasePiecesFinish(packet.Vehicles, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
             AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
         }
@@ -231,17 +232,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Log.Info("Recieved initial sync packet with game mode " + gameMode);
             GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
-        }
-
-        private void SpawnVehicles(List<VehicleModel> vehicleModels)
-        {
-            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
-
-            foreach (VehicleModel vehicle in vehicleModels)
-            {
-                vehicles.CreateVehicle(vehicle);
-            }
-
         }
 
         /*
@@ -434,6 +424,50 @@ namespace NitroxClient.Communication.Packets.Processors
                             Log.Error("Could not spawn remote player into subroot with guid: " + playerData.SubRootGuid.Get());
                         }
                     }
+                }
+            }
+        }
+
+        private void SpawnVehiclesAfterBasePiecesFinish(List<VehicleModel> vehicleModels, bool basePiecesToSpawn)
+        {
+            Log.Info("Received initial sync packet with {0} vehicles", vehicleModels.Count);
+
+            if (vehicleModels.Count == 0)
+            {
+                return;
+            }
+
+            VehicleCreator vehicleCreator = new VehicleCreator(vehicleModels, vehicles);
+
+            if(basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += vehicleCreator.CreateVehicles;
+            }
+            else
+            {
+                vehicleCreator.CreateVehicles(null, null);
+            }
+        }
+
+        private class VehicleCreator
+        {
+            private List<VehicleModel> vehicleModels;
+            private Vehicles vehicles;
+
+            public VehicleCreator(List<VehicleModel> vehicleModels, Vehicles vehicles)
+            {
+                this.vehicleModels = vehicleModels;
+                this.vehicles = vehicles;
+            }
+
+            public void CreateVehicles(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= CreateVehicles;
+
+                // TODO: Wait for Cyclops to spawn, as it is not instantaneous but rather async.
+                foreach(VehicleModel vehicle in vehicleModels)
+                {
+                    vehicles.CreateVehicle(vehicle);
                 }
             }
         }
