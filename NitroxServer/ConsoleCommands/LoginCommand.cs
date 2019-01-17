@@ -32,13 +32,14 @@ namespace NitroxServer.ConsoleCommands
             {
                 if (playerData.UpdatePlayerPermissions(playerName, Perms.ADMIN))
                 {
-                    message = "Updated permissions to admin";
+                    message = "Updated permissions to admin for " + playerName;
                 }
                 else
                 {
-                    message = "Could not update permissions " + player.ToString();
+                    message = "Could not update permissions " + playerName;
                 }
-            }else
+            }
+            else
             {
                 message = "Incorrect Password";
             }
