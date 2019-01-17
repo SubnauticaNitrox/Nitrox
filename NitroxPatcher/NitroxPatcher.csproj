@@ -61,6 +61,7 @@
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
+    <Compile Include="Patches\Persistent\EntityCell_AwakeAsync_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
@@ -94,7 +95,6 @@
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
-    <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnHandClick_Patch.cs" />
     <Compile Include="Patches\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeBegin_Patch.cs" />
