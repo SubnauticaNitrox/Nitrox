@@ -1,66 +1,47 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
 
 namespace NitroxModel.Logger
 {
     public class Log
     {
-        [Flags]
-        public enum LogLevel
+        private static bool inGameMessages;
+
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger("Nitrox");
+
+        // Enable the in-game notifications
+        public static void EnableInGameMessages()
         {
-            Disabled = 0,
-            InGameMessages = 1,
-            Info = 2,
-            Debug = 4,
-            Trace = 8,
-        }
-
-        private static LogLevel level = LogLevel.Disabled;
-        private static TextWriter writer;
-
-        // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
-        public static void SetLevel(LogLevel lvl)
-        {
-            writer?.Close();
-            writer = LogFiles.Instance.CreateNew();
-
-            level = lvl;
-            Write("Log level set to " + level);
+            inGameMessages = true;
         }
 
         // For in-game notifications
         public static void InGame(string msg)
         {
-            if ((level & LogLevel.InGameMessages) != 0)
+            if (inGameMessages)
             {
                 ErrorMessage.AddMessage(msg);
+                Info(msg);
             }
-
-            Info(msg);
         }
 
         public static void Error(string fmt, params object[] arg)
         {
-            Write("E: " + fmt, arg);
+            log.Error(Format(fmt, arg));
         }
 
         public static void Error(string msg, Exception ex)
         {
-            Error(msg + "\n{0}", (object)ex);
+            log.Error(msg, ex);
         }
 
         public static void Warn(string fmt, params object[] arg)
         {
-            Write("W: " + fmt, arg);
+            log.Warn(Format(fmt, arg));
         }
 
         public static void Info(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.Info) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
-            {
-                Write("I: " + fmt, arg);
-            }
+            log.Info(Format(fmt, arg));
         }
 
         public static void Info(object o)
@@ -73,10 +54,7 @@ namespace NitroxModel.Logger
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.Debug) != 0)
-            {
-                Write("D: " + fmt, arg);
-            }
+            log.Debug(Format(fmt, arg));
         }
 
         public static void Debug(object o)
@@ -85,29 +63,10 @@ namespace NitroxModel.Logger
             Debug(msg);
         }
 
-        public static void Trace(string fmt, params object[] arg)
+        // Helping method for formatting string correctly with arguments
+        private static string Format(string fmt, params object[] arg)
         {
-            Trace(string.Format(fmt, arg));
-        }
-
-        public static void Trace(string str = "")
-        {
-            if ((level & LogLevel.Trace) == 0)
-            {
-                return;
-            }
-
-            Write("T: {0}:\n{1}", str, new StackTrace(1));
-        }
-
-        private static void Write(string fmt, params object[] arg)
-        {
-            string msg = string.Format(fmt, arg);
-
-            writer.WriteLine("[Nitrox] " + msg);
-            writer.Flush();
-
-            Console.WriteLine("[Nitrox] " + msg);
+            return string.Format(fmt, arg);
         }
     }
 }

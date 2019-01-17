@@ -14,8 +14,6 @@ namespace NitroxServer
     {
         private static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.Info | Log.LogLevel.Debug);
-
             NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
