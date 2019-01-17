@@ -6,9 +6,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -16,17 +14,6 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly SimulationOwnership simulationOwnershipManager;
-
-        /// <summary>
-        /// KeyValuePair<Guid, douseAmount>. Used in <see cref="OnFireDoused(Fire, SubRoot, float)"/> to reduce
-        /// the <see cref="CyclopsFireHealthChanged"/> packet spam as fires are being doused. A packet is only sent after
-        /// the douse amount surpasses <see cref="FIRE_DOUSE_AMOUNT_TRIGGER"/>
-        /// </summary>
-        private readonly Dictionary<string, float> fireDouseAmount = new Dictionary<string, float>();
-        /// <summary>
-        /// Each extinguisher hit is from 0.23 to 0.45. 12 is a bit less than half a second of full extinguishing.
-        /// </summary>
-        private const float FIRE_DOUSE_AMOUNT_TRIGGER = 12f;
 
         public Cyclops(IPacketSender packetSender, SimulationOwnership simulationOwnershipManager)
         {
@@ -77,17 +64,9 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Broadcast the damage info so the other clients know what damage sounds to make. Sends a <see cref="CyclopsDamage"/> packet
-        /// </summary>
-        public void OnTakeDamage(SubRoot subRoot, Optional<DamageInfo> info)
-        {
-            BroadcastDamageState(subRoot, info);
-        }
-
-        /// <summary>
         /// Triggers a <see cref="CyclopsDamage"/> packet
         /// </summary>
-        public void OnCreatePoint(SubRoot subRoot)
+        public void OnCreateDamagePoint(SubRoot subRoot)
         {
             BroadcastDamageState(subRoot, Optional<DamageInfo>.Empty());
         }
@@ -97,7 +76,7 @@ namespace NitroxClient.GameLogic
         /// <see cref="CyclopsDamagePoint"/>s are coupled with <see cref="LiveMixin"/>, which is used with just about anything that has health.
         /// I would need to hook onto <see cref="LiveMixin.AddHealth(float)"/>, or maybe the repair gun event to catch when something repairs a damage point, which I don't 
         /// believe is worth the effort. A <see cref="CyclopsDamagePoint"/> is already fully repaired in a little over a second. This can trigger sending 
-        /// <see cref="CyclopsDamagePointHealthChanged"/> and <see cref="CyclopsDamage"/> packets
+        /// <see cref="CyclopsDamagePointRepaired"/> and <see cref="CyclopsDamage"/> packets
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
@@ -107,80 +86,10 @@ namespace NitroxClient.GameLogic
             {
                 if (subRoot.damageManager.damagePoints[i] == damagePoint)
                 {
-                    CyclopsDamagePointHealthChanged packet = new CyclopsDamagePointHealthChanged(subGuid, i, repairAmount);
+                    CyclopsDamagePointRepaired packet = new CyclopsDamagePointRepaired(subGuid, i, repairAmount);
                     packetSender.Send(packet);
 
                     return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Triggers a <see cref="CyclopsDamage"/> packet
-        /// </summary>
-        public void OnCreateFire(SubRoot subRoot, SubFire.RoomFire startInRoom)
-        {
-            BroadcastDamageState(subRoot, Optional<DamageInfo>.Empty());
-        }
-
-        /// <summary>
-        /// Called when <see cref="Fire.Douse(float)"/> is called. This can trigger sending <see cref="CyclopsFireHealthChanged"/> packets
-        /// </summary>
-        public void OnFireDoused(Fire fire, SubRoot subRoot, float douseAmount)
-        {
-            SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-            string fireGuid = GuidHelper.GetGuid(fire.gameObject);
-
-            if (!fireDouseAmount.ContainsKey(fireGuid))
-            {
-                fireDouseAmount.Add(fireGuid, douseAmount);
-            }
-            else
-            {
-                float summedDouseAmount = fireDouseAmount[fireGuid] + douseAmount;
-
-                if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
-                {
-                    // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
-                    fireDouseAmount[fireGuid] = 0;
-
-                    // Crawl up the items to get the indexes we need. This is the node.
-                    Transform fireNode = fire.gameObject.RequireComponentInParent<Transform>();
-                    foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> kvp in roomFiresDict)
-                    {
-                        for (int i = 0; i < kvp.Value.spawnNodes.Length; i++)
-                        {
-                            Fire[] fires = kvp.Value.spawnNodes[i].GetAllComponentsInChildren<Fire>();
-
-                            // The actual fires. Fires look to be procedurally generated, so a blind index lookup isn't possible.
-                            for (int j = 0; j < fires.Length; j++)
-                            {
-                                if (fires[j] == fire)
-                                {
-                                    CyclopsFireHealthChanged patch = new CyclopsFireHealthChanged(
-                                        GuidHelper.GetGuid(subRoot.gameObject),
-                                        kvp.Key,
-                                        i,
-                                        j,
-                                        summedDouseAmount);
-
-                                    packetSender.Send(patch);
-
-                                    return;
-                                }
-                            }
-                        }
-                    }
-
-                    Log.Warn("[Cyclops.OnFireDoused could not locate fire!"
-                        + " Sub Guid: " + GuidHelper.GetGuid(subRoot.gameObject)
-                        + " Fire Guid: " + fireGuid
-                        + "]");
-                }
-                else
-                {
-                    fireDouseAmount[fireGuid] = summedDouseAmount;
                 }
             }
         }

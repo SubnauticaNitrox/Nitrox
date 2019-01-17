@@ -25,12 +25,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubRoot subRoot = GuidHelper.RequireObjectFrom(packet.Guid).GetComponent<SubRoot>();
 
-            using (packetSender.Suppress<CyclopsDamagePointHealthChanged>())
+            using (packetSender.Suppress<CyclopsDamagePointRepaired>())
             {
                 SetActiveDamagePoints(subRoot, packet.DamagePointIndexes);
             }
 
-            using (packetSender.Suppress<CyclopsFireHealthChanged>())
+            using (packetSender.Suppress<FireDoused>())
             {
                 SetActiveRoomFires(subRoot, packet.RoomFires);
             }
@@ -39,6 +39,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             float oldHPPercent = (float)subRoot.ReflectionGet("oldHPPercent");
 
+            // Client side noises. Not necessary for keeping the health synced
             if (subHealth.GetHealthFraction() < 0.5f && oldHPPercent >= 0.5f)
             {
                 subRoot.voiceNotificationManager.PlayVoiceNotification(subRoot.hullLowNotification, true, false);
@@ -239,7 +240,7 @@ namespace NitroxClient.Communication.Packets.Processors
         }
 
         /// <summary>
-        /// Set the health of a <see cref="CyclopsDamagePoint"/>. This can trigger sending <see cref="CyclopsDamagePointHealthChanged"/> packets
+        /// Set the health of a <see cref="CyclopsDamagePoint"/>. This can trigger sending <see cref="CyclopsDamagePointRepaired"/> packets
         /// </summary>
         /// <param name="repairAmount">The max health of the point is 1. 999 is passed to trigger a full repair of the <see cref="CyclopsDamagePoint"/></param>
         private void RepairDamagePoint(SubRoot subRoot, int damagePointIndex, float repairAmount)
@@ -250,7 +251,7 @@ namespace NitroxClient.Communication.Packets.Processors
         /// <summary>
         /// Executes the logic in <see cref="Fire.Douse(float)"/> while not calling the method itself to avoid endless looped calls. 
         /// If the fire is extinguished (no health left), it will pass a large float to trigger the private <see cref="Fire.Extinguish()"/> method.
-        /// This can trigger sending <see cref="CyclopsFireHealthChanged"/> and <see cref="CyclopsDamage"/> packets
+        /// This can trigger sending <see cref="FireDoused"/> and <see cref="CyclopsDamage"/> packets
         /// </summary>
         private void DouseFire(SubFire fireManager, CyclopsRooms room, int fireTransformIndex, int fireIndex, float douseAmount)
         {

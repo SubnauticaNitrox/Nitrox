@@ -67,7 +67,8 @@
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamagePointHealthChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsFireHealthChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\FireCreatedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="GameLogic\EquipmentSlots.cs" />
     <Compile Include="GameLogic\Debugger.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\Fires.cs" />
     <Compile Include="GameLogic\Helper\VehicleChildObjectIdentifierHelper.cs" />
     <Compile Include="GameLogic\HUD\DenyOwnershipHand.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />

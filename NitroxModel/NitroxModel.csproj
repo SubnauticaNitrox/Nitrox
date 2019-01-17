@@ -86,7 +86,8 @@
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Logger\LogFiles.cs" />
-    <Compile Include="Packets\CyclopsDamagePointHealthChanged.cs" />
+    <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
+    <Compile Include="Packets\FireCreated.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
@@ -145,7 +146,7 @@
     <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
-    <Compile Include="Packets\CyclopsFireHealthChanged.cs" />
+    <Compile Include="Packets\FireDoused.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />

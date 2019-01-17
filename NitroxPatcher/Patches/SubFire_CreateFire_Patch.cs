@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
+using NitroxModel.Helper;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -26,9 +29,23 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(SubFire __instance, SubFire.RoomFire startInRoom, bool __state)
         {
+            // Spent way too much time trying to get around a bug in dnspy that doesn't allow me to propery edit this method, so I'm going with the hacky solution.
+            // Every time a Fire is created, the whole list of SubFire.availableNodes is cleared, then populated with any transforms that have 0 childCount. 
+            // Next, it chooses a random index, then spawns a fire in that node.
+            // We can easily find where it is because it'll be the only Transform in SubFire.availableNodes with a childCount > 0
             if (__state)
             {
-                NitroxServiceLocator.LocateService<Cyclops>().OnCreateFire(__instance.subRoot, startInRoom);
+                List<Transform> availableNodes = (List<Transform>)__instance.ReflectionGet("availableNodes");
+
+                foreach (Transform transform in availableNodes)
+                {
+                    if (transform.childCount > 0)
+                    {
+                        Fire fire = transform.GetComponentInChildren<Fire>();
+                        NitroxServiceLocator.LocateService<Fires>().OnCreate(transform.GetComponentInChildren<Fire>(), startInRoom);
+                        return;
+                    }
+                }
             }
         }
 
