@@ -119,6 +119,7 @@
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
+    <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />

@@ -27,7 +27,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private List<ChatLogEntry> entries;
         private Coroutine timer;
         private Coroutine chatScene;
-        private GameObject SomeScrollRect;
+        private GameObject chatScrollRect;
         private GameObject mainChatLog;
         AssetBundleCreateRequest asset;
  
@@ -56,7 +56,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             if(mainChatLog != null)
             {
                 mainChatLog.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(SomeScrollRect);
+                EventSystem.current.SetSelectedGameObject(chatScrollRect);
             }  
         }
 
@@ -76,14 +76,15 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void SetupChatMessagesComponent()
         {
-            chatText = SomeScrollRect.AddComponent<Text>();
+            chatText = chatScrollRect.AddComponent<Text>();
             chatText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
             chatText.name = "ChatText";
-            chatText.alignByGeometry = true;
+            chatText.alignByGeometry = false;
             chatText.horizontalOverflow = HorizontalWrapMode.Overflow;
             chatText.verticalOverflow = VerticalWrapMode.Truncate;
             chatText.fontSize = 12;
-            chatText.lineSpacing = 1f;
+            chatText.lineSpacing = 0.8f;
+
         }
 
         private void AddChatMessage(ChatLogEntry chatLogEntry)
@@ -144,7 +145,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             string sceneName = asset.assetBundle.GetAllScenePaths().First();
             Log.Info($"Trying to load scene: {sceneName}");
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-            SomeScrollRect = GameObject.Find("ChatLogContent");
+            chatScrollRect = GameObject.Find("ChatLogContent");
             mainChatLog = GameObject.Find("ChatLogScrollView");
             SetupChatMessagesComponent();
         }

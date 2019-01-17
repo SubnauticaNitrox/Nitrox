@@ -17,6 +17,8 @@ namespace NitroxServer.ConfigParser
         private const string GAMEMODE_SETTING = "GameMode";
         private const bool DEFAULT_DISABLECONSOLE = true;
         private const string DISABLECONSOLE_SETTING = "DisableConsole";
+        private const string DEFAULT_SERVER_PASSWORD = "password";
+        private const string DEFAULT_PASSWORD_SETTING = "ServerAdminPassword";
 
         private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
         {
@@ -102,6 +104,19 @@ namespace NitroxServer.ConfigParser
                     _saveInterval = configValue;
                 }
                 return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
+            }
+        }
+
+        public string ServerAdminPassword
+        {
+            get
+            {
+                string _ServerAdminPassword = null;
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING]))
+                {
+                    _ServerAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                }
+                return _ServerAdminPassword ?? DEFAULT_SERVER_PASSWORD;
             }
         }
     }
