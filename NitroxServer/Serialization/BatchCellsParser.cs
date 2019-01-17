@@ -43,6 +43,7 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "loot", spawnPoints);
             ParseFile(batchId, "", "creatures", spawnPoints);
             ParseFile(batchId, "", "other", spawnPoints);
+            ParseFile(batchId, "CellsCache", "baked-", spawnPoints);
 
             return spawnPoints;
         }
