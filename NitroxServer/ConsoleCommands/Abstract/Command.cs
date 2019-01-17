@@ -1,62 +1,64 @@
 ﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
-        public Optional<string> Args { get; protected set; }
         public string Name { get; protected set; }
         public string[] Alias { get; protected set; }
         public string Description { get; protected set; }
+        public string ArgsDescription { get; protected set; }
+        public Perms RequiredPermLevel { get; protected set; } = Perms.ADMIN;
 
-        protected Command(string name) : this(name, Optional<string>.Empty(), "", null)
+        protected Command(string name, Perms requiredPermLevel) : this(name, requiredPermLevel, "", "", null)
         {
+            RequiredPermLevel = requiredPermLevel;
             Name = name;
         }
 
-        protected Command(string name, Optional<string> args) : this(name, args, "", null)
+        protected Command(string name, Perms requiredPermLevel, string argsDescription) : this(name, requiredPermLevel, argsDescription, "", null)
         {
-            Args = args;
+            ArgsDescription = argsDescription;
             Name = name;
         }
 
-        protected Command(string name, Optional<string> args, string description) : this(name, args, "", null)
+        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description) : this(name, requiredPermLevel, argsDescription, "", null)
         {
-            Args = args;
+            ArgsDescription = argsDescription;
             Name = name;
             Description = description;
         }
 
-        protected Command(string name, Optional<string> args, string description, string[] alias)
+        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description, string[] alias)
         {
             Validate.NotNull(name);
-            Validate.NotNull(args);
+            Validate.NotNull(argsDescription);
 
             Name = name;
-            if (args.IsEmpty())
-            {
-                args = Optional<string>.Of(name);
-            }
-
             Description = description ?? "";
-            Args = args;
+            ArgsDescription = argsDescription;
+            RequiredPermLevel = requiredPermLevel;
             Alias = alias ?? new string[0];
         }
 
-        /// <summary>
-        ///     Runs your command
-        /// </summary>
-        /// <param name="args">
-        ///     Arguments passed to your command
-        /// </param>
-        public abstract void RunCommand(string[] args);
+        public abstract void RunCommand(string[] args, Optional<Player> player);
 
         public abstract bool VerifyArgs(string[] args);
 
         public override string ToString()
         {
-            return $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(Args)}: {Args}, {nameof(Alias)}: [{string.Join(", ", Alias)}]";
+            return $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(ArgsDescription)}: {ArgsDescription}, {nameof(Alias)}: [{string.Join(", ", Alias)}]";
+        }
+
+        public void SendServerMessageIfPlayerIsPresent(Optional<Player> player, string message)
+        {
+            if (player.IsPresent())
+            {
+                player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+            }
         }
     }
 }

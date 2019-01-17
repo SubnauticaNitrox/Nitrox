@@ -24,9 +24,9 @@ namespace NitroxServer.Serialization
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
-        public BatchCellsParser()
+        public BatchCellsParser(ServerProtobufSerializer serializer)
         {
-            serializer = new ServerProtobufSerializer();
+            this.serializer = serializer;
 
             surrogateTypes.Add("UnityEngine.Transform", typeof(Transform));
             surrogateTypes.Add("UnityEngine.Vector3", typeof(Vector3));

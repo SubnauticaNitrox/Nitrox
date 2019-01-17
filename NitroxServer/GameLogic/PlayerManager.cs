@@ -60,7 +60,7 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
 
                 bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.PlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
+                PlayerContext playerContext = new PlayerContext(playerName, playerData.GetPlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
                 ushort playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 
@@ -120,6 +120,24 @@ namespace NitroxServer.GameLogic
                 }
 
                 assetsByConnection.Remove(connection);
+            }
+        }
+        
+        public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
+        {
+            lock (assetsByConnection)
+            {
+                foundPlayer = null;
+                foreach (Player player in ConnectedPlayers())
+                {
+                    if (player.Name == playerName)
+                    {
+                        foundPlayer = player;
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 

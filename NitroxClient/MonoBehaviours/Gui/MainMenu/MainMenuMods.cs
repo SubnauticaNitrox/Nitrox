@@ -1,4 +1,5 @@
-﻿using NitroxClient.Unity.Helper;
+﻿using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,6 +23,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             if (scene.name == "XMenu")
             {
                 MultiplayerMenuMods();
+                DiscordController.Main.InitDRPMenu();
             }
         }
 

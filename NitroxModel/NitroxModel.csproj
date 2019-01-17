@@ -75,12 +75,15 @@
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
     <Compile Include="DataStructures\GameLogic\ItemData.cs" />
     <Compile Include="DataStructures\GameLogic\PDALogEntry.cs" />
+    <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Helper\TextureScaler.cs" />
+    <Compile Include="Helper\IPHelper.cs" />
     <Compile Include="Logger\LogFiles.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\PlayerKicked.cs" />

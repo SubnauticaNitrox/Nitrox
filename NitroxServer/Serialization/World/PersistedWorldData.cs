@@ -14,7 +14,7 @@ namespace NitroxServer.Serialization.World
     [ProtoContract]
     public class PersistedWorldData
     {
-        private const long CURRENT_VERSION = 5;
+        private const long CURRENT_VERSION = 7;
 
         [ProtoMember(1)]
         public long version { get; set; } = CURRENT_VERSION;

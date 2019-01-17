@@ -6,6 +6,7 @@ using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using NitroxServer.Communication;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer
 {
@@ -71,7 +72,7 @@ namespace NitroxServer
 
         public void SendPacket(Packet packet)
         {
-            connection.SendPacket(packet);            
+            connection.SendPacket(packet);
         }
 
         public override bool Equals(object obj)

@@ -1,7 +1,9 @@
-﻿using System.Linq;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
+using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -9,21 +11,24 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list")
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER)
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args)
+        public override void RunCommand(string[] args, Optional<Player> player)
         {
-            if (playerManager.GetPlayers().Any())
+            List<Player> players = playerManager.GetPlayers();
+
+            string playerList = "List Command Result: " + string.Join(", ", players);
+
+            if(players.Count == 0)
             {
-                Log.Info("Players: " + string.Join(", ", playerManager.GetPlayers()));
+                playerList += "No Players Online";
             }
-            else
-            {
-                Log.Info("No players online");
-            }
+
+            Log.Info(playerList);
+            SendServerMessageIfPlayerIsPresent(player, playerList);
         }
 
         public override bool VerifyArgs(string[] args)

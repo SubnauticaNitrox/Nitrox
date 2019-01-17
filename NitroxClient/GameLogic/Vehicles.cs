@@ -30,14 +30,14 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation,vehicleModel.InteractiveChildIdentifiers);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers);
+                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers)
+        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -128,6 +128,15 @@ namespace NitroxClient.GameLogic
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
 
+            if(dockingBayGuid.IsPresent())
+            {
+                GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
+                VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
+
+                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+
+                dockingBay.DockVehicle(vehicle);
+            }
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
@@ -222,7 +231,17 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
-            string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
+            string dockGuid = string.Empty;
+
+            if (dockingBay.GetSubRoot() is BaseRoot)
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+            }
+            else
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
+            }
+
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
@@ -235,15 +254,22 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastVehicleUndocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
-            string dockGuid = GuidHelper.GetGuid(dockingBay.gameObject);
+            string dockGuid = string.Empty;
+
+            if (dockingBay.GetSubRoot() is BaseRoot)
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+            }
+            else
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
+            }
+
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleUndocking packet = new VehicleUndocking(vehicleGuid, dockGuid, playerId);
             packetSender.Send(packet);
-
-            PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
-            vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor));
         }
 
         /*

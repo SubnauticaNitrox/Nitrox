@@ -147,13 +147,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             if (multiplayerClient == null)
             {
                 multiplayerClient = new GameObject();
+                multiplayerClient.name = "Multiplayer Client";
                 multiplayerClient.AddComponent<Multiplayer>();
                 multiplayerSession.ConnectionStateChanged += SessionConnectionStateChangedHandler;
             }
 
             try
             {
-                multiplayerSession.Connect(ServerIp,serverPort);
+                multiplayerSession.Connect(ServerIp, serverPort);
             }
             catch (ClientConnectionFailedException)
             {
@@ -241,7 +242,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp,serverPort);
+                            multiplayerSession.Connect(ServerIp, serverPort);
                         });
 
                     break;
@@ -278,7 +279,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
             }
         }
-        
+
         //This method merges the cloned color picker element with the existing template for menus that appear in the "right side" region of Subnautica's main menu.
         private void InitializeJoinMenu()
         {

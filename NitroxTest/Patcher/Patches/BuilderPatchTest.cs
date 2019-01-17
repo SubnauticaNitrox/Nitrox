@@ -5,6 +5,7 @@ using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using NitroxTest.Patcher.Test;
+using System.Reflection.Emit;
 
 namespace NitroxTest.Patcher.Patches
 {
@@ -25,7 +26,7 @@ namespace NitroxTest.Patcher.Patches
         [TestMethod]
         public void InjectionSanity()
         {
-            MethodInfo targetMethod = AccessTools.Method(typeof(Builder), "TryPlace");
+            DynamicMethod targetMethod = (DynamicMethod)AccessTools.Method(typeof(Builder), "TryPlace");
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
             IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(targetMethod, beforeInstructions);
