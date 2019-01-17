@@ -1,66 +1,60 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
+using log4net;
+using log4net.Appender;
+using log4net.Config;
+using log4net.Core;
+using log4net.Filter;
+using log4net.Layout;
+using log4net.Repository.Hierarchy;
+using log4net.Util;
 
 namespace NitroxModel.Logger
 {
     public class Log
     {
-        [Flags]
-        public enum LogLevel
+        private static bool inGameMessages;
+
+        private static readonly ILog log = LogManager.GetLogger("Nitrox");
+
+        static Log()
         {
-            Disabled = 0,
-            InGameMessages = 1,
-            Info = 2,
-            Debug = 4,
-            Trace = 8,
+            Setup();
         }
 
-        private static LogLevel level = LogLevel.Disabled;
-        private static TextWriter writer;
-
-        // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
-        public static void SetLevel(LogLevel lvl)
+        // Enable the in-game notifications
+        public static void EnableInGameMessages()
         {
-            writer?.Close();
-            writer = LogFiles.Instance.CreateNew();
-
-            level = lvl;
-            Write("Log level set to " + level);
+            inGameMessages = true;
         }
 
         // For in-game notifications
         public static void InGame(string msg)
         {
-            if ((level & LogLevel.InGameMessages) != 0)
+            if (inGameMessages)
             {
                 ErrorMessage.AddMessage(msg);
+                Info(msg);
             }
-
-            Info(msg);
         }
 
         public static void Error(string fmt, params object[] arg)
         {
-            Write("E: " + fmt, arg);
+            log.Error(Format(fmt, arg));
         }
 
         public static void Error(string msg, Exception ex)
         {
-            Error(msg + "\n{0}", (object)ex);
+            log.Error(msg, ex);
         }
 
         public static void Warn(string fmt, params object[] arg)
         {
-            Write("W: " + fmt, arg);
+            log.Warn(Format(fmt, arg));
         }
 
         public static void Info(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.Info) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
-            {
-                Write("I: " + fmt, arg);
-            }
+            log.Info(Format(fmt, arg));
         }
 
         public static void Info(object o)
@@ -73,10 +67,7 @@ namespace NitroxModel.Logger
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.Debug) != 0)
-            {
-                Write("D: " + fmt, arg);
-            }
+            log.Debug(Format(fmt, arg));
         }
 
         public static void Debug(object o)
@@ -85,29 +76,45 @@ namespace NitroxModel.Logger
             Debug(msg);
         }
 
-        public static void Trace(string fmt, params object[] arg)
+        // Helping method for formatting string correctly with arguments
+        private static string Format(string fmt, params object[] arg)
         {
-            Trace(string.Format(fmt, arg));
+            return string.Format(fmt, arg);
         }
 
-        public static void Trace(string str = "")
+        private static void Setup()
         {
-            if ((level & LogLevel.Trace) == 0)
-            {
-                return;
-            }
+            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
 
-            Write("T: {0}:\n{1}", str, new StackTrace(1));
-        }
+            PatternLayout patternLayout = new PatternLayout();
+            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %level]: %m%n";
+            patternLayout.ActivateOptions();
 
-        private static void Write(string fmt, params object[] arg)
-        {
-            string msg = string.Format(fmt, arg);
+            LevelRangeFilter filter = new LevelRangeFilter();
+            filter.LevelMin = Level.Debug;
+            filter.LevelMax = Level.Fatal;
 
-            writer.WriteLine("[Nitrox] " + msg);
-            writer.Flush();
+            RollingFileAppender fileAppender = new RollingFileAppender();
+            fileAppender.File = "Nitrox Logs/nitrox-.log";
+            fileAppender.AppendToFile = false;
+            fileAppender.RollingStyle = RollingFileAppender.RollingMode.Date;
+            fileAppender.MaxSizeRollBackups = 10;
+            fileAppender.DatePattern = "yyyy-MM-dd";
+            fileAppender.StaticLogFileName = false;
+            fileAppender.PreserveLogFileNameExtension = true;
+            fileAppender.LockingModel = new FileAppender.MinimalLock();
+            fileAppender.Layout = patternLayout;
+            fileAppender.ActivateOptions();
+            fileAppender.AddFilter(filter);
 
-            Console.WriteLine("[Nitrox] " + msg);
+            ConsoleAppender consoleAppender = new ConsoleAppender();
+            consoleAppender.Layout = patternLayout;
+            consoleAppender.AddFilter(filter);
+
+            hierarchy.Root.AddAppender(consoleAppender);
+            hierarchy.Root.AddAppender(fileAppender);
+
+            hierarchy.Configured = true;
         }
     }
 }
