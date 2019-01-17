@@ -13,19 +13,19 @@ namespace NitroxPatcher.Patches.Persistent
     {
         public static readonly Type TARGET_CLASS = typeof(EntityCell);
 
-        private static readonly FieldInfo current = getLoadAsyncEnumerableMethod().GetField("$current", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo current = GetAwakeAsyncEnumerableMethod().GetField("$current", BindingFlags.Instance | BindingFlags.NonPublic);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
             List<CodeInstruction> codeInstructions = instructions.ToList();
-            yield return new CodeInstruction(OpCodes.Ldarg_0);
-            yield return new CodeInstruction(OpCodes.Ldnull);
-            yield return new CodeInstruction(OpCodes.Stfld, current);
+            yield return new CodeInstruction(OpCodes.Ldarg_0); // current instance
+            yield return new CodeInstruction(OpCodes.Ldnull); //null
+            yield return new CodeInstruction(OpCodes.Stfld, current); //this.$current
 
             int i = codeInstructions.IndexOf(codeInstructions.Last()) - 3;
             Label label = generator.DefineLabel();
             codeInstructions[i].labels.Add(label);
-            yield return new CodeInstruction(OpCodes.Br, label);
+            yield return new CodeInstruction(OpCodes.Br, label); //jump to return false
 
             foreach (CodeInstruction instruction in codeInstructions)
             {
@@ -35,10 +35,10 @@ namespace NitroxPatcher.Patches.Persistent
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchTranspiler(harmony, getMethod());
+            PatchTranspiler(harmony, GetMethod());
         }
 
-        private static Type getLoadAsyncEnumerableMethod()
+        private static Type GetAwakeAsyncEnumerableMethod()
         {
             Type[] nestedTypes = TARGET_CLASS.GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Static);
             Type targetEnumeratorClass = null;
@@ -56,9 +56,9 @@ namespace NitroxPatcher.Patches.Persistent
             return targetEnumeratorClass;
         }
 
-        private static MethodInfo getMethod()
+        private static MethodInfo GetMethod()
         {
-            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo method = GetAwakeAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
             Validate.NotNull(method);
 
             return method;

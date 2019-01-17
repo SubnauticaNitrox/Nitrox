@@ -39,10 +39,10 @@ namespace NitroxPatcher.Patches.Persistent
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchTranspiler(harmony, getMethod());
+            PatchTranspiler(harmony, GetMethod());
         }
 
-        private static Type getLoadAsyncEnumerableMethod()
+        private static Type GetLoadAsyncEnumerableMethod()
         {
             Type[] nestedTypes = TARGET_CLASS.GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Static);
             Type targetEnumeratorClass = null;
@@ -60,9 +60,9 @@ namespace NitroxPatcher.Patches.Persistent
             return targetEnumeratorClass;
         }
 
-        private static MethodInfo getMethod()
+        private static MethodInfo GetMethod()
         {
-            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo method = GetLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
             Validate.NotNull(method);
 
             return method;
