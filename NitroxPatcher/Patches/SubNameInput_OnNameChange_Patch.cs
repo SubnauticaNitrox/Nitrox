@@ -20,12 +20,21 @@ namespace NitroxPatcher.Patches
             SubName subname = (SubName)__instance.ReflectionGet("target");
             if (subname != null)
             {
-                GameObject vehicle;
-                vehicle = subname.GetComponent<Vehicle>().gameObject;
-                string guid = GuidHelper.GetGuid(vehicle);
+                GameObject parentVehicle;
+                Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
+                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
+                if(vehicle)
+                {
+                    parentVehicle = vehicle.gameObject;
+                }
+                else
+                {
+                    parentVehicle = subRoot.gameObject;
+                }
+                
+                string guid = GuidHelper.GetGuid(parentVehicle);
                 VehicleNameChange packet = new VehicleNameChange(guid, subname.GetName());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
-
             }
         }
 
