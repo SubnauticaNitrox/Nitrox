@@ -123,34 +123,37 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+
+            // Cyclops comes up as TechType.None .. need to avoid trying to set colors/names for now.
+            if(CraftData.GetTechType(gameObject) != TechType.None)
+            {
+                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+                if (dockingBayGuid.IsPresent())
+                {
+                    GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
+                    VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
+
+                    dockingBay.DockVehicle(vehicle);
+                }
+
+                // Updates names and colours with persisted data
+                if (!string.IsNullOrEmpty(name))
+                {
+                    vehicle.vehicleName = name;
+                    vehicle.subName.DeserializeName(vehicle.vehicleName);
+                }
+
+                if (colours != null)
+                {
+                    vehicle.vehicleColors = colours;
+                    vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+                }
+            }
 
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
-
-            if (dockingBayGuid.IsPresent())
-            {
-                GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
-                VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
-
-                dockingBay.DockVehicle(vehicle);
-            }
-
-            // Updates names and colours with persisted data
-            if (!string.IsNullOrEmpty(name))
-            {
-                vehicle.vehicleName = name;
-                vehicle.subName.DeserializeName(vehicle.vehicleName);
-            }
-
-            if (colours != null)
-            {
-                vehicle.vehicleColors = colours;
-                vehicle.subName.DeserializeColors(vehicle.vehicleColors);
-            }
-
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network

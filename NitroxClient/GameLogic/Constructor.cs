@@ -36,20 +36,23 @@ namespace NitroxClient.GameLogic
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
 
-                Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
-                string name = vehicle.subName.GetName();
-  
-                Vector3[] colours = vehicle.subName.GetColors(); // This doesnt work for the Prawn Suit Not sure why...so untill i find a better way ive just hard coded the default values
-                if(techType == TechType.Exosuit)
+                // Need to hardcode Cyclops untill a way to get default colours is found.
+                string name = "Cyclops";
+                Vector3[] colours = new Vector3[]
                 {
-                    colours = new Vector3[] {
+                    new Vector3(0f, 0f, 1f),
+                    new Vector3(0f, 0f, 0f),
+                    new Vector3(0f, 0f, 1f),
+                    new Vector3(0.577f, 0.447f, 0.604f),
+                    new Vector3(0.114f, 0.729f, 0.965f)
+                };
 
-                        new Vector3(0f, 0f, 1f),
-                        new Vector3(0f, 0f, 0f),
-                        new Vector3(0f, 0f, 1f),
-                        new Vector3(0.577f, 0.447f, 0.604f),
-                        new Vector3(0.114f, 0.729f, 0.965f)
-                    };
+               
+                if (techType != TechType.Cyclops)
+                {
+                    Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
+                    name = vehicle.vehicleName;
+                    colours = vehicle.vehicleColors;
                 }
 
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
