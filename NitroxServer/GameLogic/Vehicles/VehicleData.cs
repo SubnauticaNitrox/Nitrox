@@ -2,6 +2,7 @@
 using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -48,6 +49,29 @@ namespace NitroxServer.GameLogic.Vehicles
                     vehiclesByGuid[guid].InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(interactiveChildObjectIdentifier);
                 }
 
+            }
+        }
+
+        public void UpdateVehicleName(string guid, string name)
+        {
+            lock (vehiclesByGuid)
+            {
+                if (vehiclesByGuid.ContainsKey(guid))
+                {
+                    vehiclesByGuid[guid].Name = name;
+                }
+
+            }
+        }
+
+        public void UpdateVehicleColours(int index, string guid, Vector3 hsb, Color colour)
+        {
+            lock (vehiclesByGuid)
+            {
+                if (vehiclesByGuid.ContainsKey(guid))
+                {
+                    vehiclesByGuid[guid].Colours[index] = hsb;
+                }
             }
         }
 

@@ -35,8 +35,25 @@ namespace NitroxClient.GameLogic
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
+
+                Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
+                string name = vehicle.subName.GetName();
+  
+                Vector3[] colours = vehicle.subName.GetColors(); // This doesnt work for the Prawn Suit Not sure why...so untill i find a better way ive just hard coded the default values
+                if(techType == TechType.Exosuit)
+                {
+                    colours = new Vector3[] {
+
+                        new Vector3(0f, 0f, 1f),
+                        new Vector3(0f, 0f, 0f),
+                        new Vector3(0f, 0f, 1f),
+                        new Vector3(0.577f, 0.447f, 0.604f),
+                        new Vector3(0.114f, 0.729f, 0.965f)
+                    };
+                }
+
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, colours);
                 packetSender.Send(beginCrafting);
             }
             else

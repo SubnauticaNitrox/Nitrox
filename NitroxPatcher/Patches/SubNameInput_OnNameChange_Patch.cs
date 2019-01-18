@@ -20,22 +20,12 @@ namespace NitroxPatcher.Patches
             SubName subname = (SubName)__instance.ReflectionGet("target");
             if (subname != null)
             {
-                GameObject parentVehicle;
-
-                // This patch works for the vehicles as well as the cyclops; this has to be found for a proper and synced guid.
-                SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
-                if (subRoot)
-                {
-                    parentVehicle = subRoot.gameObject;
-                }
-                else
-                {
-                    parentVehicle = subname.GetComponent<Vehicle>().gameObject;
-                }
-
-                string guid = GuidHelper.GetGuid(parentVehicle);
+                GameObject vehicle;
+                vehicle = subname.GetComponent<Vehicle>().gameObject;
+                string guid = GuidHelper.GetGuid(vehicle);
                 VehicleNameChange packet = new VehicleNameChange(guid, subname.GetName());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+
             }
         }
 

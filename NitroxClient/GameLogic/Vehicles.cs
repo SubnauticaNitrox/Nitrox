@@ -30,14 +30,14 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.Colours);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] colours)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, colours));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid);
+                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, colours);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
+        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] colours)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -123,20 +123,34 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
+            Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
 
-            if(dockingBayGuid.IsPresent())
+            if (dockingBayGuid.IsPresent())
             {
                 GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
                 VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
 
-                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-
                 dockingBay.DockVehicle(vehicle);
             }
+
+            // Updates names and colours with persisted data
+            if (!string.IsNullOrEmpty(name))
+            {
+                vehicle.vehicleName = name;
+                vehicle.subName.DeserializeName(vehicle.vehicleName);
+            }
+
+            if (colours != null)
+            {
+                vehicle.vehicleColors = colours;
+                vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+            }
+
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
