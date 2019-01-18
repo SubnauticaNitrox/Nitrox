@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
@@ -87,7 +88,7 @@ namespace NitroxClient.GameLogic
 
         public void ConstructionComplete(GameObject ghost)
         {
-            Optional<string> newlyConstructedBaseGuid = Optional<string>.Empty();
+            string baseGuid = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             string guid = GuidHelper.GetGuid(ghost);
@@ -95,9 +96,9 @@ namespace NitroxClient.GameLogic
             if (opConstructedBase.IsPresent())
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Get();
-                newlyConstructedBaseGuid = Optional<string>.Of(GuidHelper.GetGuid(constructedBase));
+                baseGuid = GuidHelper.GetGuid(constructedBase);
             }
-
+            
             // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
             // Furniture just uses the same game object as the ghost for the final product.
             if(ghost.GetComponent<ConstructableBase>() != null)
@@ -107,9 +108,14 @@ namespace NitroxClient.GameLogic
                 
                 UnityEngine.Object.Destroy(ghost);
                 GuidHelper.SetNewGuid(finishedPiece, guid);
+
+                if(baseGuid == null)
+                {
+                    baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                }
             }
-            
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(guid, newlyConstructedBaseGuid);
+
+            ConstructionCompleted constructionCompleted = new ConstructionCompleted(guid, baseGuid);
             packetSender.Send(constructionCompleted);
         }
 

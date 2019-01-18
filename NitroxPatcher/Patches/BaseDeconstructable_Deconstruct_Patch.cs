@@ -5,7 +5,6 @@ using System.Reflection.Emit;
 using Harmony;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -33,7 +32,7 @@ namespace NitroxPatcher.Patches
                      * BaseDeconstructable_Deconstruct_Patch.Callback(gameObject);
                      */
                     yield return original.Ldloc<GameObject>(1);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(BaseDeconstructable_Deconstruct_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Call, typeof(BaseDeconstructable_Deconstruct_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
                 }
             }
         }

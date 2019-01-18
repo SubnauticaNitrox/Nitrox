@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
+using NitroxServer.ConfigParser;
 
 namespace NitroxServer.Serialization.World
 {
@@ -18,6 +19,12 @@ namespace NitroxServer.Serialization.World
     {
         private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
         private readonly string fileName = @"save.nitrox";
+        private readonly ServerConfig config;
+
+        public WorldPersistence(ServerConfig config)
+        {
+            this.config = config;
+        }
 
         public void Save(World world)
         {
@@ -74,7 +81,8 @@ namespace NitroxServer.Serialization.World
                                           persistedData.PlayerData,
                                           persistedData.GameData,
                                           persistedData.ParsedBatchCells,
-                                          persistedData.EscapePodData);
+                                          persistedData.EscapePodData,
+                                          config.GameMode);
 
                 return Optional<World>.Of(world);
             }
@@ -104,7 +112,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData());
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
@@ -116,7 +124,8 @@ namespace NitroxServer.Serialization.World
                                   PlayerData playerData,
                                   GameData gameData,
                                   List<Int3> ParsedBatchCells,
-                                  EscapePodData escapePodData)
+                                  EscapePodData escapePodData,
+                                  GameModeOption gameMode)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -134,9 +143,12 @@ namespace NitroxServer.Serialization.World
             world.EscapePodData = escapePodData;
             world.EscapePodManager = new EscapePodManager(escapePodData);
             world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
+            world.GameMode = gameMode;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);
+            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
+
+            Log.Info("World GameMode " + gameMode);
 
             return world;
         }

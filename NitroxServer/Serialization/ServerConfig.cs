@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
 
 namespace NitroxServer.ConfigParser
@@ -12,6 +13,19 @@ namespace NitroxServer.ConfigParser
         private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
         private const int DEFAULT_SAVE_INTERVAL = 60000;
         private const string DEFAULT_SAVE_SETTING = "SaveInterval";
+        private const GameModeOption DEFAULT_GAMEMODE = GameModeOption.Survival;
+        private const string GAMEMODE_SETTING = "GameMode";
+        private const bool DEFAULT_DISABLECONSOLE = true;
+        private const string DISABLECONSOLE_SETTING = "DisableConsole";
+
+        private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
+        {
+            {"survival", GameModeOption.Survival},
+            {"creative", GameModeOption.Creative},
+            {"hardcore", GameModeOption.Hardcore},
+            {"permadeath", GameModeOption.Permadeath},
+            {"freedom", GameModeOption.Freedom},
+        };
 
         private int? _serverPort = null;
         public int ServerPort
@@ -39,6 +53,42 @@ namespace NitroxServer.ConfigParser
                 }
                 return _maxConnections ?? MAX_CONNECTIONS;
             }
+        }
+
+        private bool? _disableConsole = null;
+        public bool DisableConsole
+        {
+            get
+            {
+                bool configValue;
+                if (_disableConsole == null && bool.TryParse(ConfigurationManager.AppSettings[DISABLECONSOLE_SETTING], out configValue))
+                {
+                    _disableConsole = configValue;
+                }
+                return _disableConsole ?? DEFAULT_DISABLECONSOLE;
+            }
+        }
+
+        private GameModeOption? _gameMode = null;
+        public GameModeOption GameMode
+        {
+            get
+            {
+                if (_gameMode == null && ConfigurationManager.AppSettings[GAMEMODE_SETTING] != null)
+                {
+                    _gameMode = ParseGameMode(ConfigurationManager.AppSettings[GAMEMODE_SETTING]);
+                }
+                return _gameMode ?? DEFAULT_GAMEMODE;
+            }
+        }
+
+        private GameModeOption ParseGameMode(string stringGameMode)
+        {
+            GameModeOption gameMode = GameModeOption.Survival;
+            stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits
+
+            gameModeByConfig.TryGetValue(stringGameMode, out gameMode);
+            return gameMode;
         }
 
         private int? _saveInterval = null;

@@ -56,6 +56,9 @@
     <Compile Include="Patches\BaseDeconstructable_Deconstructor_Patch.cs" />
     <Compile Include="Patches\BaseDeconstructable_Constructor_Patch.cs" />
     <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
+    <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
+    <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
+    <Compile Include="Patches\DevConsole_Update_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
@@ -130,7 +133,6 @@
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
-    <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -147,10 +149,6 @@
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
-      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
-      <Name>NitroxReloader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.UnityStubs;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -9,6 +10,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public AbsoluteEntityCell AbsoluteEntityCell { get; private set; }
         public UnityEngine.Vector3 Position { get; private set; }
         public UnityEngine.Quaternion Rotation { get; private set; }
+        public UnityEngine.Vector3 Scale { get; private set; }
         public string ClassId { get; private set; }
         public string Guid { get; private set; }
         public BiomeType BiomeType { get; private set; }
@@ -40,10 +42,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             UnityEngine.Vector3 localPosition = go.GetComponent<Transform>().Position;
             esp.Position = esp.AbsoluteEntityCell.Center + localPosition;
+            esp.Scale = go.GetComponent<Transform>().Scale;
 
             return esp;
         }
 
-        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, ClassId: {ClassId}, Guid: {Guid}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
+        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, Scale: {Scale}, ClassId: {ClassId}, Guid: {Guid}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
     }
 }

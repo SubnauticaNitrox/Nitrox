@@ -11,9 +11,9 @@ namespace NitroxModel.Logger
         {
             Disabled = 0,
             InGameMessages = 1,
-            ConsoleInfo = 2,
-            FileLog = 4,
-            ConsoleDebug = 8
+            Info = 2,
+            Debug = 4,
+            Trace = 8,
         }
 
         private static LogLevel level = LogLevel.Disabled;
@@ -22,11 +22,8 @@ namespace NitroxModel.Logger
         // Set with combination of enum flags -- setLogLevel(LogLevel.ConsoleInfo | LogLevel.ConsoleDebug)
         public static void SetLevel(LogLevel lvl)
         {
-            if ((lvl & LogLevel.FileLog) != 0)
-            {
-                writer?.Close();
-                writer = LogFiles.Instance.CreateNew();
-            }
+            writer?.Close();
+            writer = LogFiles.Instance.CreateNew();
 
             level = lvl;
             Write("Log level set to " + level);
@@ -60,7 +57,7 @@ namespace NitroxModel.Logger
 
         public static void Info(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.ConsoleInfo) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
+            if ((level & LogLevel.Info) != 0) // == LogLevel.ConsoleMessage works as well, but is more verbose
             {
                 Write("I: " + fmt, arg);
             }
@@ -76,7 +73,7 @@ namespace NitroxModel.Logger
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
-            if ((level & LogLevel.ConsoleDebug) != 0)
+            if ((level & LogLevel.Debug) != 0)
             {
                 Write("D: " + fmt, arg);
             }
@@ -95,6 +92,11 @@ namespace NitroxModel.Logger
 
         public static void Trace(string str = "")
         {
+            if ((level & LogLevel.Trace) == 0)
+            {
+                return;
+            }
+
             Write("T: {0}:\n{1}", str, new StackTrace(1));
         }
 
@@ -102,11 +104,8 @@ namespace NitroxModel.Logger
         {
             string msg = string.Format(fmt, arg);
 
-            if ((level & LogLevel.FileLog) != 0 && writer != null)
-            {
-                writer.WriteLine("[Nitrox] " + msg);
-                writer.Flush();
-            }
+            writer.WriteLine("[Nitrox] " + msg);
+            writer.Flush();
 
             Console.WriteLine("[Nitrox] " + msg);
         }

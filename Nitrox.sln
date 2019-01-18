@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
 EndProject
@@ -9,19 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel", "NitroxModel\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxClient", "NitroxClient\NitroxClient.csproj", "{ED5034BD-66B5-4596-94B7-66A28D3EFF49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTester", "ClientTester\ClientTester.csproj", "{55193579-4D88-4735-BC85-9FD58D556F14}"
-	ProjectSection(ProjectDependencies) = postProject
-		{ED5034BD-66B5-4596-94B7-66A28D3EFF49} = {ED5034BD-66B5-4596-94B7-66A28D3EFF49}
-		{B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3} = {B16F4DE7-21AD-4FEF-955B-0A5A365FA4E3}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxTest", "NitroxTest\NitroxTest.csproj", "{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{BE983E25-24CC-4FC8-9017-61EEC43DD618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxReloader", "NitroxReloader\NitroxReloader.csproj", "{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Harmony", "Harmony\Harmony\Harmony.csproj", "{69AEE16A-B6E7-4642-8081-3928B32455DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Harmony", "Harmony\Harmony\Harmony.csproj", "{69AEE16A-B6E7-4642-8081-3928B32455DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj", "{69BEE16A-B6E7-4642-8081-3928B32455DF}"
 EndProject
@@ -33,8 +25,6 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "NitroxInstaller", "NitroxInstaller\NitroxInstaller.wixproj", "{6F1BF4AB-C8D7-4BC5-85CC-E604CEE43A09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxInstallerActions", "NitroxInstallerActions\NitroxInstallerActions.csproj", "{F37A369D-A972-476C-8777-E87EA5E089F4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer.Wpf", "NitroxServer.Wpf\NitroxServer.Wpf.csproj", "{DECAAD61-2567-468D-97DC-771FB46BD4DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,18 +72,6 @@ Global
 		{ED5034BD-66B5-4596-94B7-66A28D3EFF49}.Release|x64.Build.0 = Release|Any CPU
 		{ED5034BD-66B5-4596-94B7-66A28D3EFF49}.Release|x86.ActiveCfg = Release|Any CPU
 		{ED5034BD-66B5-4596-94B7-66A28D3EFF49}.Release|x86.Build.0 = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|x64.Build.0 = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Debug|x86.Build.0 = Debug|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|x64.ActiveCfg = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|x64.Build.0 = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|x86.ActiveCfg = Release|Any CPU
-		{55193579-4D88-4735-BC85-9FD58D556F14}.Release|x86.Build.0 = Release|Any CPU
 		{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -118,18 +96,6 @@ Global
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x64.Build.0 = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.ActiveCfg = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.Build.0 = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|x64.Build.0 = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Debug|x86.Build.0 = Debug|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|x64.ActiveCfg = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|x64.Build.0 = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|x86.ActiveCfg = Release|Any CPU
-		{FC024D71-BC7B-4A3E-968A-AF09BCD8EAE5}.Release|x86.Build.0 = Release|Any CPU
 		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -174,18 +140,6 @@ Global
 		{F37A369D-A972-476C-8777-E87EA5E089F4}.Release|x64.Build.0 = Release|x86
 		{F37A369D-A972-476C-8777-E87EA5E089F4}.Release|x86.ActiveCfg = Release|x86
 		{F37A369D-A972-476C-8777-E87EA5E089F4}.Release|x86.Build.0 = Release|x86
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|x64.Build.0 = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Debug|x86.Build.0 = Debug|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|x64.ActiveCfg = Release|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|x64.Build.0 = Release|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|x86.ActiveCfg = Release|Any CPU
-		{DECAAD61-2567-468D-97DC-771FB46BD4DA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

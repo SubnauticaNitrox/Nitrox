@@ -24,9 +24,9 @@ namespace NitroxServer.Serialization
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
-        public BatchCellsParser()
+        public BatchCellsParser(ServerProtobufSerializer serializer)
         {
-            serializer = new ServerProtobufSerializer();
+            this.serializer = serializer;
 
             surrogateTypes.Add("UnityEngine.Transform", typeof(Transform));
             surrogateTypes.Add("UnityEngine.Vector3", typeof(Vector3));
@@ -37,17 +37,18 @@ namespace NitroxServer.Serialization
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
 
-            ParseFile(batchId, "", "loot-slots", spawnPoints);
-            ParseFile(batchId, "", "creature-slots", spawnPoints);
-            ParseFile(batchId, "Generated", "slots", spawnPoints);  // Very expensive to load
-            ParseFile(batchId, "", "loot", spawnPoints);
-            ParseFile(batchId, "", "creatures", spawnPoints);
-            ParseFile(batchId, "", "other", spawnPoints);
+            ParseFile(batchId, "", "", "-loot-slots", spawnPoints);
+            ParseFile(batchId, "", "", "-creature-slots", spawnPoints);
+            ParseFile(batchId, "Generated", "", "-slots", spawnPoints);  // Very expensive to load
+            ParseFile(batchId, "", "", "-loot", spawnPoints);
+            ParseFile(batchId, "", "", "-creatures", spawnPoints);
+            ParseFile(batchId, "", "", "-other", spawnPoints);
+            ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
 
             return spawnPoints;
         }
 
-        public void ParseFile(Int3 batchId, string pathPrefix, string suffix, List<EntitySpawnPoint> spawnPoints)
+        public void ParseFile(Int3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
             List<string> errors = new List<string>();
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
@@ -59,11 +60,11 @@ namespace NitroxServer.Serialization
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
-            string fileName = Path.Combine(path, pathPrefix, "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + "-" + suffix + ".bin");
+            string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
-                // Log.Debug("File not exists: " + fileName)
+                //Log.Debug("File does not exist: " + fileName);
                 return;
             }
 

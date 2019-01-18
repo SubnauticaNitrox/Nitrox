@@ -32,10 +32,10 @@ namespace NitroxClient.GameLogic.Bases
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
-        public void EnqueueConstructionCompleted(string guid, Optional<string> newBaseCreatedGuid)
+        public void EnqueueConstructionCompleted(string guid, string baseGuid)
         {
             Log.Info("Enqueuing item to have construction completed " + guid);
-            Enqueue(new ConstructionCompletedEvent(guid, newBaseCreatedGuid));
+            Enqueue(new ConstructionCompletedEvent(guid, baseGuid));
         }
 
         public void EnqueueAmountChanged(string guid, float amount)
@@ -97,12 +97,12 @@ namespace NitroxClient.GameLogic.Bases
     public class ConstructionCompletedEvent : BuildEvent
     {
         public string Guid { get; }
-        public Optional<string> NewBaseCreatedGuid { get; }
+        public string BaseGuid { get; }
 
-        public ConstructionCompletedEvent(string guid, Optional<string> newBaseCreatedGuid)
+        public ConstructionCompletedEvent(string guid, string baseGuid)
         {
             Guid = guid;
-            NewBaseCreatedGuid = newBaseCreatedGuid;
+            BaseGuid = baseGuid;
         }
 
         public bool RequiresFreshFrame()
