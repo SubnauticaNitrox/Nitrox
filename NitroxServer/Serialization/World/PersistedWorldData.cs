@@ -8,13 +8,13 @@ using ProtoBufNet;
 using System;
 using System.Collections.Generic;
 using NitroxModel.Logger;
-
+ 
 namespace NitroxServer.Serialization.World
 {
     [ProtoContract]
     public class PersistedWorldData
     {
-        private const long CURRENT_VERSION = 7;
+        private const long CURRENT_VERSION = 8;
 
         [ProtoMember(1)]
         public long version { get; set; } = CURRENT_VERSION;
