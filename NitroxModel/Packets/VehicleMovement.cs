@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.DataStructures.GameLogic;
 using Lidgren.Network;
+using NitroxModel.Logger;
 
 namespace NitroxModel.Packets
 {
