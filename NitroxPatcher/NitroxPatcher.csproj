@@ -58,9 +58,7 @@
     <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
-    <Compile Include="Patches\CyclopsMotorModeButton_OnClick_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
-    <Compile Include="Patches\Persistent\BatchCells_Add_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
@@ -89,12 +87,14 @@
     <Compile Include="Patches\CyclopsHornButton_OnPress_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleFloodlights_Patch.cs" />
     <Compile Include="Patches\CyclopsLightingPanel_ToggleInternalLighting_Patch.cs" />
+    <Compile Include="Patches\CyclopsMotorModeButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch.cs" />
     <Compile Include="Patches\EnergyInterface_ModifyCharge_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForAwake_Patch.cs" />
     <Compile Include="Patches\EntityCell_QueueForSleep_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnHandClick_Patch.cs" />
     <Compile Include="Patches\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnPilotModeBegin_Patch.cs" />

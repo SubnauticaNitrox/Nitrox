@@ -223,7 +223,6 @@
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordJoinRequestGui.cs" />
-    <Compile Include="MonoBehaviours\EntityCellCleaner.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatEntry.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLog.cs" />
