@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -35,28 +36,40 @@ namespace NitroxClient.GameLogic
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
-
-                // Need to hardcode Cyclops untill a way to get default colours is found.
-                string name = "Cyclops";
-                Vector3[] colours = new Vector3[]
-                {
-                    new Vector3(0f, 0f, 1f),
-                    new Vector3(0f, 0f, 0f),
-                    new Vector3(0f, 0f, 1f),
-                    new Vector3(0.577f, 0.447f, 0.604f),
-                    new Vector3(0.114f, 0.729f, 0.965f)
-                };
-
+                Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
+                string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
                
-                if (techType != TechType.Cyclops)
-                {
-                    Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
+                //Initialize some default values to serialize.
+                Vector3[] HSB = new Vector3[5];
+                Vector3[] Colours = new Vector3[5];
+                Vector4 tmpColour = Color.white;
+                string name = "Cyclops"; // Cant find a way to actually get the Cyclops name.
+
+                if (!vehicle)
+                { // Cyclops
+                    GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
+                    SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
+                    SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
+                    name = subNameTarget.GetName();
+                    HSB = subNameTarget.GetColors();
+
+                    for (int i = 0; i < subNameTarget.GetColors().Length; i++)
+                    {
+                        Colours[i] = tmpColour;
+                    }
+                }
+                else
+                { // Seamoth & Prawn Suit
                     name = vehicle.vehicleName;
-                    colours = vehicle.vehicleColors;
+                    HSB = vehicle.vehicleColors;
+                    for (int i = 0; i < vehicle.vehicleColors.Length; i++)
+                    {
+                        Colours[i] = tmpColour;
+                    }
                 }
 
-                string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, colours);
+               
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
             }
             else

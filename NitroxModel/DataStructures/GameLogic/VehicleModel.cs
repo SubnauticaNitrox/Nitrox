@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 using ProtoBuf;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,9 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Name { get; set; }
 
         [ProtoMember(8)]
+        public Vector3[] HSB { get; set; }
+
+        [ProtoMember(9)]
         public Vector3[] Colours { get; set; }
 
         [ProtoIgnore]
@@ -55,7 +59,7 @@ namespace NitroxModel.DataStructures.GameLogic
             DockingBayGuid = Optional<string>.Empty();
         }
 
-        public VehicleModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name ,Vector3[] colours )
+        public VehicleModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
         {
             TechType = techType;
             Guid = guid;
@@ -64,6 +68,7 @@ namespace NitroxModel.DataStructures.GameLogic
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
             DockingBayGuid = dockingBayGuid;
             Name = name;
+            HSB = hsb;
             Colours = colours;
         }
     }

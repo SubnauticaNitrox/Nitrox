@@ -70,7 +70,9 @@ namespace NitroxServer.GameLogic.Vehicles
             {
                 if (vehiclesByGuid.ContainsKey(guid))
                 {
-                    vehiclesByGuid[guid].Colours[index] = hsb;
+                    Vector4 tmpVect = colour;
+                    vehiclesByGuid[guid].Colours[index] = tmpVect;
+                    vehiclesByGuid[guid].HSB[index] = hsb;
                 }
             }
         }
