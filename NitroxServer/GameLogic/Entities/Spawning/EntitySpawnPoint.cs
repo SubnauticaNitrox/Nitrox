@@ -18,12 +18,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public bool CanSpawnCreature { get; private set; }
         public List<EntitySlot.Type> AllowedTypes { get; private set; }
 
-        public static EntitySpawnPoint From(Int3 batchId, GameObject go, CellManager.CellHeader cellHeader)
+        public static EntitySpawnPoint From(Int3 batchId, GameObject go, Int3 cellId, int level)
         {
             // Why is this not a constructor?
             EntitySpawnPoint esp = new EntitySpawnPoint
             {
-                AbsoluteEntityCell = new AbsoluteEntityCell(batchId, cellHeader.cellId, cellHeader.level),
+                AbsoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level),
                 ClassId = go.ClassId,
                 Density = 1
             };

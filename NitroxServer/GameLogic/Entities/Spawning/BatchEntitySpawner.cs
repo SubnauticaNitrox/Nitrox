@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using UWE;
-using NitroxModel.Core;
 using static LootDistributionData;
 using NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers;
 
