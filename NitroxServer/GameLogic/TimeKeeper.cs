@@ -31,6 +31,12 @@ namespace NitroxServer.GameLogic
             SendCurrentTimePacket();
         }
 
+        public void SkipTime()
+        {
+            correctionValue += 600.0f - GetCurrentTime() % 600.0f;
+            SendCurrentTimePacket();
+        }
+
         // Convenience for sending the TimeChange packet to a player or to all online players
         public void SendCurrentTimePacket(Player player = null)
         {

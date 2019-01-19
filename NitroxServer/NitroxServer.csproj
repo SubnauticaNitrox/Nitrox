@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
