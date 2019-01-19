@@ -64,6 +64,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
@@ -117,8 +118,10 @@
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
+    <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
+    <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
