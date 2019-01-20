@@ -23,6 +23,32 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
+        public void getObjectAttributes(Vehicle vehicle, string name, Vector3[] hsb, Vector3[] colours, Vector4 tmpColour, string guid)
+        {
+            if(!vehicle)
+            { // Cylcops
+                GameObject target = GuidHelper.RequireObjectFrom(guid);
+                SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
+                SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
+                name = subNameTarget.GetName();
+                hsb = subNameTarget.GetColors();
+
+                for (int i = 0; i < subNameTarget.GetColors().Length; i++)
+                {
+                    colours[i] = tmpColour;
+                }
+            }
+            else
+            { // Seamoth & Prawn Suit
+                name = vehicle.vehicleName;
+                hsb = vehicle.vehicleColors;
+                for (int i = 0; i < vehicle.vehicleColors.Length; i++)
+                {
+                    colours[i] = tmpColour;
+                }
+            }
+        }
+
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
         {
             string constructorGuid = GuidHelper.GetGuid(constructor);
@@ -45,30 +71,8 @@ namespace NitroxClient.GameLogic
                 Vector4 tmpColour = Color.white;
                 string name = "Cyclops"; // Cant find a way to actually get the Cyclops name.
 
-                if (!vehicle)
-                { // Cyclops
-                    GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
-                    SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
-                    SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
-                    name = subNameTarget.GetName();
-                    HSB = subNameTarget.GetColors();
-
-                    for (int i = 0; i < subNameTarget.GetColors().Length; i++)
-                    {
-                        Colours[i] = tmpColour;
-                    }
-                }
-                else
-                { // Seamoth & Prawn Suit
-                    name = vehicle.vehicleName;
-                    HSB = vehicle.vehicleColors;
-                    for (int i = 0; i < vehicle.vehicleColors.Length; i++)
-                    {
-                        Colours[i] = tmpColour;
-                    }
-                }
-
-               
+                getObjectAttributes(vehicle, name, HSB, Colours, tmpColour, constructedObjectGuid);
+                Log.Info("TECHTYPE :" + vehicle + name + HSB + Colours + tmpColour + constructedObjectGuid);
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
             }

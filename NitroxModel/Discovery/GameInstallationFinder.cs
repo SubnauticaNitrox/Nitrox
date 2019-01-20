@@ -13,6 +13,8 @@ namespace NitroxModel.Discovery
     {
         private readonly List<IFindGameInstallation> finders = new List<IFindGameInstallation>
         {
+            new SteamGameRegistryFinder(),
+            new EpicGamesRegistryFinder(),
             new ConfigFileGameFinder()
         };
 

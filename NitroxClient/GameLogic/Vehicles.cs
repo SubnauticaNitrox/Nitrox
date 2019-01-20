@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours);
+                    OnVehiclePrefabLoaded(techType, techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -125,7 +125,7 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
 
             // Updates names and colours with persisted data .....yeah.....
-            if (CraftData.GetTechType(gameObject) != TechType.None)
+            if (techType != TechType.Cyclops)
             { // Seamoth & Prawn suit
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
                 if (dockingBayGuid.IsPresent())
