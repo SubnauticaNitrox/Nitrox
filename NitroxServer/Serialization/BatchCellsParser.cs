@@ -21,6 +21,8 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
+        private const string CACHE_CELLS_IDENTIFIER = "CellsCache";
+
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -35,7 +37,7 @@ namespace NitroxServer.Serialization
 
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
-            List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
+            HashSet<EntitySpawnPoint> spawnPoints = new HashSet<EntitySpawnPoint>();
 
             ParseFile(batchId, "", "", "-loot-slots", spawnPoints);
             ParseFile(batchId, "", "", "-creature-slots", spawnPoints);
@@ -43,12 +45,12 @@ namespace NitroxServer.Serialization
             ParseFile(batchId, "", "", "-loot", spawnPoints);
             ParseFile(batchId, "", "", "-creatures", spawnPoints);
             ParseFile(batchId, "", "", "-other", spawnPoints);
-            ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
+            ParseFile(batchId, CACHE_CELLS_IDENTIFIER, "baked-", "", spawnPoints);
 
-            return spawnPoints;
+            return spawnPoints.ToList();
         }
 
-        public void ParseFile(Int3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
+        public void ParseFile(Int3 batchId, string pathPrefix, string prefix, string suffix, HashSet<EntitySpawnPoint> spawnPoints)
         {
             List<string> errors = new List<string>();
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
@@ -68,23 +70,103 @@ namespace NitroxServer.Serialization
                 return;
             }
 
+            if(pathPrefix == CACHE_CELLS_IDENTIFIER)
+            {
+                ParseCacheCells(batchId, fileName, spawnPoints);
+            }
+            else
+            {
+                ParseRegularCells(batchId, fileName, spawnPoints);
+            }
+        }
+
+        private void ParseRegularCells(Int3 batchId, string fileName, HashSet<EntitySpawnPoint> spawnPoints)
+        {
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-                
+
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
                     CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
-                    
-                    ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-                    
-                    for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
-                    {
-                        GameObject gameObject = DeserializeGameObject(stream);
 
-                        EntitySpawnPoint esp = EntitySpawnPoint.From(batchId, gameObject, cellHeader);
-                        spawnPoints.Add(esp);
-                    }
+                    ParseGameObjectsFromStream(stream, batchId, cellHeader.cellId, cellHeader.level, spawnPoints);
+                }
+            }
+        }
+
+        /**
+         * It is suspected that 'cache' is a misnomer carried over from when UWE was actually doing procedurally
+         * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
+         * we can parse. 
+         */
+        private void ParseCacheCells(Int3 batchId, string fileName, HashSet<EntitySpawnPoint> spawnPoints)
+        {
+            using (Stream stream = File.OpenRead(fileName))
+            {
+                CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
+
+                for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
+                {
+                    CellManager.CellHeaderEx cellHeader = serializer.Deserialize<CellManager.CellHeaderEx>(stream);
+
+                    bool wasLegacy;
+
+                    byte[] serialData = new byte[cellHeader.dataLength];
+                    stream.Read(serialData, 0, cellHeader.dataLength);
+                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+
+                    if(!wasLegacy)
+                    {
+                        byte[] legacyData = new byte[cellHeader.legacyDataLength];
+                        stream.Read(legacyData, 0, cellHeader.legacyDataLength);
+                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+                        
+                        byte[] waiterData = new byte[cellHeader.waiterDataLength];
+                        stream.Read(waiterData, 0, cellHeader.waiterDataLength);
+                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.cellId, cellHeader.level, spawnPoints);
+                    } 
+                }
+            }
+        }
+
+        private void ParseGameObjectsWithHeader(byte[] data, Int3 batchId, Int3 cellId, int level, HashSet<EntitySpawnPoint> spawnPoints, out bool wasLegacy)
+        {
+            wasLegacy = false;
+
+            if (data.Length == 0)
+            {
+                return;
+            }
+
+            Stream stream = new MemoryStream(data);
+
+            ProtobufSerializer.StreamHeader header = serializer.Deserialize<ProtobufSerializer.StreamHeader>(stream);
+
+            if (ReferenceEquals(header, null))
+            {
+                return;
+            }
+
+            ParseGameObjectsFromStream(stream, batchId, cellId, level, spawnPoints);
+
+            wasLegacy = (header.Version < 9);
+
+            return;
+        }
+
+        private void ParseGameObjectsFromStream(Stream stream, Int3 batchId, Int3 cellId, int level, HashSet<EntitySpawnPoint> spawnPoints)
+        {
+            ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
+
+            for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
+            {
+                GameObject gameObject = DeserializeGameObject(stream);
+
+                if (gameObject.TotalComponents > 0)
+                {
+                    EntitySpawnPoint esp = EntitySpawnPoint.From(batchId, gameObject, cellId, level);
+                    spawnPoints.Add(esp);
                 }
             }
         }
