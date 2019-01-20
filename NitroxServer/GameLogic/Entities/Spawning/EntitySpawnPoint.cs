@@ -17,20 +17,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public float Density { get; private set; }
         public bool CanSpawnCreature { get; private set; }
         public List<EntitySlot.Type> AllowedTypes { get; private set; }
-                
-        public static List<EntitySpawnPoint> From(AbsoluteEntityCell absoluteEntityCell, Vector3 scale, string classId, EntitySlotsPlaceholder entitySlotPlaceholder)
-        {
-            List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
-
-            foreach(EntitySlotData entitySlot in entitySlotPlaceholder.slotsData)
-            {
-                EntitySpawnPoint spawnPoint = From(absoluteEntityCell, entitySlot.localPosition, entitySlot.localRotation, scale, classId, entitySlot);
-                spawnPoints.Add(spawnPoint);
-            }
-
-            return spawnPoints;
-        }
-
+        
         public static EntitySpawnPoint From(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, Vector3 scale, string classId, IEntitySlot entitySlot)
         {
             EntitySpawnPoint spawnPoint = From(absoluteEntityCell, localPosition, localRotation, scale, classId);
@@ -41,6 +28,25 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             spawnPoint.AllowedTypes = SlotsHelper.GetEntitySlotTypes(entitySlot);
 
             return spawnPoint;
+        }
+
+        public static List<EntitySpawnPoint> From(AbsoluteEntityCell absoluteEntityCell, EntitySlotsPlaceholder placeholder)
+        {
+            List<EntitySpawnPoint> esp = new List<EntitySpawnPoint>();
+            foreach (EntitySlotData entitySlot in placeholder.slotsData)
+            {
+                esp.Add(new EntitySpawnPoint
+                {
+                    AbsoluteEntityCell = absoluteEntityCell,
+                    BiomeType = entitySlot.biomeType,
+                    Density = entitySlot.density,
+                    Position = absoluteEntityCell.Center + entitySlot.localPosition,
+                    Rotation = entitySlot.localRotation,
+                    AllowedTypes = SlotsHelper.GetEntitySlotTypes(entitySlot),
+                });
+            }
+
+            return esp;
         }
 
         public static EntitySpawnPoint From(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, Vector3 scale, string classId)

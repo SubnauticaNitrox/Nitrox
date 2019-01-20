@@ -139,7 +139,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 for (int i = 0; i < selectedPrefab.count; i++)
                 {
-                    IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint, 
+                    IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
+                                                                            worldEntityInfo.localScale,
                                                                             worldEntityInfo.techType, 
                                                                             worldEntityInfo.cellLevel, 
                                                                             selectedPrefab.classId,
@@ -178,7 +179,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             WorldEntityInfo worldEntityInfo;
             if (worldEntitiesByClassId.TryGetValue(entitySpawnPoint.ClassId, out worldEntityInfo))
             {
-                IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint, 
+                IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
+                                                                        entitySpawnPoint.Scale,
                                                                         worldEntityInfo.techType, 
                                                                         worldEntityInfo.cellLevel, 
                                                                         entitySpawnPoint.ClassId,
@@ -190,11 +192,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, TechType techType, LargeWorldEntity.CellLevel cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
+        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, UnityEngine.Vector3 scale, TechType techType, LargeWorldEntity.CellLevel cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                               entitySpawnPoint.Rotation,
-                                              entitySpawnPoint.Scale,
+                                              scale,
                                               techType,
                                               (int)cellLevel,
                                               classId,
