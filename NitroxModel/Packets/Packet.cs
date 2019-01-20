@@ -4,11 +4,11 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using LiteNetLib;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
-using Lidgren.Network;
 using LZ4;
 
 namespace NitroxModel.Packets
@@ -19,7 +19,7 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter Serializer;
-        
+
         static Packet()
         {
             surrogateSelector = new SurrogateSelector();
@@ -47,7 +47,7 @@ namespace NitroxModel.Packets
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public NetDeliveryMethod DeliveryMethod { get; protected set; } = NetDeliveryMethod.ReliableOrdered;
+        public DeliveryMethod DeliveryMethod { get; protected set; } = DeliveryMethod.ReliableOrdered;
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId
@@ -99,6 +99,11 @@ namespace NitroxModel.Packets
         public virtual Optional<AbsoluteEntityCell> GetDeferredCell()
         {
             return Optional<AbsoluteEntityCell>.Empty();
+        }
+
+        public WrapperPacket toWrapperPacket()
+        {
+            return new WrapperPacket(Serialize());
         }
     }
 }

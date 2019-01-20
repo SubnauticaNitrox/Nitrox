@@ -1,30 +1,27 @@
-﻿using NitroxModel.Logger;
+﻿using LiteNetLib;
+using LiteNetLib.Utils;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using Lidgren.Network;
 
 namespace NitroxServer.Communication
 {
     public class Connection : IProcessorContext
     {
-        private readonly NetServer server;
-        private readonly NetConnection connection;
+        private readonly NetPeer peer;
+        private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
 
-        public Connection(NetServer server, NetConnection connection)
+        public Connection(NetPeer peer)
         {
-            this.server = server;
-            this.connection = connection;
+            this.peer = peer;
         }
-        
+
         public void SendPacket(Packet packet)
         {
-            if (connection.Status == NetConnectionStatus.Connected)
+            if (peer.ConnectionState == ConnectionState.Connected)
             {
-                byte[] packetData = packet.Serialize();
-                NetOutgoingMessage om = server.CreateMessage();
-                om.Write(packetData);
-
-                connection.SendMessage(om, packet.DeliveryMethod, (int)packet.UdpChannel);
+                peer.Send(netPacketProcessor.Write(packet.toWrapperPacket()), packet.DeliveryMethod);
+                peer.Flush();
             }
             else
             {
