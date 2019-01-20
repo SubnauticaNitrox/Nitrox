@@ -18,7 +18,6 @@ namespace NitroxServer.Serialization.World
     public class WorldPersistence
     {
         private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
-        private readonly string fileName = @"save.nitrox";
         private readonly ServerConfig config;
 
         public WorldPersistence(ServerConfig config)
@@ -43,7 +42,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.GameData = world.GameData;
                 persistedData.EscapePodData = world.EscapePodData;
 
-                using (Stream stream = File.OpenWrite(fileName))
+                using (Stream stream = File.OpenWrite(config.SaveFile))
                 {
                     serializer.Serialize(stream, persistedData);
                 }
@@ -62,7 +61,7 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData;
 
-                using (Stream stream = File.OpenRead(fileName))
+                using (Stream stream = File.OpenRead(config.SaveFile))
                 {
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
