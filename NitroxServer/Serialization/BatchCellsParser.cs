@@ -22,8 +22,6 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
-        private const string CACHE_CELLS_IDENTIFIER = "CellsCache";
-
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
@@ -40,9 +38,9 @@ namespace NitroxServer.Serialization
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             
-            ParseFile(batchId, CACHE_CELLS_IDENTIFIER, "baked-", "", spawnPoints);
+            ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
 
-            return spawnPoints.ToList();
+            return spawnPoints;
         }
 
         public void ParseFile(Int3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
@@ -64,30 +62,8 @@ namespace NitroxServer.Serialization
                 //Log.Debug("File does not exist: " + fileName);
                 return;
             }
-
-            if(pathPrefix == CACHE_CELLS_IDENTIFIER)
-            {
-                ParseCacheCells(batchId, fileName, spawnPoints);
-            }
-            else
-            {
-                ParseRegularCells(batchId, fileName, spawnPoints);
-            }
-        }
-
-        private void ParseRegularCells(Int3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
-        {
-            using (Stream stream = File.OpenRead(fileName))
-            {
-                CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-
-                for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
-                {
-                    CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
-
-                    ParseGameObjectsFromStream(stream, batchId, cellHeader.cellId, cellHeader.level, spawnPoints);
-                }
-            }
+            
+            ParseCacheCells(batchId, fileName, spawnPoints);
         }
 
         /**
@@ -171,7 +147,7 @@ namespace NitroxServer.Serialization
                     {
                         spawnPoints.AddRange(EntitySpawnPoint.From(absoluteEntityCell, transform.Scale, gameObject.ClassId, entitySlotsPlaceholder));
                     }
-                    else if(!ReferenceEquals(entitySlotsPlaceholder, null))
+                    else if(!ReferenceEquals(entitySlot, null))
                     {
                         spawnPoints.Add(EntitySpawnPoint.From(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId, entitySlot));
                     }
