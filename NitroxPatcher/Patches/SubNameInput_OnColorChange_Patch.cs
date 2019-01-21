@@ -5,6 +5,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -21,16 +22,15 @@ namespace NitroxPatcher.Patches
             if (subname != null)
             {
                 GameObject parentVehicle;
-
-                // This patch works for the vehicles as well as the cyclops; this has to be found for a proper and synced guid.
+                Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
                 SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
-                if (subRoot)
+                if (vehicle)
                 {
-                    parentVehicle = subRoot.gameObject;
+                    parentVehicle = vehicle.gameObject;
                 }
                 else
                 {
-                    parentVehicle = subname.GetComponent<Vehicle>().gameObject;
+                    parentVehicle = subRoot.gameObject;
                 }
 
                 string guid = GuidHelper.GetGuid(parentVehicle);
