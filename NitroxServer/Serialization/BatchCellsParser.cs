@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
@@ -36,13 +37,7 @@ namespace NitroxServer.Serialization
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
-
-            ParseFile(batchId, "", "", "-loot-slots", spawnPoints);
-            ParseFile(batchId, "", "", "-creature-slots", spawnPoints);
-            ParseFile(batchId, "Generated", "", "-slots", spawnPoints);  // Very expensive to load
-            ParseFile(batchId, "", "", "-loot", spawnPoints);
-            ParseFile(batchId, "", "", "-creatures", spawnPoints);
-            ParseFile(batchId, "", "", "-other", spawnPoints);
+            
             ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
 
             return spawnPoints;
@@ -67,23 +62,98 @@ namespace NitroxServer.Serialization
                 //Log.Debug("File does not exist: " + fileName);
                 return;
             }
+            
+            ParseCacheCells(batchId, fileName, spawnPoints);
+        }
 
+        /**
+         * It is suspected that 'cache' is a misnomer carried over from when UWE was actually doing procedurally
+         * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
+         * we can parse. 
+         */
+        private void ParseCacheCells(Int3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
+        {
             using (Stream stream = File.OpenRead(fileName))
             {
                 CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
-                
+
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
-                    CellManager.CellHeader cellHeader = serializer.Deserialize<CellManager.CellHeader>(stream);
-                    
-                    ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
-                    
-                    for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
-                    {
-                        GameObject gameObject = DeserializeGameObject(stream);
+                    CellManager.CellHeaderEx cellHeader = serializer.Deserialize<CellManager.CellHeaderEx>(stream);
 
-                        EntitySpawnPoint esp = EntitySpawnPoint.From(batchId, gameObject, cellHeader);
-                        spawnPoints.Add(esp);
+                    bool wasLegacy;
+
+                    byte[] serialData = new byte[cellHeader.dataLength];
+                    stream.Read(serialData, 0, cellHeader.dataLength);
+                    ParseGameObjectsWithHeader(serialData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+
+                    if(!wasLegacy)
+                    {
+                        byte[] legacyData = new byte[cellHeader.legacyDataLength];
+                        stream.Read(legacyData, 0, cellHeader.legacyDataLength);
+                        ParseGameObjectsWithHeader(legacyData, batchId, cellHeader.cellId, cellHeader.level, spawnPoints, out wasLegacy);
+                        
+                        byte[] waiterData = new byte[cellHeader.waiterDataLength];
+                        stream.Read(waiterData, 0, cellHeader.waiterDataLength);
+                        ParseGameObjectsFromStream(new MemoryStream(waiterData), batchId, cellHeader.cellId, cellHeader.level, spawnPoints);
+                    } 
+                }
+            }
+        }
+
+        private void ParseGameObjectsWithHeader(byte[] data, Int3 batchId, Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints, out bool wasLegacy)
+        {
+            wasLegacy = false;
+
+            if (data.Length == 0)
+            {
+                return;
+            }
+
+            Stream stream = new MemoryStream(data);
+
+            ProtobufSerializer.StreamHeader header = serializer.Deserialize<ProtobufSerializer.StreamHeader>(stream);
+
+            if (ReferenceEquals(header, null))
+            {
+                return;
+            }
+
+            ParseGameObjectsFromStream(stream, batchId, cellId, level, spawnPoints);
+
+            wasLegacy = (header.Version < 9);
+
+            return;
+        }
+
+        private void ParseGameObjectsFromStream(Stream stream, Int3 batchId, Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
+        {
+            ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
+
+            for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
+            {
+                GameObject gameObject = DeserializeGameObject(stream);
+                
+                if (gameObject.TotalComponents > 0)
+                {
+
+                    AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
+                    
+                    Transform transform = gameObject.GetComponent<Transform>();
+                    EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();
+                    EntitySlot entitySlot = gameObject.GetComponent<EntitySlot>();
+
+                    if(!ReferenceEquals(entitySlotsPlaceholder, null))
+                    {
+                        spawnPoints.AddRange(EntitySpawnPoint.From(absoluteEntityCell, transform.Scale, gameObject.ClassId, entitySlotsPlaceholder));
+                    }
+                    else if(!ReferenceEquals(entitySlot, null))
+                    {
+                        spawnPoints.Add(EntitySpawnPoint.From(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId, entitySlot));
+                    }
+                    else
+                    {
+                        spawnPoints.Add(EntitySpawnPoint.From(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId));
                     }
                 }
             }
@@ -117,7 +187,7 @@ namespace NitroxServer.Serialization
                 }
 
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
-
+                
                 object component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);
 

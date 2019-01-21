@@ -150,6 +150,8 @@ namespace NitroxServer.Serialization.World
 
             Log.Info("World GameMode " + gameMode);
 
+            Log.Info("Server Admin Password : " + config.ServerAdminPassword + " You can set your own password in the server config file or by using the /changepassword command");
+
             return world;
         }
     }

@@ -2,6 +2,8 @@
 using System.Configuration;
 using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
+using System.Text;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConfigParser
 {
@@ -17,6 +19,7 @@ namespace NitroxServer.ConfigParser
         private const string GAMEMODE_SETTING = "GameMode";
         private const bool DEFAULT_DISABLECONSOLE = true;
         private const string DISABLECONSOLE_SETTING = "DisableConsole";
+        private const string DEFAULT_PASSWORD_SETTING = "ServerAdminPassword";
 
         private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
         {
@@ -103,6 +106,51 @@ namespace NitroxServer.ConfigParser
                 }
                 return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
             }
+        }
+
+        public string ServerAdminPassword
+        {
+            get
+            {
+                string _ServerAdminPassword = null;
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING]))
+                {
+                    _ServerAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                }
+                return _ServerAdminPassword ?? GenerateRandomString(12, false);
+            }
+        }
+
+        // Generate a random string with a given size and case.   
+        // If second parameter is true, the return string is lowercase  
+        public string GenerateRandomString(int size, bool lowerCase)
+        {
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            
+            char ch;
+            for (int i = 0; i < size; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+            if (lowerCase)
+            {
+                return builder.ToString().ToLower();
+            }
+            return builder.ToString();  
+        }
+
+        public string ChangeServerAdminPassword(string pw)
+        {
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings[DEFAULT_PASSWORD_SETTING].Value = pw;
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
+
+            return ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
         }
     }
 }

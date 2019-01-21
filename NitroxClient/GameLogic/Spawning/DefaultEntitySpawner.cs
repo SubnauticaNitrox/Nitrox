@@ -10,14 +10,18 @@ namespace NitroxClient.GameLogic.Spawning
     {
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
         {
-            GameObject prefabForTechType = CraftData.GetPrefabForTechType(entity.TechType, false);
+            GameObject prefab;
 
-            if (prefabForTechType == null && !PrefabDatabase.TryGetPrefab(entity.ClassId, out prefabForTechType))
+            if (!PrefabDatabase.TryGetPrefab(entity.ClassId, out prefab))
             {
-                return Optional<GameObject>.Of(Utils.CreateGenericLoot(entity.TechType));
+                prefab = CraftData.GetPrefabForTechType(entity.TechType, false);
+                if (prefab == null)
+                {
+                    return Optional<GameObject>.Of(Utils.CreateGenericLoot(entity.TechType));
+                }
             }
 
-            GameObject gameObject = Utils.SpawnFromPrefab(prefabForTechType, null);
+            GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
             gameObject.transform.position = entity.Position;
             gameObject.transform.localScale = entity.Scale;
 
@@ -29,11 +33,6 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.localRotation = entity.Rotation;
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
-            // Makes movable objects movable... we can probably do this before the server sends the spawner packet?
-            if(gameObject.GetComponent<Rigidbody>() ==  null)
-            {
-                gameObject.AddComponent<Rigidbody>();
-            }
 
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
