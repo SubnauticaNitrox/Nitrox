@@ -164,7 +164,7 @@ namespace NitroxClient.GameLogic
                     subNameInput.SetSelected(i);
                     Color tmpColour = new Vector4(colours[i].x, colours[i].y, colours[i].z);
                     subNameTarget.SetColor(i, hsb[i], tmpColour);
-                    subNameInput.ReflectionCall("SetColor", args: new object[] { i, tmpColour });
+                    subNameTarget.DeserializeColors(hsb);
                 }
             }
 

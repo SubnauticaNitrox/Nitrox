@@ -72,7 +72,6 @@ namespace NitroxClient.GameLogic
                 string name = "Cyclops"; // Cant find a way to actually get the Cyclops name.
 
                 getObjectAttributes(vehicle, name, HSB, Colours, tmpColour, constructedObjectGuid);
-                Log.Info("TECHTYPE :" + vehicle + name + HSB + Colours + tmpColour + constructedObjectGuid);
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
             }
