@@ -26,7 +26,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             bool wasBrandNewPlayer;
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey, out wasBrandNewPlayer);
-            player.SendPacket(new TimeChange(timeKeeper.GetCurrentTime()));
+            timeKeeper.SendCurrentTimePacket(player);
 
             Optional<EscapePodModel> newlyCreatedEscapePod;
             string assignedEscapePodGuid = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
