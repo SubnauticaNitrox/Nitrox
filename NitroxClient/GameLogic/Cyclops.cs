@@ -122,9 +122,9 @@ namespace NitroxClient.GameLogic
                 }
 
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-                SerializableRoomFire[] firePointIndexes = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
+                SerializableRoomFire[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
-                CyclopsDamage packet = new CyclopsDamage(subGuid, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePointIndexes, damageInfo);
+                CyclopsDamage packet = new CyclopsDamage(subGuid, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
                 packetSender.Send(packet);
             }
             else
@@ -172,7 +172,7 @@ namespace NitroxClient.GameLogic
                             activeNodes.Add(new SerializableFireNode()
                             {
                                 NodeIndex = i,
-                                FireCount = roomFire.Value.spawnNodes[i].childCount
+                                FireGuid = GuidHelper.GetGuid(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
                             });
                         }
                     }
@@ -180,14 +180,12 @@ namespace NitroxClient.GameLogic
                     SerializableRoomFire newRoomFire = new SerializableRoomFire()
                     {
                         Room = roomFire.Key,
-                        ActiveRoomFireNodes = activeNodes.ToArray()
+                        ActiveFireNodes = activeNodes.ToArray()
                     };
 
                     yield return newRoomFire;
                 }
             }
-
-            // subFire.ReflectionSet("roomFires", roomFires);
         }
     }
 }

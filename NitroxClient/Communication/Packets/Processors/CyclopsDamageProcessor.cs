@@ -12,6 +12,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
+    /// <summary>
+    /// Add/remove <see cref="CyclopsDamagePoint"/>s and <see cref="Fire"/>s to match the <see cref="CyclopsDamage"/> packet received
+    /// </summary>
     public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
     {
         private readonly IPacketSender packetSender;
@@ -147,9 +150,9 @@ namespace NitroxClient.Communication.Packets.Processors
                     // There's fires that are supposed to be here.
                     for (int nodesIndex = 0; nodesIndex < keyValuePair.Value.spawnNodes.Length; nodesIndex++)
                     {
-                        if (roomFire.ActiveRoomFireNodes.Any(x => x.NodeIndex == nodesIndex))
+                        if (roomFire.ActiveFireNodes.Any(x => x.NodeIndex == nodesIndex))
                         {
-                            int fireCount = roomFire.ActiveRoomFireNodes.FirstOrDefault(x => x.NodeIndex == nodesIndex).FireCount;
+                            int fireCount = roomFire.ActiveFireNodes.Count();
 
                             // There's fewer fires than what there should be. Create new ones
                             if (keyValuePair.Value.spawnNodes[nodesIndex].childCount < fireCount)
@@ -214,8 +217,6 @@ namespace NitroxClient.Communication.Packets.Processors
                     }
                 }
             }
-
-            subFire.ReflectionSet("roomFires", roomFiresDict);
         }
 
         /// <summary>

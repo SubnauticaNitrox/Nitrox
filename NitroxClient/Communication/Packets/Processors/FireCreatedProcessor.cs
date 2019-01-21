@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             // A Fire is either on a Cyclops or not. Currently, creating a Fire is only possible if it's in a Cyclops.
             // I have not found any other code that creates a fire
-            if (packet.CyclopsGuid.IsPresent() && packet.Room.IsPresent())
+            if (packet.CyclopsGuid.IsPresent() && packet.Room.IsPresent() && packet.NodeIndex.IsPresent())
             {
                 SubFire subFire = GuidHelper.RequireObjectFrom(packet.CyclopsGuid.Get()).GetComponent<SubRoot>().damageManager.subFire;
                 Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
@@ -49,8 +49,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     return;
                 }
 
-                int index = UnityEngine.Random.Range(0, availableNodes.Count);
-                Transform transform2 = availableNodes[index];
+                // int index = UnityEngine.Random.Range(0, availableNodes.Count);
+                Transform transform2 = availableNodes[packet.NodeIndex.Get()];
                 roomFiresDict[packet.Room.Get()].fireValue++;
                 PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
                 if (component == null)

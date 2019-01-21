@@ -8,14 +8,14 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public struct SerializableFireNode
     {
+        public string FireGuid;
         public int NodeIndex;
-        public int FireCount;
 
         public override string ToString()
         {
             return "[SerializableFireNode"
-                + " NodeIndex: " + NodeIndex.ToString()
-                + " FireCount: " + FireCount.ToString()
+                + " FireGuid: " + FireGuid
+                + " NodeIndex: " + NodeIndex
                 + "]";
         }
     }
