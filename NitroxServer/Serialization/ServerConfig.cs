@@ -20,8 +20,8 @@ namespace NitroxServer.ConfigParser
         private const bool DEFAULT_DISABLECONSOLE = true;
         private const string DISABLECONSOLE_SETTING = "DisableConsole";
         private const string DEFAULT_PASSWORD_SETTING = "ServerAdminPassword";
-        private const string SAVEFILE_SETTING = "SaveFile";
-        private const string DEFAULT_SAVEFILE_SETTING = "save.nitrox";
+        private const string SAVENAME_SETTING = "SaveName";
+        private const string DEFAULT_SAVENAME_SETTING = "save";
 
         private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
         {
@@ -123,16 +123,16 @@ namespace NitroxServer.ConfigParser
             }
         }
 
-        public string SaveFile
+        public string SaveName
         {
             get
             {
-                string _SaveFile = null;
-                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[SAVEFILE_SETTING]))
+                string _SaveName = null;
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[SAVENAME_SETTING]))
                 {
-                    _SaveFile = ConfigurationManager.AppSettings[SAVEFILE_SETTING];
+                    _SaveName = ConfigurationManager.AppSettings[SAVENAME_SETTING];
                 }
-                return _SaveFile ?? DEFAULT_SAVEFILE_SETTING;
+                return _SaveName ?? DEFAULT_SAVENAME_SETTING;
             }
         }
 

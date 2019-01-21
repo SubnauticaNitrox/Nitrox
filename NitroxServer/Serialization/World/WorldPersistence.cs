@@ -42,7 +42,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.GameData = world.GameData;
                 persistedData.EscapePodData = world.EscapePodData;
 
-                using (Stream stream = File.OpenWrite(config.SaveFile))
+                using (Stream stream = File.OpenWrite(config.SaveName + ".nitrox"))
                 {
                     serializer.Serialize(stream, persistedData);
                 }
@@ -61,7 +61,7 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData;
 
-                using (Stream stream = File.OpenRead(config.SaveFile))
+                using (Stream stream = File.OpenRead(config.SaveName + ".nitrox"))
                 {
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
