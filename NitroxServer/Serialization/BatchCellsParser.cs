@@ -145,7 +145,7 @@ namespace NitroxServer.Serialization
 
                     if(!ReferenceEquals(entitySlotsPlaceholder, null))
                     {
-                        spawnPoints.AddRange(EntitySpawnPoint.From(absoluteEntityCell, transform.Scale, gameObject.ClassId, entitySlotsPlaceholder));
+                        spawnPoints.AddRange(EntitySpawnPoint.From(absoluteEntityCell, entitySlotsPlaceholder));
                     }
                     else if(!ReferenceEquals(entitySlot, null))
                     {
