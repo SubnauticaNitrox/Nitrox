@@ -63,12 +63,12 @@ namespace NitroxClient.Communication.Packets.Processors
             bool hasBasePiecesToSpawn = packet.BasePieces.Count > 0;
             bool hasVehiclesToSpawn = packet.Vehicles.Count > 0;
 
-            SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
             SpawnVehiclesAfterBasePiecesFinish(packet.Vehicles, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
             AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
             SpawnPlayerEquipment(packet.EquippedItems, hasVehiclesToSpawn);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
+            SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
         }
 
         private void SpawnGlobalRootEntities(List<Entity> globalRootEntities)

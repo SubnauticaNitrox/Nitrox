@@ -20,39 +20,29 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         public override void Process(ExosuitModulesAction packet)
         {
+            Log.Info("TORPEDO PACKET");
             using (packetSender.Suppress<ExosuitModulesAction>())
             using (packetSender.Suppress<ItemContainerRemove>())
             {
                 GameObject _gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
-                Exosuit exosuit = _gameObject.GetComponent<Exosuit>();
+                ExosuitTorpedoArm exosuit = _gameObject.GetComponent<ExosuitTorpedoArm>();
                 if (exosuit != null)
                 {
-                    if (packet.TechType == TechType.ExosuitTorpedoArmModule)
-                    {
-                        //Transform arm = exosuit.silo
-                        ItemsContainer storageInSlot = exosuit.GetStorageInSlot(packet.SlotID, TechType.ExosuitTorpedoArmModule);
-                        TorpedoType torpedoType = null;
-                        for (int i = 0; i < exosuit.torpedoTypes.Length; i++)
-                        {
-                            if (storageInSlot.Contains(exosuit.torpedoTypes[i].techType))
-                            {
-                                torpedoType = exosuit.torpedoTypes[i];
-                                break;
-                            }
-                        }
+                        Transform muzzle = packet.SiloTransform;
+                        Log.Info("TORPEDO SHOT:");
+                        TorpedoType torpedoType = packet.TorpedoType;
+   
                         //Original Function use Player Camera need parse owner camera values
-                        //TorpedoShot(storageInSlot, torpedoType, muzzle,packet.Forward,packet.Rotation);
-                        
-
-                    }
+                        TorpedoShot(torpedoType, muzzle, packet.Forward, packet.Rotation);
                 }
             }
         }
 
         //Copied this from the Vehicle class
-        public static bool TorpedoShot(ItemsContainer container, TorpedoType torpedoType, Transform muzzle, Vector3 forward, Quaternion rotation)
+        public static bool TorpedoShot(TorpedoType torpedoType, Transform muzzle, bool verbose)
         {
-            if (torpedoType != null && container.DestroyItem(torpedoType.techType))
+            Log.Info("TORPEDO SHOOTING");
+            if (torpedoType != null)
             {
                 GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(torpedoType.prefab);
                 Transform component = gameObject.GetComponent<Transform>();
@@ -60,8 +50,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 Vector3 zero = Vector3.zero;
                 Rigidbody componentInParent = muzzle.GetComponentInParent<Rigidbody>();
                 Vector3 rhs = (!(componentInParent != null)) ? Vector3.zero : componentInParent.velocity;
-                float speed = Vector3.Dot(forward, rhs);
-                //component2.siloFirst. Try(muzzle.position, rotation, speed, -1f);
+                component2.Shoot(torpedoType, muzzle.position, verbose);
                 return true;
             }
             return false;

@@ -15,25 +15,14 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void BroadcastTorpedoLaunch(TechType techType, int slotID, Exosuit instance)
+        public void BroadcastTorpedoLaunch(TorpedoType torpedoType, Transform siloTransform, bool verbose, ExosuitTorpedoArm instance)
         {
+            Log.Info("TORPEDO EVENT");
             string Guid = GuidHelper.GetGuid(instance.gameObject);
-            TorpedoType torpedoType = null;
-            ItemsContainer storageInSlot = instance.GetStorageInSlot(slotID, TechType.ExosuitTorpedoArmModule);
-            Log.Info("TORPEDO ARM +" + storageInSlot);
-
-            for (int i = 0; i < instance.torpedoTypes.Length; i++)
-            {
-                if (storageInSlot.Contains(instance.torpedoTypes[i].techType))
-                {
-                    torpedoType = instance.torpedoTypes[i];
-                    break;
-                }
-            }
 
             if (torpedoType != null) // Dont send packet if torpedo storage is empty
             {
-                ExosuitModulesAction Changed = new ExosuitModulesAction(techType, slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
+                ExosuitModulesAction Changed = new ExosuitModulesAction(torpedoType, siloTransform, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
                 packetSender.Send(Changed);
             }
         }

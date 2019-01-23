@@ -64,12 +64,20 @@ namespace NitroxClient.GameLogic
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
                 Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
-               
+
                 //Initialize some default values to serialize.
-                Vector3[] HSB = new Vector3[5];
+                Vector3[] HSB = new Vector3[]
+                {
+                    new Vector3(0f, 0f, 1f),
+                    new Vector3(0f, 0f, 0f),
+                    new Vector3(0f, 0f, 1f),
+                    new Vector3(0.577f, 0.447f, 0.604f),
+                    new Vector3(0.114f, 0.729f, 0.965f)
+                };
+
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
-                string name = "Cyclops"; // Cant find a way to actually get the Cyclops name.
+                string name = "Cyclops";
 
                 getObjectAttributes(vehicle, name, HSB, Colours, tmpColour, constructedObjectGuid);
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);

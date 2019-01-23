@@ -71,6 +71,7 @@
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
+    <Compile Include="Patches\Exosuit_OnSlotRightDown_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />
