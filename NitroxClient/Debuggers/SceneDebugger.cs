@@ -256,6 +256,8 @@ namespace NitroxClient.Debuggers
                                 }
                             }
 
+                            Log.Info("Primary");
+
                             foreach (GameObject child in showObjects)
                             {
                                 string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
@@ -293,7 +295,18 @@ namespace NitroxClient.Debuggers
 
                     if (string.IsNullOrEmpty(gameObjectSearchPatternInvalidMessage))
                     {
+                        Type type = AppDomain.CurrentDomain.GetAssemblies()
+                        .Select(a => a.GetType(gameObjectSearch))
+                        .FirstOrDefault(t => t != null);
                         gameObjectSearchResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch)).OrderBy(go => go.name).ToList();
+                        if (type != null)
+                        {
+                            List<GameObject> gameObjects = Resources.FindObjectsOfTypeAll<GameObject>()
+                                .Where(g => g.GetComponent(type))
+                                .ToList();
+
+                            gameObjectSearchResult = gameObjects;
+                        }
                         gameObjectSearchCache = gameObjectSearch;
                     }
                     else
@@ -305,17 +318,20 @@ namespace NitroxClient.Debuggers
                 using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
                 {
                     hierarchyScrollPos = scroll.scrollPosition;
-
+                    Log.Info("Secondary");
                     foreach (GameObject item in gameObjectSearchResult)
                     {
-                        string guiStyle = item.transform.childCount > 0 ? "bold" : "label";
-                        if (GUILayout.Button($"{item.name}", guiStyle))
+                        if (item != null)
                         {
-                            selectedObject = item.gameObject;
-                            selectedObjectActiveSelf = selectedObject.activeSelf;
-                            selectedObjectPos = selectedObject.transform.position;
-                            selectedObjectRot = selectedObject.transform.rotation;
-                            selectedObjectScale = selectedObject.transform.localScale;
+                            string guiStyle = item.transform.childCount > 0 ? "bold" : "label";
+                            if (GUILayout.Button($"{item.name}", guiStyle))
+                            {
+                                selectedObject = item.gameObject;
+                                selectedObjectActiveSelf = selectedObject.activeSelf;
+                                selectedObjectPos = selectedObject.transform.position;
+                                selectedObjectRot = selectedObject.transform.rotation;
+                                selectedObjectScale = selectedObject.transform.localScale;
+                            }
                         }
                     }
                 }
