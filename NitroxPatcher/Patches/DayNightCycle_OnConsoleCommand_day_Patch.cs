@@ -1,6 +1,9 @@
 ﻿using System;
 using Harmony;
 using System.Reflection;
+using NitroxClient.Communication.Abstract;
+using NitroxModel.Core;
+using NitroxModel.Packets;
 
 namespace NitroxPatcher.Patches
 {
@@ -11,6 +14,8 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix()
         {
+            IPacketSender packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
+            packetSender.Send(new ServerCommand("day"));
             return false;
         }
 

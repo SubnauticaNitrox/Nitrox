@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.Logger;
 
 namespace NitroxModel.Packets
 {
@@ -10,6 +11,11 @@ namespace NitroxModel.Packets
         public ServerCommand(string[] args)
         {
             CmdArgs = args;
+        }
+
+        public ServerCommand(string cmd)
+        {
+            CmdArgs = cmd.Split(' ');
         }
     }
 }
