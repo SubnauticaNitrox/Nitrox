@@ -61,6 +61,9 @@
     <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
+    <Compile Include="Patches\Bed_EnterInUseMode_Patch.cs" />
+    <Compile Include="Patches\DayNightCycle_OnConsoleCommand_day_Patch.cs" />
+    <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />

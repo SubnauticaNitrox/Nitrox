@@ -30,14 +30,14 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours));
             }
             else
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid);
+                    OnVehiclePrefabLoaded(techType, techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -123,19 +123,54 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
+
+            // Updates names and colours with persisted data .....yeah.....
+            if (techType != TechType.Cyclops)
+            { // Seamoth & Prawn suit
+                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+                if (dockingBayGuid.IsPresent())
+                {
+                    GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
+                    VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
+                    dockingBay.DockVehicle(vehicle);
+                }
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    vehicle.vehicleName = name;
+                    vehicle.subName.DeserializeName(vehicle.vehicleName);
+                }
+
+                if (colours != null)
+                {
+                   Vector3[] colour = new Vector3[5];
+
+                    for (int i = 0; i < hsb.Length; i++)
+                    {
+                        colour[i] = hsb[i];
+                    }
+                    vehicle.vehicleColors = colour;
+                    vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+                }
+            }
+            else // Cyclops
+            {
+                GameObject target = GuidHelper.RequireObjectFrom(guid);
+                SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
+                SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
+                subNameInput.OnNameChange(name);
+                for (int i = 0; i < hsb.Length; i++)
+                {
+                    subNameInput.SetSelected(i);
+                    Color tmpColour = new Vector4(colours[i].x, colours[i].y, colours[i].z);
+                    subNameTarget.SetColor(i, hsb[i], tmpColour);
+                    subNameTarget.DeserializeColors(hsb);
+                }
+            }
+
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
-            }
-
-            if(dockingBayGuid.IsPresent())
-            {
-                GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
-                VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
-
-                Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-
-                dockingBay.DockVehicle(vehicle);
             }
         }
 
