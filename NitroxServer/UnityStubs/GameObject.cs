@@ -12,6 +12,8 @@ namespace NitroxServer.UnityStubs
         public string ClassId { get; }
         public string Parent { get; }
 
+        public int TotalComponents { get { return components.Count; } }
+
         private readonly Dictionary<Type, object> components = new Dictionary<Type, object>();
 
         public GameObject(ProtobufSerializer.GameObjectData goData)
