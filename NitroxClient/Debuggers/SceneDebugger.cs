@@ -65,7 +65,7 @@ namespace NitroxClient.Debuggers
                 foreach (RaycastHit hit in hits)
                 {
                     // Not using the player layer mask as we should be able to hit remote players.  Simply filter local player.
-                    if (hit.transform.gameObject.name != "Player")
+                    if (hit.transform.gameObject.name != "Player" && hit.transform.gameObject.name != "override collider")
                     {
                         selectedObject = hit.transform.gameObject;
                         ActiveTab = GetTab("Hierarchy").Get();
