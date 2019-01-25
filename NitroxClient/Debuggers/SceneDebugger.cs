@@ -23,6 +23,7 @@ namespace NitroxClient.Debuggers
         private readonly BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
         public readonly KeyCode RayCastKey = KeyCode.F9;
         private bool editMode;
+        private bool hitMode = false;
         private Vector2 gameObjectScrollPos;
 
         /// <summary>
@@ -59,18 +60,24 @@ namespace NitroxClient.Debuggers
         {
             if (Input.GetKeyDown(RayCastKey))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit[] hits = Physics.RaycastAll(ray, float.MaxValue, int.MaxValue);
-
-                foreach (RaycastHit hit in hits)
+                //second press disables hitmode and goes back to default scene object list in hierarchy
+                if (hitMode)
                 {
-                    // Not using the player layer mask as we should be able to hit remote players.  Simply filter local player.
-                    if (hit.transform.gameObject.name != "Player" && hit.transform.gameObject.name != "override collider")
+                    gameObjectSearchResult.Clear();
+                    hitMode = false;
+                }
+                else
+                {
+                    gameObjectSearchResult.Clear();
+                    hitMode = true;
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit[] hits = Physics.RaycastAll(ray, float.MaxValue, int.MaxValue);
+
+                    foreach (RaycastHit hit in hits)
                     {
-                        selectedObject = hit.transform.gameObject;
-                        ActiveTab = GetTab("Hierarchy").Get();
-                        break;
+                        gameObjectSearchResult.Add(hit.transform.gameObject);
                     }
+                    ActiveTab = GetTab("Hierarchy").Get();
                 }
             }
         }
@@ -233,7 +240,36 @@ namespace NitroxClient.Debuggers
                 }
             }
 
-            if (!gameObjectSearchIsSearching)
+            if(hitMode)
+            {
+                using (new GUILayout.VerticalScope("Box"))
+                {
+                    if (gameObjectSearchResult.Count > 0)
+                    {
+                        using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
+                        {
+                            hierarchyScrollPos = scroll.scrollPosition;                            
+                            foreach (GameObject child in gameObjectSearchResult)
+                            {
+                                string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
+                                if (GUILayout.Button($"{child.name}", guiStyle))
+                                {
+                                    selectedObject = child.gameObject;
+                                    selectedObjectActiveSelf = selectedObject.activeSelf;
+                                    selectedObjectPos = selectedObject.transform.position;
+                                    selectedObjectRot = selectedObject.transform.rotation;
+                                    selectedObjectScale = selectedObject.transform.localScale;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                    }
+                }
+            }
+            else if (!gameObjectSearchIsSearching)
             {
                 // Not searching, just select game objects from selected scene (if any).
                 using (new GUILayout.VerticalScope("Box"))
