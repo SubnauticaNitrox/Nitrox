@@ -22,5 +22,6 @@
       Retries="0"
       ContinueOnError="true"
       SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(SolutionDir)lib\discord-rpc.dll" DestinationFolder="$(SubnauticaDir)\Subnautica_Data\Mono" Retries="0" ContinueOnError="true" />
   </Target>
 </Project>

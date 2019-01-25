@@ -2,6 +2,7 @@
 using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -9,7 +10,7 @@ namespace NitroxServer.GameLogic.Vehicles
     public class VehicleData
     {
         [ProtoMember(1)]
-        public Dictionary<string, VehicleModel> SerializableBasePiecesByGuid
+        public Dictionary<string, VehicleModel> SerializableVehiclesByGuid
         {
             get
             {
@@ -51,6 +52,31 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
+        public void UpdateVehicleName(string guid, string name)
+        {
+            lock (vehiclesByGuid)
+            {
+                if (vehiclesByGuid.ContainsKey(guid))
+                {
+                    vehiclesByGuid[guid].Name = name;
+                }
+
+            }
+        }
+
+        public void UpdateVehicleColours(int index, string guid, Vector3 hsb, Color colour)
+        {
+            lock (vehiclesByGuid)
+            {
+                if (vehiclesByGuid.ContainsKey(guid))
+                {
+                    Vector4 tmpVect = colour;
+                    vehiclesByGuid[guid].Colours[index] = tmpVect;
+                    vehiclesByGuid[guid].HSB[index] = hsb;
+                }
+            }
+        }
+
         public void AddVehicle(VehicleModel vehicleModel)
         {
             lock (vehiclesByGuid)
@@ -72,6 +98,23 @@ namespace NitroxServer.GameLogic.Vehicles
             lock(vehiclesByGuid)
             {
                 return new List<VehicleModel>(vehiclesByGuid.Values);
+            }
+        }
+
+        public Optional<VehicleModel> GetVehicleModel(string guid)
+        {
+            lock(vehiclesByGuid)
+            {
+                VehicleModel vehicleModel;
+
+                if(vehiclesByGuid.TryGetValue(guid, out vehicleModel))
+                {
+                    return Optional<VehicleModel>.OfNullable(vehicleModel);
+                }
+                else
+                {
+                    return Optional<VehicleModel>.Empty();
+                }
             }
         }
 

@@ -9,7 +9,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.Serialization
 {
-    class ServerProtobufSerializer
+    public class ServerProtobufSerializer
     {
         private readonly RuntimeTypeModel model;
 
@@ -84,6 +84,7 @@ namespace NitroxServer.Serialization
 
                         try
                         {
+
                             model[type].Add(tag, property.Name);
                         }
                         catch (Exception ex)

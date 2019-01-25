@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using NitroxClient.MonoBehaviours.DiscordRP;
 
 namespace NitroxClient.GameLogic
 {
@@ -64,7 +66,7 @@ namespace NitroxClient.GameLogic
             playerModelDirector.Construct();
 
             playersById.Add(player.PlayerId, player);
-
+            DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
             return player;
         }
 
@@ -75,12 +77,18 @@ namespace NitroxClient.GameLogic
             {
                 opPlayer.Get().Destroy();
                 playersById.Remove(playerId);
+                DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
             }
         }
 
         private GameObject CloneLocalPlayerBodyPrototype()
         {
             return Object.Instantiate(localPlayer.BodyPrototype);
-        }        
+        }
+
+        public int GetTotalPlayerCount()
+        {
+            return playersById.Count + 1; //Multiplayer-player(s) + you
+        }
     }
 }

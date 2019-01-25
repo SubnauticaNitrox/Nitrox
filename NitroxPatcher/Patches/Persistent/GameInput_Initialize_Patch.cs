@@ -31,11 +31,11 @@ namespace NitroxPatcher.Patches.Persistent
                      * KeyBindingManager keyBindingManager = new KeyBindingManager();
                      * GameButton.numButtons = Math.Max(keyBindingManager.GetHighestKeyBindingValue() + 1, prev);
                      */
-                    yield return new ValidatedCodeInstruction(OpCodes.Newobj, typeof(KeyBindingManager).GetConstructors().First());
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(KeyBindingManager).GetMethod("GetHighestKeyBindingValue", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_1);
-                    yield return new ValidatedCodeInstruction(OpCodes.Add);
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Math).GetMethod("Max", new[] { typeof(int), typeof(int) }));
+                    yield return new CodeInstruction(OpCodes.Newobj, typeof(KeyBindingManager).GetConstructors().First());
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(KeyBindingManager).GetMethod("GetHighestKeyBindingValue", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                    yield return new CodeInstruction(OpCodes.Add);
+                    yield return new CodeInstruction(OpCodes.Call, typeof(Math).GetMethod("Max", new[] { typeof(int), typeof(int) }));
                 }
 
                 yield return instruction;

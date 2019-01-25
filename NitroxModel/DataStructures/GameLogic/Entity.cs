@@ -18,31 +18,34 @@ namespace NitroxModel.DataStructures.GameLogic
         public Quaternion Rotation { get; set; }
 
         [ProtoMember(3)]
-        public TechType TechType { get; set; }
+        public Vector3 Scale { get; set; }
 
         [ProtoMember(4)]
-        public string Guid { get; set; }
+        public TechType TechType { get; set; }
 
         [ProtoMember(5)]
-        public int Level { get; set; }
+        public string Guid { get; set; }
 
         [ProtoMember(6)]
-        public string ClassId { get; set; }
+        public int Level { get; set; }
 
         [ProtoMember(7)]
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
+        public string ClassId { get; set; }
 
         [ProtoMember(8)]
+        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
+
+        [ProtoMember(9)]
         public bool SpawnedByServer; // Keeps track if an entity was spawned by the server or a player
                                      // Server-spawned entities need to be techType white-listed to be simulated
 
-        [ProtoMember(9)]
+        [ProtoMember(10)]
         public string WaterParkGuid { get; set; }
 
-        [ProtoMember(10)]
+        [ProtoMember(11)]
         public byte[] SerializedGameObject { get; set; } // Some entities (such as dropped items) have already been serialized and include 
                                                          // special game object meta data (like battery charge)
-        [ProtoMember(11)]
+        [ProtoMember(12)]
         public bool ExistsInGlobalRoot { get; set; }
                 
         public Entity()
@@ -50,12 +53,13 @@ namespace NitroxModel.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId, bool spawnedByServer)
+        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, string guid)
         {
             Position = position;
             Rotation = rotation;
+            Scale = scale;
             TechType = techType;
-            Guid = System.Guid.NewGuid().ToString();
+            Guid = guid;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
@@ -64,10 +68,11 @@ namespace NitroxModel.DataStructures.GameLogic
             ExistsInGlobalRoot = false;
         }
 
-        public Entity(Vector3 position, Quaternion rotation, TechType techType, int level, string classId, bool spawnedByServer, string waterParkGuid, byte[] serializedGameObject, bool existsInGlobalRoot, string guid)
+        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, string waterParkGuid, byte[] serializedGameObject, bool existsInGlobalRoot, string guid)
         {
             Position = position;
             Rotation = rotation;
+            Scale = scale;
             TechType = techType;
             Guid = guid;
             Level = level;

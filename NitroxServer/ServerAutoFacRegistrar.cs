@@ -11,6 +11,7 @@ using NitroxServer.Communication.Packets;
 using NitroxServer.ConfigParser;
 using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Serialization;
 
 namespace NitroxServer
 {
