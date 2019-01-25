@@ -140,7 +140,7 @@ namespace InstallerActions.Patches
     {
         string subPath;
         int portNumber;
-        List<FirewallRule> allRules;
+        List<FirewallRule> allRules = new List<FirewallRule>();
 
         public FirewallRules(string GamePath, int PortNumber = 11000)
         {
