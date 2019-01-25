@@ -34,6 +34,11 @@ namespace NitroxServer.UnityStubs
             z = unityVector.z;
         }
 
+        public static Vector3 operator +(UnityEngine.Vector3 unityVector, Vector3 vector)
+        {
+            return new Vector3(vector.x + unityVector.x, vector.y + unityVector.y, vector.z + unityVector.z);
+        }
+
         public override string ToString()
         {
             return "[Vector3 - {" + x + ", " + y + ", " + z + "}]";

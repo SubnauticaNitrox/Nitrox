@@ -155,11 +155,13 @@
     <Compile Include="ConsoleCommands\NightCommand.cs" />
     <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
+    <Compile Include="ConsoleCommands\ParseBatchCommand.cs" />
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
+    <Compile Include="GameLogic\Prefab.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
@@ -202,6 +204,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Nitrox.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

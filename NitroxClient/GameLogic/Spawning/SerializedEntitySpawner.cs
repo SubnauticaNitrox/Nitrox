@@ -3,8 +3,8 @@ using NitroxClient.GameLogic.ItemDropActions;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning
@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic.Spawning
             GameObject gameObject = SerializationHelper.GetGameObject(entity.SerializedGameObject);
             gameObject.transform.position = entity.Position;
             gameObject.transform.rotation = entity.Rotation;
-            gameObject.transform.localScale = entity.Scale;
+            gameObject.transform.localScale = entity.LocalScale;
             
             if (entity.WaterParkGuid != null)
             {

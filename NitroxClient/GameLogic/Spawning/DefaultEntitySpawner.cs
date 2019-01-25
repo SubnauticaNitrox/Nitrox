@@ -24,20 +24,43 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
-            gameObject.transform.position = entity.Position;
-            gameObject.transform.localScale = entity.Scale;
 
-            if (parent.IsPresent())
+            gameObject.transform.position = entity.Position;
+            gameObject.transform.localScale = entity.LocalScale;
+
+            if (parent.IsPresent() && parent.Get().name == "CellRoot(Clone)")
             {
-                gameObject.transform.SetParent(parent.Get().transform, true);
+                LargeWorldEntity ent = gameObject.GetComponent<LargeWorldEntity>();
+                ent.transform.SetParent(parent.Get().transform, true);
+                ent.OnAddToCell();
+
+                gameObject.transform.localPosition = entity.LocalPosition;
+                gameObject.transform.localRotation = entity.LocalRotation;
+            }
+            else if (gameObject.name == "CellRoot(Clone)")
+            {
+                BatchCells cells = BatchCells.GetFromPool(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, new Int3(entity.AbsoluteEntityCell.BatchId.X, entity.AbsoluteEntityCell.BatchId.Y, entity.AbsoluteEntityCell.BatchId.Z)); // Grab an already available BatchCell
+                EntityCell cell = cells.Add(new Int3(entity.AbsoluteEntityCell.CellId.X, entity.AbsoluteEntityCell.CellId.Y, entity.AbsoluteEntityCell.CellId.Z), entity.Level);
+                cell.Initialize(); // Initialize our cell
+                gameObject.GetComponent<LargeWorldEntityCell>().cell = cell;
+                gameObject.transform.SetParent(LargeWorldStreamer.main.cellsRoot);
+                BatchCells.ReturnToPool(cells); // Return it to the pool
+
+                gameObject.transform.position = entity.LocalPosition;
+                gameObject.transform.rotation = entity.LocalRotation;
+            }
+            else if (parent.IsPresent())
+            {
+                gameObject.transform.SetParent(parent.Get().transform);
+
+                gameObject.transform.localPosition = entity.LocalPosition;
+                gameObject.transform.localRotation = entity.LocalRotation;
             }
 
-            gameObject.transform.localRotation = entity.Rotation;
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
 
-            LargeWorldEntity.Register(gameObject);
-            CrafterLogic.NotifyCraftEnd(gameObject, techType);
+            CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType.Enum());
 
             return Optional<GameObject>.Of(gameObject);
         }

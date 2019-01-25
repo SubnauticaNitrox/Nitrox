@@ -39,6 +39,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Subnautica\Subnautica_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
     <Reference Include="AssetsTools.NET">
       <HintPath>..\lib\AssetsTools.NET.dll</HintPath>
     </Reference>
@@ -70,6 +73,7 @@
     <Compile Include="GameLogic\Entities\Spawning\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SlotsHelper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SubnauticaEntitySpawnPointFactory.cs" />
+    <Compile Include="GameLogic\Prefab.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\ResourceAssets.cs" />

@@ -46,7 +46,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate update in updates)
             {
-                Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Guid, update.Position, update.Rotation);
+                Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Guid, update.Position, update.Rotation, update.Scale, update.LocalPosition, update.LocalRotation);
 
                 if(currentCell.IsEmpty())
                 {

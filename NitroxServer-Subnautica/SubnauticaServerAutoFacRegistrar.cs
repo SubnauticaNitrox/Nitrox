@@ -38,7 +38,7 @@ namespace NitroxServer_Subnautica
 
             Dictionary<TechTypeModel, IEntityBootstrapper> bootstrappersByTechType = new Dictionary<TechTypeModel, IEntityBootstrapper>();
             bootstrappersByTechType[TechType.Crash.Model()] = new CrashFishBootstrapper();
-            bootstrappersByTechType[TechType.Reefback.Model()] = new ReefbackBootstrapper();
+            bootstrappersByTechType[TechType.Reefback.Model()] = new ReefbackBootstrapper(resourceAssets.WorldEntitiesByClassId);
 
             containerBuilder.Register(c => bootstrappersByTechType).SingleInstance();
 

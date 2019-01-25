@@ -20,21 +20,23 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                     List<EntitySlot.Type> slotTypes = SlotsHelper.GetEntitySlotTypes(entitySlotData);
                     List<string> stringSlotTypes = slotTypes.Select(s => s.ToString()).ToList();
 
-                    spawnPoints.Add(
-                        new EntitySpawnPoint(absoluteEntityCell,
-                                             entitySlotData.localPosition,
-                                             entitySlotData.localRotation,
-                                             stringSlotTypes,
-                                             entitySlotData.density,
-                                             entitySlotData.biomeType.ToString())
-                    );
+                    new EntitySpawnPoint(absoluteEntityCell,
+                                         entitySlotData.localPosition,
+                                         entitySlotData.localRotation,
+                                         stringSlotTypes,
+                                         entitySlotData.density,
+                                         entitySlotData.biomeType.ToString(),
+                                         gameObject.Id,
+                                         gameObject.Parent);
                 }
             }
             else
             {
-                spawnPoints.Add(
-                    new EntitySpawnPoint(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId)
-                );
+                EntitySpawnPoint spawnPoint = new EntitySpawnPoint(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId, gameObject.Id, gameObject.Parent);
+                if (spawnPoint.Parent == null)
+                {
+                    spawnPoints.Add(spawnPoint);
+                }
             }
 
             return spawnPoints;

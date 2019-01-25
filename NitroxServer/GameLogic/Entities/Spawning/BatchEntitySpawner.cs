@@ -71,19 +71,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             foreach (EntitySpawnPoint esp in spawnPoints)
             {
-                if (esp.Density > 0)
-                {
-                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
+                List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
 
-                    if (prefabs.Count > 0)
-                    {
-                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator));
-                    }
-                    else if(esp.ClassId != null)
-                    {
-                        entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator));
-                    }
-                }
+                entities.AddRange(CreateEntityCellRoot(esp, prefabs, deterministicBatchGenerator));
             }
 
             if(entities.Count == 0)
@@ -95,7 +85,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             else
             {
-                Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
+                Log.Info("Spawning " + entities.Count + " entity cells in batch " + batchId);
             }
 
             return entities;
@@ -188,7 +178,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             if (uweWorldEntity.IsPresent())
             {
                 IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
-                                                                        entitySpawnPoint.Scale,
+                                                                        entitySpawnPoint.LocalScale,
                                                                         uweWorldEntity.Get().TechType,
                                                                         uweWorldEntity.Get().CellLevel, 
                                                                         entitySpawnPoint.ClassId,
@@ -202,14 +192,17 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, UnityEngine.Vector3 scale, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
-                                              entitySpawnPoint.Rotation,
+            Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition,
+                                              entitySpawnPoint.LocalRotation, 
                                               scale,
                                               techType,
                                               cellLevel,
                                               classId,
                                               true,
                                               deterministicBatchGenerator.NextGuid());
+
+            List<Entity> prefabs = GetEntitiesFromClassId(classId, spawnedEntity, deterministicBatchGenerator);
+
             yield return spawnedEntity;
 
             IEntityBootstrapper bootstrapper;
@@ -217,11 +210,79 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
 
-                foreach(Entity childEntity in spawnedEntity.ChildEntities)
+                for (int i = 0; i < spawnedEntity.ChildEntities.Count - prefabs.Count; i++)
                 {
-                    yield return childEntity;
+                    Entity childEntity = spawnedEntity.ChildEntities[i + prefabs.Count];
                 }
             }
+        }
+
+        private IEnumerable<Entity> CreateEntityCellRoot(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition, // CellRoot
+                                              entitySpawnPoint.LocalRotation,
+                                              entitySpawnPoint.LocalScale,
+                                              new TechType("None"),
+                                              entitySpawnPoint.AbsoluteEntityCell.Level,
+                                              entitySpawnPoint.ClassId,
+                                              true,
+                                              deterministicBatchGenerator.NextGuid());
+
+            foreach (EntitySpawnPoint childSpawnPoint in entitySpawnPoint.Children)
+            {
+                if (childSpawnPoint.Density > 0)
+                {
+                    if (prefabs.Count > 0)
+                    {
+                        spawnedEntity.ChildEntities.AddRange(SpawnEntitiesUsingRandomDistribution(childSpawnPoint, prefabs, deterministicBatchGenerator));
+                    }
+                    else if (childSpawnPoint.ClassId != null)
+                    {
+                        spawnedEntity.ChildEntities.AddRange(SpawnEntitiesStaticly(childSpawnPoint, deterministicBatchGenerator));
+                    }
+                }
+            }
+
+            spawnedEntity.ChildEntities.ForEach(c => c.IsChild = true);
+
+            yield return spawnedEntity;
+        }
+
+        private List<Entity> GetEntitiesFromClassId(string classId, Entity spawnedEntity, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            List<UwePrefab> prefabClassIds = prefabFactory.GetPrefabForClassId(classId);
+            List<Entity> entities = new List<Entity>();
+
+            if (prefabClassIds.Any())
+            {
+                foreach (UwePrefab prefab in prefabClassIds)
+                {
+                    Optional<UweWorldEntity> wei = worldEntityFactory.From(prefab.ClassId);
+
+                    prefab.Guid = deterministicBatchGenerator.NextGuid();
+                    prefab.CellLevel = wei.Get().CellLevel;
+                    prefab.TechType = wei.Get().TechType;
+
+                    Entity childEntity = new Entity(prefab.LocalPosition,
+                        prefab.LocalRotation,
+                        prefab.LocalScale,
+                        prefab.TechType,
+                        prefab.CellLevel,
+                        prefab.ClassId,
+                        true,
+                        prefab.Guid) { IsChild = true };
+
+                    entities.Add(childEntity);
+
+                    childEntity.ChildEntities = GetEntitiesFromClassId(prefab.ClassId, childEntity, deterministicBatchGenerator);
+
+                    entities.AddRange(childEntity.ChildEntities);
+
+                    spawnedEntity.ChildEntities.Add(childEntity);
+                }
+            }
+
+            return entities;
         }
 
     }

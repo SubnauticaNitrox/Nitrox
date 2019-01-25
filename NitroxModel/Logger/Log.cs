@@ -98,7 +98,11 @@ namespace NitroxModel.Logger
         // Helping method for formatting string correctly with arguments
         private static string Format(string fmt, params object[] arg)
         {
-            return string.Format(fmt, arg);
+            if (arg.Length > 0)
+            {
+                return string.Format(fmt, arg);
+            }
+            return fmt;
         }
 
         private static void Setup()

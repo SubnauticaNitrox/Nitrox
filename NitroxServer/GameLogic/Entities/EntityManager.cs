@@ -35,7 +35,7 @@ namespace NitroxServer.GameLogic.Entities
             return entities;
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation, Vector3 scale, Vector3 localPosition, Quaternion localRotation)
         {
             Optional<Entity> opEntity = entityData.GetEntityByGuid(guid);
 
@@ -46,6 +46,9 @@ namespace NitroxServer.GameLogic.Entities
 
                 entity.Position = position;
                 entity.Rotation = rotation;
+                entity.LocalScale = scale;
+                entity.LocalPosition = localPosition;
+                entity.LocalRotation = localRotation;
 
                 AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
 

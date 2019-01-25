@@ -15,7 +15,7 @@ namespace NitroxServer.UnityStubs
         public float z { get; }
 
         [ProtoMember(4)]
-        public float w { get; }
+        public float w { get; } = 1f;
 
         public Quaternion()
         {
@@ -35,6 +35,16 @@ namespace NitroxServer.UnityStubs
             y = quaternion.y;
             z = quaternion.z;
             w = quaternion.w;
+        }
+
+        public static Quaternion operator +(Quaternion quaternion1, Quaternion quaternion2)
+        {
+            return new Quaternion(quaternion1.x + quaternion2.x, quaternion1.y + quaternion2.y, quaternion1.z + quaternion2.z, quaternion1.w + quaternion2.w);
+        }
+
+        public static Quaternion operator -(Quaternion quaternion1, Quaternion quaternion2)
+        {
+            return new Quaternion(quaternion1.x - quaternion2.x, quaternion1.y - quaternion2.y, quaternion1.z - quaternion2.z, quaternion1.w - quaternion2.w);
         }
 
         public static implicit operator Quaternion(UnityEngine.Quaternion quaternion)

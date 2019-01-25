@@ -24,8 +24,11 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (distance > 5 || swimBehaviour == null)
                     {
+                        gameObject.transform.localRotation = entity.LocalRotation;
+                        gameObject.transform.localPosition = entity.LocalPosition;
                         gameObject.transform.position = entity.Position;
                         gameObject.transform.rotation = entity.Rotation;
+                        gameObject.transform.localScale = entity.Scale;
                     }
                     else
                     {

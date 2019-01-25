@@ -73,6 +73,7 @@
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
+    <Compile Include="Patches\Persistent\PrefabPlaceholdersGroup_Spawn_Patch.cs" />
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
     <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />

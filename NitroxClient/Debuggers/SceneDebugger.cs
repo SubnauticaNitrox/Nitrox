@@ -43,7 +43,9 @@ namespace NitroxClient.Debuggers
 
         private bool selectedObjectActiveSelf;
         private Vector3 selectedObjectPos;
+        private Vector3 selectedObjectLocPos;
         private Quaternion selectedObjectRot;
+        private Quaternion selectedObjectLocRot;
         private Vector3 selectedObjectScale;
         private Scene selectedScene;
         private bool sendToServer;
@@ -397,6 +399,14 @@ namespace NitroxClient.Debuggers
                                 float.TryParse(GUILayout.TextField(selectedObjectPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.z);
                             }
 
+                            GUILayout.Label("Local Position");
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.z);
+                            }
+
                             GUILayout.Label("Rotation");
                             using (new GUILayout.HorizontalScope())
                             {
@@ -404,6 +414,15 @@ namespace NitroxClient.Debuggers
                                 float.TryParse(GUILayout.TextField(selectedObjectRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.y);
                                 float.TryParse(GUILayout.TextField(selectedObjectRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.z);
                                 float.TryParse(GUILayout.TextField(selectedObjectRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.w);
+                            }
+
+                            GUILayout.Label("Local Rotation");
+                            using (new GUILayout.HorizontalScope())
+                            {
+                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.z);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.w);
                             }
 
                             GUILayout.Label("Scale");

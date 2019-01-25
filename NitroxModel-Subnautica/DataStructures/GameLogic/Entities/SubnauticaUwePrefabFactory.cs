@@ -9,6 +9,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
     public class SubnauticaUwePrefabFactory : UwePrefabFactory
     {
         private readonly LootDistributionData lootDistributionData;
+        public static Dictionary<string, List<UwePrefab>> PrefabsByClassId = new Dictionary<string, List<UwePrefab>>();
 
         public SubnauticaUwePrefabFactory(string lootDistributionJson)
         {
@@ -38,6 +39,18 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
             }
 
             return prefabs;
+        }
+
+        public override List<UwePrefab> GetPrefabForClassId(string classId)
+        {
+            List<UwePrefab> prefabs;
+
+            if (PrefabsByClassId.TryGetValue(classId, out prefabs))
+            {
+                return prefabs;
+            }
+
+            return new List<UwePrefab>();
         }
 
         private LootDistributionData GetLootDistributionData(string lootDistributionJson)
