@@ -5,6 +5,7 @@ using NitroxModel.MultiplayerSession;
 using System.Text;
 using NitroxModel.Logger;
 using System.ComponentModel;
+using NitroxModel.Networking;
 
 namespace NitroxServer.ConfigParser
 {

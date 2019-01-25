@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
 {
@@ -21,7 +22,7 @@ namespace NitroxModel.Packets
             Health = health;
             Food = food;
             Water = water;
-            DeliveryMethod = NetDeliveryMethod.UnreliableSequenced;
+            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
             UdpChannel = UdpChannelId.PLAYER_STATS;
         }
 

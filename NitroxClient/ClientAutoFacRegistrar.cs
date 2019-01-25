@@ -3,6 +3,8 @@ using Autofac;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
+using NitroxClient.Communication.NetworkingLayer.Lidgren;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
@@ -32,13 +34,17 @@ namespace NitroxClient
                 .SingleInstance();
 
             containerBuilder.RegisterType<PlayerPreferenceManager>().SingleInstance();
-				
+
             containerBuilder.RegisterType<MultiplayerSessionManager>()
                 .As<IMultiplayerSession>()
                 .As<IPacketSender>()
                 .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<UdpClient>()
+            containerBuilder.RegisterType<LidgrenClient>()
+                .As<IClient>()
+                .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<LiteNetLibClient>()
                 .As<IClient>()
                 .InstancePerLifetimeScope();
 
@@ -46,7 +52,7 @@ namespace NitroxClient
                 .AsSelf() //Would like to deprecate this registration at some point and just work through an abstraction.
                 .As<ILocalNitroxPlayer>()
                 .InstancePerLifetimeScope();
-            
+
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();

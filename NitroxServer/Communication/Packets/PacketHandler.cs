@@ -15,6 +15,7 @@ using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer.Communication.Packets
 {
@@ -29,7 +30,7 @@ namespace NitroxServer.Communication.Packets
             defaultServerPacketProcessor = packetProcessor;
         }
 
-        public void Process(Packet packet, Connection connection)
+        public void Process(Packet packet, NitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
 
@@ -62,7 +63,7 @@ namespace NitroxServer.Communication.Packets
             }
         }
 
-        private void ProcessUnauthenticated(Packet packet, Connection connection)
+        private void ProcessUnauthenticated(Packet packet, NitroxConnection connection)
         {
             try
             {

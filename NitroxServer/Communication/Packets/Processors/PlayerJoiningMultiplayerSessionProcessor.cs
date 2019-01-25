@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
@@ -23,7 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.world = world;
         }
 
-        public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
+        public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
             bool wasBrandNewPlayer;
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey, out wasBrandNewPlayer);

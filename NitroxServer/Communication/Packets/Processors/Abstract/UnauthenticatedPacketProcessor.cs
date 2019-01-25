@@ -1,5 +1,6 @@
 ﻿using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer.Communication.Packets.Processors.Abstract
 {
@@ -7,9 +8,9 @@ namespace NitroxServer.Communication.Packets.Processors.Abstract
     {
         public override void ProcessPacket(Packet packet, IProcessorContext connection)
         {
-            Process((T)packet, (Connection)connection);
+            Process((T)packet, (NitroxConnection)connection);
         }
 
-        public abstract void Process(T packet, Connection connection);
+        public abstract void Process(T packet, NitroxConnection connection);
     }
 }

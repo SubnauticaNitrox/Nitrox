@@ -1,39 +1,56 @@
-﻿using Lidgren.Network;
+using System.Threading;
+using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Logger;
+using NitroxModel.Networking;
 using NitroxModel.Packets;
-using System.IO;
-using System.Threading;
 
-namespace NitroxClient.Communication
+namespace NitroxClient.Communication.NetworkingLayer.Lidgren
 {
-    public class UdpClient : IClient
+    public class LidgrenClient : IClient
     {
-        private readonly DeferringPacketReceiver packetReceiver;
+        public bool IsConnected { get; private set; }
+
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
+        protected readonly DeferringPacketReceiver packetReceiver;
 
-        public bool IsConnected { get; set; } = false;
-        
-        public UdpClient(DeferringPacketReceiver packetManager)
+        public LidgrenClient(DeferringPacketReceiver packetReceiver)
         {
-            Log.Info("Initializing UdpClient...");
-            packetReceiver = packetManager;
+            this.packetReceiver = packetReceiver;
+            Log.Info("Initializing LidgrenClient...");
         }
 
         public void Start(string ipAddress, int serverPort)
         {
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
-            
+
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
             config.AutoFlushSendQueue = true;
             client = new NetClient(config);
-            client.RegisterReceivedCallback(new SendOrPostCallback(ReceivedMessage));
+            client.RegisterReceivedCallback(ReceivedMessage);
             client.Start();
             client.Connect(ipAddress, serverPort);
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
+        }
+
+        public void Send(Packet packet)
+        {
+            byte[] bytes = packet.Serialize();
+
+            NetOutgoingMessage om = client.CreateMessage();
+            om.Write(bytes);
+
+            client.SendMessage(om, NitroxDeliveryMethod.ToLidgren(packet.DeliveryMethod), (int)packet.UdpChannel);
+            client.FlushSendQueue();
+        }
+
+        public void Stop()
+        {
+            client.UnregisterReceivedCallback(ReceivedMessage);
+            client.Disconnect("");
         }
 
         public void ReceivedMessage(object peer)
@@ -54,7 +71,7 @@ namespace NitroxClient.Communication
                         NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
                         IsConnected = status == NetConnectionStatus.Connected;
 
-                        if(IsConnected)
+                        if (IsConnected)
                         {
                             connectedEvent.Set();
                         }
@@ -71,29 +88,15 @@ namespace NitroxClient.Communication
                             Packet packet = Packet.Deserialize(im.Data);
                             packetReceiver.PacketReceived(packet);
                         }
+
                         break;
                     default:
                         Log.Info("Unhandled lidgren message type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
                         break;
                 }
+
                 client.Recycle(im);
             }
-        }
-        
-        public void Send(Packet packet)
-        {
-            byte[] bytes = packet.Serialize();
-
-            NetOutgoingMessage om = client.CreateMessage();
-            om.Write(bytes);
-
-            client.SendMessage(om, packet.DeliveryMethod, (int)packet.UdpChannel);
-            client.FlushSendQueue();
-        }
-
-        public void Stop()
-        {
-            client.Disconnect("");
         }
     }
 }

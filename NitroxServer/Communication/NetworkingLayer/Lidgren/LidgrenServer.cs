@@ -1,74 +1,55 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using Lidgren.Network;
+using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
-using NitroxServer.GameLogic;
-using Lidgren.Network;
-using System.Collections.Generic;
-using System.Threading;
-using System.IO;
-using NitroxServer.GameLogic.Entities;
-using NitroxModel.DataStructures;
 using NitroxServer.ConfigParser;
-using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxModel.Packets.Processors.Abstract;
-using NitroxModel.Core;
-using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
 
-namespace NitroxServer.Communication
+namespace NitroxServer.Communication.NetworkingLayer.Lidgren
 {
-    public class UdpServer
+    public class LidgrenServer : NitroxServer
     {
-        private bool isStopped = true;
-
-        private readonly PacketHandler packetHandler;
-        private readonly EntitySimulation entitySimulation;
-        private readonly Dictionary<long, Connection> connectionsByRemoteIdentifier = new Dictionary<long, Connection>();
-        private readonly PlayerManager playerManager;
-        private readonly NetServer server;
+        private readonly NetServer netServer;
         private readonly Thread thread;
-        private int portNumber, maxConn;
 
-        public UdpServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig)
+        public LidgrenServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
-            this.packetHandler = packetHandler;
-            this.entitySimulation = entitySimulation;
-            this.playerManager = playerManager;
-
-            portNumber = serverConfig.ServerPort;
-            maxConn = serverConfig.MaxConnections;
-
             NetPeerConfiguration config = BuildNetworkConfig();
-            server = new NetServer(config);
+            netServer = new NetServer(config);
             thread = new Thread(Listen);
         }
 
-        public void Start()
+        public override void Start()
         {
-            server.Start();
+            Log.Info("Using Lidgren as networking library");
+            netServer.Start();
             thread.Start();
-            
-            
+
             isStopped = false;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             isStopped = true;
 
-            server.Shutdown("Shutting down server...");
+            netServer.Shutdown("Shutting down server...");
             thread.Join(30000);
         }
-        
-        private void Listen()
+
+       private void Listen()
         {
             while (!isStopped)
             {
                 // Pause reading thread and wait for messages.
-                server.MessageReceivedEvent.WaitOne();
+                netServer.MessageReceivedEvent.WaitOne();
 
                 NetIncomingMessage im;
-                while ((im = server.ReadMessage()) != null)
+                while ((im = netServer.ReadMessage()) != null)
                 {
                     switch (im.MessageType)
                     {
@@ -90,7 +71,7 @@ namespace NitroxServer.Communication
                         case NetIncomingMessageType.Data:
                             if (im.Data.Length > 0)
                             {
-                                Connection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
+                                NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
                                 ProcessIncomingData(connection, im.Data);
                             }
                             break;
@@ -98,12 +79,12 @@ namespace NitroxServer.Communication
                             Log.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
                             break;
                     }
-                    server.Recycle(im);
+                    netServer.Recycle(im);
                 }
             }
         }
 
-        private void ProcessIncomingData(Connection connection, byte[] data)
+        private void ProcessIncomingData(NitroxConnection connection, byte[] data)
         {
             Packet packet = Packet.Deserialize(data);
 
@@ -114,14 +95,14 @@ namespace NitroxServer.Communication
             catch (Exception ex)
             {
                 Log.Info("Exception while processing packet: " + packet + " " + ex);
-            }            
+            }
         }
 
         private void ConnectionStatusChanged(NetConnectionStatus status, NetConnection networkConnection)
         {
             if (status == NetConnectionStatus.Connected)
             {
-                Connection connection = new Connection(server, networkConnection);
+                LidgrenConnection connection = new LidgrenConnection(netServer, networkConnection);
 
                 lock (connectionsByRemoteIdentifier)
                 {
@@ -130,7 +111,7 @@ namespace NitroxServer.Communication
             }
             else if (status == NetConnectionStatus.Disconnected)
             {
-                Connection connection = GetConnection(networkConnection.RemoteUniqueIdentifier);
+                NitroxConnection connection = GetConnection(networkConnection.RemoteUniqueIdentifier);
                 Player player = playerManager.GetPlayer(connection);
 
                 if (player != null)
@@ -151,9 +132,9 @@ namespace NitroxServer.Communication
             }
         }
 
-        private Connection GetConnection(long remoteIdentifier)
+        private NitroxConnection GetConnection(long remoteIdentifier)
         {
-            Connection connection;
+            NitroxConnection connection;
 
             lock (connectionsByRemoteIdentifier)
             {
