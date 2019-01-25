@@ -65,12 +65,14 @@
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_day_Patch.cs" />
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
+    <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
+    <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />

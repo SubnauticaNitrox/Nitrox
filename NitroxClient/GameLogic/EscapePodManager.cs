@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic
 {
@@ -104,7 +105,92 @@ namespace NitroxClient.GameLogic
             Radio radio = escapePod.RequireComponentInChildren<Radio>();
             GuidHelper.SetNewGuid(radio.gameObject, model.RadioGuid);
 
+            DamageEscapePod(model.Damaged, model.RadioDamaged);
+
             return escapePod;
+        }
+
+        public void DamageEscapePod(bool damage, bool radio)
+        {
+            if (damage)
+            {
+                EscapePod.main.ShowDamagedEffects();
+
+                EscapePod.main.lightingController.SnapToState(2);
+                uGUI_EscapePod.main.SetHeader(Language.main.Get("IntroEscapePod3Header"), new Color32(243, 201, 63, byte.MaxValue), 2f);
+                uGUI_EscapePod.main.SetContent(Language.main.Get("IntroEscapePod3Content"), new Color32(233, 63, 27, byte.MaxValue));
+                uGUI_EscapePod.main.SetPower(Language.main.Get("IntroEscapePod3Power"), new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, byte.MaxValue));
+            }
+            else
+            {
+                EscapePod.main.liveMixin.health = EscapePod.main.liveMixin.maxHealth;
+                EscapePod.main.animator.SetFloat("lifepod_damage", 1.0f);
+            }
+
+            if (radio)
+            {
+                EscapePod.main.DamageRadio();
+            }
+        }
+
+        public void OnRepair(string guid)
+        {
+            if (escapePodsByGuid.ContainsKey(guid))
+            {
+                EscapePod pod = escapePodsByGuid[guid].GetComponent<EscapePod>();
+                pod.liveMixin.health = pod.liveMixin.maxHealth;
+                pod.animator.SetFloat("lifepod_damage", 1.0f);
+                pod.fixPanelGoal.Trigger();
+                pod.fixPanelPowerUp.Play();
+            } else
+            {
+                Log.Warn("No escape pod to be repaired by guid " + guid);
+            }
+        }
+
+        public void OnRepairedByMe(EscapePod pod)
+        {
+            string guid = "";
+            foreach(KeyValuePair<string, GameObject> dict in escapePodsByGuid)
+            {
+                if(dict.Value.GetGuid() == pod.gameObject.GetGuid())
+                {
+                    guid = dict.Key; // we're looking for serverside guid here
+                    break;
+                }
+            }
+
+            if (!guid.Equals(""))
+            {
+                EscapePodRepair repair = new EscapePodRepair(guid);
+                packetSender.Send(repair);
+            } else
+            {
+                Log.Warn("Couldn't find escape pod guid on repair");
+            }
+        }
+
+        public void OnRadioRepair(string guid)
+        {
+            Optional<GameObject> radObj = GuidHelper.GetObjectFrom(guid);
+            if (radObj.IsPresent())
+            {
+                Radio radio = radObj.Get().GetComponent<Radio>();
+
+                // StoryGoalManager.main.PulsePendingMessages();
+                radio.liveMixin.health = radio.liveMixin.maxHealth;
+                radio.repairNotification.Play();
+            }
+        }
+
+        public void OnRadioRepairedByMe(Radio radio)
+        {
+            // todo: can this apply to non-escape pod radios?
+
+            string guid = GuidHelper.GetGuid(radio.gameObject);
+            
+            EscapePodRadioRepair repair = new EscapePodRadioRepair(guid);
+            packetSender.Send(repair);
         }
     }
 }
