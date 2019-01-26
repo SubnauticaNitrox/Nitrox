@@ -3,6 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -15,18 +16,19 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
-        protected readonly DeferringPacketReceiver packetReceiver;
+        private readonly DeferringPacketReceiver packetReceiver;
 
         private NetManager client;
 
-        public LiteNetLibClient(DeferringPacketReceiver packetReceiver)
+        public LiteNetLibClient()
         {
-            this.packetReceiver = packetReceiver;
-            Log.Info("Initializing LiteNetLibClient...");
+            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
         }
 
         public void Start(string ipAddress, int serverPort)
         {
+            Log.Info("Initializing LiteNetLibClient...");
+
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
             netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);

@@ -2,6 +2,7 @@ using System.Threading;
 using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
@@ -14,16 +15,17 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
 
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
-        protected readonly DeferringPacketReceiver packetReceiver;
+        private readonly DeferringPacketReceiver packetReceiver;
 
-        public LidgrenClient(DeferringPacketReceiver packetReceiver)
+        public LidgrenClient()
         {
-            this.packetReceiver = packetReceiver;
-            Log.Info("Initializing LidgrenClient...");
+            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
         }
 
         public void Start(string ipAddress, int serverPort)
         {
+            Log.Info("Initializing LidgrenClient...");
+
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
