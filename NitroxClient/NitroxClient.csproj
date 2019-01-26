@@ -70,6 +70,8 @@
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
     <Compile Include="Communication\Abstract\IPacketSender.cs" />
+    <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
