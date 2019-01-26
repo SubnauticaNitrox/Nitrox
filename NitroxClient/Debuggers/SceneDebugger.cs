@@ -256,8 +256,6 @@ namespace NitroxClient.Debuggers
                                 }
                             }
 
-                            Log.Info("Primary");
-
                             foreach (GameObject child in showObjects)
                             {
                                 string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
@@ -318,7 +316,6 @@ namespace NitroxClient.Debuggers
                 using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
                 {
                     hierarchyScrollPos = scroll.scrollPosition;
-                    Log.Info("Secondary");
                     foreach (GameObject item in gameObjectSearchResult)
                     {
                         if (item != null)
