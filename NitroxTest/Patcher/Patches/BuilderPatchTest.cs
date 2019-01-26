@@ -18,8 +18,8 @@ namespace NitroxTest.Patcher.Patches
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
             instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_BASE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_BASE_INJECTION_OPERAND));
             instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPERAND));
-
-            IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(null, instructions);
+            MethodInfo method = typeof(Builder).GetMethod("TryPlace");
+            IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(method, instructions);
             Assert.AreEqual(120, result.Count());
         }
 

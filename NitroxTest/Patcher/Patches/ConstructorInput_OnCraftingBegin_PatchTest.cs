@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,8 +17,8 @@ namespace NitroxTest.Patcher.Patches
         {
             List<CodeInstruction> instructions = PatchTestHelper.GenerateDummyInstructions(100);
             instructions.Add(new CodeInstruction(ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPCODE, ConstructorInput_OnCraftingBegin_Patch.INJECTION_OPERAND));
-
-            IEnumerable<CodeInstruction> result = ConstructorInput_OnCraftingBegin_Patch.Transpiler(null, instructions);
+            MethodInfo method = typeof(ConstructorInput).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
+            IEnumerable<CodeInstruction> result = ConstructorInput_OnCraftingBegin_Patch.Transpiler(method, instructions);
 
             Assert.AreEqual(instructions.Count + 3, result.Count());
         }

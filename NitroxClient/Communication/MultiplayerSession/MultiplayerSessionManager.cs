@@ -78,7 +78,6 @@ namespace NitroxClient.Communication.MultiplayerSession
         public void ProcessReservationResponsePacket(MultiplayerSessionReservation reservation)
         {
             Reservation = reservation;
-            CurrentState.NegotiateReservation(this);
         }
 
         public void JoinSession()

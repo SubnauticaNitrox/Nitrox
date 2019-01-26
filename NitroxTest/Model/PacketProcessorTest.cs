@@ -63,7 +63,7 @@ namespace NitroxTest.Model
                     }
                     catch (Autofac.Core.DependencyResolutionException ex)
                     {
-                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException))
+                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException)) //UnityEngine throws this when we try using its methods
                         {
                             throw ex.InnerException;
                         }
@@ -183,18 +183,8 @@ namespace NitroxTest.Model
                     Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
 
                     Console.WriteLine("Checking handler for packet {0}...", packet);
-                    try
-                    {
-                        Assert.IsTrue(!serverPacketTypes.Contains(packet) || packetTypes.Contains(packet) || clientDependencyContainer.ResolveOptional(clientProcessorType) != null,
-                            $"Runtime has not detected a handler for {packet}!");
-                    }
-                    catch (Autofac.Core.DependencyResolutionException ex)
-                    {
-                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException))
-                        {
-                            throw ex.InnerException;
-                        }
-                    }
+                    Assert.IsTrue(!serverPacketTypes.Contains(packet) || packetTypes.Contains(packet) || clientDependencyContainer.ResolveOptional(clientProcessorType) != null,
+                        $"Runtime has not detected a handler for {packet}!");
                 }
                 );
         }
