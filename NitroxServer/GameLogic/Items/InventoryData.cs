@@ -1,6 +1,6 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
-using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Items
 {
@@ -22,10 +22,10 @@ namespace NitroxServer.GameLogic.Items
 
         [ProtoIgnore]
         private Dictionary<string, ItemData> insertedInventoryItemsByGuid = new Dictionary<string, ItemData>();
-        
+
         public void ItemAdded(ItemData itemData)
         {
-            lock(insertedInventoryItemsByGuid)
+            lock (insertedInventoryItemsByGuid)
             {
                 insertedInventoryItemsByGuid[itemData.Guid] = itemData;
             }

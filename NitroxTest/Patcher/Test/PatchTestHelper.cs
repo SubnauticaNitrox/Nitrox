@@ -34,5 +34,20 @@ namespace NitroxTest.Patcher.Test
 
             return instructions;
         }
+        public static List<CodeInstruction> GetInstructionsFromMethod(MethodInfo targetMethod)
+        {
+            Validate.NotNull(targetMethod);
+
+            DynamicMethod newMethod = new DynamicMethod(targetMethod.Name, targetMethod.ReturnType, targetMethod.GetParameters().Types());
+
+            List<CodeInstruction> instructions = new List<CodeInstruction>();
+
+            foreach (ILInstruction instruction in MethodBodyReader.GetInstructions(newMethod.GetILGenerator(), targetMethod))
+            {
+                instructions.Add(instruction.GetCodeInstruction());
+            }
+
+            return instructions;
+        }
     }
 }

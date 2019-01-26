@@ -20,13 +20,13 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(121, result.Count());
+            Assert.AreEqual(120, result.Count());
         }
 
         [TestMethod]
         public void InjectionSanity()
         {
-            DynamicMethod targetMethod = (DynamicMethod)AccessTools.Method(typeof(Builder), "TryPlace");
+            MethodInfo targetMethod = AccessTools.Method(typeof(Builder), "TryPlace");
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
             IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(targetMethod, beforeInstructions);

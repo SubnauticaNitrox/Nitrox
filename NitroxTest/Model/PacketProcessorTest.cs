@@ -55,8 +55,20 @@ namespace NitroxTest.Model
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList()
                 .ForEach(processor =>
-                    Assert.IsTrue(clientDependencyContainer.Resolve(processor.BaseType) != null,
-                        $"{processor} has not been discovered by the runtime code!")
+                {
+                    try
+                    {
+                        Assert.IsTrue(clientDependencyContainer.ResolveOptional(processor.BaseType) != null,
+                            $"{processor} has not been discovered by the runtime code!");
+                    }
+                    catch (Autofac.Core.DependencyResolutionException ex)
+                    {
+                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException))
+                        {
+                            throw ex.InnerException;
+                        }
+                    }
+                }
                 );
         }
 
@@ -138,6 +150,25 @@ namespace NitroxTest.Model
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
 
+            List<Type> serverPacketTypes = new List<Type>();
+
+            typeof(Packet).Assembly.GetTypes()
+                .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
+                .ToList()
+                .ForEach(packet =>
+                {
+                    Type serverProcessorType = typeof(AuthenticatedPacketProcessor<>).MakeGenericType(packet);
+                    if (serverDependencyContainer.ResolveOptional(serverProcessorType) != null)
+                    {
+                        serverPacketTypes.Add(serverProcessorType);
+                    }
+                    serverProcessorType = typeof(UnauthenticatedPacketProcessor<>).MakeGenericType(packet);
+                    if (serverDependencyContainer.ResolveOptional(serverProcessorType) != null)
+                    {
+                        serverPacketTypes.Add(serverProcessorType);
+                    }
+                });
+
             ContainerBuilder containerBuilder = new ContainerBuilder();
             ClientAutoFacRegistrar clientDependencyRegistrar = new ClientAutoFacRegistrar();
             clientDependencyRegistrar.RegisterDependencies(containerBuilder);
@@ -152,8 +183,18 @@ namespace NitroxTest.Model
                     Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
 
                     Console.WriteLine("Checking handler for packet {0}...", packet);
-                    Assert.IsTrue(packetTypes.Contains(packet) || clientDependencyContainer.Resolve(clientProcessorType) != null,
-                        $"Runtime has not detected a handler for {packet}!");
+                    try
+                    {
+                        Assert.IsTrue(!serverPacketTypes.Contains(packet) || packetTypes.Contains(packet) || clientDependencyContainer.ResolveOptional(clientProcessorType) != null,
+                            $"Runtime has not detected a handler for {packet}!");
+                    }
+                    catch (Autofac.Core.DependencyResolutionException ex)
+                    {
+                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException))
+                        {
+                            throw ex.InnerException;
+                        }
+                    }
                 }
                 );
         }
