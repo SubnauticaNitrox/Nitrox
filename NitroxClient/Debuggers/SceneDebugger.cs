@@ -294,7 +294,7 @@ namespace NitroxClient.Debuggers
                     if (string.IsNullOrEmpty(gameObjectSearchPatternInvalidMessage))
                     {
                         Type type = AppDomain.CurrentDomain.GetAssemblies()
-                        .Select(a => a.GetType(gameObjectSearch))
+                        .Select(a => a.GetType(gameObjectSearch, false, true))
                         .FirstOrDefault(t => t != null);
                         gameObjectSearchResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch)).OrderBy(go => go.name).ToList();
                         if (type != null)
