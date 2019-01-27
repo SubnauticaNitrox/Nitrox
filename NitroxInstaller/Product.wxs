@@ -9,6 +9,7 @@
     <?define NitroxClient_TargetDir=$(var.NitroxClient.TargetDir)?>
     <?define NitroxServer_TargetDir=$(var.NitroxServer.TargetDir)?>
     <?define discordRPC_TargetDir=$(var.SolutionDir)lib\?>
+    <?define assetBundles_TargetDir=$(var.SolutionDir)AssetBundles\?>
 
     <?if $(var.Platform) = x64 ?>
     <?define ProductName = "NitroxInstaller-!(bind.fileVersion.NitroxClient.dll) (64 bit)" ?>
@@ -28,6 +29,7 @@
         <MediaTemplate EmbedCab="yes" />
         <Feature Id="ProductFeature" Title="Nitrox_Installer" Level="1">
             <ComponentGroupRef Id="SUBNAUTICAMANAGED_files" />
+            <ComponentGroupRef Id="AssetBundles_files" />
             <ComponentGroupRef Id="SUBNAUTICAMONO_files" />
             <ComponentGroupRef Id="SubServer_Files" />
         </Feature>
@@ -57,6 +59,8 @@
         <Directory Id="TARGETDIR" Name="SourceDir">
             <Directory Id="$(var.PlatformProgramFilesFolder)">
                 <Directory Id="INSTALLFOLDER" Name="Nitrox Installer">
+                    <Directory Id="AssetBundles" Name="AssetBundles">
+                    </Directory>
                     <Directory Id="SubServer" Name="SubServer">
                     </Directory>
                     <Directory Id="SubnauticaData" Name="Subnautica_Data">
@@ -113,6 +117,14 @@
             <Component Id="System.Configuration.dll" Guid="*">
                 <File Id="System.Configuration.dll" Name="System.Configuration.dll" Source="$(var.NitroxClient_TargetDir)System.Configuration.dll" />
             </Component>
+        </ComponentGroup>
+    </Fragment>
+
+    <Fragment>
+        <ComponentGroup Id="AssetBundles_files" Directory="AssetBundles">
+          <Component Id="chatlog">
+            <File Id="chatlog" Name="chatlog" Source="$(var.assetBundles_TargetDir)chatlog" />
+          </Component>
         </ComponentGroup>
     </Fragment>
 
