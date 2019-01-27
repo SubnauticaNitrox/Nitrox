@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
@@ -57,12 +58,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             chat = currentChat;
             chatEnabled = true;
+            NitroxCursor.UnlockCursor = true;
             UWE.Utils.lockCursor = false;
         }
 
         public void Hide()
         {
             chatEnabled = false;
+            NitroxCursor.UnlockCursor = false;
             UWE.Utils.lockCursor = true;
             chatMessage = "";
         }

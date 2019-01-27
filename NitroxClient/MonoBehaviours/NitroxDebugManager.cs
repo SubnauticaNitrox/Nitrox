@@ -3,6 +3,7 @@ using NitroxClient.Debuggers;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -84,6 +85,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static void ToggleCursor()
         {
+            NitroxCursor.UnlockCursor = UWE.Utils.lockCursor;
             UWE.Utils.lockCursor = !UWE.Utils.lockCursor;
         }
 
