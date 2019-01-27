@@ -76,13 +76,15 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private void SetupChatMessagesComponent()
         {
-            chatText = chatScrollRect.AddComponent<Text>();
+            chatText = new GameObject("ChatText").AddComponent<Text>();
+            chatText.transform.SetParent(chatScrollRect.transform);
             chatText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
             chatText.name = "ChatText";
             chatText.alignByGeometry = false;
-            chatText.horizontalOverflow = HorizontalWrapMode.Overflow;
+            chatText.horizontalOverflow = HorizontalWrapMode.Wrap;
             chatText.verticalOverflow = VerticalWrapMode.Truncate;
-            chatText.fontSize = 12;
+            chatText.fontSize = 17;
+            chatText.fontStyle = FontStyle.Bold;
             chatText.lineSpacing = 0.8f;
 
         }
