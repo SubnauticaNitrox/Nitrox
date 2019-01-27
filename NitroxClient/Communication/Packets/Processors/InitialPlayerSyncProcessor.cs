@@ -67,7 +67,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SpawnVehiclesAfterBasePiecesFinish(packet.Vehicles, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
             AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
-            SpawnPlayerEquipment(packet.EquippedItems, hasVehiclesToSpawn);
+            SpawnPlayerEquipment(packet.EquippedItems, hasVehiclesToSpawn, hasBasePiecesToSpawn);
             SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
         }
 
@@ -196,13 +196,13 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("Received initial sync Player Guid: " + playerguid);
         }    
         
-        private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems, bool vehiclesToSpawn)
+        private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems, bool vehiclesToSpawn, bool basePiecesToSpawn)
         {
             Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
 
             EquipmentItemAdder itemAdder = new EquipmentItemAdder(packetSender, equippedItems);
 
-            if (vehiclesToSpawn)
+            if (vehiclesToSpawn && basePiecesToSpawn)
             {
                 ThrottledBuilder.main.QueueDrained += itemAdder.AddEquipmentToInventories;
             }
