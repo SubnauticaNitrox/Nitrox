@@ -38,6 +38,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 RemotePlayer remotePlayerInstance = remotePlayer.Get();
                 ChatLogEntry chatLogEntry = new ChatLogEntry(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
                 playerChat.WriteChatLogEntry(chatLogEntry);
+                playerChat.ShowLog();
             }
         }
 
@@ -45,6 +46,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             ChatLogEntry logEntry = new ChatLogEntry("Server", message.Text, new UnityEngine.Color32(0x8c, 0x00, 0xFF, 0xFF));
             playerChat.WriteChatLogEntry(logEntry);
+            playerChat.ShowLog();
         }
     }
 }
