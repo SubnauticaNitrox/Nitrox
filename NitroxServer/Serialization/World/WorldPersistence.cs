@@ -18,7 +18,6 @@ namespace NitroxServer.Serialization.World
     public class WorldPersistence
     {
         private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
-        private readonly string fileName = @"save.nitrox";
         private readonly ServerConfig config;
 
         public WorldPersistence(ServerConfig config)
@@ -43,7 +42,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.GameData = world.GameData;
                 persistedData.EscapePodData = world.EscapePodData;
 
-                using (Stream stream = File.OpenWrite(fileName))
+                using (Stream stream = File.OpenWrite(config.SaveName + ".nitrox"))
                 {
                     serializer.Serialize(stream, persistedData);
                 }
@@ -62,7 +61,7 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData;
 
-                using (Stream stream = File.OpenRead(fileName))
+                using (Stream stream = File.OpenRead(config.SaveName + ".nitrox"))
                 {
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
@@ -112,7 +111,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), GameModeOption.Survival);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
@@ -146,7 +145,11 @@ namespace NitroxServer.Serialization.World
             world.GameMode = gameMode;
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells);
+            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
+
+            Log.Info("World GameMode " + gameMode);
+
+            Log.Info("Server Admin Password : " + config.ServerAdminPassword + " You can set your own password in the server config file or by using the /changepassword command");
 
             return world;
         }

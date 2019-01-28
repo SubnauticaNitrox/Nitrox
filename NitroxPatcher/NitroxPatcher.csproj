@@ -39,6 +39,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -59,13 +62,18 @@
     <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
     <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
+    <Compile Include="Patches\Bed_EnterInUseMode_Patch.cs" />
+    <Compile Include="Patches\DayNightCycle_OnConsoleCommand_day_Patch.cs" />
+    <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
+    <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
+    <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />
@@ -139,7 +147,6 @@
     <Compile Include="Patches\uGUI_OptionsPanel_AddBindings_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
-    <Compile Include="ValidatedCodeInstruction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -156,10 +163,6 @@
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NitroxReloader\NitroxReloader.csproj">
-      <Project>{fc024d71-bc7b-4a3e-968a-af09bcd8eae5}</Project>
-      <Name>NitroxReloader</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches
          * them so that we can update the newly placed pieces with the proper id.  The new
          * pieces are added by Base.SpawnPiece (see that patch)
          */
-        public static Dictionary<Int3, string> LastClearedCellsByGuid = new Dictionary<Int3, string>();
+        public static Dictionary<string, string> GuidByObjectKey = new Dictionary<string, string>();
 
         public static void Prefix(Base __instance)
         {
@@ -43,19 +43,23 @@ namespace NitroxPatcher.Patches
                     {
                         Transform child = cellObject.GetChild(i);
 
-                        if(child != null && child.gameObject != null)
+                        if (child != null && child.gameObject != null)
                         {
-                            Int3 cell = __instance.WorldToGrid(child.position);
-
-                            if(cell != Int3.zero && child.gameObject.GetComponent<UniqueIdentifier>() != null)
+                            if(child.gameObject.GetComponent<UniqueIdentifier>() != null)
                             {
                                 string guid = child.gameObject.GetComponent<UniqueIdentifier>().Id;
-                                LastClearedCellsByGuid[cell] = guid;
+                                string key = getObjectKey(child.gameObject.name, child.position);
+                                GuidByObjectKey[key] = guid;
                             }
                         }
                     }
                 }
             }
+        }
+
+        public static string getObjectKey(string name, Vector3 postion)
+        {
+            return name + postion.ToString();
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -274,3 +274,7 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+# Sonar
+/.sonarqube
+sonar.config.bat

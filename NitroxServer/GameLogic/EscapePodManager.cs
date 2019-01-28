@@ -59,12 +59,31 @@ namespace NitroxServer.GameLogic
                     "escapePodFab" + totalEscapePods,
                     "escapePodMedFab" + totalEscapePods,
                     "escapePodStorageFab" + totalEscapePods,
-                    "escapePodRadioFab" + totalEscapePods);
+                    "escapePodRadioFab" + totalEscapePods,
+                    true,
+                    true);
 
                 escapePodData.EscapePods.Add(escapePod);
 
-
                 return escapePod;
+            }
+        }
+
+        public void RepairEscapePod(string guid)
+        {
+            lock(escapePodData.EscapePods)
+            {
+                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.Guid == guid);
+                escapePod.Damaged = false;
+            }
+        }
+
+        public void RepairEscapePodRadio(string guid)
+        {
+            lock (escapePodData.EscapePods)
+            {
+                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.RadioGuid == guid);
+                escapePod.RadioDamaged = false;
             }
         }
     }

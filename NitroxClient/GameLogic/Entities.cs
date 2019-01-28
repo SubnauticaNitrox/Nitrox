@@ -105,6 +105,7 @@ namespace NitroxClient.GameLogic
             {
                 opGameObject.Get().transform.position = entity.Position;
                 opGameObject.Get().transform.localRotation = entity.Rotation;
+                opGameObject.Get().transform.localScale = entity.Scale;
             }
             else
             {
