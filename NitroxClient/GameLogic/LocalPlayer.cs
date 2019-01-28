@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastDeath(Vector3 deathPosition)
         {
-            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.Reservation.PlayerId, deathPosition);
+            PlayerDeathEvent playerDeath = new PlayerDeathEvent(multiplayerSession.AuthenticationContext.Username, deathPosition);
             packetSender.Send(playerDeath);
         }
 
