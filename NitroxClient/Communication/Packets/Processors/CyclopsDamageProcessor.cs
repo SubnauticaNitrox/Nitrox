@@ -2,9 +2,11 @@
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -18,10 +20,12 @@ namespace NitroxClient.Communication.Packets.Processors
     public class CyclopsDamageProcessor : ClientPacketProcessor<CyclopsDamage>
     {
         private readonly IPacketSender packetSender;
+        private readonly Fires fires;
 
-        public CyclopsDamageProcessor(IPacketSender packetSender)
+        public CyclopsDamageProcessor(IPacketSender packetSender, Fires fires)
         {
             this.packetSender = packetSender;
+            this.fires = fires;
         }
 
         public override void Process(CyclopsDamage packet)
@@ -65,7 +69,7 @@ namespace NitroxClient.Communication.Packets.Processors
         }
 
         /// <summary>
-        /// Add/remove <see cref="CyclopsDamagePoint"/>s until it matches the <paramref name="damagePointIndexes"/> array passed
+        /// Add/remove <see cref="CyclopsDamagePoint"/>s until it matches the <paramref name="damagePointIndexes"/> array passed. Can trigger <see cref="CyclopsDamagePointRepaired"/> packets
         /// </summary>
         private void SetActiveDamagePoints(SubRoot cyclops, int[] damagePointIndexes)
         {
@@ -133,110 +137,56 @@ namespace NitroxClient.Communication.Packets.Processors
         }
 
         /// <summary>
-        /// Add/remove fires until it matches the <paramref name="roomFires"/> array.
+        /// Add/remove fires until it matches the <paramref name="roomFires"/> array. Can trigger <see cref="FireDoused"/> packets
         /// </summary>
-        private void SetActiveRoomFires(SubRoot subRoot, SerializableRoomFire[] roomFires)
+        private void SetActiveRoomFires(SubRoot subRoot, FireData[] roomFires)
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+            Optional<string> subRootGuid = Optional<string>.Of(GuidHelper.GetGuid(subRoot.gameObject));
+            FireData fireNode = null;
 
-            // We can do a look for fires that shouldn't be around by looping through GetAllFires.
-            foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
+            if (roomFires != null && roomFires.Length > 0)
             {
-                if (roomFires != null && roomFires.Any(x => x.Room == keyValuePair.Key))
+                // Removing and adding fires will happen in the same loop
+                foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
                 {
-                    SerializableRoomFire roomFire = roomFires.FirstOrDefault(x => x.Room == keyValuePair.Key);
-
-                    // There's fires that are supposed to be here.
-                    for (int nodesIndex = 0; nodesIndex < keyValuePair.Value.spawnNodes.Length; nodesIndex++)
+                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
                     {
-                        if (roomFire.ActiveFireNodes.Any(x => x.NodeIndex == nodesIndex))
+                        fireNode = roomFires.SingleOrDefault(x => x.Room == keyValuePair.Key && x.NodeIndex == nodeIndex);
+
+                        // If there's a matching node index, add a fire if there isn't one already. Otherwise remove a fire if there is one
+                        if (fireNode == null)
                         {
-                            int fireCount = roomFire.ActiveFireNodes.Count();
-
-                            // There's fewer fires than what there should be. Create new ones
-                            if (keyValuePair.Value.spawnNodes[nodesIndex].childCount < fireCount)
+                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
                             {
-                                // A while statement was locking the game. I'm figuring the process of creating a fire does not happen
-                                // on the same thread.
-                                int fireCountToAdd = fireCount - keyValuePair.Value.spawnNodes[nodesIndex].childCount;
-
-                                for (int i = 0; i < fireCountToAdd; i++)
-                                {
-                                    CreateFire(subRoot, keyValuePair, nodesIndex);
-                                }
-                            }
-                            else
-                            {
-                                if (keyValuePair.Value.spawnNodes[nodesIndex].childCount > fireCount)
-                                {
-                                    // A while statement was locking the game. I'm guessing calling a douse was doing something on a different thread
-                                    // and the object wasn't getting destroyed before the loop checked again.
-                                    int fireCountToRemove = keyValuePair.Value.spawnNodes[nodesIndex].childCount - fireCount;
-
-                                    // I don't want to extinguish fires in the middle of the stack. The order can still matter. Note the conditions in the
-                                    // for loop, it does not compare i to continue looping, it compares fireCountToRemove.
-                                    for (int i = keyValuePair.Value.spawnNodes[nodesIndex].childCount - 1; fireCountToRemove > 0; i--)
-                                    {
-                                        DouseFire(subFire, keyValuePair.Key, nodesIndex, i, 10000);
-
-                                        fireCountToRemove--;
-                                    }
-                                }
+                                keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
                             }
                         }
                         else
                         {
-                            // None for this node. Remove any that are there.
-                            if (keyValuePair.Value.spawnNodes[nodesIndex].childCount > 0)
+                            if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
                             {
-                                Fire[] fires = keyValuePair.Value.spawnNodes[nodesIndex].GetAllComponentsInChildren<Fire>();
-
-                                for (int i = fires.Length - 1; i >= 0; i--)
-                                {
-                                    DouseFire(subFire, keyValuePair.Key, nodesIndex, i, 10000);
-                                }
+                                // fires.Create(fireNode.FireGuid, subRootGuid, Optional<CyclopsRooms>.Of(fireNode.Room), Optional<int>.Of(fireNode.NodeIndex));
+                                fires.Create(fireNode.FireGuid, subRootGuid, fireNode.Room, fireNode.NodeIndex);
                             }
                         }
                     }
                 }
-                else
+            }
+            // Clear out the fires, there should be none active
+            else
+            {
+                foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> keyValuePair in roomFiresDict)
                 {
-                    // Remove all of the fires in here
-                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes?.Length; nodeIndex++)
+                    for (int nodeIndex = 0; nodeIndex < keyValuePair.Value.spawnNodes.Length; nodeIndex++)
                     {
-                        if (keyValuePair.Value.spawnNodes[nodeIndex] != null && keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
+                        if (keyValuePair.Value.spawnNodes[nodeIndex].childCount > 0)
                         {
-                            Fire[] fires = keyValuePair.Value.spawnNodes[nodeIndex].GetAllComponentsInChildren<Fire>();
-
-                            for (int i = fires.Length - 1; i >= 0; i--)
-                            {
-                                DouseFire(subFire, keyValuePair.Key, nodeIndex, i, 10000);
-                            }
+                            keyValuePair.Value.spawnNodes[nodeIndex].GetComponentInChildren<Fire>().Douse(10000);
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Create a new fire in a specific room and node. Calling <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> would just cause it to use 
-        /// a random number generator to choose the node. This can trigger sending <see cref="CyclopsDamage"/> packets
-        /// </summary>
-        private void CreateFire(SubRoot subRoot, KeyValuePair<CyclopsRooms, SubFire.RoomFire> fireRoom, int nodeIndex)
-        {
-            Transform transform2 = fireRoom.Value.spawnNodes[nodeIndex];
-            fireRoom.Value.fireValue++;
-            PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
-            if (component == null)
-            {
-                return;
-            }
-            GameObject gameObject = component.SpawnManual();
-            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-            if (componentInChildren)
-            {
-                componentInChildren.fireSubRoot = subRoot;
             }
         }
 
@@ -247,38 +197,6 @@ namespace NitroxClient.Communication.Packets.Processors
         private void RepairDamagePoint(SubRoot subRoot, int damagePointIndex, float repairAmount)
         {
             subRoot.damageManager.damagePoints[damagePointIndex].liveMixin.AddHealth(repairAmount);
-        }
-
-        /// <summary>
-        /// Executes the logic in <see cref="Fire.Douse(float)"/> while not calling the method itself to avoid endless looped calls. 
-        /// If the fire is extinguished (no health left), it will pass a large float to trigger the private <see cref="Fire.Extinguish()"/> method.
-        /// This can trigger sending <see cref="FireDoused"/> and <see cref="CyclopsDamage"/> packets
-        /// </summary>
-        private void DouseFire(SubFire fireManager, CyclopsRooms room, int fireTransformIndex, int fireIndex, float douseAmount)
-        {
-            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)fireManager.ReflectionGet("roomFires");
-
-            // What a beautiful monster this is.
-            if (roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>()?.Length <= fireIndex)
-            {
-                Log.Warn("[Cyclops.DouseFire fireIndex larger than number of Fires fireIndex: " + fireIndex.ToString()
-                    + " Fire Count: " + roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>().Length.ToString()
-                    + "]");
-
-                return;
-            }
-
-            Fire fire = roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>()?[fireIndex];
-            if (fire == null)
-            {
-                Log.Warn("[Cyclops.DouseFire could not pull Fire object at index: " + fireIndex.ToString()
-                    + " Fire Index Count: " + roomFires[room]?.spawnNodes[fireTransformIndex]?.GetAllComponentsInChildren<Fire>().Length.ToString()
-                    + "]");
-
-                return;
-            }
-
-            fire.Douse(douseAmount);
         }
     }
 }

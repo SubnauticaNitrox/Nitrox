@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Packets
@@ -9,17 +10,16 @@ namespace NitroxModel.Packets
     [Serializable]
     public class FireCreated : Packet
     {
-        public string Guid { get; }
-        public Optional<string> CyclopsGuid { get; }
-        public Optional<CyclopsRooms> Room { get; }
-        public Optional<int> NodeIndex { get; }
+        public FireData FireCreatedData { get; }
 
-        public FireCreated(string guid, Optional<string> cyclopsGuid, Optional<CyclopsRooms> room, Optional<int> nodeIndex)
+        public FireCreated(string guid, Optional<string> cyclopsGuid, CyclopsRooms room, int nodeIndex)
         {
-            Guid = guid;
-            CyclopsGuid = cyclopsGuid;
-            Room = room;
-            NodeIndex = nodeIndex;
+            FireCreatedData = new FireData(guid, cyclopsGuid, room, nodeIndex);
+        }
+
+        public override string ToString()
+        {
+            return "[FireCreated " + FireCreatedData.ToString() + "]";
         }
     }
 }

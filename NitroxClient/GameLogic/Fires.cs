@@ -12,7 +12,7 @@ namespace NitroxClient.GameLogic
     /// <summary>
     /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
     /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.CreateFire(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>. Fire dousing goes by Guid and does not need to be 
+    /// added to <see cref="Fires.Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>. Fire dousing goes by Guid and does not need to be 
     /// modified
     /// </summary>
     public class Fires
@@ -35,16 +35,23 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
+        /// <summary>
+        /// Triggered when <see cref="SubFire.CreateFire(SubFire.RoomFire)"/> is executed. To create a new fire manually, 
+        /// call <see cref="Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>
+        /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            Optional<string> subRootGuid = Optional<string>.OfNullable(GuidHelper.GetGuid(fire.fireSubRoot.gameObject));
-            Optional<CyclopsRooms> startInRoom = Optional<CyclopsRooms>.OfNullable(room.roomLinks.room);
-            Optional<int> activeNodeIndex = Optional<int>.OfNullable(nodeIndex);
+            Optional<string> subRootGuid = Optional<string>.Of(GuidHelper.GetGuid(fire.fireSubRoot.gameObject));
+            // Optional<CyclopsRooms> startInRoom = Optional<CyclopsRooms>.Of(room.roomLinks.room);
+            // Optional<int> activeNodeIndex = Optional<int>.Of(nodeIndex);
 
-            FireCreated packet = new FireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, startInRoom, activeNodeIndex);
+            FireCreated packet = new FireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
+        /// <summary>
+        /// Triggered when <see cref="Fire.Douse(float)"/> is executed. To Douse a fire manually, retrieve the <see cref="Fire"/> call the Douse method
+        /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
             string fireGuid = GuidHelper.GetGuid(fire.gameObject);
@@ -70,27 +77,52 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Create a new <see cref="Fire"/>. Currently does not support Fires created outside of a Cyclops
+        /// Create a new <see cref="Fire"/>. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. Currently does not support Fires created outside of a Cyclops
         /// </summary>
         /// <param name="fireGuid">Guid of the Fire. Used for identification when dousing the fire</param>
         /// <param name="subRootGuid">Guid of the Cyclops <see cref="SubRoot"/></param>
         /// <param name="room">The room the Fire will be spawned in</param>
         /// <param name="spawnNodeIndex">Each <see cref="CyclopsRooms"/> has multiple static Fire spawn points called spawnNodes. If the wrong index is provided,
         ///     the clients will see fires in different places from the owner</param>
-        public void CreateFire(string fireGuid, Optional<string> subRootGuid, Optional<CyclopsRooms> room, Optional<int> spawnNodeIndex)
+        public void Create(string fireGuid, Optional<string> subRootGuid, CyclopsRooms room, int spawnNodeIndex)
         {
             // A Fire is either on a Cyclops or not. Currently, creating a Fire is only possible if it's in a Cyclops.
             // I have not found any other code that creates a fire
-            if (subRootGuid.IsPresent() && room.IsPresent() && spawnNodeIndex.IsPresent())
+            if (subRootGuid.IsPresent())
             {
                 SubFire subFire = GuidHelper.RequireObjectFrom(subRootGuid.Get()).GetComponent<SubRoot>().damageManager.subFire;
                 Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-
                 // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
-                Transform[] spawnNodes = (Transform[])subFire.ReflectionGet("spawnNodes");
+                Transform transform2 = roomFiresDict[room].spawnNodes[spawnNodeIndex];
 
-                Transform transform2 = spawnNodes[spawnNodeIndex.Get()];
-                roomFiresDict[room.Get()].fireValue++;
+                // If a fire already exists at the node, replace the old Guid with the new one
+                if (transform2.childCount > 0)
+                {
+                    Fire existingFire = transform2.GetComponentInChildren<Fire>();
+
+                    if (GuidHelper.GetGuid(existingFire.gameObject) != fireGuid)
+                    {
+                        Log.Error("[Fires.Create Fire already exists at node index " + spawnNodeIndex
+                            + "! Replacing existing Fire Guid " + GuidHelper.GetGuid(existingFire.gameObject)
+                            + " with Guid " + fireGuid
+                            + "]");
+
+                        GuidHelper.SetNewGuid(existingFire.gameObject, fireGuid);
+                    }
+
+                    return;
+                }
+
+                List<Transform> availableNodes = (List<Transform>)subFire.ReflectionGet("availableNodes");
+                availableNodes.Clear();
+                foreach (Transform transform in roomFiresDict[room].spawnNodes)
+                {
+                    if (transform.childCount == 0)
+                    {
+                        availableNodes.Add(transform);
+                    }
+                }
+                roomFiresDict[room].fireValue++;
                 PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
                 if (component == null)
                 {
@@ -105,7 +137,7 @@ namespace NitroxClient.GameLogic
                 }
 
                 subFire.ReflectionSet("roomFires", roomFiresDict);
-                subFire.ReflectionSet("availableNodes", spawnNodes);
+                subFire.ReflectionSet("availableNodes", availableNodes);
             }
             else
             {

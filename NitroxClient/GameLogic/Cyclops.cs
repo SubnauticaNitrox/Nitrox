@@ -104,25 +104,23 @@ namespace NitroxClient.GameLogic
             
             if (subHealth.health > 0)
             {
-                SerializableDamageInfo damageInfo = null;
+                DamageInfoData damageInfo = null;
 
                 if (info.IsPresent())
                 {
                     DamageInfo damage = info.Get();
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
-                    SerializableDamageInfo serializedDamageInfo = new SerializableDamageInfo()
-                    {
-                        OriginalDamage = damage.originalDamage,
-                        Damage = damage.damage,
-                        Position = damage.position,
-                        Type = damage.type,
-                        DealerGuid = damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty
-                    };
+                    DamageInfoData serializedDamageInfo = new DamageInfoData(subGuid,
+                        damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty,
+                        damage.originalDamage,
+                        damage.damage,
+                        damage.position,
+                        damage.type);
                 }
 
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-                SerializableRoomFire[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
+                FireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
                 CyclopsDamage packet = new CyclopsDamage(subGuid, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
                 packetSender.Send(packet);
@@ -153,37 +151,22 @@ namespace NitroxClient.GameLogic
         /// Get all of the index locations of all the fires on the <see cref="SubRoot"/>. <see cref="SubFire.RoomFire.spawnNodes"/> contains
         /// a static list of all possible fire nodes.
         /// </summary>
-        private IEnumerable<SerializableRoomFire> GetActiveRoomFires(SubFire subFire)
+        private IEnumerable<FireData> GetActiveRoomFires(SubFire subFire)
         {
             string subRootGuid = GuidHelper.GetGuid(subFire.subRoot.gameObject);
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
 
             foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in roomFires)
             {
-                // There be fires here.
-                if (roomFire.Value.fireValue > 0)
+                for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
                 {
-                    List<SerializableFireNode> activeNodes = new List<SerializableFireNode>();
-                    for (int i = 0; i < roomFire.Value.spawnNodes.Length; i++)
+                    if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        // Is this a fire? Copied from SubFire.CreateFire(SubFire.RoomFire startInRoom)
-                        if (roomFire.Value.spawnNodes[i].childCount > 0)
-                        {
-                            activeNodes.Add(new SerializableFireNode()
-                            {
-                                NodeIndex = i,
-                                FireGuid = GuidHelper.GetGuid(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
-                            });
-                        }
+                        yield return new FireData(GuidHelper.GetGuid(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject), 
+                            Optional<string>.Of(subRootGuid),
+                            roomFire.Key,
+                            i);
                     }
-
-                    SerializableRoomFire newRoomFire = new SerializableRoomFire()
-                    {
-                        Room = roomFire.Key,
-                        ActiveFireNodes = activeNodes.ToArray()
-                    };
-
-                    yield return newRoomFire;
                 }
             }
         }

@@ -19,5 +19,10 @@ namespace NitroxModel.Packets
             Guid = guid;
             DouseAmount = douseAmount;
         }
+
+        public override string ToString()
+        {
+            return "[FireDoused Guid: " + Guid + "Douse Amount: " + DouseAmount + "]";
+        }
     }
 }
