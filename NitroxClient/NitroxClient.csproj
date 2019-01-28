@@ -72,6 +72,7 @@
     <Compile Include="Communication\Abstract\IPacketSender.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\FireDouseProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
     <Compile Include="Communication\DeferringPacketReceiver.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
+    <Compile Include="GameLogic\FireManager.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordController.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
     <Compile Include="GameLogic\AI.cs" />

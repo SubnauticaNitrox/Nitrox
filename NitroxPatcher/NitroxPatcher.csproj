@@ -66,6 +66,7 @@
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
     <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
+    <Compile Include="Patches\FireExtinguisher_UseExtinguisher_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
