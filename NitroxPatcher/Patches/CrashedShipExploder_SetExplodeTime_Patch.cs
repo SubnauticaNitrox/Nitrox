@@ -13,13 +13,6 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(CrashedShipExploder);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetExplodeTime", BindingFlags.NonPublic | BindingFlags.Instance);
 
-
-        //TODO instead of disabling UPdate, which we need for actually eploding the ship
-        //because we actually send a packet to trigger the explosion and this packet sets the timeMonitor of crashedShipExploder to -25f
-        //(see StoryEventHandler ExplodeAurora)
-        //when the whole exploding routine starts, we shuold do something else
-        //e.g. disable local timeToStartWarning and/or timeToStartCountdown or sync it with servers'
-
         //set timeToStartCountdown and timeToStartWarning to an bigger value than what the server will have
         //so that the server explodes it first and overrides this value. See StoryEventHandler.ExplodeAurora
         public static void Postfix(CrashedShipExploder __instance)
