@@ -91,7 +91,6 @@
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
-    <Compile Include="Logger\LogFiles.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
