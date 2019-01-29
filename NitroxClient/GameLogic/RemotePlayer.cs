@@ -46,8 +46,6 @@ namespace NitroxClient.GameLogic
             // Get player
             PlayerModel = Body.RequireGameObject("player_view");
 
-            EquipRadiationSuit();
-
             // Move variables to keep player animations from mirroring and for identification
             ArmsController = PlayerModel.GetComponent<ArmsController>();
             ArmsController.smoothSpeedUnderWater = 0;
@@ -216,67 +214,6 @@ namespace NitroxClient.GameLogic
             ReadOnlyCollection<TechType> currentEquipment = new ReadOnlyCollection<TechType>(equipment.ToList());
             
             playerModelManager.UpdateEquipmentVisibility(PlayerModel, currentEquipment);
-        }
-
-        private void EquipRadiationSuit()
-        {
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_body_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_body_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_head_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_head_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_gloves_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_hands_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo/radiationSuit_helmet_geo 1").gameObject.SetActive(true);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1").gameObject.SetActive(true);
-
-            PlayerModel.transform.Find("male_geo/generalSuit").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/generalSuit/flippers_basic_geo").gameObject.SetActive(true);
-        }
-
-        private void EquipReinforcedSuit()
-        {
-            PlayerModel.transform.Find("male_geo/reinforcedSuit/reinforced_suit_01_body_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_body_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/reinforcedSuit/reinforced_suit_01_glove_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_hands_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_head_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_head_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_vest_neckExtension_geo/radiationSuit_helmet_geo 1").gameObject.SetActive(true);
-
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/radiationSuit/radiationSuit_vest_reducedNeck_geo/radiationSuit_tank_geo 1/radiationSuit_tubes_geo 1").gameObject.SetActive(true);
-
-            PlayerModel.transform.Find("male_geo/SwimChargeFins").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/SwimChargeFins/flippers_basic_geo").gameObject.SetActive(true);
-        }
-
-        private void EquipStillSuit()
-        {
-            PlayerModel.transform.Find("male_geo/stillSuit/still_suit_01_body_geo").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_body_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/scubaSuit").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/scubaSuit/scuba_head").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/diveSuit/diveSuit_head_geo").gameObject.SetActive(false);
-
-            PlayerModel.transform.Find("male_geo/scubaSuit/scuba_vest").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/scubaSuit/scuba_vest/scuba_breatherTubes").gameObject.SetActive(true);
-
-            PlayerModel.transform.Find("male_geo/UltraGlideFins").gameObject.SetActive(true);
-            PlayerModel.transform.Find("male_geo/UltraGlideFins/flippers_basic_geo").gameObject.SetActive(true);
         }
     }
 }
