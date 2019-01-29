@@ -164,16 +164,15 @@ namespace NitroxServer.ConfigParser
             return builder.ToString();  
         }
 
-        public string ChangeServerAdminPassword(string pw)
+        public void ChangeServerAdminPassword(string pw)
         {
+            _serverAdminPassword = pw;
 
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config.AppSettings.Settings[DEFAULT_PASSWORD_SETTING].Value = pw;
             config.Save(ConfigurationSaveMode.Modified);
 
             ConfigurationManager.RefreshSection("appSettings");
-
-            return ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
         }
     }
 }
