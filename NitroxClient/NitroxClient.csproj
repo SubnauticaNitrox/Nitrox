@@ -218,7 +218,6 @@
     <Compile Include="GameLogic\PlayerModel\ColorSwap\ColorValueRange.cs" />
     <Compile Include="GameLogic\PlayerModel\ColorSwap\HsvSwapper.cs" />
     <Compile Include="GameLogic\PlayerModel\PlayerEquipmentConstants.cs" />
-    <Compile Include="GameLogic\PlayerModel\PlayerPingBuilder.cs" />
     <Compile Include="GameLogic\PlayerModel\ColorSwap\RebreatherColorSwapManager.cs" />
     <Compile Include="GameLogic\PlayerModel\ColorSwap\RadiationHelmetColorSwapManager.cs" />
     <Compile Include="GameLogic\PlayerModel\ColorSwap\RadiationSuitColorSwapManager.cs" />

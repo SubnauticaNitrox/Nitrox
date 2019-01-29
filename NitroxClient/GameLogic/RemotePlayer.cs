@@ -55,6 +55,8 @@ namespace NitroxClient.GameLogic
 
             AnimationController = PlayerModel.AddComponent<AnimationController>();
 
+            playerModelManager.AttachPing(this);
+
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }
 
