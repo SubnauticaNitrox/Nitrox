@@ -433,10 +433,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Texture2D newBaseTabTexture = baseTabBackgroundImage.sprite.texture.Clone();
             TextureBlock textureBlock = new TextureBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f));
             IColorSwapStrategy alphaChannelSwapper = new AlphaChannelSwapper(0f);
-            HsvColorFilter baseTabBackgroundColorFilter = new HsvColorFilter(alphaChannelSwapper);
-            baseTabBackgroundColorFilter.SetHueRange(185f, 215f);
-            baseTabBackgroundColorFilter.SetAlphaRange(0f, 175f);
-            newBaseTabTexture.SwapTextureColors(baseTabBackgroundColorFilter, textureBlock);
+            HsvSwapper baseTabBackgroundSwapper = new HsvSwapper(alphaChannelSwapper);
+            baseTabBackgroundSwapper.SetHueRange(185f, 215f);
+            baseTabBackgroundSwapper.SetAlphaRange(0f, 175f);
+            newBaseTabTexture.SwapTextureColors(baseTabBackgroundSwapper, textureBlock);
             baseTabBackgroundImage.sprite = Sprite.Create(newBaseTabTexture, new Rect(baseTabBackgroundImage.sprite.textureRect), new Vector2(0f, 0f));
         }
 

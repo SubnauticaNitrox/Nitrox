@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxModel.Core;
 using UnityEngine;
 

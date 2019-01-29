@@ -1,4 +1,4 @@
-﻿namespace NitroxClient.GameLogic.PlayerModel
+﻿namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class ColorValueRange
     {

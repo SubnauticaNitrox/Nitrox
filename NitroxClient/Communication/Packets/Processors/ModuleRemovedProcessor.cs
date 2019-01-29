@@ -10,11 +10,11 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class EquipmentRemoveItemProcessor : ClientPacketProcessor<EquipmentRemoveItem>
+    class ModuleRemovedProcessor : ClientPacketProcessor<ModuleRemoved>
     {
         public const int UNEQUIP_EVENT_TYPE_ID = 1;
 
-        public override void Process(EquipmentRemoveItem packet)
+        public override void Process(ModuleRemoved packet)
         {
             GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
             GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);

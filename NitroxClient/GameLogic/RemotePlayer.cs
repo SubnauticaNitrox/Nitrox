@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -6,11 +8,15 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic
 {
     public class RemotePlayer : INitroxPlayer
     {
+        private readonly PlayerModelManager playerModelManager;
+        private readonly HashSet<TechType> equipment = new HashSet<TechType>();
+
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; set; }
         public GameObject PlayerModel { get; set; }
@@ -26,8 +32,9 @@ namespace NitroxClient.GameLogic
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, PlayerModelManager playerModelManager)
         {
+            this.playerModelManager = playerModelManager;
             Body = playerBody;
             PlayerContext = playerContext;
 
@@ -182,6 +189,31 @@ namespace NitroxClient.GameLogic
                     AnimationController["is_underwater"] = state != AnimChangeState.OFF;
                     break;
             }
+        }
+
+        public void AddEquipment(TechType techType)
+        {
+            if (equipment.Contains(techType))
+            {
+                return;
+            }
+
+            equipment.Add(techType);
+
+            UpdateEquipmentVisibility();
+        }
+
+        public void RemoveEquipment(TechType techType)
+        {
+            equipment.Remove(techType);
+            UpdateEquipmentVisibility();
+        }
+
+        private void UpdateEquipmentVisibility()
+        {
+            ReadOnlyCollection<TechType> currentEquipment = new ReadOnlyCollection<TechType>(equipment.ToList());
+            
+            playerModelManager.UpdateEquipmentVisibility(PlayerModel, currentEquipment);
         }
 
         private void EquipRadiationSuit()

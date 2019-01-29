@@ -5,7 +5,7 @@ using System.Threading;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModel
+namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
     public class ColorSwapAsyncOperation
     {

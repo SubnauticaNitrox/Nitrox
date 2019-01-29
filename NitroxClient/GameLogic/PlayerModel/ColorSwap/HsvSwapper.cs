@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
+﻿using NitroxClient.GameLogic.PlayerModel.Abstract;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.PlayerModel
+namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 {
-    public class HsvColorFilter
+    public class HsvSwapper
     {
         private readonly IColorSwapStrategy colorSwapStrategy;
+        private ColorValueRange alphaValueRange;
         private ColorValueRange hueValueRange;
         private ColorValueRange saturationValueRange;
         private ColorValueRange vibrancyValueRange;
-        private ColorValueRange alphaValueRange;
-        
-        public HsvColorFilter(IColorSwapStrategy colorSwapStrategy)
+
+        public HsvSwapper(IColorSwapStrategy colorSwapStrategy)
         {
             this.colorSwapStrategy = colorSwapStrategy;
             hueValueRange = new ColorValueRange(0f, 1f);
@@ -51,28 +50,6 @@ namespace NitroxClient.GameLogic.PlayerModel
             float newFilterMaxValue = maxAlpha < 1f ? maxAlpha : maxAlpha / 255f;
 
             alphaValueRange = new ColorValueRange(newFilterMinValue, newFilterMaxValue);
-        }
-
-        public IEnumerable<int> GetPixelIndexes(Color[] pixels)
-        {
-            for (int pixelIndex = 0; pixelIndex < pixels.Length; pixelIndex++)
-            {
-                Color pixel = pixels[pixelIndex];
-                float hue;
-                float saturation;
-                float vibrancy;
-                float alpha = pixel.a;
-
-                Color.RGBToHSV(pixel, out hue, out saturation, out vibrancy);
-
-                if (hueValueRange.Covers(hue) &&
-                    saturationValueRange.Covers(saturation) &&
-                    vibrancyValueRange.Covers(vibrancy) &&
-                    alphaValueRange.Covers(alpha))
-                {
-                    yield return pixelIndex;
-                }
-            }
         }
 
         public void SwapColors(Color[] texturePixels)

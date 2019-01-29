@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+﻿using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 
-namespace NitroxClient
+namespace NitroxClient.Unity.Helper
 {
-    public static class ClientExtensions
+    public static class RendererHelpers
     {
         //This entire method is necessary in order to deal with the fact that UWE compiles Subnautica in a mode 
         //that prevents us from accessing the pixel map of the 2D textures they apply to their materials. 
@@ -43,11 +40,11 @@ namespace NitroxClient
         //This applies a color filter to a specific region of a 2D texture.
         public static void SwapTextureColors(
             this Texture2D texture,
-            HsvColorFilter filter,
+            HsvSwapper filter,
             TextureBlock textureBlock)
         {
             Color[] pixels = texture.GetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight);
-            
+
             filter.SwapColors(pixels);
 
             texture.SetPixels(textureBlock.X, textureBlock.Y, textureBlock.BlockWidth, textureBlock.BlockHeight, pixels);
@@ -64,7 +61,7 @@ namespace NitroxClient
         //This applies a color filter to a specific region of a 2D texture.
         public static void UpdateMainTextureColors(
             this Material material,
-            Color[] pixels, 
+            Color[] pixels,
             //IColorSwapStrategy colorSwapStrategy,
             TextureBlock textureBlock)
         {

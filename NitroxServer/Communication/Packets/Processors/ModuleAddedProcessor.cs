@@ -5,27 +5,20 @@ using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    class EquipmentRemoveItemPacketProcessor : AuthenticatedPacketProcessor<EquipmentRemoveItem>
+    class ModuleAddedProcessor : AuthenticatedPacketProcessor<ModuleAdded>
     {
         private readonly PlayerManager playerManager;
         private readonly PlayerData playerData;
 
-        public EquipmentRemoveItemPacketProcessor(PlayerManager playerManager, PlayerData playerData)
+        public ModuleAddedProcessor(PlayerManager playerManager, PlayerData playerData)
         {
             this.playerManager = playerManager;
             this.playerData = playerData;
         }
 
-        public override void Process(EquipmentRemoveItem packet, Player player)
+        public override void Process(ModuleAdded packet, Player player)
         {
-            if (packet.IsPlayerEquipment)
-            {
-                playerData.RemoveEquipment(player.Name, packet.ItemGuid);
-            }
-            else
-            {
-                playerData.RemoveModule(packet.ItemGuid);
-            }
+            playerData.AddModule(packet.EquippedItemData);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

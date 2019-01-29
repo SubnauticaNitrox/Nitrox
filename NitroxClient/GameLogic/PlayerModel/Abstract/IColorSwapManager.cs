@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel.Abstract

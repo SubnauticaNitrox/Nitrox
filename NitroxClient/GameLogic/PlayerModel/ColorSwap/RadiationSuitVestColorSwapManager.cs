@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -22,7 +23,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
             return operation =>
             {
-                HsvColorFilter radiationSuitVestFilter = new HsvColorFilter(colorSwapStrategy);
+                HsvSwapper radiationSuitVestFilter = new HsvSwapper(colorSwapStrategy);
                 radiationSuitVestFilter.SetSaturationRange(0f, 35f);
                 radiationSuitVestFilter.SetVibrancyRange(12f, 100f);
 

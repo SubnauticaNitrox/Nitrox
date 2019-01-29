@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -39,15 +40,15 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
             return operation =>
             {
-                HsvColorFilter radiationSuitLegFilter = new HsvColorFilter(hueSaturationVibrancySwapper);
+                HsvSwapper radiationSuitLegFilter = new HsvSwapper(hueSaturationVibrancySwapper);
                 radiationSuitLegFilter.SetSaturationRange(0f, 35f);
                 radiationSuitLegFilter.SetVibrancyRange(40f, 100f);
 
-                HsvColorFilter radiationSuitArmAndFeetFilter = new HsvColorFilter(hueSwapper);
+                HsvSwapper radiationSuitArmAndFeetFilter = new HsvSwapper(hueSwapper);
                 radiationSuitArmAndFeetFilter.SetHueRange(0f, 100f);
                 radiationSuitArmAndFeetFilter.SetVibrancyRange(30f, 100f);
 
-                HsvColorFilter radiationSuitBeltFilter = new HsvColorFilter(hueSwapper);
+                HsvSwapper radiationSuitBeltFilter = new HsvSwapper(hueSwapper);
                 radiationSuitBeltFilter.SetVibrancyRange(3f, 100f);
                 radiationSuitBeltFilter.SetHueRange(0f, 90f);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
+using NitroxClient.Unity.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -24,7 +25,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
 
             return operation =>
             {
-                HsvColorFilter rebreatherFilter = new HsvColorFilter(colorSwapStrategy);
+                HsvSwapper rebreatherFilter = new HsvSwapper(colorSwapStrategy);
                 rebreatherFilter.SetHueRange(0f, 25f);
 
                 rebreatherFilter.SwapColors(texturePixels);

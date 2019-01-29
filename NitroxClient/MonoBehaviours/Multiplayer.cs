@@ -10,6 +10,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -170,12 +171,6 @@ namespace NitroxClient.MonoBehaviours
             yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
 
             swapOperation.ApplySwappedColors();
-
-            PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
-            playerModelDirector
-                .AddDiveSuit();
-
-            playerModelDirector.Construct();
         }
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)

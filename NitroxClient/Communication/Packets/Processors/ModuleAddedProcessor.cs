@@ -11,11 +11,11 @@ using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class EquipmentAddItemProcessor : ClientPacketProcessor<EquipmentAddItem>
+    class ModuleAddedProcessor : ClientPacketProcessor<ModuleAdded>
     {
         public const int EQUIP_EVENT_TYPE_ID = 0;
 
-        public override void Process(EquipmentAddItem packet)
+        public override void Process(ModuleAdded packet)
         {
             EquippedItemData equippedItemData = packet.EquippedItemData;
             GameObject gameObject = SerializationHelper.GetGameObject(equippedItemData.SerializedData);

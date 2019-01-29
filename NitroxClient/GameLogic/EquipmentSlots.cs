@@ -25,11 +25,6 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            // save current parent to prevent infinite oxygen when tank equipped above water #290
-            Transform parent = pickupable.gameObject.transform.parent;
-            // set pickupable parent to null to prevent deserialized function throwing errors when packet get to other players
-            pickupable.gameObject.transform.SetParent(null);
-            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
@@ -38,21 +33,43 @@ namespace NitroxClient.GameLogic
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
+            Transform parent = pickupable.gameObject.transform.parent;
+            pickupable.gameObject.transform.SetParent(null);
+            byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
+            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
             Player player = owner.GetComponent<Player>();
-            bool isPlayerEquipment = (player != null);
-            EquipmentAddItem equipPacket = new EquipmentAddItem(equippedItem, isPlayerEquipment);
-            packetSender.Send(equipPacket);
-            // re-assign parent to prevent infinite oxygen #290
+
+            if (player != null)
+            {
+                TechType techType = pickupable.GetTechType();
+                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType, equippedItem);
+                packetSender.Send(equipmentAdded);
+                pickupable.gameObject.transform.SetParent(parent);
+
+                return;
+            }
+
+            ModuleAdded moduleAdded = new ModuleAdded(equippedItem);
+            packetSender.Send(moduleAdded);
             pickupable.gameObject.transform.SetParent(parent);
         }
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
-            string ownerGuid = GuidHelper.GetGuid(owner);
+            Player player = owner.GetComponent<Player>();
 
+            if (player != null)
+            {
+                TechType techType = pickupable.GetTechType();
+                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType, itemGuid);
+                packetSender.Send(equipmentAdded);
+
+                return;
+            }
+
+            string ownerGuid = GuidHelper.GetGuid(owner);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
@@ -60,10 +77,8 @@ namespace NitroxClient.GameLogic
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
-            Player player = owner.GetComponent<Player>();
-            bool isPlayerEquipment = (player != null);
-            EquipmentRemoveItem equipPacket = new EquipmentRemoveItem(ownerGuid, slot, itemGuid, isPlayerEquipment);
-            packetSender.Send(equipPacket);
+            ModuleRemoved moduleRemoved = new ModuleRemoved(ownerGuid, slot, itemGuid);
+            packetSender.Send(moduleRemoved);
         }
 
         public void AddItems(List<EquippedItemData> equippedItems)

@@ -15,11 +15,13 @@ namespace NitroxClient.GameLogic
     public class PlayerManager
     {
         private readonly ILocalNitroxPlayer localPlayer;
+        private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
-        public PlayerManager(ILocalNitroxPlayer localPlayer)
+        public PlayerManager(ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
             this.localPlayer = localPlayer;
+            this.playerModelManager = playerModelManager;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -57,17 +59,13 @@ namespace NitroxClient.GameLogic
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext);
+            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, playerModelManager);
 
             RemotePlayerColorApplicator colorApplicator = remotePlayerBody.AddComponent<RemotePlayerColorApplicator>();
             colorApplicator.AttachRemotePlayer(remotePlayer);
 
-            PlayerModelDirector playerModelDirector = new PlayerModelDirector(remotePlayer);
-            playerModelDirector
-                .AddPing()
-                .AddDiveSuit();
-
-            playerModelDirector.Construct();
+            PlayerPingBuilder builder = new PlayerPingBuilder();
+            builder.Build(remotePlayer);
 
             DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
