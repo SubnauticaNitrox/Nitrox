@@ -110,16 +110,24 @@ namespace NitroxServer.ConfigParser
             }
         }
 
+        private string _serverAdminPassword = null;
         public string ServerAdminPassword
         {
             get
             {
-                string _ServerAdminPassword = null;
-                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING]))
+                if(_serverAdminPassword == null)
                 {
-                    _ServerAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                    string configPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                    if (!string.IsNullOrEmpty(configPassword))
+                    {
+                        _serverAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
+                    }
+                    else
+                    {
+                        _serverAdminPassword = GenerateRandomString(12, false); // generate temporary random password
+                    }
                 }
-                return _ServerAdminPassword ?? GenerateRandomString(12, false);
+                return _serverAdminPassword;
             }
         }
 
