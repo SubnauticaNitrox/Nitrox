@@ -28,7 +28,10 @@ namespace NitroxClient.Communication.Packets.Processors
 
             if (fireGameObject.IsPresent())
             {
-                fireGameObject.Get().RequireComponent<Fire>().Douse(packet.DouseAmount);
+                using (packetSender.Suppress<FireDoused>())
+                {
+                    fireGameObject.Get().RequireComponent<Fire>().Douse(packet.DouseAmount);
+                }
             }
             else
             {
