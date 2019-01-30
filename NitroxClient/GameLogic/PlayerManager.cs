@@ -61,9 +61,6 @@ namespace NitroxClient.GameLogic
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
             RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, playerModelManager);
 
-            RemotePlayerColorApplicator colorApplicator = remotePlayerBody.AddComponent<RemotePlayerColorApplicator>();
-            colorApplicator.AttachRemotePlayer(remotePlayer);
-
             DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);

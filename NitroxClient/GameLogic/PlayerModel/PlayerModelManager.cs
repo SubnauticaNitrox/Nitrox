@@ -1,22 +1,32 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
+using NitroxClient.MonoBehaviours;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel
 {
     public class PlayerModelManager
     {
+        private readonly IEnumerable<IColorSwapManager> colorSwapManagers;
         private readonly GameObject signalBasePrototype;
 
-        public PlayerModelManager()
+        public PlayerModelManager(IEnumerable<IColorSwapManager> colorSwapManagers)
         {
+            this.colorSwapManagers = colorSwapManagers;
             signalBasePrototype = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"));
             signalBasePrototype.transform.localScale = new Vector3(.5f, .5f, .5f);
             signalBasePrototype.transform.localPosition += new Vector3(0, 0.8f, 0);
+        }
+
+        public void BeginApplyPlayerColor(INitroxPlayer player)
+        {
+            Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player));
         }
 
         public void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
@@ -79,6 +89,19 @@ namespace NitroxClient.GameLogic.PlayerModel
 
             MethodInfo setColor = typeof(uGUI_Pings).GetMethod("OnColor", BindingFlags.NonPublic | BindingFlags.Instance);
             setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerSettings.PlayerColor});
+        }
+
+        private IEnumerator ApplyPlayerColor(INitroxPlayer player)
+        {
+            ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(player, colorSwapManagers);
+            swapOperation.BeginColorSwap();
+
+            while (!swapOperation.IsColorSwapComplete())
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+
+            swapOperation.ApplySwappedColors();
         }
     }
 }
