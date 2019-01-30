@@ -17,7 +17,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
         {
             string guid = deterministicBatchGenerator.NextGuid();
 
-            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType, parentEntity.Level, parentEntity.ClassId, true, guid);
+            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType, parentEntity.Level, "", true, guid);
         }
     }
 }

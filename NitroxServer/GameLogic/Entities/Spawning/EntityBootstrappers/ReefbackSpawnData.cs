@@ -11,6 +11,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
             public int minNumber;
             public int maxNumber;
             public float probability;
+            public string classId;
         }
         
         public static List<ReefbackEntity> SpawnableCreatures { get; } = new List<ReefbackEntity>()

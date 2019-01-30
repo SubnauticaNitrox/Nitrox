@@ -35,7 +35,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
                         for(int i = 0; i < totalToSpawn; i++)
                         {
                             string guid = deterministicBatchGenerator.NextGuid();
-                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, parentEntity.Scale, creature.techType, parentEntity.Level, parentEntity.ClassId, true, guid);
+                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, parentEntity.Scale, creature.techType, parentEntity.Level, creature.classId, true, guid);
                             parentEntity.ChildEntities.Add(child);
                         }
 
