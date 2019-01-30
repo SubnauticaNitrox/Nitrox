@@ -13,6 +13,7 @@ namespace NitroxServer
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
         public bool IsRunning { get; private set; }
+        private bool IsSaving;
         public static Server Instance { get; private set; }
 
         public Server(WorldPersistence worldPersistence, World world, UdpServer udpServer, ServerConfig serverConfig)
@@ -31,7 +32,13 @@ namespace NitroxServer
 
         public void Save()
         {
+            if (IsSaving)
+            {
+                return;
+            }
+            IsSaving = true;
             worldPersistence.Save(world);
+            IsSaving = false;
         }
 
         public void Start()

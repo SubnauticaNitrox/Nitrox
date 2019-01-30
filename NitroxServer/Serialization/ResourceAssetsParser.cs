@@ -89,11 +89,15 @@ namespace NitroxServer.Serialization
             {
                 return gameResourcesPath;
             }
-            else if (File.Exists(Path.Combine("..", "resources.assets")))
+            else if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => Subnautica/Subnautica_Data/SubServer
             {
                 return Path.GetFullPath(Path.Combine("..", "resources.assets"));
             }
-            else if (File.Exists("resources.assets"))
+            else if (File.Exists(Path.Combine("..", "Subnautica_Data", "resources.assets")))   //  SubServer => Subnautica/SubServer
+            {
+                return Path.GetFullPath(Path.Combine("..", "Subnautica_Data", "resources.assets"));
+            }
+            else if (File.Exists("resources.assets"))   //  SubServer/* => Subnautica/Subnautica_Data/
             {
                 return Path.GetFullPath("resources.assets");
             }
