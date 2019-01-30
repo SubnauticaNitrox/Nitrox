@@ -108,7 +108,27 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 {
                     case "cyclops":
                         string guid = Guid.NewGuid().ToString();
-                        VehicleModel newVehicle = new VehicleModel(TechType.Cyclops, guid, MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, Quaternion.LookRotation(MainCamera.camera.transform.right), Optional<List<InteractiveChildObjectIdentifier>>.Empty());
+                        // Because why not
+                        Vector4 yellow = new Vector4(0.9f, 0.8f, 0f, 1);
+                        Vector3 yellowHSB = new Vector3(0.2f, 1, 1);
+                        Vector4 green = new Vector4(0.003f, 0.795f, 0f, 1);
+                        Vector3 greenHSB = new Vector3(0.3f, 1, 0.8f);
+                        Vector4 black = new Vector4(0, 0, 0, 1);
+                        Vector3 blackHSB = new Vector3(0.5f, 1, 0);
+                        Vector4 white = Color.white;
+                        Vector3[] HSB = new Vector3[5] { yellowHSB, greenHSB, blackHSB, white, white };
+                        Vector3[] Colours = new Vector3[5] { yellow, green, black, white, white };
+
+                        VehicleModel newVehicle = new VehicleModel(TechType.Cyclops, 
+                            guid, 
+                            MainCamera.camera.transform.position + 20f * MainCamera.camera.transform.forward, 
+                            Quaternion.LookRotation(MainCamera.camera.transform.right), 
+                            Optional<List<InteractiveChildObjectIdentifier>>.Empty(), 
+                            Optional<string>.Empty(), 
+                            "", 
+                            HSB, 
+                            Colours);
+
                         NitroxServiceLocator.LocateService<Vehicles>().CreateVehicle(newVehicle);
                         NitroxServiceLocator.LocateService<Vehicles>().BroadcastCreatedVehicle(newVehicle);
                         break;

@@ -22,6 +22,7 @@ namespace NitroxServer.Communication.Packets.Processors
             vehicleData.UpdateVehicleColours(packet.Index, packet.Guid, packet.HSB, packet.Color);
             playerManager.SendPacketToOtherPlayers(packet, player);
 
+            Log.Info(packet);
         }
     }
 }
