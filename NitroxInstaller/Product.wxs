@@ -170,9 +170,9 @@
                 <File Id="protobuf_net.dll" Name="protobuf-net.dll"
                       Source="$(var.NitroxServer_TargetDir)protobuf-net.dll" />
             </Component>
-            <Component Id="AssetsTools.Net.dll" Guid="*">
-                <File Id="AssetsTools.Net.dll" Name="AssetsTools.Net.dll"
-                      Source="$(var.NitroxServer_TargetDir)AssetsTools.Net.dll" />
+            <Component Id="AssetsTools.NET.dll" Guid="*">
+                <File Id="AssetsTools.NET.dll" Name="AssetsTools.NET.dll"
+                      Source="$(var.NitroxServer_TargetDir)AssetsTools.NET.dll" />
             </Component>
             <Component Id="SubServerConfig">
                 <File Id="SubServerConfig" Name="NitroxServer.exe.config"
