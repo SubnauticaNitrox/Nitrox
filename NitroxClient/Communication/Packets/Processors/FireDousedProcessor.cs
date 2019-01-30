@@ -2,8 +2,6 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -24,18 +22,11 @@ namespace NitroxClient.Communication.Packets.Processors
         /// </summary>
         public override void Process(FireDoused packet)
         {
-            Optional<GameObject> fireGameObject = GuidHelper.GetObjectFrom(packet.Guid);
+            GameObject fireGameObject = GuidHelper.RequireObjectFrom(packet.Guid);
 
-            if (fireGameObject.IsPresent())
+            using (packetSender.Suppress<FireDoused>())
             {
-                using (packetSender.Suppress<FireDoused>())
-                {
-                    fireGameObject.Get().RequireComponent<Fire>().Douse(packet.DouseAmount);
-                }
-            }
-            else
-            {
-                Log.Warn("[FireDousedProcessor Could not find Fire! Guid: " + packet.Guid + "]");
+                fireGameObject.RequireComponent<Fire>().Douse(packet.DouseAmount);
             }
         }
     }

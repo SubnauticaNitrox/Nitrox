@@ -83,7 +83,7 @@
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\GameLogic\DamageInfoData.cs" />
-    <Compile Include="DataStructures\GameLogic\FireData.cs" />
+    <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />

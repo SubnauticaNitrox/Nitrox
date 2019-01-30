@@ -41,9 +41,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            Optional<string> subRootGuid = Optional<string>.Of(GuidHelper.GetGuid(fire.fireSubRoot.gameObject));
-            // Optional<CyclopsRooms> startInRoom = Optional<CyclopsRooms>.Of(room.roomLinks.room);
-            // Optional<int> activeNodeIndex = Optional<int>.Of(nodeIndex);
+            string subRootGuid = GuidHelper.GetGuid(fire.fireSubRoot.gameObject);
 
             FireCreated packet = new FireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
@@ -84,66 +82,65 @@ namespace NitroxClient.GameLogic
         /// <param name="room">The room the Fire will be spawned in</param>
         /// <param name="spawnNodeIndex">Each <see cref="CyclopsRooms"/> has multiple static Fire spawn points called spawnNodes. If the wrong index is provided,
         ///     the clients will see fires in different places from the owner</param>
-        public void Create(string fireGuid, Optional<string> subRootGuid, CyclopsRooms room, int spawnNodeIndex)
+        public void Create(string fireGuid, string subRootGuid, CyclopsRooms room, int spawnNodeIndex)
         {
-            // A Fire is either on a Cyclops or not. Currently, creating a Fire is only possible if it's in a Cyclops.
-            // I have not found any other code that creates a fire
-            if (subRootGuid.IsPresent())
+            SubFire subFire = GuidHelper.RequireObjectFrom(subRootGuid).GetComponent<SubRoot>().damageManager.subFire;
+            Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
+            // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
+            Transform transform2 = roomFiresDict[room].spawnNodes[(int)spawnNodeIndex];
+
+            // If a fire already exists at the node, replace the old Guid with the new one
+            if (transform2.childCount > 0)
             {
-                SubFire subFire = GuidHelper.RequireObjectFrom(subRootGuid.Get()).GetComponent<SubRoot>().damageManager.subFire;
-                Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-                // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
-                Transform transform2 = roomFiresDict[room].spawnNodes[spawnNodeIndex];
+                Fire existingFire = transform2.GetComponentInChildren<Fire>();
 
-                // If a fire already exists at the node, replace the old Guid with the new one
-                if (transform2.childCount > 0)
+                if (GuidHelper.GetGuid(existingFire.gameObject) != fireGuid)
                 {
-                    Fire existingFire = transform2.GetComponentInChildren<Fire>();
+                    Log.Error("[Fires.Create Fire already exists at node index " + spawnNodeIndex
+                        + "! Replacing existing Fire Guid " + GuidHelper.GetGuid(existingFire.gameObject)
+                        + " with Guid " + fireGuid
+                        + "]");
 
-                    if (GuidHelper.GetGuid(existingFire.gameObject) != fireGuid)
-                    {
-                        Log.Error("[Fires.Create Fire already exists at node index " + spawnNodeIndex
-                            + "! Replacing existing Fire Guid " + GuidHelper.GetGuid(existingFire.gameObject)
-                            + " with Guid " + fireGuid
-                            + "]");
-
-                        GuidHelper.SetNewGuid(existingFire.gameObject, fireGuid);
-                    }
-
-                    return;
+                    GuidHelper.SetNewGuid(existingFire.gameObject, fireGuid);
                 }
 
-                List<Transform> availableNodes = (List<Transform>)subFire.ReflectionGet("availableNodes");
-                availableNodes.Clear();
-                foreach (Transform transform in roomFiresDict[room].spawnNodes)
-                {
-                    if (transform.childCount == 0)
-                    {
-                        availableNodes.Add(transform);
-                    }
-                }
-                roomFiresDict[room].fireValue++;
-                PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
-                if (component == null)
-                {
-                    return;
-                }
-                GameObject gameObject = component.SpawnManual();
-                Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
-                if (componentInChildren)
-                {
-                    componentInChildren.fireSubRoot = subFire.subRoot;
-                    GuidHelper.SetNewGuid(componentInChildren.gameObject, fireGuid);
-                }
+                return;
+            }
 
-                subFire.ReflectionSet("roomFires", roomFiresDict);
-                subFire.ReflectionSet("availableNodes", availableNodes);
+            List<Transform> availableNodes = (List<Transform>)subFire.ReflectionGet("availableNodes");
+            availableNodes.Clear();
+            foreach (Transform transform in roomFiresDict[room].spawnNodes)
+            {
+                if (transform.childCount == 0)
+                {
+                    availableNodes.Add(transform);
+                }
+            }
+            roomFiresDict[room].fireValue++;
+            PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
+            if (component == null)
+            {
+                return;
             }
             else
             {
-                // This is where non-Cyclops Fire creation logic should go
-                Log.Error("[FireCreatedProcessor No Cyclops Guid, CyclopsRoom, or SpawnNodeIndex passed. There is currently no way to create a Fire outside of a Cyclops! Fire Guid: " + fireGuid + "]");
+                Log.Error("[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
+                    + " Fire Guid: " + fireGuid
+                    + " SubRoot Guid: " + subRootGuid
+                    + " Room: " + room
+                    + " NodeIndex: " + spawnNodeIndex
+                    + "]");
             }
+            GameObject gameObject = component.SpawnManual();
+            Fire componentInChildren = gameObject.GetComponentInChildren<Fire>();
+            if (componentInChildren)
+            {
+                componentInChildren.fireSubRoot = subFire.subRoot;
+                GuidHelper.SetNewGuid(componentInChildren.gameObject, fireGuid);
+            }
+
+            subFire.ReflectionSet("roomFires", roomFiresDict);
+            subFire.ReflectionSet("availableNodes", availableNodes);
         }
     }
 }

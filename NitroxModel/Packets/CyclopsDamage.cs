@@ -16,7 +16,7 @@ namespace NitroxModel.Packets
         public float DamageManagerHealth { get; }
         public float SubFireHealth { get; }
         public int[] DamagePointIndexes { get; }
-        public FireData[] RoomFires { get; }
+        public CyclopsFireData[] RoomFires { get; }
         public DamageInfoData DamageInfo { get; }
 
         /// <param name="guid"><see cref="SubRoot"/> Guid.</param>
@@ -28,7 +28,7 @@ namespace NitroxModel.Packets
         /// <param name="roomFires"><see cref="SubFire.RoomFire.spawnNodes"/> where <see cref="Transform.childCount"/> > 0. 
         ///     Null if only a Cyclops health change.</param>
         /// <param name="damageInfo">Null if a repair or extinguish.</param>
-        public CyclopsDamage(string guid, float subHealth, float damageManagerHealth, float subFireHealth, int[] damagePointIndexes, FireData[] roomFires, DamageInfoData damageInfo = null)
+        public CyclopsDamage(string guid, float subHealth, float damageManagerHealth, float subFireHealth, int[] damagePointIndexes, CyclopsFireData[] roomFires, DamageInfoData damageInfo = null)
         {
             Guid = guid;
             SubHealth = subHealth;

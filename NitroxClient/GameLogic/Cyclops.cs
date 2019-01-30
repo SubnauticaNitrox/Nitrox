@@ -120,7 +120,7 @@ namespace NitroxClient.GameLogic
                 }
 
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();
-                FireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
+                CyclopsFireData[] firePoints = GetActiveRoomFires(subRoot.GetComponent<SubFire>()).ToArray();
 
                 CyclopsDamage packet = new CyclopsDamage(subGuid, subRoot.GetComponent<LiveMixin>().health, subRoot.damageManager.subLiveMixin.health, subRoot.GetComponent<SubFire>().liveMixin.health, damagePointIndexes, firePoints, damageInfo);
                 packetSender.Send(packet);
@@ -151,7 +151,7 @@ namespace NitroxClient.GameLogic
         /// Get all of the index locations of all the fires on the <see cref="SubRoot"/>. <see cref="SubFire.RoomFire.spawnNodes"/> contains
         /// a static list of all possible fire nodes.
         /// </summary>
-        private IEnumerable<FireData> GetActiveRoomFires(SubFire subFire)
+        private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
             string subRootGuid = GuidHelper.GetGuid(subFire.subRoot.gameObject);
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
@@ -162,8 +162,8 @@ namespace NitroxClient.GameLogic
                 {
                     if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        yield return new FireData(GuidHelper.GetGuid(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject), 
-                            Optional<string>.Of(subRootGuid),
+                        yield return new CyclopsFireData(GuidHelper.GetGuid(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject), 
+                            subRootGuid,
                             roomFire.Key,
                             i);
                     }

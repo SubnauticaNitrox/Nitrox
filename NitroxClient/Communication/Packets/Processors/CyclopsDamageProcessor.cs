@@ -6,7 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -139,12 +138,12 @@ namespace NitroxClient.Communication.Packets.Processors
         /// <summary>
         /// Add/remove fires until it matches the <paramref name="roomFires"/> array. Can trigger <see cref="FireDoused"/> packets
         /// </summary>
-        private void SetActiveRoomFires(SubRoot subRoot, FireData[] roomFires)
+        private void SetActiveRoomFires(SubRoot subRoot, CyclopsFireData[] roomFires)
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-            Optional<string> subRootGuid = Optional<string>.Of(GuidHelper.GetGuid(subRoot.gameObject));
-            FireData fireNode = null;
+            string subRootGuid = GuidHelper.GetGuid(subRoot.gameObject);
+            CyclopsFireData fireNode = null;
 
             if (roomFires != null && roomFires.Length > 0)
             {
@@ -167,7 +166,6 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
                             {
-                                // fires.Create(fireNode.FireGuid, subRootGuid, Optional<CyclopsRooms>.Of(fireNode.Room), Optional<int>.Of(fireNode.NodeIndex));
                                 fires.Create(fireNode.FireGuid, subRootGuid, fireNode.Room, fireNode.NodeIndex);
                             }
                         }

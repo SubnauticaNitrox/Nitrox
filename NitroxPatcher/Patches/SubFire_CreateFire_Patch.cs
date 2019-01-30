@@ -6,7 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
