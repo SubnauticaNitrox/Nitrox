@@ -89,7 +89,7 @@
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
-    <Compile Include="Packets\FireCreated.cs" />
+    <Compile Include="Packets\CyclopsFireCreated.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
     <Compile Include="Packets\BedEnter.cs" />

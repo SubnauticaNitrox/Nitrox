@@ -84,7 +84,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamagePointRepairedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\FireCreatedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />

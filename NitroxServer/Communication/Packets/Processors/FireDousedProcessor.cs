@@ -4,16 +4,16 @@ using NitroxServer.GameLogic;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    class FireCreatedProcessor : AuthenticatedPacketProcessor<FireCreated>
+    class FireDousedProcessor : AuthenticatedPacketProcessor<FireDoused>
     {
         private readonly PlayerManager playerManager;
 
-        public FireCreatedProcessor(PlayerManager playerManager)
+        public FireDousedProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
         }
 
-        public override void Process(FireCreated packet, Player simulatingPlayer)
+        public override void Process(FireDoused packet, Player simulatingPlayer)
         {
             playerManager.SendPacketToOtherPlayers(packet, simulatingPlayer);
         }

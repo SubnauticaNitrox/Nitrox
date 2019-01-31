@@ -67,7 +67,7 @@
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamagePointHealthChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\FireCreatedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />

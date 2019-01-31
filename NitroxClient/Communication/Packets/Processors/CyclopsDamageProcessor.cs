@@ -166,7 +166,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
                             {
-                                fires.Create(fireNode.FireGuid, subRootGuid, fireNode.Room, fireNode.NodeIndex);
+                                fires.Create(new CyclopsFireData(fireNode.FireGuid, subRootGuid, fireNode.Room, fireNode.NodeIndex));
                             }
                         }
                     }

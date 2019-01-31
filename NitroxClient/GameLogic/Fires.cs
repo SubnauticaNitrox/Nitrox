@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -43,7 +44,7 @@ namespace NitroxClient.GameLogic
         {
             string subRootGuid = GuidHelper.GetGuid(fire.fireSubRoot.gameObject);
 
-            FireCreated packet = new FireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, room.roomLinks.room, nodeIndex);
+            CyclopsFireCreated packet = new CyclopsFireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
@@ -82,26 +83,26 @@ namespace NitroxClient.GameLogic
         /// <param name="room">The room the Fire will be spawned in</param>
         /// <param name="spawnNodeIndex">Each <see cref="CyclopsRooms"/> has multiple static Fire spawn points called spawnNodes. If the wrong index is provided,
         ///     the clients will see fires in different places from the owner</param>
-        public void Create(string fireGuid, string subRootGuid, CyclopsRooms room, int spawnNodeIndex)
+        public void Create(CyclopsFireData fireData)
         {
-            SubFire subFire = GuidHelper.RequireObjectFrom(subRootGuid).GetComponent<SubRoot>().damageManager.subFire;
+            SubFire subFire = GuidHelper.RequireObjectFrom(fireData.CyclopsGuid).GetComponent<SubRoot>().damageManager.subFire;
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
             // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
-            Transform transform2 = roomFiresDict[room].spawnNodes[(int)spawnNodeIndex];
+            Transform transform2 = roomFiresDict[fireData.Room].spawnNodes[fireData.NodeIndex];
 
             // If a fire already exists at the node, replace the old Guid with the new one
             if (transform2.childCount > 0)
             {
                 Fire existingFire = transform2.GetComponentInChildren<Fire>();
 
-                if (GuidHelper.GetGuid(existingFire.gameObject) != fireGuid)
+                if (GuidHelper.GetGuid(existingFire.gameObject) != fireData.CyclopsGuid)
                 {
-                    Log.Error("[Fires.Create Fire already exists at node index " + spawnNodeIndex
+                    Log.Error("[Fires.Create Fire already exists at node index " + fireData.NodeIndex
                         + "! Replacing existing Fire Guid " + GuidHelper.GetGuid(existingFire.gameObject)
-                        + " with Guid " + fireGuid
+                        + " with Guid " + fireData.CyclopsGuid
                         + "]");
 
-                    GuidHelper.SetNewGuid(existingFire.gameObject, fireGuid);
+                    GuidHelper.SetNewGuid(existingFire.gameObject, fireData.CyclopsGuid);
                 }
 
                 return;
@@ -109,14 +110,14 @@ namespace NitroxClient.GameLogic
 
             List<Transform> availableNodes = (List<Transform>)subFire.ReflectionGet("availableNodes");
             availableNodes.Clear();
-            foreach (Transform transform in roomFiresDict[room].spawnNodes)
+            foreach (Transform transform in roomFiresDict[fireData.Room].spawnNodes)
             {
                 if (transform.childCount == 0)
                 {
                     availableNodes.Add(transform);
                 }
             }
-            roomFiresDict[room].fireValue++;
+            roomFiresDict[fireData.Room].fireValue++;
             PrefabSpawn component = transform2.GetComponent<PrefabSpawn>();
             if (component == null)
             {
@@ -125,10 +126,10 @@ namespace NitroxClient.GameLogic
             else
             {
                 Log.Error("[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
-                    + " Fire Guid: " + fireGuid
-                    + " SubRoot Guid: " + subRootGuid
-                    + " Room: " + room
-                    + " NodeIndex: " + spawnNodeIndex
+                    + " Fire Guid: " + fireData.FireGuid
+                    + " SubRoot Guid: " + fireData.CyclopsGuid
+                    + " Room: " + fireData.Room
+                    + " NodeIndex: " + fireData.NodeIndex
                     + "]");
             }
             GameObject gameObject = component.SpawnManual();
@@ -136,7 +137,7 @@ namespace NitroxClient.GameLogic
             if (componentInChildren)
             {
                 componentInChildren.fireSubRoot = subFire.subRoot;
-                GuidHelper.SetNewGuid(componentInChildren.gameObject, fireGuid);
+                GuidHelper.SetNewGuid(componentInChildren.gameObject, fireData.FireGuid);
             }
 
             subFire.ReflectionSet("roomFires", roomFiresDict);
