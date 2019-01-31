@@ -1,5 +1,7 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.PlayerModelBuilder;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
@@ -81,7 +83,7 @@ namespace NitroxClient.GameLogic
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
             GameObject clone = Object.Instantiate(prototype);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-
+            
             return clone;
         }
     }

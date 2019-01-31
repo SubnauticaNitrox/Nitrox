@@ -91,6 +91,10 @@
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
+    <Compile Include="Packets\PlayerEquipmentAdded.cs" />
+    <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
+    <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />
@@ -142,8 +146,8 @@
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
     <Compile Include="Packets\EntityTransformUpdates.cs" />
-    <Compile Include="Packets\EquipmentAddItem.cs" />
-    <Compile Include="Packets\EquipmentRemoveItem.cs" />
+    <Compile Include="Packets\ModuleAdded.cs" />
+    <Compile Include="Packets\ModuleRemoved.cs" />
     <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />

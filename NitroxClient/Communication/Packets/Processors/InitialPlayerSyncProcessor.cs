@@ -486,7 +486,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 foreach (InitialRemotePlayerData playerData in remotePlayerData)
                 {
-                    RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext);
+                    RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, playerData.EquippedTechTypes);
 
                     if (playerData.SubRootGuid.IsPresent())
                     {

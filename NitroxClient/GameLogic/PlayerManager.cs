@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours;
-using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using NitroxClient.MonoBehaviours.DiscordRP;
 
 namespace NitroxClient.GameLogic
 {
     public class PlayerManager
     {
         private readonly ILocalNitroxPlayer localPlayer;
+        private readonly PlayerModelManager playerModelManager;
         private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
-        public PlayerManager(ILocalNitroxPlayer localPlayer)
+        public PlayerManager(ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
             this.localPlayer = localPlayer;
+            this.playerModelManager = playerModelManager;
         }
 
         public Optional<RemotePlayer> Find(ushort playerId)
@@ -46,7 +49,7 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public RemotePlayer Create(PlayerContext playerContext)
+        public RemotePlayer Create(PlayerContext playerContext, List<TechType> equippedTechTypes)
         {
             Validate.NotNull(playerContext);
 
@@ -56,18 +59,13 @@ namespace NitroxClient.GameLogic
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer player = new RemotePlayer(remotePlayerBody, playerContext);
+            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, playerModelManager);
 
-            PlayerModelDirector playerModelDirector = new PlayerModelDirector(player);
-            playerModelDirector
-                .AddPing()
-                .AddDiveSuit();
-
-            playerModelDirector.Construct();
-
-            playersById.Add(player.PlayerId, player);
             DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
-            return player;
+
+            playersById.Add(remotePlayer.PlayerId, remotePlayer);
+
+            return remotePlayer;
         }
 
         public void RemovePlayer(ushort playerId)

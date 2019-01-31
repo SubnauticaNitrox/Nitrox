@@ -7,8 +7,10 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.MonoBehaviours.DiscordRP;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
@@ -23,12 +25,35 @@ namespace NitroxClient.MonoBehaviours
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-
+        
         private IMultiplayerSession multiplayerSession;
         private DeferringPacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
         public bool InitialSyncCompleted;
+
+        public static void SubnauticaLoadingCompleted()
+        {
+            if (Main != null && Main.IsMultiplayer())
+            {
+                Main.InitialSyncCompleted = false;
+                Main.StartCoroutine(LoadAsync());
+            }
+            else
+            {
+                SetLoadingComplete();
+            }
+        }
+
+        public static IEnumerator LoadAsync()
+        {
+            WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
+            WaitScreen.ShowImmediately();
+            yield return Main.StartCoroutine(Main.StartSession());
+            yield return new WaitUntil(() => Main.InitialSyncCompleted);
+            WaitScreen.Remove(item);
+            SetLoadingComplete();
+        }
 
         public void Awake()
         {
@@ -74,33 +99,15 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public void StartSession()
+        public IEnumerator StartSession()
         {
             DevConsole.RegisterConsoleCommand(this, "execute", false, false);
             OnBeforeMultiplayerStart?.Invoke();
-            InitializeLocalPlayerState();
+            yield return StartCoroutine(InitializeLocalPlayerState());
             multiplayerSession.JoinSession();
             InitMonoBehaviours();
             Utils.SetContinueMode(true);
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        }
-
-        private void OnConsoleCommand_execute(NotificationCenter.Notification n)
-        {
-            string[] args = new string[n.data.Values.Count];
-            n.data.Values.CopyTo(args, 0);
-
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
-        }
-
-        private void InitializeLocalPlayerState()
-        {
-            ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
-            PlayerModelDirector playerModelDirector = new PlayerModelDirector(localPlayer);
-            playerModelDirector
-                .AddDiveSuit();
-
-            playerModelDirector.Construct();
         }
 
         public void InitMonoBehaviours()
@@ -132,39 +139,6 @@ namespace NitroxClient.MonoBehaviours
             NitroxServiceLocator.EndCurrentLifetimeScope();
         }
 
-        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
-        {
-            if (scene.name == "XMenu")
-            {
-                // If we just disconnected from a multiplayer session, then we need to kill the connection here.
-                // Maybe a better place for this, but here works in a pinch.
-                StopCurrentSession();
-            }
-        }
-
-        public static void SubnauticaLoadingCompleted()
-        {
-            if (Main != null && Main.IsMultiplayer())
-            {
-                Main.InitialSyncCompleted = false;
-                Main.StartCoroutine(LoadAsync());
-            }
-            else
-            {
-                SetLoadingComplete();
-            }
-        }
-
-        public static IEnumerator LoadAsync()
-        {
-            WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
-            WaitScreen.ShowImmediately();
-            Main.StartSession();
-            yield return new WaitUntil(() => Main.InitialSyncCompleted);
-            WaitScreen.Remove(item);
-            SetLoadingComplete();
-        }
-
         private static void SetLoadingComplete()
         {
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
@@ -178,6 +152,35 @@ namespace NitroxClient.MonoBehaviours
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+        }
+
+        private void OnConsoleCommand_execute(NotificationCenter.Notification n)
+        {
+            string[] args = new string[n.data.Values.Count];
+            n.data.Values.CopyTo(args, 0);
+
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new ServerCommand(args));
+        }
+
+        private IEnumerator InitializeLocalPlayerState()
+        {
+            ILocalNitroxPlayer localPlayer = NitroxServiceLocator.LocateService<ILocalNitroxPlayer>();
+            IEnumerable<IColorSwapManager> colorSwapManagers = NitroxServiceLocator.LocateService<IEnumerable<IColorSwapManager>>();
+
+            ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(localPlayer, colorSwapManagers).BeginColorSwap();
+            yield return new WaitUntil(() => swapOperation.IsColorSwapComplete());
+
+            swapOperation.ApplySwappedColors();
+        }
+
+        private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            if (scene.name == "XMenu")
+            {
+                // If we just disconnected from a multiplayer session, then we need to kill the connection here.
+                // Maybe a better place for this, but here works in a pinch.
+                StopCurrentSession();
+            }
         }
     }
 }

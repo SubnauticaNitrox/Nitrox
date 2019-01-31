@@ -12,16 +12,16 @@ namespace NitroxClient.MonoBehaviours
             gameObject.AddComponent<MainMenuMods>();
 
 #if DEBUG
-            AttachMultiplayerConsole();
+            AttachWarpToCommand();
 #endif
 
             CreateDebugger();
         }
 
-        private void AttachMultiplayerConsole()
+        private void AttachWarpToCommand()
         {
             GameObject consoleRoot = new GameObject();
-            consoleRoot.AddComponent<ConsoleJoinServer>();
+            consoleRoot.AddComponent<WarpToCommand>();
         }
 
         private void CreateDebugger()
