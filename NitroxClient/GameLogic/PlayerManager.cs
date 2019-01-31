@@ -49,7 +49,7 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
-        public RemotePlayer Create(PlayerContext playerContext)
+        public RemotePlayer Create(PlayerContext playerContext, List<TechType> equippedTechTypes)
         {
             Validate.NotNull(playerContext);
 
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic
             }
 
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
-            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, playerModelManager);
+            RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, playerModelManager);
 
             DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
 

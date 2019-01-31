@@ -32,11 +32,13 @@ namespace NitroxClient.GameLogic
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, PlayerModelManager playerModelManager)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, PlayerModelManager playerModelManager)
         {
-            this.playerModelManager = playerModelManager;
             Body = playerBody;
             PlayerContext = playerContext;
+            equipment = new HashSet<TechType>(equippedTechTypes);
+
+            this.playerModelManager = playerModelManager;
 
             Body.name = PlayerName;
 
@@ -55,6 +57,8 @@ namespace NitroxClient.GameLogic
 
             playerModelManager.AttachPing(this);
             playerModelManager.BeginApplyPlayerColor(this);
+
+            UpdateEquipmentVisibility();
 
             ErrorMessage.AddMessage($"{PlayerName} joined the game.");
         }

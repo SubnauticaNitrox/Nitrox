@@ -25,8 +25,9 @@ namespace NitroxClient.GameLogic
         {
             string ownerGuid = GuidHelper.GetGuid(owner);
             string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
+            TechType techType = pickupable.GetTechType();
 
-            if (pickupable.GetTechType() == TechType.VehicleStorageModule)
+            if (techType == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
                 VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
@@ -37,12 +38,11 @@ namespace NitroxClient.GameLogic
             pickupable.gameObject.transform.SetParent(null);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot);
+            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot, techType);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
-                TechType techType = pickupable.GetTechType();
                 PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType, equippedItem);
                 packetSender.Send(equipmentAdded);
                 pickupable.gameObject.transform.SetParent(parent);

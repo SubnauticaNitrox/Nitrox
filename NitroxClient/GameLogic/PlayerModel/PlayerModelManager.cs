@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic.PlayerModel
 
         public void BeginApplyPlayerColor(INitroxPlayer player)
         {
-            Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player));
+            Multiplayer.Main.StartCoroutine(ApplyPlayerColor(player, colorSwapManagers));
         }
 
         public void UpdateEquipmentVisibility(GameObject playerModel, ReadOnlyCollection<TechType> currentEquipment)
@@ -49,7 +49,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             SetInGamePingColor(player, ping);
         }
 
-        private EquipmentVisibilityHandler BuildVisibilityHandlerChain()
+        private static EquipmentVisibilityHandler BuildVisibilityHandlerChain()
         {
             return new DiveSuitVisibilityHandler()
                 .WithPredecessorHandler(new ScubaSuitVisibiliyHandler())
@@ -91,7 +91,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerSettings.PlayerColor});
         }
 
-        private IEnumerator ApplyPlayerColor(INitroxPlayer player)
+        private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)
         {
             ColorSwapAsyncOperation swapOperation = new ColorSwapAsyncOperation(player, colorSwapManagers);
             swapOperation.BeginColorSwap();
