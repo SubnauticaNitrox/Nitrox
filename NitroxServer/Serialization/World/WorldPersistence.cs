@@ -131,7 +131,7 @@ namespace NitroxServer.Serialization.World
             world.TimeKeeper.ServerStartTime = serverStartTime;
 
             world.SimulationOwnershipData = new SimulationOwnershipData();
-            world.PlayerManager = new PlayerManager(playerData);
+            world.PlayerManager = new PlayerManager(playerData, config);
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
