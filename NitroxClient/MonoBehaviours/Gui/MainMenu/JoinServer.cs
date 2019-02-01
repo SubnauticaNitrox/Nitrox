@@ -3,7 +3,10 @@ using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.GameLogic.PlayerModelBuilder;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -55,13 +58,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             float hue;
             float saturation;
-            float vibrance;
+            float vibrancy;
 
             Color playerColor = new Color(activePlayerPreference.RedAdditive, activePlayerPreference.GreenAdditive, activePlayerPreference.BlueAdditive);
 
-            Color.RGBToHSV(playerColor, out hue, out saturation, out vibrance);
+            Color.RGBToHSV(playerColor, out hue, out saturation, out vibrancy);
             uGUI_ColorPicker colorPicker = playerSettingsPanel.GetComponentInChildren<uGUI_ColorPicker>();
-            colorPicker.SetHSB(new Vector3(hue, 1f, vibrance));
+            colorPicker.SetHSB(new Vector3(hue, 1f, vibrancy));
 
             GameObject playerNameInputFieldGameObject = playerSettingsPanel.RequireGameObject("InputField");
 
@@ -428,10 +431,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             //This removes the extra "tabs" from the base texture.
             Texture2D newBaseTabTexture = baseTabBackgroundImage.sprite.texture.Clone();
-            HsvColorFilter baseTabBackgroundColorFilter = new HsvColorFilter(-1f, -1f, -1f, 0f);
-            baseTabBackgroundColorFilter.AddHueRange(185f, 215f);
-            baseTabBackgroundColorFilter.AddAlphaRange(0f, 175f);
-            newBaseTabTexture.ApplyFiltersToBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f), baseTabBackgroundColorFilter);
+            TextureBlock textureBlock = new TextureBlock(3, 3, 160, (int)(baseTabBackgroundImage.sprite.textureRect.height - 71f));
+            IColorSwapStrategy alphaChannelSwapper = new AlphaChannelSwapper(0f);
+            HsvSwapper baseTabBackgroundSwapper = new HsvSwapper(alphaChannelSwapper);
+            baseTabBackgroundSwapper.SetHueRange(185f, 215f);
+            baseTabBackgroundSwapper.SetAlphaRange(0f, 175f);
+            newBaseTabTexture.SwapTextureColors(baseTabBackgroundSwapper, textureBlock);
             baseTabBackgroundImage.sprite = Sprite.Create(newBaseTabTexture, new Rect(baseTabBackgroundImage.sprite.textureRect), new Vector2(0f, 0f));
         }
 

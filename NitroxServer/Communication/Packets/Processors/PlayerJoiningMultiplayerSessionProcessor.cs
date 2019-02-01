@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -35,15 +36,18 @@ namespace NitroxServer.Communication.Packets.Processors
                 AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Get());
                 playerManager.SendPacketToOtherPlayers(addEscapePod, player);
             }
-            
-            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext);
+
+            List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(player.Name);
+            List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+
+            PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
                                                                        wasBrandNewPlayer,
                                                                        world.EscapePodData.EscapePods,
                                                                        assignedEscapePodGuid,
-                                                                       world.PlayerData.GetEquippedItemsForInitialSync(player.Name),
+                                                                       equippedItems,
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
@@ -67,7 +71,10 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 if (!player.Equals(otherPlayer))
                 {
-                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootGuid);
+                    List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(otherPlayer.Name);
+                    List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+
+                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootGuid, techTypes);
                     playerData.Add(remotePlayer);
                 }
             }
