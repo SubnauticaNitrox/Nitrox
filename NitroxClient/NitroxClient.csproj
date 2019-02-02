@@ -63,6 +63,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\Packets\Processors\ExosuitSpawnedArmProcessor.cs" />
+    <Compile Include="GameLogic\ExosuitModuleEvent.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
