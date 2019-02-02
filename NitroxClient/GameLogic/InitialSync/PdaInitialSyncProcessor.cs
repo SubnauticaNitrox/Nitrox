@@ -27,15 +27,22 @@ namespace NitroxClient.GameLogic.InitialSync
             SetPDALog(packet.PDAData.PDALogEntries);
         }
         
-        private void SetEncyclopediaEntry(List<string> entries)
+        private void SetEncyclopediaEntry(List<EncyclopediaEntry> entries)
         {
             Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
-                foreach (string entry in entries)
+                foreach (EncyclopediaEntry entry in entries)
                 {
-                    PDAEncyclopedia.Add(entry, false);
+                    if (!entry.IsTimeCapsule)
+                    {
+                        PDAEncyclopedia.Add(entry.Key, false);
+                    }
+                    else
+                    {
+                        PDAEncyclopedia.AddTimeCapsule(entry.Key, false);
+                    }
                 }
             }
         }
