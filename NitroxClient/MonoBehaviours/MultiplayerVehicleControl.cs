@@ -12,6 +12,8 @@ namespace NitroxClient.MonoBehaviours
 
         protected readonly SmoothParameter SmoothYaw = new SmoothParameter();
         protected readonly SmoothParameter SmoothPitch = new SmoothParameter();
+        protected readonly SmoothVector SmoothLeftArm = new SmoothVector();
+        protected readonly SmoothVector SmoothRightArm = new SmoothVector();
         protected SmoothVector SmoothPosition;
         protected SmoothVector SmoothVelocity;
         protected SmoothRotation SmoothRotation;
@@ -57,6 +59,12 @@ namespace NitroxClient.MonoBehaviours
             SmoothPitch.Target = pitch;
         }
 
+        internal virtual void SetArmPositions(Vector3 leftArmPosition, Vector3 rightArmPosition)
+        {
+           SmoothLeftArm.Target = leftArmPosition;
+           SmoothRightArm.Target = rightArmPosition;
+        }
+
         internal virtual void Enter()
         {
             enabled = true;
@@ -72,15 +80,25 @@ namespace NitroxClient.MonoBehaviours
 
     public abstract class MultiplayerVehicleControl<T> : MultiplayerVehicleControl
     {
+
         private readonly FieldInfo steeringWheelYaw = ReflectionHelper.GetField<T>("steeringWheelYaw");
         private readonly FieldInfo steeringWheelPitch = ReflectionHelper.GetField<T>("steeringWheelPitch");
+
         protected T SteeringControl;
+        protected T ArmPositions;
 
         protected override void FixedUpdate()
         {
             base.FixedUpdate();
+
             SteeringControl.ReflectionSet(steeringWheelYaw, SmoothYaw.SmoothValue);
             SteeringControl.ReflectionSet(steeringWheelPitch, SmoothPitch.SmoothValue);
+
+            //Transform tmpAimLeftTarget = (Transform)ArmPositions.ReflectionGet("aimTargetLeft", true, false);
+            //Transform tmpAimRightTarget = (Transform)ArmPositions.ReflectionGet("aimTargetRight", true, false);
+
+            //tmpAimLeftTarget.position = SmoothLeftArm.SmoothValue;
+            //tmpAimRightTarget.position = SmoothRightArm.SmoothValue;
 
         }
     }

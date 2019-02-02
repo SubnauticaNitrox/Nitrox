@@ -98,7 +98,8 @@ namespace NitroxClient.GameLogic
                 {
                     mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);                    
+                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
+                    mvc.SetArmPositions(vehicleModel.LeftAimTarget, vehicleModel.RightAimTarget);
                 }
             }
 
