@@ -4,6 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -57,6 +58,8 @@ namespace NitroxClient.MonoBehaviours
             TechType techType;
             float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
             bool appliedThrottle = false;
+            Vector3 leftArmPosition = new Vector3(0, 0, 0);
+            Vector3 rightArmPosition = new Vector3(0, 0, 0);
 
             if (vehicle != null)
             {
@@ -131,7 +134,9 @@ namespace NitroxClient.MonoBehaviours
                                                   angularVelocity,
                                                   steeringWheelYaw,
                                                   steeringWheelPitch,
-                                                  appliedThrottle);
+                                                  appliedThrottle,
+                                                  leftArmPosition,
+                                                  rightArmPosition);
 
             return Optional<VehicleMovementData>.Of(model);
         }
