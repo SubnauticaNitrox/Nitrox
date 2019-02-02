@@ -66,6 +66,11 @@
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsDamagePointHealthChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSession.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionContext.cs" />
     <Compile Include="Communication\Abstract\IMultiplayerSessionConnectionState.cs" />
@@ -132,6 +137,7 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerKickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleOnPilotModeChangedProcessor.cs" />
@@ -179,6 +185,7 @@
     <Compile Include="GameLogic\Debugger.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\Abstract\EquipmentVisibilityHandler.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
+    <Compile Include="GameLogic\Fires.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\FinsVisibilityHandler.cs" />
     <Compile Include="GameLogic\Helper\VehicleChildObjectIdentifierHelper.cs" />
     <Compile Include="GameLogic\HUD\DenyOwnershipHand.cs" />

@@ -66,7 +66,7 @@ namespace NitroxServer.GameLogic.Entities
 
                     if (isOtherPlayer && player.CanSee(entity) && simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
-                        Log.Info("Player " + player.Name + "has taken over simulating " + entity.Guid);
+                        Log.Info("Player " + player.Name + " has taken over simulating " + entity.Guid);
                         ownershipChanges.Add(new SimulatedEntity(entity.Guid, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }

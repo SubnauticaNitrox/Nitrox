@@ -82,10 +82,14 @@
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\GameLogic\DamageInfoData.cs" />
+    <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
+    <Compile Include="Packets\CyclopsFireCreated.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
     <Compile Include="Packets\BedEnter.cs" />
@@ -137,6 +141,8 @@
     <Compile Include="Packets\CyclopsActivateShield.cs" />
     <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
+    <Compile Include="Packets\CyclopsDamage.cs" />
+    <Compile Include="Packets\CyclopsDestroyed.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
@@ -151,6 +157,7 @@
     <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
     <Compile Include="Packets\FabricatorBeginCrafting.cs" />
     <Compile Include="Packets\FabricatorItemPickup.cs" />
+    <Compile Include="Packets\FireDoused.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
     <Compile Include="Packets\ItemPosition.cs" />
@@ -188,6 +195,7 @@
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />
+    <Compile Include="Packets\VehicleCreated.cs" />
     <Compile Include="Packets\VehicleUndocking.cs" />
     <Compile Include="Packets\VehicleDocking.cs" />
     <Compile Include="Packets\VehicleOnPilotModeChanged.cs" />
@@ -211,7 +219,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

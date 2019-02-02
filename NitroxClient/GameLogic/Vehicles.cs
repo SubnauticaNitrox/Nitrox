@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +12,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.Communication;
-using System.Collections;
 
 namespace NitroxClient.GameLogic
 {
@@ -230,6 +230,14 @@ namespace NitroxClient.GameLogic
                 GameObject T = Object.Get();
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids);
             }
+        }
+
+        public void BroadcastCreatedVehicle(VehicleModel vehicle)
+        {
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
+            VehicleCreated vehicleCreated = new VehicleCreated(vehicle, localPlayer.PlayerName);
+            packetSender.Send(vehicleCreated);
         }
 
         public void BroadcastDestroyedVehicle(Vehicle vehicle)
