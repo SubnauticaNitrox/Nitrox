@@ -52,5 +52,16 @@ namespace NitroxClient.MonoBehaviours
                 }
             }
         }
+
+        internal override void SetArmPositions(Vector3 leftArmPosition, Vector3 rightArmPosition)
+        {
+            base.SetArmPositions(leftArmPosition, rightArmPosition);
+            Transform leftAim = (Transform)exosuit.ReflectionGet("aimTargetLeft", true);
+            Transform rightAim = (Transform)exosuit.ReflectionGet("aimTargetRight", true);
+
+            leftAim.transform.localPosition = new Vector3(leftAim.transform.localPosition.x, leftArmPosition.y, leftAim.transform.localPosition.z);
+            rightAim.transform.localPosition = new Vector3(rightAim.transform.localPosition.x, rightArmPosition.y, rightAim.transform.localPosition.z);
+
+        }
     }
 }

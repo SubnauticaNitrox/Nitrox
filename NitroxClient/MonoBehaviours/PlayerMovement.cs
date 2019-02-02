@@ -89,6 +89,16 @@ namespace NitroxClient.MonoBehaviours
                         if (exosuit)
                         {
                             appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
+
+                            Transform leftAim = (Transform)exosuit.ReflectionGet("aimTargetLeft", true);
+                            Transform rightAim = (Transform)exosuit.ReflectionGet("aimTargetRight", true);
+
+                            Vector3 eulerAngles = exosuit.transform.eulerAngles;
+                            eulerAngles.x = MainCamera.camera.transform.eulerAngles.x;
+                            Quaternion quaternion = Quaternion.Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+
+                            leftArmPosition = leftAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
+                            rightArmPosition = rightAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
                         }
                     }
                 }

@@ -81,6 +81,7 @@ namespace NitroxClient.MonoBehaviours
             base.FixedUpdate();
             SteeringControl.ReflectionSet(steeringWheelYaw, SmoothYaw.SmoothValue);
             SteeringControl.ReflectionSet(steeringWheelPitch, SmoothPitch.SmoothValue);
+
         }
     }
 }
