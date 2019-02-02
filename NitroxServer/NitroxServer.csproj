@@ -129,6 +129,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DayCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />

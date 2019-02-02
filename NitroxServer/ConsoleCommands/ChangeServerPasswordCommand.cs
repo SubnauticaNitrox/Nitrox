@@ -8,12 +8,12 @@ using NitroxServer.ConfigParser;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class ChangeAdminPasswordCommand : Command
+    internal class ChangeServerPasswordCommand : Command
     {
         private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
 
-        public ChangeAdminPasswordCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "<password>", "Change the admin password")
+        public ChangeServerPasswordCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "[<password>]", "Change the server password. Clear password without argument")
         {
             this.playerManager = playerManager;
             this.serverConfig = serverConfig;
@@ -24,23 +24,23 @@ namespace NitroxServer.ConsoleCommands
             try
             {
                 string playerName = player.IsPresent() ? player.Get().Name : "SERVER";
-                ChangeAdminPassword(args[0], playerName);   
+                ChangeServerPassword(args.Length==0?"":args[0], playerName);
             }
             catch (Exception ex)
             {
-                Log.Error("Error attempting to change admin password: " + args[0], ex);
+                Log.Error("Error attempting to change server password: " + args[0], ex);
             }
         }
 
         public override bool VerifyArgs(string[] args)
         {
-            return args.Length >= 1;
+            return args.Length >= 0;
         }
 
-        private void ChangeAdminPassword(string password, string name)
+        private void ChangeServerPassword(string password, string name)
         {
-            serverConfig.ChangeAdminPassword(password);
-            Log.Info($"Admin password changed to \"{password}\" by {name}");
+            serverConfig.ChangeServerPassword(password);
+            Log.Info($"Server password changed to \"{password}\" by {name}");
         }
     }
 }
