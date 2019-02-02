@@ -4,149 +4,33 @@ using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
 using System.Text;
 using NitroxModel.Logger;
+using System.ComponentModel;
 
 namespace NitroxServer.ConfigParser
 {
     public class ServerConfig
     {
-        private const int MAX_CONNECTIONS = 100;
-        private const string MAX_CONNECTIONS_SETTING = "MaxConnections";
-        private const int DEFAULT_SERVER_PORT = 11000;
-        private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
-        private const int DEFAULT_SAVE_INTERVAL = 60000;
-        private const string DEFAULT_SAVE_SETTING = "SaveInterval";
-        private const GameModeOption DEFAULT_GAMEMODE = GameModeOption.Survival;
-        private const string GAMEMODE_SETTING = "GameMode";
-        private const bool DEFAULT_DISABLECONSOLE = true;
-        private const string DISABLECONSOLE_SETTING = "DisableConsole";
-        private const string DEFAULT_PASSWORD_SETTING = "ServerAdminPassword";
-        private const string SAVENAME_SETTING = "SaveName";
-        private const string DEFAULT_SAVENAME_SETTING = "save";
-
-        private Dictionary<string, GameModeOption> gameModeByConfig = new Dictionary<string, GameModeOption>
-        {
-            {"survival", GameModeOption.Survival},
-            {"creative", GameModeOption.Creative},
-            {"hardcore", GameModeOption.Hardcore},
-            {"permadeath", GameModeOption.Permadeath},
-            {"freedom", GameModeOption.Freedom},
-        };
-
-        private int? _serverPort = null;
-        public int ServerPort
-        {
-            get
-            {
-                int configValue;
-                if (_serverPort == null && int.TryParse(ConfigurationManager.AppSettings[DEFAULT_SERVER_PORT_SETTING], out configValue))
-                {
-                    _serverPort = configValue;
-                }
-                return _serverPort ?? DEFAULT_SERVER_PORT;
-            }
-        }
-
-        private int? _maxConnections = null;
-        public int MaxConnections
-        {
-            get
-            {
-                int configValue;
-                if (_maxConnections == null && int.TryParse(ConfigurationManager.AppSettings[MAX_CONNECTIONS_SETTING], out configValue))
-                {
-                    _maxConnections = configValue;
-                }
-                return _maxConnections ?? MAX_CONNECTIONS;
-            }
-        }
-
-        private bool? _disableConsole = null;
-        public bool DisableConsole
-        {
-            get
-            {
-                bool configValue;
-                if (_disableConsole == null && bool.TryParse(ConfigurationManager.AppSettings[DISABLECONSOLE_SETTING], out configValue))
-                {
-                    _disableConsole = configValue;
-                }
-                return _disableConsole ?? DEFAULT_DISABLECONSOLE;
-            }
-        }
-
-        private GameModeOption? _gameMode = null;
-        public GameModeOption GameMode
-        {
-            get
-            {
-                if (_gameMode == null && ConfigurationManager.AppSettings[GAMEMODE_SETTING] != null)
-                {
-                    _gameMode = ParseGameMode(ConfigurationManager.AppSettings[GAMEMODE_SETTING]);
-                }
-                return _gameMode ?? DEFAULT_GAMEMODE;
-            }
-        }
-
-        private GameModeOption ParseGameMode(string stringGameMode)
-        {
-            GameModeOption gameMode = GameModeOption.Survival;
-            stringGameMode = stringGameMode.ToLower(); // Lets be frank people have habits
-
-            gameModeByConfig.TryGetValue(stringGameMode, out gameMode);
-            return gameMode;
-        }
-
-        private int? _saveInterval = null;
-        public int SaveInterval
-        {
-            get
-            {
-                int configValue;
-                if (_saveInterval == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SAVE_SETTING], out configValue))
-                {
-                    _saveInterval = configValue;
-                }
-                return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
-            }
-        }
-
-        private string _serverAdminPassword = null;
-        public string ServerAdminPassword
-        {
-            get
-            {
-                if(_serverAdminPassword == null)
-                {
-                    string configPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
-                    if (!string.IsNullOrEmpty(configPassword))
-                    {
-                        _serverAdminPassword = ConfigurationManager.AppSettings[DEFAULT_PASSWORD_SETTING];
-                    }
-                    else
-                    {
-                        _serverAdminPassword = GenerateRandomString(12, false); // generate temporary random password
-                    }
-                }
-                return _serverAdminPassword;
-            }
-        }
-
-        public string SaveName
-        {
-            get
-            {
-                string _SaveName = null;
-                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings[SAVENAME_SETTING]))
-                {
-                    _SaveName = ConfigurationManager.AppSettings[SAVENAME_SETTING];
-                }
-                return _SaveName ?? DEFAULT_SAVENAME_SETTING;
-            }
-        }
-
+        private readonly ServerConfigItem<int>    portSetting = new ServerConfigItem<int>("Port", 11000);
+        private readonly ServerConfigItem<int>    saveIntervalSetting   = new ServerConfigItem<int>("SaveInterval", 60000);
+        private readonly ServerConfigItem<int>    maxConnectionsSetting = new ServerConfigItem<int>("MaxConnections", 100);
+        private readonly ServerConfigItem<bool>   disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", true);
+        private readonly ServerConfigItem<string> saveNameSetting       = new ServerConfigItem<string>("SaveName", "save");
+        private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
+        private readonly ServerConfigItem<string> serverAdminPasswordSetting = new ServerConfigItem<string>("ServerAdminPassword", GenerateRandomString(12, false));
+        private readonly ServerConfigItem<GameModeOption> gameModeSetting    = new ServerConfigItem<GameModeOption>("GameMode", GameModeOption.Survival);
+        
+        public int ServerPort { get { return portSetting.Value; } }
+        public int SaveInterval { get { return saveIntervalSetting.Value; } }
+        public int MaxConnections { get { return maxConnectionsSetting.Value; } }
+        public bool DisableConsole { get { return disableConsoleSetting.Value; } }
+        public string SaveName { get { return saveNameSetting.Value; } }
+        public string ServerPassword { get { return serverPasswordSetting.Value; } }
+        public string ServerAdminPassword { get { return serverAdminPasswordSetting.Value; } }
+        public GameModeOption GameMode { get { return gameModeSetting.Value; } }
+        
         // Generate a random string with a given size and case.   
         // If second parameter is true, the return string is lowercase  
-        public string GenerateRandomString(int size, bool lowerCase)
+        public static string GenerateRandomString(int size, bool lowerCase)
         {
             StringBuilder builder = new StringBuilder();
             Random random = new Random();
@@ -166,13 +50,50 @@ namespace NitroxServer.ConfigParser
 
         public void ChangeServerAdminPassword(string pw)
         {
-            _serverAdminPassword = pw;
+            serverAdminPasswordSetting.Value = pw;
 
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings[DEFAULT_PASSWORD_SETTING].Value = pw;
+            config.AppSettings.Settings[serverAdminPasswordSetting.Name].Value = pw;
             config.Save(ConfigurationSaveMode.Modified);
 
             ConfigurationManager.RefreshSection("appSettings");
+        }
+    }
+    
+    internal class ServerConfigItem<T>
+    {
+        public T Value;
+        public readonly string Name;
+        public ServerConfigItem(string itemName, T defaultValue)
+        {
+            Name = itemName;
+            Value = defaultValue;
+            try
+            {
+                TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+                if (converter == null)
+                {
+                    return;
+                }
+
+                string text = ConfigurationManager.AppSettings[itemName];
+
+                // Empty string is ignored
+                if (typeof(T) == typeof(string) && (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text)))
+                {
+                    return;
+                }
+                // Enum members are assumed to be Titlecased
+                if (typeof(T).IsEnum)
+                {
+                    text = text.ToLower();
+                    text = char.ToUpper(text[0]) + text.Substring(1);
+                }
+
+                Value = (T)converter.ConvertFromString(text);
+
+            }
+            catch (Exception) { }
         }
     }
 }
