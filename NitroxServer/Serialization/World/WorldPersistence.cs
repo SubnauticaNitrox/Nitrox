@@ -147,10 +147,12 @@ namespace NitroxServer.Serialization.World
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
             world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
 
-            Log.Info("World GameMode " + gameMode);
+            Log.Info("World GameMode: " + gameMode);
 
             Log.Info("Server Password: " + (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword));
-            Log.Info("Admin Password: " + config.AdminPassword + ". You can edit the server config file or run /changeadminpassword NEW_PASSWORD to change it");
+            Log.Info("Admin Password: " + config.AdminPassword);
+
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

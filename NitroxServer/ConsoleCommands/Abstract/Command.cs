@@ -38,7 +38,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Validate.NotNull(argsDescription);
 
             Name = name;
-            Description = description ?? "";
+            Description = string.IsNullOrEmpty(description) ? "No Descrption" : description;
             ArgsDescription = argsDescription;
             RequiredPermLevel = requiredPermLevel;
             Alias = alias ?? new string[0];
@@ -51,6 +51,19 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public override string ToString()
         {
             return $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(ArgsDescription)}: {ArgsDescription}, {nameof(Alias)}: [{string.Join(", ", Alias)}]";
+        }
+
+        public string ToHelpText()
+        {
+            string cmd = Name;
+            string text = "";
+            if (Alias.Length > 0)
+            {
+                cmd += "/" + string.Join("/", Alias);
+            }
+            cmd += "  " + ArgsDescription;
+
+            return $"{cmd, -40}  -  {Description}";
         }
 
         public void SendServerMessageIfPlayerIsPresent(Optional<Player> player, string message)
