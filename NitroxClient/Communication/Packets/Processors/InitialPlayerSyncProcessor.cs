@@ -17,6 +17,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxClient.GameLogic.Bases.Metadata;
+using System.Linq;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -48,8 +50,6 @@ namespace NitroxClient.Communication.Packets.Processors
             SetEscapePodInfo(packet.EscapePodsData, packet.AssignedEscapePodGuid);
             SetPlayerGuid(packet.PlayerGuid);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
-            SpawnVehicles(packet.Vehicles);
-            SpawnPlayerEquipment(packet.EquippedItems); //Need to Set Equipment On Vehicles before SpawnItemContainer due to the locker upgrade (VehicleStorageModule Seamoth / Prawn)
             SpawnBasePieces(packet.BasePieces);
             SpawnGlobalRootEntities(packet.GlobalRootEntities);
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
@@ -58,13 +58,17 @@ namespace NitroxClient.Communication.Packets.Processors
             SetKnownTech(packet.PDAData.KnownTechTypes);
             SetPDALog(packet.PDAData.PDALogEntries);
             SetPlayerStats(packet.PlayerStatsData);
+            SetPlayerGameMode(packet.GameMode);
 
             bool hasBasePiecesToSpawn = packet.BasePieces.Count > 0;
+            bool hasVehiclesToSpawn = packet.Vehicles.Count > 0;
 
-            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
             SpawnRemotePlayersAfterBasePiecesFinish(packet.RemotePlayerData, hasBasePiecesToSpawn);
+            SpawnVehiclesAfterBasePiecesFinish(packet.Vehicles, hasBasePiecesToSpawn);
             SetPlayerLocationAfterBasePiecesFinish(packet.PlayerSpawnData, packet.PlayerSubRootGuid, hasBasePiecesToSpawn);
             AssignBasePieceMetadataAfterBuildingsComplete(packet.BasePieces);
+            SpawnPlayerEquipment(packet.EquippedItems, hasVehiclesToSpawn, hasBasePiecesToSpawn);
+            SpawnInventoryItemsAfterBasePiecesFinish(packet.InventoryItems, hasBasePiecesToSpawn, packet.PlayerGuid);
         }
 
         private void SpawnGlobalRootEntities(List<Entity> globalRootEntities)
@@ -192,13 +196,19 @@ namespace NitroxClient.Communication.Packets.Processors
             Log.Info("Received initial sync Player Guid: " + playerguid);
         }    
         
-        private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems)
+        private void SpawnPlayerEquipment(List<EquippedItemData> equippedItems, bool vehiclesToSpawn, bool basePiecesToSpawn)
         {
             Log.Info("Received initial sync packet with " + equippedItems.Count + " equipment items");
 
-            using (packetSender.Suppress<EquipmentAddItem>())
+            EquipmentItemAdder itemAdder = new EquipmentItemAdder(packetSender, equippedItems);
+
+            if (vehiclesToSpawn && basePiecesToSpawn)
             {
-                equipment.AddItems(equippedItems);
+                ThrottledBuilder.main.QueueDrained += itemAdder.AddEquipmentToInventories;
+            }
+            else
+            {
+                itemAdder.AddEquipmentToInventories(null, null);
             }
         }
 
@@ -215,8 +225,8 @@ namespace NitroxClient.Communication.Packets.Processors
                     buildEventQueue.EnqueueBasePiecePlaced(basePiece);
 
                     if (basePiece.ConstructionCompleted)
-                    {
-                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.NewBaseGuid);
+                    {                        
+                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.BaseGuid);
                     }
                     else
                     {
@@ -226,15 +236,10 @@ namespace NitroxClient.Communication.Packets.Processors
             }
         }
 
-        private void SpawnVehicles(List<VehicleModel> vehicleModels)
+        private void SetPlayerGameMode(GameModeOption gameMode)
         {
-            Log.Info("Received initial sync packet with " + vehicleModels.Count + " vehicles");
-
-            foreach (VehicleModel vehicle in vehicleModels)
-            {
-                vehicles.CreateVehicle(vehicle);
-            }
-
+            Log.Info("Recieved initial sync packet with game mode " + gameMode);
+            GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
         }
 
         /*
@@ -325,7 +330,76 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
             }
         }
-        
+
+        /*
+        * This class simply encapsulates a callback method that is invoked when the throttled builder
+        * is completed with the initial sync of vehicles.  We keep this in a new class to be able to
+        * hold the relevant equipment and use them when the time comes.  This can be later extended
+        * to wait on other events if need be.
+        */
+        private class EquipmentItemAdder
+        {
+            private IPacketSender packetSender;
+            private List<EquippedItemData> equippedItems;
+
+            public EquipmentItemAdder(IPacketSender packetSender, List<EquippedItemData> equippedItems)
+            {
+                this.packetSender = packetSender;
+                this.equippedItems = equippedItems;
+            }
+
+            public void AddEquipmentToInventories(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= AddEquipmentToInventories;
+
+                using (packetSender.Suppress<ItemContainerAdd>())
+                {
+    
+                    foreach (EquippedItemData equippedItem in equippedItems)
+                    {
+                        GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
+
+                        // Mark this entity as spawned by the server
+                        gameObject.AddComponent<NitroxEntity>();
+
+                        Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
+
+                        Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(equippedItem.ContainerGuid);
+
+                        if (opGameObject.IsPresent())
+                        {
+                            GameObject owner = opGameObject.Get();
+
+                            Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+
+                            if (opEquipment.IsPresent())
+                            {
+                                Equipment equipment = opEquipment.Get();
+                                InventoryItem inventoryItem = new InventoryItem(pickupable);
+                                inventoryItem.container = equipment;
+                                inventoryItem.item.Reparent(equipment.tr);
+
+                                Dictionary<string, InventoryItem> itemsBySlot = (Dictionary<string, InventoryItem>)equipment.ReflectionGet("equipment");
+                                itemsBySlot[equippedItem.Slot] = inventoryItem;
+
+                                equipment.ReflectionCall("UpdateCount", false, false, new object[] { pickupable.GetTechType(), true });
+                                Equipment.SendEquipmentEvent(pickupable, 0, owner, equippedItem.Slot);
+                                equipment.ReflectionCall("NotifyEquip", false, false, new object[] { equippedItem.Slot, inventoryItem });
+                            }
+                            else
+                            {
+                                Log.Info("Could not find equipment type for " + gameObject.name);
+                            }
+                        }
+                        else
+                        {
+                            Log.Info("Could not find Container for " + gameObject.name);
+                        }
+                    }
+                }
+            }
+        }
+
         private void SetPlayerLocationAfterBasePiecesFinish(Vector3 position, Optional<string> subRootGuid, bool basePiecesToSpawn)
         {
             Log.Info("Received initial sync packet with location " + position + " and subroot " + subRootGuid);
@@ -412,7 +486,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 foreach (InitialRemotePlayerData playerData in remotePlayerData)
                 {
-                    RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext);
+                    RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, playerData.EquippedTechTypes);
 
                     if (playerData.SubRootGuid.IsPresent())
                     {
@@ -428,6 +502,50 @@ namespace NitroxClient.Communication.Packets.Processors
                         }
                     }
                 }
+            }
+        }
+
+        private void SpawnVehiclesAfterBasePiecesFinish(List<VehicleModel> vehicleModels, bool basePiecesToSpawn)
+        {
+            Log.Info("Received initial sync packet with {0} vehicles", vehicleModels.Count);
+
+            if (vehicleModels.Count == 0)
+            {
+                return;
+            }
+
+            VehicleCreator vehicleCreator = new VehicleCreator(vehicleModels, vehicles);
+
+            if(basePiecesToSpawn)
+            {
+                ThrottledBuilder.main.QueueDrained += vehicleCreator.CreateVehicles;
+            }
+            else
+            {
+                vehicleCreator.CreateVehicles(null, null);
+            }
+        }
+
+        private class VehicleCreator
+        {
+            private List<VehicleModel> vehicleModels;
+            private Vehicles vehicles;
+
+            public VehicleCreator(List<VehicleModel> vehicleModels, Vehicles vehicles)
+            {
+                this.vehicleModels = vehicleModels;
+                this.vehicles = vehicles;
+            }
+
+            public void CreateVehicles(object sender, EventArgs eventArgs)
+            {
+                ThrottledBuilder.main.QueueDrained -= CreateVehicles;
+
+                // TODO: Wait for Cyclops to spawn, as it is not instantaneous but rather async.
+                foreach(VehicleModel vehicle in vehicleModels)
+                {
+                    vehicles.CreateVehicle(vehicle);
+                } 
             }
         }
 

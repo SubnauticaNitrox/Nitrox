@@ -1,58 +1,110 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
+using System.Text;
+using NitroxModel.Logger;
+using System.ComponentModel;
 
 namespace NitroxServer.ConfigParser
 {
     public class ServerConfig
     {
-        private const int MAX_CONNECTIONS = 100;
-        private const string MAX_CONNECTIONS_SETTING = "MaxConnections";
-        private const int DEFAULT_SERVER_PORT = 11000;
-        private const string DEFAULT_SERVER_PORT_SETTING = "DefaultPortNumber";
-        private const int DEFAULT_SAVE_INTERVAL = 60000;
-        private const string DEFAULT_SAVE_SETTING = "SaveInterval";
-
-        private int? _serverPort = null;
-        public int ServerPort
+        private readonly ServerConfigItem<int>    portSetting = new ServerConfigItem<int>("Port", 11000);
+        private readonly ServerConfigItem<int>    saveIntervalSetting   = new ServerConfigItem<int>("SaveInterval", 60000);
+        private readonly ServerConfigItem<int>    maxConnectionsSetting = new ServerConfigItem<int>("MaxConnections", 100);
+        private readonly ServerConfigItem<bool>   disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", true);
+        private readonly ServerConfigItem<string> saveNameSetting       = new ServerConfigItem<string>("SaveName", "save");
+        private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
+        private readonly ServerConfigItem<string> adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", GenerateRandomString(12, false));
+        private readonly ServerConfigItem<GameModeOption> gameModeSetting    = new ServerConfigItem<GameModeOption>("GameMode", GameModeOption.Survival);
+        
+        public int ServerPort { get { return portSetting.Value; } }
+        public int SaveInterval { get { return saveIntervalSetting.Value; } }
+        public int MaxConnections { get { return maxConnectionsSetting.Value; } }
+        public bool DisableConsole { get { return disableConsoleSetting.Value; } }
+        public string SaveName { get { return saveNameSetting.Value; } }
+        public string ServerPassword { get { return serverPasswordSetting.Value; } }
+        public string AdminPassword { get { return adminPasswordSetting.Value; } }
+        public GameModeOption GameMode { get { return gameModeSetting.Value; } }
+        
+        // Generate a random string with a given size and case.   
+        // If second parameter is true, the return string is lowercase  
+        public static string GenerateRandomString(int size, bool lowerCase)
         {
-            get
+            StringBuilder builder = new StringBuilder();
+            Random random = new Random();
+            
+            char ch;
+            for (int i = 0; i < size; i++)
             {
-                int configValue;
-                if (_serverPort == null && int.TryParse(ConfigurationManager.AppSettings[DEFAULT_SERVER_PORT_SETTING], out configValue))
-                {
-                    _serverPort = configValue;
-                }
-                return _serverPort ?? DEFAULT_SERVER_PORT;
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
             }
+            if (lowerCase)
+            {
+                return builder.ToString().ToLower();
+            }
+            return builder.ToString();  
         }
 
-        private int? _maxConnections = null;
-        public int MaxConnections
+        public void ChangeAdminPassword(string pw)
         {
-            get
-            {
-                int configValue;
-                if (_maxConnections == null && int.TryParse(ConfigurationManager.AppSettings[MAX_CONNECTIONS_SETTING], out configValue))
-                {
-                    _maxConnections = configValue;
-                }
-                return _maxConnections ?? MAX_CONNECTIONS;
-            }
+            adminPasswordSetting.Value = pw;
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings[adminPasswordSetting.Name].Value = pw;
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
         }
 
-        private int? _saveInterval = null;
-        public int SaveInterval
+        public void ChangeServerPassword(string pw)
         {
-            get
+            serverPasswordSetting.Value = pw;
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings[serverPasswordSetting.Name].Value = pw;
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
+        }
+    }
+    
+    internal class ServerConfigItem<T>
+    {
+        public T Value;
+        public readonly string Name;
+        public ServerConfigItem(string itemName, T defaultValue)
+        {
+            Name = itemName;
+            Value = defaultValue;
+            try
             {
-                int configValue;
-                if (_saveInterval == null && Int32.TryParse(ConfigurationManager.AppSettings[DEFAULT_SAVE_SETTING], out configValue))
+                TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+                if (converter == null)
                 {
-                    _saveInterval = configValue;
+                    return;
                 }
-                return _saveInterval ?? DEFAULT_SAVE_INTERVAL;
+
+                string text = ConfigurationManager.AppSettings[itemName];
+
+                // Empty string is ignored
+                if (typeof(T) == typeof(string) && (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text)))
+                {
+                    return;
+                }
+                // Enum members are assumed to be Titlecased
+                if (typeof(T).IsEnum)
+                {
+                    text = text.ToLower();
+                    text = char.ToUpper(text[0]) + text.Substring(1);
+                }
+
+                Value = (T)converter.ConvertFromString(text);
+
             }
+            catch (Exception) { }
         }
     }
 }

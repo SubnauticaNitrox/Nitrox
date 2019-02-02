@@ -4,7 +4,6 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
 using NitroxModel.Helper;
-using System.Linq;
 using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
@@ -19,33 +18,21 @@ namespace NitroxPatcher.Patches.Persistent
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
-            
-            List<CodeInstruction> instructionList = instructions.ToList();
 
-            for (int i = 0; i < instructionList.Count; i++)
+            bool alreadyInjected = false;
+
+            foreach (CodeInstruction instruction in instructions)
             {
-                CodeInstruction instruction = instructionList[i];
-
-                int nextIndex = i + 1;
-
-                if ((instructionList.Count - 1) > nextIndex)
+                if (alreadyInjected || instruction.opcode != OpCodes.Ldc_I4_0)
                 {
-                    CodeInstruction oneInstructionOut = instructionList[nextIndex];
-
-                   if (oneInstructionOut.opcode.Equals(INJECTION_OPCODE) && oneInstructionOut.operand.Equals(INJECTION_OPERAND))
-                   {
-                        //Call our injection code and set paxTerratinController.setIsWorking(true); (this keeps up the loading screen)
-                        yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
-                        yield return new ValidatedCodeInstruction(OpCodes.Ldc_I4_1, instruction.labels);
-                   }
-                   else
-                   {
-                        yield return instruction;
-                   }
+                    yield return instruction;
                 }
                 else
                 {
-                    yield return instruction;
+                    alreadyInjected = true;
+                    
+                    yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_1) { labels = instruction.labels };
                 }
             }
         }

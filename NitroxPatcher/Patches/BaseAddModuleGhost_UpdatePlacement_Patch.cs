@@ -54,8 +54,8 @@ namespace NitroxPatcher.Patches
                     // First fetch the place we want to jump... this will be the same place as !main.currentSub.isBase
                     CodeInstruction jumpInstruction = GetJumpInstruction(instructionList, i);
 
-                    yield return new ValidatedCodeInstruction(OpCodes.Call, typeof(MultiplayerBuilder).GetMethod("get_isPlacing", BindingFlags.Public | BindingFlags.Static));
-                    yield return new ValidatedCodeInstruction(OpCodes.Brtrue_S, jumpInstruction.operand); // copy the jump location
+                    yield return new CodeInstruction(OpCodes.Call, typeof(MultiplayerBuilder).GetMethod("get_isPlacing", BindingFlags.Public | BindingFlags.Static));
+                    yield return new CodeInstruction(OpCodes.Brtrue_S, jumpInstruction.operand); // copy the jump location
                 }
 
                 // We want to inject just after Player main = Player.main... if this is that instruction then we'll inject after the next opcode (stfld)

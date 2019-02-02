@@ -17,7 +17,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy(TestConstants.TEST_CORRELATION_ID, false));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 
@@ -33,7 +33,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests.ConnectionStat
         {
             // Arrange
             IMultiplayerSessionConnectionContext connectionContext = Substitute.For<IMultiplayerSessionConnectionContext>();
-            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong"));
+            connectionContext.SessionPolicy.Returns(new MultiplayerSessionPolicy("wrong", false));
 
             EstablishingSessionPolicy connectionState = new EstablishingSessionPolicy(TestConstants.TEST_CORRELATION_ID);
 

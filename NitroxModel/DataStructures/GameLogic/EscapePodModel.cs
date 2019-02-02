@@ -23,8 +23,12 @@ namespace NitroxModel.DataStructures.GameLogic
         public string RadioGuid { get; set; }
         [ProtoMember(7)]
         public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
+        [ProtoMember(8)]
+        public bool Damaged { get; set; }
+        [ProtoMember(9)]
+        public bool RadioDamaged { get; set; }
 
-        public void InitEscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid)
+        public void InitEscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid, bool damaged, bool radioDamaged)
         {
             Guid = guid;
             Location = location;
@@ -32,6 +36,8 @@ namespace NitroxModel.DataStructures.GameLogic
             MedicalFabricatorGuid = medicalFabricatorGuid;
             StorageContainerGuid = storageContainerGuid;
             RadioGuid = radioGuid;
+            Damaged = damaged;
+            RadioDamaged = radioDamaged;
         }
 
         public override string ToString()
@@ -43,7 +49,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 toString += playerId + " ";
             }
 
-            return toString + "}]";
+            return toString + "} Damaged: " + Damaged + " RadioDamaged: " + RadioDamaged + "]";
         }
     }
 }

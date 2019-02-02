@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -15,7 +16,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
-        
+
 
         public MobileVehicleBay(IPacketSender packetSender)
         {
@@ -35,8 +36,30 @@ namespace NitroxClient.GameLogic
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
+                Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
                 string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation);
+                Vector3[] HSB = new Vector3[5];
+                Vector3[] Colours = new Vector3[5];
+                Vector4 tmpColour = Color.white;
+                string name = "";
+
+                if (!vehicle)
+                { // Cylcops
+                    GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
+                    SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
+                    SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
+
+                    Colours = subNameTarget.GetColors();
+                    HSB = subNameTarget.GetColors();
+                    name = subNameTarget.GetName();
+                }
+                else if(vehicle)
+                { // Seamoth & Prawn Suit
+                    name = (string)vehicle.ReflectionCall("GetName", true);
+                    HSB = vehicle.subName.GetColors();
+                    Colours = vehicle.subName.GetColors();
+                }
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
             }
             else

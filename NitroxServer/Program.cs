@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using System.Threading;
-using NitroxModel.Logger;
-using NitroxServer.ConfigParser;
-using NitroxServer.ConsoleCommands.Processor;
 using NitroxModel.Core;
-
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
+using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer
 {
     public static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Log.SetLevel(Log.LogLevel.ConsoleInfo | Log.LogLevel.ConsoleDebug | Log.LogLevel.FileLog);
-
             NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            configureCultureInfo();
+            ConfigureCultureInfo();
             Server server;
             try
             {
@@ -31,10 +30,12 @@ namespace NitroxServer
                 return;
             }
 
-            ConsoleCommandProcessor CmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+            CatchExitEvent();
+
+            ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
             while (server.IsRunning)
             {
-                CmdProcessor.ProcessCommand(Console.ReadLine());
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<Player>.Empty(), Perms.CONSOLE);
             }
         }
 
@@ -46,7 +47,7 @@ namespace NitroxServer
          * throughout the entire application.  This originally manifested itself as a duplicate spawning
          * issue for players in Europe.  This was due to incorrect parsing of probability tables.
          */
-        static void configureCultureInfo()
+        private static void ConfigureCultureInfo()
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
@@ -58,5 +59,49 @@ namespace NitroxServer
             Thread.CurrentThread.CurrentCulture = cultureInfo;
             Thread.CurrentThread.CurrentUICulture = cultureInfo;
         }
+
+        private static void CatchExitEvent()
+        {
+            // Catch Exit Event
+            PlatformID platid = Environment.OSVersion.Platform;
+
+            // using *nix signal system to catch Ctrl+C
+            if (platid == PlatformID.Unix || platid == PlatformID.MacOSX || platid == PlatformID.Win32NT || (int)platid == 128) // mono = 128
+            {
+                Console.CancelKeyPress += OnCtrlCPressed;
+            }
+
+            // better catch using WinAPI. This will handled process kill
+            if (platid == PlatformID.Win32NT)
+            {
+                SetConsoleCtrlHandler(ConsoleEventCallback, true);
+            }
+        }
+
+        // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
+        private delegate bool ConsoleEventDelegate(int eventType);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+
+        private static bool ConsoleEventCallback(int eventType)
+        {
+            if (eventType == 2) // close
+            {
+                StopAndExitServer();
+            }
+            return false;
+        }
+        private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
+        {
+            StopAndExitServer();
+        }
+
+        private static void StopAndExitServer()
+        {
+            Log.Info("Exiting ...");
+            Server.Instance.Stop();
+            Environment.Exit(0);
+        }
+
     }
 }
