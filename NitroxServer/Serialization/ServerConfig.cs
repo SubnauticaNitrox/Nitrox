@@ -16,7 +16,7 @@ namespace NitroxServer.ConfigParser
         private readonly ServerConfigItem<bool>   disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", true);
         private readonly ServerConfigItem<string> saveNameSetting       = new ServerConfigItem<string>("SaveName", "save");
         private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
-        private readonly ServerConfigItem<string> serverAdminPasswordSetting = new ServerConfigItem<string>("ServerAdminPassword", GenerateRandomString(12, false));
+        private readonly ServerConfigItem<string> adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", GenerateRandomString(12, false));
         private readonly ServerConfigItem<GameModeOption> gameModeSetting    = new ServerConfigItem<GameModeOption>("GameMode", GameModeOption.Survival);
         
         public int ServerPort { get { return portSetting.Value; } }
@@ -25,7 +25,7 @@ namespace NitroxServer.ConfigParser
         public bool DisableConsole { get { return disableConsoleSetting.Value; } }
         public string SaveName { get { return saveNameSetting.Value; } }
         public string ServerPassword { get { return serverPasswordSetting.Value; } }
-        public string ServerAdminPassword { get { return serverAdminPasswordSetting.Value; } }
+        public string AdminPassword { get { return adminPasswordSetting.Value; } }
         public GameModeOption GameMode { get { return gameModeSetting.Value; } }
         
         // Generate a random string with a given size and case.   
@@ -48,12 +48,23 @@ namespace NitroxServer.ConfigParser
             return builder.ToString();  
         }
 
-        public void ChangeServerAdminPassword(string pw)
+        public void ChangeAdminPassword(string pw)
         {
-            serverAdminPasswordSetting.Value = pw;
+            adminPasswordSetting.Value = pw;
 
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings[serverAdminPasswordSetting.Name].Value = pw;
+            config.AppSettings.Settings[adminPasswordSetting.Name].Value = pw;
+            config.Save(ConfigurationSaveMode.Modified);
+
+            ConfigurationManager.RefreshSection("appSettings");
+        }
+
+        public void ChangeServerPassword(string pw)
+        {
+            serverPasswordSetting.Value = pw;
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            config.AppSettings.Settings[serverPasswordSetting.Name].Value = pw;
             config.Save(ConfigurationSaveMode.Modified);
 
             ConfigurationManager.RefreshSection("appSettings");
