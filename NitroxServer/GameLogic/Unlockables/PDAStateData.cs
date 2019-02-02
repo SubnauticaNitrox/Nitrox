@@ -34,7 +34,7 @@ namespace NitroxServer.GameLogic.Unlockables
         }
 
         [ProtoMember(3)]
-        public List<string> SerializedEncyclopediaEntries
+        public List<EncyclopediaEntry> SerializedEncyclopediaEntries
         {
             get
             {
@@ -87,7 +87,7 @@ namespace NitroxServer.GameLogic.Unlockables
         private List<TechType> knownTechTypes = new List<TechType>();
 
         [ProtoIgnore]
-        private List<string> encyclopediaEntries = new List<string>();
+        private List<EncyclopediaEntry> encyclopediaEntries = new List<EncyclopediaEntry>();
 
         [ProtoIgnore]
         private Dictionary<TechType, PDAEntry> partiallyUnlockedByTechType = new Dictionary<TechType, PDAEntry>();
@@ -115,11 +115,19 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
-        public void AddEncyclopediaEntry(string entry)
+        public void AddEncyclopediaEntry(EncyclopediaEntry entry)
         {
             lock (encyclopediaEntries)
             {
                 encyclopediaEntries.Add(entry);
+            }
+        }
+
+        public void RemoveEncyclopediaEntry(EncyclopediaEntry entry)
+        {
+            lock (encyclopediaEntries)
+            {
+                encyclopediaEntries.Remove(entry);
             }
         }
 
@@ -161,7 +169,7 @@ namespace NitroxServer.GameLogic.Unlockables
                             {
                                 return new InitialPdaData(new List<TechType>(unlockedTechTypes),
                                                           new List<TechType>(knownTechTypes),
-                                                          new List<string>(encyclopediaEntries),
+                                                          new List<EncyclopediaEntry>(encyclopediaEntries),
                                                           new List<PDAEntry>(partiallyUnlockedByTechType.Values),
                                                           new List<PDALogEntry>(pdaLogEntries));
                             }

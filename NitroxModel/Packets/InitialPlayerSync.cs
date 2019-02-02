@@ -44,6 +44,7 @@ namespace NitroxModel.Packets
             GlobalRootEntities = globalRootEntities;
             GameMode = gameMode;
             Permissions = perms;
+            DeliveryMethod = Lidgren.Network.NetDeliveryMethod.ReliableOrdered;
         }
 
         public override string ToString()

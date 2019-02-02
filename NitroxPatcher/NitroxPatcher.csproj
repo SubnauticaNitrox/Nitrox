@@ -70,6 +70,8 @@
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitSubscreen_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
+    <Compile Include="Patches\PDAEncyclopedia_RemoveTimeCapsule_Patch.cs" />
+    <Compile Include="Patches\PDAEncyclopedia_UpdateTimeCapsule_Patch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />

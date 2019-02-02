@@ -25,7 +25,14 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
-                PDAEncyclopedia.Add(packet.Key,true);
+                if (!packet.Entry.IsTimeCapsule)
+                {
+                    PDAEncyclopedia.Add(packet.Entry.Key, true);
+                }
+                else
+                {
+                    PDAEncyclopedia.AddTimeCapsule(packet.Entry.Key, true);
+                }
             }
         }
     }

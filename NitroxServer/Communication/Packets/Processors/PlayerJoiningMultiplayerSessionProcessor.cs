@@ -6,6 +6,7 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
+using NitroxModel.Logger;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -42,6 +43,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
+
+            Log.Info("{0} joined!", player.Name); // This is nice to have
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
                                                                        wasBrandNewPlayer,

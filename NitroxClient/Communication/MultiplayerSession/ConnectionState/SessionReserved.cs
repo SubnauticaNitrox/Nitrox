@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
+using NitroxModel.Logger;
 
 namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
@@ -16,8 +17,9 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
                 EnterMultiplayerSession(sessionConnectionContext);
                 ChangeState(sessionConnectionContext);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Info(ex);
                 Disconnect(sessionConnectionContext);
                 throw;
             }

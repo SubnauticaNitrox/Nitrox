@@ -8,7 +8,7 @@ namespace NitroxModel.DataStructures.GameLogic
     {
         public List<TechType> UnlockedTechTypes { get; set; }
         public List<TechType> KnownTechTypes { get; set; }
-        public List<string> EncyclopediaEntries { get; set; }
+        public List<EncyclopediaEntry> EncyclopediaEntries { get; set; }
         public List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
         public List<PDALogEntry> PDALogEntries { get; set; }
 
@@ -17,7 +17,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // Constructor for serialization
         }
 
-        public InitialPdaData(List<TechType> unlockedTechTypes, List<TechType> knownTechTypes, List<string> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries)
+        public InitialPdaData(List<TechType> unlockedTechTypes, List<TechType> knownTechTypes, List<EncyclopediaEntry> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries)
         {
             UnlockedTechTypes = unlockedTechTypes;
             KnownTechTypes = knownTechTypes;

@@ -1,20 +1,21 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PDAEncyclopediaEntryRemove : Packet
     {
-        public string Key;
+        public EncyclopediaEntry Entry;
 
-        public PDAEncyclopediaEntryRemove(string key)
+        public PDAEncyclopediaEntryRemove(EncyclopediaEntry entry)
         {
-            Key = key;
+            Entry = entry;
         }
 
         public override string ToString()
         {
-            return "[PDAEncyclopediaEntryRemove - Key: " + Key + "]";
+            return "[PDAEncyclopediaEntryRemove - " + Entry + "]";
         }
     }
 }

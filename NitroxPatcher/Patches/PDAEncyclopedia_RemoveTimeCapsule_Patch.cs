@@ -8,14 +8,14 @@ using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches
 {
-    public class PDAEncyclopedia_Add_Patch : NitroxPatch
+    public class PDAEncyclopedia_RemoveTimeCapsule_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(PDAEncyclopedia);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("RemoveTimeCapsule", BindingFlags.Public | BindingFlags.Static);
 
-        public static void Prefix(string key, PDAEncyclopedia.Entry entry)
+        public static void Prefix(string key)
         {
-            NitroxServiceLocator.LocateService<PDAEncyclopediaEntry>().Add(new EncyclopediaEntry((entry.timeCapsuleId != null ? key : entry.timeCapsuleId), entry.timeCapsuleId != null));
+            NitroxServiceLocator.LocateService<PDAEncyclopediaEntry>().Remove(new EncyclopediaEntry(key, true));
         }
 
         public override void Patch(HarmonyInstance harmony)
@@ -24,3 +24,4 @@ namespace NitroxPatcher.Patches
         }
     }
 }
+

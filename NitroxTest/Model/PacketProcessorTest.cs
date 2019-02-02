@@ -160,12 +160,12 @@ namespace NitroxTest.Model
                     Type serverProcessorType = typeof(AuthenticatedPacketProcessor<>).MakeGenericType(packet);
                     if (serverDependencyContainer.ResolveOptional(serverProcessorType) != null)
                     {
-                        serverPacketTypes.Add(serverProcessorType);
+                        serverPacketTypes.Add(serverProcessorType.GetGenericArguments()[0]);
                     }
                     serverProcessorType = typeof(UnauthenticatedPacketProcessor<>).MakeGenericType(packet);
                     if (serverDependencyContainer.ResolveOptional(serverProcessorType) != null)
                     {
-                        serverPacketTypes.Add(serverProcessorType);
+                        serverPacketTypes.Add(serverProcessorType.GetGenericArguments()[0]);
                     }
                 });
 
@@ -183,8 +183,24 @@ namespace NitroxTest.Model
                     Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
 
                     Console.WriteLine("Checking handler for packet {0}...", packet);
-                    Assert.IsTrue(!serverPacketTypes.Contains(packet) || packetTypes.Contains(packet) || clientDependencyContainer.ResolveOptional(clientProcessorType) != null,
-                        $"Runtime has not detected a handler for {packet}!");
+                    bool serverAlreadyHandlesPacket = (serverPacketTypes.Contains(packet));
+
+                    if (!serverAlreadyHandlesPacket)
+                    {
+                        try
+                        {
+                            Assert.IsTrue(packetTypes.Contains(packet) || // If the packet is a default handled packet but doesnt have a ClientProcessor then its not ok
+                                clientDependencyContainer.ResolveOptional(clientProcessorType) != null,
+                                $"Runtime has not detected a handler for {packet}!");
+                        }
+                        catch (Autofac.Core.DependencyResolutionException ex)
+                        {
+                            if (ex.InnerException.GetType() != typeof(System.Security.SecurityException)) //UnityEngine throws this when we try using its methods
+                            {
+                                throw ex.InnerException;
+                            }
+                        }
+                    }
                 }
                 );
         }

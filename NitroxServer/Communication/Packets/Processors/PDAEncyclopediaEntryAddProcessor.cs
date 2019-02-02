@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PDAEncyclopediaEntryAdd packet, Player player)
         {
-            pdaStateData.AddEncyclopediaEntry(packet.Key);
+            pdaStateData.AddEncyclopediaEntry(packet.Entry);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
