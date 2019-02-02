@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using NitroxModel.Core;
 using System.Reflection;
+using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Communication;
@@ -48,7 +49,11 @@ namespace NitroxServer
                 if (config.NetworkingType.ToLower() == "litenetlib")
                 {
                     return ctx.Resolve<LiteNetLibServer>();
+                } else if (config.NetworkingType.ToLower() == "lidgren")
+                {
+                    return ctx.Resolve<LidgrenServer>();
                 }
+                Log.Warn("Entered networking type not recognised. Falling back to Lidgren. Available types are 'LiteNetLib' and 'Lidgren'");
                 return ctx.Resolve<LidgrenServer>();
             }).SingleInstance();
 

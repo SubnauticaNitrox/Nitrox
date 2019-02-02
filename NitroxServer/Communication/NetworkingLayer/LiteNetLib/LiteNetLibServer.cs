@@ -62,24 +62,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            NitroxConnection connection = GetConnection(peer.Id);
-            Player player = playerManager.GetPlayer(connection);
-
-            if (player != null)
-            {
-                playerManager.PlayerDisconnected(connection);
-
-                Disconnect disconnect = new Disconnect(player.Id);
-                playerManager.SendPacketToAllPlayers(disconnect);
-
-                List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
-
-                if (revokedGuids.Count > 0)
-                {
-                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
-                    playerManager.SendPacketToAllPlayers(ownershipChange);
-                }
-            }
+            ClientDisconnected(GetConnection(peer.Id));
         }
 
         private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
@@ -91,15 +74,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         {
             NitroxConnection connection = GetConnection(peer.Id);
             Packet packet = Packet.Deserialize(wrapperPacket.packetData);
-
-            try
-            {
-                packetHandler.Process(packet, connection);
-            }
-            catch (Exception ex)
-            {
-                Log.Info("Exception while processing packet: " + packet + " " + ex);
-            }
+            ProcessIncomingData(connection, packet);
         }
 
         public void OnConnectionRequest(ConnectionRequest request)
@@ -111,20 +86,6 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             else
             {
                 request.Reject();
-            }
-        }
-
-        private void ProcessIncomingData(LiteNetLibConnection connection, byte[] data)
-        {
-            Packet packet = Packet.Deserialize(data);
-
-            try
-            {
-                packetHandler.Process(packet, connection);
-            }
-            catch (Exception ex)
-            {
-                Log.Info("Exception while processing packet: " + packet + " " + ex);
             }
         }
 

@@ -9,7 +9,6 @@ using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
 using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
-using NitroxClient.GameLogic.PlayerModelBuilder;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;

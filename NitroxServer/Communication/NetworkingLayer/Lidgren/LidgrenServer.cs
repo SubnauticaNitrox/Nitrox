@@ -72,7 +72,8 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                             if (im.Data.Length > 0)
                             {
                                 NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
-                                ProcessIncomingData(connection, im.Data);
+                                Packet packet = Packet.Deserialize(im.Data);
+                                ProcessIncomingData(connection, packet);
                             }
                             break;
                         default:
@@ -81,20 +82,6 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                     }
                     netServer.Recycle(im);
                 }
-            }
-        }
-
-        private void ProcessIncomingData(NitroxConnection connection, byte[] data)
-        {
-            Packet packet = Packet.Deserialize(data);
-
-            try
-            {
-                packetHandler.Process(packet, connection);
-            }
-            catch (Exception ex)
-            {
-                Log.Info("Exception while processing packet: " + packet + " " + ex);
             }
         }
 
@@ -111,24 +98,7 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
             }
             else if (status == NetConnectionStatus.Disconnected)
             {
-                NitroxConnection connection = GetConnection(networkConnection.RemoteUniqueIdentifier);
-                Player player = playerManager.GetPlayer(connection);
-
-                if (player != null)
-                {
-                    playerManager.PlayerDisconnected(connection);
-
-                    Disconnect disconnect = new Disconnect(player.Id);
-                    playerManager.SendPacketToAllPlayers(disconnect);
-
-                    List<SimulatedEntity> ownershipChanges = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player);
-
-                    if (ownershipChanges.Count > 0)
-                    {
-                        SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
-                        playerManager.SendPacketToAllPlayers(ownershipChange);
-                    }
-                }
+                ClientDisconnected(GetConnection(networkConnection.RemoteUniqueIdentifier));
             }
         }
 
