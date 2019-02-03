@@ -36,10 +36,10 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool AppliedThrottle { get; }
 
-        [ProtoMember(7)]
+        [ProtoMember(10)]
         public Vector3 LeftAimTarget { get; }
 
-        [ProtoMember(8)]
+        [ProtoMember(11)]
         public Vector3 RightAimTarget { get; }
 
 
