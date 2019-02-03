@@ -22,11 +22,23 @@ namespace NitroxServer.GameLogic.Vehicles
             set { vehiclesByGuid = value; }
         }
 
+        [ProtoMember(2)]
+        public Dictionary<string, ExosuitModel> SerializableExosuitsByGuid
+        {
+            get
+            {
+                lock (exosuitsByGuid)
+                {
+                    return new Dictionary<string, ExosuitModel>(exosuitsByGuid);
+                }
+            }
+            set { exosuitsByGuid = value; }
+        }
+
         [ProtoIgnore]
         private Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
+        private Dictionary<string, ExosuitModel> exosuitsByGuid = new Dictionary<string, ExosuitModel>();
 
-
-        
         public void UpdateVehicle(VehicleMovementData vehicleMovement)
         {
             lock(vehiclesByGuid)
@@ -85,6 +97,14 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
+        public void AddExosuit(ExosuitModel exosuitModel)
+        {
+            lock (vehiclesByGuid)
+            {
+                exosuitsByGuid.Add(exosuitModel.Guid, exosuitModel);
+            }
+        }
+
         public void RemoveVehicle(string guid)
         {
             lock (vehiclesByGuid)
@@ -101,6 +121,14 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
+        public List<ExosuitModel> GetExosuitsForInitialSync()
+        {
+            lock (exosuitsByGuid)
+            {
+                return new List<ExosuitModel>(exosuitsByGuid.Values);
+            }
+        }
+
         public Optional<VehicleModel> GetVehicleModel(string guid)
         {
             lock(vehiclesByGuid)
@@ -114,6 +142,23 @@ namespace NitroxServer.GameLogic.Vehicles
                 else
                 {
                     return Optional<VehicleModel>.Empty();
+                }
+            }
+        }
+
+        public Optional<ExosuitModel> GetExosuitModel(string guid)
+        {
+            lock (exosuitsByGuid)
+            {
+                ExosuitModel exosuitModel;
+
+                if (exosuitsByGuid.TryGetValue(guid, out exosuitModel))
+                {
+                    return Optional<ExosuitModel>.OfNullable(exosuitModel);
+                }
+                else
+                {
+                    return Optional<ExosuitModel>.Empty();
                 }
             }
         }

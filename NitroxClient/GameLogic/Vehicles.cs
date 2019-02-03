@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -30,14 +31,19 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, null, null);
         }
 
-        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
+        public void CreateVehicle(ExosuitModel exoModel)
+        {
+            CreateVehicle(exoModel.TechType, exoModel.Guid, exoModel.Position, exoModel.Rotation, exoModel.InteractiveChildIdentifiers, exoModel.DockingBayGuid, exoModel.Name, exoModel.HSB, exoModel.Colours, exoModel.LeftArmGuid, exoModel.RightArmGuid);
+        }
+
+        public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours, string leftArmGuid, string rightArmGuid)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours, null, null));
             }
             else
             {
@@ -45,7 +51,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techType, techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours);
+                    OnVehiclePrefabLoaded(techType, techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours, leftArmGuid, rightArmGuid);
                 }
                 else
                 {
@@ -113,7 +119,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, string guid, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours, string leftArmGuid, string rightArmGuid)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -124,7 +130,7 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-
+            Guid.NewGuid().ToString();
             // Updates names and colours with persisted data .....yeah.....
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             { // Seamoth & Prawn suit
@@ -152,6 +158,20 @@ namespace NitroxClient.GameLogic
                     }
                     vehicle.vehicleColors = colour;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+                }
+                if(techType == TechType.Exosuit)
+                {
+                    GameObject _gameObject = GuidHelper.RequireObjectFrom(guid);
+                    Exosuit exosuit = _gameObject.GetComponent<Exosuit>();
+
+                    IExosuitArm leftArm = (IExosuitArm)exosuit.ReflectionGet("leftArm");
+                    IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");
+
+                    GameObject rightArmOb = rightArm.GetGameObject();
+                    GameObject leftArmOb = leftArm.GetGameObject();
+ 
+                    rightArmOb.SetNewGuid(rightArmGuid);
+                    leftArmOb.SetNewGuid(leftArmGuid);
                 }
             }
             else if(techType == TechType.Cyclops) // Cyclops

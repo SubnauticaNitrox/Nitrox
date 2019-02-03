@@ -29,13 +29,11 @@ namespace NitroxClient.Communication.Packets.Processors
                 IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");
 
                 GameObject rightArmOb = rightArm.GetGameObject();
-                ExosuitClawArm rightClawArm = rightArmOb.GetComponent<ExosuitClawArm>();
-
                 GameObject leftArmOb = leftArm.GetGameObject();
-                ExosuitClawArm leftClawArm = leftArmOb.GetComponent<ExosuitClawArm>();
 
                 rightArmOb.SetNewGuid(packet.RightArmGuid);
                 leftArmOb.SetNewGuid(packet.LeftArmGuid);
+
             }
         }
     }

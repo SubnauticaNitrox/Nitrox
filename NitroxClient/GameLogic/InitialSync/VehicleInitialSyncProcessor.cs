@@ -19,8 +19,12 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                // TODO: create an AsyncInitialSyncProcessor that creates cyclops before seamoth (as seamoth can be docked in cyclops)
+                // TODO: create an AsyncInitialSyncProcessor that creates cyclops before seamoth and exosuit (as seamoth can be docked in cyclops)
                 vehicles.CreateVehicle(vehicle);
+            }
+            foreach(ExosuitModel exosuit in packet.Exosuits)
+            {
+                vehicles.CreateVehicle(exosuit);
             }
         }
     }

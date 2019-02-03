@@ -69,6 +69,7 @@
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\MapRoomRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />

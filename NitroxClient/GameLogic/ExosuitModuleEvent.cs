@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -24,10 +25,10 @@ namespace NitroxClient.GameLogic
             string Guid = GuidHelper.GetGuid(exo.gameObject);
             if (!string.IsNullOrEmpty(Guid))
             {
-               
+                
                 IExosuitArm spawnedRArm = (IExosuitArm)exo.ReflectionGet("rightArm");
                 IExosuitArm spawnedLArm = (IExosuitArm)exo.ReflectionGet("leftArm");
-
+                
                 GameObject spawnedRArmOb = spawnedRArm.GetGameObject();
                 string rightArmGuid = GuidHelper.GetGuid(spawnedRArmOb);
                 spawnedRArmOb.SetNewGuid(rightArmGuid);
@@ -35,7 +36,7 @@ namespace NitroxClient.GameLogic
                 GameObject spawnedLArmOb = spawnedLArm.GetGameObject();
                 string leftArmGuid = GuidHelper.GetGuid(spawnedLArmOb);
                 spawnedLArmOb.SetNewGuid(leftArmGuid);
-
+                
                 ExosuitSpawnedArmAction Changed = new ExosuitSpawnedArmAction(Guid, leftArmGuid, rightArmGuid);
                 packetSender.Send(Changed);
             }

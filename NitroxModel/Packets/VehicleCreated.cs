@@ -11,10 +11,17 @@ namespace NitroxModel.Packets
     {
         public string PlayerName { get; }
         public VehicleModel CreatedVehicle { get; }
+        public ExosuitModel CreatedExosuit { get; }
 
         public VehicleCreated(VehicleModel createdVehicle, string playerName)
         {
             CreatedVehicle = createdVehicle;
+            PlayerName = playerName;
+        }
+
+        public VehicleCreated(ExosuitModel createdExosuit, string playerName)
+        {
+            CreatedExosuit = createdExosuit;
             PlayerName = playerName;
         }
 
