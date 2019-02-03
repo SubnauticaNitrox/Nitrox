@@ -128,7 +128,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>
-      <MoveToLibFolder Include="$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; $(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; $(OutputPath)Lidgren.Network.xml ; $(OutputPath)LZ4.dll ; $(OutputPath)NitroxClient.dll ; $(OutputPath)NitroxModel.dll ; $(OutputPath)NitroxPatcher.dll ; $(OutputPath)log4net.dll ; $(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; $(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe" />
+      <MoveToLibFolder Include="$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; $(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; $(OutputPath)Lidgren.Network.xml ; $(OutputPath)LZ4.dll ; $(OutputPath)NitroxClient.dll ; $(OutputPath)NitroxModel.dll ; $(OutputPath)NitroxPatcher.dll ; $(OutputPath)log4net.dll ; $(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; $(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; $(OutputPath)Lidgren.Network.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>

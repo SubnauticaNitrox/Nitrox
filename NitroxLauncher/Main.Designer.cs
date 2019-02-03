@@ -70,9 +70,9 @@
             this.ServerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ServerButton.ForeColor = System.Drawing.SystemColors.ControlText;
             this.ServerButton.Image = ((System.Drawing.Image)(resources.GetObject("ServerButton.Image")));
-            this.ServerButton.Location = new System.Drawing.Point(551, 654);
+            this.ServerButton.Location = new System.Drawing.Point(613, 646);
             this.ServerButton.Name = "ServerButton";
-            this.ServerButton.Size = new System.Drawing.Size(284, 40);
+            this.ServerButton.Size = new System.Drawing.Size(221, 54);
             this.ServerButton.TabIndex = 2;
             this.ServerButton.UseVisualStyleBackColor = true;
             this.ServerButton.Click += new System.EventHandler(this.ServerButton_Click);
