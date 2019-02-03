@@ -13,6 +13,7 @@ using NitroxModel.Core;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
+using NitroxClient.GameLogic.InitialSync.Base;
 
 namespace NitroxClient
 {
@@ -23,16 +24,17 @@ namespace NitroxClient
             RegisterCoreDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
+            RegisterInitialSyncProcessors(containerBuilder);
         }
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-			containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
+            containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
                 .As<IPreferenceStateProvider>()
                 .SingleInstance();
 
             containerBuilder.RegisterType<PlayerPreferenceManager>().SingleInstance();
-				
+
             containerBuilder.RegisterType<MultiplayerSessionManager>()
                 .As<IMultiplayerSession>()
                 .As<IPacketSender>()
@@ -46,7 +48,7 @@ namespace NitroxClient
                 .AsSelf() //Would like to deprecate this registration at some point and just work through an abstraction.
                 .As<ILocalNitroxPlayer>()
                 .InstancePerLifetimeScope();
-            
+
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
@@ -94,6 +96,15 @@ namespace NitroxClient
                 .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
                 .AssignableTo<IColorSwapManager>()
                 .As<IColorSwapManager>()
+                .InstancePerLifetimeScope();
+        }
+
+        private void RegisterInitialSyncProcessors(ContainerBuilder containerBuilder)
+        {
+            containerBuilder
+                .RegisterAssemblyTypes(Assembly.GetAssembly(GetType()))
+                .AssignableTo<InitialSyncProcessor>()
+                .As<InitialSyncProcessor>()
                 .InstancePerLifetimeScope();
         }
     }

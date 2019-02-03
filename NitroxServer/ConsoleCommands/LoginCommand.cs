@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             string message;
             string playerName = player.Get().Name;
 
-            if (pass == serverConfig.ServerAdminPassword)
+            if (pass == serverConfig.AdminPassword)
             {
                 if (playerData.UpdatePlayerPermissions(playerName, Perms.ADMIN))
                 {
