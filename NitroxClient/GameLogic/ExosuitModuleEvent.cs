@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic
             string Guid = GuidHelper.GetGuid(exo.gameObject);
             if (!string.IsNullOrEmpty(Guid))
             {
-                // This needs to be refactored to be done by the serverr, Since Every client will run this and the last one that does will sync all the guids...
+               
                 IExosuitArm spawnedRArm = (IExosuitArm)exo.ReflectionGet("rightArm");
                 IExosuitArm spawnedLArm = (IExosuitArm)exo.ReflectionGet("leftArm");
 
