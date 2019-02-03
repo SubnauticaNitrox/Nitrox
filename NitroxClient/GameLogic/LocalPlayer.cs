@@ -83,6 +83,7 @@ namespace NitroxClient.GameLogic
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.On;
             GameObject clone = Object.Instantiate(prototype);
             prototype.GetComponentInParent<Player>().head.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            clone.SetActive(false);
             
             return clone;
         }
