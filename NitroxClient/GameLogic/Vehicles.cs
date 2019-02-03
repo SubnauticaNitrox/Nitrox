@@ -21,22 +21,28 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, Dictionary<string, VehicleModel> vehiclesByGuid)
         {
             this.packetSender = packetSender;
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
+            this.vehiclesByGuid = vehiclesByGuid;
         }
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, null, null);
-        }
+            if (vehicleModel.TechType == TechType.Exosuit)
+            {
+                ExosuitModel exosuitModel = vehicleModel as ExosuitModel;
+                CreateVehicle(exosuitModel.TechType, exosuitModel.Guid, exosuitModel.Position, exosuitModel.Rotation, exosuitModel.InteractiveChildIdentifiers, exosuitModel.DockingBayGuid, exosuitModel.Name, exosuitModel.HSB, exosuitModel.Colours, exosuitModel.LeftArmGuid, exosuitModel.RightArmGuid);
+            }
+            else
+            {
+                CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, null, null);
+            }
 
-        public void CreateVehicle(ExosuitModel exoModel)
-        {
-            CreateVehicle(exoModel.TechType, exoModel.Guid, exoModel.Position, exoModel.Rotation, exoModel.InteractiveChildIdentifiers, exoModel.DockingBayGuid, exoModel.Name, exoModel.HSB, exoModel.Colours, exoModel.LeftArmGuid, exoModel.RightArmGuid);
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours, string leftArmGuid, string rightArmGuid)
@@ -387,6 +393,11 @@ namespace NitroxClient.GameLogic
                     }
                 }
             }
+        }
+
+        public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
+        {
+            return (T)vehiclesByGuid[vehicleGuid];
         }
     }
 }

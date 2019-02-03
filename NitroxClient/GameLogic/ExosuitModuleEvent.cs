@@ -13,11 +13,13 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly Vehicles vehicles;
 
-        public ExosuitModuleEvent(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+        public ExosuitModuleEvent(IPacketSender packetSender, IMultiplayerSession multiplayerSession, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.multiplayerSession = multiplayerSession;
+            this.vehicles = vehicles;
         }
 
         public void BroadcastSpawnedArm(Exosuit exo)
@@ -25,19 +27,19 @@ namespace NitroxClient.GameLogic
             string Guid = GuidHelper.GetGuid(exo.gameObject);
             if (!string.IsNullOrEmpty(Guid))
             {
-                
+
+                ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
+               
                 IExosuitArm spawnedRArm = (IExosuitArm)exo.ReflectionGet("rightArm");
                 IExosuitArm spawnedLArm = (IExosuitArm)exo.ReflectionGet("leftArm");
-                
+
                 GameObject spawnedRArmOb = spawnedRArm.GetGameObject();
-                string rightArmGuid = GuidHelper.GetGuid(spawnedRArmOb);
-                spawnedRArmOb.SetNewGuid(rightArmGuid);
+                spawnedRArmOb.SetNewGuid(exosuitModel.RightArmGuid);
 
                 GameObject spawnedLArmOb = spawnedLArm.GetGameObject();
-                string leftArmGuid = GuidHelper.GetGuid(spawnedLArmOb);
-                spawnedLArmOb.SetNewGuid(leftArmGuid);
-                
-                ExosuitSpawnedArmAction Changed = new ExosuitSpawnedArmAction(Guid, leftArmGuid, rightArmGuid);
+                spawnedLArmOb.SetNewGuid(exosuitModel.LeftArmGuid);
+
+                ExosuitSpawnedArmAction Changed = new ExosuitSpawnedArmAction(Guid, exosuitModel.LeftArmGuid, exosuitModel.RightArmGuid);
                 packetSender.Send(Changed);
             }
         }

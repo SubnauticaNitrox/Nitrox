@@ -115,6 +115,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleColorChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleDockingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleModelFactory.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />

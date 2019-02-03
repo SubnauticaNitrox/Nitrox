@@ -14,7 +14,6 @@ namespace NitroxModel.Packets
         public List<EquippedItemData> EquippedItems { get; }
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
-        public List<ExosuitModel> Exosuits { get; }
         public List<ItemData> InventoryItems { get; }
         public string PlayerGuid { get; }
         public bool FirstTimeConnecting { get; }
@@ -27,7 +26,7 @@ namespace NitroxModel.Packets
         public GameModeOption GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ExosuitModel> exosuits, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, GameModeOption gameMode, Perms perms)
+        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, GameModeOption gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodGuid = assignedEscapePodGuid;
@@ -36,7 +35,6 @@ namespace NitroxModel.Packets
             EquippedItems = equipment;
             BasePieces = basePieces;
             Vehicles = vehicles;
-            Exosuits = exosuits;
             InventoryItems = inventoryItems;
             PDAData = pdaData;
             PlayerSpawnData = playerSpawnData;

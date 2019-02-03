@@ -22,14 +22,8 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ConstructorBeginCrafting packet, Player player)
         {
-            if (packet.TechType != TechType.Exosuit)
-            {
-                vehicleData.AddVehicle(new VehicleModel(packet.TechType, packet.ConstructedItemGuid, packet.Position, packet.Rotation, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(packet.InteractiveChildIdentifiers), Optional<string>.Empty(), packet.Name, packet.HSB, packet.Colours));
-            }
-            else
-            {
-                vehicleData.AddExosuit(new ExosuitModel(packet.TechType, packet.ConstructedItemGuid, packet.Position, packet.Rotation, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(packet.InteractiveChildIdentifiers), Optional<string>.Empty(), packet.Name, packet.HSB, packet.Colours));
-            }
+            VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(packet);
+            vehicleData.AddVehicle(vehicleModel);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

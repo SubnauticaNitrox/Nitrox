@@ -20,14 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(VehicleCreated packet, Player player)
         {
             Log.Info(packet);
-            if(packet.CreatedVehicle.TechType != TechType.Exosuit)
-            {
-                vehicleData.AddVehicle(packet.CreatedVehicle);
-            }
-            else
-            {
-                vehicleData.AddExosuit(packet.CreatedExosuit);
-            }
+            vehicleData.AddVehicle(packet.CreatedVehicle);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
