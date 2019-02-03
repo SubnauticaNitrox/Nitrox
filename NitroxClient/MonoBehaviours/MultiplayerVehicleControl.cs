@@ -94,12 +94,6 @@ namespace NitroxClient.MonoBehaviours
             SteeringControl.ReflectionSet(steeringWheelYaw, SmoothYaw.SmoothValue);
             SteeringControl.ReflectionSet(steeringWheelPitch, SmoothPitch.SmoothValue);
 
-            //Transform tmpAimLeftTarget = (Transform)ArmPositions.ReflectionGet("aimTargetLeft", true, false);
-            //Transform tmpAimRightTarget = (Transform)ArmPositions.ReflectionGet("aimTargetRight", true, false);
-
-            //tmpAimLeftTarget.position = SmoothLeftArm.SmoothValue;
-            //tmpAimRightTarget.position = SmoothRightArm.SmoothValue;
-
         }
     }
 }
