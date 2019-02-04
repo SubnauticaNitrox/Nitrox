@@ -1,6 +1,10 @@
 ﻿using System.Timers;
+using NitroxModel.Core;
 using NitroxModel.Logger;
+using NitroxModel.Networking;
 using NitroxServer.Communication;
+using NitroxServer.Communication.NetworkingLayer.Lidgren;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Serialization.World;
 using NitroxServer.ConfigParser;
 
@@ -9,20 +13,19 @@ namespace NitroxServer
     public class Server
     {
         private readonly Timer saveTimer;
-        private readonly UdpServer udpServer;
+        private Communication.NetworkingLayer.NitroxServer server;
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
         public bool IsRunning { get; private set; }
         private bool IsSaving;
         public static Server Instance { get; private set; }
 
-        public Server(WorldPersistence worldPersistence, World world, UdpServer udpServer, ServerConfig serverConfig)
+        public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
             Instance = this;
             this.worldPersistence = worldPersistence;
             this.world = world;
-
-            this.udpServer = udpServer;
+            this.server = server;
 
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
@@ -45,7 +48,7 @@ namespace NitroxServer
         {
             IsRunning = true;
             IpLogger.PrintServerIps();
-            udpServer.Start();
+            server.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
@@ -55,7 +58,7 @@ namespace NitroxServer
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
             Save();
-            udpServer.Stop();
+            server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
         }

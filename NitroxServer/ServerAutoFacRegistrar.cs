@@ -1,9 +1,12 @@
 ﻿using Autofac;
 using NitroxModel.Core;
 using System.Reflection;
+using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Communication;
+using NitroxServer.Communication.NetworkingLayer.Lidgren;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -34,8 +37,26 @@ namespace NitroxServer
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntityManager>().SingleInstance();
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
-            containerBuilder.RegisterType<UdpServer>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
+
+            containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
+            containerBuilder.RegisterType<LidgrenServer>().SingleInstance();
+
+
+            containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
+            {
+                ServerConfig config = ctx.Resolve<ServerConfig>();
+                if (config.NetworkingType.ToLower() == "litenetlib")
+                {
+                    return ctx.Resolve<LiteNetLibServer>();
+                } else if (config.NetworkingType.ToLower() == "lidgren")
+                {
+                    return ctx.Resolve<LidgrenServer>();
+                }
+                Log.Warn("Entered networking type not recognised. Falling back to Lidgren. Available types are 'LiteNetLib' and 'Lidgren'");
+                return ctx.Resolve<LidgrenServer>();
+            }).SingleInstance();
+
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)

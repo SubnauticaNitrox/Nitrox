@@ -52,6 +52,10 @@
     <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="LiteNetLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LitJson">
       <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
     </Reference>
@@ -75,7 +79,12 @@
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\Connection.cs" />
+    <Compile Include="Communication\NetworkingLayer\Lidgren\LidgrenConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\Lidgren\LidgrenServer.cs" />
+    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
+    <Compile Include="Communication\NetworkingLayer\NitroxConnection.cs" />
+    <Compile Include="Communication\NetworkingLayer\NitroxServer.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
@@ -127,7 +136,6 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
-    <Compile Include="Communication\UdpServer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DayCommand.cs" />

@@ -97,6 +97,9 @@
                 <File Id="Lidgren.Network.dll" Name="Lidgren.Network.dll"
                       Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
             </Component>
+            <Component Id="LiteNetLib.dll" Guid="*">
+                <File Id="LiteNetLib.dll" Name="LiteNetLib.dll" Source="$(var.NitroxClient_TargetDir)LiteNetLib.dll" />
+            </Component>            
             <Component Id="_0Harmony.dll" Guid="*">
                 <File Id="_0Harmony.dll" Name="0Harmony.dll" Source="$(var.Harmony_TargetDir)0Harmony.dll" />
             </Component>
@@ -153,6 +156,9 @@
                 <File Id="SubServer_Lidgren.Network.dll" Name="Lidgren.Network.dll"
                       Source="$(var.Lidgren.Network_TargetDir)Lidgren.Network.dll" />
             </Component>
+            <Component Id="Subserver_LiteNetLib.dll" Guid="*">
+                <File Id="SubServer_LiteNetLib.dll" Name="LiteNetLib.dll" Source="$(var.NitroxClient_TargetDir)LiteNetLib.dll" />
+            </Component>               
             <Component Id="SubServer_NitroxClient.dll" Guid="*">
                 <File Id="SubServer_NitroxClient.dll" Name="NitroxClient.dll"
                       Source="$(var.NitroxClient_TargetDir)NitroxClient.dll" />

@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
 using Lidgren.Network;
 using LZ4;
+using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
 {
@@ -47,7 +48,7 @@ namespace NitroxModel.Packets
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public NetDeliveryMethod DeliveryMethod { get; protected set; } = NetDeliveryMethod.ReliableOrdered;
+        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.ReliableOrdered;
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId
@@ -99,6 +100,11 @@ namespace NitroxModel.Packets
         public virtual Optional<AbsoluteEntityCell> GetDeferredCell()
         {
             return Optional<AbsoluteEntityCell>.Empty();
+        }
+
+        public WrapperPacket ToWrapperPacket()
+        {
+            return new WrapperPacket(Serialize());
         }
     }
 }
