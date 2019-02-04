@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
 using NitroxClient.GameLogic.Spawning;

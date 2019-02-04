@@ -35,6 +35,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.QuitButton = new System.Windows.Forms.Button();
             this.SettingsButton = new System.Windows.Forms.Button();
+            this.webBrowser1 = new System.Windows.Forms.WebBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -115,12 +116,23 @@
             this.SettingsButton.UseVisualStyleBackColor = false;
             this.SettingsButton.Click += new System.EventHandler(this.SettingsButton_Click);
             // 
+            // webBrowser1
+            // 
+            this.webBrowser1.Location = new System.Drawing.Point(1210, 764);
+            this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.webBrowser1.Name = "webBrowser1";
+            this.webBrowser1.ScrollBarsEnabled = false;
+            this.webBrowser1.Size = new System.Drawing.Size(876, 586);
+            this.webBrowser1.TabIndex = 6;
+            this.webBrowser1.Visible = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1215, 775);
+            this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.SettingsButton);
             this.Controls.Add(this.QuitButton);
             this.Controls.Add(this.pictureBox1);
@@ -143,6 +155,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button QuitButton;
         private System.Windows.Forms.Button SettingsButton;
+        private System.Windows.Forms.WebBrowser webBrowser1;
     }
 }
 

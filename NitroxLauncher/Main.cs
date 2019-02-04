@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
+using NitroxModel.Helper;
 
 namespace NitroxLauncher
 {
@@ -31,6 +32,12 @@ namespace NitroxLauncher
                 return;
             }
 
+            if (PirateDetection.IsPirate(subnauticaPath))
+            {
+                PirateDetected();
+                return;
+            }
+
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -46,6 +53,12 @@ namespace NitroxLauncher
 
             if (ErrorConfiguringLaunch(ref subnauticaPath))
             {
+                return;
+            }
+
+            if(PirateDetection.IsPirate(subnauticaPath))
+            {
+                PirateDetected();
                 return;
             }
 
@@ -84,12 +97,12 @@ namespace NitroxLauncher
 
         private void Main_Load(object sender, EventArgs e)
         {
-            if(!File.Exists("path.txt"))
+            if (!File.Exists("path.txt"))
             {
                 Settings settings = new Settings();
                 settings.Show();
                 settings.TopMost = true;
-            }
+            }          
         }
 
         private bool ErrorConfiguringLaunch(ref string subnauticaPath)
@@ -146,6 +159,20 @@ namespace NitroxLauncher
                     File.Copy(sourceFilePath, destinationFilePath, true);
                 }
             }
+        }
+
+        private void PirateDetected()
+        {
+            string embed = "<html><head>" +
+               "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
+               "</head><body>" +
+               "<iframe width=\"854\" height=\"564\" src=\"{0}\"" +
+               "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
+               "</body></html>";
+            string url = "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1";
+            webBrowser1.Location = new System.Drawing.Point(157, 125);
+            webBrowser1.Visible = true;
+            webBrowser1.DocumentText = string.Format(embed, url);
         }
     }
 }

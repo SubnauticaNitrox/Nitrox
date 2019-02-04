@@ -92,6 +92,7 @@
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
     <Compile Include="Packets\CyclopsFireCreated.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
