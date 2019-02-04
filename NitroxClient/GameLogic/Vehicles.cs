@@ -23,12 +23,11 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
 
-        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession, Dictionary<string, VehicleModel> vehiclesByGuid)
+        public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
         {
             this.packetSender = packetSender;
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
-            this.vehiclesByGuid = vehiclesByGuid;
         }
 
         public void CreateVehicle(VehicleModel vehicleModel)

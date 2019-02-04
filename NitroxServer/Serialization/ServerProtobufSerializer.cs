@@ -6,6 +6,7 @@ using ProtoBufNet;
 using ProtoBufNet.Meta;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization
 {
@@ -56,6 +57,9 @@ namespace NitroxServer.Serialization
 
             MetaType metadataType = model.Add(typeof(BasePieceMetadata), false);
             metadataType.AddSubType(50, typeof(SignMetadata));
+
+            MetaType vehicleModel = model.Add(typeof(VehicleModel), false);
+            vehicleModel.AddSubType(50, typeof(ExosuitModel));
         }
         
         private void RegisterAssemblyClasses(string assemblyName)
