@@ -81,7 +81,9 @@ namespace NitroxClient.GameLogic
 
         private GameObject CloneLocalPlayerBodyPrototype()
         {
-            return Object.Instantiate(localPlayer.BodyPrototype);
+            GameObject clone = Object.Instantiate(localPlayer.BodyPrototype);
+            clone.SetActive(true);
+            return clone;
         }
 
         public int GetTotalPlayerCount()
