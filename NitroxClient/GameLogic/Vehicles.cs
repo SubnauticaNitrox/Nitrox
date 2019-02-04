@@ -30,12 +30,12 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
         }
 
-        public void CreateVehicle(VehicleModel vehicleModels)
+        public void CreateVehicle(VehicleModel vehicleModel)
         {
 
-            VehicleModel vehicleModel = VehicleFactory.CreateFrom(vehicleModels);
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
-            AddVehicle(vehicleModel);
+            VehicleModel _vehicleModel = VehicleFactory.CreateFrom(vehicleModel);
+            CreateVehicle(_vehicleModel.TechType, _vehicleModel.Guid, _vehicleModel.Position, _vehicleModel.Rotation, _vehicleModel.InteractiveChildIdentifiers, _vehicleModel.DockingBayGuid, _vehicleModel.Name, _vehicleModel.HSB, _vehicleModel.Colours);
+            AddVehicle(_vehicleModel);
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
@@ -376,10 +376,7 @@ namespace NitroxClient.GameLogic
 
         public void AddVehicle(VehicleModel vehicleModel)
         {
-            lock (vehiclesByGuid)
-            {
                 vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
-            }
         }
         
         public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
