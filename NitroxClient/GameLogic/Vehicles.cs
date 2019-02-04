@@ -130,7 +130,6 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            Guid.NewGuid().ToString();
             // Updates names and colours with persisted data .....yeah.....
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             { // Seamoth & Prawn suit
