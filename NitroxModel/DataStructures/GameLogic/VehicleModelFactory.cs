@@ -21,8 +21,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 case TechType.RocketBase:
                     return null;
                 default:
-                    throw new Exception
-                        ("Unrecognized TechType value.");  
+                    throw new Exception("Could not build from: " + packet.TechType);
+
             }
         }
     }
