@@ -24,10 +24,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastSpawnedArm(Exosuit exo)
         {
-            string Guid = GuidHelper.GetGuid(exo.gameObject);
-            if (!string.IsNullOrEmpty(Guid))
-            {
-
+                string Guid = GuidHelper.GetGuid(exo.gameObject);
                 ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
                
                 IExosuitArm spawnedRArm = (IExosuitArm)exo.ReflectionGet("rightArm");
@@ -38,10 +35,6 @@ namespace NitroxClient.GameLogic
 
                 GameObject spawnedLArmOb = spawnedLArm.GetGameObject();
                 spawnedLArmOb.SetNewGuid(exosuitModel.LeftArmGuid);
-
-                ExosuitSpawnedArmAction Changed = new ExosuitSpawnedArmAction(Guid, exosuitModel.LeftArmGuid, exosuitModel.RightArmGuid);
-                packetSender.Send(Changed);
-            }
         }
     }
 }

@@ -63,7 +63,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
-    <Compile Include="Communication\Packets\Processors\ExosuitSpawnedArmProcessor.cs" />
     <Compile Include="GameLogic\ExosuitModuleEvent.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
@@ -79,7 +78,7 @@
     <Compile Include="GameLogic\InitialSync\PlayerInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
-    <Compile Include="GameLogic\VehicleCreatorFactory.cs" />
+    <Compile Include="GameLogic\VehicleFactory.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />

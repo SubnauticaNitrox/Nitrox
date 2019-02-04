@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModels)
         {
 
-            VehicleModel vehicleModel = VehicleCreatorFactory.CreateFrom(vehicleModels);
+            VehicleModel vehicleModel = VehicleFactory.CreateFrom(vehicleModels);
             CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
             AddVehicle(vehicleModel);
         }

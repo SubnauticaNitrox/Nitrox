@@ -85,6 +85,7 @@
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\GameLogic\DamageInfoData.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
+    <Compile Include="DataStructures\GameLogic\VehicleModelFactory.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
@@ -96,7 +97,6 @@
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
-    <Compile Include="Packets\ExosuitSpawnedArmAction.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />

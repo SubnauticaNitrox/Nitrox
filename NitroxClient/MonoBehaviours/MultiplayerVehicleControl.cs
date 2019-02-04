@@ -85,7 +85,6 @@ namespace NitroxClient.MonoBehaviours
         private readonly FieldInfo steeringWheelPitch = ReflectionHelper.GetField<T>("steeringWheelPitch");
 
         protected T SteeringControl;
-        protected T ArmPositions;
 
         protected override void FixedUpdate()
         {

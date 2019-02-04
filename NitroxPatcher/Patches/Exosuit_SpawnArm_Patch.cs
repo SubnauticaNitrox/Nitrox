@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
-    public class ExosuitArmSpawned_Patch : NitroxPatch
+    public class Exosuit_ArmSpawned_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(Exosuit);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("UpdateColliders", BindingFlags.NonPublic | BindingFlags.Instance);
