@@ -12,13 +12,17 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class ExosuitModel : VehicleModel
     {
-        [ProtoMember(1)]
+        [ProtoMember(10)]
         public string LeftArmGuid { get; }
 
-        [ProtoMember(2)]
+        [ProtoMember(11)]
         public string RightArmGuid { get; }
 
-        public ExosuitModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours) : base(techType, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours)
+        public ExosuitModel()
+        {
+
+        }
+        public ExosuitModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours) : base (techType, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours)
         {
             LeftArmGuid = System.Guid.NewGuid().ToString();
             RightArmGuid = System.Guid.NewGuid().ToString();
