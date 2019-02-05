@@ -12,8 +12,7 @@ namespace NitroxServer.ConsoleCommands
     internal class HelpCommand : Command
     {
         private readonly PlayerData playerData;
-        private Dictionary<Perms, List<string>> helpTexts = new Dictionary<Perms, List<string>>();
-
+        
         public HelpCommand(PlayerData playerData) : base("help", Perms.PLAYER, "", "Display help about supported commands")
         {
             this.playerData = playerData;
@@ -48,18 +47,10 @@ namespace NitroxServer.ConsoleCommands
 
         private List<string> GetHelpText(Perms perm)
         {
-            List<string> helpText;
-            if (helpTexts.TryGetValue(perm, out helpText))
-            {
-                return helpText;
-            }
-
             // runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             SortedSet<Command> sortedCommands = new SortedSet<Command>(commands.Where(cmd => cmd.RequiredPermLevel <= perm), new CommandComparer());
-            helpText = new List<string>(sortedCommands.Select(cmd => cmd.ToHelpText()));
-            helpTexts[perm] = helpText;
-            return helpText;
+            return List<string>(sortedCommands.Select(cmd => cmd.ToHelpText()));
         }
     }
 }
