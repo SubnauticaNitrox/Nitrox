@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -13,6 +14,9 @@ namespace NitroxLauncher
 {
     public partial class Main : Form
     {
+        private bool isDragging;
+        private Point dragStartPoint;
+
         public Main()
         {
             InitializeComponent();
@@ -170,9 +174,32 @@ namespace NitroxLauncher
                "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
                "</body></html>";
             string url = "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1";
-            webBrowser1.Location = new System.Drawing.Point(157, 125);
+            webBrowser1.Location = new Point(157, 125);
             webBrowser1.Visible = true;
             webBrowser1.DocumentText = string.Format(embed, url);
+        }
+
+        private void DragPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            isDragging = true;
+            dragStartPoint = e.Location;
+        }
+
+        private void DragPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
+
+        void DragPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            { 
+                Point p1 = new Point(e.X, e.Y);
+                Point p2 = PointToScreen(p1);
+                Point p3 = new Point(p2.X - dragStartPoint.X,
+                                     p2.Y - dragStartPoint.Y);
+                Location = p3;
+            }
         }
     }
 }

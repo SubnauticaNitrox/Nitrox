@@ -50,7 +50,7 @@ namespace NitroxServer.ConsoleCommands
             // runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             SortedSet<Command> sortedCommands = new SortedSet<Command>(commands.Where(cmd => cmd.RequiredPermLevel <= perm), new CommandComparer());
-            return List<string>(sortedCommands.Select(cmd => cmd.ToHelpText()));
+            return new List<string>(sortedCommands.Select(cmd => cmd.ToHelpText()));
         }
     }
 }

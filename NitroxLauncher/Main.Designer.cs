@@ -36,6 +36,7 @@
             this.QuitButton = new System.Windows.Forms.Button();
             this.SettingsButton = new System.Windows.Forms.Button();
             this.webBrowser1 = new System.Windows.Forms.WebBrowser();
+            this.DragPanel = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,12 +127,24 @@
             this.webBrowser1.TabIndex = 6;
             this.webBrowser1.Visible = false;
             // 
+            // DragPanel
+            // 
+            this.DragPanel.BackColor = System.Drawing.Color.Transparent;
+            this.DragPanel.Location = new System.Drawing.Point(-5, 3);
+            this.DragPanel.Name = "DragPanel";
+            this.DragPanel.Size = new System.Drawing.Size(1104, 97);
+            this.DragPanel.TabIndex = 7;
+            this.DragPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragPanel_MouseUp);
+            this.DragPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DragPanel_MouseDown);
+            this.DragPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragPanel_MouseMove);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
             this.ClientSize = new System.Drawing.Size(1215, 775);
+            this.Controls.Add(this.DragPanel);
             this.Controls.Add(this.webBrowser1);
             this.Controls.Add(this.SettingsButton);
             this.Controls.Add(this.QuitButton);
@@ -156,6 +169,7 @@
         private System.Windows.Forms.Button QuitButton;
         private System.Windows.Forms.Button SettingsButton;
         private System.Windows.Forms.WebBrowser webBrowser1;
+        private System.Windows.Forms.Panel DragPanel;
     }
 }
 
