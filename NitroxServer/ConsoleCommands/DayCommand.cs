@@ -1,4 +1,4 @@
-using NitroxModel.Core;
+﻿using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -6,7 +6,7 @@ using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
-    public class DayCommand : Command
+    internal class DayCommand : Command
     {
         public DayCommand() : base("day", Perms.ADMIN)
         {
