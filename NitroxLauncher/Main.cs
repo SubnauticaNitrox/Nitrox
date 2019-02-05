@@ -48,7 +48,7 @@ namespace NitroxLauncher
             nitroxEntryPatch.Remove();
 
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
-            Process.Start(subnauticaExe, "-EpicPortal");
+            Process.Start(subnauticaExe);
         }
 
         private void MultiplayerButton_Click(object sender, EventArgs e)
@@ -69,10 +69,11 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            nitroxEntryPatch.Remove(); // Remove any previous instances first.
             nitroxEntryPatch.Apply();
 
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
-            Process.Start(subnauticaExe, "-EpicPortal");
+            Process.Start(subnauticaExe);
 
             //TODO: maybe an async callback to remove when the app closes.
         }
@@ -136,15 +137,24 @@ namespace NitroxLauncher
             string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
             string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
 
-            CopyAllAssemblies(subnauticaManagedPath, libDirectory);
-            CopyAllAssemblies(libDirectory, subnauticaManagedPath);
+            List<string> ignoreNitroxBinaries = new List<string>() { "NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll", "0Harmony.dll", "Autofac.dll", "log4net.dll", "protobuf-net.dll", "LitJson.dll", "dnlib.dll", "AssetsTools.NET.dll", "LiteNetLib.dll" };
+            CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
+
+            List<string> ignoreNoBinaries = new List<string>();
+            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
         }
 
-        private void CopyAllAssemblies(string source, string destination)
+        private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)
         {
             foreach (string sourceFilePath in Directory.GetFiles(source))
             {
                 string fileName = Path.GetFileName(sourceFilePath);
+
+                if(dllsToIgnore.Contains(fileName))
+                {
+                    continue;
+                } 
+
                 string destinationFilePath = Path.Combine(destination, fileName);
                 
                 if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
