@@ -194,14 +194,29 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, UnityEngine.Vector3 scale, TechType techType, LargeWorldEntity.CellLevel cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
+            Entity spawnedEntity;
+            if (System.DateTime.Today.Month == 4 && System.DateTime.Today.Day == 1)
+            {
+                spawnedEntity = new Entity(entitySpawnPoint.Position,
                                               entitySpawnPoint.Rotation,
                                               scale,
                                               techType,
                                               (int)cellLevel,
-                                              classId,
+                                              "8d3d3c8b-9290-444a-9fea-8e5493ecd6fe",
                                               true,
                                               deterministicBatchGenerator.NextGuid());
+            }
+            else
+            {
+                spawnedEntity = new Entity(entitySpawnPoint.Position,
+                                                  entitySpawnPoint.Rotation,
+                                                  scale,
+                                                  techType,
+                                                  (int)cellLevel,
+                                                  classId,
+                                                  true,
+                                                  deterministicBatchGenerator.NextGuid());
+            }
             yield return spawnedEntity;
 
             IEntityBootstrapper bootstrapper;
