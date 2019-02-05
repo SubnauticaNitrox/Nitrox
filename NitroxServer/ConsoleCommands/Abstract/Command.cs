@@ -38,7 +38,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Validate.NotNull(argsDescription);
 
             Name = name;
-            Description = string.IsNullOrEmpty(description) ? "No Descrption" : description;
+            Description = string.IsNullOrEmpty(description) ? "No description" : description;
             ArgsDescription = argsDescription;
             RequiredPermLevel = requiredPermLevel;
             Alias = alias ?? new string[0];
