@@ -32,10 +32,8 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-
-            VehicleModel _vehicleModel = VehicleFactory.CreateFrom(vehicleModel);
-            CreateVehicle(_vehicleModel.TechType, _vehicleModel.Guid, _vehicleModel.Position, _vehicleModel.Rotation, _vehicleModel.InteractiveChildIdentifiers, _vehicleModel.DockingBayGuid, _vehicleModel.Name, _vehicleModel.HSB, _vehicleModel.Colours);
-            AddVehicle(_vehicleModel);
+            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
+            AddVehicle(vehicleModel);
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
@@ -51,7 +49,6 @@ namespace NitroxClient.GameLogic
                 if (techPrefab != null)
                 {
                     OnVehiclePrefabLoaded(techType, techPrefab, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours);
-                    
                 }
                 else
                 {
@@ -97,6 +94,7 @@ namespace NitroxClient.GameLogic
                     else if (exosuit)
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        mvc.SetArmPositions(vehicleModel.LeftAimTarget, vehicleModel.RightAimTarget);
                     }
                 }
 
@@ -105,7 +103,6 @@ namespace NitroxClient.GameLogic
                     mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
                     mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
-                    mvc.SetArmPositions(vehicleModel.LeftAimTarget, vehicleModel.RightAimTarget);
                 }
             }
 
@@ -130,9 +127,9 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            // Updates names and colours with persisted data .....yeah.....
+            // Updates names and colours with persisted data
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
-            { // Seamoth & Prawn suit
+            { 
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
                 if (dockingBayGuid.IsPresent())
                 {
@@ -159,7 +156,7 @@ namespace NitroxClient.GameLogic
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
             }
-            else if(techType == TechType.Cyclops) // Cyclops
+            else if(techType == TechType.Cyclops)
             {
                 GameObject target = GuidHelper.RequireObjectFrom(guid);
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
@@ -376,7 +373,7 @@ namespace NitroxClient.GameLogic
 
         public void AddVehicle(VehicleModel vehicleModel)
         {
-                vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
+            vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
         }
         
         public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel

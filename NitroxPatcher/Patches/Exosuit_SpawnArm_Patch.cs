@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(Exosuit __instance)
         {
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastSpawnedArm(__instance);
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().SpawnedArm(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)

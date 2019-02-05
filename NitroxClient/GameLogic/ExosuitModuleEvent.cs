@@ -22,19 +22,19 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastSpawnedArm(Exosuit exo)
+        public void SpawnedArm(Exosuit exosuit)
         {
-                string Guid = GuidHelper.GetGuid(exo.gameObject);
-                ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
+            string Guid = GuidHelper.GetGuid(exosuit.gameObject);
+            ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
                
-                IExosuitArm spawnedRArm = (IExosuitArm)exo.ReflectionGet("rightArm");
-                IExosuitArm spawnedLArm = (IExosuitArm)exo.ReflectionGet("leftArm");
+            IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");
+            IExosuitArm leftArm = (IExosuitArm)exosuit.ReflectionGet("leftArm");
 
-                GameObject spawnedRArmOb = spawnedRArm.GetGameObject();
-                spawnedRArmOb.SetNewGuid(exosuitModel.RightArmGuid);
+            GameObject rightArmGameObject = rightArm.GetGameObject();
+            rightArmGameObject.SetNewGuid(exosuitModel.RightArmGuid);
 
-                GameObject spawnedLArmOb = spawnedLArm.GetGameObject();
-                spawnedLArmOb.SetNewGuid(exosuitModel.LeftArmGuid);
+            GameObject leftArmGameObject = leftArm.GetGameObject();
+            leftArmGameObject.SetNewGuid(exosuitModel.LeftArmGuid);
         }
     }
 }
