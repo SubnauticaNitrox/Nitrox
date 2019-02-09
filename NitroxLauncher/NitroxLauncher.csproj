@@ -103,22 +103,27 @@
     <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
       <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Harmony</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Lidgren.Network</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
       <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
       <Name>NitroxPatcher</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
@@ -127,13 +132,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <ItemGroup>
-      <MoveToLibFolder Include="$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; $(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; $(OutputPath)Lidgren.Network.xml ; $(OutputPath)LZ4.dll ; $(OutputPath)NitroxClient.dll ; $(OutputPath)NitroxModel.dll ; $(OutputPath)NitroxPatcher.dll ; $(OutputPath)log4net.dll ; $(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; $(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; $(OutputPath)Lidgren.Network.dll ; $(OutputPath)LiteNetLib.dll" />
+      <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
+        <ItemGroup>
+      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
-    <ItemGroup>
-      <MoveToUweLibFolder Include="$(OutputPath)*.dll ; $(OutputPath)*.xml" Exclude="Assembly-CSharp.dll" />
-    </ItemGroup>
-    <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>
