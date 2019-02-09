@@ -58,7 +58,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Patching\NitroxEntryPatch.cs" />
-    <Compile Include="Patching\SteamDetection.cs" />
+    <Compile Include="Patching\PlatformDetection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs">

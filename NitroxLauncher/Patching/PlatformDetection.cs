@@ -5,7 +5,7 @@ namespace NitroxLauncher.Patching
 {
     public class PlatformDetection
     {
-        public static bool IsSteam(string subnauticaPath)
+        public static bool IsEpic(string subnauticaPath)
         {
             string assemblyCSharp = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", "Assembly-CSharp.dll");
 
@@ -13,7 +13,8 @@ namespace NitroxLauncher.Patching
             {
                 foreach (TypeDef type in module.GetTypes())
                 {
-                    if(type.FullName == "PlatformServicesSteam")
+                    // TODO: Not going to work with below zero, find an alternative
+                    if(type.FullName == "PlatformServicesEpic")
                     {
                         return true;
                     }

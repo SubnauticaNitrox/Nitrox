@@ -80,13 +80,13 @@ namespace NitroxLauncher
         {
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
 
-            if (PlatformDetection.IsSteam(subnauticaPath))
+            if (PlatformDetection.IsEpic(subnauticaPath))
             {
-                Process.Start(subnauticaExe);
+                Process.Start(subnauticaExe, "-EpicPortal");
             }
             else
             {
-                Process.Start(subnauticaExe, "-EpicPortal");
+                Process.Start(subnauticaExe);
             }
         }
 
