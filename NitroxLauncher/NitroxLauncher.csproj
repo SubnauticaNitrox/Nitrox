@@ -58,6 +58,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Compile Include="Patching\SteamDetection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs">
@@ -132,8 +133,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-      <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
-        <ItemGroup>
+    <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
+    <ItemGroup>
       <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />

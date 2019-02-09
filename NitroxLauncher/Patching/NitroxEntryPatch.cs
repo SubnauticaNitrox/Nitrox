@@ -10,7 +10,6 @@ namespace NitroxLauncher.Patching
     {
         public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
         public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
-        public const string GAME_ASSEMBLY_BACKUP_NAME = "Assembly-CSharp.dll.bak";
         public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
         private const string NITROX_ENTRY_TYPE_NAME = "Main";

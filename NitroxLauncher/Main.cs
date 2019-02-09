@@ -47,8 +47,7 @@ namespace NitroxLauncher
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
             nitroxEntryPatch.Remove();
 
-            string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
-            Process.Start(subnauticaExe);
+            StartSubnautica(subnauticaPath);
         }
 
         private void MultiplayerButton_Click(object sender, EventArgs e)
@@ -72,10 +71,23 @@ namespace NitroxLauncher
             nitroxEntryPatch.Remove(); // Remove any previous instances first.
             nitroxEntryPatch.Apply();
 
-            string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
-            Process.Start(subnauticaExe);
+            StartSubnautica(subnauticaPath);
 
             //TODO: maybe an async callback to remove when the app closes.
+        }
+
+        private void StartSubnautica(string subnauticaPath)
+        {
+            string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
+
+            if (PlatformDetection.IsSteam(subnauticaPath))
+            {
+                Process.Start(subnauticaExe);
+            }
+            else
+            {
+                Process.Start(subnauticaExe, "-EpicPortal");
+            }
         }
 
         private void ServerButton_Click(object sender, EventArgs e)
