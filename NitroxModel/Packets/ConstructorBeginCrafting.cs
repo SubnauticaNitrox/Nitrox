@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
 using UnityEngine;
 
 namespace NitroxModel.Packets

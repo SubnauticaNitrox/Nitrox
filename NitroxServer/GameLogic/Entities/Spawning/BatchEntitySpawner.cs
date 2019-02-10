@@ -6,6 +6,7 @@ using NitroxServer.Serialization;
 using UWE;
 using static LootDistributionData;
 using NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -197,7 +198,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             Entity spawnedEntity = new Entity(entitySpawnPoint.Position,
                                               entitySpawnPoint.Rotation,
                                               scale,
-                                              techType,
+                                              techType.Model(),
                                               (int)cellLevel,
                                               classId,
                                               true,
@@ -205,7 +206,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             yield return spawnedEntity;
 
             IEntityBootstrapper bootstrapper;
-            if (customBootstrappersByTechType.TryGetValue(spawnedEntity.TechType, out bootstrapper))
+            if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
             {
                 bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
 

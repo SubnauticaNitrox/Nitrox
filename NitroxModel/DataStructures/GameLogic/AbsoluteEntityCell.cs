@@ -1,7 +1,7 @@
 ﻿using System;
 using NitroxModel.Helper;
 using UnityEngine;
-using ProtoBuf;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -34,12 +34,14 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             Level = level;
 
-            Vector3 localPosition = (worldSpace + Map.BATCH_DIMENSION_CENTERING.ToVector3()) / Map.BATCH_SIZE;
+            Vector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter.ToVector3()) / Map.Main.BatchSize;
             BatchId = Int3.Floor(localPosition);
-            CellId = Int3.Floor(((localPosition - BatchId.ToVector3()) * GetCellsPerBlock()).AddScalar(0.0001f));
+
+            Vector3 cell = (localPosition - BatchId.ToVector3()) * GetCellsPerBlock();            
+            CellId = Int3.Floor(new Vector3(cell.x + 0.0001f, cell.y + 0.0001f, cell.z + 0.0001f));
         }
 
-        private Int3 BatchPosition => BatchId * Map.BATCH_SIZE - Map.BATCH_DIMENSION_CENTERING;
+        private Int3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
         public Int3 Position => BatchPosition + CellId * GetCellSize();
         public Int3 Center
         {
@@ -47,10 +49,6 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 Int3 cellSize = GetCellSize();
                 return BatchPosition + CellId * cellSize + (cellSize >> 1);
-
-                // Same as:
-                // Int3.Bounds bounds = BatchCells.GetBlockBounds(BatchId, CellId, Level, Map.BATCH_DIMENSIONS);
-                // Vector3 center = EntityCell.GetCenter(bounds) - Map.BATCH_DIMENSION_CENTERING.ToVector3();
             }
         }
 
@@ -82,7 +80,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public Int3 GetCellSize()
         {
-            return GetCellSize(Map.BATCH_DIMENSIONS);
+            return GetCellSize(Map.Main.BatchDimensions);
         }
 
         public Int3 GetCellSize(Int3 blocksPerBatch)

@@ -135,8 +135,12 @@
   <Target Name="AfterBuild">
     <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll" />
+      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
+    <ItemGroup>
+      <CopyToLibFolder Include=" ../lib/discord-rpc.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CopyToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>

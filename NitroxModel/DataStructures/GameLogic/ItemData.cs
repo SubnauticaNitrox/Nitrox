@@ -1,4 +1,4 @@
-﻿using ProtoBuf;
+﻿using ProtoBufNet;
 using System;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -16,6 +16,11 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(3)]
         public byte[] SerializedData { get; }
+
+        public ItemData()
+        {
+            // For serialization
+        }
 
         public ItemData(string containerGuid, string guid, byte[] serializedData)
         {

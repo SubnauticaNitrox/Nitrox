@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -30,7 +31,7 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)

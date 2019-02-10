@@ -4,7 +4,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Packets;
+using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors

@@ -1,7 +1,8 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic.Creatures.Actions;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions;
 
-namespace NitroxModel.Packets
+namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CreatureActionChanged : Packet

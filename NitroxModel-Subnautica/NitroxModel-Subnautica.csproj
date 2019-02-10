@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A377218-6B36-4522-89A3-A39CFC999209}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NitroxModel_Subnautica</RootNamespace>
+    <AssemblyName>NitroxModel-Subnautica</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\SharedConfig.targets" />
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\lib\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\SubnauticaRotationMetadataFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
+    <Compile Include="DataStructures\GameLogic\CyclopsDamageInfoData.cs" />
+    <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
+    <Compile Include="Helper\SubnauticaMap.cs" />
+    <Compile Include="Helper\Int3Converter.cs" />
+    <Compile Include="Helper\TechTypeConverter.cs" />
+    <Compile Include="Logger\SubnauticaInGameLogger.cs" />
+    <Compile Include="Packets\CreatureActionChanged.cs" />
+    <Compile Include="Packets\CyclopsActivateHorn.cs" />
+    <Compile Include="Packets\CyclopsActivateShield.cs" />
+    <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
+    <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
+    <Compile Include="Packets\CyclopsDamage.cs" />
+    <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
+    <Compile Include="Packets\CyclopsDestroyed.cs" />
+    <Compile Include="Packets\CyclopsFireCreated.cs" />
+    <Compile Include="Packets\CyclopsToggleEngineState.cs" />
+    <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
+    <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>NitroxModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

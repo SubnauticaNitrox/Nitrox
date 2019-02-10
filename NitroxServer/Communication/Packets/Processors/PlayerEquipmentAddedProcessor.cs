@@ -25,8 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
             playerData.AddEquipment(playerName, equippedItem);
 
             ushort playerId = player.Id;
-            TechType techType = packet.TechType;
-            RemotePlayerEquipmentAdded equipmentAdded = new RemotePlayerEquipmentAdded(playerId, techType);
+            RemotePlayerEquipmentAdded equipmentAdded = new RemotePlayerEquipmentAdded(playerId, packet.TechType);
 
             playerManager.SendPacketToOtherPlayers(equipmentAdded, player);
         }

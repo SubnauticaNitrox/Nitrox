@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
-using ProtoBuf;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {

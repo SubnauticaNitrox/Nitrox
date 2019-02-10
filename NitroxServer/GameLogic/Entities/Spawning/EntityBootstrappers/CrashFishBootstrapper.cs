@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
 {
@@ -17,7 +18,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
         {
             string guid = deterministicBatchGenerator.NextGuid();
 
-            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType, parentEntity.Level, classId, true, guid);
+            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, guid);
         }
     }
 }

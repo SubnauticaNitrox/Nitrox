@@ -4,6 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -113,15 +114,15 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleMovementData model = new VehicleMovementData(techType,
-                                                  guid,
-                                                  position,
-                                                  rotation,
-                                                  velocity,
-                                                  angularVelocity,
-                                                  steeringWheelYaw,
-                                                  steeringWheelPitch,
-                                                  appliedThrottle);
+            VehicleMovementData model = new VehicleMovementData(techType.Model(),
+                                                                guid,
+                                                                position,
+                                                                rotation,
+                                                                velocity,
+                                                                angularVelocity,
+                                                                steeringWheelYaw,
+                                                                steeringWheelPitch,
+                                                                appliedThrottle);
 
             return Optional<VehicleMovementData>.Of(model);
         }

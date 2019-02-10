@@ -1,12 +1,8 @@
 ﻿using System.Timers;
-using NitroxModel.Core;
 using NitroxModel.Logger;
-using NitroxModel.Networking;
-using NitroxServer.Communication;
-using NitroxServer.Communication.NetworkingLayer.Lidgren;
-using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Serialization.World;
 using NitroxServer.ConfigParser;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxServer
 {
@@ -26,7 +22,7 @@ namespace NitroxServer
             this.worldPersistence = worldPersistence;
             this.world = world;
             this.server = server;
-
+            
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;

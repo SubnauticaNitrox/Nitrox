@@ -1,12 +1,12 @@
 ﻿using System;
-using ProtoBuf;
+using ProtoBufNet;
 using UnityEngine;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]
-    public class DamageInfoData
+    public class CyclopsDamageInfoData
     {
         [ProtoMember(1)]
         public string ReceiverGuid { get; set; }
@@ -26,12 +26,12 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(6)]
         public DamageType Type { get; set; }
 
-        public DamageInfoData()
+        public CyclopsDamageInfoData()
         {
             // Default Constructor for serialization
         }
 
-        public DamageInfoData(string receiverGuid, string dealerGuid, float originalDamage, float damage, Vector3 position, DamageType type)
+        public CyclopsDamageInfoData(string receiverGuid, string dealerGuid, float originalDamage, float damage, Vector3 position, DamageType type)
         {
             ReceiverGuid = receiverGuid;
             DealerGuid = dealerGuid;

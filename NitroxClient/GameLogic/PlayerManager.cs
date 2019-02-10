@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.DiscordRP;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;

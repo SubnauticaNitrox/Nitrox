@@ -6,6 +6,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.Helper;
 using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer
@@ -14,11 +15,15 @@ namespace NitroxServer
     {
         private static void Main(string[] args)
         {
+            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+
             NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             ConfigureCultureInfo();
+
             Server server;
+
             try
             {
                 server = NitroxServiceLocator.LocateService<Server>();
@@ -33,6 +38,7 @@ namespace NitroxServer
             CatchExitEvent();
 
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
+
             while (server.IsRunning)
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<Player>.Empty(), Perms.CONSOLE);

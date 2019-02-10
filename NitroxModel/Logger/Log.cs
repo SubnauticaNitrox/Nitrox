@@ -10,10 +10,12 @@ namespace NitroxModel.Logger
 {
     public class Log
     {
+        public static InGameLogger InGameLogger { get; set; }
+
         private static bool inGameMessages;
 
         private static readonly ILog log = LogManager.GetLogger("Nitrox");
-
+        
         static Log()
         {
             Setup();
@@ -30,24 +32,43 @@ namespace NitroxModel.Logger
         {
             if (inGameMessages)
             {
-                ErrorMessage.AddMessage(msg);
+                if(InGameLogger != null)
+                {
+                    InGameLogger.Log(msg);
+                }
+                
                 Info(msg);
             }
+        }
+
+        public static void Error(string msg)
+        {
+            log.Error(msg);
         }
 
         public static void Error(string fmt, params object[] arg)
         {
             log.Error(Format(fmt, arg));
         }
-
+        
         public static void Error(string msg, Exception ex)
         {
             log.Error(msg, ex);
         }
 
+        public static void Warn(string msg)
+        {
+            log.Warn(msg);
+        }
+
         public static void Warn(string fmt, params object[] arg)
         {
             log.Warn(Format(fmt, arg));
+        }
+
+        public static void Info(string msg)
+        {
+            log.Info(msg);
         }
 
         public static void Info(string fmt, params object[] arg)

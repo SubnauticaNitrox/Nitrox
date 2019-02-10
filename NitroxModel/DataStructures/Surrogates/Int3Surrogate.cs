@@ -6,16 +6,16 @@ namespace NitroxModel.DataStructures.Surrogates
     {
         protected override void GetObjectData(Int3 int3, SerializationInfo info)
         {
-            info.AddValue("x", int3.x);
-            info.AddValue("y", int3.y);
-            info.AddValue("z", int3.z);
+            info.AddValue("x", int3.X);
+            info.AddValue("y", int3.Y);
+            info.AddValue("z", int3.Z);
         }
 
         protected override Int3 SetObjectData(Int3 int3, SerializationInfo info)
         {
-            int3.x = info.GetInt32("x");
-            int3.y = info.GetInt32("y");
-            int3.z = info.GetInt32("z");
+            int3.X = info.GetInt32("x");
+            int3.Y = info.GetInt32("y");
+            int3.Z = info.GetInt32("z");
             return int3;
         }
     }

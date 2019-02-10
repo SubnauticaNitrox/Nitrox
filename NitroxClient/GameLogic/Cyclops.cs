@@ -3,10 +3,10 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel_Subnautica.Packets;
 
 namespace NitroxClient.GameLogic
 {
@@ -104,14 +104,14 @@ namespace NitroxClient.GameLogic
             
             if (subHealth.health > 0)
             {
-                DamageInfoData damageInfo = null;
+                CyclopsDamageInfoData damageInfo = null;
 
                 if (info.IsPresent())
                 {
                     DamageInfo damage = info.Get();
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
-                    DamageInfoData serializedDamageInfo = new DamageInfoData(subGuid,
+                    CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subGuid,
                         damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty,
                         damage.originalDamage,
                         damage.damage,

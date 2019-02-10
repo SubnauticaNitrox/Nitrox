@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -59,7 +60,7 @@ namespace NitroxClient.GameLogic
                     HSB = vehicle.subName.GetColors();
                     Colours = vehicle.subName.GetColors();
                 }
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType, duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
             }
             else

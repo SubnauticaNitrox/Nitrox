@@ -1,4 +1,5 @@
 ﻿using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Unlockables;

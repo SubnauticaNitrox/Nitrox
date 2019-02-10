@@ -327,6 +327,10 @@
       <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
+      <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
+      <Name>NitroxModel-Subnautica</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>

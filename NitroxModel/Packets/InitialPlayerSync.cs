@@ -23,10 +23,10 @@ namespace NitroxModel.Packets
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
         public List<Entity> GlobalRootEntities { get; }
-        public GameModeOption GameMode { get; }
+        public byte GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, GameModeOption gameMode, Perms perms)
+        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, byte gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodGuid = assignedEscapePodGuid;

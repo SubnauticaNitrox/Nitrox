@@ -3,7 +3,6 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -91,11 +90,11 @@ namespace NitroxServer.GameLogic.Entities
             foreach (AbsoluteEntityCell cell in added)
             {
                 List<Entity> entities = entityData.GetEntities(cell);
-                
+
                 assignedEntities.AddRange(
                     entities.Where(entity => cell.Level <= entity.Level &&
-                                             ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) && 
-                                             simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE)));                               
+                                                ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) &&
+                                                simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE)));                       
             }
 
             return assignedEntities;

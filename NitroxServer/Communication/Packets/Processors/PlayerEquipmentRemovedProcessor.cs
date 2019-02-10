@@ -24,8 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
             playerData.RemoveEquipment(playerName, itemGuid);
 
             ushort playerId = player.Id;
-            TechType techType = packet.TechType;
-            RemotePlayerEquipmentRemoved equipmentRemoved = new RemotePlayerEquipmentRemoved(playerId, techType);
+            RemotePlayerEquipmentRemoved equipmentRemoved = new RemotePlayerEquipmentRemoved(playerId, packet.TechType);
 
             playerManager.SendPacketToOtherPlayers(equipmentRemoved, player);
         }

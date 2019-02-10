@@ -1,7 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
-using ProtoBuf;
-using System;
+﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
 {
@@ -15,27 +13,6 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
         public RotationMetadata(Type ghostType)
         {
             GhostType = ghostType;
-        }
-
-        public static Optional<RotationMetadata> From(BaseGhost baseGhost)
-        {
-            RotationMetadata rotationMetadata = null;
-
-            if (baseGhost is BaseAddCorridorGhost)
-            {
-                BaseAddCorridorGhost corridorGhost = baseGhost as BaseAddCorridorGhost;
-                int rotation = (int)corridorGhost.ReflectionGet("rotation");
-                rotationMetadata = new CorridorRotationMetadata(rotation);
-            }
-            else if(baseGhost is BaseAddMapRoomGhost)
-            {
-                BaseAddMapRoomGhost mapRoomGhost = baseGhost as BaseAddMapRoomGhost;
-                Base.CellType cellType = (Base.CellType)mapRoomGhost.ReflectionGet("cellType");
-                int connectionMask = (int)mapRoomGhost.ReflectionGet("connectionMask");
-                rotationMetadata = new MapRoomRotationMetadata(cellType, connectionMask);
-            }
-
-            return Optional<RotationMetadata>.OfNullable(rotationMetadata);
         }
     }
 }

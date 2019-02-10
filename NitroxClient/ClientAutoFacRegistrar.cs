@@ -17,6 +17,8 @@ using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 
 namespace NitroxClient
 {
@@ -50,6 +52,10 @@ namespace NitroxClient
             containerBuilder.RegisterType<LocalPlayer>()
                 .AsSelf() //Would like to deprecate this registration at some point and just work through an abstraction.
                 .As<ILocalNitroxPlayer>()
+                .InstancePerLifetimeScope();
+
+            containerBuilder.RegisterType<SubnauticaRotationMetadataFactory>()
+                .As<RotationMetadataFactory>()
                 .InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();

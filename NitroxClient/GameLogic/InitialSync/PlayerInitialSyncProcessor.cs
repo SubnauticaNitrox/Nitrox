@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic.InitialSync
             SetPlayerGuid(packet.PlayerGuid);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerGameMode(packet.GameMode);
+            SetPlayerGameMode((GameModeOption)packet.GameMode);
         }
 
         private void SetPlayerGuid(string playerguid)

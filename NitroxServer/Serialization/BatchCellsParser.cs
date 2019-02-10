@@ -8,6 +8,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.Helper.Int3;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
 
@@ -137,7 +139,7 @@ namespace NitroxServer.Serialization
                 if (gameObject.TotalComponents > 0)
                 {
 
-                    AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
+                    AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId.Model(), cellId.Model(), level);
                     
                     Transform transform = gameObject.GetComponent<Transform>();
                     EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();

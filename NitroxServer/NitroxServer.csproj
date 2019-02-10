@@ -64,7 +64,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net">
-      <HintPath>protobuf-net.dll</HintPath>
+      <HintPath>..\lib\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -207,6 +207,10 @@
     <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
       <Name>Lidgren.Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
+      <Project>{0A377218-6B36-4522-89A3-A39CFC999209}</Project>
+      <Name>NitroxModel-Subnautica</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>

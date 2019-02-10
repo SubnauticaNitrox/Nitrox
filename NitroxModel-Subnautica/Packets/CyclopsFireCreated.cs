@@ -1,7 +1,8 @@
 ﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 
-namespace NitroxModel.Packets
+namespace NitroxModel_Subnautica.Packets
 {
     /// <summary>
     /// Triggered when a fire has been created in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>

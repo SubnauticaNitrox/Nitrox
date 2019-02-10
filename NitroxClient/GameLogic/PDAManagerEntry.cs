@@ -1,8 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -17,19 +15,19 @@ namespace NitroxClient.GameLogic
 
         public void Add(PDAScanner.Entry entry)
         {
-            PDAEntryAdd EntryChanged = new PDAEntryAdd(entry.techType, entry.progress,entry.unlocked);
+            PDAEntryAdd EntryChanged = new PDAEntryAdd(entry.techType.Model(), entry.progress,entry.unlocked);
             packetSender.Send(EntryChanged);
         }
 
         public void Progress(PDAScanner.Entry entry)
         {
-            PDAEntryProgress EntryChanged = new PDAEntryProgress(entry.techType, entry.progress, entry.unlocked);
+            PDAEntryProgress EntryChanged = new PDAEntryProgress(entry.techType.Model(), entry.progress, entry.unlocked);
             packetSender.Send(EntryChanged);
         }
 
         public void Remove(PDAScanner.Entry entry)
         {
-            PDAEntryRemove EntryChanged = new PDAEntryRemove(entry.techType, entry.progress, entry.unlocked);
+            PDAEntryRemove EntryChanged = new PDAEntryRemove(entry.techType.Model(), entry.progress, entry.unlocked);
             packetSender.Send(EntryChanged);
         }
 

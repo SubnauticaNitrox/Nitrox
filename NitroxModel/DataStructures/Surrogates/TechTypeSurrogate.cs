@@ -1,17 +1,19 @@
 ﻿using System.Runtime.Serialization;
+using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxModel.DataStructures.Surrogates
 {
-    public class TechTypeSurrogate : SerializationSurrogate<TechType>
+    public class TechTypeSurrogate : SerializationSurrogate<TechTypeModel>
     {
-        protected override void GetObjectData(TechType techType, SerializationInfo info)
+        protected override void GetObjectData(TechTypeModel techType, SerializationInfo info)
         {
-            info.AddValue("TechType", (int)techType);
+            info.AddValue("name", techType.Name);
         }
 
-        protected override TechType SetObjectData(TechType techType, SerializationInfo info)
+        protected override TechTypeModel SetObjectData(TechTypeModel techType, SerializationInfo info)
         {
-            return techType = (TechType)info.GetInt32("TechType");
+            techType.Name = info.GetString("name");
+            return techType;
         }
     }
 }

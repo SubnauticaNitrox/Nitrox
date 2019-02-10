@@ -1,4 +1,4 @@
-﻿using ProtoBuf;
+﻿using ProtoBufNet;
 using System;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
@@ -12,12 +12,12 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(1)]
         public int Rotation { get; set; }
 
-        public CorridorRotationMetadata() : base(typeof(BaseAddCorridorGhost))
+        public CorridorRotationMetadata() : base(Type.GetType("BaseAddCorridorGhost"))
         {
             // For serialization purposes
         }
 
-        public CorridorRotationMetadata(int rotation) : base (typeof(BaseAddCorridorGhost))
+        public CorridorRotationMetadata(int rotation) : base (Type.GetType("BaseAddCorridorGhost"))
         {
             Rotation = rotation;
         }

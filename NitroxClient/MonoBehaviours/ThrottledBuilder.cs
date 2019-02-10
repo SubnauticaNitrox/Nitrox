@@ -13,6 +13,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -110,7 +111,7 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Guid + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
-            GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType);
+            GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
             MultiplayerBuilder.overrideQuaternion = basePiece.Rotation;
             MultiplayerBuilder.overrideTransform = new GameObject().transform;

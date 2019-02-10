@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.Helper;
 using NitroxServer.UnityStubs;
 using static NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData;
 
@@ -35,7 +36,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
                         for(int i = 0; i < totalToSpawn; i++)
                         {
                             string guid = deterministicBatchGenerator.NextGuid();
-                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, parentEntity.Scale, creature.techType, parentEntity.Level, creature.classId, true, guid);
+                            Entity child = new Entity(parentEntity.Position + localSpawnPosition, parentEntity.Rotation, parentEntity.Scale, creature.techType.Model(), parentEntity.Level, creature.classId, true, guid);
                             parentEntity.ChildEntities.Add(child);
                         }
 

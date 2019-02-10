@@ -8,9 +8,9 @@ using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures.GameLogic;
-using Lidgren.Network;
 using LZ4;
 using NitroxModel.Networking;
+using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
@@ -29,20 +29,20 @@ namespace NitroxModel.Packets
             Type[] types = Assembly.GetExecutingAssembly()
                 .GetTypes();
 
-            types.Where(t =>
-                    t.BaseType != null &&
-                    t.BaseType.IsGenericType &&
-                    t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                    t.IsClass &&
-                    !t.IsAbstract)
-                .ForEach(t =>
-                {
-                    ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(t);
-                    Type surrogatedType = t.BaseType.GetGenericArguments()[0];
-                    surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
+            IEnumerable<Type> surrogates = types.Where(t =>
+                                                       t.BaseType != null &&
+                                                       t.BaseType.IsGenericType &&
+                                                       t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
+                                                       t.IsClass &&
+                                                       !t.IsAbstract);
+            foreach(Type type in surrogates)
+            {
+                ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
+                Type surrogatedType = type.BaseType.GetGenericArguments()[0];
+                surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                    Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
-                });
+                Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
+            }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
             Serializer = new BinaryFormatter(surrogateSelector, streamingContext);

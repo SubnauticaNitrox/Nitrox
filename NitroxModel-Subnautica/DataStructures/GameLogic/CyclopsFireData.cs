@@ -1,7 +1,7 @@
 ﻿using System;
-using ProtoBuf;
+using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
     [Serializable]
     [ProtoContract]

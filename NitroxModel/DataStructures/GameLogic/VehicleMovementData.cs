@@ -1,5 +1,4 @@
-﻿using NitroxModel.DataStructures.Util;
-using ProtoBuf;
+﻿using ProtoBufNet;
 using System;
 using UnityEngine;
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace NitroxModel.DataStructures.GameLogic.Creatures.Actions
+namespace NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions
 {
     public interface SerializableCreatureAction
     {

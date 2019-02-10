@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 
-namespace NitroxModel.Packets
+namespace NitroxModel_Subnautica.Packets
 {
     /// <summary>
     /// A state update packet for the Cyclops that could be sent due to a <see cref="CyclopsDamagePoint"/> create/repair, <see cref="SubFire"/> create/extinguish,
@@ -17,7 +18,7 @@ namespace NitroxModel.Packets
         public float SubFireHealth { get; }
         public int[] DamagePointIndexes { get; }
         public CyclopsFireData[] RoomFires { get; }
-        public DamageInfoData DamageInfo { get; }
+        public CyclopsDamageInfoData DamageInfo { get; }
 
         /// <param name="guid"><see cref="SubRoot"/> Guid.</param>
         /// <param name="subHealth"><see cref="SubRoot.liveMixin.health"/>.</param>
@@ -28,7 +29,7 @@ namespace NitroxModel.Packets
         /// <param name="roomFires"><see cref="SubFire.RoomFire.spawnNodes"/> where <see cref="Transform.childCount"/> > 0. 
         ///     Null if only a Cyclops health change.</param>
         /// <param name="damageInfo">Null if a repair or extinguish.</param>
-        public CyclopsDamage(string guid, float subHealth, float damageManagerHealth, float subFireHealth, int[] damagePointIndexes, CyclopsFireData[] roomFires, DamageInfoData damageInfo = null)
+        public CyclopsDamage(string guid, float subHealth, float damageManagerHealth, float subFireHealth, int[] damagePointIndexes, CyclopsFireData[] roomFires, CyclopsDamageInfoData damageInfo = null)
         {
             Guid = guid;
             SubHealth = subHealth;
@@ -42,9 +43,9 @@ namespace NitroxModel.Packets
         public override string ToString()
         {
             return "[CyclopsDamage Guid: " + Guid
-                + " SubHealth: " + SubHealth.ToTwoDecimalString()
-                + " DamageManagerHealth: " + DamageManagerHealth.ToTwoDecimalString()
-                + " SubFireHealth: " + SubFireHealth.ToTwoDecimalString()
+                + " SubHealth: " + SubHealth
+                + " DamageManagerHealth: " + DamageManagerHealth
+                + " SubFireHealth: " + SubFireHealth
                 + (DamagePointIndexes == null ? "" : " DamagePointIndexes: " + string.Join(", ", DamagePointIndexes.Select(x => x.ToString()).ToArray()))
                 + (RoomFires == null ? "" : " RoomFires: " + string.Join(", ", RoomFires.Select(x => x.ToString()).ToArray()))
                 + (DamageInfo == null ? "" : " DamageInfo: DealerGuid: " + DamageInfo?.DealerGuid ?? "null" + " Damage: " + DamageInfo?.OriginalDamage + "ModifiedDamage:" + DamageInfo?.Damage + "Pos:" + DamageInfo?.Position.ToString());
