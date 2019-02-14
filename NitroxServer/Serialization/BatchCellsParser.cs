@@ -8,10 +8,10 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel_Subnautica.Helper;
-using NitroxModel_Subnautica.Helper.Int3;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
+using NitroxModel.DataStructures;
+using ProtoBufNet;
 
 namespace NitroxServer.Serialization
 {
@@ -24,11 +24,13 @@ namespace NitroxServer.Serialization
      */
     class BatchCellsParser
     {
+        private readonly EntitySpawnPointFactory entitySpawnPointFactory;
         private readonly ServerProtobufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
-        public BatchCellsParser(ServerProtobufSerializer serializer)
+        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtobufSerializer serializer)
         {
+            this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;
 
             surrogateTypes.Add("UnityEngine.Transform", typeof(Transform));
@@ -57,7 +59,7 @@ namespace NitroxServer.Serialization
             }
 
             string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
-            string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.x + "-" + batchId.y + "-" + batchId.z + suffix + ".bin");
+            string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.X + "-" + batchId.Y + "-" + batchId.Z + suffix + ".bin");
 
             if (!File.Exists(fileName))
             {
@@ -77,11 +79,11 @@ namespace NitroxServer.Serialization
         {
             using (Stream stream = File.OpenRead(fileName))
             {
-                CellManager.CellsFileHeader cellsFileHeader = serializer.Deserialize<CellManager.CellsFileHeader>(stream);
+                CellsFileHeader cellsFileHeader = serializer.Deserialize<CellsFileHeader>(stream);
 
                 for (int cellCounter = 0; cellCounter < cellsFileHeader.numCells; cellCounter++)
                 {
-                    CellManager.CellHeaderEx cellHeader = serializer.Deserialize<CellManager.CellHeaderEx>(stream);
+                    CellHeaderEx cellHeader = serializer.Deserialize<CellHeaderEx>(stream);
 
                     bool wasLegacy;
 
@@ -114,7 +116,7 @@ namespace NitroxServer.Serialization
 
             Stream stream = new MemoryStream(data);
 
-            ProtobufSerializer.StreamHeader header = serializer.Deserialize<ProtobufSerializer.StreamHeader>(stream);
+            StreamHeader header = serializer.Deserialize<StreamHeader>(stream);
 
             if (ReferenceEquals(header, null))
             {
@@ -130,7 +132,7 @@ namespace NitroxServer.Serialization
 
         private void ParseGameObjectsFromStream(Stream stream, Int3 batchId, Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
         {
-            ProtobufSerializer.LoopHeader gameObjectCount = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
+            LoopHeader gameObjectCount = serializer.Deserialize<LoopHeader>(stream);
 
             for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
             {
@@ -139,31 +141,16 @@ namespace NitroxServer.Serialization
                 if (gameObject.TotalComponents > 0)
                 {
 
-                    AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId.Model(), cellId.Model(), level);
-                    
+                    AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
                     Transform transform = gameObject.GetComponent<Transform>();
-                    EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();
-                    EntitySlot entitySlot = gameObject.GetComponent<EntitySlot>();
-
-                    if(!ReferenceEquals(entitySlotsPlaceholder, null))
-                    {
-                        spawnPoints.AddRange(EntitySpawnPoint.From(absoluteEntityCell, entitySlotsPlaceholder));
-                    }
-                    else if(!ReferenceEquals(entitySlot, null))
-                    {
-                        spawnPoints.Add(EntitySpawnPoint.From(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId, entitySlot));
-                    }
-                    else
-                    {
-                        spawnPoints.Add(EntitySpawnPoint.From(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId));
-                    }
+                    spawnPoints.AddRange(entitySpawnPointFactory.From(absoluteEntityCell, transform, gameObject));
                 }
             }
         }
 
         private GameObject DeserializeGameObject(Stream stream)
         {
-            ProtobufSerializer.GameObjectData goData = serializer.Deserialize<ProtobufSerializer.GameObjectData>(stream);
+            GameObjectData goData = serializer.Deserialize<GameObjectData>(stream);
 
             GameObject gameObject = new GameObject(goData);
             DeserializeComponents(stream, gameObject);
@@ -173,11 +160,11 @@ namespace NitroxServer.Serialization
 
         private void DeserializeComponents(Stream stream, GameObject gameObject)
         {
-            ProtobufSerializer.LoopHeader components = serializer.Deserialize<ProtobufSerializer.LoopHeader>(stream);
+            LoopHeader components = serializer.Deserialize<LoopHeader>(stream);
 
             for (int componentCounter = 0; componentCounter < components.Count; componentCounter++)
             {
-                ProtobufSerializer.ComponentHeader componentHeader = serializer.Deserialize<ProtobufSerializer.ComponentHeader>(stream);
+                ComponentHeader componentHeader = serializer.Deserialize<ComponentHeader>(stream);
 
                 Type type = null;
 
@@ -197,4 +184,241 @@ namespace NitroxServer.Serialization
             }
         }
     }
+    
+    [ProtoContract]
+    public class CellsFileHeader
+    {
+        public override string ToString()
+        {
+            return string.Format("(version={0}, numCells={1})", version, numCells);
+        }
+
+        [ProtoMember(1)]
+        public int version;
+
+        [ProtoMember(2)]
+        public int numCells;
+    }
+
+    [ProtoContract]
+    public class CellHeader
+    {
+        public override string ToString()
+        {
+            return string.Format("(cellId={0}, level={1})", cellId, level);
+        }
+
+        [ProtoMember(1)]
+        public Int3 cellId;
+
+        [ProtoMember(2)]
+        public int level;
+    }
+
+    [ProtoContract]
+    public class CellHeaderEx
+    {
+        public override string ToString()
+        {
+            return string.Format("(cellId={0}, level={1}, dataLength={2}, legacyDataLength={3}, waiterDataLength={4})", new object[]
+            {
+                cellId,
+                level,
+                dataLength,
+                legacyDataLength,
+                waiterDataLength
+            });
+        }
+
+        [ProtoMember(1)]
+        public Int3 cellId;
+
+        [ProtoMember(2)]
+        public int level;
+
+        [ProtoMember(3)]
+        public int dataLength;
+
+        [ProtoMember(4)]
+        public int legacyDataLength;
+
+        [ProtoMember(5)]
+        public int waiterDataLength;
+    }
+
+    [ProtoContract]
+    public class StreamHeader
+    {
+        [ProtoMember(1)]
+        public int Signature
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(2)]
+        public int Version
+        {
+            get;
+            set;
+        }
+
+        public void Reset()
+        {
+            Signature = 0;
+            Version = 0;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("(UniqueIdentifier={0}, Version={1})", Signature, Version);
+        }
+    }
+
+    [ProtoContract]
+    public class LoopHeader
+    {
+        [ProtoMember(1)]
+        public int Count
+        {
+            get;
+            set;
+        }
+
+        public void Reset()
+        {
+            Count = 0;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("(Count={0})", Count);
+        }
+    }
+
+    [ProtoContract]
+    public class GameObjectData
+    {
+        [ProtoMember(1)]
+        public bool CreateEmptyObject
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(2)]
+        public bool IsActive
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(3)]
+        public int Layer
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(4)]
+        public string Tag
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(6)]
+        public string Id
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(7)]
+        public string ClassId
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(8)]
+        public string Parent
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(9)]
+        public bool OverridePrefab
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(10)]
+        public bool MergeObject
+        {
+            get;
+            set;
+        }
+
+        public void Reset()
+        {
+            CreateEmptyObject = false;
+            IsActive = false;
+            Layer = 0;
+            Tag = null;
+            Id = null;
+            ClassId = null;
+            Parent = null;
+            OverridePrefab = false;
+            MergeObject = false;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("(CreateEmptyObject={0}, IsActive={1}, Layer={2}, Tag={3}, Id={4}, ClassId={5}, Parent={6}, OverridePrefab={7}, MergeObject={8})", new object[]
+            {
+                CreateEmptyObject,
+                IsActive,
+                Layer,
+                Tag,
+                Id,
+                ClassId,
+                Parent,
+                OverridePrefab,
+                MergeObject
+            });
+        }
+    }
+
+    [ProtoContract]
+    public class ComponentHeader
+    {
+        [ProtoMember(1)]
+        public string TypeName
+        {
+            get;
+            set;
+        }
+
+        [ProtoMember(2)]
+        public bool IsEnabled
+        {
+            get;
+            set;
+        }
+
+        public void Reset()
+        {
+            TypeName = null;
+            IsEnabled = false;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("(TypeName={0}, IsEnabled={1})", TypeName, IsEnabled);
+        }
+    }
+
 }

@@ -1,8 +1,9 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.GameLogic.Entities.Spawning;
 
-namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
+namespace NitroxServer.GameLogic.Entities.EntityBootstrappers
 {
-    interface IEntityBootstrapper
+    public interface IEntityBootstrapper
     {
         void Prepare(Entity spawnedEntity, DeterministicBatchGenerator guidGenerator);
     }

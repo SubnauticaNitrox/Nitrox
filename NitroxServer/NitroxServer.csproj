@@ -12,6 +12,21 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputType>Exe</OutputType>
@@ -38,19 +53,18 @@
     <StartupObject>
     </StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET40\Autofac.Configuration.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="LiteNetLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
@@ -75,9 +89,6 @@
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup Condition="'$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release'">
-    <Compile Include="Program.cs" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\NetworkingLayer\Lidgren\LidgrenConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\Lidgren\LidgrenServer.cs" />
@@ -92,10 +103,7 @@
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellVisibilityChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsDamagePointRepairedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />
@@ -150,14 +158,13 @@
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\SlotsHelper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
     <Compile Include="ConsoleCommands\SaveCommand.cs" />
     <Compile Include="GameLogic\Bases\BaseData.cs" />
-    <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\GameData.cs" />
     <Compile Include="GameLogic\ConnectionAssets.cs" />
     <Compile Include="GameLogic\Entities\EntityData.cs" />
@@ -165,11 +172,8 @@
     <Compile Include="GameLogic\Entities\EntitySimulator.cs" />
     <Compile Include="GameLogic\Entities\Spawning\BatchEntitySpawner.cs" />
     <Compile Include="GameLogic\Entities\Spawning\DeterministicBatchGenerator.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackBootstrapper.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\CrashFishBootstrapper.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPoint.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\EntityBootstrappers\IEntityBootstrapper.cs" />
+    <Compile Include="GameLogic\Entities\Spawning\IEntityBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\EscapePodManager.cs" />
     <Compile Include="GameLogic\EventTriggerer.cs" />
@@ -185,9 +189,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\GenericNode.cs" />
-    <Compile Include="Serialization\LootDistributionsParser.cs" />
-    <Compile Include="Serialization\ResourceAssets.cs" />
-    <Compile Include="Serialization\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
     <Compile Include="Serialization\World\PersistedWorldData.cs" />
     <Compile Include="Serialization\World\World.cs" />
@@ -208,14 +209,17 @@
       <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
-      <Project>{0A377218-6B36-4522-89A3-A39CFC999209}</Project>
-      <Name>NitroxModel-Subnautica</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

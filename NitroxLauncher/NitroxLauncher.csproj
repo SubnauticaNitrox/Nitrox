@@ -116,6 +116,10 @@
       <Name>NitroxClient</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
+      <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
+      <Name>NitroxModel-Subnautica</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
@@ -126,6 +130,10 @@
       <Name>NitroxPatcher</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj">
+      <Project>{eff1d7a5-efd6-413a-8d5f-dc2408e4c9b7}</Project>
+      <Name>NitroxServer-Subnautica</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
       <Name>NitroxServer</Name>
@@ -135,7 +143,7 @@
   <Target Name="AfterBuild">
     <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll" />
+      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer-Subnautica.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll ; ../$(OutputPath)NitroxServer.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>

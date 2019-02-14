@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxServer.GameLogic
@@ -19,7 +18,7 @@ namespace NitroxServer.GameLogic
 
 
             if (escapePodData.EscapePods.Count > 0)
-                escapePodData.PodNotFullYet = escapePodData.EscapePods.GetLast();
+                escapePodData.PodNotFullYet = escapePodData.EscapePods[escapePodData.EscapePods.Count - 1];
 
             if (escapePodData.PodNotFullYet == null)
                 escapePodData.PodNotFullYet = CreateNewEscapePod();

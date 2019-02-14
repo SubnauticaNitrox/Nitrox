@@ -12,16 +12,21 @@ using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.ConfigParser;
+using NitroxModel.DataStructures;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 
 namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
+        private readonly ServerProtobufSerializer serializer;
         private readonly ServerConfig config;
 
-        public WorldPersistence(ServerConfig config)
+        public WorldPersistence(ServerProtobufSerializer serializer, ServerConfig config)
         {
+            this.serializer = serializer;
             this.config = config;
         }
 
@@ -122,9 +127,9 @@ namespace NitroxServer.Serialization.World
                                   InventoryData inventoryData,
                                   PlayerData playerData,
                                   GameData gameData,
-                                  List<Int3> ParsedBatchCells,
+                                  List<Int3> parsedBatchCells,
                                   EscapePodData escapePodData,
-                                  GameModeOption gameMode)
+                                  string gameMode)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -141,11 +146,17 @@ namespace NitroxServer.Serialization.World
             world.GameData = gameData;
             world.EscapePodData = escapePodData;
             world.EscapePodManager = new EscapePodManager(escapePodData);
-            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
-            world.GameMode = gameMode;
 
-            ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
+            HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
+            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
+            world.GameMode = gameMode;
+            
+            world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
+                                                              NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
+                                                              NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                                                              parsedBatchCells,
+                                                              serializer,
+                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>());
 
             Log.Info("World GameMode: " + gameMode);
 

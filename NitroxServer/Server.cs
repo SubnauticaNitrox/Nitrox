@@ -2,7 +2,6 @@
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
 using NitroxServer.ConfigParser;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxServer
 {

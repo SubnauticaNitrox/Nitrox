@@ -3,7 +3,6 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -59,7 +58,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.PlayerData.GetPlayerStats(player.Name),
                                                                        getRemotePlayerData(player),
                                                                        world.EntityData.GetGlobalRootEntities(),
-                                                                       (byte)world.GameMode,
+                                                                       world.GameMode,
                                                                        world.PlayerData.GetPermissions(player.Name));
 
             player.SendPacket(initialPlayerSync);

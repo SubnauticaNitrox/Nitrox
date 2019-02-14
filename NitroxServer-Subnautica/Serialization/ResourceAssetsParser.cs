@@ -8,7 +8,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UWE;
 
-namespace NitroxServer.Serialization
+namespace NitroxServer_Subnautica.Serialization
 {
     public static class ResourceAssetsParser
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
+namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
 {
     public static class ReefbackSpawnData
     {

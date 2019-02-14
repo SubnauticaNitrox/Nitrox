@@ -2,7 +2,7 @@
 using NitroxModel_Subnautica.Helper;
 using TechTypeModel = NitroxModel.DataStructures.TechType;
 
-namespace NitroxServer.GameLogic.Entities
+namespace NitroxServer_Subnautica.GameLogic.Entities
 {
     public class SimulationWhitelist
     {

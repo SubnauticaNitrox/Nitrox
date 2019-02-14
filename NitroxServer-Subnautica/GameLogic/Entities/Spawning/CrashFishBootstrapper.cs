@@ -1,9 +1,11 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
+using NitroxServer.GameLogic.Entities.EntityBootstrappers;
+using NitroxServer.GameLogic.Entities.Spawning;
 
-namespace NitroxServer.GameLogic.Entities.Spawning.EntityBootstrappers
+namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
 {
-    class CrashFishBootstrapper : IEntityBootstrapper
+    public class CrashFishBootstrapper : IEntityBootstrapper
     {
         public void Prepare(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {

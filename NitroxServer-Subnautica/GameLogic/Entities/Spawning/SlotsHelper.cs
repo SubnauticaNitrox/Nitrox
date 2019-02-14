@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NitroxServer.GameLogic.Entities.Spawning
+namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
 {
     public static class SlotsHelper
     {

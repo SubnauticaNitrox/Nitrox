@@ -21,6 +21,11 @@ namespace NitroxModel.DataStructures
         [ProtoMember(3)]
         public int Z { get; set; }
 
+        public Int3()
+        {
+            // For serialization purposes
+        }
+
         public Int3(int x, int y, int z)
         {
             X = x;

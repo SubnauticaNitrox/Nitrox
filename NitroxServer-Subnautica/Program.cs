@@ -7,17 +7,18 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
+using NitroxServer;
 using NitroxServer.ConsoleCommands.Processor;
 
-namespace NitroxServer
+namespace NitroxServer_Subnautica
 {
-    public static class Program
+    class Program
     {
         private static void Main(string[] args)
         {
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
-            NitroxServiceLocator.InitializeDependencyContainer(new ServerAutoFacRegistrar());
+            NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             ConfigureCultureInfo();
@@ -41,7 +42,7 @@ namespace NitroxServer
 
             while (server.IsRunning)
             {
-                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<Player>.Empty(), Perms.CONSOLE);
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<NitroxServer.Player>.Empty(), Perms.CONSOLE);
             }
         }
 
@@ -108,6 +109,5 @@ namespace NitroxServer
             Server.Instance.Stop();
             Environment.Exit(0);
         }
-
     }
 }

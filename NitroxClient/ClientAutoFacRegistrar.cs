@@ -4,8 +4,6 @@ using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer;
-using NitroxClient.Communication.NetworkingLayer.Lidgren;
-using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;

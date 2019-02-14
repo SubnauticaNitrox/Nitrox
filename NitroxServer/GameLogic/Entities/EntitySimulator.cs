@@ -13,12 +13,14 @@ namespace NitroxServer.GameLogic.Entities
         private readonly EntityData entityData;
         private readonly SimulationOwnershipData simulationOwnershipData;
         private readonly PlayerManager playerManager;
+        private readonly HashSet<TechType> serverSpawnedSimulationWhiteList;
 
-        public EntitySimulation(EntityData entityData, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager)
+        public EntitySimulation(EntityData entityData, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<TechType> serverSpawnedSimulationWhiteList)
         {
             this.entityData = entityData;
             this.simulationOwnershipData = simulationOwnershipData;
             this.playerManager = playerManager;
+            this.serverSpawnedSimulationWhiteList = serverSpawnedSimulationWhiteList;
         }
 
         public List<SimulatedEntity> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
@@ -93,7 +95,7 @@ namespace NitroxServer.GameLogic.Entities
 
                 assignedEntities.AddRange(
                     entities.Where(entity => cell.Level <= entity.Level &&
-                                                ((entity.SpawnedByServer && SimulationWhitelist.ForServerSpawned.Contains(entity.TechType)) || !entity.SpawnedByServer) &&
+                                                ((entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType)) || !entity.SpawnedByServer) &&
                                                 simulationOwnershipData.TryToAcquire(entity.Guid, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE)));                       
             }
 

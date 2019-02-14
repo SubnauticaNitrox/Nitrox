@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UWE;
 
-namespace NitroxServer.Serialization
+namespace NitroxServer_Subnautica.Serialization
 {
     public class ResourceAssets
     {

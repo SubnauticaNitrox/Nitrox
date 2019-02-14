@@ -1,5 +1,4 @@
-﻿using System;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
+﻿using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxModel_Subnautica.Helper
 {

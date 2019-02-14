@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel_Subnautica.Helper.Int3;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -76,7 +76,7 @@ namespace NitroxServer.GameLogic.Entities
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId.Global()).Distinct();
+            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
             foreach(Int3 batchId in distinctBatchIds)
             {
