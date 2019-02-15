@@ -19,7 +19,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
         public override List<UwePrefab> GetPossiblePrefabs(string biome)
         {
             List<UwePrefab> prefabs = new List<UwePrefab>();
-            
+
             if (biome == null)
             {
                 return prefabs;

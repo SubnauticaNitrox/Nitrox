@@ -71,9 +71,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             foreach (EntitySpawnPoint esp in spawnPoints)
             {
-                List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
-
-                entities.AddRange(CreateEntityCellRoot(esp, prefabs, deterministicBatchGenerator));
+                entities.AddRange(CreateEntityCellRoot(esp, deterministicBatchGenerator));
             }
 
             if(entities.Count == 0)
@@ -217,7 +215,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private IEnumerable<Entity> CreateEntityCellRoot(EntitySpawnPoint entitySpawnPoint, List<UwePrefab> prefabs, DeterministicBatchGenerator deterministicBatchGenerator)
+        private IEnumerable<Entity> CreateEntityCellRoot(EntitySpawnPoint entitySpawnPoint, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition, // CellRoot
                                               entitySpawnPoint.LocalRotation,
@@ -232,6 +230,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 if (childSpawnPoint.Density > 0)
                 {
+                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(childSpawnPoint.BiomeType);
                     if (prefabs.Count > 0)
                     {
                         spawnedEntity.ChildEntities.AddRange(SpawnEntitiesUsingRandomDistribution(childSpawnPoint, prefabs, deterministicBatchGenerator));
