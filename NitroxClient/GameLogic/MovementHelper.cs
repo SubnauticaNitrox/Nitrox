@@ -37,8 +37,6 @@ namespace NitroxClient.GameLogic
             Vector3 difference = (remotePosition - gameObject.transform.position);
             Vector3 velocityToMakeUpDifference = difference / correctionTime;
 
-            Log.Info($"{gameObject.name} remotePosition: {remotePosition.x}, {remotePosition.y}, {remotePosition.z}");
-
             float distance = difference.magnitude;
 
             if (distance > 20f)
@@ -52,8 +50,7 @@ namespace NitroxClient.GameLogic
                 float maxAdjustment = (float)Math.Log10(distance) * 4f;
                 remoteVelocity += MathUtil.ClampMagnitude(velocityToMakeUpDifference - remoteVelocity, maxAdjustment, -maxAdjustment);
             }
-
-            Log.Info($"{gameObject.name} remoteVelocity: {remoteVelocity.x}, {remoteVelocity.y}, {remoteVelocity.z}");
+            
             return remoteVelocity;
         }
 

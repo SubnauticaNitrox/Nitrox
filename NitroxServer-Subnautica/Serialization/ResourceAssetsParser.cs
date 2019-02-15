@@ -284,9 +284,9 @@ namespace NitroxServer_Subnautica.Serialization
                                     string classId = resourcesFile.reader.ReadCountStringInt32(); // ClassId
 
                                     List<UwePrefab> val;
-                                    if (!gameObjectsByClassId.TryGetValue(classId, out val)) // should never be false but just incase
+                                    if (!SubnauticaUwePrefabFactory.PrefabsByClassId.TryGetValue(classId, out val)) // should never be false but just incase
                                     {
-                                        gameObjectsByClassId.Add(classId, prefabs);
+                                        SubnauticaUwePrefabFactory.PrefabsByClassId.Add(classId, prefabs);
                                     }
 
                                     resourcesFile.reader.Position = prevPos; // Reset position
