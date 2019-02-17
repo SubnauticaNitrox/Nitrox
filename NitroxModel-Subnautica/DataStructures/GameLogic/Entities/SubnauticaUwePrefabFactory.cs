@@ -41,7 +41,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
             return prefabs;
         }
 
-        public override List<UwePrefab> GetPrefabForClassId(string classId)
+        public override List<UwePrefab> GetPrefabsForClassId(string classId)
         {
             List<UwePrefab> prefabs;
 

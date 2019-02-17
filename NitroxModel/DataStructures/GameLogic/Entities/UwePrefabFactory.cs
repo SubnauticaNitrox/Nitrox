@@ -6,6 +6,6 @@ namespace NitroxModel.DataStructures.GameLogic.Entities
     {
         public abstract List<UwePrefab> GetPossiblePrefabs(string biomeType);
 
-        public abstract List<UwePrefab> GetPrefabForClassId(string classId);
+        public abstract List<UwePrefab> GetPrefabsForClassId(string classId);
     }
 }

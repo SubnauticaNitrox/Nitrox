@@ -70,6 +70,30 @@ namespace NitroxModel.DataStructures.GameLogic
             int level,
             string classId,
             bool spawnedByServer,
+            string guid,
+            bool isChild)
+        {
+            LocalScale = localScale;
+            LocalPosition = localPosition;
+            LocalRotation = localRotation;
+            TechType = techType;
+            Guid = guid;
+            Level = level;
+            ClassId = classId;
+            SpawnedByServer = spawnedByServer;
+            WaterParkGuid = null;
+            SerializedGameObject = null;
+            ExistsInGlobalRoot = false;
+            IsChild = isChild;
+        }
+
+        public Entity(Vector3 localPosition,
+            Quaternion localRotation,
+            Vector3 localScale,
+            TechType techType,
+            int level,
+            string classId,
+            bool spawnedByServer,
             string guid)
         {
             LocalScale = localScale;
@@ -83,6 +107,7 @@ namespace NitroxModel.DataStructures.GameLogic
             WaterParkGuid = null;
             SerializedGameObject = null;
             ExistsInGlobalRoot = false;
+            IsChild = false;
         }
 
         public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, string waterParkGuid, byte[] serializedGameObject, bool existsInGlobalRoot, string guid)

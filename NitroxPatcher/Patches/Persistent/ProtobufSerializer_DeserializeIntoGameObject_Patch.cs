@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Persistent
         {
             bool isMultiplayer = (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer());
 
-            if (isMultiplayer && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject) && uid.gameObject.name != "CellRoot(Clone)")
+            if (isMultiplayer && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject))
             {
                 UnityEngine.Object.Destroy(uid.gameObject);
             }

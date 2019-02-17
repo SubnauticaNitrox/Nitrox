@@ -197,7 +197,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               cellLevel,
                                               classId,
                                               true,
-                                              deterministicBatchGenerator.NextGuid());
+                                              deterministicBatchGenerator.NextGuid(),
+                                              true);
 
             List<Entity> prefabs = GetEntitiesFromClassId(classId, spawnedEntity, deterministicBatchGenerator);
 
@@ -242,14 +243,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 }
             }
 
-            spawnedEntity.ChildEntities.ForEach(c => c.IsChild = true);
-
             yield return spawnedEntity;
         }
 
         private List<Entity> GetEntitiesFromClassId(string classId, Entity spawnedEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            List<UwePrefab> prefabClassIds = prefabFactory.GetPrefabForClassId(classId);
+            List<UwePrefab> prefabClassIds = prefabFactory.GetPrefabsForClassId(classId);
             List<Entity> entities = new List<Entity>();
 
             if (prefabClassIds.Any())
@@ -269,7 +268,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                         prefab.CellLevel,
                         prefab.ClassId,
                         true,
-                        prefab.Guid) { IsChild = true };
+                        prefab.Guid,
+                        true);
 
                     entities.Add(childEntity);
 
