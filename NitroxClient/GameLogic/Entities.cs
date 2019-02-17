@@ -105,13 +105,13 @@ namespace NitroxClient.GameLogic
                 opGameObject.Get().transform.localRotation = entity.LocalRotation;
                 opGameObject.Get().transform.localPosition = entity.LocalPosition;
                 opGameObject.Get().transform.localScale = entity.LocalScale;
-                if (entity.LocalPosition != new Vector3(0, 0, 0))
+                if (entity.Position != new Vector3(0, 0, 0))
                 {
                     opGameObject.Get().transform.position = entity.Position;
                     opGameObject.Get().transform.rotation = entity.Rotation;
                 }
             }
-            else if (!entity.IsChild)
+            else
             {
                 Log.Error("Entity was already spawned but not found(is it in another chunk?) guid: " + entity.Guid + " " + entity.TechType + " " + entity.ClassId + " " + entity.IsChild);
             }

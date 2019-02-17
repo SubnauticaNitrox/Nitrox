@@ -11,7 +11,8 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 {
     class ReefbackBootstrapper : IEntityBootstrapper
     {
-        private float creatureProbabiltySum = 0;
+        private float creatureProbabilitySum = 0;
+        private float plantProbabilitySum = 0;
         private readonly Dictionary<string, WorldEntityInfo> worldEntitiesByClassId;
 
         public ReefbackBootstrapper(Dictionary<string, WorldEntityInfo> worldEntitiesByClassId)
@@ -20,26 +21,70 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
             foreach (ReefbackSpawnData.ReefbackCreature creature in SpawnableCreatures)
             {
-                creatureProbabiltySum += creature.probability;
+                creatureProbabilitySum += creature.probability;
+            }
+
+            foreach (ReefbackSpawnData.ReefbackPlant plant in SpawnablePlants)
+            {
+                plantProbabilitySum += plant.probability;
             }
         }
 
         public void Prepare(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
-            for(int spawnPointCounter = 0; spawnPointCounter < LocalCreatureSpawnPoints.Count; spawnPointCounter++)
+            SpawnCreatures(parentEntity, deterministicBatchGenerator);
+            SpawnPlants(parentEntity, deterministicBatchGenerator);
+            
+        }
+
+        private void SpawnPlants(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            float probabilitySum = 0;
+            foreach (ReefbackSpawnData.ReefbackPlant plant in SpawnablePlants)
             {
-                float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * creatureProbabiltySum;
+                probabilitySum += plant.probability;
+                float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * plantProbabilitySum;
+
+                if (probabilitySum >= targetProbabilitySum)
+                {
+                    string guid = deterministicBatchGenerator.NextGuid();
+
+                    WorldEntityInfo wei;
+
+                    worldEntitiesByClassId.TryGetValue(plant.classId, out wei);
+
+                    Entity child = new Entity(plant.position,
+                        plant.rotation,
+                        plant.scale,
+                        wei.techType.Model(),
+                        (int)wei.cellLevel,
+                        plant.classId,
+                        true,
+                        guid);
+
+                    parentEntity.ChildEntities.Add(child);
+
+                    break;
+                }
+            }
+        }
+
+        private void SpawnCreatures(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            for (int spawnPointCounter = 0; spawnPointCounter < SpawnableCreatures.Count; spawnPointCounter++)
+            {
+                float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * creatureProbabilitySum;
                 float probabilitySum = 0;
 
                 foreach (ReefbackSpawnData.ReefbackCreature creature in SpawnableCreatures)
                 {
                     probabilitySum += creature.probability;
 
-                    if(probabilitySum >= targetProbabilitySum)
+                    if (probabilitySum >= targetProbabilitySum)
                     {
                         int totalToSpawn = deterministicBatchGenerator.NextInt(creature.minNumber, creature.maxNumber + 1);
 
-                        for(int i = 0; i < totalToSpawn; i++)
+                        for (int i = 0; i < totalToSpawn; i++)
                         {
                             string guid = deterministicBatchGenerator.NextGuid();
 
@@ -58,33 +103,6 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
                             parentEntity.ChildEntities.Add(child);
                         }
-
-                        break;
-                    }
-                }
-
-                foreach (ReefbackSpawnData.ReefbackPlant plant in SpawnablePlants)
-                {
-                    probabilitySum += plant.probability;
-
-                    if (probabilitySum >= targetProbabilitySum)
-                    {
-                        string guid = deterministicBatchGenerator.NextGuid();
-
-                        WorldEntityInfo wei;
-
-                        worldEntitiesByClassId.TryGetValue(plant.classId, out wei);
-
-                        Entity child = new Entity(plant.position,
-                            plant.rotation,
-                            plant.scale,
-                            wei.techType.Model(),
-                            (int)wei.cellLevel,
-                            plant.classId,
-                            true,
-                            guid);
-
-                        parentEntity.ChildEntities.Add(child);
 
                         break;
                     }

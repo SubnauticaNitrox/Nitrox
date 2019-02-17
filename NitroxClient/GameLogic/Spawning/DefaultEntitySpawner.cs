@@ -33,9 +33,6 @@ namespace NitroxClient.GameLogic.Spawning
                 LargeWorldEntity ent = gameObject.GetComponent<LargeWorldEntity>();
                 ent.transform.SetParent(parent.Get().transform, true);
                 ent.OnAddToCell();
-
-                gameObject.transform.localPosition = entity.LocalPosition;
-                gameObject.transform.localRotation = entity.LocalRotation;
             }
             else if (gameObject.name == "CellRoot(Clone)")
             {
@@ -45,17 +42,15 @@ namespace NitroxClient.GameLogic.Spawning
                 gameObject.GetComponent<LargeWorldEntityCell>().cell = cell;
                 gameObject.transform.SetParent(LargeWorldStreamer.main.cellsRoot);
                 BatchCells.ReturnToPool(cells); // Return it to the pool
-
-                gameObject.transform.position = entity.LocalPosition;
-                gameObject.transform.rotation = entity.LocalRotation;
             }
             else if (parent.IsPresent())
             {
                 gameObject.transform.SetParent(parent.Get().transform);
-
-                gameObject.transform.localPosition = entity.LocalPosition;
-                gameObject.transform.localRotation = entity.LocalRotation;
             }
+
+
+            gameObject.transform.localPosition = entity.LocalPosition;
+            gameObject.transform.localRotation = entity.LocalRotation;
 
             GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);

@@ -73,11 +73,15 @@
     <Compile Include="GameLogic\Entities\Spawning\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SlotsHelper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SubnauticaEntitySpawnPointFactory.cs" />
-    <Compile Include="GameLogic\Prefab.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\ResourceAssets.cs" />
-    <Compile Include="Serialization\ResourceAssetsParser.cs" />
+    <Compile Include="Serialization\ResourceAssets\MonoBehaviourParsers\Abstract\MonoBehaviourParser.cs" />
+    <Compile Include="Serialization\ResourceAssets\MonoBehaviourParsers\DefaultMonoBehaviourParser.cs" />
+    <Compile Include="Serialization\ResourceAssets\MonoBehaviourParsers\ReefbackSlotsDataParser.cs" />
+    <Compile Include="Serialization\ResourceAssets\MonoBehaviourParsers\WorldEntityDataParser.cs" />
+    <Compile Include="Serialization\ResourceAssets\ResourceAssets.cs" />
+    <Compile Include="Serialization\ResourceAssets\ResourceAssetsHelper.cs" />
+    <Compile Include="Serialization\ResourceAssets\ResourceAssetsParser.cs" />
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
