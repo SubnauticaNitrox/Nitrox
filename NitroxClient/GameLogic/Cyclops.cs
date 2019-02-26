@@ -63,6 +63,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void ActivateSonar(string guid)
+        {
+            CyclopsActivateSonar packet = new CyclopsActivateSonar(guid);
+            packetSender.Send(packet);
+        }
+
         public void ActivateShield(string guid)
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(guid);
