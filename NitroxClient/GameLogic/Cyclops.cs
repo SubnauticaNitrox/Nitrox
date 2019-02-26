@@ -57,6 +57,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void LaunchDecoy(string guid)
+        {
+            CyclopsDecoyLaunch packet = new CyclopsDecoyLaunch(guid);
+            packetSender.Send(packet);
+        }
+
         public void ActivateShield(string guid)
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(guid);
