@@ -7,7 +7,6 @@ using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
-using NitroxModel.Logger;
 using UnityEngine;
 
 
@@ -45,7 +44,6 @@ namespace NitroxPatcher.Patches
                     IEnumerable<CodeInstruction> injectInstructions = AssembleNewCode(jumpLabel,toInjectJump);
                     foreach (CodeInstruction injectInstruction in injectInstructions)
                     {
-                        Log.Debug(injectInstruction);
                         yield return injectInstruction;
                     }
                 }
@@ -56,7 +54,6 @@ namespace NitroxPatcher.Patches
                         instruction.operand = toInjectJump;
                     }
                 }
-                Log.Debug(instruction);
                 yield return instruction;
             }           
         }
