@@ -33,9 +33,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        public void BeginSilentRunning(string guid)
+        public void ChangeSilentRunning(string guid, bool isOn)
         {
-            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(guid);
+            CyclopsChangeSilentRunning packet = new CyclopsChangeSilentRunning(guid, isOn);
             packetSender.Send(packet);
         }
 
