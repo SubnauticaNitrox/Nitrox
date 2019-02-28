@@ -8,11 +8,11 @@ using System.Reflection;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class CyclopsBeginSilentRunningProcessor : ClientPacketProcessor<CyclopsChangeSilentRunning>
+    public class CyclopsChangeSilentRunningProcessor : ClientPacketProcessor<CyclopsChangeSilentRunning>
     {
         private readonly IPacketSender packetSender;
 
-        public CyclopsBeginSilentRunningProcessor(IPacketSender packetSender)
+        public CyclopsChangeSilentRunningProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
