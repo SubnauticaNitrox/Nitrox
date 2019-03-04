@@ -2,6 +2,7 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 using System.Reflection;
@@ -24,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
             {
-                ability.GetType().GetField("active", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(ability, packet.IsOn);
+                ability.ReflectionSet("active", packet.IsOn);
                 if (packet.IsOn)
                 {
                     ability.image.sprite = ability.activeSprite;

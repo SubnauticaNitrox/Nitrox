@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches
             List<CodeInstruction> instructionList = instructions.ToList();
             int startCut = 0;
             int endCut = instructionList.Count;
-            /*Cut out
+            /* Cut out
              * if (Player.main.currentSub != this.subRoot)
              * {
              * 	return;
@@ -44,7 +44,7 @@ namespace NitroxPatcher.Patches
                 {
                     startCut = i - 1;
                 }
-                //Should cut at the first return encountered
+                // Cut at the first return encountered
                 if (endCut == instructionList.Count && instructionList[i].opcode.Equals(END_CUT_CODE))
                 {
                     endCut = i;
@@ -60,8 +60,7 @@ namespace NitroxPatcher.Patches
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPostfix(harmony, TARGET_METHOD);
-            PatchTranspiler(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, false, true, true);            
         }        
     }
 }   

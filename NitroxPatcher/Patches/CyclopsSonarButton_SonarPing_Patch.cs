@@ -14,26 +14,48 @@ namespace NitroxPatcher.Patches
 {
     class CyclopsSonarButton_SonarPing_Patch : NitroxPatch
     {
+
         public static readonly Type TARGET_CLASS = typeof(CyclopsSonarButton);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SonarPing", BindingFlags.NonPublic | BindingFlags.Instance);
         public static readonly OpCode JUMP_TARGET_CODE = OpCodes.Ldsfld;
         public static readonly FieldInfo JUMP_TARGET_FIELD = typeof(SNCameraRoot).GetField("main", BindingFlags.Public | BindingFlags.Static);
 
+        
+        // Send ping to other players        
         public static void Postfix(CyclopsSonarButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            //bool activeSonar = Traverse.Create(__instance).Field("sonarActive").GetValue<bool>();
             NitroxServiceLocator.LocateService<Cyclops>().SonarPing(guid);
         }
 
+       
+        /* As the ping would be always be executed it should be restricted to players, that are in the cyclops
+        * Therefore the code generated from AssembleNewCode will be injected before the ping would be send but after energy consumption
+        * End result:
+        * private void SonarPing()
+        * {
+        * 	float num = 0f;
+        * 	if (!this.subRoot.powerRelay.ConsumeEnergy(this.subRoot.sonarPowerCost, out num))
+        * 	{
+        * 	    this.TurnOffSonar();
+        * 	    return;
+        * 	}
+        * 	if(Player.main.currentSub != this.subroot)
+        * 	{
+        * 	    return;
+        * 	}
+        * 	SNCameraRoot.main.SonarPing();
+        * 	this.soundFX.Play();
+        * }
+        */        
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions, ILGenerator iLGenerator)
         {
             List<CodeInstruction> instructionList = instructions.ToList();
 
-            //need to change the jump target for at one point
+            // Need to change the jump target for Brtrue at one point
             Label toInjectJump = iLGenerator.DefineLabel();
 
-            // find point to inject:
+            // Find point to inject if player is in subroot:
             // SNCameraRoot.main.SonarPing();
             for (int i = 0; i < instructionList.Count; i++)
             {
@@ -47,6 +69,13 @@ namespace NitroxPatcher.Patches
                         yield return injectInstruction;
                     }
                 }
+
+                /* New jump target will from 
+                 * 
+                 * if (!this.subRoot.powerRelay.ConsumeEnergy(this.subRoot.sonarPowerCost, out num))
+                 * 
+                 * will be new code
+                 */
                 if (instruction.opcode.Equals(OpCodes.Brtrue))
                 {
                     if (instructionList[i - 1].opcode.Equals(OpCodes.Ldloc_1) && instructionList[i + 1].opcode.Equals(OpCodes.Ldarg_0))
@@ -68,7 +97,7 @@ namespace NitroxPatcher.Patches
 		     * }
              * 
              */
-            List<CodeInstruction> injectInstructions = new List<CodeInstruction>();
+                List<CodeInstruction> injectInstructions = new List<CodeInstruction>();
 
             CodeInstruction instruction = new CodeInstruction(OpCodes.Ldsfld);
             instruction.operand = typeof(Player).GetField("main", BindingFlags.Public | BindingFlags.Static);

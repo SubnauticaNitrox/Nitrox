@@ -3,8 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using System.Reflection;
-using System;
-using NitroxModel.Logger;
+using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -28,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 // At this moment the code is "non functional" as for some reason changing the sprite will never happen
                 // Also setting sonar as active will never work
-                //Log.Debug("Process sonar click guid: " + sonar.gameObject.GetGuid().ToString());
+                
                 MethodInfo sonarSetActiveInfo = sonar.GetType().GetMethod("set_sonarActive", BindingFlags.NonPublic | BindingFlags.Instance);
                 if (sonarSetActiveInfo != null)
                 {
@@ -41,7 +40,6 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     sonar.image.sprite = sonar.inactiveSprite;
                 }
-                //Log.Debug("Sonar onclick from sender processed");
             }
         }
     }
