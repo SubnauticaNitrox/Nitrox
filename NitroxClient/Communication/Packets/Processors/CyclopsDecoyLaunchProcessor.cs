@@ -23,15 +23,13 @@ namespace NitroxClient.Communication.Packets.Processors
             CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
             {
-                if (decoyManager.decoyCount > 0)
-                {
-                    decoyManager.Invoke("LaunchWithDelay", 3f);
-                    decoyManager.decoyLaunchButton.UpdateText();
-                    decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
-                    decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
-                    CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponent<CyclopsDecoyLaunchButton>();
-                    decoyLaunchButton.StartCooldown();
-                }
+                decoyManager.Invoke("LaunchWithDelay", 3f);
+                decoyManager.decoyLaunchButton.UpdateText();
+                decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
+                decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
+                CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponent<CyclopsDecoyLaunchButton>();
+                decoyLaunchButton.StartCooldown();
+
             }
         }
     }
