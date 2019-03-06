@@ -25,6 +25,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
             
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
+            customSpawnersByTechType[TechType.None] = new NoneEntitySpawner();
         }
 
         public void BroadcastTransforms(Dictionary<string, GameObject> gameObjectsByGuid)
@@ -48,7 +49,7 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
-                if (!alreadySpawnedGuids.Contains(entity.Guid) && !entity.IsChild)
+                if (!alreadySpawnedGuids.Contains(entity.Guid))
                 {
                     Spawn(entity, Optional<GameObject>.Empty());
                 }
@@ -62,13 +63,13 @@ namespace NitroxClient.GameLogic
         private void Spawn(Entity entity, Optional<GameObject> parent)
         {
             alreadySpawnedGuids.Add(entity.Guid);
+            SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION = true;
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
 
-            foreach (Entity childEntity in entity.ChildEntities)
+            foreach (Entity childEntity in entity.ChildEntitiesByGuid.Values)
             {
                 alreadySpawnedGuids.Add(childEntity.Guid);
-
                 if (!entitySpawner.SpawnsOwnChildren())
                 {
                     Spawn(childEntity, gameObject);
@@ -79,6 +80,7 @@ namespace NitroxClient.GameLogic
             {
                 gameObject.Get().AddComponent<NitroxEntity>();
             }
+            SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION = false;
         }
 
         private IEntitySpawner ResolveEntitySpawner(Entity entity)
@@ -105,6 +107,7 @@ namespace NitroxClient.GameLogic
                 opGameObject.Get().transform.localRotation = entity.LocalRotation;
                 opGameObject.Get().transform.localPosition = entity.LocalPosition;
                 opGameObject.Get().transform.localScale = entity.LocalScale;
+
                 if (entity.Position != new Vector3(0, 0, 0))
                 {
                     opGameObject.Get().transform.position = entity.Position;

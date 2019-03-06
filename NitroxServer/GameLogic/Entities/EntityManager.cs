@@ -61,7 +61,7 @@ namespace NitroxServer.GameLogic.Entities
             }
             else
             {
-                Log.Info("Could not update entity position because it was not found (maybe it was recently picked up)");
+                Log.Info("Could not update entity position because it was not found (maybe it was recently picked up) " + guid);
             }
 
             return Optional<AbsoluteEntityCell>.Empty();

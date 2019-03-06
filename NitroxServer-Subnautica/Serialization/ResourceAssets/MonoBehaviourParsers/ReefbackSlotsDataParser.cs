@@ -23,7 +23,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                 resourcesFile.reader.ReadCountStringInt32();
                 resourcesFile.reader.Align();
                 uint plantsDataSize = resourcesFile.reader.ReadUInt32();
-                List<ReefbackSpawnData.ReefbackPlant> plantPrefabs = new List<ReefbackSpawnData.ReefbackPlant>();
+                List<ReefbackSpawnData.ReefbackEntity> plantPrefabs = new List<ReefbackSpawnData.ReefbackEntity>();
 
                 for (int p = 0; p < plantsDataSize; p++)
                 {
@@ -61,7 +61,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
 
                     resourcesFile.reader.Position = prevPos;
 
-                    plantPrefabs.Add(new ReefbackSpawnData.ReefbackPlant()
+                    plantPrefabs.Add(new ReefbackSpawnData.ReefbackEntity()
                     {
                         classId = classId,
                         position = position,
@@ -75,9 +75,9 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                 float y = resourcesFile.reader.ReadSingle();
                 float z = resourcesFile.reader.ReadSingle();
 
-                foreach (ReefbackSpawnData.ReefbackPlant plant in plantPrefabs)
+                foreach (ReefbackSpawnData.ReefbackEntity plant in plantPrefabs)
                 {
-                    ReefbackSpawnData.SpawnablePlants.Add(new ReefbackSpawnData.ReefbackPlant
+                    ReefbackSpawnData.SpawnablePlants.Add(new ReefbackSpawnData.ReefbackEntity
                     {
                         classId = plant.classId,
                         probability = probability,
@@ -96,7 +96,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                 resourcesFile.reader.Align();
                 uint fileId = (uint)resourcesFile.reader.ReadInt32();
                 ulong pathId = (ulong)resourcesFile.reader.ReadInt64(); // PathId
-                ReefbackSpawnData.ReefbackCreature creaturePrefab = new ReefbackSpawnData.ReefbackCreature();
+                ReefbackSpawnData.ReefbackEntity creaturePrefab = new ReefbackSpawnData.ReefbackEntity();
                 AssetFileInfoEx asset = ResourceAssetsHelper.FindComponentOfType<PrefabIdentifier>(instance, pathId);
                 ulong prevPos = resourcesFile.reader.Position;
                 resourcesFile.reader.Position = asset.absoluteFilePos + 28;
@@ -125,7 +125,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                     resourcesFile.reader.ReadSingle(), // Scale Y
                     resourcesFile.reader.ReadSingle()); // Scale Z
 
-                creaturePrefab = new ReefbackSpawnData.ReefbackCreature
+                creaturePrefab = new ReefbackSpawnData.ReefbackEntity
                 {
                     classId = classId,
                     position = position,
@@ -140,7 +140,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                 int maxNumber = resourcesFile.reader.ReadInt32();
                 float probability = resourcesFile.reader.ReadSingle();
 
-                ReefbackSpawnData.SpawnableCreatures.Add(new ReefbackSpawnData.ReefbackCreature()
+                ReefbackSpawnData.SpawnableCreatures.Add(new ReefbackSpawnData.ReefbackEntity()
                 {
                     classId = creaturePrefab.classId,
                     position = creaturePrefab.position,

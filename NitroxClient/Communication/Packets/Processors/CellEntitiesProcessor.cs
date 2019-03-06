@@ -15,8 +15,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CellEntities packet)
         {
+            NitroxModel.Logger.Log.Info("Got CellEntities Packet!: " + packet.Count);
             entities.Spawn(packet.Entities);
         }
-
     }
 }

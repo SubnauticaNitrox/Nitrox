@@ -208,11 +208,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
             {
                 bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
-
-                for (int i = 0; i < spawnedEntity.ChildEntities.Count - prefabs.Count; i++)
-                {
-                    Entity childEntity = spawnedEntity.ChildEntities[i + prefabs.Count];
-                }
             }
         }
 
@@ -234,15 +229,21 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(childSpawnPoint.BiomeType);
                     if (prefabs.Count > 0)
                     {
-                        spawnedEntity.ChildEntities.AddRange(SpawnEntitiesUsingRandomDistribution(childSpawnPoint, prefabs, deterministicBatchGenerator));
+                        foreach (Entity childEntity in SpawnEntitiesUsingRandomDistribution(childSpawnPoint, prefabs, deterministicBatchGenerator))
+                        {
+                            spawnedEntity.ChildEntitiesByGuid.Add(childEntity.Guid, childEntity);
+                        }
                     }
                     else if (childSpawnPoint.ClassId != null)
                     {
-                        spawnedEntity.ChildEntities.AddRange(SpawnEntitiesStaticly(childSpawnPoint, deterministicBatchGenerator));
+                        foreach (Entity childEntity in SpawnEntitiesStaticly(childSpawnPoint, deterministicBatchGenerator))
+                        {
+                            spawnedEntity.ChildEntitiesByGuid.Add(childEntity.Guid, childEntity);
+                        }
                     }
                 }
             }
-
+            
             yield return spawnedEntity;
         }
 
@@ -273,11 +274,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     entities.Add(childEntity);
 
-                    childEntity.ChildEntities = GetEntitiesFromClassId(prefab.ClassId, childEntity, deterministicBatchGenerator);
+                    childEntity.ChildEntitiesByGuid = GetEntitiesFromClassId(prefab.ClassId, childEntity, deterministicBatchGenerator).ToDictionary(c => c.Guid);
 
-                    entities.AddRange(childEntity.ChildEntities);
+                    entities.AddRange(childEntity.ChildEntitiesByGuid.Values);
 
-                    spawnedEntity.ChildEntities.Add(childEntity);
+                    spawnedEntity.ChildEntitiesByGuid.Add(childEntity.Guid, childEntity);
                 }
             }
 

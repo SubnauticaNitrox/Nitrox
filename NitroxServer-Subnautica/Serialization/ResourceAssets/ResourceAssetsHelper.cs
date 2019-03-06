@@ -63,9 +63,9 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets
                 }
             }
 
+            Log.Error("Well oddly, a Transform wasnt found or a silent error happened...", new NullReferenceException());
 
-
-            return null; // This should likely never happen
+            return null;
         }
 
         public static AssetFileInfoEx FindComponentOfType(Type type, AssetsFileInstance assetsFileInstance, ulong gameObjectPathId)

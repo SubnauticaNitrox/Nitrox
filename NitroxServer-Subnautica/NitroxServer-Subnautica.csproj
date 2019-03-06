@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -68,7 +70,6 @@
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
-    <Compile Include="GameLogic\Entities\Spawning\CrashFishBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\ReefbackBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\ReefbackSpawnData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\SlotsHelper.cs" />
@@ -85,7 +86,9 @@
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">

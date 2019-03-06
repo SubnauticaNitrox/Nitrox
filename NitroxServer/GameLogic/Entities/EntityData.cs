@@ -99,8 +99,21 @@ namespace NitroxServer.GameLogic.Entities
 
             lock (entitiesByGuid)
             {
-                entitiesByGuid.TryGetValue(guid, out entity);
-                entitiesByGuid.Remove(guid);                
+                if (entitiesByGuid.TryGetValue(guid, out entity))
+                {
+                    entitiesByGuid.Remove(guid);
+                }
+                else
+                {
+                    foreach(Entity parentEntity in entitiesByGuid.Values)
+                    {
+                        Entity childEntity = null;
+                        if (parentEntity.ChildEntitiesByGuid.TryGetValue(guid, out childEntity))
+                        {
+                            parentEntity.ChildEntitiesByGuid.Remove(childEntity.Guid);
+                        }
+                    }
+                }
             }
 
             if (entity != null)
@@ -132,7 +145,22 @@ namespace NitroxServer.GameLogic.Entities
 
                 if(phasingEntitiesByAbsoluteCell.TryGetValue(entity.AbsoluteEntityCell, out entities))
                 {
-                    entities.Remove(entity);
+                    if (entities.Contains(entity))
+                    {
+                        entities.Remove(entity);
+                    }
+                    else
+                    {
+                        foreach(Entity parentEntity in entities)
+                        {
+                            Entity child = null;
+                            if (parentEntity.ChildEntitiesByGuid.TryGetValue(entity.Guid, out child))
+                            {
+                                parentEntity.ChildEntitiesByGuid.Remove(child.Guid);
+                            }
+                        }
+                    }
+
                 }
             }
         }
@@ -164,12 +192,53 @@ namespace NitroxServer.GameLogic.Entities
         {
             Entity entity = null;
 
-            lock (entitiesByGuid)
-            {
-                entitiesByGuid.TryGetValue(guid, out entity);
-            }
+            TryGetParentOrChild(guid, out entity);
 
             return Optional<Entity>.OfNullable(entity);
+        }
+
+        private bool TryGetParentOrChild(string guid, out Entity entity)
+        {
+            entity = null;
+            lock (entitiesByGuid)
+            {
+                if (!entitiesByGuid.TryGetValue(guid, out entity))
+                {
+                    foreach (Entity parentEntity in entitiesByGuid.Values)
+                    {
+                        if (TryGetEntityInChildren(guid, parentEntity, out entity))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool TryGetEntityInChildren(string guid, Entity parent, out Entity entity)
+        {
+            if (parent.ChildEntitiesByGuid.TryGetValue(guid, out entity))
+            {
+                return true;
+            }
+
+            foreach (Entity child in parent.ChildEntitiesByGuid.Values)
+            {
+                if (child.ChildEntitiesByGuid.Count > 0)
+                {
+                    if (TryGetEntityInChildren(guid, child, out entity))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public List<Entity> GetEntitiesByGuids(List<string> guids)
@@ -182,7 +251,7 @@ namespace NitroxServer.GameLogic.Entities
                 {
                     Entity entity = null;
 
-                    if(entitiesByGuid.TryGetValue(guid, out entity))
+                    if(TryGetParentOrChild(guid, out entity))
                     {
                         entities.Add(entity);
                     }

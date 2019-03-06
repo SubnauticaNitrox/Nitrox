@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.IO;
-using System.Threading.Tasks;
+using System.Threading;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
 using NitroxModel.DataStructures.Util;
@@ -104,11 +104,11 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets
 
             if (subnauticaPath.IsEmpty())
             {
-                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors.ToArray())}");
                 return assembly.FullName;
             }
 
-            return Path.Combine(subnauticaPath.Get(), "SubnauticaData", "Managed", assembly.FullName);
+            return Path.Combine(subnauticaPath.Get(), Path.Combine("SubnauticaData", Path.Combine("Managed", assembly.FullName)));
         }
 
         private static string FindPath()
@@ -117,14 +117,14 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
             if (subnauticaPath.IsEmpty())
             {
-                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors.ToArray())}");
             }
             
             string gameResourcesPath = "";
 
             if (!subnauticaPath.IsEmpty())
             {
-                gameResourcesPath = Path.Combine(subnauticaPath.Get(), "Subnautica_Data", "resources.assets");
+                gameResourcesPath = Path.Combine(subnauticaPath.Get(), Path.Combine("Subnautica_Data", "resources.assets"));
             }
 
             if (File.Exists(gameResourcesPath))
@@ -135,9 +135,9 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets
             {
                 return Path.GetFullPath(Path.Combine("..", "resources.assets"));
             }
-            else if (File.Exists(Path.Combine("..", "Subnautica_Data", "resources.assets")))   //  SubServer => Subnautica/SubServer
+            else if (File.Exists(Path.Combine("..", Path.Combine("Subnautica_Data", "resources.assets"))))   //  SubServer => Subnautica/SubServer
             {
-                return Path.GetFullPath(Path.Combine("..", "Subnautica_Data", "resources.assets"));
+                return Path.GetFullPath(Path.Combine("..", Path.Combine("Subnautica_Data", "resources.assets")));
             }
             else if (File.Exists("resources.assets"))   //  SubServer/* => Subnautica/Subnautica_Data/
             {

@@ -24,6 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(SimulationOwnershipChange simulationOwnershipChange)
         {
+            Log.Info("Got SimulationOwnershipChangePacket: " + simulationOwnershipChange.Count);
             foreach (SimulatedEntity simulatedEntity in simulationOwnershipChange.Entities)
             {
                 if (multiplayerSession.Reservation.PlayerId == simulatedEntity.PlayerId)

@@ -25,7 +25,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
             {
                 return; // Gotta love early breaks
             }
-            else if (gameObjectPathId != 0 && !checkedGameObjects.Contains(gameObjectPathId))
+            else if (!checkedGameObjects.Contains(gameObjectPathId))
             {
                 checkedGameObjects.Add(gameObjectPathId);
                 AssetFileInfoEx asset = ResourceAssetsHelper.FindComponentOfType<PrefabPlaceholdersGroup>(instance, (ulong)gameObjectPathId);
@@ -83,11 +83,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                     resourcesFile.reader.ReadCountStringInt32(); // Empty name
                     string classId = resourcesFile.reader.ReadCountStringInt32(); // ClassId
 
-                    List<UwePrefab> val;
-                    if (!SubnauticaUwePrefabFactory.PrefabsByClassId.TryGetValue(classId, out val)) // should never be false but just incase
-                    {
-                        SubnauticaUwePrefabFactory.PrefabsByClassId.Add(classId, prefabs);
-                    }
+                    SubnauticaUwePrefabFactory.PrefabsByClassId[classId] = prefabs;
 
                     resourcesFile.reader.Position = prevPos; // Reset position
                 }

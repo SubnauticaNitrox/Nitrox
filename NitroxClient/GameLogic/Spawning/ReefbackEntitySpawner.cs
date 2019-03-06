@@ -20,7 +20,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             if(reefback.IsPresent())
             {
-                foreach (Entity childEntity in entity.ChildEntities)
+                foreach (Entity childEntity in entity.ChildEntitiesByGuid.Values)
                 {
                     Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback);
                 }

@@ -89,7 +89,7 @@ namespace NitroxServer.ConfigParser
                 string text = ConfigurationManager.AppSettings[itemName];
 
                 // Empty string is ignored
-                if (typeof(T) == typeof(string) && (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text)))
+                if (typeof(T) == typeof(string) && (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(text)))
                 {
                     return;
                 }

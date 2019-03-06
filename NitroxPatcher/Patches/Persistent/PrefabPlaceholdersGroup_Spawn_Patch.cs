@@ -11,7 +11,7 @@ namespace NitroxPatcher.Patches.Persistent
     {
         public static bool Prefix()
         {
-            return false;
+            return false; // Disable spawning of PrefabPlaceholders(In other words large portion of objects)
         }
 
         public override void Patch(HarmonyInstance harmony)

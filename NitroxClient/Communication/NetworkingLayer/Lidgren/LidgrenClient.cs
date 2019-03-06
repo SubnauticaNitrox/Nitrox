@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
@@ -77,7 +77,7 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
                         {
                             connectedEvent.Set();
                         }
-                        else if (LostConnectionModal.Instance)
+                        else if (LostConnectionModal.Instance != null)
                         {
                             LostConnectionModal.Instance.Show();
                         }

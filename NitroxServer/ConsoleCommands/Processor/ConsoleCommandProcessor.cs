@@ -42,7 +42,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
         public void ProcessCommand(string msg, Optional<Player> player, Perms perms)
         {
-            if (string.IsNullOrWhiteSpace(msg))
+            if (string.IsNullOrEmpty(msg))
             {
                 return;
             }

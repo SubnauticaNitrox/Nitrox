@@ -54,12 +54,12 @@ namespace NitroxServer.Serialization
 
             if (subnauticaPath.IsEmpty())
             {
-                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors.ToArray())}");
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
-            string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.X + "-" + batchId.Y + "-" + batchId.Z + suffix + ".bin");
+            string path = Path.Combine(subnauticaPath.Get(), Path.Combine("SNUnmanagedData", "Build18"));
+            string fileName = Path.Combine(path, Path.Combine(pathPrefix, prefix + "batch-cells-" + batchId.X + "-" + batchId.Y + "-" + batchId.Z + suffix + ".bin"));
 
             if (!File.Exists(fileName))
             {

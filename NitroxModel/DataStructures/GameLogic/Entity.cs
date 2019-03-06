@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Linq;
 using ProtoBufNet;
 
@@ -39,8 +40,18 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public string ClassId { get; set; }
 
+        [ProtoIgnore]
+        public Dictionary<string, Entity> ChildEntitiesByGuid { get { return childEntitiesByGuid; } set { childEntitiesByGuid = value; } }
+
+        [NonSerialized]
+        [ProtoIgnore]
+        private Dictionary<string, Entity> childEntitiesByGuid;
+
+        ///<summary>
+        /// Used for Serialization don't use
+        /// </summary>
         [ProtoMember(10)]
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
+        public List<Entity> ChildEntities { get; set; }
 
         [ProtoMember(11)]
         public bool SpawnedByServer; // Keeps track if an entity was spawned by the server or a player
@@ -57,7 +68,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(15)]
         public bool IsChild { get; set; }
-                
+
         public Entity()
         {
             // Default Constructor for serialization
@@ -84,6 +95,7 @@ namespace NitroxModel.DataStructures.GameLogic
             WaterParkGuid = null;
             SerializedGameObject = null;
             ExistsInGlobalRoot = false;
+            ChildEntitiesByGuid = new Dictionary<string, Entity>();
             IsChild = isChild;
         }
 
@@ -107,6 +119,7 @@ namespace NitroxModel.DataStructures.GameLogic
             WaterParkGuid = null;
             SerializedGameObject = null;
             ExistsInGlobalRoot = false;
+            ChildEntitiesByGuid = new Dictionary<string, Entity>();
             IsChild = false;
         }
 
@@ -123,10 +136,48 @@ namespace NitroxModel.DataStructures.GameLogic
             WaterParkGuid = waterParkGuid;
             SerializedGameObject = serializedGameObject;
             ExistsInGlobalRoot = existsInGlobalRoot;
+            ChildEntitiesByGuid = new Dictionary<string, Entity>();
+        }
+
+        [OnDeserialized]
+        private void OnDeserialize(StreamingContext streamingContext)
+        {
+            ChildEntitiesByGuid = new Dictionary<string, Entity>(); // Converts back to Dictionary
+            if (ChildEntities != null)
+            {
+                foreach (Entity child in ChildEntities)
+                {
+                    ChildEntitiesByGuid.Add(child.Guid, child);
+                }
+            }
+        }
+
+        [OnSerializing]
+        [ProtoBeforeSerialization]
+        private void OnSerialize(StreamingContext streamingContext) // Converts Dictionary to List for serialization by our friend Windows
+        {
+            List<Entity> childList = ChildEntitiesByGuid.Values.ToList();
+            if (childList == null)
+            {
+                childList = new List<Entity>();
+            }
+
+            ChildEntities = ChildEntitiesByGuid.Values.ToList();
+        }
+
+        public void AddChild(Entity child)
+        {
+            ChildEntitiesByGuid.Add(Guid, child);
         }
 
         public override string ToString()
         {
+            List<Entity> childList = ChildEntitiesByGuid.Values.ToList();
+            if (childList == null)
+            {
+                childList = new List<Entity>();
+            }
+
             return "[Entity Position: " + Position + " Local Position: " + LocalPosition + " Rotation: " + Rotation + " Local Rotation: " + LocalRotation + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntities: { " + string.Join(", ", ChildEntities.Select(c => c.ToString()).ToArray()) + " } SpawnedByServer: " + SpawnedByServer + "]";
         }
     }

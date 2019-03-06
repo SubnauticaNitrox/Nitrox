@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -37,10 +38,10 @@ namespace NitroxServer
                 return;
             }
 
-            var ips = _interface.GetIPProperties().UnicastAddresses
+            string[] ips = _interface.GetIPProperties().UnicastAddresses
                 .Select(address => address.Address.ToString())
-                .Where(address => !address.ToString().Contains("fe80::"));
-            Log.Info("If using Hamachi, use this IP: " + string.Join(" or ", ips));
+                .Where(address => !address.ToString().Contains("fe80::")).ToArray();
+            Log.Info("If using Hamachi, use this IP: " + string.Join(" or ", ips.ToArray()));
         }
 
         private static void PrintIfLan(NetworkInterface _interface)

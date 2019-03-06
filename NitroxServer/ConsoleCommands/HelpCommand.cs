@@ -37,11 +37,16 @@ namespace NitroxServer.ConsoleCommands
             return args.Length == 0;
         }
         
-        private class CommandComparer : IComparer<Command>
+        private class CommandComparer : IEqualityComparer<Command>
         {
-            public int Compare(Command x, Command y)
+            public bool Equals(Command x, Command y)
             {
-                return x.Name.CompareTo(y.Name);
+                return x.Name.Equals(y.Name);
+            }
+
+            public int GetHashCode(Command obj)
+            {
+                return obj.GetHashCode();
             }
         }
 
@@ -49,7 +54,7 @@ namespace NitroxServer.ConsoleCommands
         {
             // runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            SortedSet<Command> sortedCommands = new SortedSet<Command>(commands.Where(cmd => cmd.RequiredPermLevel <= perm), new CommandComparer());
+            HashSet<Command> sortedCommands = new HashSet<Command>(commands.Where(cmd => cmd.RequiredPermLevel <= perm), new CommandComparer());
             return new List<string>(sortedCommands.Select(cmd => cmd.ToHelpText()));
         }
     }

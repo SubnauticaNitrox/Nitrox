@@ -4,6 +4,7 @@ using NitroxServer.GameLogic;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using System.Linq;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -20,9 +21,9 @@ namespace NitroxServer.ConsoleCommands
         {
             List<Player> players = playerManager.GetPlayers();
 
-            string playerList = "List Command Result: " + string.Join(", ", players);
+            string playerList = "List Command Result: " + string.Join(", ", players.Select(p => p.Name).ToArray());
 
-            if(players.Count == 0)
+            if (players.Count == 0)
             {
                 playerList += "No Players Online";
             }

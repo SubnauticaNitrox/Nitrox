@@ -14,6 +14,9 @@ namespace NitroxServer.Communication.Packets.Processors
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
+        private static int simCount = 0;
+        private static int cellCount = 0;
+
         public CellVisibilityChangedProcessor(EntityManager entityManager, EntitySimulation entitySimulation, PlayerManager playerManager)
         {
             this.entityManager = entityManager;
@@ -39,6 +42,8 @@ namespace NitroxServer.Communication.Packets.Processors
             if (newlyVisibleEntities.Count > 0)
             {
                 CellEntities cellEntities = new CellEntities(newlyVisibleEntities);
+                cellEntities.Count = cellCount;
+                cellCount++;
                 player.SendPacket(cellEntities);
             }
         }
@@ -49,6 +54,8 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 // TODO: This should be moved to `SimulationOwnership`
                 SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(ownershipChanges);
+                ownershipChange.Count = simCount;
+                simCount++;
                 playerManager.SendPacketToAllPlayers(ownershipChange);
             }
         }
