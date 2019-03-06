@@ -8,6 +8,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public string Guid { get; }
         public string GameObjectNamePath { get; }
 
+        public InteractiveChildObjectIdentifier()
+        {
+            // Default Constructor for serialization
+        }
+
         public InteractiveChildObjectIdentifier(string guid, string gameObjectNamePath)
         {
             Guid = guid;
