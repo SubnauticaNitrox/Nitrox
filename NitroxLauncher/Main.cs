@@ -9,6 +9,7 @@ using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -171,13 +172,30 @@ namespace NitroxLauncher
                 
                 if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
                 {
-                    Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
-                    Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
-
-                    if(sourceVersion != destinationVersion)
+                    try
                     {
-                        File.Delete(destinationFilePath);
-                        File.Copy(sourceFilePath, destinationFilePath, true);
+                        Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
+                        Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
+
+                        if (sourceVersion != destinationVersion)
+                        {
+                            File.Delete(destinationFilePath);
+                            File.Copy(sourceFilePath, destinationFilePath, true);
+                        }
+                    }
+                    catch (BadImageFormatException)
+                    {
+                        // note: discord-rpc.dll has no version information and will fail with BadImageFormatException.
+                        // This means the discord-rpc.dll is already present in the destination folder and will be ignored.
+                        // Only in case of other dll's the error will be logged.
+                        if (!fileName.Equals("discord-rpc.dll"))
+                        {
+                            Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
                 else if(!File.Exists(destinationFilePath))
