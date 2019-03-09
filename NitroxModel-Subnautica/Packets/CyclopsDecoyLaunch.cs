@@ -4,18 +4,18 @@ using NitroxModel.Packets;
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
-    public class CyclopsBeginSilentRunning : Packet
+    public class CyclopsDecoyLaunch : Packet
     {
         public string Guid { get; }
 
-        public CyclopsBeginSilentRunning(string guid)
+        public CyclopsDecoyLaunch(string guid)
         {
             Guid = guid;
         }
 
         public override string ToString()
         {
-            return "[CyclopsBeginSilentRunning Guid: " + Guid + "]";
+            return "[CyclopsDecoyLaunch Guid: " + Guid + "]";
         }
     }
 }

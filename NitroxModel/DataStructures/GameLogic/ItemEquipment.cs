@@ -13,6 +13,11 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(2)]
         public TechType TechType { get; }
 
+        public EquippedItemData()
+        {
+            // For serialization
+        }
+
         public EquippedItemData(string containerGuid, string guid, byte[] serializedData, string slot, TechType techType) : base(containerGuid, guid, serializedData)
         {
             Slot = slot;

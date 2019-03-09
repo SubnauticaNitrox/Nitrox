@@ -21,7 +21,8 @@ namespace NitroxClient.GameLogic.Helper
             { typeof(VehicleDockingBay) },
             { typeof(DockedVehicleHandTarget) },
             { typeof(UpgradeConsole) },
-            { typeof(DockingBayDoor) }
+            { typeof(DockingBayDoor) },
+            { typeof(CyclopsDecoyLoadingTube) }
         };
 
         public static  List<InteractiveChildObjectIdentifier> ExtractGuidsOfInteractiveChildren(GameObject constructedObject)
