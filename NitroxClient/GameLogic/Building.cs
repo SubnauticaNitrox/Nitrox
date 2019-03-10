@@ -80,39 +80,34 @@ namespace NitroxClient.GameLogic
             
             string guid = GuidHelper.GetGuid(gameObject);
 
-            if (amount < 0.95f) // Construction complete event handled by function below
-            {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(guid, amount);
-                packetSender.Send(amountChanged);
-            }
+            ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(guid, amount);
+            packetSender.Send(amountChanged);
         }
 
         public void ConstructionComplete(GameObject ghost)
         {
             string baseGuid = null;
-            Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-
             string guid = GuidHelper.GetGuid(ghost);
+            Optional<object> optionalConstructedBaseGhost = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            if (opConstructedBase.IsPresent())
+            if (optionalConstructedBaseGhost.IsPresent())
             {
-                GameObject constructedBase = (GameObject)opConstructedBase.Get();
+                GameObject constructedBase = (GameObject)optionalConstructedBaseGhost.Get();
                 baseGuid = GuidHelper.GetGuid(constructedBase);
-            }
-            
-            // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
-            // Furniture just uses the same game object as the ghost for the final product.
-            if(ghost.GetComponent<ConstructableBase>() != null)
-            {
-                Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
-                GameObject finishedPiece = (GameObject)opBasePiece.Get();
-                
-                UnityEngine.Object.Destroy(ghost);
-                GuidHelper.SetNewGuid(finishedPiece, guid);
-
-                if(baseGuid == null)
+                // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
+                // Furniture just uses the same game object as the ghost for the final product.
+                if (ghost.GetComponent<ConstructableBase>() != null)
                 {
-                    baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                    Optional<object> optionalBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
+                    GameObject finishedPiece = (GameObject)optionalBasePiece.Get();
+
+                    UnityEngine.Object.Destroy(ghost);
+                    GuidHelper.SetNewGuid(finishedPiece, guid);
+
+                    if (baseGuid == null)
+                    {
+                        baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                    }
                 }
             }
 
