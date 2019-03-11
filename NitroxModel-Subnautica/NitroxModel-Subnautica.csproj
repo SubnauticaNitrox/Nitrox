@@ -70,12 +70,16 @@
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
     <Compile Include="Packets\CyclopsActivateShield.cs" />
-    <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
+    <Compile Include="Packets\CyclopsActivateSonar.cs" />
+    <Compile Include="Packets\CyclopsChangeSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
     <Compile Include="Packets\CyclopsDamage.cs" />
     <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
+    <Compile Include="Packets\CyclopsDecoyLaunch.cs" />
     <Compile Include="Packets\CyclopsDestroyed.cs" />
     <Compile Include="Packets\CyclopsFireCreated.cs" />
+    <Compile Include="Packets\CyclopsFireSuppression.cs" />
+    <Compile Include="Packets\CyclopsSonarPing.cs" />
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />

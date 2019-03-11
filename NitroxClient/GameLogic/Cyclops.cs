@@ -81,6 +81,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void ActivateFireSuppression(string guid)
+        {
+            CyclopsFireSuppression packet = new CyclopsFireSuppression(guid);
+            packetSender.Send(packet);
+        }
+
         /// <summary>
         /// Triggers a <see cref="CyclopsDamage"/> packet
         /// </summary>
