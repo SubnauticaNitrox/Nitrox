@@ -28,7 +28,6 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 // Infos from SubFire.StartSystem
                 fireSuppButton.subFire.StartCoroutine(StartSystem(fireSuppButton.subFire));
-
                 fireSuppButton.StartCooldown();
             }
         }
@@ -45,7 +44,6 @@ namespace NitroxClient.Communication.Packets.Processors
             fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
             fire.Invoke("CancelFireSuppression", fire.fireSuppressionSystemDuration);
             float doorCloseDuration = 30f;
-            //fire.gameObject.BroadcastMessage("TemporaryClose", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
             fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
             yield break;
         }
