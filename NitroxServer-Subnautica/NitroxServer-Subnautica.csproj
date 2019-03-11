@@ -35,6 +35,7 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
