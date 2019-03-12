@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,9 +18,14 @@ namespace NitroxPatcher.Patches
             return true;
         }
 
+        public static void Postfix(VehicleDockingBay __instance, Vehicle vehicle)
+        {
+            NitroxServiceLocator.LocateService<Vehicles>().BroadcastVehicleDocking(__instance, vehicle);
+        }
+
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }
