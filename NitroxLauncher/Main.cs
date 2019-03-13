@@ -93,6 +93,7 @@ namespace NitroxLauncher
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
             nitroxEntryPatch.Remove();
+            Log.Info("Finished removing patches!");
         }
 
         private void StartSubnautica(string subnauticaPath)
@@ -103,14 +104,17 @@ namespace NitroxLauncher
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
                 Subnautica = Process.Start(subnauticaExe, "-EpicPortal");
-                Subnautica.EnableRaisingEvents = true;
             }
             else
             {
-                Subnautica = Process.Start(subnauticaExe);
-                Subnautica.EnableRaisingEvents = true;
+                string steamPath = (string)Microsoft.Win32.Registry.GetValue(@"HKEY_CURRENT_USER\Software\Valve\Steam\", "SteamExe", @"C:\Program Files (x86)\Steam\Steam.exe");
+                Subnautica = new Process();
+                Subnautica.StartInfo.FileName = steamPath;
+                Subnautica.StartInfo.Arguments = "-applaunch 264710";
+                Subnautica.Start();
             }
 
+            Subnautica.EnableRaisingEvents = true;
             Subnautica.Exited += new EventHandler(OnSubnauticaExit);
         }
 
