@@ -58,7 +58,7 @@ namespace NitroxModel.Packets
 
             public override string ToString()
             {
-                return "(" + Guid + " " + Position + ")";
+                return "[EntityTransformUpdate (" + Guid + " " + Position + " " + Rotation + " " + Scale + " " + LocalPosition + " " + LocalRotation + ")]";
             }
         }
     }
