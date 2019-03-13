@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.DeferredPacketReceivers;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Logger;

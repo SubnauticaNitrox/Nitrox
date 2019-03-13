@@ -7,14 +7,14 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
     {
         public struct ReefbackEntity
         {
-            public TechType techType;
-            public int minNumber;
-            public int maxNumber;
-            public float probability;
-            public string classId;
-            public Quaternion rotation;
-            public Vector3 scale;
-            public Vector3 position;
+            public TechType TechType;
+            public int MinNumber;
+            public int MaxNumber;
+            public float Probability;
+            public string ClassId;
+            public Quaternion Rotation;
+            public Vector3 Scale;
+            public Vector3 Position;
         }
         
         public static List<ReefbackEntity> SpawnableCreatures { get; } = new List<ReefbackEntity>();

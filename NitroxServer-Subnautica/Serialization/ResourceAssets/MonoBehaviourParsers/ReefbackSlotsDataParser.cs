@@ -63,10 +63,10 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
 
                     plantPrefabs.Add(new ReefbackSpawnData.ReefbackEntity()
                     {
-                        classId = classId,
-                        position = position,
-                        scale = scale,
-                        rotation = rotation
+                        ClassId = classId,
+                        Position = position,
+                        Scale = scale,
+                        Rotation = rotation
                     });
                 }
 
@@ -79,11 +79,11 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
                 {
                     ReefbackSpawnData.SpawnablePlants.Add(new ReefbackSpawnData.ReefbackEntity
                     {
-                        classId = plant.classId,
-                        probability = probability,
-                        rotation = plant.rotation,
-                        position = plant.position,
-                        scale = plant.scale
+                        ClassId = plant.ClassId,
+                        Probability = probability,
+                        Rotation = plant.Rotation,
+                        Position = plant.Position,
+                        Scale = plant.Scale
                     });
                 }
             }
@@ -127,10 +127,10 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
 
                 creaturePrefab = new ReefbackSpawnData.ReefbackEntity
                 {
-                    classId = classId,
-                    position = position,
-                    scale = scale,
-                    rotation = rotation,
+                    ClassId = classId,
+                    Position = position,
+                    Scale = scale,
+                    Rotation = rotation,
                 };
 
                 resourcesFile.reader.Position = prevPos;
@@ -142,13 +142,13 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets.MonoBehaviourPars
 
                 ReefbackSpawnData.SpawnableCreatures.Add(new ReefbackSpawnData.ReefbackEntity()
                 {
-                    classId = creaturePrefab.classId,
-                    position = creaturePrefab.position,
-                    scale = creaturePrefab.scale,
-                    rotation = creaturePrefab.rotation,
-                    probability = probability,
-                    minNumber = minNumber,
-                    maxNumber = maxNumber
+                    ClassId = creaturePrefab.ClassId,
+                    Position = creaturePrefab.Position,
+                    Scale = creaturePrefab.Scale,
+                    Rotation = creaturePrefab.Rotation,
+                    Probability = probability,
+                    MinNumber = minNumber,
+                    MaxNumber = maxNumber
                 });
             }
         }

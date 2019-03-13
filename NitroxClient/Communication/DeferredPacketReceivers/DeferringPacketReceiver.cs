@@ -5,11 +5,12 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.Util;
+using NitroxClient.Communication.Abstract;
 
-namespace NitroxClient.Communication
+namespace NitroxClient.Communication.DeferredPacketReceivers
 {
     // TODO: Spinlocks don't seem to be necessary here, but I don't know for certain.
-    public class DeferringPacketReceiver
+    public class DeferringPacketReceiver : DeferredPacketReceiver
     {
         private const int EXPIDITED_PACKET_PRIORITY = 999;
         private const int DEFAULT_PACKET_PRIORITY = 1;
@@ -24,7 +25,7 @@ namespace NitroxClient.Communication
             receivedPackets = new NitroxModel.DataStructures.PriorityQueue<Packet>();
         }
 
-        public void PacketReceived(Packet packet)
+        public override void PacketReceived(Packet packet)
         {
             lock (receivedPackets)
             {
@@ -35,7 +36,7 @@ namespace NitroxClient.Communication
             }
         }
 
-        public Queue<Packet> GetReceivedPackets()
+        public override Queue<Packet> GetReceivedPackets()
         {
             Queue<Packet> packets = new Queue<Packet>();
 
@@ -50,7 +51,7 @@ namespace NitroxClient.Communication
             return packets;
         }
 
-        private bool PacketWasDeferred(Packet packet)
+        internal override bool PacketWasDeferred(Packet packet)
         {
             Optional<AbsoluteEntityCell> deferLocation = packet.GetDeferredCell();
 
@@ -71,7 +72,7 @@ namespace NitroxClient.Communication
             return false;
         }
 
-        private void AddPacketToDeferredMap(Packet deferred, AbsoluteEntityCell cell)
+        internal override void AddPacketToDeferredMap(Packet deferred, AbsoluteEntityCell cell)
         {
             lock (deferredPacketsByAbsoluteCell)
             {

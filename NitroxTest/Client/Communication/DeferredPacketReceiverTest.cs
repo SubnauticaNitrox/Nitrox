@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxClient.Communication;
+using NitroxClient.Communication.DeferredPacketReceivers;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;

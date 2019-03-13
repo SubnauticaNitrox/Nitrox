@@ -81,7 +81,7 @@ namespace NitroxServer_Subnautica
             // better catch using WinAPI. This will handled process kill
             if (platid == PlatformID.Win32NT)
             {
-                SetConsoleCtrlHandler(ConsoleEventCallback, true);
+                SetConsoleCtrlHandler(_ConsoleCtrlCheckDelegate, true);
             }
         }
 
@@ -89,6 +89,8 @@ namespace NitroxServer_Subnautica
         private delegate bool ConsoleEventDelegate(int eventType);
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+
+        private static ConsoleEventDelegate _ConsoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)
         {
@@ -98,6 +100,7 @@ namespace NitroxServer_Subnautica
             }
             return false;
         }
+
         private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
         {
             StopAndExitServer();

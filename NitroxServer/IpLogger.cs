@@ -22,7 +22,7 @@ namespace NitroxServer
 
                 PrintIfExternal();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // This is technically an error but will scare most users into thinking the server is not working
                 // generally this can happen on Mac / Wine due to issues fetching networking interfaces.  Simply

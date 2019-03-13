@@ -9,6 +9,7 @@ using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -76,18 +77,41 @@ namespace NitroxLauncher
             //TODO: maybe an async callback to remove when the app closes.
         }
 
+        private void OnSubnauticaExit(object sender, EventArgs e)
+        {
+            string subnauticaPath = "";
+
+            Optional<string> installation = GameInstallationFinder.Instance.FindGame(new List<string>());
+
+            if (!installation.IsPresent())
+            {
+                MessageBox.Show("Please configure your Subnautica location in settings.", "Error", MessageBoxButtons.OK);
+                return;
+            }
+
+            subnauticaPath = installation.Get();
+
+            NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            nitroxEntryPatch.Remove();
+        }
+
         private void StartSubnautica(string subnauticaPath)
         {
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
+            Process Subnautica;
 
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
-                Process.Start(subnauticaExe, "-EpicPortal");
+                Subnautica = Process.Start(subnauticaExe, "-EpicPortal");
+                Subnautica.EnableRaisingEvents = true;
             }
             else
             {
-                Process.Start(subnauticaExe);
+                Subnautica = Process.Start(subnauticaExe);
+                Subnautica.EnableRaisingEvents = true;
             }
+
+            Subnautica.Exited += new EventHandler(OnSubnauticaExit);
         }
 
         private void ServerButton_Click(object sender, EventArgs e)
@@ -101,8 +125,8 @@ namespace NitroxLauncher
 
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
-            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer.exe");
-            Process.Start(serverPath);
+            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
+            Process server = Process.Start(serverPath);
         }
 
         private void SettingsButton_Click(object sender, EventArgs e)
@@ -171,13 +195,32 @@ namespace NitroxLauncher
                 
                 if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
                 {
-                    Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
-                    Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
-
-                    if(sourceVersion != destinationVersion)
+                    try
                     {
-                        File.Delete(destinationFilePath);
-                        File.Copy(sourceFilePath, destinationFilePath, true);
+
+                        Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
+                        Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
+                        if (sourceVersion != destinationVersion)
+                        {
+                            File.Delete(destinationFilePath);
+                            File.Copy(sourceFilePath, destinationFilePath, true);
+                        }
+                    }
+                    catch (BadImageFormatException)
+                    {
+                        // note: discord-rpc.dll has no version information and will fail with BadImageFormatException.
+                        // This means the discord-rpc.dll is already present in the destination folder and will be ignored.
+                        // Only in case of other dll's the error will be logged.
+                        if (!fileName.Equals("discord-rpc.dll") && !fileName.Equals("steam_api64.dll"))
+                        {
+                            Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        {
+                            Log.Error($"There was error during copying the assembly: {fileName}", e);
+                        }
                     }
                 }
                 else if(!File.Exists(destinationFilePath))

@@ -21,12 +21,12 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
             foreach (ReefbackSpawnData.ReefbackEntity creature in SpawnableCreatures)
             {
-                creatureProbabilitySum += creature.probability;
+                creatureProbabilitySum += creature.Probability;
             }
 
             foreach (ReefbackSpawnData.ReefbackEntity plant in SpawnablePlants)
             {
-                plantProbabilitySum += plant.probability;
+                plantProbabilitySum += plant.Probability;
             }
         }
 
@@ -43,12 +43,12 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
                 float probabilitySum = 0;
                 foreach (ReefbackSpawnData.ReefbackEntity entity in entities)
                 {
-                    probabilitySum += entity.probability;
+                    probabilitySum += entity.Probability;
                     float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * probability;
 
                     if (probabilitySum >= targetProbabilitySum)
                     {
-                        int totalToSpawn = deterministicBatchGenerator.NextInt(entity.minNumber, entity.maxNumber + 1);
+                        int totalToSpawn = deterministicBatchGenerator.NextInt(entity.MinNumber, entity.MaxNumber + 1);
 
                         for (int i = 0; i < totalToSpawn; i++)
                         {
@@ -56,14 +56,14 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
                             WorldEntityInfo wei;
 
-                            worldEntitiesByClassId.TryGetValue(entity.classId, out wei);
+                            worldEntitiesByClassId.TryGetValue(entity.ClassId, out wei);
 
-                            Entity child = new Entity(entity.position,
-                                entity.rotation,
-                                entity.scale,
+                            Entity child = new Entity(entity.Position,
+                                entity.Rotation,
+                                entity.Scale,
                                 wei.techType.Model(),
                                 (int)wei.cellLevel,
-                                entity.classId,
+                                entity.ClassId,
                                 true,
                                 guid);
 

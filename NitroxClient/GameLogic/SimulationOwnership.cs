@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 
 namespace NitroxClient.GameLogic
 {
@@ -14,6 +16,8 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Dictionary<string, SimulationLockType> simulatedGuidsByLockType = new Dictionary<string, SimulationLockType>();
         private readonly Dictionary<string, LockRequestCompleted> completeFunctionsByGuid = new Dictionary<string, LockRequestCompleted>();
+
+        public static readonly List<AbsoluteEntityCell> LoadedCells = new List<AbsoluteEntityCell>();
         
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
@@ -75,6 +79,11 @@ namespace NitroxClient.GameLogic
         public void StopSimulatingGuid(string guid)
         {
             simulatedGuidsByLockType.Remove(guid);
+        }
+
+        internal void RegisterEntityForBroadcasting(string guid)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxClient.Communication.DeferredPacketReceivers;
 using NitroxModel.Packets;
 using NitroxClient.Communication.Abstract;
 using UnityEngine;

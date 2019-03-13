@@ -17,6 +17,8 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             NitroxModel.Logger.Log.Info("Got CellEntities Packet!: " + packet.Count);
             entities.Spawn(packet.Entities);
+
+            SimulationOwnership.LoadedCells.Add(packet.GetDeferredCell().Get());
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using NitroxClient.Communication;
+using NitroxClient.Communication.DeferredPacketReceivers;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;

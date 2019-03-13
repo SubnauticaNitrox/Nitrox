@@ -30,10 +30,12 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+    <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -45,12 +47,6 @@
     <Reference Include="LiteNetLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="iTween">
       <HintPath>$(SubnauticaManaged)\iTween.dll</HintPath>
@@ -64,9 +60,18 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\Abstract\DeferredPacketReceiver.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\Base\AsyncInitialSyncProcessor.cs" />
@@ -102,7 +107,7 @@
     <Compile Include="Communication\Packets\Processors\RemotePlayerEquipmentRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
-    <Compile Include="Communication\DeferringPacketReceiver.cs" />
+    <Compile Include="Communication\DeferredPacketReceivers\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingSessionReservation.cs" />

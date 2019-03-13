@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
-using NitroxClient.Communication;
+using NitroxClient.Communication.DeferredPacketReceivers;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer;

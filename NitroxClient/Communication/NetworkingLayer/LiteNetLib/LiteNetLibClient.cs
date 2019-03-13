@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
@@ -7,6 +7,7 @@ using NitroxModel.Core;
 using NitroxModel.Logger;
 using NitroxModel.Networking;
 using NitroxModel.Packets;
+using NitroxClient.Communication.DeferredPacketReceivers;
 
 namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 {

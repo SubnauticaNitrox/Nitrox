@@ -90,7 +90,7 @@ namespace NitroxServer.Serialization.World
 
                 return Optional<World>.Of(world);
             }
-            catch (FileNotFoundException ex)
+            catch (FileNotFoundException)
             {
                 Log.Info("No previous save file found - creating a new one.");
             }

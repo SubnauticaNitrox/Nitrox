@@ -52,8 +52,7 @@ namespace NitroxServer_Subnautica.Serialization.ResourceAssets
             AssetsFile resourcesFile = instance.file;
             AssetsFileReader afr = resourcesFile.reader;
             AssetsFileTable resourcesFileTable = instance.table;
-
-            int timesRan = 0;
+            
             foreach (AssetFileInfoEx afi in resourcesFileTable.pAssetFileInfo.Values)
             {
                 if (afi.curFileType == TEXT_CLASS_ID)
