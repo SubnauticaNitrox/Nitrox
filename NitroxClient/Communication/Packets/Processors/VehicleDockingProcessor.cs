@@ -30,10 +30,19 @@ namespace NitroxClient.Communication.Packets.Processors
             
             using (packetSender.Suppress<VehicleDocking>())
             {
-                vehicleDockingBay.DockVehicle(vehicle);
+                vehicleDockingBay.SetVehicleDocked(vehicle);
             }
 
             vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.PlayerId));
+        }
+
+        IEnumerator DockDelayed(Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
+        {
+            yield return new WaitForSeconds(1.0f);
+            using (packetSender.Suppress<VehicleDocking>())
+            {
+                vehicleDockingBay.DockVehicle(vehicle);
+            }
         }
 
         IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ushort playerId)
