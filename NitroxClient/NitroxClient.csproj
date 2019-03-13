@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\Abstract\DeferredPacketReceiver.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeSilentRunningProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\Base\AsyncInitialSyncProcessor.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsBeginSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />

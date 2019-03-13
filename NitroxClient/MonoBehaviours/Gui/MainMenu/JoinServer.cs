@@ -232,7 +232,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
 
+#pragma warning disable CS0618 // Yes yes we know its obsolete but your not giving us many options here deal with it
                     IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618
                     StartCoroutine(startNewGame);
 
                     break;

@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic;
+﻿using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
@@ -10,9 +9,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class WarpToCommand : MonoBehaviour
     {
         private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
-        private GameObject multiplayerClient;
-        private IMultiplayerSession multiplayerSession;
-        private string userName;
 
         public void Awake()
         {
