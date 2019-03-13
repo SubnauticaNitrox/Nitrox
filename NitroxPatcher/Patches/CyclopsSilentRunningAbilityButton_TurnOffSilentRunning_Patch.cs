@@ -7,15 +7,16 @@ using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
 {
-    public class CyclopsSilentRunningAbilityButton_TurnOnSilentRunning_Patch : NitroxPatch
+    public class CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(CyclopsSilentRunningAbilityButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TurnOnSilentRunning", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TurnOffSilentRunning", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().ChangeSilentRunning(guid,true);
+
+            NitroxServiceLocator.LocateService<Cyclops>().ChangeSilentRunning(guid, false);
         }
 
         public override void Patch(HarmonyInstance harmony)

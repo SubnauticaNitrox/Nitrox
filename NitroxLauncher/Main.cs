@@ -197,9 +197,9 @@ namespace NitroxLauncher
                 {
                     try
                     {
-
                         Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
                         Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
+
                         if (sourceVersion != destinationVersion)
                         {
                             File.Delete(destinationFilePath);
@@ -218,9 +218,7 @@ namespace NitroxLauncher
                     }
                     catch (Exception e)
                     {
-                        {
-                            Log.Error($"There was error during copying the assembly: {fileName}", e);
-                        }
+                        Log.Error($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
                 else if(!File.Exists(destinationFilePath))

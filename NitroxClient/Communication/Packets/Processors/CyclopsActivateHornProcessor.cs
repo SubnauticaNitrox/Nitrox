@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsActivateHorn hornPacket)
         {
             GameObject cyclops = GuidHelper.RequireObjectFrom(hornPacket.Guid);
-            CyclopsHornControl horn = cyclops.RequireComponent<CyclopsHornControl>();
+            CyclopsHornControl horn = cyclops.RequireComponentInChildren<CyclopsHornControl>();
 
             Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
         }
