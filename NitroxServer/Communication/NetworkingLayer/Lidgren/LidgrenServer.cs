@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Lidgren.Network;
-using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
@@ -73,7 +71,21 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                             {
                                 NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
                                 Packet packet = Packet.Deserialize(im.Data);
-                                ProcessIncomingData(connection, packet);
+
+                                if (connection is LidgrenConnection)
+                                {
+                                    List<Packet> packetsToProcess = ((LidgrenConnection)connection).ManageNewPacket(packet);
+
+                                    foreach (Packet packetToProcess in packetsToProcess)
+                                    {
+                                        ProcessIncomingData(connection, packetToProcess);
+                                    }
+                                }
+                                else
+                                {
+                                    ProcessIncomingData(connection, packet);
+                                }
+                                    
                             }
                             break;
                         default:
