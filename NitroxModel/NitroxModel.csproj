@@ -165,6 +165,7 @@
     <Compile Include="Packets\MultiplayerSessionReservationRequest.cs" />
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />
+    <Compile Include="Packets\PacketResendRequest.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntryAdd.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntryRemove.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntryUpdate.cs" />
