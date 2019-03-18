@@ -30,11 +30,11 @@ namespace NitroxClient.Communication.Packets.Processors
             
             using (packetSender.Suppress<VehicleDocking>())
             {
-                vehicleDockingBay.DockVehicle(vehicle);
+                vehicleDockingBay.SetVehicleDocked(vehicle);
             }
 
             vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.PlayerId));
-        }
+        }        
 
         IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ushort playerId)
         {
