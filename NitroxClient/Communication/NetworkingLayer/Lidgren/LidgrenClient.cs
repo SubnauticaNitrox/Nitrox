@@ -153,15 +153,12 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
                     case NetIncomingMessageType.Data:
                         if (im.Data.Length > 0)
                         {
-                            Packet packet = null;
-                            
 #if TRACE && PACKET
                             NitroxModel.Logger.Log.Info(DateTime.Now.Ticks + " Connection: Received Data: " + im.LengthBytes + " " + im.PositionInBytes + " " + im.Data);
 #endif
                             byte[] data = new byte[im.LengthBytes];
-                            im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);                            
-                            packet = Packet.Deserialize(data);
-
+                            im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
+                            Packet packet = Packet.Deserialize(data);
 #if TRACE && PACKET
                             NitroxModel.Logger.Log.Info(DateTime.Now.Ticks + " Connection: Received Packet: " + packet.Sequence + '/' + incomingSequence + ' ' + packet.GetType().ToString());
 #endif
