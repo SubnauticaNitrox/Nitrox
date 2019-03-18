@@ -49,6 +49,11 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                 NetIncomingMessage im;
                 while ((im = netServer.ReadMessage()) != null)
                 {
+
+#if TRACE && PACKET
+                    NitroxModel.Logger.Log.Info(System.DateTime.Now.Ticks + " Connection: Received MessageString: " + im.MessageType + ' ' + im.Data.Length + ' ' + im.ToString());
+#endif
+
                     switch (im.MessageType)
                     {
                         case NetIncomingMessageType.DebugMessage:
@@ -70,7 +75,14 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                             if (im.Data.Length > 0)
                             {
                                 NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
-                                Packet packet = Packet.Deserialize(im.Data);
+
+#if TRACE && PACKET
+                                NitroxModel.Logger.Log.Info(System.DateTime.Now.Ticks + " Connection: Received Data: " + im.LengthBytes + " " + im.PositionInBytes + " " + im.Data);
+#endif
+                                byte[] data = new byte[im.LengthBytes];
+                                im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
+
+                                Packet packet = Packet.Deserialize(data);
 
                                 if (connection is LidgrenConnection)
                                 {
@@ -131,6 +143,7 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
             config.Port = portNumber;
             config.MaximumConnections = maxConn;
+            config.SendBufferSize = 10485760;
             config.AutoFlushSendQueue = true;
 
             return config;
