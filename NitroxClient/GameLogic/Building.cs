@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
@@ -88,25 +89,32 @@ namespace NitroxClient.GameLogic
         {
             string baseGuid = null;
             string guid = GuidHelper.GetGuid(ghost);
-            Optional<object> optionalConstructedBaseGhost = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+            Optional<object> optionalConstructedGhost = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            if (optionalConstructedBaseGhost.IsPresent())
+            if (optionalConstructedGhost.IsPresent())
             {
-                GameObject constructedBase = (GameObject)optionalConstructedBaseGhost.Get();
-                baseGuid = GuidHelper.GetGuid(constructedBase);
+                GameObject constructedGhost = (GameObject)optionalConstructedGhost.Get();
+                baseGuid = GuidHelper.GetGuid(constructedGhost);
                 // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
                 // Furniture just uses the same game object as the ghost for the final product.
                 if (ghost.GetComponent<ConstructableBase>() != null)
                 {
-                    Optional<object> optionalBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
-                    GameObject finishedPiece = (GameObject)optionalBasePiece.Get();
-
-                    UnityEngine.Object.Destroy(ghost);
-                    GuidHelper.SetNewGuid(finishedPiece, guid);
-
-                    if (baseGuid == null)
+                    Optional<object> optionalLatestConstructedBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
+                    if (!optionalLatestConstructedBasePiece.IsPresent())
                     {
-                        baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                        GameObject finishedPiece = (GameObject)optionalLatestConstructedBasePiece.Get();
+
+                        UnityEngine.Object.Destroy(ghost);
+                        GuidHelper.SetNewGuid(finishedPiece, guid);
+
+                        if (baseGuid == null)
+                        {
+                            baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                        }
+                    }
+                    else
+                    {
+                        Log.Warn($"LATEST_CONSTRUCTED_BASE_PIECE is not present for construction completed guid: {guid}");
                     }
                 }
             }

@@ -31,8 +31,7 @@ namespace NitroxServer.Communication.Packets.Processors
             VehicleModel vehicleModel = vehicle.Get();
             vehicleModel.DockingBayGuid = Optional<string>.Of(packet.DockGuid);
 
-            // We don't need to send this packet to the other clients, as those clients
-            // will automatically dock the vehicle when it enters the trigger
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }
