@@ -75,6 +75,7 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().EntityData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.PDAState).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().GameData.StoryGoals).SingleInstance();
         }
 
         private void RegisterGameSpecificServices(ContainerBuilder containerBuilder, Assembly assembly)

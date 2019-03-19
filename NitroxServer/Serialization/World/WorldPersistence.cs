@@ -116,7 +116,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
