@@ -73,6 +73,8 @@
     <Compile Include="Communication\Packets\Processors\CyclopsDecoyLaunchProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireSuppressionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsSonarPingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotAddItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotRemoveItemProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\Base\AsyncInitialSyncProcessor.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="GameLogic\InitialSync\PlayerInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
+    <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
