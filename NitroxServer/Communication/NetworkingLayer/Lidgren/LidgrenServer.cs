@@ -72,7 +72,9 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
                             if (im.Data.Length > 0)
                             {
                                 NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
-                                Packet packet = Packet.Deserialize(im.Data);
+								byte[] data = new byte[im.LengthBytes];
+                                im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
+                                Packet packet = Packet.Deserialize(data);
                                 ProcessIncomingData(connection, packet);
                             }
                             break;
@@ -120,6 +122,7 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
             config.Port = portNumber;
             config.MaximumConnections = maxConn;
             config.AutoFlushSendQueue = true;
+			config.SendBufferSize = 10485760;
 
             return config;
         }
