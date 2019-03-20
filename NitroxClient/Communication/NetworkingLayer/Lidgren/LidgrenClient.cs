@@ -30,6 +30,7 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
 
             NetPeerConfiguration config = new NetPeerConfiguration("Nitrox");
             config.AutoFlushSendQueue = true;
+			config.SendBufferSize = 1048576;
             client = new NetClient(config);
             client.RegisterReceivedCallback(ReceivedMessage);
             client.Start();
@@ -87,7 +88,9 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
                     case NetIncomingMessageType.Data:
                         if (im.Data.Length > 0)
                         {
-                            Packet packet = Packet.Deserialize(im.Data);
+                            byte[] data = new byte[im.LengthBytes];
+                            im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
+                            Packet packet = Packet.Deserialize(data);
                             packetReceiver.PacketReceived(packet);
                         }
 
