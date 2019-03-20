@@ -16,9 +16,9 @@ namespace NitroxClient.Communication.NetworkingLayer
 
         public ModulatingClient()
         {
-            CurrentClient = new LiteNetLibClient();
+            CurrentClient = new LidgrenClient();
             fallbackClients = new Queue<IClient>();
-            fallbackClients.Enqueue(new LidgrenClient());
+            fallbackClients.Enqueue(new LiteNetLibClient());
         }
 
         public void Start(string ipAddress, int serverPort)
