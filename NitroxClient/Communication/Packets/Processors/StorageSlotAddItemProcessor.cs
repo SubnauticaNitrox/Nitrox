@@ -22,8 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         }
 
         public override void Process(StorageSlotItemAdd packet)
-        {
-            Log.Debug("Process storage slot add");
+        {            
             ItemData itemData = packet.ItemData;
             GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
@@ -31,8 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
             item.AddComponent<NitroxEntity>();
             item.SetNewGuid(itemData.Guid);
 
-            storageSlots.AddItem(item, itemData.ContainerGuid);
-            Log.Debug("Process storage slot add finished");
+            storageSlots.AddItem(item, itemData.ContainerGuid);            
         }
     }
 }

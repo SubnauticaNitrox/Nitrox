@@ -57,7 +57,7 @@ namespace NitroxClient.GameLogic
             packetSender.Send(slotItemRemove);
         }
 
-        public void AddItem(GameObject item, string containerGuid)
+        public void AddItem(GameObject item, string containerGuid, bool silent = false)
         {
             GameObject owner = GuidHelper.RequireObjectFrom(containerGuid);
 
@@ -76,11 +76,20 @@ namespace NitroxClient.GameLogic
                 // Maybe need to suppress batterysound play
 
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
-
+                bool allowedToPlaySounds = true;
+                if (silent)
+                {                    
+                    allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
+                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                }
                 using (packetSender.Suppress<StorageSlotItemAdd>())
                 {
                     slot.AddItem(new InventoryItem(pickupable));
-                }                
+                }
+                if (silent)
+                {
+                    mixin.ReflectionSet("allowedToPlaySounds", allowedToPlaySounds);
+                }
             }
             else
             {
@@ -88,17 +97,28 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void RemoveItem(string ownerGuid)
+        public void RemoveItem(string ownerGuid, bool silent = false)
         {
             GameObject owner = GuidHelper.RequireObjectFrom(ownerGuid);            
             Optional<EnergyMixin> opMixin = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
             
             if (opMixin.IsPresent())
             {
-                StorageSlot slot = (StorageSlot)opMixin.Get().ReflectionGet("batterySlot");
+                EnergyMixin mixin = opMixin.Get();
+                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                bool allowedToPlaySounds = true;
+                if (silent)
+                {
+                    allowedToPlaySounds = (bool)mixin.ReflectionGet("allowedToPlaySounds");
+                    mixin.ReflectionSet("allowedToPlaySounds", !silent);
+                }
                 using (packetSender.Suppress<StorageSlotItemRemove>())
                 {
                     slot.RemoveItem();
+                }
+                if (silent)
+                {
+                    mixin.ReflectionSet("allowedToPlaySounds", allowedToPlaySounds);
                 }
             }
             else

@@ -23,9 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(StorageSlotItemRemove packet)
         {
-            Log.Debug("Process storage slot remove");
             storageSlots.RemoveItem(packet.OwnerGuid);
-            Log.Debug("Process storage slot remove finished");
         }
     }
 }

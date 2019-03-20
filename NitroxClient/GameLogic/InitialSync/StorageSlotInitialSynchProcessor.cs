@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     {
                         if(opGameObject.Get().GetComponent<EnergyMixin>() != null)
                         {
-                            slots.RemoveItem(vehicle.Guid);
+                            slots.RemoveItem(vehicle.Guid,true);
                         }
                         if (vehicle.InteractiveChildIdentifiers.IsPresent())
                         {
@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic.InitialSync
                                 {
                                     if (opChildGameObject.Get().GetComponent<EnergyMixin>() != null)
                                     {
-                                        slots.RemoveItem(identifier.Guid);
+                                        slots.RemoveItem(identifier.Guid,true);
                                     }
                                 }
                             }
@@ -64,7 +64,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     // Mark this entity as spawned by the server
                     item.AddComponent<NitroxEntity>();
                     item.SetNewGuid(itemData.Guid);
-                    slots.AddItem(item, itemData.ContainerGuid);
+                    slots.AddItem(item, itemData.ContainerGuid,true);
                 }
             }
         }
