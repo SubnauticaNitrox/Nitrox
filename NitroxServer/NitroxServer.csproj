@@ -108,6 +108,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentRemovedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SignChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionCompletedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StoryEventSendProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\KnownTechEntryAddProcessor.cs" />
@@ -160,6 +162,7 @@
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
+    <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
