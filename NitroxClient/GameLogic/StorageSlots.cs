@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -25,20 +26,34 @@ namespace NitroxClient.GameLogic
             this.localPlayer = localPlayer;
         }
 
-        public void BroadcastItemAdd(InventoryItem item, string ownerGuid)
+
+        public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
-            
+            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+            if (entity == null)
+            {
+                return;
+            }
+
             string itemGuid = GuidHelper.GetGuid(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(item.item.gameObject);
 
-            ItemData itemData = new ItemData(ownerGuid, itemGuid, bytes);
+            ItemData itemData = new ItemData(guid, itemGuid, bytes);
             StorageSlotItemAdd add = new StorageSlotItemAdd(itemData);
             packetSender.Send(add);
         }
 
-        public void BroadcastItemRemoval(string ownerGuid)
+        public void BroadcastItemRemoval(GameObject gameObject)
         {
-            StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(ownerGuid);
+            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+            if (entity == null)
+            {
+                return;
+            }
+
+            StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(guid);
             packetSender.Send(slotItemRemove);
         }
 
@@ -77,7 +92,6 @@ namespace NitroxClient.GameLogic
         {
             GameObject owner = GuidHelper.RequireObjectFrom(ownerGuid);            
             Optional<EnergyMixin> opMixin = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
-            //Optional<BatterySource> opSource = Optional<BatterySource>.OfNullable(owner.GetComponent<BatterySource>());
             
             if (opMixin.IsPresent())
             {
@@ -92,5 +106,6 @@ namespace NitroxClient.GameLogic
                 Log.Error("Removing storage slot item: Could not find storage slot field on object " + owner.name);
             }
         }
+
     }
 }

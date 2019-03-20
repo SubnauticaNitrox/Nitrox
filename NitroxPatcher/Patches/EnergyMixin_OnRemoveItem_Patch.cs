@@ -17,8 +17,7 @@ namespace NitroxPatcher.Patches
         {
             if (item != null)
             {
-                string guid = GuidHelper.GetGuid(__instance.gameObject);
-                NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(guid);
+                NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
             }
         }
 

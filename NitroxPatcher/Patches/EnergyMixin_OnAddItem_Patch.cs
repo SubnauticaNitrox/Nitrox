@@ -15,9 +15,8 @@ namespace NitroxPatcher.Patches
         public static void Postfix(EnergyMixin __instance, InventoryItem item)
         {
             if (item != null)
-            {
-                string guid = GuidHelper.GetGuid(__instance.gameObject);
-                NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemAdd(item, guid);
+            {                
+                NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemAdd(item, __instance.gameObject);
             }
         }
 

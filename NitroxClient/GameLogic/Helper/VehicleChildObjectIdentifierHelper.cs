@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -41,11 +42,13 @@ namespace NitroxClient.GameLogic.Helper
                     string guid = GuidHelper.GetGuid(component.gameObject);
                     string componentName = component.gameObject.GetFullName();
                     string relativePathName = componentName.Replace(constructedObjectsName, "");
-                    // It can happen, that the game object is in fact the constructed object. That should be be added
+                    // It can happen, that the game object is the constructed object itself. This code prevents to add itself to the child objects
                     if (relativePathName.Length != 0)
                     {
                         relativePathName = relativePathName.TrimStart('/');
                         ids.Add(new InteractiveChildObjectIdentifier(guid, relativePathName));
+                        // Mark game objects as controlled by nitrox (used for sending add/remove batteries)
+                        component.gameObject.AddComponent<NitroxEntity>();
                     }
                     
                     
@@ -65,6 +68,7 @@ namespace NitroxClient.GameLogic.Helper
                 {
                     GameObject gameObject = transform.gameObject;
                     GuidHelper.SetNewGuid(gameObject, childIdentifier.Guid);
+                    gameObject.AddComponent<NitroxEntity>();
                 }
                 else
                 {

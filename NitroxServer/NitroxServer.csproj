@@ -120,6 +120,8 @@
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotAddItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotRemoveItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventSendProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />

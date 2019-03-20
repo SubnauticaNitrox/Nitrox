@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -16,12 +17,13 @@ namespace NitroxClient.GameLogic
     public class MobileVehicleBay
     {
         private readonly IPacketSender packetSender;
+        private readonly StorageSlots storageSlots;
 
 
-
-        public MobileVehicleBay(IPacketSender packetSender)
+        public MobileVehicleBay(IPacketSender packetSender, StorageSlots storageSlots)
         {
             this.packetSender = packetSender;
+            this.storageSlots = storageSlots;
         }
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
@@ -62,10 +64,49 @@ namespace NitroxClient.GameLogic
                 }
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
                 packetSender.Send(beginCrafting);
+
+                // Mark vehicle as controlled by nitrox (used for sending add/remove batteries aka storage slots)
+                constructedObject.AddComponent<NitroxEntity>();
+                SendBatterySlots(constructedObject, childIdentifiers);
             }
             else
             {
                 Log.Error("Could not send packet because there wasn't a corresponding constructed object!");
+            }
+        }
+
+        private void SendBatterySlots(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
+        {
+            
+            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(constructedObject.GetComponent<EnergyMixin>());
+            if (opEnergy.IsPresent())
+            {
+                EnergyMixin mixin = opEnergy.Get();
+                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                foreach (InventoryItem item in slot)
+                {
+                    storageSlots.BroadcastItemAdd(item, constructedObject);
+                }
+            }
+            foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
+            {
+                Optional<GameObject> opChildGameObject = GuidHelper.GetObjectFrom(identifier.Guid);
+                if (opChildGameObject.IsPresent())
+                {
+                                        
+                    opChildGameObject.Get().AddComponent<NitroxEntity>();
+                    Optional<EnergyMixin> opEnergyMixin = Optional<EnergyMixin>.OfNullable(opChildGameObject.Get().GetComponent<EnergyMixin>());
+                    if(opEnergyMixin.IsPresent())
+                    {
+                        
+                        EnergyMixin mixin = opEnergyMixin.Get();
+                        StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+                        foreach (InventoryItem item in slot)
+                        {
+                            storageSlots.BroadcastItemAdd(item, mixin.gameObject);
+                        }
+                    }
+                }
             }
         }
     }

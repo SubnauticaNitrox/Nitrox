@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
+    <Compile Include="GameLogic\InitialSync\StorageSlotInitialSynchProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateSonarProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDecoyLaunchProcessor.cs" />
