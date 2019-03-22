@@ -40,13 +40,13 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleMovementData> vehicle = GetVehicleModel();
+                Optional<VehicleMovementData> vehicle = GetVehicleMovement();
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }
 
-        private Optional<VehicleMovementData> GetVehicleModel()
+        private Optional<VehicleMovementData> GetVehicleMovement()
         {
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
@@ -127,18 +127,17 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleMovementData model = new VehicleMovementData(techType,
-                                                  guid,
-                                                  position,
-                                                  rotation,
-                                                  velocity,
-                                                  angularVelocity,
-                                                  steeringWheelYaw,
-                                                  steeringWheelPitch,
-                                                  appliedThrottle,
-                                                  leftArmPosition,
-                                                  rightArmPosition);
-
+            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(  techType, 
+                                                                                        guid, 
+                                                                                        position, 
+                                                                                        rotation, 
+                                                                                        velocity, 
+                                                                                        angularVelocity, 
+                                                                                        steeringWheelYaw, 
+                                                                                        steeringWheelPitch, 
+                                                                                        appliedThrottle, 
+                                                                                        leftArmPosition, 
+                                                                                        rightArmPosition);
             return Optional<VehicleMovementData>.Of(model);
         }
     }

@@ -76,6 +76,7 @@
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
+    <Compile Include="DataStructures\GameLogic\ExosuitMovementData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
@@ -92,9 +93,6 @@
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\TechType.cs" />
-    <Compile Include="DataStructures\GameLogic\DamageInfoData.cs" />
-    <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
-    <Compile Include="DataStructures\GameLogic\VehicleModelFactory.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesRegistryFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />

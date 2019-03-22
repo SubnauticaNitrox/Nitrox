@@ -5,7 +5,7 @@ using UnityEngine;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [ProtoContract, ProtoInclude(1000,typeof(ExosuitMovementData))]    
     public class VehicleMovementData
     {
         [ProtoMember(1)]
@@ -35,20 +35,13 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool AppliedThrottle { get; }
 
-        [ProtoMember(10)]
-        public Vector3 LeftAimTarget { get; }
-
-        [ProtoMember(11)]
-        public Vector3 RightAimTarget { get; }
-
 
         public VehicleMovementData()
         {
             // For serialization purposes
         }
 
-        public VehicleMovementData(TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
-            Vector3 leftAimTarget, Vector3 rightAimTarget)
+        public VehicleMovementData(TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
             TechType = techType;
             Guid = guid;
@@ -59,8 +52,6 @@ namespace NitroxModel.DataStructures.GameLogic
             SteeringWheelYaw = steeringWheelYaw;
             SteeringWheelPitch = steeringWheelPitch;
             AppliedThrottle = appliedThrottle;
-            LeftAimTarget = leftAimTarget;
-            RightAimTarget = rightAimTarget;
         }
     }
 }

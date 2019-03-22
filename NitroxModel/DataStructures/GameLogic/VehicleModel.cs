@@ -7,7 +7,7 @@ using UnityEngine;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract, ProtoInclude(10, typeof(ExosuitModel))]
+    [ProtoContract, ProtoInclude(100, typeof(ExosuitModel))]
     public class VehicleModel
     {
         [ProtoMember(1)]

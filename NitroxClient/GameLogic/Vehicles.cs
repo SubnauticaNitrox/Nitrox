@@ -95,7 +95,14 @@ namespace NitroxClient.GameLogic
                     else if (exosuit)
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
-                        mvc.SetArmPositions(vehicleModel.LeftAimTarget, vehicleModel.RightAimTarget);
+                        if (vehicleModel.GetType() == typeof(ExosuitMovementData))
+                        {
+                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
+                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget, exoSuitMovement.RightAimTarget);
+                        } else
+                        {
+                            Log.Error("Got exosuit vehicle but no ExosuitMovementData");
+                        }
                     }
                 }
 
