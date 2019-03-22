@@ -106,7 +106,7 @@ namespace NitroxModel.Logger
             Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
 
             PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %level]: %m%n";
+            patternLayout.ConversionPattern = "[%d{HH:mm:ss.fff} %level]: %m%n";
             patternLayout.ActivateOptions();
 
             LevelRangeFilter filter = new LevelRangeFilter();

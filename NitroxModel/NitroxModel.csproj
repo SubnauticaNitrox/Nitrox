@@ -101,8 +101,11 @@
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
+    <Compile Include="Packets\CrafterEndUse.cs" />
+    <Compile Include="Packets\CrafterStartUse.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
+    <Compile Include="Packets\FabricatorEndCrafting.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />

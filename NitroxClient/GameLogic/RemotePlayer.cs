@@ -183,6 +183,7 @@ namespace NitroxClient.GameLogic
 
         public void Destroy()
         {
+            GameLogic.Crafting.Instance.ReleaseFabricatorsUsedBy(PlayerName);
             ErrorMessage.AddMessage($"{PlayerName} left the game.");
             Object.DestroyImmediate(Body);
         }
