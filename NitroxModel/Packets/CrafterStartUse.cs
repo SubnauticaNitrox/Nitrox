@@ -13,5 +13,10 @@ namespace NitroxModel.Packets
             PlayerName = playerName;
             CrafterGuid = crafterGuid;
         }
+
+        public override string ToString()
+        {
+            return "[CrafterStartUse - PlayerName: " + PlayerName + " CrafterGuid: " + CrafterGuid + "]";
+        }
     }
 }

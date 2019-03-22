@@ -11,5 +11,10 @@ namespace NitroxModel.Packets
         {
             CrafterGuid = crafterGuid;
         }
+
+        public override string ToString()
+        {
+            return "[CrafterEndUse - CrafterGuid: " + CrafterGuid + "]";
+        }
     }
 }
