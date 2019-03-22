@@ -1,9 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic
         public void PickedUp(Vector3 itemPosition, string guid, TechType techType)
         {
             Log.Info("PickedUp " + guid + " " + techType);
-            PickupItem pickupItem = new PickupItem(itemPosition, guid, techType);
+            PickupItem pickupItem = new PickupItem(itemPosition, guid, techType.Model());
             packetSender.Send(pickupItem);
         }
 
@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
             
             Log.Debug("Dropping item with guid: " + guid);
 
-            DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType, dropPosition, gameObject.transform.rotation, bytes);
+            DroppedItem droppedItem = new DroppedItem(guid, waterpark, techType.Model(), dropPosition, gameObject.transform.rotation, bytes);
             packetSender.Send(droppedItem);
         }
 

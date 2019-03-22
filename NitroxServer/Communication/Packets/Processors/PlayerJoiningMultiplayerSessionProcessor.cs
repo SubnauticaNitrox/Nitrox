@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Serialization.World;
@@ -23,7 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
             this.world = world;
         }
 
-        public override void Process(PlayerJoiningMultiplayerSession packet, Connection connection)
+        public override void Process(PlayerJoiningMultiplayerSession packet, NitroxConnection connection)
         {
             bool wasBrandNewPlayer;
             Player player = playerManager.CreatePlayer(connection, packet.ReservationKey, out wasBrandNewPlayer);
@@ -38,7 +39,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(player.Name);
-            List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+            List<NitroxModel.DataStructures.TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
@@ -52,6 +53,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
                                                                        world.GameData.PDAState.GetInitialPdaData(),
+                                                                       world.GameData.StoryGoals.GetInitialStoryGoalData(),
                                                                        world.PlayerData.GetPlayerSpawn(player.Name),
                                                                        world.PlayerData.GetSubRootGuid(player.Name),
                                                                        world.PlayerData.GetPlayerStats(player.Name),
@@ -72,7 +74,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 if (!player.Equals(otherPlayer))
                 {
                     List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(otherPlayer.Name);
-                    List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+                    List<NitroxModel.DataStructures.TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
                     InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootGuid, techTypes);
                     playerData.Add(remotePlayer);

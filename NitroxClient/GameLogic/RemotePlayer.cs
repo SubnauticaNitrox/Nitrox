@@ -66,6 +66,7 @@ namespace NitroxClient.GameLogic
         public void ResetModel(ILocalNitroxPlayer localPlayer)
         {
             Body = Object.Instantiate(localPlayer.BodyPrototype);
+            Body.SetActive(true);
             PlayerModel = Body.RequireGameObject("player_view");
         }
 

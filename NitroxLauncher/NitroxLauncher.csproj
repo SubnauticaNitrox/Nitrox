@@ -35,8 +35,8 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dnlib">
-      <HintPath>..\packages\dnlib.1.6.1\lib\dnlib.dll</HintPath>
+    <Reference Include="dnlib, Version=3.1.0.0, Culture=neutral, PublicKeyToken=50e96378b6e77999, processorArchitecture=MSIL">
+      <HintPath>..\packages\dnlib.3.1.0\lib\net461\dnlib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -58,6 +58,7 @@
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
     <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Compile Include="Patching\PlatformDetection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs">
@@ -84,6 +85,7 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -103,22 +105,35 @@
     <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
       <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Harmony</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
       <Name>Lidgren.Network</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
+      <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
+      <Name>NitroxModel-Subnautica</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
       <Name>NitroxModel</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\NitroxPatcher\NitroxPatcher.csproj">
       <Project>{be983e25-24cc-4fc8-9017-61eec43dd618}</Project>
       <Name>NitroxPatcher</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxServer-Subnautica\NitroxServer-Subnautica.csproj">
+      <Project>{eff1d7a5-efd6-413a-8d5f-dc2408e4c9b7}</Project>
+      <Name>NitroxServer-Subnautica</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxServer\NitroxServer.csproj">
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
@@ -127,13 +142,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
+    <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <MoveToLibFolder Include="$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; $(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; $(OutputPath)Lidgren.Network.xml ; $(OutputPath)LZ4.dll ; $(OutputPath)NitroxClient.dll ; $(OutputPath)NitroxModel.dll ; $(OutputPath)NitroxPatcher.dll ; $(OutputPath)log4net.dll ; $(OutputPath)LitJson.dll ; $(OutputPath)protobuf-net.dll ; $(OutputPath)*.pdb ; $(OutputPath)NitroxServer.exe ; $(OutputPath)Lidgren.Network.dll" />
+      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)Lidgren.Network.xml ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer-Subnautica.exe ; ../$(OutputPath)Lidgren.Network.dll ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)System.Configuration.dll ; ../$(OutputPath)Autofac.Configuration.dll ; ../$(OutputPath)NitroxServer.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <MoveToUweLibFolder Include="$(OutputPath)*.dll ; $(OutputPath)*.xml" Exclude="Assembly-CSharp.dll" />
+      <CopyToLibFolder Include=" ../lib/discord-rpc.dll" />
     </ItemGroup>
-    <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(CopyToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>

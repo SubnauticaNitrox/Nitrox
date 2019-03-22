@@ -8,6 +8,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -38,12 +39,12 @@ namespace NitroxClient.GameLogic
             pickupable.gameObject.transform.SetParent(null);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot, techType);
+            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot, techType.Model());
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
-                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType, equippedItem);
+                PlayerEquipmentAdded equipmentAdded = new PlayerEquipmentAdded(techType.Model(), equippedItem);
                 packetSender.Send(equipmentAdded);
                 pickupable.gameObject.transform.SetParent(parent);
 
@@ -63,7 +64,7 @@ namespace NitroxClient.GameLogic
             if (player != null)
             {
                 TechType techType = pickupable.GetTechType();
-                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType, itemGuid);
+                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.Model(), itemGuid);
                 packetSender.Send(equipmentAdded);
 
                 return;

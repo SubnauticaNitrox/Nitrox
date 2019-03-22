@@ -4,6 +4,7 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning
@@ -23,7 +24,7 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             EnableRigidBody(gameObject);
-            ExecuteDropItemAction(entity.TechType, gameObject);
+            ExecuteDropItemAction(entity.TechType.Enum(), gameObject);
 
             return Optional<GameObject>.Of(gameObject);
         }

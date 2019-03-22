@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ProtoBuf;
+using ProtoBufNet;
 using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -11,20 +11,28 @@ namespace NitroxModel.DataStructures.GameLogic
     {
         [ProtoMember(1)]
         public string Guid { get; set; }
+
         [ProtoMember(2)]
         public Vector3 Location { get; set; }
+
         [ProtoMember(3)]
         public string FabricatorGuid { get; set; }
+
         [ProtoMember(4)]
         public string MedicalFabricatorGuid { get; set; }
+
         [ProtoMember(5)]
         public string StorageContainerGuid { get; set; }
+
         [ProtoMember(6)]
         public string RadioGuid { get; set; }
+
         [ProtoMember(7)]
         public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
+
         [ProtoMember(8)]
         public bool Damaged { get; set; }
+
         [ProtoMember(9)]
         public bool RadioDamaged { get; set; }
 

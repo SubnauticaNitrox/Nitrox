@@ -1,8 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -32,7 +31,7 @@ namespace NitroxClient.GameLogic
 
             if (torpedoType != null) // Dont send packet if torpedo storage is empty
             {
-                SeamothModulesAction Changed = new SeamothModulesAction(techType, slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
+                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
                 packetSender.Send(Changed);
             }
         }
@@ -42,7 +41,7 @@ namespace NitroxClient.GameLogic
             string Guid = GuidHelper.GetGuid(instance.gameObject);
             if (techType == TechType.SeamothElectricalDefense)
             {
-                SeamothModulesAction Changed = new SeamothModulesAction(techType, slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
+                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
                 packetSender.Send(Changed);
             }
         }

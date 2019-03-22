@@ -12,6 +12,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -32,7 +33,7 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType, vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
             AddVehicle(vehicleModel);
         }
 
@@ -278,22 +279,23 @@ namespace NitroxClient.GameLogic
         public void BroadcastVehicleDocking(VehicleDockingBay dockingBay, Vehicle vehicle)
         {
             string dockGuid = string.Empty;
-
             if (dockingBay.GetSubRoot() is BaseRoot)
             {
                 dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+            }
+            else if (dockingBay.GetSubRoot() is SubRoot)
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetSubRoot().gameObject);
             }
             else
             {
                 dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<ConstructableBase>().gameObject);
             }
-
             string vehicleGuid = GuidHelper.GetGuid(vehicle.gameObject);
             ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleDocking packet = new VehicleDocking(vehicleGuid, dockGuid, playerId);
             packetSender.Send(packet);
-
             PacketSuppressor<Movement> movementSuppressor = packetSender.Suppress<Movement>();
             vehicle.StartCoroutine(AllowMovementPacketsAfterDockingAnimation(movementSuppressor));
         }
@@ -305,6 +307,10 @@ namespace NitroxClient.GameLogic
             if (dockingBay.GetSubRoot() is BaseRoot)
             {
                 dockGuid = GuidHelper.GetGuid(dockingBay.GetComponentInParent<BaseRoot>().gameObject);
+            }
+            else if (dockingBay.GetSubRoot() is SubRoot)
+            {
+                dockGuid = GuidHelper.GetGuid(dockingBay.GetSubRoot().gameObject);
             }
             else
             {

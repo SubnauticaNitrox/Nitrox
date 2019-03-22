@@ -3,10 +3,10 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel_Subnautica.Packets;
 
 namespace NitroxClient.GameLogic
 {
@@ -33,9 +33,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
-        public void BeginSilentRunning(string guid)
+        public void ChangeSilentRunning(string guid, bool isOn)
         {
-            CyclopsBeginSilentRunning packet = new CyclopsBeginSilentRunning(guid);
+            CyclopsChangeSilentRunning packet = new CyclopsChangeSilentRunning(guid, isOn);
             packetSender.Send(packet);
         }
 
@@ -57,9 +57,33 @@ namespace NitroxClient.GameLogic
             packetSender.Send(packet);
         }
 
+        public void LaunchDecoy(string guid)
+        {
+            CyclopsDecoyLaunch packet = new CyclopsDecoyLaunch(guid);
+            packetSender.Send(packet);
+        }
+
+        public void ActivateSonar(string guid, bool active)
+        {
+            CyclopsActivateSonar packet = new CyclopsActivateSonar(guid,active);
+            packetSender.Send(packet);
+        }
+
+        public void SonarPing(string guid)
+        {
+            CyclopsSonarPing packet = new CyclopsSonarPing(guid);
+            packetSender.Send(packet);
+        }
+
         public void ActivateShield(string guid)
         {
             CyclopsActivateShield packet = new CyclopsActivateShield(guid);
+            packetSender.Send(packet);
+        }
+
+        public void ActivateFireSuppression(string guid)
+        {
+            CyclopsFireSuppression packet = new CyclopsFireSuppression(guid);
             packetSender.Send(packet);
         }
 
@@ -104,14 +128,14 @@ namespace NitroxClient.GameLogic
             
             if (subHealth.health > 0)
             {
-                DamageInfoData damageInfo = null;
+                CyclopsDamageInfoData damageInfo = null;
 
                 if (info.IsPresent())
                 {
                     DamageInfo damage = info.Get();
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
-                    DamageInfoData serializedDamageInfo = new DamageInfoData(subGuid,
+                    CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subGuid,
                         damage.dealer != null ? GuidHelper.GetGuid(damage.dealer) : string.Empty,
                         damage.originalDamage,
                         damage.damage,

@@ -10,7 +10,6 @@ namespace NitroxLauncher.Patching
     {
         public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
         public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
-        public const string GAME_ASSEMBLY_BACKUP_NAME = "Assembly-CSharp.dll.bak";
         public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
         private const string NITROX_ENTRY_TYPE_NAME = "Main";
@@ -90,19 +89,19 @@ namespace NitroxLauncher.Patching
                 IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
                 int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
 
-                if(nitroxExecuteInstructionIndex != -1)
+                if(nitroxExecuteInstructionIndex == -1)
                 {
-                    methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
-                    module.Write(modifiedAssemblyCSharp);
-                    File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
+                    return;
                 }
+                
+                methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
+                module.Write(modifiedAssemblyCSharp);
+
+                File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
             }
 
-            if(File.Exists(modifiedAssemblyCSharp))
-            {
-                File.Delete(assemblyCSharp);
-                File.Move(modifiedAssemblyCSharp, assemblyCSharp);
-            }
+            File.Delete(assemblyCSharp);
+            File.Move(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
         private static int FindNitroxExecuteInstructionIndex(IList<Instruction> methodInstructions)

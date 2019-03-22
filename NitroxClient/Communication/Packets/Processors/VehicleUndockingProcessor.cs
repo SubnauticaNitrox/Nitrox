@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using System.Collections;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -33,10 +34,23 @@ namespace NitroxClient.Communication.Packets.Processors
                 vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerId, true);
                 vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
                 SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
-                vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
-                vehicle.docked = false;
-                vehicle.useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
+
+                
+
+                vehicle.StartCoroutine(WaitBeforePushDown(vehicle, vehicleDockingBay));
+                
             }
+        }
+
+        IEnumerator WaitBeforePushDown(Vehicle vehicle, VehicleDockingBay vehicleDockingBay)
+        {
+            yield return new WaitForSeconds(6.0f);
+            
+            vehicleDockingBay.SetVehicleUndocked();
+            vehicleDockingBay.ReflectionSet("vehicle_docked_param", false);
+            vehicleDockingBay.ReflectionSet("_dockedVehicle", null);
+            vehicle.docked = false;
+            vehicle.useRigidbody.AddForce(Vector3.down * 5f, ForceMode.VelocityChange);
         }
     }
 }

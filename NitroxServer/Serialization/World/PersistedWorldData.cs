@@ -8,7 +8,8 @@ using ProtoBufNet;
 using System;
 using System.Collections.Generic;
 using NitroxModel.Logger;
- 
+using NitroxModel.DataStructures;
+
 namespace NitroxServer.Serialization.World
 {
     [ProtoContract]

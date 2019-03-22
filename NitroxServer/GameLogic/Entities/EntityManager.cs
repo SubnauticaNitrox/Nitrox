@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities
 {

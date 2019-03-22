@@ -1,7 +1,5 @@
 ﻿using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
-using ProtoBuf;
+using ProtoBufNet;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

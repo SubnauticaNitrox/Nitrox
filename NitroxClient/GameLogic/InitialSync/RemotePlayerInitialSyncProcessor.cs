@@ -1,9 +1,12 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -25,7 +28,8 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             foreach (InitialRemotePlayerData playerData in packet.RemotePlayerData)
             {
-                RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, playerData.EquippedTechTypes);
+                List<TechType> equippedTechTypes = playerData.EquippedTechTypes.Select(techType => techType.Enum()).ToList();
+                RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, equippedTechTypes);
 
                 if (playerData.SubRootGuid.IsPresent())
                 {

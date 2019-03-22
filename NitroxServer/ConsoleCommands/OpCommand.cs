@@ -7,12 +7,12 @@ using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class OpCommand : Command
+    internal class OpCommand : Command
     {
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
 
-        public OpCommand(PlayerData playerData, PlayerManager playerManager) : base("op", Perms.ADMIN, "<name>")
+        public OpCommand(PlayerData playerData, PlayerManager playerManager) : base("op", Perms.ADMIN, "<name>", "Set an user as admin")
         {
             this.playerData = playerData;
             this.playerManager = playerManager;

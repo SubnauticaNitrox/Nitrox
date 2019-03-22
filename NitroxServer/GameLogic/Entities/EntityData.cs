@@ -46,7 +46,7 @@ namespace NitroxServer.GameLogic.Entities
                 lock (phasingEntitiesByAbsoluteCell)
                 {
                     foreach (Entity entity in entities)
-                    {
+                    {           
                         List<Entity> entitiesInCell = EntitiesFromCell(entity.AbsoluteEntityCell);
                         entitiesInCell.Add(entity);
 
@@ -73,7 +73,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                     else
                     {
-                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType.AsString());
+                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType);
                     }
                 }
             }

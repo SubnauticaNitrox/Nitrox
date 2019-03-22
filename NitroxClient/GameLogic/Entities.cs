@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -89,9 +90,11 @@ namespace NitroxClient.GameLogic
                 return serializedEntitySpawner;
             }
 
-            if (customSpawnersByTechType.ContainsKey(entity.TechType))
+            TechType techType = entity.TechType.Enum();
+
+            if (customSpawnersByTechType.ContainsKey(techType))
             {
-                return customSpawnersByTechType[entity.TechType];
+                return customSpawnersByTechType[techType];
             }
 
             return defaultEntitySpawner;

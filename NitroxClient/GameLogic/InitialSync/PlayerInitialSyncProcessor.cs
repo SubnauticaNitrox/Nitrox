@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
@@ -24,7 +25,7 @@ namespace NitroxClient.GameLogic.InitialSync
             SetPlayerGuid(packet.PlayerGuid);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             SetPlayerStats(packet.PlayerStatsData);
-            SetPlayerGameMode(packet.GameMode);
+            SetPlayerGameMode((GameModeOption)Enum.Parse(typeof(GameModeOption), packet.GameMode));
         }
 
         private void SetPlayerGuid(string playerguid)

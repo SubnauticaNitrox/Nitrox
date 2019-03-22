@@ -30,17 +30,15 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(SubnauticaManaged)\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="LiteNetLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
       <HintPath>..\packages\log4net.2.0.8\lib\net35-full\log4net.dll</HintPath>
@@ -48,6 +46,9 @@
     </Reference>
     <Reference Include="LZ4">
       <HintPath>..\lib\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\lib\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
@@ -62,6 +63,9 @@
   <ItemGroup>
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\UwePrefab.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\UwePrefabFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntity.cs" />
     <Compile Include="DataStructures\GameLogic\AbsoluteEntityCell.cs" />
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
@@ -69,12 +73,14 @@
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\MapRoomRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
+    <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
-    <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
     <Compile Include="DataStructures\GameLogic\EscapePodModel.cs" />
     <Compile Include="DataStructures\GameLogic\InteractiveChildObjectIdentifier.cs" />
@@ -83,6 +89,9 @@
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\Int3.cs" />
+    <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
+    <Compile Include="DataStructures\TechType.cs" />
     <Compile Include="DataStructures\GameLogic\DamageInfoData.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleModelFactory.cs" />
@@ -90,15 +99,17 @@
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
-    <Compile Include="Packets\CyclopsDamagePointRepaired.cs" />
-    <Compile Include="Packets\CyclopsFireCreated.cs" />
+    <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
+    <Compile Include="Logger\InGameLogger.cs" />
+    <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
@@ -111,10 +122,8 @@
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleMovementData.cs" />
     <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\Int3Surrogate.cs" />
     <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
@@ -137,17 +146,7 @@
     <Compile Include="Packets\ConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\CorrelatedPacket.cs" />
-    <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\SceneDebuggerChange.cs" />
-    <Compile Include="Packets\CyclopsActivateHorn.cs" />
-    <Compile Include="Packets\CyclopsActivateShield.cs" />
-    <Compile Include="Packets\CyclopsBeginSilentRunning.cs" />
-    <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
-    <Compile Include="Packets\CyclopsDamage.cs" />
-    <Compile Include="Packets\CyclopsDestroyed.cs" />
-    <Compile Include="Packets\CyclopsToggleEngineState.cs" />
-    <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
-    <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\DeconstructionBegin.cs" />
     <Compile Include="Packets\DeconstructionCompleted.cs" />
     <Compile Include="Packets\ServerCommand.cs" />
@@ -205,6 +204,7 @@
     <Compile Include="Packets\VehicleColorChange.cs" />
     <Compile Include="Packets\VehicleMovement.cs" />
     <Compile Include="Packets\VehicleNameChange.cs" />
+    <Compile Include="Packets\WrapperPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

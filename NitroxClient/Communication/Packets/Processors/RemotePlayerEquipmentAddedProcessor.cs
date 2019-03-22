@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -24,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 return;
             }
 
-            TechType techType = packet.TechType;
+            TechType techType = packet.TechType.Enum();
             player.AddEquipment(techType);
         }
     }

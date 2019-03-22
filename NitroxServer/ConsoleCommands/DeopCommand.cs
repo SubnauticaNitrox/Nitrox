@@ -7,7 +7,7 @@ using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class DeopCommand : Command
+    internal class DeopCommand : Command
     {
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;

@@ -243,7 +243,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
 
                 Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
-                ghostBase.SetCell(Int3.zero, mapRoomRotationMetadata.CellType);
+                
+                ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                 mapRoom.ReflectionCall("RebuildGhostGeometry");
             }
         }

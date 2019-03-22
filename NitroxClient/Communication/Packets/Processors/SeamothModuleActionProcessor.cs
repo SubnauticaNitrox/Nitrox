@@ -1,11 +1,9 @@
-﻿using System.Reflection;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -27,7 +25,9 @@ namespace NitroxClient.Communication.Packets.Processors
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
                 if (seamoth != null)
                 {
-                    if (packet.TechType == TechType.SeamothElectricalDefense)
+                    TechType techType = packet.TechType.Enum();
+
+                    if (techType == TechType.SeamothElectricalDefense)
                     {
                         float[] chargearray = (float[])seamoth.ReflectionGet("quickSlotCharge");
                         float charge = chargearray[packet.SlotID];
@@ -38,11 +38,12 @@ namespace NitroxClient.Communication.Packets.Processors
                         component.chargeScalar = slotCharge;
                     }
 
-                    if (packet.TechType == TechType.SeamothTorpedoModule)
+                    if (techType == TechType.SeamothTorpedoModule)
                     {
                         Transform muzzle = (packet.SlotID != seamoth.GetSlotIndex("SeamothModule1") && packet.SlotID != seamoth.GetSlotIndex("SeamothModule3")) ? seamoth.torpedoTubeRight : seamoth.torpedoTubeLeft;
                         ItemsContainer storageInSlot = seamoth.GetStorageInSlot(packet.SlotID, TechType.SeamothTorpedoModule);
                         TorpedoType torpedoType = null;
+
                         for (int i = 0; i < seamoth.torpedoTypes.Length; i++)
                         {
                             if (storageInSlot.Contains(seamoth.torpedoTypes[i].techType))
@@ -51,10 +52,9 @@ namespace NitroxClient.Communication.Packets.Processors
                                 break;
                             }
                         }
+
                         //Original Function use Player Camera need parse owner camera values
                         TorpedoShot(storageInSlot, torpedoType, muzzle,packet.Forward,packet.Rotation);
-                        
-
                     }
                 }
             }
@@ -73,8 +73,10 @@ namespace NitroxClient.Communication.Packets.Processors
                 Vector3 rhs = (!(componentInParent != null)) ? Vector3.zero : componentInParent.velocity;
                 float speed = Vector3.Dot(forward, rhs);
                 component2.Shoot(muzzle.position, rotation, speed, -1f);
+
                 return true;
             }
+
             return false;
         }
     }

@@ -7,12 +7,13 @@ using UnityEngine;
 using NitroxServer.Communication;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public Connection connection { get; private set; }
+        public NitroxConnection connection { get; private set; }
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -22,7 +23,7 @@ namespace NitroxServer
         public Vector3 Position { get; set; }
         public Optional<string> SubRootGuid { get; set; }
 
-        public Player(PlayerContext playerContext, Connection connection, Vector3 position, Optional<string> subRootGuid)
+        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<string> subRootGuid)
         {
             PlayerContext = playerContext;
             this.connection = connection;

@@ -14,12 +14,15 @@ namespace NitroxServer.Serialization
     {
         private readonly RuntimeTypeModel model;
 
-        public ServerProtobufSerializer()
+        public ServerProtobufSerializer(params string[] assemblies)
         {
             model = TypeModel.Create();
-            RegisterAssemblyClasses("Assembly-CSharp");
-            RegisterAssemblyClasses("Assembly-CSharp-firstpass");
-            RegisterAssemblyClasses("NitroxModel");
+
+            foreach(string assembly in assemblies)
+            {
+                RegisterAssemblyClasses(assembly);
+            }
+
             RegisterHardCodedTypes();
         }
 
@@ -66,26 +69,48 @@ namespace NitroxServer.Serialization
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                if (type.GetCustomAttributes(typeof(ProtoBuf.ProtoContractAttribute), true).Length > 0)
+                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoBufNet.ProtoContractAttribute), true).Length > 0);
+
+                if (hasNitroxProtobuf)
+                {
+                    // As of the latest protobuf update they will automatically register detected attributes.
+                    model.Add(type, true);
+                }
+                else if(HasUweProtoContract(type))
                 {
                     model.Add(type, true);
 
-                    RegisterMembers(type.GetFields(), type);
-                    RegisterMembers(type.GetProperties(), type);
+                    ManuallyRegisterUweProtoMembers(type.GetFields(), type);
+                    ManuallyRegisterUweProtoMembers(type.GetProperties(), type);
                 }
             }
         }
 
-        private void RegisterMembers(MemberInfo[] info, Type type)
+        private bool HasUweProtoContract(Type type)
+        {
+            foreach(object o in type.GetCustomAttributes(true))
+            {
+                if (o.GetType().ToString().Contains("ProtoContractAttribute"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ManuallyRegisterUweProtoMembers(MemberInfo[] info, Type type)
         {
             foreach (MemberInfo property in info)
             {
                 foreach (object customAttribute in property.GetCustomAttributes(true))
                 {
-                    if (customAttribute is ProtoBuf.ProtoMemberAttribute)
-                    {
-                        int tag = ((ProtoBuf.ProtoMemberAttribute)customAttribute).Tag;
+                    Type attributeType = customAttribute.GetType();
 
+                    if (attributeType.ToString().Contains("ProtoMemberAttribute"))
+                    {
+                        int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
+                        
                         try
                         {
 
@@ -93,7 +118,7 @@ namespace NitroxServer.Serialization
                         }
                         catch (Exception ex)
                         {
-                            if(typeof(Peeper) != type) // srsly peeper we know you are broken...
+                            if("Peeper" != type.ToString()) // srsly peeper we know you are broken...
                             {
                                 Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name + " " + ex);
                             }

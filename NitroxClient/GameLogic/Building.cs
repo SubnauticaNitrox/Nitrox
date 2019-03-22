@@ -1,12 +1,10 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -17,11 +15,14 @@ namespace NitroxClient.GameLogic
         private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
 
         private readonly IPacketSender packetSender;
+        private readonly RotationMetadataFactory rotationMetadataFactory;
+
         private float timeSinceLastConstructionChangeEvent;
 
-        public Building(IPacketSender packetSender)
+        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
+            this.rotationMetadataFactory = rotationMetadataFactory;
         }
 
         public void PlaceBasePiece(BaseGhost baseGhost, ConstructableBase constructableBase, Base targetBase, TechType techType, Quaternion quaternion)
@@ -35,9 +36,9 @@ namespace NitroxClient.GameLogic
             string parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
-            Optional<RotationMetadata> rotationMetadata = RotationMetadata.From(baseGhost);
+            Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
-            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid), false, rotationMetadata);
+            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional<string>.OfNullable(parentBaseGuid), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
@@ -61,7 +62,7 @@ namespace NitroxClient.GameLogic
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = Optional<RotationMetadata>.Empty();
 
-            BasePiece basePiece = new BasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType, subGuid, true, rotationMetadata);
+            BasePiece basePiece = new BasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), subGuid, true, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }

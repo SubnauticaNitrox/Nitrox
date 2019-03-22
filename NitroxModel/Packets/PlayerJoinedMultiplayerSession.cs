@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using NitroxModel.MultiplayerSession;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {

@@ -19,6 +19,8 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using NitroxModel_Subnautica.Logger;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -60,6 +62,8 @@ namespace NitroxClient.MonoBehaviours
             Log.InGame("Multiplayer Client Loaded...");
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            Log.InGameLogger = new SubnauticaInGameLogger();
+            NitroxModel.Helper.Map.Main = new SubnauticaMap();
             Main = this;
             DontDestroyOnLoad(gameObject);
         }
