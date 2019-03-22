@@ -27,7 +27,11 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
             // Mark this entity as spawned by the server
-            item.AddComponent<NitroxEntity>();
+            if (item.GetComponent<NitroxEntity>() == null)
+            {
+                item.AddComponent<NitroxEntity>();
+            }
+            
             item.SetNewGuid(itemData.Guid);
 
             storageSlots.AddItem(item, itemData.ContainerGuid);            

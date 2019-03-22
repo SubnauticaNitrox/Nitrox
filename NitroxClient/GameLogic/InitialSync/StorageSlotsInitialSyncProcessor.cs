@@ -10,13 +10,13 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
-    class StorageSlotInitialSynchProcessor : InitialSyncProcessor
+    class StorageSlotsInitialSyncProcessor : InitialSyncProcessor
     {
         private readonly IPacketSender packetSender;
         private readonly StorageSlots slots;
         private readonly Vehicles vehicles;
 
-        public StorageSlotInitialSynchProcessor(IPacketSender packetSender,StorageSlots slots, Vehicles vehicles)
+        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender,StorageSlots slots, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.slots = slots;

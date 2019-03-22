@@ -33,6 +33,7 @@ namespace NitroxClient.GameLogic
             NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
             if (entity == null)
             {
+                Log.Info("Skipping Storage slot item add broadcast for " + guid + ". Cause: Guid not synched with server.");
                 return;
             }
 
@@ -50,6 +51,7 @@ namespace NitroxClient.GameLogic
             NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
             if (entity == null)
             {
+                Log.Info("Skipping Storage slot item remove broadcast for " + guid + ". Cause: Guid not synched with server.");
                 return;
             }
 
@@ -61,21 +63,17 @@ namespace NitroxClient.GameLogic
         {
             GameObject owner = GuidHelper.RequireObjectFrom(containerGuid);
 
-            if (owner == null)
-            {
-                Log.Info("Add storage slot item: Unable to find game object with id: " + containerGuid);
-                return;
-            }
             // only need to watch EnergyMixin slots for now (only other type will be propulsion cannon)
             Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
             if (opEnergy.IsPresent())
             {
                 EnergyMixin mixin = opEnergy.Get();
-                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
-
-                // Maybe need to suppress batterysound play
+                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");                
 
                 Pickupable pickupable = item.RequireComponent<Pickupable>();
+
+                // Suppress sound when silent is active
+                // Will be used to suppress swap sound at the initialisation of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {                    
@@ -106,6 +104,9 @@ namespace NitroxClient.GameLogic
             {
                 EnergyMixin mixin = opMixin.Get();
                 StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
+
+                // Suppress sound when silent is active
+                // Will be used to suppress swap sound at the initialisation of the game
                 bool allowedToPlaySounds = true;
                 if (silent)
                 {
