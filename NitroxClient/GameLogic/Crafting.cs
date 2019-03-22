@@ -240,6 +240,9 @@ namespace NitroxClient.GameLogic
 
         internal void Fabricator_Remote_OnCraftingBegin(string fabricatorGuid, NitroxModel.DataStructures.TechType techType, float duration)
         {
+#if TRACE && REMOTEEVENTCRAFTING
+            NitroxModel.Logger.Log.Debug("Fabricator_Remote_OnCraftingBegin");
+#endif
             GameObject gameObject = GuidHelper.RequireObjectFrom(fabricatorGuid);
             Fabricator fabricator = gameObject.RequireComponentInChildren<Fabricator>(true);
             FieldInfo logic = typeof(Crafter).GetField("_logic", BindingFlags.Instance | BindingFlags.NonPublic);
