@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
 
                 // Mark vehicle as controlled by nitrox (used for sending add/remove batteries aka storage slots)
                 constructedObject.AddComponent<NitroxEntity>();
-                SendBatterySlots(constructedObject, childIdentifiers);
+                BroadcastDefaultBatterySlots(constructedObject, childIdentifiers);
             }
             else
             {
@@ -75,7 +75,8 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void SendBatterySlots(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
+        // The server has no notice of the default batteries spawned for the vehicle. This info will be send to the server
+        private void BroadcastDefaultBatterySlots(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
         {
             
             Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(constructedObject.GetComponent<EnergyMixin>());
