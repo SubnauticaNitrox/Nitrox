@@ -230,6 +230,7 @@ namespace NitroxClient.GameLogic
                     }
 
                     UnityEngine.Object.Destroy(vehicle.gameObject);
+                    RemoveVehicle(guid);
                 }
             }
         }
@@ -389,6 +390,16 @@ namespace NitroxClient.GameLogic
         {
             vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
         }
+
+        public bool RemoveVehicle(VehicleModel vehicleModel)
+        {
+            return RemoveVehicle(vehicleModel.Guid);
+        }
+        
+        public bool RemoveVehicle(string guid)
+        {
+            return vehiclesByGuid.Remove(guid);
+        } 
         
         public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
         {
