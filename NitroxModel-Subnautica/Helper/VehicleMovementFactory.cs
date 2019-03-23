@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxModel_Subnautica.Helper

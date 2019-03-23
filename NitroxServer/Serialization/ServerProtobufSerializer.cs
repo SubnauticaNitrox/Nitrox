@@ -14,6 +14,8 @@ namespace NitroxServer.Serialization
     {
         private readonly RuntimeTypeModel model;
 
+        protected RuntimeTypeModel Model { get { return model; } }
+
         public ServerProtobufSerializer(params string[] assemblies)
         {
             model = TypeModel.Create();
@@ -60,9 +62,6 @@ namespace NitroxServer.Serialization
 
             MetaType metadataType = model.Add(typeof(BasePieceMetadata), false);
             metadataType.AddSubType(50, typeof(SignMetadata));
-
-            MetaType vehicleModel = model.Add(typeof(VehicleModel), false);
-            vehicleModel.AddSubType(50, typeof(ExosuitModel));
         }
         
         private void RegisterAssemblyClasses(string assemblyName)

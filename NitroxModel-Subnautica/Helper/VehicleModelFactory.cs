@@ -5,6 +5,7 @@ using System.Text;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 
 namespace NitroxModel_Subnautica.Helper
 {

@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -23,7 +24,7 @@ namespace NitroxClient.GameLogic
         }
 
         public void SpawnedArm(Exosuit exosuit)
-        {
+        {            
             string Guid = GuidHelper.GetGuid(exosuit.gameObject);
             ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
                
@@ -35,6 +36,8 @@ namespace NitroxClient.GameLogic
 
             GameObject leftArmGameObject = leftArm.GetGameObject();
             leftArmGameObject.SetNewGuid(exosuitModel.LeftArmGuid);
+
+            Log.Debug("Spawn exosuit arms for: " + Guid);
         }
     }
 }
