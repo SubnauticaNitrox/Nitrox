@@ -23,10 +23,13 @@ namespace NitroxClient.GameLogic.InitialSync
             this.vehicles = vehicles;
 
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
+            //Items with batteries can also have battery slots
+            DependentProcessors.Add(typeof(InventoryItemsInitialSyncProcessor));
         }
 
         public override void Process(InitialPlayerSync packet)
         {
+            /*
             //First we remove all Batteries in vehicles
             using (packetSender.Suppress<StorageSlotItemRemove>())
             {                
@@ -55,7 +58,7 @@ namespace NitroxClient.GameLogic.InitialSync
                         }
                     }
                 }
-            }
+            }*/
             using (packetSender.Suppress<StorageSlotItemAdd>())
             {                
                 foreach (ItemData itemData in packet.StorageSlots)

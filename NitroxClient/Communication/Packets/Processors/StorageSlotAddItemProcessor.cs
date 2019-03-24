@@ -24,13 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(StorageSlotItemAdd packet)
         {            
             ItemData itemData = packet.ItemData;
-            GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
-
-            // Mark this entity as spawned by the server
-            if (item.GetComponent<NitroxEntity>() == null)
-            {
-                item.AddComponent<NitroxEntity>();
-            }
+            GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);            
             
             item.SetNewGuid(itemData.Guid);
 

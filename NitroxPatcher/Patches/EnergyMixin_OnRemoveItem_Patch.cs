@@ -5,6 +5,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches
 {
@@ -17,7 +18,12 @@ namespace NitroxPatcher.Patches
         {
             if (item != null)
             {
-                NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
+                //For now only broadcast, if it is a vehicle
+                GameObject gameObject = __instance.gameObject;
+                if (gameObject.GetComponent<Vehicle>() != null || gameObject.GetComponentInParent<Vehicle>() != null || gameObject.GetComponentInParent<SubRoot>() != null)
+                {
+                    NitroxServiceLocator.LocateService<StorageSlots>().BroadcastItemRemoval(__instance.gameObject);
+                }
             }
         }
 

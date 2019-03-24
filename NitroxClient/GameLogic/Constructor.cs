@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
 
                 // Mark vehicle as controlled by nitrox (used for sending add/remove batteries aka storage slots)
                 constructedObject.AddComponent<NitroxEntity>();
-                BroadcastDefaultBatterySlots(constructedObject, childIdentifiers);
+                SpawnDefaultBatteries(constructedObject, childIdentifiers);
             }
             else
             {
@@ -75,19 +75,18 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        // The server has no notice of the default batteries spawned for the vehicle. This info will be send to the server
-        private void BroadcastDefaultBatterySlots(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
+        // As the normal spawn is suppressed, spawn default batteries afterwards
+        private void SpawnDefaultBatteries(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
         {
             
             Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(constructedObject.GetComponent<EnergyMixin>());
             if (opEnergy.IsPresent())
             {
-                EnergyMixin mixin = opEnergy.Get();
-                StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
-                foreach (InventoryItem item in slot)
-                {
-                    storageSlots.BroadcastItemAdd(item, constructedObject);
-                }
+                EnergyMixin mixin = opEnergy.Get();                
+                mixin.ReflectionSet("allowedToPlaySounds", false);
+                mixin.SetBattery(mixin.defaultBattery, 1);
+                mixin.ReflectionSet("allowedToPlaySounds", true);
+
             }
             foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
             {
@@ -101,11 +100,9 @@ namespace NitroxClient.GameLogic
                     {
                         
                         EnergyMixin mixin = opEnergyMixin.Get();
-                        StorageSlot slot = (StorageSlot)mixin.ReflectionGet("batterySlot");
-                        foreach (InventoryItem item in slot)
-                        {
-                            storageSlots.BroadcastItemAdd(item, mixin.gameObject);
-                        }
+                        mixin.ReflectionSet("allowedToPlaySounds", false);
+                        mixin.SetBattery(mixin.defaultBattery, 1);
+                        mixin.ReflectionSet("allowedToPlaySounds", true);
                     }
                 }
             }

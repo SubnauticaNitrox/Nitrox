@@ -30,13 +30,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
             string guid = GuidHelper.GetGuid(gameObject);
-            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity == null)
-            {
-                Log.Info("Skipping Storage slot item add broadcast for " + guid + ". Cause: Guid not synched with server.");
-                return;
-            }
-
+            
             string itemGuid = GuidHelper.GetGuid(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(item.item.gameObject);
 
@@ -48,13 +42,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastItemRemoval(GameObject gameObject)
         {
             string guid = GuidHelper.GetGuid(gameObject);
-            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity == null)
-            {
-                Log.Info("Skipping Storage slot item remove broadcast for " + guid + ". Cause: Guid not synched with server.");
-                return;
-            }
-
+            
             StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(guid);
             packetSender.Send(slotItemRemove);
         }
