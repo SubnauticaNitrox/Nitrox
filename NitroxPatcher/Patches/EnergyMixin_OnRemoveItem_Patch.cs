@@ -18,7 +18,9 @@ namespace NitroxPatcher.Patches
         {
             if (item != null)
             {
-                //For now only broadcast, if it is a vehicle
+                // For now only broadcast, if it is a vehicle
+                // Items that use batteries also have energymixin components. But the items will be serialized with the battery
+                // and therefore dont need to be synchronized this way
                 GameObject gameObject = __instance.gameObject;
                 if (gameObject.GetComponent<Vehicle>() != null || gameObject.GetComponentInParent<Vehicle>() != null || gameObject.GetComponentInParent<SubRoot>() != null)
                 {
