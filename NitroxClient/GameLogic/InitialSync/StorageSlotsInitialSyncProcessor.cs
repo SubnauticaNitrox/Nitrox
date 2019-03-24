@@ -28,44 +28,12 @@ namespace NitroxClient.GameLogic.InitialSync
         }
 
         public override void Process(InitialPlayerSync packet)
-        {
-            /*
-            //First we remove all Batteries in vehicles
-            using (packetSender.Suppress<StorageSlotItemRemove>())
-            {                
-                foreach(VehicleModel vehicle in packet.Vehicles)
-                {
-                    Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(vehicle.Guid);
-                    if(opGameObject.IsPresent())
-                    {
-                        if(opGameObject.Get().GetComponent<EnergyMixin>() != null)
-                        {
-                            slots.RemoveItem(vehicle.Guid,true);
-                        }
-                        if (vehicle.InteractiveChildIdentifiers.IsPresent())
-                        {
-                            foreach (InteractiveChildObjectIdentifier identifier in vehicle.InteractiveChildIdentifiers.Get())
-                            {
-                                Optional<GameObject> opChildGameObject = GuidHelper.GetObjectFrom(identifier.Guid);
-                                if (opChildGameObject.IsPresent())
-                                {
-                                    if (opChildGameObject.Get().GetComponent<EnergyMixin>() != null)
-                                    {
-                                        slots.RemoveItem(identifier.Guid,true);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }*/
+        {            
             using (packetSender.Suppress<StorageSlotItemAdd>())
             {                
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
-                    // Mark this entity as spawned by the server
-                    item.AddComponent<NitroxEntity>();
                     item.SetNewGuid(itemData.Guid);
                     slots.AddItem(item, itemData.ContainerGuid,true);
                 }
