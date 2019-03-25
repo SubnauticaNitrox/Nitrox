@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
+    [Serializable]
     [ProtoContract]
     public class ExosuitMovementData : VehicleMovementData
     {
