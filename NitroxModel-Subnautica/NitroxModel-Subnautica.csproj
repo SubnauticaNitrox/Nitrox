@@ -66,6 +66,7 @@
     <Compile Include="Helper\SubnauticaMap.cs" />
     <Compile Include="Helper\Int3Converter.cs" />
     <Compile Include="Helper\TechTypeConverter.cs" />
+    <Compile Include="Helper\VehicleModelComparer.cs" />
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />

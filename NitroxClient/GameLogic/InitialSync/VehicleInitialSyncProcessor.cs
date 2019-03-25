@@ -1,6 +1,7 @@
 ﻿using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -17,6 +18,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
+            packet.Vehicles.Sort(new VehicleModelComparer());
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
                 // TODO: create an AsyncInitialSyncProcessor that creates cyclops before seamoth (as seamoth can be docked in cyclops)

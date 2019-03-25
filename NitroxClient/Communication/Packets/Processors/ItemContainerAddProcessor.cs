@@ -4,6 +4,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -26,7 +27,10 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
             // Mark this entity as spawned by the server
-            item.AddComponent<NitroxEntity>();
+            if (item.GetComponent<NitroxEntity>() == null)
+            {
+                item.AddComponent<NitroxEntity>();
+            }
             item.SetNewGuid(itemData.Guid);
             
             itemContainer.AddItem(item, itemData.ContainerGuid);

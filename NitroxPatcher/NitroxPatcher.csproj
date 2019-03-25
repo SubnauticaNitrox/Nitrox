@@ -71,6 +71,9 @@
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_day_Patch.cs" />
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
+    <Compile Include="Patches\EnergyMixin_OnAddItem_Patch.cs" />
+    <Compile Include="Patches\EnergyMixin_OnRemoveItem_Patch.cs" />
+    <Compile Include="Patches\EnergyMixin_SpawnDefault_Patch.cs" />
     <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitSubscreen_Patch.cs" />

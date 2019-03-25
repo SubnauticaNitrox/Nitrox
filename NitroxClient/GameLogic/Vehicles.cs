@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -124,7 +125,7 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-
+            
             // Updates names and colours with persisted data .....yeah.....
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             { // Seamoth & Prawn suit
@@ -144,7 +145,7 @@ namespace NitroxClient.GameLogic
 
                 if (colours != null)
                 {
-                   Vector3[] colour = new Vector3[5];
+                    Vector3[] colour = new Vector3[5];
 
                     for (int i = 0; i < hsb.Length; i++)
                     {
@@ -154,7 +155,7 @@ namespace NitroxClient.GameLogic
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
             }
-            else if(techType == TechType.Cyclops) // Cyclops
+            else if (techType == TechType.Cyclops) // Cyclops
             {
                 GameObject target = GuidHelper.RequireObjectFrom(guid);
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
@@ -168,11 +169,11 @@ namespace NitroxClient.GameLogic
                     subNameTarget.DeserializeColors(hsb);
                 }
             }
-
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
+            gameObject.AddComponent<NitroxEntity>();
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network

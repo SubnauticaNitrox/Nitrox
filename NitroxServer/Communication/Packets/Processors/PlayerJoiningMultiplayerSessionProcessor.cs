@@ -52,6 +52,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
                                                                        world.InventoryData.GetAllItemsForInitialSync(),
+                                                                       world.InventoryData.GetAllStorageItemsForInitialSync(),
                                                                        world.GameData.PDAState.GetInitialPdaData(),
                                                                        world.GameData.StoryGoals.GetInitialStoryGoalData(),
                                                                        world.PlayerData.GetPlayerSpawn(player.Name),
