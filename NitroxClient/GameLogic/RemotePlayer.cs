@@ -92,7 +92,8 @@ namespace NitroxClient.GameLogic
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-            if (SubRoot  != null)
+            // If in a subroot the position will be relative to the subroot
+            if (SubRoot  != null && !SubRoot.isBase)
             {
                 Quaternion vehicleAngle = SubRoot.transform.rotation;
                 position = vehicleAngle * position;

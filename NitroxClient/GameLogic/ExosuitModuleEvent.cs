@@ -62,20 +62,84 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(TechType.ExosuitClawArmModule, guid, action);
-            packetSender.Send(packet);
+            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action);
         }
 
-        public void UseClaw(ExosuitClawArm clawArm,ExosuitArmAction armAction)
+        public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
         {
             if (armAction == ExosuitArmAction.pickup)
             {
                 clawArm.animator.SetTrigger("use_tool");
             }
-            else
+            else if(armAction == ExosuitArmAction.punch)
             {
                 clawArm.animator.SetTrigger("bash");
                 clawArm.fxControl.Play(0);
+            }
+        }        
+
+        public void UseDrill(ExosuitDrillArm drillArm, ExosuitArmAction armAction)
+        {
+            if(armAction == ExosuitArmAction.startUseTool)
+            {
+                drillArm.animator.SetBool("use_tool", true);
+                drillArm.loop.Play();
+            }
+            else if (armAction == ExosuitArmAction.endUseTool)
+            {
+                drillArm.animator.SetBool("use_tool", false);
+                drillArm.ReflectionCall("StopEffects");
+            }
+            else
+            {
+                Log.Error("Drill arm got an arm action he should not get: " + armAction);
+            }
+        }       
+
+        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null)
+        {
+            string guid = GuidHelper.GetGuid(exosuitArm.GetGameObject());
+            
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, guid, armAction, opVector);
+            packetSender.Send(packet);
+        }        
+
+        public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Optional<Vector3> opHitVector)
+        {
+            if (armAction == ExosuitArmAction.endUseTool)
+            {
+                grapplingArm.animator.SetBool("use_tool", false);
+                grapplingArm.ReflectionCall("ResetHook");                
+            }
+            else if (armAction == ExosuitArmAction.onHit)
+            {
+                grapplingArm.animator.SetBool("use_tool", true);
+                if (!grapplingArm.rope.isLaunching)
+                {
+                    grapplingArm.rope.LaunchHook(35f);
+                }
+
+                GrapplingHook hook = (GrapplingHook)grapplingArm.ReflectionGet("hook");
+
+                hook.transform.parent = null;
+                hook.transform.position = grapplingArm.front.transform.position;
+                hook.SetFlying(true);
+                Exosuit componentInParent = grapplingArm.GetComponentInParent<Exosuit>();
+
+                
+                if(opHitVector.IsEmpty())
+                {
+                    Log.Error("No vector given that contains the hook direction");
+                    return;
+                }
+                
+                hook.rb.velocity = opHitVector.Get();
+                global::Utils.PlayFMODAsset(grapplingArm.shootSound, grapplingArm.front, 15f);
+                grapplingArm.ReflectionSet("grapplingStartPos", componentInParent.transform.position);
+            }
+            else
+            {
+                Log.Error("Grappling arm got an arm action he should not get: " + armAction);
             }
         }
     }

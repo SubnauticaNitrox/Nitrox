@@ -32,10 +32,23 @@ namespace NitroxClient.GameLogic
                 return;
             }
             GameObject gameObject = opGameObject.Get();
-            if(packet.TechType == TechType.ExosuitClawArmModule)
+            switch (packet.TechType)
             {
-                exosuitModuleEvent.UseClaw(gameObject.GetComponent<ExosuitClawArm>(), packet.ArmAction);
+
+                case TechType.ExosuitClawArmModule:
+                    exosuitModuleEvent.UseClaw(gameObject.GetComponent<ExosuitClawArm>(), packet.ArmAction);
+                    break;
+                case TechType.ExosuitDrillArmModule:
+                    exosuitModuleEvent.UseDrill(gameObject.GetComponent<ExosuitDrillArm>(), packet.ArmAction);
+                    break;
+                case TechType.ExosuitGrapplingArmModule:
+                    exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector);
+                    break;
+                default:
+                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for guid " + packet.ArmGuid);
+                    break;
             }
+            
         }
     }
 }

@@ -41,12 +41,12 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
                 Optional<VehicleMovementData> vehicle = GetVehicleMovement();
-
-                if(Player.main.GetCurrentSub() != null)
-                {
-                    SubRoot subRoot = Player.main.GetCurrentSub();
-                    Quaternion vehicleAngle = subRoot.transform.rotation;
-                    
+                SubRoot subRoot = Player.main.GetCurrentSub();
+                // If in a subroot the position will be relative to the subroot
+                if (subRoot != null && !subRoot.isBase)
+                { 
+                    // Rotate relative player position relative to the subroot (else there are problems with respawning)
+                    Quaternion vehicleAngle = subRoot.transform.rotation;                    
                     currentPosition = currentPosition - subRoot.transform.position;
                     currentPosition = vehicleAngle.GetInverse() * currentPosition;
 

@@ -35,7 +35,8 @@ namespace NitroxClient.GameLogic.InitialSync
                 if (sub.IsPresent())
                 {
                     SubRoot root = sub.Get().GetComponent<SubRoot>();
-                    if (root != null)
+                    // Player position is relative to a subroot if in a subroot
+                    if (root != null && !root.isBase)
                     {                        
                         Player.main.SetCurrentSub(root);
                         Quaternion vehicleAngle = root.transform.rotation;
