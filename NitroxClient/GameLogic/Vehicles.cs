@@ -24,6 +24,8 @@ namespace NitroxClient.GameLogic
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
         private readonly Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
+        public delegate void VehicleCreatedHandler(GameObject gameObject);
+        public event VehicleCreatedHandler VehicleCreated;
 
         public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
         {
@@ -34,8 +36,8 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
             AddVehicle(vehicleModel);
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);            
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
@@ -138,13 +140,17 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
             // Updates names and colours with persisted data
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
-            { 
+            {
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
                 if (dockingBayGuid.IsPresent())
                 {
                     GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
                     dockingBay.DockVehicle(vehicle);
+                } else if(techType == TechType.Exosuit)
+                {
+                    // exosuits tend to fall through the ground after spawning. This should prevent that
+                    vehicle.ReflectionSet("onGround", true);
                 }
 
                 if (!string.IsNullOrEmpty(name))
@@ -183,6 +189,12 @@ namespace NitroxClient.GameLogic
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
+            }
+            // Send event after everthing is created
+            
+            if (VehicleCreated != null)
+            {
+                VehicleCreated(gameObject);
             }
         }
 

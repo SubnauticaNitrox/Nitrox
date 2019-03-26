@@ -42,6 +42,16 @@ namespace NitroxClient.MonoBehaviours
 
                 Optional<VehicleMovementData> vehicle = GetVehicleMovement();
 
+                if(Player.main.GetCurrentSub() != null)
+                {
+                    SubRoot subRoot = Player.main.GetCurrentSub();
+                    Quaternion vehicleAngle = subRoot.transform.rotation;
+                    
+                    currentPosition = currentPosition - subRoot.transform.position;
+                    currentPosition = vehicleAngle.GetInverse() * currentPosition;
+
+                }
+
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }

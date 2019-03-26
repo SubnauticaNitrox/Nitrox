@@ -68,6 +68,8 @@
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
+    <Compile Include="GameLogic\ExosuitArmActionProcessor.cs" />
+    <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateSonarProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDecoyLaunchProcessor.cs" />
@@ -325,6 +327,7 @@
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
     <Compile Include="Unity\Helper\StringUtils.cs" />
+    <Compile Include="Unity\Smoothing\ExosuitSmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
     <Compile Include="Unity\Smoothing\SmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />

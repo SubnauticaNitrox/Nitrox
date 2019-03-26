@@ -1,6 +1,7 @@
 ﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -33,7 +34,18 @@ namespace NitroxClient.GameLogic.InitialSync
 
                 if (sub.IsPresent())
                 {
-                    Player.main.SetCurrentSub(sub.Get().GetComponent<SubRoot>());
+                    SubRoot root = sub.Get().GetComponent<SubRoot>();
+                    if (root != null)
+                    {                        
+                        Player.main.SetCurrentSub(root);
+                        Quaternion vehicleAngle = root.transform.rotation;
+                        position = vehicleAngle * position;
+                        position = position + root.transform.position;
+                        Player.main.SetPosition(position);
+                    } else
+                    {
+                        Log.Error("Could not find subroot for player for subroot with guid: " + subRootGuid.Get());
+                    }
                 }
                 else
                 {

@@ -92,7 +92,14 @@ namespace NitroxClient.GameLogic
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-
+            if (SubRoot  != null)
+            {
+                Quaternion vehicleAngle = SubRoot.transform.rotation;
+                position = vehicleAngle * position;
+                position = position + SubRoot.transform.position;
+                
+                
+            }
             RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
 

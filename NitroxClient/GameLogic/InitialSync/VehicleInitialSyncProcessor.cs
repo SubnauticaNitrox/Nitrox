@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -14,6 +15,7 @@ namespace NitroxClient.GameLogic.InitialSync
             this.vehicles = vehicles;
 
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor));
+            DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
         }
         
         public override void Process(InitialPlayerSync packet)
@@ -21,7 +23,10 @@ namespace NitroxClient.GameLogic.InitialSync
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
                 // TODO: create an AsyncInitialSyncProcessor that creates cyclops before seamoth and exosuit (as seamoth can be docked in cyclops)
-                vehicles.CreateVehicle(vehicle);
+                if (vehicle.TechType.Enum() != TechType.Cyclops)
+                {
+                    vehicles.CreateVehicle(vehicle);
+                }
             }
         }
     }

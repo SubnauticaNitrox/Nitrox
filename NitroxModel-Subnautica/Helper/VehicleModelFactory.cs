@@ -13,15 +13,15 @@ namespace NitroxModel_Subnautica.Helper
     {
         public static VehicleModel BuildFrom(ConstructorBeginCrafting packet)
         {
-            switch (packet.TechType.Name)
+            switch (packet.TechType.Enum())
             {
-                case "Seamoth":
+                case TechType.Seamoth:
                     return new VehicleModel(packet.TechType, packet.ConstructedItemGuid, packet.Position, packet.Rotation, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(packet.InteractiveChildIdentifiers), Optional<string>.Empty(), packet.Name, packet.HSB, packet.Colours);
-                case "Exosuit":
+                case TechType.Exosuit:
                     return new ExosuitModel(packet.TechType, packet.ConstructedItemGuid, packet.Position, packet.Rotation, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(packet.InteractiveChildIdentifiers), Optional<string>.Empty(), packet.Name, packet.HSB, packet.Colours);
-                case "Cyclops":
+                case TechType.Cyclops:
                     return new VehicleModel(packet.TechType, packet.ConstructedItemGuid, packet.Position, packet.Rotation, Optional<List<InteractiveChildObjectIdentifier>>.OfNullable(packet.InteractiveChildIdentifiers), Optional<string>.Empty(), packet.Name, packet.HSB, packet.Colours);
-                case "RocketBase":
+                case TechType.RocketBase:
                     return null;
                 default:
                     throw new Exception("Could not build from: " + packet.TechType);

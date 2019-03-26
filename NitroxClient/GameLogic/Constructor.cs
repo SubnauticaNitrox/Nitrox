@@ -17,12 +17,13 @@ namespace NitroxClient.GameLogic
     public class MobileVehicleBay
     {
         private readonly IPacketSender packetSender;
+        private readonly Vehicles vehicles;
 
 
-
-        public MobileVehicleBay(IPacketSender packetSender)
+        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
+            this.vehicles = vehicles;
         }
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
@@ -44,7 +45,7 @@ namespace NitroxClient.GameLogic
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
                 string name = "";
-
+                
                 if (!vehicle)
                 { // Cylcops
                     GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
@@ -63,6 +64,7 @@ namespace NitroxClient.GameLogic
                 }
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
                     name, HSB, Colours);
+                vehicles.AddVehicle(VehicleModelFactory.BuildFrom(beginCrafting));
                 packetSender.Send(beginCrafting);
             }
             else

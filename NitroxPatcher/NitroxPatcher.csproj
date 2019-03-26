@@ -72,6 +72,8 @@
     <Compile Include="Patches\DayNightCycle_OnConsoleCommand_night_Patch.cs" />
     <Compile Include="Patches\DevConsole_Update_Patch.cs" />
     <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
+    <Compile Include="Patches\ExosuitClawArm_OnPickup_Patch.cs" />
+    <Compile Include="Patches\ExosuitClawArm_TryUse_Patch.cs" />
     <Compile Include="Patches\Exosuit_SpawnArm_Patch.cs" />
     <Compile Include="Patches\Exosuit_Update_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
     <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Radio_PlayRadioMessage_Patch.cs" />
+    <Compile Include="Patches\SubRoot_OnPlayerEntered_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />
