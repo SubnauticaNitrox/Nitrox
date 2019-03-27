@@ -16,7 +16,6 @@ namespace NitroxClient.Unity.Smoothing
             get { return target; }
             set
             {
-                NitroxModel.Logger.Log.Debug("set rotation target");
                 timeCount = 0;
                 target = value;
             }
