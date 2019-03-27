@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -161,7 +162,7 @@ namespace NitroxClient.GameLogic
 
                 if (colours != null)
                 {
-                   Vector3[] colour = new Vector3[5];
+                    Vector3[] colour = new Vector3[5];
 
                     for (int i = 0; i < hsb.Length; i++)
                     {
@@ -185,7 +186,6 @@ namespace NitroxClient.GameLogic
                     subNameTarget.DeserializeColors(hsb);
                 }
             }
-
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor

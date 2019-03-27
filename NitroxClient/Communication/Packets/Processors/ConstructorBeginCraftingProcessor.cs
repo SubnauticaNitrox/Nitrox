@@ -3,6 +3,7 @@ using System.Reflection;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -39,6 +40,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opConstructedObject.IsPresent())
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
+                constructedObject.AddComponent<NitroxEntity>();
                 GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
             }
