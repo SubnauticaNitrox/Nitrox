@@ -29,7 +29,7 @@ namespace NitroxClient.MonoBehaviours
         public static Multiplayer Main;
         
         private IMultiplayerSession multiplayerSession;
-        private DeferringPacketReceiver packetReceiver;
+        private PacketReceiver packetReceiver;
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
         public bool InitialSyncCompleted;
@@ -61,7 +61,7 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.InGame("Multiplayer Client Loaded...");
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             Log.InGameLogger = new SubnauticaInGameLogger();
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
             Main = this;

@@ -49,6 +49,15 @@ namespace NitroxClient.GameLogic.InitialSync
 
                         if (opEquipment.IsPresent())
                         {
+                            if(gameObject.GetComponent<SeamothStorageContainer>() != null)
+                            {
+                                Log.Debug("game object has seamoth container");
+                                var container = gameObject.GetComponent<SeamothStorageContainer>();
+                                foreach (var item in container.container)
+                                {
+                                    Log.Debug("item in container: " + item.item.name);
+                                }
+                            }
                             Equipment equipment = opEquipment.Get();
                             InventoryItem inventoryItem = new InventoryItem(pickupable);
                             inventoryItem.container = equipment;

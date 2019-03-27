@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="GameLogic\ExosuitArmActionProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
@@ -115,7 +116,6 @@
     <Compile Include="Communication\Packets\Processors\RemotePlayerEquipmentRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
-    <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingSessionReservation.cs" />
