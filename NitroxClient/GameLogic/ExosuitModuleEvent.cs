@@ -1,11 +1,9 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -37,13 +35,14 @@ namespace NitroxClient.GameLogic
                 GameObject rightArmGameObject = rightArm.GetGameObject();
                 rightArmGameObject.SetNewGuid(exosuitModel.RightArmGuid);
                 GameObject leftArmGameObject = leftArm.GetGameObject();
-                leftArmGameObject.SetNewGuid(exosuitModel.LeftArmGuid);
+                leftArmGameObject.SetNewGuid(exosuitModel.LeftArmGuid);                
+
             } catch (Exception e)
             {
-                Log.Warn("Got error setting arm GameObjects. This is probably due to docking sync and can be ignored" + e.Message);
+                Log.Warn("Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
             }
             Log.Debug("Spawn exosuit arms for: " + Guid);
-        }
+        }                
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
         {
@@ -96,11 +95,10 @@ namespace NitroxClient.GameLogic
             }
         }       
 
-        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null)
+        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null, Optional<Quaternion> opRotation = null)
         {
-            string guid = GuidHelper.GetGuid(exosuitArm.GetGameObject());
-            
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, guid, armAction, opVector);
+            string guid = GuidHelper.GetGuid(exosuitArm.GetGameObject());            
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, guid, armAction, opVector, opRotation);
             packetSender.Send(packet);
         }        
 
@@ -111,7 +109,7 @@ namespace NitroxClient.GameLogic
                 grapplingArm.animator.SetBool("use_tool", false);
                 grapplingArm.ReflectionCall("ResetHook");                
             }
-            else if (armAction == ExosuitArmAction.onHit)
+            else if (armAction == ExosuitArmAction.startUseTool)
             {
                 grapplingArm.animator.SetBool("use_tool", true);
                 if (!grapplingArm.rope.isLaunching)
@@ -142,5 +140,67 @@ namespace NitroxClient.GameLogic
                 Log.Error("Grappling arm got an arm action he should not get: " + armAction);
             }
         }
+
+        public void UseTorpedo(ExosuitTorpedoArm torpedoArm, ExosuitArmAction armAction, Optional<Vector3> opVector, Optional<Quaternion> opRotation)
+        {            
+            if (armAction == ExosuitArmAction.startUseTool || armAction == ExosuitArmAction.altHit)
+            {
+                if(opVector.IsEmpty() || opRotation.IsEmpty())
+                {
+                    Log.Error("Torpedo arm action shoot: no vector or rotation present");
+                    return;
+                }
+                Vector3 forward = opVector.Get();
+                Quaternion rotation = opRotation.Get();
+                Transform silo = default(Transform);
+                if(armAction == ExosuitArmAction.startUseTool)
+                {
+                    silo = torpedoArm.siloFirst;
+                }
+                else
+                {
+                    silo = torpedoArm.siloSecond;
+                }
+                ItemsContainer container = (ItemsContainer)torpedoArm.ReflectionGet("container");
+                Exosuit exosuit = torpedoArm.GetComponentInParent<Exosuit>();
+                TorpedoType[] torpedoTypes = exosuit.torpedoTypes;
+
+                TorpedoType torpedoType = null;
+                for (int i = 0; i < torpedoTypes.Length; i++)
+                {
+                    if (container.Contains(torpedoTypes[i].techType))
+                    {
+                        torpedoType = torpedoTypes[i];
+                        break;
+                    }
+                }
+
+                // Copied from SeamothModuleActionProcessor. We need to synchronize both methods
+                GameObject gameObject = UnityEngine.Object.Instantiate(torpedoType.prefab);
+                Transform component = gameObject.GetComponent<Transform>();
+                SeamothTorpedo component2 = gameObject.GetComponent<SeamothTorpedo>();
+                Vector3 zero = Vector3.zero;
+                Rigidbody componentInParent = silo.GetComponentInParent<Rigidbody>();
+                Vector3 rhs = (!(componentInParent != null)) ? Vector3.zero : componentInParent.velocity;
+                float speed = Vector3.Dot(forward, rhs);
+                component2.Shoot(silo.position, rotation, speed, -1f);
+
+                torpedoArm.animator.SetBool("use_tool", true);
+                if (container.count == 0)
+                {
+                    Utils.PlayFMODAsset(torpedoArm.torpedoDisarmed, torpedoArm.transform, 1f);
+                }
+
+            }
+            else if (armAction == ExosuitArmAction.endUseTool)
+            {
+                torpedoArm.animator.SetBool("use_tool", false);
+            }
+            else
+            {
+                Log.Error("Torpedo arm got an arm action he should not get: " + armAction);
+            }
+        }
+
     }
 }

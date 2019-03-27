@@ -7,6 +7,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -43,6 +44,9 @@ namespace NitroxClient.GameLogic
                     break;
                 case TechType.ExosuitGrapplingArmModule:
                     exosuitModuleEvent.UseGrappling(gameObject.GetComponent<ExosuitGrapplingArm>(), packet.ArmAction, packet.OpVector);
+                    break;
+                case TechType.ExosuitTorpedoArmModule:                    
+                        exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);                    
                     break;
                 default:
                     Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for guid " + packet.ArmGuid);

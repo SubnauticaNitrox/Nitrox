@@ -37,7 +37,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
         {
             // We send the hook direction to the other player so he sees where the other player exosuit is heading
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.onHit, Optional<Vector3>.Of(___hook.rb.velocity));
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.startUseTool, Optional<Vector3>.Of(___hook.rb.velocity));
         }
 
         public override void Patch(HarmonyInstance harmony)
