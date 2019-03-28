@@ -10,20 +10,20 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class CyclopsActivateSonarProcessor : ClientPacketProcessor<CyclopsActivateSonar>
+    public class CyclopsChangeSonarModeProcessor : ClientPacketProcessor<CyclopsChangeSonarMode>
     {
         private readonly IPacketSender packetSender;
 
-        public CyclopsActivateSonarProcessor(IPacketSender packetSender)
+        public CyclopsChangeSonarModeProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public override void Process(CyclopsActivateSonar sonarPacket)
+        public override void Process(CyclopsChangeSonarMode sonarPacket)
         {            
             GameObject cyclops = GuidHelper.RequireObjectFrom(sonarPacket.Guid);
             CyclopsSonarButton sonar = cyclops.RequireComponentInChildren<CyclopsSonarButton>();
-            using (packetSender.Suppress<CyclopsActivateSonar>())
+            using (packetSender.Suppress<CyclopsChangeSonarMode>())
             {
                 // At this moment the code is "non functional" as for some reason changing the sprite will never happen
                 // Also setting sonar as active will never work

@@ -28,13 +28,7 @@ namespace NitroxPatcher.Patches
 
 
             // Set lights of seamoth            
-            Log.Debug("Set lights of seamoth");
-            ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-            if (toggleLights == null)
-            {
-                Log.Debug("ToggleLight is in children");
-                toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
-            }
+            ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();            
             toggleLights.lightsActive = model.LightOn;
             return model.LightOn;
         }

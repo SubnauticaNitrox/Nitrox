@@ -58,17 +58,15 @@ namespace NitroxPatcher.Patches
 
                 if (!gameObject)
                 {
-                    Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
                     DebugUtils.PrintHierarchy(__instance.gameObject);
                 }
 
                 string guid = GuidHelper.GetGuid(gameObject);
+                // If the floodlight belongs to a seamoth, then set the lights for the model
                 if(type == typeof(SeaMoth))
                 {
-                    Log.Debug("Change seamoth light to " + __instance.lightsActive);
                     NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid).LightOn = __instance.lightsActive;
                 }
-                Log.Debug("Send toggle light packet for " + guid + " with lights on " + __instance.lightsActive);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
             }
         }

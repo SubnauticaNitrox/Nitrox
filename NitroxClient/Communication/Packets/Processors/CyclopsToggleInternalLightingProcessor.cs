@@ -1,7 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
@@ -18,16 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleInternalLighting lightingPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(lightingPacket.Guid);
-            CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
-
-            if (lighting.lightingOn != lightingPacket.IsOn)
-            {
-                using (packetSender.Suppress<CyclopsToggleInternalLighting>())
-                {
-                    lighting.ToggleInternalLighting();
-                }
-            }
+            NitroxServiceLocator.LocateService<Cyclops>().SetInternalLighting(lightingPacket.Guid, lightingPacket.IsOn);
         }
     }
 }

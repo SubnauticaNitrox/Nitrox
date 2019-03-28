@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsSonarButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().SonarPing(guid);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(guid);
         }
 
        

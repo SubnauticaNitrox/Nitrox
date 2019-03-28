@@ -20,6 +20,7 @@ namespace NitroxServer_Subnautica.Serialization
             MetaType vehicleModel = Model.Add(typeof(VehicleModel), false);
             vehicleModel.AddSubType(100, typeof(ExosuitModel));
             vehicleModel.AddSubType(200, typeof(SeamothModel));
+            vehicleModel.AddSubType(300, typeof(CyclopsModel));
 
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
             movementData.AddSubType(100, typeof(ExosuitMovementData));

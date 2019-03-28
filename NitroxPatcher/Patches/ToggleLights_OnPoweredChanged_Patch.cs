@@ -25,12 +25,11 @@ namespace NitroxPatcher.Patches
             // Find the right gameobject in the hierarchy to sync on:
             GameObject gameObject = null;
             // Suppress powered on if a seamoth´s default is set to false            
-            if (__instance.GetComponentInParent<SeaMoth>() && powered)
+            if (__instance.GetComponentInParent<SeaMoth>() != null && powered)
             {                
                 gameObject = __instance.transform.parent.gameObject;
                 string guid = GuidHelper.GetGuid(gameObject);
-                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid);
-                Log.Debug("Found seamoth " + guid + ". Will power on lights: " + model.LightOn);                
+                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid);           
                 return (model.LightOn == __instance.lightsActive);
             }        
             

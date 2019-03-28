@@ -185,17 +185,25 @@ namespace NitroxClient.GameLogic
                     subNameTarget.SetColor(i, hsb[i], tmpColour);
                     subNameTarget.DeserializeColors(hsb);
                 }
+
+                // Set internal and external lights
+                SetCyclopsModes(guid);
             }
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
-            }
-            // Send event after everthing is created
-            
+            }            
+
+            // Send event after everthing is created            
             if (VehicleCreated != null)
             {
                 VehicleCreated(gameObject);
             }
+        }
+
+        private void SetCyclopsModes(string guid)
+        {            
+            NitroxServiceLocator.LocateService<Cyclops>().SetAllModes(guid,GetVehicles<CyclopsModel>(guid));
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
@@ -414,7 +422,7 @@ namespace NitroxClient.GameLogic
         } 
         
         public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
-        {
+        {            
             return (T)vehiclesByGuid[vehicleGuid];
         }
     }

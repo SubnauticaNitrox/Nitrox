@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches
         {
             SubRoot cyclops = __instance.subRoot;
             string guid = GuidHelper.GetGuid(cyclops.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().ActivateFireSuppression(guid);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(guid);
         }
 
         public override void Patch(HarmonyInstance harmony)
