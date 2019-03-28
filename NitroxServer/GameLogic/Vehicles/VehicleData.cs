@@ -132,5 +132,22 @@ namespace NitroxServer.GameLogic.Vehicles
                 }
             }
         }
+
+        public Optional<T> GetVehicleModel<T>(string guid) where T : VehicleModel
+        {
+            lock (vehiclesByGuid)
+            {
+                VehicleModel vehicleModel;
+
+                if (vehiclesByGuid.TryGetValue(guid, out vehicleModel) && vehicleModel is T)
+                {
+                    return Optional<T>.OfNullable((T)vehicleModel);
+                }
+                else
+                {
+                    return Optional<T>.Empty();
+                }
+            }
+        }
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -32,20 +34,23 @@ namespace NitroxPatcher.Patches
         }
 
         public static void Postfix(ToggleLights __instance, bool __state)
-        {
+        {            
             if (__state != __instance.lightsActive)
             {
                 // Find the right gameobject in the hierarchy to sync on:
                 GameObject gameObject = null;
+                Type type = null;
                 foreach (Type t in syncedParents)
                 {
                     if (__instance.GetComponent(t))
                     {
+                        type = t;
                         gameObject = __instance.gameObject;
                         break;
                     }
                     else if (__instance.GetComponentInParent(t))
                     {
+                        type = t;
                         gameObject = __instance.transform.parent.gameObject;
                         break;
                     }
@@ -58,7 +63,12 @@ namespace NitroxPatcher.Patches
                 }
 
                 string guid = GuidHelper.GetGuid(gameObject);
-
+                if(type == typeof(SeaMoth))
+                {
+                    Log.Debug("Change seamoth light to " + __instance.lightsActive);
+                    NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid).LightOn = __instance.lightsActive;
+                }
+                Log.Debug("Send toggle light packet for " + guid + " with lights on " + __instance.lightsActive);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
             }
         }
