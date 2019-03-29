@@ -18,7 +18,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
             ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-            NitroxModel.Logger.Log.Debug("Process toggle lighting");
             if (toggleLights == null)
             {
                 toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
