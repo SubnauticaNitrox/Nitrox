@@ -38,7 +38,7 @@ namespace NitroxClient.Communication
                 }
             }
 
-            return receivedPackets;
+            return packets;
         }        
     }
 }
