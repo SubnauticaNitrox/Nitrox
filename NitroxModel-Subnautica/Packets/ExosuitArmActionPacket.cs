@@ -10,8 +10,6 @@ namespace NitroxModel_Subnautica.Packets
 {
     public enum ExosuitArmAction
     {
-        pickup,
-        punch,
         startUseTool,
         endUseTool,
         altHit

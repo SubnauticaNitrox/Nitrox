@@ -81,7 +81,7 @@
     <Compile Include="Patches\ExosuitDrillArm_OnUseUp_Patch.cs" />
     <Compile Include="Patches\ExosuitGrapplingArm_OnHit_Patch.cs" />
     <Compile Include="Patches\ExosuitGrapplingArm_OnUseUp_Patch.cs" />
-    <Compile Include="Patches\ExosuitTorpedoArm_OnUseUp.cs" />
+    <Compile Include="Patches\ExosuitTorpedoArm_OnUseUp_Patch.cs" />
     <Compile Include="Patches\ExosuitTorpedoArm_Shoot_Patch.cs" />
     <Compile Include="Patches\Exosuit_SpawnArm_Patch.cs" />
     <Compile Include="Patches\Exosuit_Update_Patch.cs" />

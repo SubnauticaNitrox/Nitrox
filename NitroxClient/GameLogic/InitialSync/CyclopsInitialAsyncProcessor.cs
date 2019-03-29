@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.InitialSync
     class CyclopsInitialAsyncProcessor : AsyncInitialSyncProcessor
     {
         private readonly Vehicles vehicles;
-        private int created = 0;
+        private int cyclopsStillLoading = 0;
 
         public CyclopsInitialAsyncProcessor(Vehicles vehicles)
         {
@@ -27,11 +27,12 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 if (vehicle.TechType.Enum() == TechType.Cyclops)
                 {
-                    created++;
+                    cyclopsStillLoading++;
                     vehicles.CreateVehicle(vehicle);
                 }
             }
-            if(created == 0)
+            // If no cyclops is created, just send the finish right away
+            if(cyclopsStillLoading == 0)
             {
                 FinishedCreating();
             }
@@ -39,11 +40,11 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void OnVehicleCreated(GameObject gameObject)
         {
-            if (created > 0)
+            if (cyclopsStillLoading > 0)
             {
-                created--;
+                cyclopsStillLoading--;
                 // After all cyclops are created
-                if (created == 0)
+                if (cyclopsStillLoading == 0)
                 {
                     FinishedCreating();
                 }

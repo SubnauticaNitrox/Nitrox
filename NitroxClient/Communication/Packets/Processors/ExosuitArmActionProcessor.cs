@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel.Packets;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic
+namespace NitroxClient.Communication.Packets.Processors
 {
     public class ExosuitArmActionProcessor : ClientPacketProcessor<ExosuitArmActionPacket>
     {
@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.ArmGuid);
             if(opGameObject.IsEmpty())
             {
-                Log.Debug("Could not find exosuit arm");
+                Log.Error("Could not find exosuit arm");
                 return;
             }
             GameObject gameObject = opGameObject.Get();

@@ -10,7 +10,12 @@ namespace NitroxClient.Communication.Packets.Processors
 {
     public class PickupItemProcessor : ClientPacketProcessor<PickupItem>
     {
-        
+        private readonly Entities entities;
+
+        public PickupItemProcessor(Entities entities)
+        {
+            this.entities = entities;
+        }
 
         public override void Process(PickupItem pickup)
         {
@@ -19,7 +24,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opGameObject.IsPresent())
             {
                 UnityEngine.Object.Destroy(opGameObject.Get());
-                NitroxServiceLocator.LocateService<Entities>().RemoveEntity(pickup.Guid);
+               entities.RemoveEntity(pickup.Guid);
             }
         }
     }

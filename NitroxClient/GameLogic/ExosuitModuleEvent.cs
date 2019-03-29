@@ -48,13 +48,15 @@ namespace NitroxClient.GameLogic
         {
             string guid = GuidHelper.GetGuid(clawArm.gameObject);
             ExosuitArmAction action;
+
+            // If cooldown of claw arm matches pickup cooldown, the exosuit arm performed a pickup action
             if (cooldown == clawArm.cooldownPickup)
             {
-                action = ExosuitArmAction.pickup;
-            }
+                action = ExosuitArmAction.startUseTool;
+            } // Else if it matches the punch cooldown, it has punched something (or nothing but water, who knows)
             else if (cooldown == clawArm.cooldownPunch)
             {
-                action = ExosuitArmAction.punch;
+                action = ExosuitArmAction.altHit;
             }
             else
             {
@@ -66,11 +68,11 @@ namespace NitroxClient.GameLogic
 
         public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
         {
-            if (armAction == ExosuitArmAction.pickup)
+            if (armAction == ExosuitArmAction.startUseTool)
             {
                 clawArm.animator.SetTrigger("use_tool");
             }
-            else if(armAction == ExosuitArmAction.punch)
+            else if(armAction == ExosuitArmAction.altHit)
             {
                 clawArm.animator.SetTrigger("bash");
                 clawArm.fxControl.Play(0);

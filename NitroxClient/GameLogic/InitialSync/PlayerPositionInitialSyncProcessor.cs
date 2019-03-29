@@ -43,7 +43,8 @@ namespace NitroxClient.GameLogic.InitialSync
                         position = vehicleAngle * position;
                         position = position + root.transform.position;
                         Player.main.SetPosition(position);
-                    } else
+                    }
+                    else
                     {
                         Log.Error("Could not find subroot for player for subroot with guid: " + subRootGuid.Get());
                     }

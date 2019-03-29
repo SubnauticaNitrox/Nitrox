@@ -8,7 +8,7 @@ namespace NitroxClient.Unity.Smoothing
 {
     class ExosuitSmoothRotation : SmoothRotation
     {
-        private const float SMOOTHING_SPEED = 10f;
+        private const float SMOOTHING_SPEED = 20f;
         private float timeCount = 0;
         private Quaternion target;
         public new Quaternion Target

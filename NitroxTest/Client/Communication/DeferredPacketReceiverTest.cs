@@ -27,7 +27,7 @@ namespace NitroxTest.Client.Communication
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new PacketReceiver(visibleCells);
+            packetReceiver = new PacketReceiver();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
