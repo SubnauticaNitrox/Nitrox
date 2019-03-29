@@ -22,7 +22,6 @@ namespace NitroxClient.GameLogic.InitialSync
         { 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                // TODO: create an AsyncInitialSyncProcessor that creates cyclops before seamoth and exosuit (as seamoth can be docked in cyclops)
                 if (vehicle.TechType.Enum() != TechType.Cyclops)
                 {
                     vehicles.CreateVehicle(vehicle);

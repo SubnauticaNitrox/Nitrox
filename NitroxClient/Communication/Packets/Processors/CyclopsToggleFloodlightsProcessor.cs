@@ -13,15 +13,17 @@ namespace NitroxClient.Communication.Packets.Processors
     public class CyclopsToggleFloodlightsProcessor : ClientPacketProcessor<CyclopsToggleFloodLights>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsToggleFloodlightsProcessor(IPacketSender packetSender)
+        public CyclopsToggleFloodlightsProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
         public override void Process(CyclopsToggleFloodLights lightingPacket)
         {
-            NitroxServiceLocator.LocateService<Cyclops>().SetFloodLighting(lightingPacket.Guid, lightingPacket.IsOn);
+            cyclops.SetFloodLighting(lightingPacket.Guid, lightingPacket.IsOn);
         }
     }
 }

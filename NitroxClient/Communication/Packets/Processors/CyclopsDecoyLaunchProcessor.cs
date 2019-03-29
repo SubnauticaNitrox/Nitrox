@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -11,26 +12,17 @@ namespace NitroxClient.Communication.Packets.Processors
     class CyclopsDecoyLaunchProcessor : ClientPacketProcessor<CyclopsDecoyLaunch>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsDecoyLaunchProcessor(IPacketSender packetSender)
+        public CyclopsDecoyLaunchProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
         public override void Process(CyclopsDecoyLaunch decoyLaunchPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(decoyLaunchPacket.Guid);
-            CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
-            using (packetSender.Suppress<CyclopsChangeSilentRunning>())
-            {
-                decoyManager.Invoke("LaunchWithDelay", 3f);
-                decoyManager.decoyLaunchButton.UpdateText();
-                decoyManager.subRoot.voiceNotificationManager.PlayVoiceNotification(decoyManager.subRoot.decoyNotification, false, true);
-                decoyManager.subRoot.BroadcastMessage("UpdateTotalDecoys", decoyManager.decoyCount, SendMessageOptions.DontRequireReceiver);
-                CyclopsDecoyLaunchButton decoyLaunchButton = cyclops.RequireComponent<CyclopsDecoyLaunchButton>();
-                decoyLaunchButton.StartCooldown();
-
-            }
+            cyclops.LaunchDecoy(decoyLaunchPacket.Guid);
         }
     }
 }

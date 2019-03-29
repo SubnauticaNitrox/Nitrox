@@ -7,22 +7,22 @@ namespace NitroxModel_Subnautica.Packets
     public class CyclopsChangeSonarMode : Packet
     {
         public string Guid { get; }
-        public bool Active { get; }
+        public bool IsOn { get; }
 
         public CyclopsChangeSonarMode(string guid)
         {
             Guid = guid;
-            Active = false;
+            IsOn = false;
         }
-        public CyclopsChangeSonarMode(string guid, bool active)
+        public CyclopsChangeSonarMode(string guid, bool isOn)
         {
             Guid = guid;
-            Active = active;
+            IsOn = isOn;
         }
 
         public override string ToString()
         {
-            return "[CyclopsActivateSonar Guid: " + Guid + "," + "active: " + Active + "]";
+            return "[CyclopsActivateSonar Guid: " + Guid + "," + "isOn: " + IsOn + "]";
         }
     }
 }

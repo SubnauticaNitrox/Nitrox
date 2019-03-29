@@ -66,6 +66,7 @@
     <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
     <Compile Include="Patches\Bed_EnterInUseMode_Patch.cs" />
     <Compile Include="Patches\CyclopsFireSuppressionButton_StartCooldown_Patch.cs" />
+    <Compile Include="Patches\CyclopsLightingPanel_OnSubConstructionComplete_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_StartShield_Patch.cs" />
     <Compile Include="Patches\CyclopsShieldButton_StopShield_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch.cs" />

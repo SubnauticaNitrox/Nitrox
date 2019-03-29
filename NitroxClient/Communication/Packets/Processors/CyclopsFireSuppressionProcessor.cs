@@ -8,44 +8,24 @@ using System.Collections.Generic;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsFireSuppressionProcessor : ClientPacketProcessor<CyclopsFireSuppression>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsFireSuppressionProcessor(IPacketSender packetSender)
+        public CyclopsFireSuppressionProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
-        public override void Process(CyclopsFireSuppression sonarPacket)
+        public override void Process(CyclopsFireSuppression fireSuppressionPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(sonarPacket.Guid);
-            CyclopsFireSuppressionSystemButton fireSuppButton = cyclops.RequireComponentInChildren<CyclopsFireSuppressionSystemButton>();
-            using (packetSender.Suppress<CyclopsFireSuppression>())
-            {
-                // Infos from SubFire.StartSystem
-                fireSuppButton.subFire.StartCoroutine(StartSystem(fireSuppButton.subFire));
-                fireSuppButton.StartCooldown();
-            }
-        }
-
-        // Remake of the StartSystem Coroutine from original player. Some Methods are not used from the original coroutine
-        // For example no temporaryClose as this will be initiated anyway from the originating Player
-        // Also the fire extiguishing will not start cause the initial player is already extiguishing the fires. Else this could double/triple/... the extinguishing
-        private IEnumerator StartSystem(SubFire fire)
-        {
-            fire.subRoot.voiceNotificationManager.PlayVoiceNotification(fire.subRoot.fireSupressionNotification, false, true);
-            yield return new WaitForSeconds(3f);
-            fire.ReflectionSet("fireSuppressionActive", true);
-            fire.subRoot.fireSuppressionState = true;
-            fire.subRoot.BroadcastMessage("NewAlarmState", null, SendMessageOptions.DontRequireReceiver);
-            fire.Invoke("CancelFireSuppression", fire.fireSuppressionSystemDuration);
-            float doorCloseDuration = 30f;
-            fire.gameObject.BroadcastMessage("TemporaryLock", doorCloseDuration, SendMessageOptions.DontRequireReceiver);
-            yield break;
+            cyclops.StartFireSuppression(fireSuppressionPacket.Guid);
         }
     }
 }

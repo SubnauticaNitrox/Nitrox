@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -11,30 +12,17 @@ namespace NitroxClient.Communication.Packets.Processors
     public class CyclopsChangeShieldModeProcessor : ClientPacketProcessor<CyclopsChangeShieldMode>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsChangeShieldModeProcessor(IPacketSender packetSender)
+        public CyclopsChangeShieldModeProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
         public override void Process(CyclopsChangeShieldMode shieldPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(shieldPacket.Guid);
-            CyclopsShieldButton shield = cyclops.RequireComponentInChildren<CyclopsShieldButton>();
-
-            using (packetSender.Suppress<CyclopsChangeShieldMode>())
-            {
-                if ((shield.activeSprite == shield.image.sprite) != shieldPacket.IsOn)
-                {
-                    if (shieldPacket.IsOn)
-                    {
-                        shield.ReflectionCall("StartShield");
-                    } else
-                    {
-                        shield.ReflectionCall("StopShield");
-                    }
-                }
-            }
+            cyclops.ChangeShieldMode(shieldPacket.Guid, shieldPacket.IsOn);
         }
     }
 }

@@ -28,6 +28,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(5)]
         public bool SonarOn { get; set; }
 
+        [ProtoMember(6)]
+        public bool EngineState { get; set; }
+
+        [ProtoMember(7)]
+        public CyclopsMotorMode.CyclopsMotorModes EngineMode { get; set; }
+
         public CyclopsModel()
         {
 
@@ -40,6 +46,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             SilentRunningOn = false;
             ShieldOn = false;
             SonarOn = false;
+            EngineState = false;
+            EngineMode = CyclopsMotorMode.CyclopsMotorModes.Standard;
         }
     }
 }
