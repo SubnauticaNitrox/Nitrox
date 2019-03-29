@@ -63,10 +63,14 @@
     <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\SubnauticaUwePrefabFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\SubnauticaUweWorldEntityFactory.cs" />
+    <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
+    <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
     <Compile Include="Helper\Int3Converter.cs" />
     <Compile Include="Helper\TechTypeConverter.cs" />
     <Compile Include="Helper\VehicleModelComparer.cs" />
+    <Compile Include="Helper\VehicleModelFactory.cs" />
+    <Compile Include="Helper\VehicleMovementFactory.cs" />
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
@@ -84,6 +88,7 @@
     <Compile Include="Packets\CyclopsToggleEngineState.cs" />
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
+    <Compile Include="Packets\ExosuitArmActionPacket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic
         private readonly IMultiplayerSession multiplayerSession;
         private readonly IPacketSender packetSender;
         private readonly VisibleCells visibleCells;
-        private readonly DeferringPacketReceiver packetReceiver;
+        private readonly PacketReceiver packetReceiver;
 
         private bool cellsPendingSync;
         private float timeWhenCellsBecameOutOfSync;
@@ -23,7 +23,7 @@ namespace NitroxClient.GameLogic
         private List<AbsoluteEntityCell> added = new List<AbsoluteEntityCell>();
         private List<AbsoluteEntityCell> removed = new List<AbsoluteEntityCell>();
 
-        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, DeferringPacketReceiver packetReceiver)
+        public Terrain(IMultiplayerSession multiplayerSession, IPacketSender packetSender, VisibleCells visibleCells, PacketReceiver packetReceiver)
         {
             this.multiplayerSession = multiplayerSession;
             this.packetSender = packetSender;
@@ -47,7 +47,6 @@ namespace NitroxClient.GameLogic
             {
                 visibleCells.Add(cell);
                 added.Add(cell);
-                packetReceiver.CellLoaded(cell);
             }
         }
 

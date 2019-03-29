@@ -5,6 +5,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -39,13 +40,23 @@ namespace NitroxClient.MonoBehaviours
                 Quaternion bodyRotation = MainCameraControl.main.viewModel.transform.rotation;
                 Quaternion aimingRotation = Player.main.camRoot.GetAimingTransform().rotation;
 
-                Optional<VehicleMovementData> vehicle = GetVehicleModel();
+                Optional<VehicleMovementData> vehicle = GetVehicleMovement();
+                SubRoot subRoot = Player.main.GetCurrentSub();
+                // If in a subroot the position will be relative to the subroot
+                if (subRoot != null && !subRoot.isBase)
+                { 
+                    // Rotate relative player position relative to the subroot (else there are problems with respawning)
+                    Quaternion vehicleAngle = subRoot.transform.rotation;                    
+                    currentPosition = currentPosition - subRoot.transform.position;
+                    currentPosition = vehicleAngle.GetInverse() * currentPosition;
+
+                }
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
             }
         }
 
-        private Optional<VehicleMovementData> GetVehicleModel()
+        private Optional<VehicleMovementData> GetVehicleMovement()
         {
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
@@ -58,6 +69,8 @@ namespace NitroxClient.MonoBehaviours
             TechType techType;
             float steeringWheelYaw = 0f, steeringWheelPitch = 0f;
             bool appliedThrottle = false;
+            Vector3 leftArmPosition = new Vector3(0, 0, 0);
+            Vector3 rightArmPosition = new Vector3(0, 0, 0);
 
             if (vehicle != null)
             {
@@ -90,6 +103,16 @@ namespace NitroxClient.MonoBehaviours
                         if (exosuit)
                         {
                             appliedThrottle = (bool)exosuit.ReflectionGet("_jetsActive") && (float)exosuit.ReflectionGet("thrustPower") > 0f;
+
+                            Transform leftAim = (Transform)exosuit.ReflectionGet("aimTargetLeft", true);
+                            Transform rightAim = (Transform)exosuit.ReflectionGet("aimTargetRight", true);
+
+                            Vector3 eulerAngles = exosuit.transform.eulerAngles;
+                            eulerAngles.x = MainCamera.camera.transform.eulerAngles.x;
+                            Quaternion quaternion = Quaternion.Euler(eulerAngles.x, eulerAngles.y, eulerAngles.z);
+
+                            leftArmPosition = leftAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
+                            rightArmPosition = rightAim.transform.position = MainCamera.camera.transform.position + quaternion * Vector3.forward * 100f;
                         }
                     }
                 }
@@ -114,16 +137,17 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleMovementData model = new VehicleMovementData(techType.Model(),
-                                                                guid,
-                                                                position,
-                                                                rotation,
-                                                                velocity,
-                                                                angularVelocity,
-                                                                steeringWheelYaw,
-                                                                steeringWheelPitch,
-                                                                appliedThrottle);
-
+            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(  techType, 
+                                                                                        guid, 
+                                                                                        position, 
+                                                                                        rotation, 
+                                                                                        velocity, 
+                                                                                        angularVelocity, 
+                                                                                        steeringWheelYaw, 
+                                                                                        steeringWheelPitch, 
+                                                                                        appliedThrottle, 
+                                                                                        leftArmPosition, 
+                                                                                        rightArmPosition);
             return Optional<VehicleMovementData>.Of(model);
         }
     }

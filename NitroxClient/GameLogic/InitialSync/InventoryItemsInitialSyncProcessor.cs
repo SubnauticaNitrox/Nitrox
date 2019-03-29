@@ -26,6 +26,8 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(GlobalRootInitialSyncProcessor)); // Global root items can have inventories like the floating locker.
             DependentProcessors.Add(typeof(BuildingInitialSyncProcessor)); // Buildings can have inventories like storage lockers.
             DependentProcessors.Add(typeof(PlayerInitialSyncProcessor)); // The player has their own inventory.
+            DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Vehicle can have an inventory.
+            DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Vehicles can have equipped items that spawns container
         }
 
         public override void Process(InitialPlayerSync packet)

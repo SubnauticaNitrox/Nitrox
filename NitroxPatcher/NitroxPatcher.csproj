@@ -75,6 +75,16 @@
     <Compile Include="Patches\EnergyMixin_OnRemoveItem_Patch.cs" />
     <Compile Include="Patches\EnergyMixin_SpawnDefault_Patch.cs" />
     <Compile Include="Patches\EscapePod_OnRepair_Patch.cs" />
+    <Compile Include="Patches\ExosuitClawArm_OnPickup_Patch.cs" />
+    <Compile Include="Patches\ExosuitClawArm_TryUse_Patch.cs" />
+    <Compile Include="Patches\ExosuitDrillArm_OnUseDown_Patch.cs" />
+    <Compile Include="Patches\ExosuitDrillArm_OnUseUp_Patch.cs" />
+    <Compile Include="Patches\ExosuitGrapplingArm_OnHit_Patch.cs" />
+    <Compile Include="Patches\ExosuitGrapplingArm_OnUseUp_Patch.cs" />
+    <Compile Include="Patches\ExosuitTorpedoArm_OnUseUp_Patch.cs" />
+    <Compile Include="Patches\ExosuitTorpedoArm_Shoot_Patch.cs" />
+    <Compile Include="Patches\Exosuit_SpawnArm_Patch.cs" />
+    <Compile Include="Patches\Exosuit_Update_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitSubscreen_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
@@ -84,6 +94,7 @@
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
     <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Radio_PlayRadioMessage_Patch.cs" />
+    <Compile Include="Patches\SubRoot_OnPlayerEntered_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />
@@ -169,6 +180,10 @@
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
+      <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
+      <Name>NitroxModel-Subnautica</Name>
     </ProjectReference>
     <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
       <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>

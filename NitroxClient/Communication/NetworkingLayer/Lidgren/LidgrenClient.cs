@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using Lidgren.Network;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.InGame;
@@ -15,11 +15,11 @@ namespace NitroxClient.Communication.NetworkingLayer.Lidgren
 
         private NetClient client;
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
-        private readonly DeferringPacketReceiver packetReceiver;
+        private readonly PacketReceiver packetReceiver;
 
         public LidgrenClient()
         {
-            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
         }
 
         public void Start(string ipAddress, int serverPort)

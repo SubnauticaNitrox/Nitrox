@@ -121,5 +121,10 @@ namespace NitroxClient.GameLogic
             return alreadySpawnedGuids.Contains(guid);
         }
 
+        public bool RemoveEntity(string guid)
+        {
+            return alreadySpawnedGuids.Remove(guid);
+        }
+
     }
 }

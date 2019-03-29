@@ -67,7 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClientAutoFacRegistrar.cs" />
+    <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
+    <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateSonarProcessor.cs" />
@@ -76,6 +79,7 @@
     <Compile Include="Communication\Packets\Processors\CyclopsSonarPingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StorageSlotAddItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StorageSlotRemoveItemProcessor.cs" />
+    <Compile Include="GameLogic\ExosuitModuleEvent.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\Base\AsyncInitialSyncProcessor.cs" />
@@ -112,7 +116,6 @@
     <Compile Include="Communication\Packets\Processors\RemotePlayerEquipmentRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SceneDebuggerChangeProcessor.cs" />
-    <Compile Include="Communication\DeferringPacketReceiver.cs" />
     <Compile Include="Communication\Exceptions\ClientConnectionFailedException.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingReservationCredentials.cs" />
     <Compile Include="Communication\MultiplayerSession\ConnectionState\AwaitingSessionReservation.cs" />
@@ -328,6 +331,7 @@
     <Compile Include="Unity\Helper\GameObjectHelper.cs" />
     <Compile Include="Unity\Helper\MathUtil.cs" />
     <Compile Include="Unity\Helper\StringUtils.cs" />
+    <Compile Include="Unity\Smoothing\ExosuitSmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothParameter.cs" />
     <Compile Include="Unity\Smoothing\SmoothRotation.cs" />
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />

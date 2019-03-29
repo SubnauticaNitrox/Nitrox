@@ -61,7 +61,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerChat>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<VisibleCells>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<DeferringPacketReceiver>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Building>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Chat>().InstancePerLifetimeScope();
@@ -84,6 +84,7 @@ namespace NitroxClient
             containerBuilder.RegisterType<BuildThrottlingQueue>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Vehicles>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<KnownTechEntry>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ExosuitModuleEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();

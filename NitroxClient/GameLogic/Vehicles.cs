@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -12,6 +13,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -22,6 +24,9 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
+        private readonly Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
+        public delegate void VehicleCreatedHandler(GameObject gameObject);
+        public event VehicleCreatedHandler VehicleCreated;
 
         public Vehicles(IPacketSender packetSender, PlayerManager playerManager, IMultiplayerSession multiplayerSession)
         {
@@ -32,7 +37,8 @@ namespace NitroxClient.GameLogic
 
         public void CreateVehicle(VehicleModel vehicleModel)
         {
-            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);
+            AddVehicle(vehicleModel);
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Guid, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayGuid, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);            
         }
 
         public void CreateVehicle(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
@@ -93,6 +99,14 @@ namespace NitroxClient.GameLogic
                     else if (exosuit)
                     {
                         mvc = exosuit.gameObject.EnsureComponent<MultiplayerExosuit>();
+                        if (vehicleModel.GetType() == typeof(ExosuitMovementData))
+                        {
+                            ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
+                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget, exoSuitMovement.RightAimTarget);
+                        } else
+                        {
+                            Log.Error("Got exosuit vehicle but no ExosuitMovementData");
+                        }
                     }
                 }
 
@@ -100,7 +114,7 @@ namespace NitroxClient.GameLogic
                 {
                     mvc.SetPositionVelocityRotation(remotePosition, remoteVelocity, remoteRotation, angularVelocity);
                     mvc.SetThrottle(vehicleModel.AppliedThrottle);
-                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);                    
+                    mvc.SetSteeringWheel(vehicleModel.SteeringWheelYaw, vehicleModel.SteeringWheelPitch);
                 }
             }
 
@@ -125,16 +139,19 @@ namespace NitroxClient.GameLogic
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             GuidHelper.SetNewGuid(gameObject, guid);
-            
-            // Updates names and colours with persisted data .....yeah.....
+            // Updates names and colours with persisted data
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
-            { // Seamoth & Prawn suit
+            {
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
                 if (dockingBayGuid.IsPresent())
                 {
                     GameObject dockingBayBase = GuidHelper.RequireObjectFrom(dockingBayGuid.Get());
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
                     dockingBay.DockVehicle(vehicle);
+                } else if(techType == TechType.Exosuit)
+                {
+                    // exosuits tend to fall through the ground after spawning. This should prevent that
+                    vehicle.ReflectionSet("onGround", true);
                 }
 
                 if (!string.IsNullOrEmpty(name))
@@ -155,7 +172,7 @@ namespace NitroxClient.GameLogic
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
             }
-            else if (techType == TechType.Cyclops) // Cyclops
+            else if(techType == TechType.Cyclops)
             {
                 GameObject target = GuidHelper.RequireObjectFrom(guid);
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
@@ -173,7 +190,12 @@ namespace NitroxClient.GameLogic
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
             }
-            gameObject.AddComponent<NitroxEntity>();
+            // Send event after everthing is created
+            
+            if (VehicleCreated != null)
+            {
+                VehicleCreated(gameObject);
+            }
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
@@ -220,6 +242,7 @@ namespace NitroxClient.GameLogic
                     }
 
                     UnityEngine.Object.Destroy(vehicle.gameObject);
+                    RemoveVehicle(guid);
                 }
             }
         }
@@ -373,6 +396,26 @@ namespace NitroxClient.GameLogic
                     }
                 }
             }
+        }
+
+        public void AddVehicle(VehicleModel vehicleModel)
+        {
+            vehiclesByGuid.Add(vehicleModel.Guid, vehicleModel);
+        }
+
+        public bool RemoveVehicle(VehicleModel vehicleModel)
+        {
+            return RemoveVehicle(vehicleModel.Guid);
+        }
+        
+        public bool RemoveVehicle(string guid)
+        {
+            return vehiclesByGuid.Remove(guid);
+        } 
+        
+        public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
+        {
+            return (T)vehiclesByGuid[vehicleGuid];
         }
     }
 }

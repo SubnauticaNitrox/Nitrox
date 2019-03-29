@@ -23,11 +23,8 @@ namespace NitroxServer.GameLogic.Vehicles
             }
             set { vehiclesByGuid = value; }
         }
-
         [ProtoIgnore]
         private Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
-
-
         
         public void UpdateVehicle(VehicleMovementData vehicleMovement)
         {
@@ -135,6 +132,5 @@ namespace NitroxServer.GameLogic.Vehicles
                 }
             }
         }
-
     }
 }

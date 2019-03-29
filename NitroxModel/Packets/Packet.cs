@@ -91,17 +91,7 @@ namespace NitroxModel.Packets
             ISurrogateSelector selector;
             return (Serializer.SurrogateSelector.GetSurrogate(type, Packet.Serializer.Context, out selector) != null);
         }
-
-        // Deferred cells are a replacement for the old DeferredPacket class.  The idea
-        // is that some packets should not be replayed until a player enters close proximity.
-        // when the player enters a deferred cell, the DeferredPacketReceiver will automatically
-        // allow the packet to be processed. This method is virtual as some packets may have
-        // complex logic to decide if it needs to defer.
-        public virtual Optional<AbsoluteEntityCell> GetDeferredCell()
-        {
-            return Optional<AbsoluteEntityCell>.Empty();
-        }
-
+        
         public WrapperPacket ToWrapperPacket()
         {
             return new WrapperPacket(Serialize());

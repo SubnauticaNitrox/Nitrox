@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning;
@@ -17,12 +18,14 @@ namespace NitroxClient.GameLogic
     public class MobileVehicleBay
     {
         private readonly IPacketSender packetSender;
+        private readonly Vehicles vehicles;
         private readonly StorageSlots storageSlots;
 
 
-        public MobileVehicleBay(IPacketSender packetSender, StorageSlots storageSlots)
+        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles, StorageSlots storageSlots)
         {
             this.packetSender = packetSender;
+            this.vehicles = vehicles;
             this.storageSlots = storageSlots;
         }
 
@@ -45,7 +48,7 @@ namespace NitroxClient.GameLogic
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
                 string name = "";
-
+                
                 if (!vehicle)
                 { // Cylcops
                     GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
@@ -62,7 +65,9 @@ namespace NitroxClient.GameLogic
                     HSB = vehicle.subName.GetColors();
                     Colours = vehicle.subName.GetColors();
                 }
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, name, HSB, Colours);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
+                    name, HSB, Colours);
+                vehicles.AddVehicle(VehicleModelFactory.BuildFrom(beginCrafting));
                 packetSender.Send(beginCrafting);
 
                 // Mark vehicle as controlled by nitrox (used for sending add/remove batteries aka storage slots)
