@@ -77,8 +77,20 @@
     <Compile Include="GameLogic\Entities\Spawning\SubnauticaEntitySpawnPointFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Serialization\ResourceAssets.cs" />
-    <Compile Include="Serialization\ResourceAssetsParser.cs" />
+    <Compile Include="Serialization\Resources\AssetIdentifier.cs" />
+    <Compile Include="Serialization\Resources\Parsers\MonobehaviourAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabIdentifierParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\MonoscriptAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Text\EntityDistributionsParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\GameObjectAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabPlaceholdersGroupParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\AssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\TextAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\TransformAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\WorldEntityDataParser.cs" />
+    <Compile Include="Serialization\Resources\Processing\PrefabPlaceholderExtractor.cs" />
+    <Compile Include="Serialization\Resources\ResourceAssets.cs" />
+    <Compile Include="Serialization\Resources\ResourceAssetsParser.cs" />
     <Compile Include="Serialization\SubnauticaServerProtobufSerializer.cs" />
     <Compile Include="SubnauticaServerAutoFacRegistrar.cs" />
   </ItemGroup>
@@ -99,5 +111,6 @@
       <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

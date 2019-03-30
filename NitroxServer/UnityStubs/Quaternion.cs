@@ -15,7 +15,7 @@ namespace NitroxServer.UnityStubs
         public float z { get; }
 
         [ProtoMember(4)]
-        public float w { get; }
+        public float w { get; } = 1.0f;
 
         public Quaternion()
         {
