@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
 using static NitroxServer_Subnautica.Serialization.Resources.Parsers.MonoscriptAssetParser;
 
@@ -41,15 +42,6 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             {
                 monoResourceParser.Parse(monobehaviour.GameObjectIdentifier, reader, resourceAssets);
             }
-        }
-
-        public class MonobehaviourAsset
-        {
-            public string Name;
-            public string MonoscriptName;
-            public AssetIdentifier GameObjectIdentifier;
-            public int Enabled;
-            public AssetIdentifier MonoscriptIdentifier;
         }
     }
 }

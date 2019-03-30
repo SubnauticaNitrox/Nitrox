@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
 using static NitroxServer_Subnautica.Serialization.Resources.Parsers.GameObjectAssetParser;
@@ -54,18 +55,6 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
             }
 
             throw new Exception("No transform found for " + gameObjectAsset.Identifier);
-        }
-
-        public class PrefabAsset
-        {
-            public string ClassId { get; set; }
-            public TransformAsset TransformAsset { get; set; }
-
-            public PrefabAsset(string classId, TransformAsset transformAsset)
-            {
-                ClassId = classId;
-                TransformAsset = transformAsset;
-            }
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace NitroxServer_Subnautica.Serialization.Resources
+﻿namespace NitroxServer.Serialization.Resources.Datastructures
 {
     public class AssetIdentifier
     {

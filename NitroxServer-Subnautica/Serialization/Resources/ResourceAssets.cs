@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.Helper;
 using UWE;
-using static NitroxServer_Subnautica.Serialization.Resources.Processing.PrefabPlaceholderExtractor;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {

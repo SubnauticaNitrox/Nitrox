@@ -7,6 +7,7 @@ using NitroxModel.Discovery;
 using NitroxModel.Logger;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Processing;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources
 {

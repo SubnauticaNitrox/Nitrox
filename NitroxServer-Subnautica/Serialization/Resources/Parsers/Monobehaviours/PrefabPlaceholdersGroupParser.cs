@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 {

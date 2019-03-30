@@ -164,6 +164,11 @@
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\MonobehaviourAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\PrefabAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />

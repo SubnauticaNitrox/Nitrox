@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 {
@@ -22,11 +23,5 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             GameObjectAssets.Add(gameObjectAsset);
         }
-
-        public class GameObjectAsset
-        {
-            public AssetIdentifier Identifier;
-            public List<AssetIdentifier> Components { get; } = new List<AssetIdentifier>();
-        }        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AssetsTools.NET;
+using NitroxServer.Serialization.Resources.Datastructures;
 using UWE;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours

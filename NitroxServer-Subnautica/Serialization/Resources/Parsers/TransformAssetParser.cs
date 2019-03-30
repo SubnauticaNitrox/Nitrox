@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer.UnityStubs;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
@@ -41,15 +42,6 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             transformAsset.ParentIdentifier = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
 
             TransformsByAssetId.Add(identifier, transformAsset);
-        }
-
-        public class TransformAsset
-        {
-            public AssetIdentifier Identifier { get; set; }
-            public AssetIdentifier ParentIdentifier { get; set; }
-            public Quaternion Rotation { get; set; }
-            public Vector3 Position { get; set; }
-            public Vector3 Scale { get; set; }
         }
     }
 }
