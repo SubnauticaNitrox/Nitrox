@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxServer.Serialization;
 using ProtoBufNet.Meta;
 
@@ -24,6 +22,10 @@ namespace NitroxServer_Subnautica.Serialization
 
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
             movementData.AddSubType(100, typeof(ExosuitMovementData));
+            
+            MetaType rotationData = Model.Add(typeof(RotationMetadata), false);
+            rotationData.AddSubType(50, typeof(CorridorRotationMetadata));
+            rotationData.AddSubType(60, typeof(MapRoomRotationMetadata));
         }
     }
 }
