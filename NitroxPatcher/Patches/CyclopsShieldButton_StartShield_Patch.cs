@@ -19,7 +19,8 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             // Shield is activated, if activeSprite is set as sprite
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeShieldState(guid, (__instance.activeSprite == __instance.image.sprite));
+            bool isActive = (__instance.activeSprite == __instance.image.sprite);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeShieldState(guid, isActive);
         }
 
         public override void Patch(HarmonyInstance harmony)

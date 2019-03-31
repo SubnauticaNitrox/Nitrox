@@ -8,12 +8,7 @@ namespace NitroxModel_Subnautica.Packets
     {
         public string Guid { get; }
         public bool IsOn { get; }
-
-        public CyclopsChangeSonarMode(string guid)
-        {
-            Guid = guid;
-            IsOn = false;
-        }
+        
         public CyclopsChangeSonarMode(string guid, bool isOn)
         {
             Guid = guid;
