@@ -78,7 +78,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\Resources\Parsers\MonobehaviourAssetParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\MonobehaviourParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\EntitySlotParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabIdentifierParser.cs" />
+    <Compile Include="Serialization\Resources\Parsers\Monobehaviours\PrefabPlaceholderParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\MonoscriptAssetParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\Text\EntityDistributionsParser.cs" />
     <Compile Include="Serialization\Resources\Parsers\GameObjectAssetParser.cs" />

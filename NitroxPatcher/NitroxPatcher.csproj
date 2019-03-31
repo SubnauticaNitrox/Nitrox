@@ -92,6 +92,7 @@
     <Compile Include="Patches\DockedVehicleHandTarget_OnHandClick_Patch.cs" />
     <Compile Include="Patches\LargeWorldStreamer_Deinitialize.cs" />
     <Compile Include="Patches\Player_SetCurrentSub_Patch.cs" />
+    <Compile Include="Patches\PrefabPlaceholdersGroup_Spawn_Patch.cs" />
     <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Radio_PlayRadioMessage_Patch.cs" />
     <Compile Include="Patches\SubRoot_OnPlayerEntered_Patch.cs" />

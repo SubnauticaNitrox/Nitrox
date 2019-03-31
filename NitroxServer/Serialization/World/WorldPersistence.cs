@@ -16,6 +16,8 @@ using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
+using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization.World
 {
@@ -156,7 +158,8 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                                                               parsedBatchCells,
                                                               serializer,
-                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>());
+                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
+                                                              NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
 
             Log.Info("World GameMode: " + gameMode);
 

@@ -8,11 +8,15 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 {
     public class MonobehaviourAssetParser : AssetParser
     {
-        private Dictionary<string, AssetParser> monobehaviourParsersByMonoscriptName = new Dictionary<string, AssetParser>()
+        public static Dictionary<AssetIdentifier, MonobehaviourAsset> MonobehavioursByAssetId = new Dictionary<AssetIdentifier, MonobehaviourAsset>();
+
+        private Dictionary<string, MonobehaviourParser> monobehaviourParsersByMonoscriptName = new Dictionary<string, MonobehaviourParser>()
         {
             { "WorldEntityData", new WorldEntityDataParser() },
+            { "PrefabPlaceholder", new PrefabPlaceholderParser() },
             { "PrefabPlaceholdersGroup", new PrefabPlaceholdersGroupParser() },
-            { "PrefabIdentifier", new PrefabIdentifierParser() }
+            { "PrefabIdentifier", new PrefabIdentifierParser() },
+            { "EntitySlot", new EntitySlotParser() }
         };
         
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
@@ -36,12 +40,14 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
             MonoscriptAsset monoscript = MonoscriptAssetParser.MonoscriptsByAssetId[monobehaviour.MonoscriptIdentifier];
             monobehaviour.MonoscriptName = monoscript.Name;
 
-            AssetParser monoResourceParser;
+            MonobehaviourParser monoResourceParser;
 
             if (monobehaviourParsersByMonoscriptName.TryGetValue(monoscript.Name, out monoResourceParser))
             {
-                monoResourceParser.Parse(monobehaviour.GameObjectIdentifier, reader, resourceAssets);
+                monoResourceParser.Parse(identifier, monobehaviour.GameObjectIdentifier, reader, resourceAssets);
             }
+
+            MonobehavioursByAssetId.Add(identifier, monobehaviour);
         }
     }
 }

@@ -168,6 +168,7 @@
     <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\MonobehaviourAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\PrefabAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />

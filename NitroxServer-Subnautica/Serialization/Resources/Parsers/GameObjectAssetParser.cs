@@ -6,7 +6,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 {
     public class GameObjectAssetParser : AssetParser
     {
-        public static List<GameObjectAsset> GameObjectAssets { get; } = new List<GameObjectAsset>();
+        public static Dictionary<AssetIdentifier, GameObjectAsset> GameObjectsByAssetId { get; } = new Dictionary<AssetIdentifier, GameObjectAsset>();
 
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
@@ -21,7 +21,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
                 gameObjectAsset.Components.Add(component);
             }
 
-            GameObjectAssets.Add(gameObjectAsset);
+            GameObjectsByAssetId.Add(identifier, gameObjectAsset);
         }
     }
 }

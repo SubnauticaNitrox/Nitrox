@@ -8,41 +8,48 @@ using static NitroxServer_Subnautica.Serialization.Resources.Parsers.TransformAs
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Processing
 {
+    /**
+     * Subnautica spawns certain types of items using PrefabPlaceholderGroups.  These internally have a 
+     * list of PrefabPlaceholders that can spawn an item. When Nitrox spawns items, it will need to do a 
+     * lookup every time it identifies a PrefabPlaceholderGroup to replace it with the resulting entities.
+     * We surpress the client from doing this as we don't want virtual entities that the server does not
+     * know about.
+     */
     public class PrefabPlaceholderExtractor
     {
         public void LoadInto(ResourceAssets resourceAssets)
         {
-            foreach (GameObjectAsset gameObjectAsset in GameObjectAssetParser.GameObjectAssets)
+            foreach (GameObjectAsset placeholderGroup in GameObjectAssetParser.GameObjectsByAssetId.Values)
             {
-                string prefabPlaceholder;
+                List<AssetIdentifier> prefabPlaceholders;
 
-                if (!PrefabPlaceholdersGroupParser.PrefabByGameObjectId.TryGetValue(gameObjectAsset.Identifier, out prefabPlaceholder))
+                if (!PrefabPlaceholdersGroupParser.PrefabPlaceholderIdsByGameObjectId.TryGetValue(placeholderGroup.Identifier, out prefabPlaceholders))
                 {
                     continue;
                 }
 
-                string classId;
-
-                if (!PrefabIdentifierParser.ClassIdByGameObjectId.TryGetValue(gameObjectAsset.Identifier, out classId))
-                {
-                    throw new Exception("All prefab placeholders should have a class id " + gameObjectAsset.Identifier);
-                }
-
-                TransformAsset transform = FindTransform(gameObjectAsset);
+                string placeholderGroupClassId = PrefabIdentifierParser.ClassIdByGameObjectId[placeholderGroup.Identifier];
 
                 List<PrefabAsset> prefabs;
 
-                if(!resourceAssets.PrefabsByClassId.TryGetValue(classId, out prefabs))
+                if (!resourceAssets.PlaceholderPrefabsByGroupClassId.TryGetValue(placeholderGroupClassId, out prefabs))
                 {
                     prefabs = new List<PrefabAsset>();
-                    resourceAssets.PrefabsByClassId[classId] = prefabs;
+                    resourceAssets.PlaceholderPrefabsByGroupClassId[placeholderGroupClassId] = prefabs;
                 }
+                
+                foreach (AssetIdentifier prefabPlaceholderId in prefabPlaceholders)
+                {
+                    PrefabPlaceholderAsset prefabPlaceholderAsset = PrefabPlaceholderParser.PrefabPlaceholderIdToPlaceholderAsset[prefabPlaceholderId];
+                    GameObjectAsset prefabPlaceholder = GameObjectAssetParser.GameObjectsByAssetId[prefabPlaceholderAsset.GameObjectIdentifier];                    
+                    TransformAsset localTransform = GetTransform(prefabPlaceholder);
 
-                prefabs.Add(new PrefabAsset(classId, transform));
+                    prefabs.Add(new PrefabAsset(prefabPlaceholderAsset.ClassId, localTransform));
+                }
             }
         }
 
-        private TransformAsset FindTransform(GameObjectAsset gameObjectAsset)
+        private TransformAsset GetTransform(GameObjectAsset gameObjectAsset)
         {
             foreach (AssetIdentifier componentIdentifier in gameObjectAsset.Components)
             {

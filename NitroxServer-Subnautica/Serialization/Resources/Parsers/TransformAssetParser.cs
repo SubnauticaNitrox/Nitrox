@@ -8,6 +8,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
     public class TransformAssetParser : AssetParser
     {
         public static Dictionary<AssetIdentifier, TransformAsset> TransformsByAssetId { get; } = new Dictionary<AssetIdentifier, TransformAsset>();
+        public static Dictionary<AssetIdentifier, AssetIdentifier> ChildrenIdToParentId { get; } = new Dictionary<AssetIdentifier, AssetIdentifier>();
 
         public override void Parse(AssetIdentifier identifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
@@ -36,7 +37,8 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             for (int i = 0; i < childrenCount; i++)
             {
-                reader.Position += 12; //skip Children file and path ids
+                AssetIdentifier child = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+                ChildrenIdToParentId.Add(child, identifier);
             }
 
             transformAsset.ParentIdentifier = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());

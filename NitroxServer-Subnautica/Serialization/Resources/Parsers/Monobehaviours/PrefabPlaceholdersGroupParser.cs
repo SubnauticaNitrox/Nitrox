@@ -4,17 +4,23 @@ using NitroxServer.Serialization.Resources.Datastructures;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 {
-    public class PrefabPlaceholdersGroupParser : AssetParser
+    public class PrefabPlaceholdersGroupParser : MonobehaviourParser
     {
-        public static Dictionary<AssetIdentifier, string> PrefabByGameObjectId { get; } = new Dictionary<AssetIdentifier, string>();
+        public static Dictionary<AssetIdentifier, List<AssetIdentifier>> PrefabPlaceholderIdsByGameObjectId { get; } = new Dictionary<AssetIdentifier, List<AssetIdentifier>>();
 
-        public override void Parse(AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
-            reader.Position += 16;
-            reader.ReadCountStringInt32(); //Empty...
-            string prefab = reader.ReadCountStringInt32();
+            List<AssetIdentifier> prefabPlaceholderIds = new List<AssetIdentifier>();
 
-            PrefabByGameObjectId.Add(gameObjectIdentifier, prefab);
+            int placeholders = reader.ReadInt32();
+            
+            for (int i = 0; i < placeholders; i++)
+            {
+                AssetIdentifier prefabPlaceholderId = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+                prefabPlaceholderIds.Add(prefabPlaceholderId);
+            }
+
+            PrefabPlaceholderIdsByGameObjectId.Add(gameObjectIdentifier, prefabPlaceholderIds);
         }
     }
 }

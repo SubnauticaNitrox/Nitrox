@@ -4,9 +4,9 @@ using UWE;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
 {
-    class WorldEntityDataParser : AssetParser
+    class WorldEntityDataParser : MonobehaviourParser
     {
-        public override void Parse(AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
+        public override void Parse(AssetIdentifier identifier, AssetIdentifier gameObjectIdentifier, AssetsFileReader reader, ResourceAssets resourceAssets)
         {
             reader.Align();
             uint size = reader.ReadUInt32();
