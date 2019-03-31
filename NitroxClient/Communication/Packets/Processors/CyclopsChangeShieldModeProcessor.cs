@@ -9,20 +9,20 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    class CyclopsDecoyLaunchProcessor : ClientPacketProcessor<CyclopsDecoyLaunch>
+    public class CyclopsChangeShieldModeProcessor : ClientPacketProcessor<CyclopsChangeShieldMode>
     {
         private readonly IPacketSender packetSender;
         private readonly Cyclops cyclops;
 
-        public CyclopsDecoyLaunchProcessor(IPacketSender packetSender, Cyclops cyclops)
+        public CyclopsChangeShieldModeProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
             this.cyclops = cyclops;
         }
 
-        public override void Process(CyclopsDecoyLaunch decoyLaunchPacket)
+        public override void Process(CyclopsChangeShieldMode shieldPacket)
         {
-            cyclops.LaunchDecoy(decoyLaunchPacket.Guid);
+            cyclops.ChangeShieldMode(shieldPacket.Guid, shieldPacket.IsOn);
         }
     }
 }

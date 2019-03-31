@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsHornButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().ActivateHorn(guid);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateHorn(guid);
         }
 
         public override void Patch(HarmonyInstance harmony)

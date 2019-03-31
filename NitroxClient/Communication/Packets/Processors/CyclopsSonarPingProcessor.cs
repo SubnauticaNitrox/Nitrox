@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
@@ -12,20 +13,17 @@ namespace NitroxClient.Communication.Packets.Processors
     class CyclopsSonarPingProcessor : ClientPacketProcessor<CyclopsSonarPing>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsSonarPingProcessor(IPacketSender packetSender)
+        public CyclopsSonarPingProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
         public override void Process(CyclopsSonarPing sonarPacket)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(sonarPacket.Guid);
-            CyclopsSonarButton sonar = cyclops.RequireComponentInChildren<CyclopsSonarButton>();
-            using (packetSender.Suppress<CyclopsSonarPing>())
-            {
-                sonar.ReflectionCall("SonarPing");
-            }
+            cyclops.SonarPing(sonarPacket.Guid);
         }
     }
 }

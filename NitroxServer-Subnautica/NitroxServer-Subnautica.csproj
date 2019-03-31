@@ -66,9 +66,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeShieldModeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeSilentRunningProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeSonarModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamagePointRepairedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDamageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireCreatedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="GameLogic\Entities\SimulationWhitelist.cs" />
     <Compile Include="GameLogic\Entities\Spawning\CrashFishBootstrapper.cs" />
     <Compile Include="GameLogic\Entities\Spawning\ReefbackBootstrapper.cs" />

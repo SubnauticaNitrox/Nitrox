@@ -51,6 +51,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -65,6 +66,9 @@
     <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
     <Compile Include="Patches\Bed_EnterInUseMode_Patch.cs" />
     <Compile Include="Patches\CyclopsFireSuppressionButton_StartCooldown_Patch.cs" />
+    <Compile Include="Patches\CyclopsLightingPanel_OnSubConstructionComplete_Patch.cs" />
+    <Compile Include="Patches\CyclopsShieldButton_StartShield_Patch.cs" />
+    <Compile Include="Patches\CyclopsShieldButton_StopShield_Patch.cs" />
     <Compile Include="Patches\CyclopsSilentRunningAbilityButton_TurnOffSilentRunning_Patch.cs" />
     <Compile Include="Patches\CyclopsSonarButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsSonarButton_SonarPing_Patch.cs" />
@@ -95,7 +99,9 @@
     <Compile Include="Patches\PrefabPlaceholdersGroup_Spawn_Patch.cs" />
     <Compile Include="Patches\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Radio_PlayRadioMessage_Patch.cs" />
+    <Compile Include="Patches\Seamoth_SubConstructionComplete_Patch.cs" />
     <Compile Include="Patches\SubRoot_OnPlayerEntered_Patch.cs" />
+    <Compile Include="Patches\ToggleLights_OnPoweredChanged_Patch.cs" />
     <Compile Include="Patches\VehicleDockingBay_DockVehicle_Patch.cs" />
     <Compile Include="Patches\Vehicle_OnHandClick_Patch.cs" />
     <Compile Include="Patches\PilotingChair_OnPlayerDeath_Patch.cs" />

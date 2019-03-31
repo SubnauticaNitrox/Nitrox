@@ -25,6 +25,7 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor));
             //Items with batteries can also have battery slots
             DependentProcessors.Add(typeof(InventoryItemsInitialSyncProcessor));
+            DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Just to be sure, for cyclops mode persistence. See "Cyclops.SetAdvancedModes"
         }
 
         public override void Process(InitialPlayerSync packet)

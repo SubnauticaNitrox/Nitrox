@@ -24,6 +24,7 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
+        private Cyclops cyclops;
         private readonly Dictionary<string, VehicleModel> vehiclesByGuid = new Dictionary<string, VehicleModel>();
         public delegate void VehicleCreatedHandler(GameObject gameObject);
         public event VehicleCreatedHandler VehicleCreated;
@@ -33,6 +34,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
+            cyclops = null;
         }
 
         public void CreateVehicle(VehicleModel vehicleModel)
@@ -185,17 +187,29 @@ namespace NitroxClient.GameLogic
                     subNameTarget.SetColor(i, hsb[i], tmpColour);
                     subNameTarget.DeserializeColors(hsb);
                 }
+
+                // Set internal and external lights
+                SetCyclopsModes(guid);
             }
             if (interactiveChildIdentifiers.IsPresent())
             {
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
-            }
-            // Send event after everthing is created
-            
+            }            
+
+            // Send event after everthing is created            
             if (VehicleCreated != null)
             {
                 VehicleCreated(gameObject);
             }
+        }
+
+        private void SetCyclopsModes(string guid)
+        {
+            if (cyclops == null)
+            {
+                cyclops = NitroxServiceLocator.LocateService<Cyclops>();
+            }
+            cyclops.SetAllModes(GetVehicles<CyclopsModel>(guid));
         }
 
         public void DestroyVehicle(string guid, bool isPiloting) //Destroy Vehicle From network
@@ -414,7 +428,7 @@ namespace NitroxClient.GameLogic
         } 
         
         public T GetVehicles<T>(string vehicleGuid) where T : VehicleModel
-        {
+        {            
             return (T)vehiclesByGuid[vehicleGuid];
         }
     }

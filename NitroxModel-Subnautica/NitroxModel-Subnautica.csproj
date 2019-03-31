@@ -63,10 +63,12 @@
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsDamageInfoData.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />
+    <Compile Include="DataStructures\GameLogic\CyclopsModel.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\SubnauticaUwePrefabFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\SubnauticaUweWorldEntityFactory.cs" />
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
+    <Compile Include="DataStructures\GameLogic\SeamothModel.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
     <Compile Include="Helper\Int3Converter.cs" />
     <Compile Include="Helper\TechTypeConverter.cs" />
@@ -76,8 +78,8 @@
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />
     <Compile Include="Packets\CreatureActionChanged.cs" />
     <Compile Include="Packets\CyclopsActivateHorn.cs" />
-    <Compile Include="Packets\CyclopsActivateShield.cs" />
-    <Compile Include="Packets\CyclopsActivateSonar.cs" />
+    <Compile Include="Packets\CyclopsChangeShieldMode.cs" />
+    <Compile Include="Packets\CyclopsChangeSonarMode.cs" />
     <Compile Include="Packets\CyclopsChangeSilentRunning.cs" />
     <Compile Include="Packets\CyclopsChangeEngineMode.cs" />
     <Compile Include="Packets\CyclopsDamage.cs" />

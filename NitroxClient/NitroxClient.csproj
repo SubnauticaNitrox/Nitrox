@@ -73,7 +73,7 @@
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsActivateSonarProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeSonarModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDecoyLaunchProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsFireSuppressionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsSonarPingProcessor.cs" />
@@ -141,7 +141,7 @@
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\CyclopsActivateShieldProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CyclopsChangeShieldModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeSilentRunningProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />

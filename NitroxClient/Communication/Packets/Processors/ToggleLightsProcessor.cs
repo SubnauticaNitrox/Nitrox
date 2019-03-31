@@ -18,7 +18,6 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
             ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
-
             if (toggleLights == null)
             {
                 toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
