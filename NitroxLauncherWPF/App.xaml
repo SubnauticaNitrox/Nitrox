@@ -1,0 +1,28 @@
+﻿<Application x:Class="NitroxLauncherWPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:NitroxLauncherWPF"
+             xmlns:css="clr-namespace:XamlCSS;assembly=XamlCSS"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- for styling button's mouse over color -->
+            <ControlTemplate x:Key="buttonTemplate" TargetType="{x:Type Button}">
+                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+            <css:StyleSheet x:Key="inlineStyle" xml:space="preserve">
+                <css:StyleSheet.Content>
+                    <![CDATA[
+                    Grid {
+                    &.Main {
+                        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+                    }
+                    }
+                    ]]>
+                </css:StyleSheet.Content>
+            </css:StyleSheet>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
