@@ -10,9 +10,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
     public class WarpToCommand : MonoBehaviour
     {
         private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
-        private GameObject multiplayerClient;
-        private IMultiplayerSession multiplayerSession;
-        private string userName;
+        //private GameObject multiplayerClient;
+        //private IMultiplayerSession multiplayerSession;
+        //private string userName;
 
         public void Awake()
         {
