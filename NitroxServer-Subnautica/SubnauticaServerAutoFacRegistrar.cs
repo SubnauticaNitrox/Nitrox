@@ -11,6 +11,7 @@ using NitroxServer_Subnautica.GameLogic.Entities;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
 using NitroxServer_Subnautica.Serialization;
+using NitroxServer_Subnautica.Serialization.Resources;
 using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxServer_Subnautica
@@ -22,7 +23,7 @@ namespace NitroxServer_Subnautica
             base.RegisterDependencies(containerBuilder);
             containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
 
-            ServerProtobufSerializer serializer = new ServerProtobufSerializer("Assembly-CSharp", "Assembly-CSharp-firstpass", "NitroxModel", "NitroxModel-Subnautica");
+            ServerProtobufSerializer serializer = new SubnauticaServerProtobufSerializer("Assembly-CSharp", "Assembly-CSharp-firstpass", "NitroxModel", "NitroxModel-Subnautica");
             containerBuilder.Register(c => serializer).SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
@@ -31,6 +32,7 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.Register(c => resourceAssets).SingleInstance();
             containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
+            containerBuilder.Register(c => resourceAssets.PlaceholderPrefabsByGroupClassId).SingleInstance();
             containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);

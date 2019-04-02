@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
 
-            NitroxServiceLocator.LocateService<Cyclops>().ChangeSilentRunning(guid, false);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(guid, false);
         }
 
         public override void Patch(HarmonyInstance harmony)

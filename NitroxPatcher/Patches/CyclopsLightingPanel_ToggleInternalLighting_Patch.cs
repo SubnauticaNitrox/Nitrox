@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches
             if (__state != __instance.lightingOn)
             {
                 string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().ToggleInternalLight(guid, __instance.lightingOn);
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleInternalLight(guid, __instance.lightingOn);
             }
         }
 

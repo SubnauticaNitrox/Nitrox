@@ -70,8 +70,6 @@
     <Compile Include="DataStructures\GameLogic\BasePiece.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\BasePieceMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Metadata\SignMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\MapRoomRotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
@@ -108,6 +106,8 @@
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\StorageSlotItemAdd.cs" />
+    <Compile Include="Packets\StorageSlotItemRemove.cs" />
     <Compile Include="Packets\SubRootChanged.cs" />
     <Compile Include="Packets\PlayerKicked.cs" />
     <Compile Include="Packets\VehicleChildUpdate.cs" />

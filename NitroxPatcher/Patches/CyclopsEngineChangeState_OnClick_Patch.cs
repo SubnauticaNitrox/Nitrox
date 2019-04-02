@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsEngineChangeState __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().ToggleEngineState(guid, __instance.motorMode.engineOn, (bool)__instance.ReflectionGet("startEngine"));
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleEngineState(guid, __instance.motorMode.engineOn, (bool)__instance.ReflectionGet("startEngine"));
         }
 
         public override void Patch(HarmonyInstance harmony)

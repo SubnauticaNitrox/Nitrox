@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
@@ -16,13 +16,13 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
-        private readonly DeferringPacketReceiver packetReceiver;
+        private readonly PacketReceiver packetReceiver;
 
         private NetManager client;
 
         public LiteNetLibClient()
         {
-            packetReceiver = NitroxServiceLocator.LocateService<DeferringPacketReceiver>();
+            packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
         }
 
         public void Start(string ipAddress, int serverPort)

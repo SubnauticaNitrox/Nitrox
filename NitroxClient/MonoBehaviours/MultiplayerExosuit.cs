@@ -1,4 +1,5 @@
-﻿using NitroxModel.Helper;
+﻿using NitroxClient.Unity.Smoothing;
+using NitroxModel.Helper;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -13,6 +14,7 @@ namespace NitroxClient.MonoBehaviours
         {
             SteeringControl = exosuit = GetComponent<Exosuit>();
             base.Awake();
+            SmoothRotation = new ExosuitSmoothRotation(gameObject.transform.rotation);
         }
 
         internal override void Enter()
@@ -50,6 +52,21 @@ namespace NitroxClient.MonoBehaviours
                     exosuit.loopingJetSound.Stop();
                     exosuit.fxcontrol.Stop(0);
                 }
+            }
+        }
+
+        internal override void SetArmPositions(Vector3 leftArmPosition, Vector3 rightArmPosition)
+        {
+            base.SetArmPositions(leftArmPosition, rightArmPosition);
+            Transform leftAim = exosuit.aimTargetLeft;
+            Transform rightAim = exosuit.aimTargetRight;
+            if (leftAim != null)
+            {
+                leftAim.transform.localPosition = new Vector3(leftAim.transform.localPosition.x, leftArmPosition.y, leftAim.transform.localPosition.z);
+            }
+            if (rightAim != null)
+            {
+                rightAim.transform.localPosition = new Vector3(rightAim.transform.localPosition.x, rightArmPosition.y, rightAim.transform.localPosition.z);
             }
         }
     }

@@ -1,7 +1,8 @@
 ﻿using ProtoBufNet;
 using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract]
@@ -15,12 +16,12 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(2)]
         public int ConnectionMask { get; set; }
 
-        public MapRoomRotationMetadata() : base(Type.GetType("BaseAddMapRoomGhost"))
+        public MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
         {
             // For serialization purposes
         }
 
-        public MapRoomRotationMetadata(byte cellType, int connectionMask) : base (Type.GetType("BaseAddMapRoomGhost"))
+        public MapRoomRotationMetadata(byte cellType, int connectionMask) : base (typeof(BaseAddMapRoomGhost))
         {
             CellType = cellType;
             ConnectionMask = connectionMask;

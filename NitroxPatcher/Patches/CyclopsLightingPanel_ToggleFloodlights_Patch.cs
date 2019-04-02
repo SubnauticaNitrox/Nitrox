@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches
             if (__state != __instance.floodlightsOn)
             {
                 string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().ToggleFloodLights(guid, __instance.floodlightsOn);
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleFloodLights(guid, __instance.floodlightsOn);
             }
         }
 

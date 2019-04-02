@@ -98,7 +98,6 @@
     <Compile Include="Communication\NetworkingLayer\NitroxServer.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\PacketHandler.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\AuthenticatedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\Abstract\UnauthenticatedPacketProcessor.cs" />
@@ -120,6 +119,8 @@
     <Compile Include="Communication\Packets\Processors\ItemContainerAddPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DroppedItemPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotAddItemProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\StorageSlotRemoveItemProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventSendProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SubRootChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ServerCommandProcessor.cs" />
@@ -163,6 +164,12 @@
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\MonobehaviourAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\PrefabAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
+    <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
     <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />

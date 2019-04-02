@@ -20,7 +20,8 @@ namespace NitroxModel.Packets
         public Vector3[] HSB { get; }
         public Vector3[] Colours { get; }
 
-        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, string name, Vector3[] hsb, Vector3[] colours)
+        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
+            string name, Vector3[] hsb, Vector3[] colours)
         {
             ConstructorGuid = constructorGuid;
             ConstructedItemGuid = constructedItemGuid;

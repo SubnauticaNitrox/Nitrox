@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
             bool activeSonar = Traverse.Create(__instance).Field("sonarActive").GetValue<bool>();
-            NitroxServiceLocator.LocateService<Cyclops>().ActivateSonar(guid,activeSonar);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSonarState(guid,activeSonar);
         }        
 
         public override void Patch(HarmonyInstance harmony)

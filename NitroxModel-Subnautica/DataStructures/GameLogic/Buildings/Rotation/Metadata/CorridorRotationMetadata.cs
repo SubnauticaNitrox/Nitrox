@@ -1,7 +1,8 @@
 ﻿using ProtoBufNet;
 using System;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 
-namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract]
@@ -12,12 +13,12 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(1)]
         public int Rotation { get; set; }
 
-        public CorridorRotationMetadata() : base(Type.GetType("BaseAddCorridorGhost"))
+        public CorridorRotationMetadata() : base(typeof(BaseAddCorridorGhost))
         {
             // For serialization purposes
         }
 
-        public CorridorRotationMetadata(int rotation) : base (Type.GetType("BaseAddCorridorGhost"))
+        public CorridorRotationMetadata(int rotation) : base (typeof(BaseAddCorridorGhost))
         {
             Rotation = rotation;
         }

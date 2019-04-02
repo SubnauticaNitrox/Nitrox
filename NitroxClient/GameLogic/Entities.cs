@@ -69,12 +69,12 @@ namespace NitroxClient.GameLogic
 
             foreach (Entity childEntity in entity.ChildEntities)
             {
-                alreadySpawnedGuids.Add(childEntity.Guid);
-
-                if (!entitySpawner.SpawnsOwnChildren())
+                if (!alreadySpawnedGuids.Contains(childEntity.Guid) && !entitySpawner.SpawnsOwnChildren())
                 {
                     Spawn(childEntity, gameObject);
                 }
+
+                alreadySpawnedGuids.Add(childEntity.Guid);
             }
 
             if (gameObject.IsPresent())
@@ -119,6 +119,11 @@ namespace NitroxClient.GameLogic
         public bool WasSpawnedByServer(string guid)
         {
             return alreadySpawnedGuids.Contains(guid);
+        }
+
+        public bool RemoveEntity(string guid)
+        {
+            return alreadySpawnedGuids.Remove(guid);
         }
 
     }

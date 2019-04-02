@@ -7,6 +7,7 @@ using NitroxModel.Logger;
 using UnityEngine;
 using UWE;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 
 namespace NitroxClient.MonoBehaviours.Overrides
 {

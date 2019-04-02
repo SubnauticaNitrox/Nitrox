@@ -13,7 +13,7 @@ namespace NitroxTest.Client.Communication
     public class DeferredPacketReceiverTest
     {
         private readonly VisibleCells visibleCells = new VisibleCells();
-        private DeferringPacketReceiver packetReceiver;
+        private PacketReceiver packetReceiver;
 
         // Test Data
         private const ushort PLAYER_ID = 1;
@@ -27,7 +27,7 @@ namespace NitroxTest.Client.Communication
         [TestInitialize]
         public void TestInitialize()
         {
-            packetReceiver = new DeferringPacketReceiver(visibleCells);
+            packetReceiver = new PacketReceiver();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
@@ -45,50 +45,6 @@ namespace NitroxTest.Client.Communication
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet, packets.Dequeue());
-        }
-
-        [TestMethod]
-        public void ActionPacketInLoadedCell()
-        {
-            Packet packet = new TestDeferrablePacket(loadedActionPosition, CELL_LEVEL);
-            packetReceiver.PacketReceived(packet);
-
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
-            Assert.AreEqual(1, packets.Count);
-            Assert.AreEqual(packet, packets.Dequeue());
-        }
-
-        [TestMethod]
-        public void ActionPacketInUnloadedCell()
-        {
-            Packet packet = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
-            packetReceiver.PacketReceived(packet);
-
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
-            Assert.AreEqual(0, packets.Count);
-        }
-
-        [TestMethod]
-        public void PacketPrioritizedAfterBeingDeferred()
-        {
-            Packet packet1 = new TestDeferrablePacket(unloadedActionPosition, CELL_LEVEL);
-            packetReceiver.PacketReceived(packet1);
-
-            Assert.AreEqual(0, packetReceiver.GetReceivedPackets().Count);
-
-            Packet packet2 = new TestNonActionPacket(PLAYER_ID);
-            packetReceiver.PacketReceived(packet2);
-
-            visibleCells.Add(unloadedCell);
-            packetReceiver.CellLoaded(unloadedCell);
-
-            Queue<Packet> packets = packetReceiver.GetReceivedPackets();
-
-            Assert.AreEqual(2, packets.Count);
-            Assert.AreEqual(packet1, packets.Dequeue());
-            Assert.AreEqual(packet2, packets.Dequeue());
-        }
+        }        
     }
 }

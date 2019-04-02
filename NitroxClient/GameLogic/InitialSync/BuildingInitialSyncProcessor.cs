@@ -19,6 +19,8 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             this.packetSender = packetSender;
             this.buildEventQueue = buildEventQueue;
+
+            DependentProcessors.Add(typeof(CyclopsInitialAsyncProcessor));
         }
 
         public override void Process(InitialPlayerSync packet)

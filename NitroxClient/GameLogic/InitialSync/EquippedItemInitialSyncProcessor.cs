@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic.InitialSync
                         Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 
                         if (opEquipment.IsPresent())
-                        {
+                        {                            
                             Equipment equipment = opEquipment.Get();
                             InventoryItem inventoryItem = new InventoryItem(pickupable);
                             inventoryItem.container = equipment;

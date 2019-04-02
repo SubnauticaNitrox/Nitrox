@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
             string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().ChangeSilentRunning(guid,true);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(guid,true);
         }
 
         public override void Patch(HarmonyInstance harmony)

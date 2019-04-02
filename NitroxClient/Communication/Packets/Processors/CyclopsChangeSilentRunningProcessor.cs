@@ -6,38 +6,24 @@ using NitroxModel.Helper;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
 using System.Reflection;
+using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class CyclopsChangeSilentRunningProcessor : ClientPacketProcessor<CyclopsChangeSilentRunning>
     {
         private readonly IPacketSender packetSender;
+        private readonly Cyclops cyclops;
 
-        public CyclopsChangeSilentRunningProcessor(IPacketSender packetSender)
+        public CyclopsChangeSilentRunningProcessor(IPacketSender packetSender, Cyclops cyclops)
         {
             this.packetSender = packetSender;
+            this.cyclops = cyclops;
         }
 
         public override void Process(CyclopsChangeSilentRunning packet)
         {
-            GameObject cyclops = GuidHelper.RequireObjectFrom(packet.Guid);
-            CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
-
-            using (packetSender.Suppress<CyclopsChangeSilentRunning>())
-            {
-                ability.ReflectionSet("active", packet.IsOn);
-                if (packet.IsOn)
-                {
-                    ability.image.sprite = ability.activeSprite;
-                    ability.subRoot.BroadcastMessage("RigForSilentRunning");
-                    ability.InvokeRepeating("SilentRunningIteration", 0f, ability.silentRunningIteration);
-                } else
-                {
-                    ability.image.sprite = ability.inactiveSprite;
-                    ability.subRoot.BroadcastMessage("SecureFromSilentRunning");
-                    ability.CancelInvoke("SilentRunningIteration");
-                }
-            }
+            cyclops.ChangeSilentRunning(packet.Guid, packet.IsOn);
         }
     }
 }

@@ -7,6 +7,8 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
+using NitroxServer.Serialization.Resources.Datastructures;
+using UnityEngine;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -42,13 +44,16 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly BatchCellsParser batchCellsParser;
 
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType;
+        private readonly Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId;
 
-        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer, Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType)
+        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer, Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId)
         {
             parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
             this.prefabFactory = prefabFactory;
             this.customBootstrappersByTechType = customBootstrappersByTechType;
+            this.placeholderPrefabsByGroupClassId = placeholderPrefabsByGroupClassId;
+
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
@@ -155,7 +160,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                                                             deterministicBatchGenerator);
                     foreach (Entity entity in entities)
                     {
-                        yield return entity;
+                       yield return entity;
                     }
                 }
             }
@@ -210,19 +215,55 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               classId,
                                               true,
                                               deterministicBatchGenerator.NextGuid());
+            
+            
             yield return spawnedEntity;
 
+            AssignPlaceholderEntitiesIfRequired(spawnedEntity, techType, cellLevel, classId, deterministicBatchGenerator);
+
             IEntityBootstrapper bootstrapper;
+
             if (customBootstrappersByTechType.TryGetValue(techType, out bootstrapper))
             {
                 bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
+            }
 
-                foreach(Entity childEntity in spawnedEntity.ChildEntities)
-                {
-                    yield return childEntity;
-                }
+            // Children are yielded as well so they can be indexed at the top level (for use by simulation 
+            // ownership and various other consumers).  The parent should always be yielded before the children
+            foreach (Entity childEntity in spawnedEntity.ChildEntities)
+            {
+                yield return childEntity;
             }
         }
 
+        private void AssignPlaceholderEntitiesIfRequired(Entity entity, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            List<PrefabAsset> prefabs;
+
+            // Check to see if this entity is a PrefabPlaceholderGroup.  If it is, 
+            // we want to add the children that would be spawned here.  This is 
+            // surpressed on the client so we don't get virtual entities that the
+            // server doesn't know about.
+            if (placeholderPrefabsByGroupClassId.TryGetValue(classId, out prefabs))
+            {
+                foreach (PrefabAsset prefab in prefabs)
+                {
+                    TransformAsset transform = prefab.TransformAsset;
+
+                    Vector3 position = transform.Position + entity.Position;
+
+                    Entity prefabEntity = new Entity(position,
+                                            transform.Rotation,
+                                            transform.Scale,
+                                            techType,
+                                            cellLevel,
+                                            prefab.ClassId,
+                                            true,
+                                            deterministicBatchGenerator.NextGuid());
+
+                    entity.ChildEntities.Add(prefabEntity);
+                }
+            }
+        }
     }
 }
