@@ -5,33 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NitroxLauncherWPF"
         mc:Ignorable="d"
-        Title="NitroxLauncher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="NitroxLauncher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png">
     <Window.Resources>
-        <Style x:Key="OpaqueButton" TargetType="Button">
-            <Setter Property="OverridesDefaultStyle" Value="True" />
-            <Setter Property="Cursor" Value="Hand" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Name="border" BorderThickness="0" BorderBrush="Black" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Opacity" Value="0.7" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>        
+            
     </Window.Resources>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Image Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" Visibility="Visible">
+        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" Visibility="Visible">
 
         </Image>
         <Grid Background="#B228292C" Margin="0,0,0,0">
@@ -60,9 +43,12 @@
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
                     </Button>
+                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" >
+                        <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
+                    </Button>
                     <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick">
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
-                    </Button>
+                    </Button>                    
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
                     <TextBlock Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
@@ -70,7 +56,7 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" x:Name="UserControls">
-                <Frame x:Name="MainPage" NavigationUIVisibility="Hidden"/>
+                <Frame x:Name="MainPage" NavigationUIVisibility="Hidden" />
             </Grid>
         </Grid>
     </Grid>

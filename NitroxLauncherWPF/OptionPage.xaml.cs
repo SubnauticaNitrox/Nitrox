@@ -15,11 +15,9 @@ using System.Windows.Shapes;
 
 namespace NitroxLauncherWPF
 {
-    /// <summary>
-    /// Interaktionslogik für OptionPage.xaml
-    /// </summary>
     public partial class OptionPage : Page
     {
+        
         public OptionPage()
         {
             InitializeComponent();

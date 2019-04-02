@@ -21,6 +21,7 @@ namespace NitroxLauncherWPF
     public partial class MainWindow : Window
     {
         LaunchGamePage launchPage = new LaunchGamePage();
+        ServerPage serverPage = new ServerPage();
         OptionPage optionPage = new OptionPage();
 
         public MainWindow()
@@ -42,15 +43,28 @@ namespace NitroxLauncherWPF
         private void ToPlayGame_OnClick(object sender, RoutedEventArgs e)
         {
             MainPage.Content = launchPage;
+            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative));
             SetDeActive(OptionsNav);
             SetActive(PlayGameNav);
+            SetDeActive(ServerNav);
         }
 
         private void ToOptions_OnClick(object sender, RoutedEventArgs e)
         {
             MainPage.Content = optionPage;
+            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative));
             SetActive(OptionsNav);
             SetDeActive(PlayGameNav);
+            SetDeActive(ServerNav);
+        }
+
+        private void ToServer_OnClick(object sender, RoutedEventArgs e)
+        {
+            MainPage.Content = serverPage;
+            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative));
+            SetActive(ServerNav);
+            SetDeActive(PlayGameNav);
+            SetDeActive(OptionsNav);
         }
 
         private void SetDeActive(Button button)
@@ -70,5 +84,7 @@ namespace NitroxLauncherWPF
                 block.Foreground = Brushes.White;
             }
         }
+
+        
     }
 }

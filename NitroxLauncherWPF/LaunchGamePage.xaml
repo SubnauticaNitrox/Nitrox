@@ -8,17 +8,7 @@
       d:DesignHeight="470" d:DesignWidth="719"
       Title="Launch Game">
     <Page.Resources>
-        <Style TargetType="Button" x:Key="BTNCORNER">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="7,7,7,7"  BorderThickness="1,1,1,1" Background="{TemplateBinding Background}">
-                            <ContentPresenter x:Name="contentPresenter"  ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding  Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding  VerticalContentAlignment}" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+        
     </Page.Resources>
     <Grid Height="470" Width="719">
         <Grid Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
@@ -34,7 +24,7 @@
             </TextBlock>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,330,0,0" >
-            <Button Width="225" Height="80" Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource BTNCORNER}">
+            <Button Width="225" Height="80" Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource BTNOPTIONS}">
                 <TextBlock FontSize="16" Foreground="White" >SINGLEPLAYER</TextBlock>
             </Button>
 
@@ -46,7 +36,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
                 <StackPanel>
-                    <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="22">PLAY</TextBlock>
+                    <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">PLAY</TextBlock>
                     <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">MULTIPLAYER</TextBlock>
                 </StackPanel>
             </Button>
