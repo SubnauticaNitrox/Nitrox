@@ -17,8 +17,16 @@ namespace NitroxLauncher
 {
     public class LauncherLogic
     {
-        public event PirateDetected PirateDetectedEvent;
-        public delegate void PirateDetected(object sender, EventArgs e);
+        public event EventHandler PirateDetectedEvent;
+        public event EventHandler SubnauticaExitedEvent;
+        private Process GameProcess = null;
+        private Process ServerProcess = null;
+        public bool HasSomethingRunning {
+            get
+            {                
+                return ((GameProcess != null && !GameProcess.HasExited)  || (ServerProcess != null && !ServerProcess.HasExited));
+            }
+        }
 
         internal void StartSingleplayer()
         {
@@ -70,8 +78,30 @@ namespace NitroxLauncher
             nitroxEntryPatch.Apply();
 
             StartSubnautica(subnauticaPath);
-
+            if(GameProcess != null)
+            {
+                GameProcess.Exited += OnSubnauticaExited;
+            }
             //TODO: maybe an async callback to remove when the app closes.
+        }
+
+        private void OnSubnauticaExited(object sender, EventArgs e)
+        {
+            string subnauticaPath = "";
+
+            Optional<string> installation = GameInstallationFinder.Instance.FindGame(new List<string>());
+
+            if (!installation.IsPresent())
+            {
+                MessageBox.Show("Please configure your Subnautica location in settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            subnauticaPath = installation.Get();
+
+            NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            nitroxEntryPatch.Remove();
+            Log.Info("Finished removing patches!");
         }
 
         internal void StartSubnautica(string subnauticaPath)
@@ -85,8 +115,10 @@ namespace NitroxLauncher
             {
                 startInfo.Arguments = "-EpicPortal";
             }
-            Process.Start(startInfo);
+            GameProcess = Process.Start(startInfo);            
         }
+
+
 
         internal string LoadSettings()
         {
@@ -112,7 +144,8 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
-            Process.Start(serverPath);
+            ServerProcess = Process.Start(serverPath);
+            
         }
 
 
@@ -124,6 +157,11 @@ namespace NitroxLauncher
                 return true;
             }
 
+            if(serverStart && (ServerProcess != null && !ServerProcess.HasExited))
+            {
+                MessageBox.Show("An instance of Nitrox Server is already running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
             List<string> errors = new List<string>();
             Optional<string> installation = GameInstallationFinder.Instance.FindGame(errors);
 
