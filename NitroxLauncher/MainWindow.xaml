@@ -1,20 +1,20 @@
-﻿<Window x:Class="NitroxLauncherWPF.MainWindow"
+﻿<Window x:Class="NitroxLauncher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NitroxLauncherWPF"
+        xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
-        Title="NitroxLauncher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png">
+        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png">
     <Window.Resources>
             
     </Window.Resources>
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" Visibility="Visible">
+        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right">
 
         </Image>
         <Grid Background="#B228292C" Margin="0,0,0,0">
@@ -36,10 +36,14 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="225"/>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Height="470" Background="#B2151414">
-                <StackPanel Margin="0,28,0,0">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="#B2151414">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Margin="0,28,0,0">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
                     </Button>
@@ -50,13 +54,13 @@
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
                     </Button>                    
                 </StackPanel>
-                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
+                <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
                     <TextBlock Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
                     <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel">ALPHA 1.0.3.1</TextBlock>
                 </StackPanel>
             </Grid>
-            <Grid Grid.Column="1" x:Name="UserControls">
-                <Frame x:Name="MainPage" NavigationUIVisibility="Hidden" />
+            <Grid Grid.Column="1" x:Name="FrameGrid">
+                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" />                
             </Grid>
         </Grid>
     </Grid>

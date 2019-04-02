@@ -13,14 +13,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NitroxLauncherWPF
+namespace NitroxLauncher
 {
-    public partial class OptionPage : Page
+    /// <summary>
+    /// Interaktionslogik für ServerPage.xaml
+    /// </summary>
+    public partial class ServerPage : Page
     {
-        
-        public OptionPage()
+        LauncherLogic logic;
+        public ServerPage(LauncherLogic logic)
         {
             InitializeComponent();
+            this.logic = logic;
+        }
+
+        private void StartServer_Click(object sender, RoutedEventArgs e)
+        {
+            logic.StartServer();
         }
     }
 }

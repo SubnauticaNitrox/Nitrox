@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Windows.Forms;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
 using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
@@ -13,22 +15,12 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public partial class Main : Form
+    public class LauncherLogic
     {
-        private bool isDragging;
-        private Point dragStartPoint;
+        public event PirateDetected PirateDetectedEvent;
+        public delegate void PirateDetected(object sender, EventArgs e);
 
-        public Main()
-        {
-            InitializeComponent();
-        }
-
-        private void QuitButton_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
-        }
-
-        private void SinglePlayerButton_Click(object sender, EventArgs e)
+        internal void StartSingleplayer()
         {
             string subnauticaPath = "";
 
@@ -39,10 +31,12 @@ namespace NitroxLauncher
 
             if (PirateDetection.IsPirate(subnauticaPath))
             {
-                PirateDetected();
+                if(PirateDetectedEvent != null)
+                {
+                    PirateDetectedEvent(this, new EventArgs());
+                }
                 return;
             }
-
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -51,7 +45,7 @@ namespace NitroxLauncher
             StartSubnautica(subnauticaPath);
         }
 
-        private void MultiplayerButton_Click(object sender, EventArgs e)
+        internal void StartMultiplayer()
         {
             string subnauticaPath = "";
 
@@ -60,9 +54,12 @@ namespace NitroxLauncher
                 return;
             }
 
-            if(PirateDetection.IsPirate(subnauticaPath))
+            if (PirateDetection.IsPirate(subnauticaPath))
             {
-                PirateDetected();
+                if (PirateDetectedEvent != null)
+                {
+                    PirateDetectedEvent(this, new EventArgs());
+                }
                 return;
             }
 
@@ -77,57 +74,53 @@ namespace NitroxLauncher
             //TODO: maybe an async callback to remove when the app closes.
         }
 
-        private void StartSubnautica(string subnauticaPath)
+        internal void StartSubnautica(string subnauticaPath)
         {
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
+            var startInfo = new ProcessStartInfo();
+            startInfo.WorkingDirectory = subnauticaPath;
+            startInfo.FileName = subnauticaExe;
 
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
-                Process.Start(subnauticaExe, "-EpicPortal");
+                startInfo.Arguments = "-EpicPortal";
             }
-            else
-            {
-                Process.Start(subnauticaExe);
-            }
+            Process.Start(startInfo);
         }
 
-        private void ServerButton_Click(object sender, EventArgs e)
+        internal string LoadSettings()
+        {
+            List<string> errors = new List<string>();
+            Optional<string> installation = GameInstallationFinder.Instance.FindGame(errors);
+            if (installation.IsEmpty())
+            {
+                installation = Optional<string>.Of(installation.OrElse(@"C:\Program Files\Epic Games\Subnautica"));
+                File.WriteAllText("path.txt", installation.Get());
+            }
+            return installation.Get();
+        } 
+
+        internal void StartServer()
         {
             string subnauticaPath = "";
 
-            if (ErrorConfiguringLaunch(ref subnauticaPath))
+            if (ErrorConfiguringLaunch(ref subnauticaPath, true))
             {
                 return;
             }
 
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
-            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer.exe");
+            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
             Process.Start(serverPath);
         }
 
-        private void SettingsButton_Click(object sender, EventArgs e)
-        {
-            Settings settings = new Settings();
-            settings.Show();
-            settings.TopMost = true;
-        }
 
-        private void Main_Load(object sender, EventArgs e)
+        internal bool ErrorConfiguringLaunch(ref string subnauticaPath, bool serverStart = false)
         {
-            if (!File.Exists("path.txt"))
+            if (Process.GetProcessesByName("Subnautica").Length > 0 && !serverStart)
             {
-                Settings settings = new Settings();
-                settings.Show();
-                settings.TopMost = true;
-            }          
-        }
-
-        private bool ErrorConfiguringLaunch(ref string subnauticaPath)
-        {
-            if (Process.GetProcessesByName("Subnautica").Length > 0)
-            {
-                MessageBox.Show("An instance of Subnautica is already running", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("An instance of Subnautica is already running", "Error",MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
@@ -136,7 +129,7 @@ namespace NitroxLauncher
 
             if (!installation.IsPresent())
             {
-                MessageBox.Show("Please configure your Subnautica location in settings.", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("Please configure your Subnautica location in settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
 
@@ -144,7 +137,7 @@ namespace NitroxLauncher
 
             return false;
         }
-        
+
         private void SyncAssembliesBetweenSubnauticaManagedAndLib(string subnauticaPath)
         {
             string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
@@ -163,13 +156,13 @@ namespace NitroxLauncher
             {
                 string fileName = Path.GetFileName(sourceFilePath);
 
-                if(dllsToIgnore.Contains(fileName))
+                if (dllsToIgnore.Contains(fileName))
                 {
                     continue;
-                } 
+                }
 
                 string destinationFilePath = Path.Combine(destination, fileName);
-                
+
                 if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
                 {
                     try
@@ -198,47 +191,10 @@ namespace NitroxLauncher
                         Log.Error($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
-                else if(!File.Exists(destinationFilePath))
+                else if (!File.Exists(destinationFilePath))
                 {
                     File.Copy(sourceFilePath, destinationFilePath, true);
                 }
-            }
-        }
-
-        private void PirateDetected()
-        {
-            string embed = "<html><head>" +
-               "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
-               "</head><body>" +
-               "<iframe width=\"854\" height=\"564\" src=\"{0}\"" +
-               "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
-               "</body></html>";
-            string url = "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1";
-            webBrowser1.Location = new Point(157, 125);
-            webBrowser1.Visible = true;
-            webBrowser1.DocumentText = string.Format(embed, url);
-        }
-
-        private void DragPanel_MouseDown(object sender, MouseEventArgs e)
-        {
-            isDragging = true;
-            dragStartPoint = e.Location;
-        }
-
-        private void DragPanel_MouseUp(object sender, MouseEventArgs e)
-        {
-            isDragging = false;
-        }
-
-        void DragPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
-            { 
-                Point p1 = new Point(e.X, e.Y);
-                Point p2 = PointToScreen(p1);
-                Point p3 = new Point(p2.X - dragStartPoint.X,
-                                     p2.Y - dragStartPoint.Y);
-                Location = p3;
             }
         }
     }

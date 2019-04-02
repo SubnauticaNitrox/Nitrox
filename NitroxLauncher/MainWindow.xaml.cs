@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,21 +14,34 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NitroxLauncherWPF
+namespace NitroxLauncher
 {
     /// <summary>
     /// Interaktionslogik für MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        LaunchGamePage launchPage = new LaunchGamePage();
-        ServerPage serverPage = new ServerPage();
-        OptionPage optionPage = new OptionPage();
+        LauncherLogic logic = new LauncherLogic();
+        LaunchGamePage launchPage;
+        ServerPage serverPage;
+        OptionPage optionPage;
+        WebBrowser webBrowser = new WebBrowser();
 
         public MainWindow()
         {
             InitializeComponent();
-            MainPage.Content = launchPage;
+            launchPage = new LaunchGamePage(logic);
+            serverPage = new ServerPage(logic);
+            optionPage = new OptionPage(logic);
+            logic.PirateDetectedEvent += PirateDetected;
+            if (!File.Exists("path.txt"))
+            {
+                MainPage.Content = optionPage;
+            }
+            else
+            {
+                MainPage.Content = launchPage;
+            }
         }        
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -42,8 +56,11 @@ namespace NitroxLauncherWPF
 
         private void ToPlayGame_OnClick(object sender, RoutedEventArgs e)
         {
+            Height = 542;
+            Width = 946;
             MainPage.Content = launchPage;
             BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative));
+            BackgroundImage.Visibility = Visibility.Visible;
             SetDeActive(OptionsNav);
             SetActive(PlayGameNav);
             SetDeActive(ServerNav);
@@ -51,8 +68,11 @@ namespace NitroxLauncherWPF
 
         private void ToOptions_OnClick(object sender, RoutedEventArgs e)
         {
+            Height = 542;
+            Width = 946;
             MainPage.Content = optionPage;
             BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative));
+            BackgroundImage.Visibility = Visibility.Visible;
             SetActive(OptionsNav);
             SetDeActive(PlayGameNav);
             SetDeActive(ServerNav);
@@ -60,8 +80,11 @@ namespace NitroxLauncherWPF
 
         private void ToServer_OnClick(object sender, RoutedEventArgs e)
         {
-            MainPage.Content = serverPage;
+            Height = 542;
+            Width = 946;
+            MainPage.Content = serverPage;            
             BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative));
+            BackgroundImage.Visibility = Visibility.Visible;
             SetActive(ServerNav);
             SetDeActive(PlayGameNav);
             SetDeActive(OptionsNav);
@@ -85,6 +108,25 @@ namespace NitroxLauncherWPF
             }
         }
 
-        
+        private void PirateDetected(object o, EventArgs e)
+        {
+            string embed = "<html><head>" +
+               "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
+               "</head><body>" +
+               "<iframe width=\"854\" height=\"564\" src=\"{0}\"" +
+               "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
+               "</body></html>";
+            Height = 662;
+            Width = 1106;
+            BackgroundImage.Visibility = Visibility.Hidden;
+            webBrowser.HorizontalAlignment = HorizontalAlignment.Stretch;
+            webBrowser.VerticalAlignment = VerticalAlignment.Stretch;
+            webBrowser.Margin = new Thickness(0);
+            string url = "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1";
+            MainPage.Content = webBrowser;
+            webBrowser.NavigateToString(string.Format(embed, url));
+        }
+
+
     }
 }

@@ -13,16 +13,28 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace NitroxLauncherWPF
+namespace NitroxLauncher
 {
     /// <summary>
     /// Interaktionslogik für LaunchGamePage1xaml.xaml
     /// </summary>
     public partial class LaunchGamePage : Page
     {
-        public LaunchGamePage()
+        LauncherLogic logic;
+        public LaunchGamePage(LauncherLogic logic)
         {
             InitializeComponent();
+            this.logic = logic;
+        }
+
+        private void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
+        {
+            logic.StartSingleplayer();
+        }
+
+        private void MultiplayerButton_Click(object sender, RoutedEventArgs e)
+        {
+            logic.StartMultiplayer();
         }
     }
 }
