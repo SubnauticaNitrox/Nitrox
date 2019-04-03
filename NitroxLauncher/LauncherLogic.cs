@@ -19,12 +19,12 @@ namespace NitroxLauncher
     {
         public event EventHandler PirateDetectedEvent;
         public event EventHandler SubnauticaExitedEvent;
-        private Process GameProcess = null;
-        private Process ServerProcess = null;
+        private Process gameProcess = null;
+        private Process serverProcess = null;
         public bool HasSomethingRunning {
             get
             {                
-                return ((GameProcess != null && !GameProcess.HasExited)  || (ServerProcess != null && !ServerProcess.HasExited));
+                return ((gameProcess != null && !gameProcess.HasExited)  || (serverProcess != null && !serverProcess.HasExited));
             }
         }
 
@@ -78,9 +78,9 @@ namespace NitroxLauncher
             nitroxEntryPatch.Apply();
 
             StartSubnautica(subnauticaPath);
-            if(GameProcess != null)
+            if(gameProcess != null)
             {
-                GameProcess.Exited += OnSubnauticaExited;
+                gameProcess.Exited += OnSubnauticaExited;
             }
             //TODO: maybe an async callback to remove when the app closes.
         }
@@ -115,7 +115,7 @@ namespace NitroxLauncher
             {
                 startInfo.Arguments = "-EpicPortal";
             }
-            GameProcess = Process.Start(startInfo);            
+            gameProcess = Process.Start(startInfo);            
         }
 
 
@@ -144,7 +144,7 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
-            ServerProcess = Process.Start(serverPath);
+            serverProcess = Process.Start(serverPath);
             
         }
 
@@ -157,7 +157,7 @@ namespace NitroxLauncher
                 return true;
             }
 
-            if(serverStart && (ServerProcess != null && !ServerProcess.HasExited))
+            if(serverStart && (serverProcess != null && !serverProcess.HasExited))
             {
                 MessageBox.Show("An instance of Nitrox Server is already running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
