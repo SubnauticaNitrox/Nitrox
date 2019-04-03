@@ -18,7 +18,6 @@ namespace NitroxLauncher
     public class LauncherLogic
     {
         public event EventHandler PirateDetectedEvent;
-        public event EventHandler SubnauticaExitedEvent;
         private Process gameProcess = null;
         private Process serverProcess = null;
         public bool HasSomethingRunning {
@@ -78,10 +77,20 @@ namespace NitroxLauncher
             nitroxEntryPatch.Apply();
 
             StartSubnautica(subnauticaPath);
-            if(gameProcess != null)
+            if(gameProcess == null)
             {
-                gameProcess.Exited += OnSubnauticaExited;
-            }
+                Process[] processes = Process.GetProcessesByName("Subnautica");
+                if (processes.Count() == 1)
+                {
+                    gameProcess = processes[0];
+                }
+                else
+                {
+                    Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
+                    return;
+                }
+            } 
+            gameProcess.Exited += OnSubnauticaExited;
         }
 
         private void OnSubnauticaExited(object sender, EventArgs e)
