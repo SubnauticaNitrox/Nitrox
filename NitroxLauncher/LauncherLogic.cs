@@ -82,7 +82,6 @@ namespace NitroxLauncher
             {
                 gameProcess.Exited += OnSubnauticaExited;
             }
-            //TODO: maybe an async callback to remove when the app closes.
         }
 
         private void OnSubnauticaExited(object sender, EventArgs e)
