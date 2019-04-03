@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Patching;
@@ -20,10 +21,11 @@ namespace NitroxLauncher
         public event EventHandler PirateDetectedEvent;
         private Process gameProcess = null;
         private Process serverProcess = null;
+        private bool gameStarting = false;
         public bool HasSomethingRunning {
             get
             {                
-                return ((gameProcess != null && !gameProcess.HasExited)  || (serverProcess != null && !serverProcess.HasExited));
+                return ((gameProcess != null && !gameProcess.HasExited)  || (serverProcess != null && !serverProcess.HasExited) || gameStarting);
             }
         }
 
@@ -54,6 +56,7 @@ namespace NitroxLauncher
 
         internal void StartMultiplayer()
         {
+            gameStarting = true;
             string subnauticaPath = "";
 
             if (ErrorConfiguringLaunch(ref subnauticaPath))
@@ -77,24 +80,40 @@ namespace NitroxLauncher
             nitroxEntryPatch.Apply();
 
             StartSubnautica(subnauticaPath);
-            if(gameProcess == null)
-            {
-                Process[] processes = Process.GetProcessesByName("Subnautica");
-                if (processes.Count() == 1)
+            Thread thread = new Thread(new ThreadStart(AsyncGetProcess));
+            thread.Start();
+        }
+
+        private void AsyncGetProcess()
+        {
+            if (gameProcess == null)
+            {                
+                for (int i = 0; i < 1000 && (gameProcess == null); i++)
                 {
-                    gameProcess = processes[0];
+                    Process[] processes = Process.GetProcessesByName("Subnautica");
+                    if (processes.Count() == 1)
+                    {
+                        gameProcess = processes[0];
+                    }
+                    if (gameProcess == null)
+                    {
+                        Thread.Sleep(100);
+                    }
                 }
-                else
+                if (gameProcess == null)
                 {
                     Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
+                    gameStarting = false;
                     return;
                 }
-            } 
+            }
+            gameStarting = false;
             gameProcess.Exited += OnSubnauticaExited;
         }
 
         private void OnSubnauticaExited(object sender, EventArgs e)
         {
+            gameStarting = false;
             string subnauticaPath = "";
 
             Optional<string> installation = GameInstallationFinder.Instance.FindGame(new List<string>());
