@@ -122,10 +122,11 @@ namespace NitroxLauncher
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
                 startInfo.Arguments = "-EpicPortal";
-            } else
+            } else if (PlatformDetection.IsSteam(subnauticaPath))
             {
                 startInfo.FileName = "steam://run/264710";
             }
+
             gameProcess = Process.Start(startInfo);            
         }
 
