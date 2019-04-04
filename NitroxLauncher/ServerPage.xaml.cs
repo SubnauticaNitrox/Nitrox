@@ -14,10 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace NitroxLauncher
-{
-    /// <summary>
-    /// Interaktionslogik für ServerPage.xaml
-    /// </summary>
+{    
     public partial class ServerPage : Page
     {
         LauncherLogic logic;

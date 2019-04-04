@@ -25,9 +25,8 @@
         </Grid>
         <StackPanel Grid.Row="2" Margin="0,17,0,0">
             <TextBlock FontSize="12" Foreground="White">GAME DIRECTORY</TextBlock>
-            <Border  HorizontalAlignment="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,4,0,0">
-                <!--<TextBlock FontSize="16" Foreground="White" TextAlignment="Left" VerticalAlignment="Center" Margin="12,12,12,12" >Game Directory</TextBlock>-->
-                <TextBox Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}"/>
+            <Border  HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,4,0,0">
+                <TextBox Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="6" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" SelectionOpacity="-1"/>
             </Border>
         </StackPanel>
         <StackPanel Grid.Row="3" Margin="0,18,0,0">

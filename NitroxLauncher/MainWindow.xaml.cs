@@ -46,6 +46,11 @@ namespace NitroxLauncher
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
+            if(logic.HasSomethingRunning)
+            {
+                MessageBox.Show("Cannot close as long as server or game is running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             Environment.Exit(0);
         }
 
