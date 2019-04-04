@@ -65,7 +65,7 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
                     <TextBlock Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
-                    <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel">ALPHA 1.0.3.1</TextBlock>
+                    <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" x:Name="FrameGrid">
