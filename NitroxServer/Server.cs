@@ -2,6 +2,7 @@
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
 using NitroxServer.ConfigParser;
+using System.Configuration;
 
 namespace NitroxServer
 {
@@ -17,6 +18,10 @@ namespace NitroxServer
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
+            if (ConfigurationManager.AppSettings.Count == 0)
+            {
+                Log.Warn("Nitrox Server Cant Read Config File.");
+            }
             Instance = this;
             this.worldPersistence = worldPersistence;
             this.world = world;
