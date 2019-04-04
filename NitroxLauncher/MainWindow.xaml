@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
-        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png" Closing="OnClosing">
     <Window.Resources>
             
     </Window.Resources>
@@ -68,7 +69,7 @@
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" x:Name="FrameGrid">
-                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" />                
+                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>                
             </Grid>
         </Grid>
     </Grid>

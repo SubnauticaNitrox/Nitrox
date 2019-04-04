@@ -19,6 +19,8 @@ namespace NitroxLauncher
     public class LauncherLogic
     {
         public event EventHandler PirateDetectedEvent;
+        public event EventHandler StartServerEvent;
+        public event EventHandler EndServerEvent;
         private Process gameProcess = null;
         private Process serverProcess = null;
         private bool gameStarting = false;
@@ -53,6 +55,8 @@ namespace NitroxLauncher
 
             StartSubnautica(subnauticaPath);
         }
+
+        
 
         internal void StartMultiplayer()
         {
@@ -163,7 +167,7 @@ namespace NitroxLauncher
             return installation.Get();
         } 
 
-        internal void StartServer()
+        internal void StartServer(bool windowed)
         {
             string subnauticaPath = "";
 
@@ -175,10 +179,28 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
-            serverProcess = Process.Start(serverPath);
-            
+            ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
+            if(!windowed)
+            {
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardInput = true;
+                startInfo.CreateNoWindow = true;
+            }
+            serverProcess = Process.Start(startInfo);           
+            if (!windowed && StartServerEvent != null)
+            {
+                StartServerEvent(serverProcess, new EventArgs());
+            }
         }
 
+        internal void EndServer()
+        {
+            if (EndServerEvent != null)
+            {
+                EndServerEvent(serverProcess, new EventArgs());
+            }
+        }
 
         internal bool ErrorConfiguringLaunch(ref string subnauticaPath, bool serverStart = false)
         {
