@@ -23,7 +23,7 @@
         <Grid Grid.Row="1"></Grid>
         <Grid Grid.Row="2"></Grid>
         <Grid Grid.Row="3">
-            <TextBlock FontSize="22" Foreground="White" >Server Options</TextBlock>
+            <TextBlock FontFamily="{StaticResource Roboto}" FontSize="22" Foreground="White" >Server Options</TextBlock>
         </Grid>
         <Grid Grid.Row="4" Margin="0,19,0,0">
             <Grid>
@@ -32,15 +32,15 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                    <TextBlock Foreground="White" FontSize="12">GAME VERSION</TextBlock>
+                    <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="12">GAME VERSION</TextBlock>
                     <Border Height="43" Width="269" Margin="0,4,0,0" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="4">
-                        <ComboBox Background="{x:Null}" Foreground="White" FontSize="16" Padding="12,8,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange" >
+                        <ComboBox FontFamily="{StaticResource Roboto}" Background="#9928292C" Foreground="White" FontSize="16" Padding="12,12,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange" >
                             <ComboBox.Resources>                                
                                 <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#00FFFFFF" />
                             </ComboBox.Resources>
-                            
-                            <ComboBoxItem x:Name="CBInner" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Launcher window</ComboBoxItem>
-                            <ComboBoxItem x:Name="CBWindow" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Command line window</ComboBoxItem>
+
+                            <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Launcher window</ComboBoxItem>
+                            <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Command line window</ComboBoxItem>
                         </ComboBox>
                         <!--<TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>-->
                     </Border>
@@ -53,8 +53,8 @@
                         </LinearGradientBrush>
                     </Button.Background>
                     <StackPanel>
-                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" >START SERVER</TextBlock>
-                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">NITROX ALPHA</TextBlock>
+                        <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" >START SERVER</TextBlock>
+                        <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}"/>
                     </StackPanel>
                 </Button>
             </Grid>

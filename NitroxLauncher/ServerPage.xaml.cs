@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,14 @@ namespace NitroxLauncher
         {
             InitializeComponent();
             this.logic = logic;
+        }
+
+        public string Version
+        {
+            get
+            {
+                return "NITROX ALPHA " + Assembly.GetAssembly(typeof(NitroxModel.Extensions)).GetName().Version.ToString(3);
+            }
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
