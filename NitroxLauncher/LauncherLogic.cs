@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Patching;
@@ -17,8 +18,16 @@ namespace NitroxLauncher
 {
     public class LauncherLogic
     {
-        public event PirateDetected PirateDetectedEvent;
-        public delegate void PirateDetected(object sender, EventArgs e);
+        public event EventHandler PirateDetectedEvent;
+        private Process gameProcess = null;
+        private Process serverProcess = null;
+        private bool gameStarting = false;
+        public bool HasSomethingRunning {
+            get
+            {                
+                return ((gameProcess != null && !gameProcess.HasExited)  || (serverProcess != null && !serverProcess.HasExited) || gameStarting);
+            }
+        }
 
         internal void StartSingleplayer()
         {
@@ -47,6 +56,7 @@ namespace NitroxLauncher
 
         internal void StartMultiplayer()
         {
+            gameStarting = true;
             string subnauticaPath = "";
 
             if (ErrorConfiguringLaunch(ref subnauticaPath))
@@ -70,8 +80,55 @@ namespace NitroxLauncher
             nitroxEntryPatch.Apply();
 
             StartSubnautica(subnauticaPath);
+            Thread thread = new Thread(new ThreadStart(AsyncGetProcess));
+            thread.Start();
+        }
 
-            //TODO: maybe an async callback to remove when the app closes.
+        private void AsyncGetProcess()
+        {
+            if (gameProcess == null)
+            {                
+                for (int i = 0; i < 1000 && (gameProcess == null); i++)
+                {
+                    Process[] processes = Process.GetProcessesByName("Subnautica");
+                    if (processes.Count() == 1)
+                    {
+                        gameProcess = processes[0];
+                    }
+                    if (gameProcess == null)
+                    {
+                        Thread.Sleep(100);
+                    }
+                }
+                if (gameProcess == null)
+                {
+                    Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
+                    gameStarting = false;
+                    return;
+                }
+            }
+            gameStarting = false;
+            gameProcess.Exited += OnSubnauticaExited;
+        }
+
+        private void OnSubnauticaExited(object sender, EventArgs e)
+        {
+            gameStarting = false;
+            string subnauticaPath = "";
+
+            Optional<string> installation = GameInstallationFinder.Instance.FindGame(new List<string>());
+
+            if (!installation.IsPresent())
+            {
+                MessageBox.Show("Please configure your Subnautica location in settings.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            subnauticaPath = installation.Get();
+
+            NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            nitroxEntryPatch.Remove();
+            Log.Info("Finished removing patches!");
         }
 
         internal void StartSubnautica(string subnauticaPath)
@@ -84,9 +141,15 @@ namespace NitroxLauncher
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
                 startInfo.Arguments = "-EpicPortal";
+            } else if (PlatformDetection.IsSteam(subnauticaPath))
+            {
+                startInfo.FileName = "steam://run/264710";
             }
-            Process.Start(startInfo);
+
+            gameProcess = Process.Start(startInfo);            
         }
+
+
 
         internal string LoadSettings()
         {
@@ -112,7 +175,8 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
-            Process.Start(serverPath);
+            serverProcess = Process.Start(serverPath);
+            
         }
 
 
@@ -124,6 +188,11 @@ namespace NitroxLauncher
                 return true;
             }
 
+            if(serverStart && (serverProcess != null && !serverProcess.HasExited))
+            {
+                MessageBox.Show("An instance of Nitrox Server is already running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return true;
+            }
             List<string> errors = new List<string>();
             Optional<string> installation = GameInstallationFinder.Instance.FindGame(errors);
 
