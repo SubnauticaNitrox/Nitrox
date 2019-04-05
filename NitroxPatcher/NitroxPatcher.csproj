@@ -59,6 +59,7 @@
     <Compile Include="Patches\BaseAddModuleGhost_UpdatePlacement_Patch.cs" />
     <Compile Include="Patches\BaseDeconstructable_Deconstructor_Patch.cs" />
     <Compile Include="Patches\BaseDeconstructable_Constructor_Patch.cs" />
+    <Compile Include="Patches\SpawnConsoleCommand_OnConsoleCommand_Patch.cs" />
     <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
