@@ -27,6 +27,7 @@ namespace NitroxLauncher
         ServerPage serverPage;
         OptionPage optionPage;
         ServerConsolePage serverConsolePage;
+        Dictionary<Page,BitmapImage> imageDict;
         WebBrowser webBrowser = new WebBrowser();
         object currentPage;
 
@@ -58,13 +59,21 @@ namespace NitroxLauncher
             logic.PirateDetectedEvent += PirateDetected;
             logic.StartServerEvent += OnStartServer;
             logic.EndServerEvent += OnEndServer;
+
+            imageDict = new Dictionary<Page, BitmapImage> {
+                {launchPage, new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative)) },
+                {serverPage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative)) },
+                {serverConsolePage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative)) },
+                {optionPage, new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative)) }
+                };
+
             if (!File.Exists("path.txt"))
             {
-                CurrentPage = optionPage;
+                ChangeFrameContent(optionPage);
             }
             else
             {
-                CurrentPage = launchPage;
+                ChangeFrameContent(launchPage);
             }
         }
 
@@ -105,77 +114,60 @@ namespace NitroxLauncher
 
         private void ToPlayGame_OnClick(object sender, RoutedEventArgs e)
         {
-            Height = 542;
-            Width = 946;
-            CurrentPage = launchPage;
-            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative));
-            BackgroundImage.Visibility = Visibility.Visible;
-            SetDeActive(OptionsNav);
+            ChangeFrameContent(launchPage);         
             SetActive(PlayGameNav);
-            SetDeActive(ServerNav);
         }
 
         private void ToOptions_OnClick(object sender, RoutedEventArgs e)
         {
-            Height = 542;
-            Width = 946;
-            CurrentPage = optionPage;
-            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative));
-            BackgroundImage.Visibility = Visibility.Visible;
+            ChangeFrameContent(optionPage);
             SetActive(OptionsNav);
-            SetDeActive(PlayGameNav);
-            SetDeActive(ServerNav);
         }
 
         private void ToServer_OnClick(object sender, RoutedEventArgs e)
         {
-            Height = 542;
-            Width = 946;
             if (!serverConsolePage.ServerRunning)
             {
-                CurrentPage = serverPage;
+                ChangeFrameContent(serverPage);
             }
             else
             {
-                CurrentPage = serverConsolePage;
+                ChangeFrameContent(serverConsolePage);
                 serverConsolePage.CommandLine.Focus();
-            }
-            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative));
-            BackgroundImage.Visibility = Visibility.Visible;
+            }            
             SetActive(ServerNav);
-            SetDeActive(PlayGameNav);
-            SetDeActive(OptionsNav);
         }
-
-        private void SetDeActive(Button button)
+        
+        private void SetActive(Button activeButton)
         {
-            if (button.Content is TextBlock block)
+            foreach (var item in SideBarPanel.Children)
             {
-                block.FontWeight = FontWeights.Normal;
-                var bc = new BrushConverter();
-                block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
-            }
-        }
-        private void SetActive(Button button)
-        {
-            if (button.Content is TextBlock block)
-            {
-                block.FontWeight = FontWeights.Bold;
-                block.Foreground = Brushes.White;
-            }
+                if(item is Button button)
+                {
+                    
+                    if (button.Content is TextBlock block)
+                    {
+                        if (button == activeButton)
+                        {
+                            block.FontWeight = FontWeights.Bold;
+                            block.Foreground = Brushes.White;
+                        }
+                        else // set as not active
+                        {
+                            block.FontWeight = FontWeights.Normal;
+                            var bc = new BrushConverter();
+                            block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
+                        }
+                    }
+                }
+            }            
         }
 
         private void OnStartServer(object sender, EventArgs e)
         {
-            Height = 542;
-            Width = 946;
-            CurrentPage = serverConsolePage;
+            ChangeFrameContent(serverConsolePage);
             serverConsolePage.CommandLine.Focus();
-            BackgroundImage.Source = new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative));
-            BackgroundImage.Visibility = Visibility.Visible;
             SetActive(ServerNav);
-            SetDeActive(PlayGameNav);
-            SetDeActive(OptionsNav);
         }
 
         private void OnEndServer(object sender, EventArgs e)
@@ -203,6 +195,22 @@ namespace NitroxLauncher
             string url = "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1";
             CurrentPage = webBrowser;
             webBrowser.NavigateToString(string.Format(embed, url));
+        }
+
+        private void ChangeFrameContent(object frameContent)
+        {
+            if(frameContent is Page page)
+            {
+                Height = 542;
+                Width = 946;
+                CurrentPage = page;
+                BackgroundImage.Source = imageDict[page];
+                BackgroundImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                PirateDetected(this, new EventArgs());
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

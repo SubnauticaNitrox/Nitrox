@@ -52,7 +52,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Margin="0,28,0,0">
+                <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
                     </Button>
