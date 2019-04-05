@@ -20,7 +20,7 @@ namespace NitroxClient.GameLogic
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; set; }
         public GameObject PlayerModel { get; set; }
-        public Rigidbody RigidBody { get; }
+        public Rigidbody RemoteRigidBody { get; }
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
 
@@ -42,8 +42,8 @@ namespace NitroxClient.GameLogic
 
             Body.name = PlayerName;
 
-            RigidBody = Body.AddComponent<Rigidbody>();
-            RigidBody.useGravity = false;
+            RemoteRigidBody = Body.AddComponent<Rigidbody>();
+            RemoteRigidBody.useGravity = false;
 
             // Get player
             PlayerModel = Body.RequireGameObject("player_view");
@@ -87,23 +87,34 @@ namespace NitroxClient.GameLogic
 
         public void UpdatePosition(Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
+
+#if TRACE && MOVEMENT
+            NitroxModel.Logger.Log.Debug("Received UpdateLocation: playerID: " + PlayerId + " location: " + position + " velocity: " + velocity + " bodyRotation: " + bodyRotation + " aiming: " + aimingRotation);
+#endif
+
             Body.SetActive(true);
 
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
+            
             // If in a subroot the position will be relative to the subroot
-            if (SubRoot  != null && !SubRoot.isBase)
+            if (SubRoot != null && !SubRoot.isBase)
             {
                 Quaternion vehicleAngle = SubRoot.transform.rotation;
                 position = vehicleAngle * position;
                 position = position + SubRoot.transform.position;
-                
-                
             }
-            RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
-            RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
 
+
+            //RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
+            //RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
+
+            RemoteRigidBody.MovePosition(position);
+            RemoteRigidBody.MoveRotation(bodyRotation);
+            RemoteRigidBody.velocity = AnimationController.Velocity = velocity;
+
+            AnimationController.BodyRotation = bodyRotation;
             AnimationController.AimingRotation = aimingRotation;
             AnimationController.UpdatePlayerAnimations = true;
         }
@@ -135,7 +146,7 @@ namespace NitroxClient.GameLogic
                     mpCyclops.Exit();
                 }
 
-                RigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
+                RemoteRigidBody.isKinematic = AnimationController["cyclops_steering"] = newPilotingChair != null;
             }
         }
 
@@ -180,7 +191,7 @@ namespace NitroxClient.GameLogic
                     newVehicle.GetComponent<MultiplayerVehicleControl<Vehicle>>().Enter();
                 }
 
-                RigidBody.isKinematic = newVehicle != null;
+                RemoteRigidBody.isKinematic = newVehicle != null;
 
                 Vehicle = newVehicle;
 
