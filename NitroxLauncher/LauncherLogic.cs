@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
@@ -77,6 +75,7 @@ namespace NitroxLauncher
                 return;
             }
 
+            SyncAssetBundles(subnauticaPath);
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -247,6 +246,18 @@ namespace NitroxLauncher
 
             List<string> ignoreNoBinaries = new List<string>();
             CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
+        }
+
+        private void SyncAssetBundles(string subnauticaPath)
+        {
+            string subnauticaAssetsPath = Path.Combine(subnauticaPath, "AssetBundles");
+
+            string[] assetBundles = Directory.GetFiles("AssetBundles");
+
+            foreach (string assetBundle in assetBundles)
+            {
+                File.Copy(assetBundle, Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle)));
+            }
         }
 
         private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)

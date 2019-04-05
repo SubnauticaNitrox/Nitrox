@@ -196,5 +196,9 @@
       <CopyToLibFolder Include=" ../lib/discord-rpc.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
+    <ItemGroup>
+      <MoveToAssets Include="$(SolutionDir)AssetBundles/*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(MoveToAssets)" DestinationFolder="$(OutputPath)AssetBundles" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>
