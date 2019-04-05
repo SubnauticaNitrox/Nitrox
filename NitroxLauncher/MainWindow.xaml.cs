@@ -88,6 +88,8 @@ namespace NitroxLauncher
                 // If the server is running from launcher, we will just stop the server
                 serverConsolePage.HandleInputData("stop\n");
             }
+            // If launcher is closing, remove patch from subnautica
+            logic.OnSubnauticaExited(this, new EventArgs());
             return true;
         }
 

@@ -123,7 +123,7 @@ namespace NitroxLauncher
             gameProcess.Exited += OnSubnauticaExited;
         }
 
-        private void OnSubnauticaExited(object sender, EventArgs e)
+        internal void OnSubnauticaExited(object sender, EventArgs e)
         {
             gameStarting = false;
             string subnauticaPath = "";
