@@ -41,6 +41,12 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerStats);
         }
 
+
+        private Vector3 lastMovementLocation;
+        private Vector3 lastMovementVelocity;
+        private Quaternion lastMovementBodyRotation;
+        private Quaternion lastMovementAimingRotation;
+        
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
@@ -48,13 +54,42 @@ namespace NitroxClient.GameLogic
             if (vehicle.IsPresent())
             {
                 movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Get());
+                packetSender.Send(movement);
             }
             else
             {
-                movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
-            }
 
-            packetSender.Send(movement);
+                //reduce unneeded net traffic if no movement has happened
+                bool _needSend = false;
+                if (lastMovementLocation != null && lastMovementBodyRotation != null && lastMovementVelocity != null && lastMovementAimingRotation != null)
+                {
+                    //use .ToString compare to skip minor changes
+                    if(!(lastMovementLocation.ToString().Equals(location.ToString()) && lastMovementBodyRotation.ToString().Equals(bodyRotation.ToString()) && lastMovementVelocity.ToString().Equals(velocity.ToString()) && lastMovementAimingRotation.ToString().Equals(aimingRotation.ToString())))
+                    {
+                        _needSend = true;
+                    }
+                }
+                else
+                {
+                    _needSend = true;
+                }
+
+                if(_needSend)
+                {
+#if TRACE && MOVEMENT
+                    NitroxModel.Logger.Log.Debug("Send UpdateLocation: playerID: " + multiplayerSession.Reservation.PlayerId + " location: " + location + " velocity: " + velocity + " bodyRotation: " + bodyRotation + " aiming: " + aimingRotation);
+#endif
+
+                    lastMovementLocation = location;
+                    lastMovementVelocity = velocity;
+                    lastMovementBodyRotation = bodyRotation;
+                    lastMovementAimingRotation = aimingRotation;
+
+                    movement = new Movement(multiplayerSession.Reservation.PlayerId, location, velocity, bodyRotation, aimingRotation);
+                    packetSender.Send(movement);
+                }
+            }
+            
         }
 
         public void AnimationChange(AnimChangeType type, AnimChangeState state)
