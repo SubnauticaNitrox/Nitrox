@@ -241,7 +241,7 @@ namespace NitroxLauncher
             string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
             string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
 
-            List<string> ignoreNitroxBinaries = new List<string>() { "NitroxModel.dll", "NitroxPatcher.dll", "NitroxClient.dll", "0Harmony.dll", "Autofac.dll", "log4net.dll", "protobuf-net.dll", "LitJson.dll", "dnlib.dll", "AssetsTools.NET.dll", "LiteNetLib.dll" };
+            List<string> ignoreNitroxBinaries = new List<string>() { "NitroxModel.dll", "NitroxServer.dll", "NitroxServer-Subnautica.dll", "NitroxModel-Subnautica.dll", "NitroxPatcher.dll", "NitroxClient.dll", "0Harmony.dll", "Autofac.dll", "log4net.dll", "protobuf-net.dll", "LitJson.dll", "dnlib.dll", "AssetsTools.NET.dll", "LiteNetLib.dll" };
             CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
 
             List<string> ignoreNoBinaries = new List<string>();
