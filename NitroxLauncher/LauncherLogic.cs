@@ -256,7 +256,7 @@ namespace NitroxLauncher
 
             foreach (string assetBundle in assetBundles)
             {
-                File.Copy(assetBundle, Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle)));
+                File.Copy(assetBundle, Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle)), true);
             }
         }
 
