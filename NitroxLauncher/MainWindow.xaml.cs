@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {    
@@ -60,6 +61,8 @@ namespace NitroxLauncher
             logic.StartServerEvent += OnStartServer;
             logic.EndServerEvent += OnEndServer;
 
+            AppDomain.CurrentDomain.UnhandledException += CrashLog;
+
             imageDict = new Dictionary<Page, BitmapImage> {
                 {launchPage, new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative)) },
                 {serverPage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative)) },
@@ -75,6 +78,11 @@ namespace NitroxLauncher
             {
                 ChangeFrameContent(launchPage);
             }
+        }
+
+        private void CrashLog(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.ToString() + Environment.NewLine + Environment.StackTrace);
         }
 
         private bool CanClose()
