@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches
     {
         public static void Prefix()
         {
-            DevConsole.disableConsole = NitroxConsole.DisableConsole;
+            DevConsole.disableConsole = false;
         }
 
         public override void Patch(HarmonyInstance harmony)

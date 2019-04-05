@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
@@ -134,6 +135,98 @@ namespace NitroxClient.GameLogic
 
             DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(guid);
             packetSender.Send(deconstructionCompleted);
+        }
+
+
+
+
+        private Constructable lastHoveredConstructable = null;
+
+        //only triggered here for Fabricator and Workbench
+        public void BuilderTool_Post_OnHover(GameObject gameObject, Constructable constructable)
+        {
+
+#if TRACE && GAMEEVENTBUILDING
+            NitroxModel.Logger.Log.Debug("BuilderTool_Post_OnHover");
+#endif
+
+            lastHoveredConstructable = constructable;
+            string _crafterGuid = GuidHelper.GetGuid(constructable.gameObject);
+            ushort _remotePlayerId;
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasExclusiveLockByRemotePlayer(_crafterGuid, out _remotePlayerId))
+            {
+
+#if TRACE && GAMEEVENTBUILDING
+                    NitroxModel.Logger.Log.Debug("BuilderTool_Post_OnHover - lockedRemote guid: " + _crafterGuid + " remotePlayerID: " + _remotePlayerId);
+#endif
+
+                RemotePlayer _remotePlayer;
+                if (NitroxServiceLocator.LocateService<PlayerManager>().TryFind(_remotePlayerId, out _remotePlayer))
+                {
+                    string _baseString = string.Empty;
+                    if (constructable.constructed)
+                    {
+                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInUseBy");
+                    }
+                    else
+                    {
+                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInConstructionBy");
+                    }
+                    string _displayText = _baseString + " " + _remotePlayer.PlayerName;
+                    HandReticle.main.SetInteractText(_displayText, string.Empty);
+#pragma warning disable 0618 // deprecated code here
+                    //HandReticle.main.SetInteractInfo(_displayText, string.Empty); //<< must be used, otherwise it is not displayed > bug SN ? 
+#pragma warning restore
+                    HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
+                }
+                else
+                {
+                    //exclusive lock is active, but remote Player can not be found
+                    //possible causes:
+                    //- disconnect of remote Player did not free the lock locally
+                    lastHoveredConstructable = null;
+                    throw new System.Exception("BuilderTool_Post_OnHover: " + "No remote Player could be found for ID: " + _remotePlayerId);
+                }
+            }
+            else
+            {
+                lastHoveredConstructable = null;
+            }
+
+        }
+
+        public bool BuilderTool_Pre_HandleInput(GameObject gameObject)
+        {
+
+#if TRACE && GAMEEVENTBUILDING
+            NitroxModel.Logger.Log.Debug("BuilderTool_Pre_HandleInput");
+#endif
+
+            if (lastHoveredConstructable != null)
+            {
+                string _crafterGuid = GuidHelper.GetGuid(lastHoveredConstructable.gameObject);
+                ushort _remotePlayerId;
+                if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasExclusiveLockByRemotePlayer(_crafterGuid, out _remotePlayerId))
+                {
+                    //if Object is in use by remote Player, supress deconstruction
+                    if (GameInput.GetButtonHeld(GameInput.Button.LeftHand) || GameInput.GetButtonDown(GameInput.Button.LeftHand) || GameInput.GetButtonHeld(GameInput.Button.Deconstruct) || GameInput.GetButtonDown(GameInput.Button.Deconstruct))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }

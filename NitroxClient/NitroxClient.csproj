@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -46,7 +46,7 @@
       <HintPath>..\lib\LiteNetLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-	<Reference Include="Lidgren.Network">
+    <Reference Include="Lidgren.Network">
       <HintPath>..\lib\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -75,6 +75,7 @@
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
+    <Compile Include="GameLogic\InitialSync\SimulationOwnershipInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeSonarModeProcessor.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
+    <Compile Include="GameLogic\TranslationManager.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
@@ -157,8 +159,7 @@
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleRemovedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\FabricatorBeginCraftingProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\FabricatorItemPickupProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\CraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemoveProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemPositionProcessor.cs" />
@@ -171,7 +172,6 @@
     <Compile Include="Communication\Packets\Processors\PDAEncyclopediaEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDALogEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SeamothModuleActionProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\SimulationOwnershipResponseProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerKickedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleChildUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleCreatedProcessor.cs" />
@@ -189,7 +189,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SignChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\SimulationOwnershipProcessors.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
     <Compile Include="Communication\Packets\Processors\TimeChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />

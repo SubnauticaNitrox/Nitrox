@@ -1,9 +1,12 @@
-﻿using NitroxModel.DataStructures;
+﻿using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.Packets;
+using System;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
 {
-    public class SimulationOwnershipData
+    public class SimulationOwnershipData 
     {
         struct PlayerLock
         {
@@ -15,6 +18,14 @@ namespace NitroxServer.GameLogic
                 Player = player;
                 LockType = lockType;
             }
+        }
+
+        internal void SimulationOwnershipRelease(string guid, Player player)
+        {
+            RevokeOwnerOfGuid(guid);
+
+            SimulationOwnershipRelease simulationOwnershipChange = new SimulationOwnershipRelease(player.Id, guid);
+            NitroxServiceLocator.LocateService<PlayerManager>().SendPacketToOtherPlayers(simulationOwnershipChange, player);
         }
 
         Dictionary<string, PlayerLock> playerLocksByGuid = new Dictionary<string, PlayerLock>();
@@ -52,7 +63,22 @@ namespace NitroxServer.GameLogic
                 return false;
             }
         }
-        
+
+        internal void SimulationOwnershipRequest(string guid, Player player, SimulationLockType lockType)
+        {
+            bool aquiredLock = TryToAcquire(guid, player, lockType);
+
+            if (aquiredLock)
+            {
+                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(guid, player.Id, lockType);
+                NitroxServiceLocator.LocateService<PlayerManager>().SendPacketToOtherPlayers(simulationOwnershipChange, player);
+            }
+
+            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(guid, aquiredLock, lockType);
+            player.SendPacket(responseToPlayer);
+       
+    }
+
         public bool RevokeIfOwner(string guid, Player player)
         {
             lock (playerLocksByGuid)
@@ -86,10 +112,24 @@ namespace NitroxServer.GameLogic
                 foreach(string guid in revokedGuids)
                 {
                     playerLocksByGuid.Remove(guid);
+                    NitroxServiceLocator.LocateService<PlayerManager>().SendPacketToOtherPlayers(new SimulationOwnershipRelease(player.Id,guid), player);
                 }
 
                 return revokedGuids;
             }
+        }
+
+        internal List<SimulationOwnershipChange> GetCurrentSimulationsData()
+        {
+            List<SimulationOwnershipChange> _result = new List<SimulationOwnershipChange>();
+            lock (playerLocksByGuid)
+            {
+                foreach (KeyValuePair<string, PlayerLock> item in playerLocksByGuid)
+                {
+                    _result.Add(new SimulationOwnershipChange(item.Key, item.Value.Player.Id, item.Value.LockType));
+                }
+            }
+            return _result;
         }
 
         public bool RevokeOwnerOfGuid(string guid)

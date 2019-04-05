@@ -108,10 +108,16 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void UpdateConnectionState(IMultiplayerSessionConnectionState sessionConnectionState)
         {
+
+#if TRACE && CONNECT
+            NitroxModel.Logger.Log.Debug("UpdateConnectionState - sessionConnectionState: " + sessionConnectionState);
+#endif
+
             Validate.NotNull(sessionConnectionState);
 
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
+
             Log.Info($"Updating session stage from '{fromStage}' to '{sessionConnectionState.CurrentStage}' for '{username}'");
 
             CurrentState = sessionConnectionState;

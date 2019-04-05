@@ -231,8 +231,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
-
-                    IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameModeOption.Survival);
+#pragma warning disable 0618 // deprecated code here
+                    IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore
                     StartCoroutine(startNewGame);
 
                     break;
