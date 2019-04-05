@@ -64,6 +64,9 @@
     <Compile Include="LauncherLogic.cs" />
     <Compile Include="Patching\NitroxEntryPatch.cs" />
     <Compile Include="Patching\PlatformDetection.cs" />
+    <Compile Include="ServerConsolePage.xaml.cs">
+      <DependentUpon>ServerConsolePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ServerPage.xaml.cs">
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OptionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ServerConsolePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
