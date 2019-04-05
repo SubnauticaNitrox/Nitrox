@@ -251,9 +251,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                     TransformAsset transform = prefab.TransformAsset;
 
                     Vector3 position = transform.Position + entity.Position;
+                    Quaternion rotation = entity.Rotation * transform.Rotation;
 
                     Entity prefabEntity = new Entity(position,
-                                            transform.Rotation,
+                                            rotation,
                                             transform.Scale,
                                             techType,
                                             cellLevel,
