@@ -54,7 +54,7 @@
                     </Button.Background>
                     <StackPanel>
                         <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" >START SERVER</TextBlock>
-                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">NITROX ALPHA 1.0.3.1</TextBlock>
+                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">NITROX ALPHA</TextBlock>
                     </StackPanel>
                 </Button>
             </Grid>
