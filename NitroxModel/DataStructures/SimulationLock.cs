@@ -5,6 +5,8 @@ namespace NitroxModel.DataStructures
     [Serializable]
     public enum SimulationLockType
     {
+       
+
         /*
          * Exclusive locks: These are typically requested by a player to hold exclusive, unbreaking control 
          *                  over the simulation of an entity.  An example of this could be a player piloting

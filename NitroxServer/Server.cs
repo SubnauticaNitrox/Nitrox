@@ -12,8 +12,9 @@ namespace NitroxServer
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
         public bool IsRunning { get; private set; }
-        private bool IsSaving;
+        private bool isSaving;
         public static Server Instance { get; private set; }
+        public System.Windows.Forms.Control DelegateControl { get; set; }
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
@@ -21,6 +22,7 @@ namespace NitroxServer
             this.worldPersistence = worldPersistence;
             this.world = world;
             this.server = server;
+            
             
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
@@ -30,19 +32,20 @@ namespace NitroxServer
 
         public void Save()
         {
-            if (IsSaving)
+            if (isSaving)
             {
                 return;
             }
-            IsSaving = true;
+            isSaving = true;
             worldPersistence.Save(world);
-            IsSaving = false;
+            isSaving = false;
         }
 
         public void Start()
         {
             IsRunning = true;
             IpLogger.PrintServerIps();
+            server.DelegateControl = DelegateControl;
             server.Start();
             Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();

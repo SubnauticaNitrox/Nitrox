@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -14,7 +16,7 @@ namespace NitroxServer.Communication.NetworkingLayer
     {
         protected bool isStopped = true;
         protected int portNumber, maxConn;
-
+        internal Control DelegateControl;
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
         protected readonly Dictionary<long, NitroxConnection> connectionsByRemoteIdentifier = new Dictionary<long, NitroxConnection>();

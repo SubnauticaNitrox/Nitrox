@@ -27,8 +27,9 @@ namespace NitroxModel.Packets
         public List<Entity> GlobalRootEntities { get; }
         public string GameMode { get; }
         public Perms Permissions { get; }
+        public List<SimulationOwnershipChange> SimulationOwnerships { get; }
 
-        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms, List<SimulationOwnershipChange> simulationOwnerships)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodGuid = assignedEscapePodGuid;
@@ -48,6 +49,7 @@ namespace NitroxModel.Packets
             GlobalRootEntities = globalRootEntities;
             GameMode = gameMode;
             Permissions = perms;
+            SimulationOwnerships = simulationOwnerships;
         }
 
         public override string ToString()

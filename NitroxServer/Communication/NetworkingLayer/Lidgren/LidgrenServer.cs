@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
 using Lidgren.Network;
@@ -17,19 +17,25 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
         private readonly NetServer netServer;
         private readonly Thread thread;
 
+        private delegate void ExceptionToMain(Exception ex);
+        private event ExceptionToMain OnExceptionToMain;
+
+
         public LidgrenServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
             NetPeerConfiguration config = BuildNetworkConfig();
             netServer = new NetServer(config);
             thread = new Thread(Listen);
+            OnExceptionToMain += new ExceptionToMain(ReceiveThreadExceptions);
         }
 
         public override void Start()
         {
             Log.Info("Using Lidgren as networking library");
             netServer.Start();
+            
             thread.Start();
-
+            
             isStopped = false;
         }
 
@@ -43,48 +49,71 @@ namespace NitroxServer.Communication.NetworkingLayer.Lidgren
 
        private void Listen()
         {
+            
             while (!isStopped)
             {
-                // Pause reading thread and wait for messages.
-                netServer.MessageReceivedEvent.WaitOne();
-
-                NetIncomingMessage im;
-                while ((im = netServer.ReadMessage()) != null)
+                try
                 {
-                    switch (im.MessageType)
+                    // Pause reading thread and wait for messages.
+                    netServer.MessageReceivedEvent.WaitOne();
+
+                    NetIncomingMessage im;
+                    while ((im = netServer.ReadMessage()) != null)
                     {
-                        case NetIncomingMessageType.DebugMessage:
-                        case NetIncomingMessageType.ErrorMessage:
-                        case NetIncomingMessageType.WarningMessage:
-                        case NetIncomingMessageType.VerboseDebugMessage:
-                            string message = im.ReadString();
-                            Log.Info("Networking: " + message);
-                            break;
-                        case NetIncomingMessageType.StatusChanged:
-                            NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
+                        switch (im.MessageType)
+                        {
+                            case NetIncomingMessageType.DebugMessage:
+                            case NetIncomingMessageType.ErrorMessage:
+                            case NetIncomingMessageType.WarningMessage:
+                            case NetIncomingMessageType.VerboseDebugMessage:
+                                string message = im.ReadString();
+                                Log.Info("Networking: " + message);
+                                break;
+                            case NetIncomingMessageType.StatusChanged:
+                                NetConnectionStatus status = (NetConnectionStatus)im.ReadByte();
 
-                            string reason = im.ReadString();
-                            Log.Info("Identifier " + im.SenderConnection.RemoteUniqueIdentifier + " " + status + ": " + reason);
+                                string reason = im.ReadString();
+                                Log.Info("Identifier " + im.SenderConnection.RemoteUniqueIdentifier + " " + status + ": " + reason);
 
-                            ConnectionStatusChanged(status, im.SenderConnection);
-                            break;
-                        case NetIncomingMessageType.Data:
-                            if (im.Data.Length > 0)
-                            {
-                                NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
-								byte[] data = new byte[im.LengthBytes];
-                                im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
-                                Packet packet = Packet.Deserialize(data);
-                                ProcessIncomingData(connection, packet);
-                            }
-                            break;
-                        default:
-                            Log.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
-                            break;
+                                ConnectionStatusChanged(status, im.SenderConnection);
+                                break;
+                            case NetIncomingMessageType.Data:
+                                if (im.Data.Length > 0)
+                                {
+                                    NitroxConnection connection = GetConnection(im.SenderConnection.RemoteUniqueIdentifier);
+                                    byte[] data = new byte[im.LengthBytes];
+                                    im.ReadBytes(data, im.PositionInBytes, im.LengthBytes);
+                                    Packet packet = Packet.Deserialize(data);
+                                    ProcessIncomingData(connection, packet);
+                                }
+                                break;
+                            default:
+                                Log.Info("Unhandled type: " + im.MessageType + " " + im.LengthBytes + " bytes " + im.DeliveryMethod + "|" + im.SequenceChannel);
+                                break;
+                        }
+                        netServer.Recycle(im);
                     }
-                    netServer.Recycle(im);
+                }
+                catch(Exception _ex)
+                {
+                    if(OnExceptionToMain != null)
+                    {
+                        OnExceptionToMain(_ex);
+                    }
                 }
             }
+        }
+
+        private void ReceiveThreadExceptions(Exception ex)
+        {
+            if (base.DelegateControl.InvokeRequired)
+            {
+                base.DelegateControl.BeginInvoke(new ExceptionToMain(ReceiveThreadExceptions), ex);
+                return;
+            }
+
+            //now we are on the main thread and can throw
+            throw ex;
         }
 
         private void ConnectionStatusChanged(NetConnectionStatus status, NetConnection networkConnection)

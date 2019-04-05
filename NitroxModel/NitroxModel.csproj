@@ -40,7 +40,7 @@
       <HintPath>..\lib\LiteNetLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-	<Reference Include="Lidgren.Network">
+    <Reference Include="Lidgren.Network">
       <HintPath>..\lib\Lidgren.Network.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -156,8 +156,7 @@
     <Compile Include="Packets\ModuleAdded.cs" />
     <Compile Include="Packets\ModuleRemoved.cs" />
     <Compile Include="Packets\Exceptions\UncorrelatedPacketException.cs" />
-    <Compile Include="Packets\FabricatorBeginCrafting.cs" />
-    <Compile Include="Packets\FabricatorItemPickup.cs" />
+    <Compile Include="Packets\CraftingPackets.cs" />
     <Compile Include="Packets\FireDoused.cs" />
     <Compile Include="Packets\ItemContainerAdd.cs" />
     <Compile Include="Packets\ItemContainerRemove.cs" />
@@ -190,9 +189,7 @@
     <Compile Include="Packets\Processors\Abstract\PacketProcessor.cs" />
     <Compile Include="Packets\SeamothModulesAction.cs" />
     <Compile Include="Packets\SignChanged.cs" />
-    <Compile Include="Packets\SimulationOwnershipChange.cs" />
-    <Compile Include="Packets\SimulationOwnershipRequest.cs" />
-    <Compile Include="Packets\SimulationOwnershipResponse.cs" />
+    <Compile Include="Packets\SimulationOwnershipPackets.cs" />
     <Compile Include="Packets\StoryEventSend.cs" />
     <Compile Include="Packets\TimeChange.cs" />
     <Compile Include="Packets\ToggleLights.cs" />

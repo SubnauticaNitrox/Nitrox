@@ -56,6 +56,7 @@ namespace NitroxClient
                 .As<RotationMetadataFactory>()
                 .InstancePerLifetimeScope();
 
+            containerBuilder.RegisterType<TranslationManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
