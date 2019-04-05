@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Patching;
 using NitroxModel.DataStructures.Util;
@@ -19,6 +17,8 @@ namespace NitroxLauncher
     public class LauncherLogic
     {
         public event EventHandler PirateDetectedEvent;
+        public event EventHandler StartServerEvent;
+        public event EventHandler EndServerEvent;
         private Process gameProcess = null;
         private Process serverProcess = null;
         private bool gameStarting = false;
@@ -54,6 +54,8 @@ namespace NitroxLauncher
             StartSubnautica(subnauticaPath);
         }
 
+        
+
         internal void StartMultiplayer()
         {
             gameStarting = true;
@@ -73,6 +75,7 @@ namespace NitroxLauncher
                 return;
             }
 
+            SyncAssetBundles(subnauticaPath);
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -86,10 +89,18 @@ namespace NitroxLauncher
 
         private void AsyncGetProcess()
         {
+            int waitTimeInMill = 1000;
+            int maxStartingTime = 10;
             if (gameProcess == null)
             {                
                 for (int i = 0; i < 1000 && (gameProcess == null); i++)
                 {
+                    // If wait more than ten seconds, mark game as not starting anymore.
+                    // This will not stop the thread. Just if someone closes the launcher before, it will work
+                    if(maxStartingTime < i*waitTimeInMill)
+                    {
+                        gameStarting = false;
+                    }
                     Process[] processes = Process.GetProcessesByName("Subnautica");
                     if (processes.Count() == 1)
                     {
@@ -97,7 +108,7 @@ namespace NitroxLauncher
                     }
                     if (gameProcess == null)
                     {
-                        Thread.Sleep(100);
+                        Thread.Sleep(waitTimeInMill);
                     }
                 }
                 if (gameProcess == null)
@@ -111,7 +122,7 @@ namespace NitroxLauncher
             gameProcess.Exited += OnSubnauticaExited;
         }
 
-        private void OnSubnauticaExited(object sender, EventArgs e)
+        internal void OnSubnauticaExited(object sender, EventArgs e)
         {
             gameStarting = false;
             string subnauticaPath = "";
@@ -163,7 +174,7 @@ namespace NitroxLauncher
             return installation.Get();
         } 
 
-        internal void StartServer()
+        internal void StartServer(bool windowed)
         {
             string subnauticaPath = "";
 
@@ -175,10 +186,28 @@ namespace NitroxLauncher
             SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
-            serverProcess = Process.Start(serverPath);
-            
+            ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
+            if(!windowed)
+            {
+                startInfo.UseShellExecute = false;
+                startInfo.RedirectStandardOutput = true;
+                startInfo.RedirectStandardInput = true;
+                startInfo.CreateNoWindow = true;
+            }
+            serverProcess = Process.Start(startInfo);           
+            if (!windowed && StartServerEvent != null)
+            {
+                StartServerEvent(serverProcess, new EventArgs());
+            }
         }
 
+        internal void EndServer()
+        {
+            if (EndServerEvent != null)
+            {
+                EndServerEvent(serverProcess, new EventArgs());
+            }
+        }
 
         internal bool ErrorConfiguringLaunch(ref string subnauticaPath, bool serverStart = false)
         {
@@ -217,6 +246,18 @@ namespace NitroxLauncher
 
             List<string> ignoreNoBinaries = new List<string>();
             CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
+        }
+
+        private void SyncAssetBundles(string subnauticaPath)
+        {
+            string subnauticaAssetsPath = Path.Combine(subnauticaPath, "AssetBundles");
+
+            string[] assetBundles = Directory.GetFiles("AssetBundles");
+
+            foreach (string assetBundle in assetBundles)
+            {
+                File.Copy(assetBundle, Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle)), true);
+            }
         }
 
         private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)
