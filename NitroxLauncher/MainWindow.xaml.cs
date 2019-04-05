@@ -82,22 +82,22 @@ namespace NitroxLauncher
             {
                 MessageBox.Show("Cannot close as long as server or game is running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
-            } else if(serverConsolePage.ServerRunning)
-            {
-                // If the server is running from launcher, we will just stop the server
-                CloseInternalServer();
             }
-            // If launcher is closing, remove patch from subnautica
-            logic.OnSubnauticaExited(this, new EventArgs());
+            // If the server is running from launcher, we will just stop the server
+            CloseInternalServerAndRemovePatch();
+            
+            
             return true;
         }
 
-        internal void CloseInternalServer()
+        internal void CloseInternalServerAndRemovePatch()
         {
             if (serverConsolePage.ServerRunning)
             {                
                 serverConsolePage.HandleInputData("stop\n");
             }
+            // If launcher is closing, remove patch from subnautica
+            logic.OnSubnauticaExited(this, new EventArgs());
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)

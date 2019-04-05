@@ -14,7 +14,7 @@ namespace NitroxLauncher
         {
             // If something went wrong. Close the server
             MainWindow window = (MainWindow)Application.Current.MainWindow;
-            window.CloseInternalServer();
+            window.CloseInternalServerAndRemovePatch();
 
             throw e.Exception;
         }
