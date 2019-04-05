@@ -21,7 +21,7 @@ namespace NitroxServer
 
                 PrintIfExternal();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // This is technically an error but will scare most users into thinking the server is not working
                 // generally this can happen on Mac / Wine due to issues fetching networking interfaces.  Simply
@@ -37,7 +37,7 @@ namespace NitroxServer
                 return;
             }
 
-            var ips = _interface.GetIPProperties().UnicastAddresses
+            System.Collections.Generic.IEnumerable<string> ips = _interface.GetIPProperties().UnicastAddresses
                 .Select(address => address.Address.ToString())
                 .Where(address => !address.ToString().Contains("fe80::"));
             Log.Info("If using Hamachi, use this IP: " + string.Join(" or ", ips));

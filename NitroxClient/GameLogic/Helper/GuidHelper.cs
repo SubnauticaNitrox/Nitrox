@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using System;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -42,6 +43,11 @@ namespace NitroxClient.GameLogic.Helper
             return GetUniqueIdentifier(gameObject).Id;
         }
 
+        public static string GetGuid(this GameObject gameObject, bool allowGenerate)
+        {
+            return GetUniqueIdentifier(gameObject, allowGenerate).Id;
+        }
+
         public static void SetNewGuid(this GameObject gameObject, string guid)
         {
             GetUniqueIdentifier(gameObject).Id = guid;
@@ -54,6 +60,25 @@ namespace NitroxClient.GameLogic.Helper
             if (uniqueIdentifier == null)
             {
                 uniqueIdentifier = gameObject.AddComponent<PrefabIdentifier>();
+            }
+
+            return uniqueIdentifier;
+        }
+
+        private static UniqueIdentifier GetUniqueIdentifier(GameObject gameObject, bool allowGenerate)
+        {
+            UniqueIdentifier uniqueIdentifier = gameObject.GetComponent<UniqueIdentifier>();
+
+            if (uniqueIdentifier == null)
+            {
+                if (!allowGenerate)
+                {
+                    throw new ArgumentOutOfRangeException("gameObject", "No Nitrox-Guid found for: " + gameObject.ToString());
+                }
+                else
+                {
+                    uniqueIdentifier = gameObject.AddComponent<PrefabIdentifier>();
+                }
             }
 
             return uniqueIdentifier;

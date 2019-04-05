@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>NitroxLauncher</RootNamespace>
     <AssemblyName>NitroxLauncher</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -64,9 +65,6 @@
     <Compile Include="LauncherLogic.cs" />
     <Compile Include="Patching\NitroxEntryPatch.cs" />
     <Compile Include="Patching\PlatformDetection.cs" />
-    <Compile Include="ServerConsolePage.xaml.cs">
-      <DependentUpon>ServerConsolePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ServerPage.xaml.cs">
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
@@ -90,10 +88,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="OptionPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ServerConsolePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -152,14 +146,6 @@
     <Resource Include="Images\Nitrox.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Harmony</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
@@ -196,9 +182,5 @@
       <CopyToLibFolder Include=" ../lib/discord-rpc.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(CopyToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
-    <ItemGroup>
-      <MoveToAssets Include="$(SolutionDir)AssetBundles/*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(MoveToAssets)" DestinationFolder="$(OutputPath)AssetBundles" OverwriteReadOnlyFiles="true" />
   </Target>
 </Project>

@@ -34,7 +34,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
-        public int serverPort;
+        public int ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -160,11 +160,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(ServerIp, serverPort);
+                multiplayerSession.Connect(ServerIp, ServerPort);
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{serverPort}");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
                 OnCancelClick();
             }
         }
@@ -231,8 +231,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
-
+#pragma warning disable 0618 // deprecated code here
                     IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore
                     StartCoroutine(startNewGame);
 
                     break;
@@ -248,7 +249,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp, serverPort);
+                            multiplayerSession.Connect(ServerIp, ServerPort);
                         });
 
                     break;

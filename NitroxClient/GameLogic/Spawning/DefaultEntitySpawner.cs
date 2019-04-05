@@ -14,14 +14,19 @@ namespace NitroxClient.GameLogic.Spawning
             TechType techType = entity.TechType.Enum();
             GameObject prefab;
 
+#pragma warning disable 0618 // deprecated code here
+
             if (!PrefabDatabase.TryGetPrefab(entity.ClassId, out prefab))
             {
+
                 prefab = CraftData.GetPrefabForTechType(techType, false);
                 if (prefab == null)
                 {
                     return Optional<GameObject>.Of(Utils.CreateGenericLoot(techType));
                 }
             }
+
+#pragma warning restore
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
             gameObject.transform.position = entity.Position;

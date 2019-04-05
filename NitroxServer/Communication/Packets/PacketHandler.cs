@@ -46,20 +46,28 @@ namespace NitroxServer.Communication.Packets
 
         private void ProcessAuthenticated(Packet packet, Player player)
         {
-            Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
-            Type packetType = packet.GetType();
-            Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
-
-            Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
-
-            if (opProcessor.IsPresent())
+            try
             {
-                PacketProcessor processor = (PacketProcessor)opProcessor.Get();
-                processor.ProcessPacket(packet, player);
+                Type serverPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
+                Type packetType = packet.GetType();
+                Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
+
+                Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
+
+                if (opProcessor.IsPresent())
+                {
+                    PacketProcessor processor = (PacketProcessor)opProcessor.Get();
+                    processor.ProcessPacket(packet, player);
+                }
+                else
+                {
+                    defaultServerPacketProcessor.ProcessPacket(packet, player);
+                }
             }
-            else
+            catch(Exception ex)
             {
-                defaultServerPacketProcessor.ProcessPacket(packet, player);
+                Log.Info("Received invalid, authenticated packet: " + packet);
+                Log.Error("Exception:", ex);
             }
         }
 

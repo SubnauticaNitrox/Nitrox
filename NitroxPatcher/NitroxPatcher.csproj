@@ -51,7 +51,13 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Harmony">
+      <HintPath>..\lib\0Harmony.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -62,6 +68,8 @@
     <Compile Include="Patches\BaseDeconstructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Base_ClearGeometry_Patch.cs" />
+    <Compile Include="Patches\BuilderTool_Patch.cs" />
+    <Compile Include="Patches\CrafterLogic_Patch.cs" />
     <Compile Include="Patches\CyclopsDecoyLaunchButton_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsExternalDamageManager_CreatePoint_Patch.cs" />
     <Compile Include="Patches\Bed_EnterInUseMode_Patch.cs" />
@@ -89,6 +97,7 @@
     <Compile Include="Patches\ExosuitTorpedoArm_Shoot_Patch.cs" />
     <Compile Include="Patches\Exosuit_SpawnArm_Patch.cs" />
     <Compile Include="Patches\Exosuit_Update_Patch.cs" />
+    <Compile Include="Patches\GhostCrafter_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitSubscreen_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
@@ -109,7 +118,6 @@
     <Compile Include="Patches\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\BaseGhost_Finish_Patch.cs" />
-    <Compile Include="Patches\BuilderTool_HandleInput_Patch.cs" />
     <Compile Include="Patches\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\CyclopsDamagePoint_OnRepair_Patch.cs" />
     <Compile Include="Patches\Fire_Douse_Patch.cs" />
@@ -119,7 +127,6 @@
     <Compile Include="Patches\Constructable_Deconstruct_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_Craft_Patch.cs" />
     <Compile Include="Patches\ConstructorInput_OnCraftingBegin_Patch.cs" />
-    <Compile Include="Patches\CrafterLogic_TryPickup_Patch.cs" />
     <Compile Include="Patches\Creature_ChooseBestAction_Patch.cs" />
     <Compile Include="Patches\CyclopsEngineChangeState_OnClick_Patch.cs" />
     <Compile Include="Patches\CyclopsHelmHUDManager_Start_Patch.cs" />
@@ -144,7 +151,6 @@
     <Compile Include="Patches\Equipment_AddItem_Patch.cs" />
     <Compile Include="Patches\Equipment_RemoveItem_Patch.cs" />
     <Compile Include="Patches\EscapePod_Awake_Patch.cs" />
-    <Compile Include="Patches\Fabricator_OnCraftingBegin_Patch.cs" />
     <Compile Include="Patches\FreezeTime_Begin_Patch.cs" />
     <Compile Include="Patches\GameSettings_SerializeInputSettings_Patch.cs" />
     <Compile Include="Patches\ItemsContainer_NotifyAddItem_Patch.cs" />
@@ -180,10 +186,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Harmony</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>

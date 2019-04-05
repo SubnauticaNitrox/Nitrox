@@ -24,10 +24,12 @@ namespace NitroxServer_Subnautica
             ConfigureCultureInfo();
 
             Server server;
-
+            System.Windows.Forms.Control control = new System.Windows.Forms.Control();
+            
             try
             {
                 server = NitroxServiceLocator.LocateService<Server>();
+                server.DelegateControl = control;
                 server.Start();
             }
             catch (Exception e)

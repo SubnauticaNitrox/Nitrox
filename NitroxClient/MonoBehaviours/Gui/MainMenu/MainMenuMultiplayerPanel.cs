@@ -164,7 +164,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
                 joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
-                joinServerComponent.serverPort = 11000;
+                joinServerComponent.ServerPort = 11000;
             }
             catch (SocketException e)
             {
@@ -180,12 +180,12 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             {
                 string[] splitIP = serverIp.Split(seperator);
                 joinServerComponent.ServerIp = splitIP[0];
-                joinServerComponent.serverPort = int.Parse(splitIP[1]);
+                joinServerComponent.ServerPort = int.Parse(splitIP[1]);
             }
             else
             {
                 joinServerComponent.ServerIp = serverIp;
-                joinServerComponent.serverPort = 11000;
+                joinServerComponent.ServerPort = 11000;
             }
         }
 

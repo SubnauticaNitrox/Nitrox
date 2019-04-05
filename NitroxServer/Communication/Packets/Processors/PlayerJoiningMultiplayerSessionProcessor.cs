@@ -61,7 +61,8 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        getRemotePlayerData(player),
                                                                        world.EntityData.GetGlobalRootEntities(),
                                                                        world.GameMode,
-                                                                       world.PlayerData.GetPermissions(player.Name));
+                                                                       world.PlayerData.GetPermissions(player.Name),
+                                                                       world.SimulationOwnershipData.GetCurrentSimulationsData());
 
             player.SendPacket(initialPlayerSync);
         }
