@@ -43,6 +43,7 @@ namespace NitroxLauncher
             InitializeComponent();
             this.logic = logic;
             this.logic.StartServerEvent += OnStartServer;
+            PropertyChanged += PropertyChange;
             CommandText = "";
         }        
 
@@ -104,6 +105,13 @@ namespace NitroxLauncher
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void PropertyChange(object sender, PropertyChangedEventArgs propertyName)
+        {
+            ServerConsolePage serverConsolePage = (ServerConsolePage)sender;
+            Dispatcher.BeginInvoke(
+           new ThreadStart(() => serverConsolePage.ConsoleWindowScrollView.ScrollToEnd()));
+        }
 
         /// <summary>
         /// Raises this object's PropertyChanged event.
