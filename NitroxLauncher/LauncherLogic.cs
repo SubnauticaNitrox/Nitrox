@@ -46,19 +46,26 @@ namespace NitroxLauncher
                 }
                 return;
             }
-            SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
-            NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
-            nitroxEntryPatch.Remove();
+            try
+            {
+                SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
-            StartSubnautica(subnauticaPath);
+                NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+                nitroxEntryPatch.Remove();
+
+                StartSubnautica(subnauticaPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
         }
 
         
 
         internal void StartMultiplayer()
         {
-            gameStarting = true;
             string subnauticaPath = "";
 
             if (ErrorConfiguringLaunch(ref subnauticaPath))
@@ -74,17 +81,27 @@ namespace NitroxLauncher
                 }
                 return;
             }
+            
+            try
+            {
+                gameStarting = true;
 
-            SyncAssetBundles(subnauticaPath);
-            SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
+                SyncAssetBundles(subnauticaPath);
+                SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
-            NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
-            nitroxEntryPatch.Remove(); // Remove any previous instances first.
-            nitroxEntryPatch.Apply();
+                NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+                nitroxEntryPatch.Remove(); // Remove any previous instances first.
+                nitroxEntryPatch.Apply();
 
-            StartSubnautica(subnauticaPath);
-            Thread thread = new Thread(new ThreadStart(AsyncGetProcess));
-            thread.Start();
+                StartSubnautica(subnauticaPath);
+                Thread thread = new Thread(new ThreadStart(AsyncGetProcess));
+                thread.Start();
+            }
+            catch (Exception ex)
+            {
+                gameStarting = false;
+                MessageBox.Show(ex.ToString());
+            }            
         }
 
         private void AsyncGetProcess()
