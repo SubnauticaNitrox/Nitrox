@@ -46,8 +46,8 @@ namespace NitroxClient.GameLogic
             NitroxModel.Logger.Log.Debug("GhostCrafter_Post_OnHandHover - remote player usage");
 #endif
 
-                    string _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInUseBy");
-                    string _displayText = _baseString + " " + _remotePlayer.PlayerName;
+                    string _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtCrafterInUseBy {0}");
+                    string _displayText = string.Format(_baseString, _remotePlayer.PlayerName);
 
 #if TRACE && GAMEEVENTCRAFTING
                     NitroxModel.Logger.Log.Debug("GhostCrafter_Post_OnHandHover - remote player usage: " + _displayText);

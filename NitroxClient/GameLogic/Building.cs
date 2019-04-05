@@ -166,13 +166,13 @@ namespace NitroxClient.GameLogic
                     string _baseString = string.Empty;
                     if (constructable.constructed)
                     {
-                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInUseBy");
+                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInUseBy {0}");
                     }
                     else
                     {
-                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInConstructionBy");
+                        _baseString = NitroxServiceLocator.LocateService<TranslationManager>().GetTranslation("txtInConstructionBy {0}");
                     }
-                    string _displayText = _baseString + " " + _remotePlayer.PlayerName;
+                    string _displayText =  string.Format(_baseString, _remotePlayer.PlayerName);
                     HandReticle.main.SetInteractText(_displayText, string.Empty);
 #pragma warning disable 0618 // deprecated code here
                     //HandReticle.main.SetInteractInfo(_displayText, string.Empty); //<< must be used, otherwise it is not displayed > bug SN ? 

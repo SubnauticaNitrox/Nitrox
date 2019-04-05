@@ -17,7 +17,8 @@ namespace NitroxClient.GameLogic
         {
 
             English,
-            German
+            German,
+            Polish
         }
 
         private Languages currentLanguage = Languages.English; //default
@@ -48,20 +49,26 @@ namespace NitroxClient.GameLogic
                     return TranslateToEnglish(txt);
                 case Languages.German:
                     return TranslateToGerman(txt);
+                case Languages.Polish:
+                    return TranslateToPolish(txt);
                 default:
                     return TranslateToEnglish(txt);
             }
         }
+
+        
 
         private string TranslateToEnglish(string txt)
         {
             //current translation in code > ToDo: change to use .json or .xml source file for translated strings
             switch (txt)
             {
-                case "txtInUseBy":
-                    return "In use by";
-                case "txtInConstructionBy":
-                    return "Under construction by";
+                case "txtCrafterInUseBy {0}":
+                    return "Fabricator in use by {0}";
+                case "txtInUseBy {0}":
+                    return "In use by {0}";
+                case "txtInConstructionBy {0}":
+                    return "Under construction by {0}";
                 default:
                     //fallback for unknown translation in master language > show hint at UI for issue creation
                     return "No Translation found for "+ txt;
@@ -70,13 +77,30 @@ namespace NitroxClient.GameLogic
 
         private string TranslateToGerman(string txt)
         {
-            //current translation in code > ToDo: change to use .json or .xml source file for translated strings
             switch (txt)
             {
-                case "txtInUseBy":
-                    return "Wird verwendet von";
-                case "txtInConstructionBy":
-                    return "Wird hergestellt von";
+                case "txtCrafterInUseBy {0}":
+                    return "Fabrikator wird verwendet von {0}";
+                case "txtInUseBy {0}":
+                    return "Wird verwendet von {0}";
+                case "txtInConstructionBy {0}":
+                    return "Wird bearbeitet von {0}";
+                default:
+                    //fallback for unknown translation in other languages > use the english translation
+                    return TranslateToEnglish(txt);
+            }
+        }
+
+        private string TranslateToPolish(string txt)
+        {
+            switch (txt)
+            {
+                case "txtCrafterInUseBy {0}":
+                    return "{0} używa fabrykatora";
+                case "txtInUseBy {0}":
+                    return "{0} tego używa";
+                case "txtInConstructionBy {0}":
+                    return "{0} tego używa";
                 default:
                     //fallback for unknown translation in other languages > use the english translation
                     return TranslateToEnglish(txt);
