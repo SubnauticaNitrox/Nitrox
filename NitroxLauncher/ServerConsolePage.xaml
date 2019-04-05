@@ -15,7 +15,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Width="709"  HorizontalAlignment="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="5,5,5,5">
-            <TextBlock FontSize="16" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" />
+            <ScrollViewer x:Name="ConsoleWindowScrollView">
+                <TextBlock FontSize="16" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" />
+            </ScrollViewer>
         </Border>
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" >
             <Border  HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
