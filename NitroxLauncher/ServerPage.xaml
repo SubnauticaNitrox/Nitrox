@@ -5,9 +5,12 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher"
       mc:Ignorable="d" 
-       d:DesignHeight="470" d:DesignWidth="719"
+      d:DesignHeight="470" d:DesignWidth="719"
+      DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="Server Page" Margin="0,0,0,0">
-
+    <Page.Resources>
+        
+    </Page.Resources>
     <Grid Margin="30,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="36"/>
@@ -31,7 +34,15 @@
                 <StackPanel Grid.Column="0" VerticalAlignment="Center">
                     <TextBlock Foreground="White" FontSize="12">GAME VERSION</TextBlock>
                     <Border Height="43" Width="269" Margin="0,4,0,0" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="4">
-                        <TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>
+                        <ComboBox Background="{x:Null}" Foreground="White" FontSize="16" Padding="12,8,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange" >
+                            <ComboBox.Resources>                                
+                                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#00FFFFFF" />
+                            </ComboBox.Resources>
+                            
+                            <ComboBoxItem x:Name="CBInner" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Launcher window</ComboBoxItem>
+                            <ComboBoxItem x:Name="CBWindow" Foreground="White" HorizontalAlignment="Left" FontSize="16" >Command line window</ComboBoxItem>
+                        </ComboBox>
+                        <!--<TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>-->
                     </Border>
                 </StackPanel>
                 <Button Grid.Column="2" Width="334" Height="80" Margin="48,0,38,45" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" >
@@ -43,7 +54,7 @@
                     </Button.Background>
                     <StackPanel>
                         <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" >START SERVER</TextBlock>
-                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">NITROX ALPHA 1.0.3.1</TextBlock>
+                        <TextBlock Foreground="White" HorizontalAlignment="Center" FontSize="16">NITROX ALPHA</TextBlock>
                     </StackPanel>
                 </Button>
             </Grid>

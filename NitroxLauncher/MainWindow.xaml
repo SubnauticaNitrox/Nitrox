@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
-        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png">
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png" Closing="OnClosing">
     <Window.Resources>
             
     </Window.Resources>
@@ -51,7 +52,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Margin="0,28,0,0">
+                <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
                         <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
                     </Button>
@@ -64,11 +65,11 @@
                 </StackPanel>
                 <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
                     <TextBlock Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
-                    <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel">ALPHA 1.0.3.1</TextBlock>
+                    <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" x:Name="FrameGrid">
-                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" />                
+                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>                
             </Grid>
         </Grid>
     </Grid>

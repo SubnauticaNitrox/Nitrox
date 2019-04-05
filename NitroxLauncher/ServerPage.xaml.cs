@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,6 +20,7 @@ namespace NitroxLauncher
     public partial class ServerPage : Page
     {
         LauncherLogic logic;
+        bool inLauncher = false;
         public ServerPage(LauncherLogic logic)
         {
             InitializeComponent();
@@ -26,7 +29,21 @@ namespace NitroxLauncher
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
-            logic.StartServer();
+            logic.StartServer(!inLauncher);
+        }
+
+        private void OnSelectionChange(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBox box = (ComboBox)sender;
+            if (box.SelectedIndex == 0)
+            {
+                inLauncher = true;
+            }
+            else
+            {
+                inLauncher = false;
+            }
+
         }
     }
 }
