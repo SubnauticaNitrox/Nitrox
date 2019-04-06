@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxModel.Networking;
 using UnityEngine;
 
 namespace NitroxModel.Packets
@@ -9,14 +10,16 @@ namespace NitroxModel.Packets
     {
         public List<EntityTransformUpdate> Updates { get; }
 
-        public EntityTransformUpdates()
+        public EntityTransformUpdates() : this(new List<EntityTransformUpdate>())
         {
-            Updates = new List<EntityTransformUpdate>();
+
         }
 
         public EntityTransformUpdates(List<EntityTransformUpdate> updates)
         {
             Updates = updates;
+            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
+            UdpChannel = UdpChannelId.ENTITY_UPDATES;
         }
 
         public void AddUpdate(string guid, Vector3 position, Quaternion rotation)
