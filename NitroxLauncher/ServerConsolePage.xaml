@@ -8,30 +8,32 @@
       d:DesignHeight="470" d:DesignWidth="719"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="ServerConsolePage">
-
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Border Grid.Row="0" Width="709"  HorizontalAlignment="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="5,5,5,5">
-            <ScrollViewer x:Name="ConsoleWindowScrollView">
-                <TextBlock FontSize="16" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" />
-            </ScrollViewer>
-        </Border>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" >
-            <Border  HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
-                <TextBox Width="620" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="6" Background="{x:Null}" BorderBrush="{x:Null}"  SelectionOpacity="-1" x:Name="CommandLine" KeyDown="CommandLine_OnKeyDown" />
+        <Image x:Name="BackgroundImage" Source="Images/EscapePod.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Width="709"  HorizontalAlignment="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="5,5,5,5">
+                <ScrollViewer x:Name="ConsoleWindowScrollView">
+                    <TextBlock FontFamily="{StaticResource Roboto}" FontSize="16" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" />
+                </ScrollViewer>
             </Border>
-            <Button Margin="5,0,0,0" Width="84"  Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="CommandButton" Click="CommandButton_OnClick">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FF00B1E9" Offset="0"/>
-                        <GradientStop Color="#FF006BE9" Offset="1"/>
-                    </LinearGradientBrush>
-                </Button.Background>
-                Send
-            </Button>
-        </StackPanel>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" >
+                <Border  HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
+                    <TextBox FontFamily="{StaticResource Roboto}" Width="620" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="6" Background="{x:Null}" BorderBrush="{x:Null}"  SelectionOpacity="-1" x:Name="CommandLine" KeyDown="CommandLine_OnKeyDown" />
+                </Border>
+                <Button Margin="5,0,0,0" Width="84"  Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="CommandButton" Click="CommandButton_OnClick">
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FF00B1E9" Offset="0"/>
+                            <GradientStop Color="#FF006BE9" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    Send
+                </Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

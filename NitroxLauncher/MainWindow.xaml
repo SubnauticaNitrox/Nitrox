@@ -23,17 +23,19 @@
             <RowDefinition Height="72"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right">
-
+        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <Image.Effect>
+                <BlurEffect Radius="7" />
+            </Image.Effect>
         </Image>
-        <Grid Background="#B228292C" Margin="0,0,0,0">
+        <Grid Background="#B228292C" Margin="0,0,0,0">                
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal"  >
-                <TextBlock Text="NITROX" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
-                <TextBlock VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
+                <TextBlock FontFamily="{StaticResource Roboto}" Text="NITROX" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
+                <TextBlock FontFamily="{StaticResource Roboto}" VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
             </StackPanel>
             <Button Grid.Column="1" Margin="0,6.25,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="#00000000" Background="#00000000" Foreground="White" Visibility="Visible" IsEnabled="True" Click="Minimze_Click" Style="{StaticResource OpaqueButton}"  WindowChrome.IsHitTestVisibleInChrome="True">
                 <Image Height="16" Width="16" Source="Images/minimise.png" Stretch="None" Margin="5,5,5,5" />
@@ -54,18 +56,18 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
-                        <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
+                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
                     </Button>
                     <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" >
-                        <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
+                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
                     </Button>
                     <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick">
-                        <TextBlock HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
+                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
                     </Button>                    
                 </StackPanel>
                 <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
-                    <TextBlock Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
-                    <TextBlock Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
+                    <TextBlock FontFamily="{StaticResource Roboto}" Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
+                    <TextBlock FontFamily="{StaticResource Roboto}" Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
                 </StackPanel>
             </Grid>
             <Grid Grid.Column="1" x:Name="FrameGrid">

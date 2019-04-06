@@ -8,10 +8,15 @@ using System.Windows;
 
 namespace NitroxLauncher
 {
-    /// <summary>
-    /// Interaktionslogik für "App.xaml"
-    /// </summary>
     public partial class App : Application
     {
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            // If something went wrong. Close the server
+            MainWindow window = (MainWindow)Application.Current.MainWindow;
+            window.CloseInternalServerAndRemovePatch();
+
+            throw e.Exception;
+        }
     }
 }
