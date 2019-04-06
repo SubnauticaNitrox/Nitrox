@@ -205,9 +205,9 @@
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <CopyToLibFolder Include=" ../lib/discord-rpc.dll" />
+      <CopyToMonoFolder Include=" ../lib/discord-rpc.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(CopyToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(CopyToMonoFolder)" DestinationFolder="$(OutputPath)lib/Mono" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
       <MoveToAssets Include="$(SolutionDir)AssetBundles/*" />
     </ItemGroup>

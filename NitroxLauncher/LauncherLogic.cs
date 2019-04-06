@@ -87,6 +87,7 @@ namespace NitroxLauncher
                 gameStarting = true;
 
                 SyncAssetBundles(subnauticaPath);
+                SyncMonoAssemblies(subnauticaPath);
                 SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
                 NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -267,7 +268,17 @@ namespace NitroxLauncher
             CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
 
             List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
+            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);            
+        }
+
+        private void SyncMonoAssemblies(string subnauticaPath)
+        {
+            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
+            string launcherMonoPath = Path.Combine(libDirectory, "Mono");
+            string subnauticaMonoPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Mono");
+
+            List<string> ignoreNoBinaries = new List<string>();
+            CopyAllAssemblies(launcherMonoPath, subnauticaMonoPath, ignoreNoBinaries);
         }
 
         private void SyncAssetBundles(string subnauticaPath)
