@@ -4,6 +4,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -274,11 +275,12 @@ namespace NitroxClient.GameLogic
 
         private void Crafter_Remote_LockStatusChanged(string guid, bool locked)
         {
-            GameObject _gameObject = GuidHelper.RequireObjectFrom(guid);
-            if (_gameObject != null)
+            Optional<GameObject> _opgameObject = GuidHelper.GetObjectFrom(guid);
+            if (!_opgameObject.IsEmpty())
             {
-                GhostCrafter _crafter = _gameObject.RequireComponentInChildren<GhostCrafter>(true);
-                Constructable _constructable = _gameObject.RequireComponentInChildren<Constructable>(true);
+                GameObject _gameObject = _opgameObject.Get();
+                GhostCrafter _crafter = _gameObject.GetComponentInChildren<GhostCrafter>(true);
+                Constructable _constructable = _gameObject.GetComponentInChildren<Constructable>(true);
                 if (_crafter != null && _constructable != null)
                 {
                     if (_crafter is Fabricator && _constructable.constructed)

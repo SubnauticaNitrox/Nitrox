@@ -107,7 +107,7 @@ namespace NitroxClient.GameLogic
 #endif
 
                     SimulateGuid(simulatedEntity.Guid, simulatedEntity.LockType, simulatedEntity.PlayerId);
-                    if(OnLockStatusChanged != null)
+                    if(OnLockStatusChanged != null && simulatedEntity.LockType == SimulationLockType.EXCLUSIVE)
                     {
                         OnLockStatusChanged(simulatedEntity.Guid, true);
                     }
@@ -121,9 +121,15 @@ namespace NitroxClient.GameLogic
 #if TRACE && OWNERSHIP
             NitroxModel.Logger.Log.Debug("RemoteSimulationOwnershipRelease - guid: " + simulationOwnershipRelease.Guid);
 #endif
+            bool _needNotify = false;
+            if(simulatedGuidsByLockType.ContainsKey(simulationOwnershipRelease.Guid) && simulatedGuidsByLockType[simulationOwnershipRelease.Guid].LockType == SimulationLockType.EXCLUSIVE)
+            {
+                _needNotify = true;
+            }
 
             StopSimulatingGuid(simulationOwnershipRelease.Guid);
-            if (OnLockStatusChanged != null)
+
+            if (OnLockStatusChanged != null && _needNotify)
             {
                 OnLockStatusChanged(simulationOwnershipRelease.Guid, false);
             }
