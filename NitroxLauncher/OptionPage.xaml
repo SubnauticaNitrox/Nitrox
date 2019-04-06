@@ -8,13 +8,14 @@
       d:DesignHeight="470" d:DesignWidth="719"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
       Title="OptionPage"
-      Name="OptionsPage" >
+      Name="OptionsPage" 
+      Margin="0">
     <Page.Resources>
         
     </Page.Resources>
-    <Grid Height="470" Width="719" >
+    <Grid >
         <Image x:Name="BackgroundImage" Source="Images/Vines.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Grid Margin="30,0,0,0">
+        <Grid Height="470" Width="719" Margin="30,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>

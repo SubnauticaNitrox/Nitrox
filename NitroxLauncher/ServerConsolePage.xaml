@@ -7,7 +7,8 @@
       mc:Ignorable="d" 
       d:DesignHeight="470" d:DesignWidth="719"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
-      Title="ServerConsolePage">
+      Title="ServerConsolePage"
+      Margin="0">
     <Grid>
         <Image x:Name="BackgroundImage" Source="Images/EscapePod.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <Grid>
