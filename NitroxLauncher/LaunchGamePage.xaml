@@ -11,6 +11,7 @@
         
     </Page.Resources>
     <Grid Height="470" Width="719">
+        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <Grid Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Image Stretch="Fill" Source="Images/SubnauticaMain.png" Height="36" Width="305.69" />
         </Grid>
