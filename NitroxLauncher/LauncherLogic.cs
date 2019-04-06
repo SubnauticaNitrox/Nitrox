@@ -87,6 +87,7 @@ namespace NitroxLauncher
                 gameStarting = true;
 
                 SyncAssetBundles(subnauticaPath);
+                SyncMonoAssemblies(subnauticaPath);
                 SyncAssembliesBetweenSubnauticaManagedAndLib(subnauticaPath);
 
                 NitroxEntryPatch nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
@@ -162,14 +163,15 @@ namespace NitroxLauncher
         internal void StartSubnautica(string subnauticaPath)
         {
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
-            var startInfo = new ProcessStartInfo();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.WorkingDirectory = subnauticaPath;
             startInfo.FileName = subnauticaExe;
 
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
                 startInfo.Arguments = "-EpicPortal";
-            } else if (PlatformDetection.IsSteam(subnauticaPath))
+            }
+            else if (PlatformDetection.IsSteam(subnauticaPath))
             {
                 startInfo.FileName = "steam://run/264710";
             }
@@ -177,17 +179,17 @@ namespace NitroxLauncher
             gameProcess = Process.Start(startInfo);            
         }
 
-
-
         internal string LoadSettings()
         {
             List<string> errors = new List<string>();
             Optional<string> installation = GameInstallationFinder.Instance.FindGame(errors);
+
             if (installation.IsEmpty())
             {
                 installation = Optional<string>.Of(installation.OrElse(@"C:\Program Files\Epic Games\Subnautica"));
                 File.WriteAllText("path.txt", installation.Get());
             }
+
             return installation.Get();
         } 
 
@@ -204,6 +206,7 @@ namespace NitroxLauncher
 
             string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
             ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
+
             if(!windowed)
             {
                 startInfo.UseShellExecute = false;
@@ -211,7 +214,9 @@ namespace NitroxLauncher
                 startInfo.RedirectStandardInput = true;
                 startInfo.CreateNoWindow = true;
             }
-            serverProcess = Process.Start(startInfo);           
+
+            serverProcess = Process.Start(startInfo);  
+            
             if (!windowed && StartServerEvent != null)
             {
                 StartServerEvent(serverProcess, new EventArgs());
@@ -239,6 +244,7 @@ namespace NitroxLauncher
                 MessageBox.Show("An instance of Nitrox Server is already running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return true;
             }
+
             List<string> errors = new List<string>();
             Optional<string> installation = GameInstallationFinder.Instance.FindGame(errors);
 
@@ -262,11 +268,30 @@ namespace NitroxLauncher
             CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
 
             List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
+            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);            
+        }
+
+        private void SyncMonoAssemblies(string subnauticaPath)
+        {
+            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
+            string launcherMonoPath = Path.Combine(libDirectory, "Mono");
+            string subnauticaMonoPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Mono");
+
+            List<string> ignoreNoBinaries = new List<string>();
+            CopyAllAssemblies(launcherMonoPath, subnauticaMonoPath, ignoreNoBinaries);
         }
 
         private void SyncAssetBundles(string subnauticaPath)
         {
+            string currentDirectory = Directory.GetCurrentDirectory();
+
+            // Don't try to sync Asset Bundles if the user placed the launcher in the root
+            // of the subnautica folder.
+            if(NormalizePath(currentDirectory) == NormalizePath(subnauticaPath))
+            {
+                return;
+            }
+            
             string subnauticaAssetsPath = Path.Combine(subnauticaPath, "AssetBundles");
 
             string[] assetBundles = Directory.GetFiles("AssetBundles");
@@ -323,6 +348,13 @@ namespace NitroxLauncher
                     File.Copy(sourceFilePath, destinationFilePath, true);
                 }
             }
+        }
+
+        public string NormalizePath(string path)
+        {
+            return Path.GetFullPath(new Uri(path).LocalPath)
+                       .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                       .ToUpperInvariant();
         }
     }
 }
