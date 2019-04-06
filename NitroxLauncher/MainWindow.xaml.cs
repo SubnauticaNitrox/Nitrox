@@ -149,23 +149,28 @@ namespace NitroxLauncher
         
         private void SetActive(Button activeButton)
         {
-            foreach (var item in SideBarPanel.Children)
+            foreach (var children in SideBarPanel.Children)
             {
-                if(item is Button button)
+                if (children is Grid grid)
                 {
-                    
-                    if (button.Content is TextBlock block)
+                    foreach (var item in grid.Children)
                     {
-                        if (button == activeButton)
+                        if (item is Button button)
                         {
-                            block.FontWeight = FontWeights.Bold;
-                            block.Foreground = Brushes.White;
-                        }
-                        else // set as not active
-                        {
-                            block.FontWeight = FontWeights.Normal;
-                            var bc = new BrushConverter();
-                            block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
+                            if (button.Content is TextBlock block)
+                            {
+                                if (button == activeButton)
+                                {
+                                    block.FontWeight = FontWeights.Bold;
+                                    block.Foreground = Brushes.White;
+                                }
+                                else // set as not active
+                                {
+                                    block.FontWeight = FontWeights.Normal;
+                                    var bc = new BrushConverter();
+                                    block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
+                                }
+                            }
                         }
                     }
                 }
