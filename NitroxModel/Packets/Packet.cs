@@ -56,8 +56,7 @@ namespace NitroxModel.Packets
             DEFAULT = 0,
             PLAYER_MOVEMENT = 1,
             VEHICLE_MOVEMENT = 2,
-            PLAYER_STATS = 3,
-            ENTITY_UPDATES = 4
+            PLAYER_STATS = 3
         }
 
         public byte[] Serialize()
