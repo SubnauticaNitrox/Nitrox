@@ -2,6 +2,7 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic.Helper;
+using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxPatcher.Patches
@@ -14,11 +15,11 @@ namespace NitroxPatcher.Patches
     public class BaseDeconstructable_Constructor_Patch : NitroxPatch
     {
         public static readonly Type TARGET_CLASS = typeof(BaseDeconstructable);
-        public static readonly ConstructorInfo TARGET_METHOD = TARGET_CLASS.GetConstructor(new Type[] { });
+        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("MakeCellDeconstructable");
 
-        public static void Postfix(BaseDeconstructable __instance)
+        public static void Postfix(Transform geometry)
         {
-            TransientLocalObjectManager.Add(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE, __instance.gameObject);
+            TransientLocalObjectManager.Add(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE, geometry.gameObject);
         }
 
         public override void Patch(HarmonyInstance harmony)
