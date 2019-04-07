@@ -6,13 +6,14 @@
       xmlns:local="clr-namespace:NitroxLauncher"
       mc:Ignorable="d" 
       d:DesignHeight="470" d:DesignWidth="719"
-      Title="Launch Game">
+      Title="Launch Game"
+      Margin="0">
     <Page.Resources>
         
     </Page.Resources>
-    <Grid Height="470" Width="719">
+    <Grid >
         <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Grid Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Grid Height="470" Width="719" Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Image Stretch="Fill" Source="Images/SubnauticaMain.png" Height="36" Width="305.69" />
         </Grid>
         <Grid Margin="0,204,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="522.07" Height="98">

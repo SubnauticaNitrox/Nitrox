@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png" Closing="OnClosing">
+        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
     <Window.Resources>
-            
+
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome
             ResizeBorderThickness="0"
             CaptionHeight="72"
             CornerRadius="0"
-            GlassFrameThickness="0"
+            GlassFrameThickness="3"
             />
     </WindowChrome.WindowChrome>
     <Grid Margin="0,0,0,0">
@@ -23,7 +23,7 @@
             <RowDefinition Height="72"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+        <Image x:Name="BackgroundImage" Margin="0,0,0,0" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Image.Effect>
                 <BlurEffect Radius="7" />
             </Image.Effect>
@@ -56,13 +56,19 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
-                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
+                        <Grid Width="225">
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
+                        </Grid>
                     </Button>
                     <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" >
-                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
+                        <Grid Width="225">
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
+                        </Grid>
                     </Button>
                     <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick">
-                        <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Center" Margin="0,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
+                        <Grid Width="225">
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
+                        </Grid>
                     </Button>                    
                 </StackPanel>
                 <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
