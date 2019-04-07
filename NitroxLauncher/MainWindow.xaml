@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="542" Width="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="Images/Nitrox.png" Closing="OnClosing">
+        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
     <Window.Resources>
-            
+
     </Window.Resources>
     <WindowChrome.WindowChrome>
         <WindowChrome
             ResizeBorderThickness="0"
             CaptionHeight="72"
             CornerRadius="0"
-            GlassFrameThickness="0"
+            GlassFrameThickness="3"
             />
     </WindowChrome.WindowChrome>
     <Grid Margin="0,0,0,0">
