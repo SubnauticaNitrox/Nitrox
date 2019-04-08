@@ -2,9 +2,10 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
@@ -37,8 +38,8 @@ namespace NitroxPatcher.Patches
             if (__state)
             {
                 SubRoot cyclops = (SubRoot)__instance.ReflectionGet("subRoot");
-                string guid = GuidHelper.GetGuid(cyclops.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeEngineMode(guid, __instance.motorModeIndex);
+                NitroxId id = NitroxIdentifier.GetId(cyclops.gameObject);
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeEngineMode(id, __instance.motorModeIndex);
             }
         }
 

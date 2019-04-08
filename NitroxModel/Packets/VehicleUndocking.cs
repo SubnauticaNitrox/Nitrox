@@ -1,24 +1,25 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleUndocking : Packet
     {
-        public string VehicleGuid { get; }
-        public string DockGuid { get; }
+        public NitroxId VehicleId { get; }
+        public NitroxId DockId { get; }
         public ushort PlayerId { get; }
 
-        public VehicleUndocking(string vehicleGuid, string dockGuid, ushort playerId)
+        public VehicleUndocking(NitroxId vehicleId, NitroxId dockId, ushort playerId)
         {
-            VehicleGuid = vehicleGuid;
-            DockGuid = dockGuid;
+            VehicleId = vehicleId;
+            DockId = dockId;
             PlayerId = playerId;
         }
 
         public override string ToString()
         {
-            return "[VehicleUndocking VehicleGuid: " + VehicleGuid + " DockGuid: " + DockGuid + " PlayerId: " + PlayerId + "]";
+            return "[VehicleUndocking VehicleId: " + VehicleId + " DockId: " + DockId + " PlayerId: " + PlayerId + "]";
         }
     }
 }

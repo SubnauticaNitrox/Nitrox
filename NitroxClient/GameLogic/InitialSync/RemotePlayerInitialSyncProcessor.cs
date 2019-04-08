@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -31,9 +31,9 @@ namespace NitroxClient.GameLogic.InitialSync
                 List<TechType> equippedTechTypes = playerData.EquippedTechTypes.Select(techType => techType.Enum()).ToList();
                 RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, equippedTechTypes);
 
-                if (playerData.SubRootGuid.IsPresent())
+                if (playerData.SubRootId.IsPresent())
                 {
-                    Optional<GameObject> sub = GuidHelper.GetObjectFrom(playerData.SubRootGuid.Get());
+                    Optional<GameObject> sub = NitroxIdentifier.GetObjectFrom(playerData.SubRootId.Get());
 
                     if (sub.IsPresent())
                     {
@@ -41,7 +41,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        Log.Error("Could not spawn remote player into subroot with guid: " + playerData.SubRootGuid.Get());
+                        Log.Error("Could not spawn remote player into subroot with id: " + playerData.SubRootId.Get());
                     }
                 }
             }

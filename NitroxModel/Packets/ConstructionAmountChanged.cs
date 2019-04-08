@@ -1,23 +1,23 @@
 ﻿using System;
-using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructionAmountChanged : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public float ConstructionAmount { get; }
 
-        public ConstructionAmountChanged(string guid, float constructionAmount)
+        public ConstructionAmountChanged(NitroxId id, float constructionAmount)
         {
-            Guid = guid;
+            Id = id;
             ConstructionAmount = constructionAmount;
         }
 
         public override string ToString()
         {
-            return "[ConstructionAmountChanged Guid:" + Guid + " ConstructionAmount: " + ConstructionAmount + "]";
+            return "[ConstructionAmountChanged Id:" + Id + " ConstructionAmount: " + ConstructionAmount + "]";
         }
     }
 }

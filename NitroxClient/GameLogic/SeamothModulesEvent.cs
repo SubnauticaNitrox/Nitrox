@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 
@@ -16,7 +17,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastTorpedoLaunch(TechType techType, int slotID, SeaMoth instance)
         {
-            string Guid = GuidHelper.GetGuid(instance.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(instance.gameObject);
             TorpedoType torpedoType = null;
             ItemsContainer storageInSlot = instance.GetStorageInSlot(slotID, TechType.SeamothTorpedoModule);
 
@@ -31,17 +32,17 @@ namespace NitroxClient.GameLogic
 
             if (torpedoType != null) // Dont send packet if torpedo storage is empty
             {
-                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
+                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, id, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
                 packetSender.Send(Changed);
             }
         }
 
         public void BroadcastElectricalDefense(TechType techType, int slotID, SeaMoth instance)
         {
-            string Guid = GuidHelper.GetGuid(instance.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(instance.gameObject);
             if (techType == TechType.SeamothElectricalDefense)
             {
-                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, Guid, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
+                SeamothModulesAction Changed = new SeamothModulesAction(techType.Model(), slotID, id, Player.main.camRoot.GetAimingTransform().forward, Player.main.camRoot.GetAimingTransform().rotation);
                 packetSender.Send(Changed);
             }
         }

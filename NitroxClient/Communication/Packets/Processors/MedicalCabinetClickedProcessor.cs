@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -11,7 +11,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(MedicalCabinetClicked packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
             MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
 
             bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;

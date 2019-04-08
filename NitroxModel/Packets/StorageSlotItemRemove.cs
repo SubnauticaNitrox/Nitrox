@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class StorageSlotItemRemove : Packet
     {
-        public string OwnerGuid { get; }
+        public NitroxId OwnerId { get; }
 
-        public StorageSlotItemRemove(string ownerGuid)
+        public StorageSlotItemRemove(NitroxId ownerId)
         {
-            OwnerGuid = ownerGuid;
+            OwnerId = ownerId;
         }
 
         public override string ToString()
         {
-            return "[StorageSlotItemRemove OwnerGuid: " + OwnerGuid + "]";
+            return "[StorageSlotItemRemove ownerId: " + OwnerId + "]";
         }
     }
 }

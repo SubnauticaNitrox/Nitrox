@@ -18,9 +18,9 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ItemContainerRemove packet, Player player)
         {
-            inventoryData.ItemRemoved(packet.ItemGuid);
+            inventoryData.ItemRemoved(packet.ItemId);
 
-            if (packet.OwnerGuid != player.Id.ToString())
+            if (packet.OwnerId != player.GameObjectId)
             {
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }

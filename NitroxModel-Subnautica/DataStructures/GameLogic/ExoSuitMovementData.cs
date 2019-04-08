@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
@@ -23,8 +21,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             // For serialization purposes
         }
 
-        public ExosuitMovementData(NitroxModel.DataStructures.TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
-            Vector3 leftAimTarget, Vector3 rightAimTarget) : base(techType,guid,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle)
+        public ExosuitMovementData(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
+            Vector3 leftAimTarget, Vector3 rightAimTarget) : base(techType,id,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle)
         {
             LeftAimTarget = leftAimTarget;
             RightAimTarget = rightAimTarget;

@@ -1,12 +1,12 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using System.Collections;
 using UnityEngine;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -23,15 +23,15 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleUndocking packet)
         {
-            GameObject vehicleGo = GuidHelper.RequireObjectFrom(packet.VehicleGuid);
-            GameObject vehicleDockingBayGo = GuidHelper.RequireObjectFrom(packet.DockGuid);
+            GameObject vehicleGo = NitroxIdentifier.RequireObjectFrom(packet.VehicleId);
+            GameObject vehicleDockingBayGo = NitroxIdentifier.RequireObjectFrom(packet.DockId);
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
             
             using (packetSender.Suppress<VehicleUndocking>())
             {
-                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerId, true);
+                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, true);
                 vehicleDockingBay.subRoot.BroadcastMessage("OnLaunchBayOpening", SendMessageOptions.DontRequireReceiver);
                 SkyEnvironmentChanged.Broadcast(vehicleGo, (GameObject)null);
 

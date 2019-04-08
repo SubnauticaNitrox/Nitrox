@@ -1,19 +1,19 @@
 ﻿using System;
-using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class MedicalCabinetClicked : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public bool DoorOpen { get; }
         public bool HasMedKit { get; }
         public float NextSpawnTime { get; }
 
-        public MedicalCabinetClicked(string guid, bool doorOpen, bool hasMedKit, float nextSpawnTime)
+        public MedicalCabinetClicked(NitroxId id, bool doorOpen, bool hasMedKit, float nextSpawnTime)
         {
-            Guid = guid;
+            Id = id;
             DoorOpen = doorOpen;
             HasMedKit = hasMedKit;
             NextSpawnTime = nextSpawnTime;
@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[MedicalCabinetClicked guid: " + Guid + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
+            return "[MedicalCabinetClicked id: " + Id + " DoorOpen: " + DoorOpen + " HasMedKit: " + HasMedKit + " NextSpawnTime: " + NextSpawnTime + "]";
         }
     }
 }

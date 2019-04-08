@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<SeamothModulesAction>())
             using (packetSender.Suppress<ItemContainerRemove>())
             {
-                GameObject _gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+                GameObject _gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
                 if (seamoth != null)
                 {

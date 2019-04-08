@@ -6,18 +6,18 @@ namespace NitroxModel.Packets
     [Serializable]
     public class FabricatorItemPickup : Packet
     {
-        public string FabricatorGuid { get; }
+        public NitroxId FabricatorId { get; }
         public TechType TechType { get; }
 
-        public FabricatorItemPickup(string fabricatorGuid, TechType techType)
+        public FabricatorItemPickup(NitroxId fabricatorId, TechType techType)
         {
-            FabricatorGuid = fabricatorGuid;
+            FabricatorId = fabricatorId;
             TechType = techType;
         }
 
         public override string ToString()
         {
-            return "[FabricatorItemPickup - FabricatorGuid: " + FabricatorGuid + " TechType: " + TechType + "]";
+            return "[FabricatorItemPickup - FabricatorId: " + FabricatorId + " TechType: " + TechType + "]";
         }
     }
 }

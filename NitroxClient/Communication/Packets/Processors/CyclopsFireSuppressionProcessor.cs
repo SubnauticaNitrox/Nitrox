@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsFireSuppression fireSuppressionPacket)
         {
-            cyclops.StartFireSuppression(fireSuppressionPacket.Guid);
+            cyclops.StartFireSuppression(fireSuppressionPacket.Id);
         }
     }
 }

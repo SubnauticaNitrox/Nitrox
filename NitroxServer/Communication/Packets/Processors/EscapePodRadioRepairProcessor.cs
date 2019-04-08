@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(EscapePodRadioRepair packet, Player player)
         {
-            world.EscapePodManager.RepairEscapePodRadio(packet.Guid);
+            world.EscapePodManager.RepairEscapePodRadio(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);            
         }
     }

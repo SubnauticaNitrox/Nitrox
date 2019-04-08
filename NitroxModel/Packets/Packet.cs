@@ -6,8 +6,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.DataStructures.GameLogic;
 using LZ4;
 using NitroxModel.Networking;
 using System.Collections.Generic;
@@ -19,7 +17,7 @@ namespace NitroxModel.Packets
     {
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
-        private static readonly BinaryFormatter Serializer;
+        private static readonly BinaryFormatter serializer;
         
         static Packet()
         {
@@ -45,7 +43,7 @@ namespace NitroxModel.Packets
             }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
-            Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
+            serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
         public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.ReliableOrdered;
@@ -66,7 +64,7 @@ namespace NitroxModel.Packets
             using (MemoryStream ms = new MemoryStream())
             using (LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress))
             {
-                Serializer.Serialize(lz4Stream, this);
+                serializer.Serialize(lz4Stream, this);
                 packetData = ms.ToArray();
             }
 
@@ -78,7 +76,7 @@ namespace NitroxModel.Packets
             using (Stream stream = new MemoryStream(data))
             using (LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress))
             {
-                return (Packet)Serializer.Deserialize(lz4Stream);
+                return (Packet)serializer.Deserialize(lz4Stream);
             }
         }
 
@@ -89,7 +87,7 @@ namespace NitroxModel.Packets
             // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
 
             ISurrogateSelector selector;
-            return (Serializer.SurrogateSelector.GetSurrogate(type, Packet.Serializer.Context, out selector) != null);
+            return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
         }
         
         public WrapperPacket ToWrapperPacket()

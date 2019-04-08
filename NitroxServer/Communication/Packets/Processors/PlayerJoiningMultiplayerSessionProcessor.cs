@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
@@ -31,7 +32,7 @@ namespace NitroxServer.Communication.Packets.Processors
             timeKeeper.SendCurrentTimePacket(player);
 
             Optional<EscapePodModel> newlyCreatedEscapePod;
-            string assignedEscapePodGuid = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
+            NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
             if(newlyCreatedEscapePod.IsPresent())
             {
                 AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Get());
@@ -44,10 +45,10 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id.ToString(),
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
                                                                        wasBrandNewPlayer,
                                                                        world.EscapePodData.EscapePods,
-                                                                       assignedEscapePodGuid,
+                                                                       assignedEscapePodId,
                                                                        equippedItems,
                                                                        world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
                                                                        world.VehicleData.GetVehiclesForInitialSync(),
@@ -56,7 +57,7 @@ namespace NitroxServer.Communication.Packets.Processors
                                                                        world.GameData.PDAState.GetInitialPdaData(),
                                                                        world.GameData.StoryGoals.GetInitialStoryGoalData(),
                                                                        world.PlayerData.GetPlayerSpawn(player.Name),
-                                                                       world.PlayerData.GetSubRootGuid(player.Name),
+                                                                       world.PlayerData.GetSubRootId(player.Name),
                                                                        world.PlayerData.GetPlayerStats(player.Name),
                                                                        getRemotePlayerData(player),
                                                                        world.EntityData.GetGlobalRootEntities(),
@@ -77,7 +78,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(otherPlayer.Name);
                     List<NitroxModel.DataStructures.TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
-                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootGuid, techTypes);
+                    InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
                     playerData.Add(remotePlayer);
                 }
             }

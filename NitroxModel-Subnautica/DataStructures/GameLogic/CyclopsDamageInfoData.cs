@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using ProtoBufNet;
 using UnityEngine;
 
@@ -9,10 +10,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
     public class CyclopsDamageInfoData
     {
         [ProtoMember(1)]
-        public string ReceiverGuid { get; set; }
+        public NitroxId ReceiverId { get; set; }
 
         [ProtoMember(2)]
-        public string DealerGuid { get; set; }
+        public NitroxId DealerId { get; set; }
 
         [ProtoMember(3)]
         public float OriginalDamage { get; set; }
@@ -31,10 +32,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public CyclopsDamageInfoData(string receiverGuid, string dealerGuid, float originalDamage, float damage, Vector3 position, DamageType type)
+        public CyclopsDamageInfoData(NitroxId receiverId, NitroxId dealerId, float originalDamage, float damage, Vector3 position, DamageType type)
         {
-            ReceiverGuid = receiverGuid;
-            DealerGuid = dealerGuid;
+            ReceiverId = receiverId;
+            DealerId = dealerId;
             OriginalDamage = originalDamage;
             Damage = damage;
             Position = position;
@@ -43,8 +44,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[DamageInfoData - ReceiverGuid: " + ReceiverGuid 
-                + " DealerGuid:" + DealerGuid 
+            return "[DamageInfoData - ReceiverId: " + ReceiverId
+                + " DealerId:" + DealerId
                 + " OriginalDamage: " + OriginalDamage 
                 + " Damage: " + Damage
                 + " Position: " + Position

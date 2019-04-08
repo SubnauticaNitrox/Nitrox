@@ -5,18 +5,18 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public class InteractiveChildObjectIdentifier
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public string GameObjectNamePath { get; }
 
-        public InteractiveChildObjectIdentifier(string guid, string gameObjectNamePath)
+        public InteractiveChildObjectIdentifier(NitroxId id, string gameObjectNamePath)
         {
-            Guid = guid;
+            Id = id;
             GameObjectNamePath = gameObjectNamePath;
         }
 
         public override string ToString()
         {
-            return "[InteractiveChildObjectIdentifier - Guid: " + Guid + " GameObjectNamePath: " + GameObjectNamePath + "]";
+            return "[InteractiveChildObjectIdentifier - Id: " + Id + " GameObjectNamePath: " + GameObjectNamePath + "]";
         }
     }
 }

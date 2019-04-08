@@ -2,6 +2,8 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -9,7 +11,7 @@ namespace NitroxPatcher.Patches
 {
     /**
      * A DeconstructableBase is initialize when an base piece is fully created (unintuitively - this is the thing that tells the
-     * build that this object can be deconstructed.)  When this oject is destroyed (we call deconstruct) we want to store its guid
+     * build that this object can be deconstructed.)  When this oject is destroyed (we call deconstruct) we want to store its id
      * so that it can be later transfered to the ghost object that replaces it.
      */
     public class BaseDeconstructable_Deconstructor_Patch : NitroxPatch
@@ -19,9 +21,9 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix(BaseDeconstructable __instance)
         {
-            string guid = GuidHelper.GetGuid(__instance.gameObject);
-            Log.Info("Deconstructing " + guid);
-            TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, guid);
+            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
+            Log.Info("Deconstructing " + id);
+            TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -1,7 +1,7 @@
-﻿using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.InitialSync.Base;
+﻿using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -21,16 +21,16 @@ namespace NitroxClient.GameLogic.InitialSync
         public override void Process(InitialPlayerSync packet)
         {
             Vector3 position = packet.PlayerSpawnData;
-            Optional<string> subRootGuid = packet.PlayerSubRootGuid;
+            Optional<NitroxId> subRootId = packet.PlayerSubRootId;
 
             if (!(position.x == 0 && position.y == 0 && position.z == 0))
             {
                 Player.main.SetPosition(position);
             }
 
-            if (subRootGuid.IsPresent())
+            if (subRootId.IsPresent())
             {
-                Optional<GameObject> sub = GuidHelper.GetObjectFrom(subRootGuid.Get());
+                Optional<GameObject> sub = NitroxIdentifier.GetObjectFrom(subRootId.Get());
 
                 if (sub.IsPresent())
                 {
@@ -46,12 +46,12 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        Log.Error("Could not find subroot for player for subroot with guid: " + subRootGuid.Get());
+                        Log.Error("Could not find subroot for player for subroot with id: " + subRootId.Get());
                     }
                 }
                 else
                 {
-                    Log.Error("Could not spawn player into subroot with guid: " + subRootGuid.Get());
+                    Log.Error("Could not spawn player into subroot with id: " + subRootId.Get());
                 }
             }
         }

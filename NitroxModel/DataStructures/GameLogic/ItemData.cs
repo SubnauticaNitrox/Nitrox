@@ -9,10 +9,10 @@ namespace NitroxModel.DataStructures.GameLogic
     public class ItemData
     {
         [ProtoMember(1)]
-        public string ContainerGuid { get; }
+        public NitroxId ContainerId { get; }
 
         [ProtoMember(2)]
-        public string Guid { get; }
+        public NitroxId ItemId { get; }
 
         [ProtoMember(3)]
         public byte[] SerializedData { get; }
@@ -22,16 +22,16 @@ namespace NitroxModel.DataStructures.GameLogic
             // For serialization
         }
 
-        public ItemData(string containerGuid, string guid, byte[] serializedData)
+        public ItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData)
         {
-            ContainerGuid = containerGuid;
-            Guid = guid;
+            ContainerId = containerId;
+            ItemId = itemId;
             SerializedData = serializedData;
         }
 
         public override string ToString()
         {
-            return "[ItemData ContainerGuid: " + ContainerGuid + "Guid: " + Guid + "]";
+            return "[ItemData ContainerId: " + ContainerId + "Id: " + ItemId + "]";
         }
     }
 }

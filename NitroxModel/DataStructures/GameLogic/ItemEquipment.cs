@@ -18,7 +18,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // For serialization
         }
 
-        public EquippedItemData(string containerGuid, string guid, byte[] serializedData, string slot, TechType techType) : base(containerGuid, guid, serializedData)
+        public EquippedItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData, string slot, TechType techType) : base(containerId, itemId, serializedData)
         {
             Slot = slot;
             TechType = techType;
@@ -26,7 +26,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[EquippedItemData ContainerGuid: " + ContainerGuid + "Guid: " + Guid + " Slot: " + Slot + " TechType: " + TechType + "]";
+            return "[EquippedItemData ContainerGuid: " + ContainerId + "Id: " + ItemId + " Slot: " + Slot + " TechType: " + TechType + "]";
         }
     }
 }

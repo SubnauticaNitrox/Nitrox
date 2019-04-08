@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using System.Collections.Generic;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Items
 {
@@ -8,84 +9,84 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryData
     {
         [ProtoMember(1)]
-        public Dictionary<string, ItemData> SerializableInsertedInventoryItemsByGuid
+        public Dictionary<NitroxId, ItemData> SerializableInsertedInventoryItemsById
         {
             get
             {
-                lock (insertedInventoryItemsByGuid)
+                lock (insertedInventoryItemsById)
                 {
-                    return new Dictionary<string, ItemData>(insertedInventoryItemsByGuid);
+                    return new Dictionary<NitroxId, ItemData>(insertedInventoryItemsById);
                 }
             }
-            set { insertedInventoryItemsByGuid = value; }
+            set { insertedInventoryItemsById = value; }
         }
         
         [ProtoMember(2)]
-        public Dictionary<string, ItemData> SerializableStorageSlotItemsByGuid
+        public Dictionary<NitroxId, ItemData> SerializableStorageSlotItemsById
         {
             get
             {
-                lock (storageSlotItemsByGuid)
+                lock (storageSlotItemsById)
                 {
-                    return new Dictionary<string, ItemData>(storageSlotItemsByGuid);
+                    return new Dictionary<NitroxId, ItemData>(storageSlotItemsById);
                 }
             }
-            set { storageSlotItemsByGuid = value; }
+            set { storageSlotItemsById = value; }
         }
         
         [ProtoIgnore]
-        private Dictionary<string, ItemData> insertedInventoryItemsByGuid = new Dictionary<string, ItemData>();
+        private Dictionary<NitroxId, ItemData> insertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
 
-        private Dictionary<string, ItemData> storageSlotItemsByGuid = new Dictionary<string, ItemData>();
+        private Dictionary<NitroxId, ItemData> storageSlotItemsById = new Dictionary<NitroxId, ItemData>();
 
         public void ItemAdded(ItemData itemData)
         {
-            lock(insertedInventoryItemsByGuid)
+            lock(insertedInventoryItemsById)
             {
-                insertedInventoryItemsByGuid[itemData.Guid] = itemData;
+                insertedInventoryItemsById[itemData.ItemId] = itemData;
             }
         }
 
-        public void ItemRemoved(string itemGuid)
+        public void ItemRemoved(NitroxId itemId)
         {
-            lock (insertedInventoryItemsByGuid)
+            lock (insertedInventoryItemsById)
             {
-                insertedInventoryItemsByGuid.Remove(itemGuid);
+                insertedInventoryItemsById.Remove(itemId);
             }
         }
         
         public List<ItemData> GetAllItemsForInitialSync()
         {
-            lock (insertedInventoryItemsByGuid)
+            lock (insertedInventoryItemsById)
             {
-                return new List<ItemData>(insertedInventoryItemsByGuid.Values);
+                return new List<ItemData>(insertedInventoryItemsById.Values);
             }
         }
 
         
         public void StorageItemAdded(ItemData itemData)
         {
-            lock (storageSlotItemsByGuid)
+            lock (storageSlotItemsById)
             {
-                storageSlotItemsByGuid[itemData.ContainerGuid] = itemData;
+                storageSlotItemsById[itemData.ContainerId] = itemData;
             }
         }
 
-        public bool StorageItemRemoved(string ownerGuid)
+        public bool StorageItemRemoved(NitroxId ownerId)
         {
             bool success = false;
-            lock (storageSlotItemsByGuid)
+            lock (storageSlotItemsById)
             {
-                success = storageSlotItemsByGuid.Remove(ownerGuid);
+                success = storageSlotItemsById.Remove(ownerId);
             }
             return success;
         }
 
         public List<ItemData> GetAllStorageItemsForInitialSync()
         {
-            lock (storageSlotItemsByGuid)
+            lock (storageSlotItemsById)
             {
-                return new List<ItemData>(storageSlotItemsByGuid.Values);
+                return new List<ItemData>(storageSlotItemsById.Values);
             }
         }        
     }

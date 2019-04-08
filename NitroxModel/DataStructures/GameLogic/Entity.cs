@@ -24,7 +24,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public TechType TechType { get; set; }
 
         [ProtoMember(5)]
-        public string Guid { get; set; }
+        public NitroxId Id { get; set; }
 
         [ProtoMember(6)]
         public int Level { get; set; }
@@ -40,7 +40,7 @@ namespace NitroxModel.DataStructures.GameLogic
                                      // Server-spawned entities need to be techType white-listed to be simulated
 
         [ProtoMember(10)]
-        public string WaterParkGuid { get; set; }
+        public NitroxId WaterParkId { get; set; }
 
         [ProtoMember(11)]
         public byte[] SerializedGameObject { get; set; } // Some entities (such as dropped items) have already been serialized and include 
@@ -53,39 +53,39 @@ namespace NitroxModel.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, string guid)
+        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId id)
         {
             Position = position;
             Rotation = rotation;
             Scale = scale;
             TechType = techType;
-            Guid = guid;
+            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkGuid = null;
+            WaterParkId = null;
             SerializedGameObject = null;
             ExistsInGlobalRoot = false;
         }
 
-        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, string waterParkGuid, byte[] serializedGameObject, bool existsInGlobalRoot, string guid)
+        public Entity(Vector3 position, Quaternion rotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
         {
             Position = position;
             Rotation = rotation;
             Scale = scale;
             TechType = techType;
-            Guid = guid;
+            Id = id;
             Level = level;
             ClassId = classId;
             SpawnedByServer = spawnedByServer;
-            WaterParkGuid = waterParkGuid;
+            WaterParkId = waterParkId;
             SerializedGameObject = serializedGameObject;
             ExistsInGlobalRoot = existsInGlobalRoot;
         }
 
         public override string ToString()
         {
-            return "[Entity Position: " + Position + " TechType: " + TechType + " Guid: " + Guid + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + ChildEntities + " SpawnedByServer: " + SpawnedByServer + "]";
+            return "[Entity Position: " + Position + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + ChildEntities + " SpawnedByServer: " + SpawnedByServer + "]";
         }
     }
 }

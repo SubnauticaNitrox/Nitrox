@@ -1,11 +1,11 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using System;
 using System.Reflection;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -34,20 +34,20 @@ namespace NitroxPatcher.Patches
 
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
-            string guid = GuidHelper.GetGuid(vehicle.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(vehicle.gameObject);
 
-            if (simulationOwnership.HasExclusiveLock(guid))
+            if (simulationOwnership.HasExclusiveLock(id))
             {
-                Log.Debug($"Already have an exclusive lock on this vehicle: {guid}");
+                Log.Debug($"Already have an exclusive lock on this vehicle: {id}");
                 return true;
             }
 
-            simulationOwnership.RequestSimulationLock(guid, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
 
             return false;
         }
 
-        private static void ReceivedSimulationLockResponse(string guid, bool lockAquired)
+        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired)
         {
             if (lockAquired)
             {

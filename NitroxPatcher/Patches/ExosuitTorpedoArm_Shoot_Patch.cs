@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -30,7 +27,7 @@ namespace NitroxPatcher.Patches
                 }
                 if(siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
                 {
-                    Log.Error("Exosuit torpedo arm siloTransform is not first or second silo " + GuidHelper.GetGuid(__instance.gameObject));
+                    Log.Error("Exosuit torpedo arm siloTransform is not first or second silo " + NitroxIdentifier.GetId(__instance.gameObject));
                 }
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance, 

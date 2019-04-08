@@ -20,14 +20,14 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PickupItem packet, Player player)
         {
-            if(simulationOwnershipData.RevokeOwnerOfGuid(packet.Guid))
+            if(simulationOwnershipData.RevokeOwnerOfId(packet.Id))
             {
                 ushort serverId = ushort.MaxValue;
-                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Guid, serverId, NitroxModel.DataStructures.SimulationLockType.TRANSIENT);
+                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, NitroxModel.DataStructures.SimulationLockType.TRANSIENT);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
             }
             
-            entityManager.PickUpEntity(packet.Guid);
+            entityManager.PickUpEntity(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

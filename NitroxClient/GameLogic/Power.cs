@@ -1,4 +1,5 @@
 ﻿using NitroxClient.Communication.Abstract;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -14,9 +15,9 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void ChargeChanged(string guid, float amount, PowerType powerType)
+        public void ChargeChanged(NitroxId id, float amount, PowerType powerType)
         {
-            PowerLevelChanged powerChanged = new PowerLevelChanged(guid, amount, powerType);
+            PowerLevelChanged powerChanged = new PowerLevelChanged(id, amount, powerType);
             packetSender.Send(powerChanged);
             Log.Debug(powerChanged);
         }

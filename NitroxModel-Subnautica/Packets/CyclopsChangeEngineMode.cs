@@ -1,23 +1,24 @@
 ﻿using System;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CyclopsChangeEngineMode : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public CyclopsMotorMode.CyclopsMotorModes Mode { get; }
 
-        public CyclopsChangeEngineMode(string guid, CyclopsMotorMode.CyclopsMotorModes mode)
+        public CyclopsChangeEngineMode(NitroxId id, CyclopsMotorMode.CyclopsMotorModes mode)
         {
-            Guid = guid;
+            Id = id;
             Mode = mode;
         }
 
         public override string ToString()
         {
-            return "[CyclopsChangeEngineMode Guid: " + Guid + " Mode: " + Mode + "]";
+            return "[CyclopsChangeEngineMode Id: " + Id + " Mode: " + Mode + "]";
         }
     }
 }

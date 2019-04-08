@@ -31,7 +31,6 @@ namespace NitroxClient.GameLogic.Spawning
                     if (child.IsPresent())
                     {
                         child.Get().AddComponent<ReefbackCreature>();
-                        child.Get().AddComponent<NitroxEntity>();
                     }
                 }
             }

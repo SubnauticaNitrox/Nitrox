@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleColorChange colorPacket)
         {
-            GameObject target = GuidHelper.RequireObjectFrom(colorPacket.Guid);
+            GameObject target = NitroxIdentifier.RequireObjectFrom(colorPacket.Id);
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
             SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 

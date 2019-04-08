@@ -2,9 +2,8 @@
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -26,9 +25,9 @@ namespace NitroxClient.Communication.Packets.Processors
             ItemData itemData = packet.ItemData;
             GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);            
             
-            item.SetNewGuid(itemData.Guid);
+            NitroxIdentifier.SetNewId(item, itemData.ItemId);
 
-            storageSlots.AddItem(item, itemData.ContainerGuid);            
+            storageSlots.AddItem(item, itemData.ContainerId);            
         }
     }
 }

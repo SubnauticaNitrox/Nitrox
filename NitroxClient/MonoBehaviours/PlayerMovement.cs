@@ -7,6 +7,7 @@ using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -61,7 +62,7 @@ namespace NitroxClient.MonoBehaviours
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
 
-            string guid;
+            NitroxId id;
             Vector3 position;
             Quaternion rotation;
             Vector3 velocity;
@@ -74,7 +75,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (vehicle != null)
             {
-                guid = GuidHelper.GetGuid(vehicle.gameObject);
+                id = NitroxIdentifier.GetId(vehicle.gameObject);
                 position = vehicle.gameObject.transform.position;
                 rotation = vehicle.gameObject.transform.rotation;
                 techType = CraftData.GetTechType(vehicle.gameObject);
@@ -119,7 +120,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else if (sub != null && Player.main.isPiloting)
             {
-                guid = GuidHelper.GetGuid(sub.gameObject);
+                id = NitroxIdentifier.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
                 rotation = sub.gameObject.transform.rotation;
                 Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
@@ -138,7 +139,7 @@ namespace NitroxClient.MonoBehaviours
             }
 
             VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(  techType, 
-                                                                                        guid, 
+                                                                                        id, 
                                                                                         position, 
                                                                                         rotation, 
                                                                                         velocity, 

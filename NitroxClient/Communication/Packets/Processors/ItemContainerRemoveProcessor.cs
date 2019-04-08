@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ItemContainerRemove packet)
         {
-            itemContainer.RemoveItem(packet.OwnerGuid, packet.ItemGuid);
+            itemContainer.RemoveItem(packet.OwnerId, packet.ItemId);
         }
     }
 }

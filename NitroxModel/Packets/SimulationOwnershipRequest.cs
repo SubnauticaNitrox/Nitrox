@@ -7,19 +7,19 @@ namespace NitroxModel.Packets
     public class SimulationOwnershipRequest : Packet
     {
         public ushort PlayerId { get; }
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulationOwnershipRequest(ushort playerId, string guid, SimulationLockType lockType)
+        public SimulationOwnershipRequest(ushort playerId, NitroxId id, SimulationLockType lockType)
         {
             PlayerId = playerId;
-            Guid = guid;
+            Id = id;
             LockType = lockType;
         }
 
         public override string ToString()
         {
-            return "[SimulationOwnershipRequest - PlayerId: " + PlayerId + " Guid: " + Guid + " PlayerId: " + PlayerId + " LockType: " + LockType + "]";
+            return "[SimulationOwnershipRequest - PlayerId: " + PlayerId + " Id: " + Id + " PlayerId: " + PlayerId + " LockType: " + LockType + "]";
         }
     }
 }

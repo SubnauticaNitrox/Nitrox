@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -25,28 +26,31 @@ namespace NitroxClient.GameLogic
 
         public void SpawnedArm(Exosuit exosuit)
         {
-            string Guid = GuidHelper.GetGuid(exosuit.gameObject);            
-            ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(Guid);
+            NitroxId id = NitroxIdentifier.GetId(exosuit.gameObject);            
+            ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(id);
             
             IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");            
-            IExosuitArm leftArm = (IExosuitArm)exosuit.ReflectionGet("leftArm");            
+            IExosuitArm leftArm = (IExosuitArm)exosuit.ReflectionGet("leftArm");  
+            
             try
             {
                 GameObject rightArmGameObject = rightArm.GetGameObject();
-                rightArmGameObject.SetNewGuid(exosuitModel.RightArmGuid);
-                GameObject leftArmGameObject = leftArm.GetGameObject();
-                leftArmGameObject.SetNewGuid(exosuitModel.LeftArmGuid);                
+                NitroxIdentifier.SetNewId(rightArmGameObject, exosuitModel.RightArmId);
 
-            } catch (Exception e)
+                GameObject leftArmGameObject = leftArm.GetGameObject();
+                NitroxIdentifier.SetNewId(leftArmGameObject, exosuitModel.LeftArmId);
+            }
+            catch (Exception e)
             {
                 Log.Warn("Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
             }
-            Log.Debug("Spawn exosuit arms for: " + Guid);
+
+            Log.Debug("Spawn exosuit arms for: " + id);
         }                
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
         {
-            string guid = GuidHelper.GetGuid(clawArm.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(clawArm.gameObject);
             ExosuitArmAction action;
 
             // If cooldown of claw arm matches pickup cooldown, the exosuit arm performed a pickup action
@@ -99,8 +103,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null, Optional<Quaternion> opRotation = null)
         {
-            string guid = GuidHelper.GetGuid(exosuitArm.GetGameObject());            
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, guid, armAction, opVector, opRotation);
+            NitroxId id = NitroxIdentifier.GetId(exosuitArm.GetGameObject());            
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
             packetSender.Send(packet);
         }        
 

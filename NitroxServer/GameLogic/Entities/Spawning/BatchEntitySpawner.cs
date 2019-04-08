@@ -214,7 +214,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               cellLevel,
                                               classId,
                                               true,
-                                              deterministicBatchGenerator.NextGuid());
+                                              deterministicBatchGenerator.NextId());
             
             
             yield return spawnedEntity;
@@ -260,7 +260,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                             cellLevel,
                                             prefab.ClassId,
                                             true,
-                                            deterministicBatchGenerator.NextGuid());
+                                            deterministicBatchGenerator.NextId());
 
                     entity.ChildEntities.Add(prefabEntity);
                 }

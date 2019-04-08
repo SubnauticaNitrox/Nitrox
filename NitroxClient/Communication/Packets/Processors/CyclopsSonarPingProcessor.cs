@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsSonarPing sonarPacket)
         {
-            cyclops.SonarPing(sonarPacket.Guid);
+            cyclops.SonarPing(sonarPacket.Id);
         }
     }
 }

@@ -1,16 +1,17 @@
 ﻿using System;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CyclopsDestroyed : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
 
-        public CyclopsDestroyed(string guid)
+        public CyclopsDestroyed(NitroxId id)
         {
-            Guid = guid;
+            Id = id;
         }
     }
 }

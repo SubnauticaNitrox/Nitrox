@@ -1,24 +1,25 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleOnPilotModeChanged : Packet
     {
-        public string VehicleGuid { get; }
+        public NitroxId VehicleId { get; }
         public ushort PlayerId { get; }
         public bool IsPiloting { get; }
 
-        public VehicleOnPilotModeChanged(string vehicleGuid, ushort playerId, bool isPiloting)
+        public VehicleOnPilotModeChanged(NitroxId vehicleId, ushort playerId, bool isPiloting)
         {
-            VehicleGuid = vehicleGuid;
+            VehicleId = vehicleId;
             PlayerId = playerId;
             IsPiloting = isPiloting;
         }
 
         public override string ToString()
         {
-            return "[VehicleOnPilotModeChanged - VehicleGuid: " + VehicleGuid + " PlayerId: " + PlayerId + " IsPiloting: " + IsPiloting + "]";
+            return "[VehicleOnPilotModeChanged - VehicleId: " + VehicleId + " PlayerId: " + PlayerId + " IsPiloting: " + IsPiloting + "]";
         }
     }
 }

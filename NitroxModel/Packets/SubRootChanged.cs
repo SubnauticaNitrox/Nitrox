@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.Util;
 using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -7,17 +8,17 @@ namespace NitroxModel.Packets
     public class SubRootChanged : Packet
     {
         public ushort PlayerId { get; }
-        public Optional<string> SubRootGuid { get; }
+        public Optional<NitroxId> SubRootId { get; }
 
-        public SubRootChanged(ushort playerId, Optional<string> subRootGuid)
+        public SubRootChanged(ushort playerId, Optional<NitroxId> subRootId)
         {
             PlayerId = playerId;
-            SubRootGuid = subRootGuid;
+            SubRootId = subRootId;
         }
 
         public override string ToString()
         {
-            return "[SubRootChanged - PlayerId: " + PlayerId + " SubRootGuid: " + SubRootGuid + "]";
+            return "[SubRootChanged - PlayerId: " + PlayerId + " SubRootId: " + SubRootId + "]";
         }
     }
 }

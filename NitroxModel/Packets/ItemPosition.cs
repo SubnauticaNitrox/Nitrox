@@ -1,26 +1,26 @@
 ﻿using System;
 using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ItemPosition : Packet
     {
+        public NitroxId Id { get; }
         public Vector3 Position { get; }
         public Quaternion Rotation { get; }
-
-        public string Guid { get; }
-
-        public ItemPosition(string guid, Vector3 position, Quaternion rotation)
+        
+        public ItemPosition(NitroxId id, Vector3 position, Quaternion rotation)
         {
-            Guid = guid;
+            Id = id;
             Position = position;
             Rotation = rotation;
         }
 
         public override string ToString()
         {
-            return "[ItemPosition position: " + Position + " Rotation: " + Rotation + " guid: " + Guid + "]";
+            return "[ItemPosition position: " + Position + " Rotation: " + Rotation + " id: " + Id + "]";
         }
     }
 }

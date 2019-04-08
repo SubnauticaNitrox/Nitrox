@@ -4,6 +4,7 @@ using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities
 {
@@ -11,13 +12,13 @@ namespace NitroxServer.GameLogic.Entities
     public class EntityData
     {        
         [ProtoMember(1)]
-        public Dictionary<string, Entity> SerializableEntitiesByGuid
+        public Dictionary<NitroxId, Entity> SerializableEntitiesById
         {
             get
             {
-                lock (entitiesByGuid)
+                lock (entitiesById)
                 {
-                    return new Dictionary<string, Entity>(entitiesByGuid);
+                    return new Dictionary<NitroxId, Entity>(entitiesById);
                 }
             }
             set
@@ -34,14 +35,14 @@ namespace NitroxServer.GameLogic.Entities
         private Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
         
         [ProtoIgnore]
-        private Dictionary<string, Entity> entitiesByGuid = new Dictionary<string, Entity>();
+        private Dictionary<NitroxId, Entity> entitiesById = new Dictionary<NitroxId, Entity>();
 
         [ProtoIgnore]
-        private Dictionary<string, Entity> globalRootEntitiesByGuid = new Dictionary<string, Entity>();
+        private Dictionary<NitroxId, Entity> globalRootEntitiesById = new Dictionary<NitroxId, Entity>();
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
-            lock (entitiesByGuid)
+            lock (entitiesById)
             {
                 lock (phasingEntitiesByAbsoluteCell)
                 {
@@ -50,7 +51,7 @@ namespace NitroxServer.GameLogic.Entities
                         List<Entity> entitiesInCell = EntitiesFromCell(entity.AbsoluteEntityCell);
                         entitiesInCell.Add(entity);
 
-                        entitiesByGuid.Add(entity.Guid, entity);
+                        entitiesById.Add(entity.Id, entity);
                     }
                 }
             }
@@ -58,22 +59,22 @@ namespace NitroxServer.GameLogic.Entities
 
         public void AddEntity(Entity entity)
         {
-            lock (entitiesByGuid)
+            lock (entitiesById)
             {
-                entitiesByGuid.Add(entity.Guid, entity);
+                entitiesById.Add(entity.Id, entity);
             }
             
             if (entity.ExistsInGlobalRoot)
             {
-                lock (globalRootEntitiesByGuid)
+                lock (globalRootEntitiesById)
                 {
-                    if (!globalRootEntitiesByGuid.ContainsKey(entity.Guid))
+                    if (!globalRootEntitiesById.ContainsKey(entity.Id))
                     {
-                        globalRootEntitiesByGuid.Add(entity.Guid, entity);
+                        globalRootEntitiesById.Add(entity.Id, entity);
                     }
                     else
                     {
-                        Log.Info("Entity Already Exists for Guid: " + entity.Guid + " Item: " + entity.TechType);
+                        Log.Info("Entity Already Exists for Id: " + entity.Id + " Item: " + entity.TechType);
                     }
                 }
             }
@@ -93,21 +94,21 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public void RemoveEntity(string guid)
+        public void RemoveEntity(NitroxId id)
         {
             Entity entity = null;
 
-            lock (entitiesByGuid)
+            lock (entitiesById)
             {
-                entitiesByGuid.TryGetValue(guid, out entity);
-                entitiesByGuid.Remove(guid);                
+                entitiesById.TryGetValue(id, out entity);
+                entitiesById.Remove(id);                
             }
 
             if (entity != null)
             {
                 if(entity.ExistsInGlobalRoot)
                 {
-                    RemoveEntityFromGlobalRoot(guid);
+                    RemoveEntityFromGlobalRoot(id);
                 }
                 else
                 {
@@ -116,11 +117,11 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        private void RemoveEntityFromGlobalRoot(string guid)
+        private void RemoveEntityFromGlobalRoot(NitroxId id)
         {
-            lock (globalRootEntitiesByGuid)
+            lock (globalRootEntitiesById)
             {
-                globalRootEntitiesByGuid.Remove(guid);
+                globalRootEntitiesById.Remove(id);
             }
         }
 
@@ -160,35 +161,35 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public Optional<Entity> GetEntityByGuid(string guid)
+        public Optional<Entity> GetEntityById(NitroxId id)
         {
             Entity entity = null;
 
-            lock (entitiesByGuid)
+            lock (entitiesById)
             {
-                entitiesByGuid.TryGetValue(guid, out entity);
+                entitiesById.TryGetValue(id, out entity);
             }
 
             return Optional<Entity>.OfNullable(entity);
         }
 
-        public List<Entity> GetEntitiesByGuids(List<string> guids)
+        public List<Entity> GetEntitiesByIds(List<NitroxId> ids)
         {
             List<Entity> entities = new List<Entity>();
 
-            lock (entitiesByGuid)
+            lock (entitiesById)
             {
-                foreach(string guid in guids)
+                foreach(NitroxId id in ids)
                 {
                     Entity entity = null;
 
-                    if(entitiesByGuid.TryGetValue(guid, out entity))
+                    if(entitiesById.TryGetValue(id, out entity))
                     {
                         entities.Add(entity);
                     }
                     else
                     {
-                        Log.Error("Guid did not have a corresponding entity in GetEntitiesByGuids: " + guid);
+                        Log.Error("Id did not have a corresponding entity in GetEntitiesByIds: " + id);
                     }
                 }
             }
@@ -198,9 +199,9 @@ namespace NitroxServer.GameLogic.Entities
 
         public List<Entity> GetGlobalRootEntities()
         {
-            lock (globalRootEntitiesByGuid)
+            lock (globalRootEntitiesById)
             {
-                return globalRootEntitiesByGuid.Values.ToList();
+                return globalRootEntitiesById.Values.ToList();
             }
         }
 

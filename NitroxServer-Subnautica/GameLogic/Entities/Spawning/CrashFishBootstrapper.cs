@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.GameLogic.Entities.Spawning;
@@ -18,9 +19,9 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
 
         private Entity SpawnChild(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator, TechType techType, string classId)
         {
-            string guid = deterministicBatchGenerator.NextGuid();
+            NitroxId id = deterministicBatchGenerator.NextId();
 
-            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, guid);
+            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, id);
         }
     }
 }

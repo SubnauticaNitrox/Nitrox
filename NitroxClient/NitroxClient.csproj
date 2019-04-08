@@ -95,6 +95,7 @@
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
+    <Compile Include="MonoBehaviours\NitroxIdentifier.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
@@ -223,7 +224,6 @@
     <Compile Include="GameLogic\HUD\DenyOwnershipHand.cs" />
     <Compile Include="GameLogic\HUD\PlayerVitalsManager.cs" />
     <Compile Include="GameLogic\Helper\EquipmentHelper.cs" />
-    <Compile Include="GameLogic\Helper\GuidHelper.cs" />
     <Compile Include="GameLogic\Helper\InventoryContainerHelper.cs" />
     <Compile Include="GameLogic\Helper\SerializationHelper.cs" />
     <Compile Include="GameLogic\Helper\TransientLocalObjectManager.cs" />
@@ -279,7 +279,6 @@
     <Compile Include="GameLogic\Signs.cs" />
     <Compile Include="GameLogic\SimulationOwnership.cs" />
     <Compile Include="GameLogic\Spawning\SerializedEntitySpawner.cs" />
-    <Compile Include="GameLogic\Spawning\NitroxEntity.cs" />
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\DefaultEntitySpawner.cs" />

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorBeginCrafting packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.FabricatorId);
             Fabricator fabricator = gameObject.RequireComponentInChildren<Fabricator>(true);
 
             float buildDuration = packet.Duration + 0.2f; // small increase to prevent this player from swiping item from remote player

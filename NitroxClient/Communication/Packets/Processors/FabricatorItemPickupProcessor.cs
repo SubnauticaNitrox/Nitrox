@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorItemPickup packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.FabricatorGuid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.FabricatorId);
             CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
 
             if (crafterLogic.numCrafted > 0)

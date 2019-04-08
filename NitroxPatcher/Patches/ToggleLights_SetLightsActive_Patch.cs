@@ -4,10 +4,10 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -61,13 +61,13 @@ namespace NitroxPatcher.Patches
                     DebugUtils.PrintHierarchy(__instance.gameObject);
                 }
 
-                string guid = GuidHelper.GetGuid(gameObject);
+                NitroxId id = NitroxIdentifier.GetId(gameObject);
                 // If the floodlight belongs to a seamoth, then set the lights for the model
                 if(type == typeof(SeaMoth))
                 {
-                    NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid).LightOn = __instance.lightsActive;
+                    NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id).LightOn = __instance.lightsActive;
                 }
-                NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
+                NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
             }
         }
 

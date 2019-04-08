@@ -9,8 +9,8 @@ namespace NitroxModel.Packets
     [Serializable]
     public class ConstructorBeginCrafting : Packet
     {
-        public string ConstructorGuid { get; }
-        public string ConstructedItemGuid { get; }
+        public NitroxId ConstructorId { get; }
+        public NitroxId ConstructedItemId { get; }
         public TechType TechType { get; }
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
@@ -20,11 +20,11 @@ namespace NitroxModel.Packets
         public Vector3[] HSB { get; }
         public Vector3[] Colours { get; }
 
-        public ConstructorBeginCrafting(string constructorGuid, string constructedItemGuid, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
+        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
             string name, Vector3[] hsb, Vector3[] colours)
         {
-            ConstructorGuid = constructorGuid;
-            ConstructedItemGuid = constructedItemGuid;
+            ConstructorId = constructorId;
+            ConstructedItemId = constructeditemId;
             TechType = techType;
             Duration = duration;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
@@ -37,7 +37,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            string s = "[ConstructorBeginCrafting - ConstructorGuid: " + ConstructorGuid + " ConstructedItemGuid: " + ConstructedItemGuid + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
+            string s = "[ConstructorBeginCrafting - ConstructorId: " + ConstructorId + " ConstructedItemId: " + ConstructedItemId + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
 
             foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {

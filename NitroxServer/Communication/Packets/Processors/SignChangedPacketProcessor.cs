@@ -20,7 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(SignChanged packet, Player player)
         {
             SignMetadata signMetadata = packet.SignMetadata;
-            baseData.UpdateBasePieceMetadata(signMetadata.Guid, signMetadata);
+            baseData.UpdateBasePieceMetadata(signMetadata.Id, signMetadata);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

@@ -4,6 +4,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
@@ -69,9 +70,9 @@ namespace NitroxClient.GameLogic
             packetSender.Send(playerDeath);
         }
 
-        public void BroadcastSubrootChange(Optional<string> subrootGuid)
+        public void BroadcastSubrootChange(Optional<NitroxId> subrootId)
         {
-            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootGuid);
+            SubRootChanged packet = new SubRootChanged(multiplayerSession.Reservation.PlayerId, subrootId);
             packetSender.Send(packet);
         }
 

@@ -1,7 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleOnPilotModeChanged packet)
         {
-            GameObject vehicleGo = GuidHelper.RequireObjectFrom(packet.VehicleGuid);
+            GameObject vehicleGo = NitroxIdentifier.RequireObjectFrom(packet.VehicleId);
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             
             // If the vehicle is docked, then we will manually set the piloting mode
@@ -30,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // before the animation completes on the remote player.)
             if (!vehicle.docked)
             {
-                vehicles.SetOnPilotMode(packet.VehicleGuid, packet.PlayerId, packet.IsPiloting);
+                vehicles.SetOnPilotMode(packet.VehicleId, packet.PlayerId, packet.IsPiloting);
             }
         }
     }

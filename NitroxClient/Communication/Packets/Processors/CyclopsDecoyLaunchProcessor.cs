@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsDecoyLaunch decoyLaunchPacket)
         {
-            cyclops.LaunchDecoy(decoyLaunchPacket.Guid);
+            cyclops.LaunchDecoy(decoyLaunchPacket.Id);
         }
     }
 }

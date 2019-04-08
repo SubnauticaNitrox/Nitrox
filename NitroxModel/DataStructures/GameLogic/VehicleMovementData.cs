@@ -12,7 +12,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public TechType TechType { get; }
 
         [ProtoMember(2)]
-        public string Guid { get; set; }
+        public NitroxId Id { get; set; }
 
         [ProtoMember(3)]
         public Vector3 Position { get; }
@@ -41,10 +41,10 @@ namespace NitroxModel.DataStructures.GameLogic
             // For serialization purposes
         }
 
-        public VehicleMovementData(TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
+        public VehicleMovementData(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
             TechType = techType;
-            Guid = guid;
+            Id = id;
             Position = position;
             Rotation = rotation;
             Velocity = velocity;
