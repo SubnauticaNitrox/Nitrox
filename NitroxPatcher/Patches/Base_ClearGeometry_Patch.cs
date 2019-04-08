@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
+using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
@@ -19,7 +22,7 @@ namespace NitroxPatcher.Patches
          * them so that we can update the newly placed pieces with the proper id.  The new
          * pieces are added by Base.SpawnPiece (see that patch)
          */
-        public static Dictionary<string, string> GuidByObjectKey = new Dictionary<string, string>();
+        public static Dictionary<string, NitroxId> NitroxIdByObjectKey = new Dictionary<string, NitroxId>();
 
         public static void Prefix(Base __instance)
         {
@@ -47,9 +50,9 @@ namespace NitroxPatcher.Patches
                         {
                             if(child.gameObject.GetComponent<UniqueIdentifier>() != null)
                             {
-                                string guid = child.gameObject.GetComponent<UniqueIdentifier>().Id;
+                                NitroxId id = NitroxIdentifier.GetId(child.gameObject);
                                 string key = getObjectKey(child.gameObject.name, child.position);
-                                GuidByObjectKey[key] = guid;
+                                NitroxIdByObjectKey[key] = id;
                             }
                         }
                     }

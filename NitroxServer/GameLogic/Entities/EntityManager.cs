@@ -35,9 +35,9 @@ namespace NitroxServer.GameLogic.Entities
             return entities;
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(string guid, Vector3 position, Quaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
         {
-            Optional<Entity> opEntity = entityData.GetEntityByGuid(guid);
+            Optional<Entity> opEntity = entityData.GetEntityById(id);
 
             if(opEntity.IsPresent())
             {
@@ -69,9 +69,9 @@ namespace NitroxServer.GameLogic.Entities
             entityData.AddEntity(entity);
         }
 
-        public void PickUpEntity(string guid)
+        public void PickUpEntity(NitroxId id)
         {
-            entityData.RemoveEntity(guid);
+            entityData.RemoveEntity(id);
         }
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)

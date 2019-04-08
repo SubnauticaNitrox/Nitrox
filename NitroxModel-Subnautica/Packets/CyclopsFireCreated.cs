@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
@@ -12,9 +13,9 @@ namespace NitroxModel_Subnautica.Packets
     {
         public CyclopsFireData FireCreatedData { get; }
 
-        public CyclopsFireCreated(string guid, string cyclopsGuid, CyclopsRooms room, int nodeIndex)
+        public CyclopsFireCreated(NitroxId id, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
         {
-            FireCreatedData = new CyclopsFireData(guid, cyclopsGuid, room, nodeIndex);
+            FireCreatedData = new CyclopsFireData(id, cyclopsId, room, nodeIndex);
         }
 
         public override string ToString()

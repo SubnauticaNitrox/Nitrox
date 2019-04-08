@@ -8,6 +8,7 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -22,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
 
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(equippedItemData.ContainerGuid);
+            Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(equippedItemData.ContainerId);
 
             if (opGameObject.IsPresent())
             {

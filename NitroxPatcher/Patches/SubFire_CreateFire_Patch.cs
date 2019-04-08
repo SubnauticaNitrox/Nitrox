@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using UnityEngine;
@@ -21,7 +21,7 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {
-            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(GuidHelper.GetGuid(__instance.subRoot.gameObject));
+            __state = NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxIdentifier.GetId(__instance.subRoot.gameObject));
 
             // Block any new fires if this player is not the owner
             return __state;

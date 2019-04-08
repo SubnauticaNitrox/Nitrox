@@ -2,8 +2,9 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches
 {
@@ -14,8 +15,8 @@ namespace NitroxPatcher.Patches
 
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
-            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(guid,true);
+            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(id,true);
         }
 
         public override void Patch(HarmonyInstance harmony)

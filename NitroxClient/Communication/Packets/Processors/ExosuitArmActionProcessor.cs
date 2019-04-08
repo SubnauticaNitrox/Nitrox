@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Packets;
@@ -26,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ExosuitArmActionPacket packet)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(packet.ArmGuid);
+            Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(packet.ArmId);
             if(opGameObject.IsEmpty())
             {
                 Log.Error("Could not find exosuit arm");
@@ -49,7 +45,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);                    
                     break;
                 default:
-                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for guid " + packet.ArmGuid);
+                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
                     break;
             }
             

@@ -3,6 +3,7 @@ using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -10,16 +11,16 @@ namespace NitroxServer.GameLogic.Bases
     public class BaseData
     {
         [ProtoMember(1)]
-        public Dictionary<string, BasePiece> SerializableBasePiecesByGuid
+        public Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
         {
             get
             {
-                lock (basePiecesByGuid)
+                lock (basePiecesById)
                 {
-                    return new Dictionary<string, BasePiece>(basePiecesByGuid);
+                    return new Dictionary<NitroxId, BasePiece>(basePiecesById);
                 }
             }
-            set { basePiecesByGuid = value; }
+            set { basePiecesById = value; }
         }
 
         [ProtoMember(2)]
@@ -36,26 +37,26 @@ namespace NitroxServer.GameLogic.Bases
         }
 
         [ProtoIgnore]
-        private Dictionary<string, BasePiece> basePiecesByGuid = new Dictionary<string, BasePiece>();
+        private Dictionary<NitroxId, BasePiece> basePiecesById = new Dictionary<NitroxId, BasePiece>();
 
         [ProtoIgnore]
         private List<BasePiece> completedBasePieceHistory = new List<BasePiece>();
 
         public void AddBasePiece(BasePiece basePiece)
         {
-            lock(basePiecesByGuid)
+            lock(basePiecesById)
             {
-                basePiecesByGuid.Add(basePiece.Guid, basePiece);
+                basePiecesById.Add(basePiece.Id, basePiece);
             }
         }
 
-        public void BasePieceConstructionAmountChanged(string guid, float constructionAmount)
+        public void BasePieceConstructionAmountChanged(NitroxId id, float constructionAmount)
         {
             BasePiece basePiece;
 
-            lock (basePiecesByGuid)
+            lock (basePiecesById)
             {
-                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                if (basePiecesById.TryGetValue(id, out basePiece))
                 {
                     basePiece.ConstructionAmount = constructionAmount;
 
@@ -67,18 +68,18 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
-        public void BasePieceConstructionCompleted(string guid, string baseGuid)
+        public void BasePieceConstructionCompleted(NitroxId id, NitroxId baseId)
         {
             BasePiece basePiece;
 
-            lock (basePiecesByGuid)
+            lock (basePiecesById)
             {
-                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                if (basePiecesById.TryGetValue(id, out basePiece))
                 {
                     basePiece.ConstructionAmount = 1.0f;
                     basePiece.ConstructionCompleted = true;
-                    basePiece.BaseGuid = baseGuid;
-                    basePiece.ParentGuid = Optional<string>.OfNullable(baseGuid);
+                    basePiece.BaseId = baseId;
+                    basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
 
                     lock (completedBasePieceHistory)
                     {
@@ -88,13 +89,13 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
-        public void BasePieceDeconstructionBegin(string guid)
+        public void BasePieceDeconstructionBegin(NitroxId id)
         {
             BasePiece basePiece;
 
-            lock (basePiecesByGuid)
+            lock (basePiecesById)
             {
-                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                if (basePiecesById.TryGetValue(id, out basePiece))
                 {
                     basePiece.ConstructionAmount = 0.95f;
                     basePiece.ConstructionCompleted = false;
@@ -102,29 +103,29 @@ namespace NitroxServer.GameLogic.Bases
             }
         }
 
-        public void BasePieceDeconstructionCompleted(string guid)
+        public void BasePieceDeconstructionCompleted(NitroxId id)
         {
             BasePiece basePiece;
-            lock (basePiecesByGuid)
+            lock (basePiecesById)
             {
-                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                if (basePiecesById.TryGetValue(id, out basePiece))
                 {
                     lock(completedBasePieceHistory)
                     {
                         completedBasePieceHistory.Remove(basePiece);
                     }
 
-                    basePiecesByGuid.Remove(guid);
+                    basePiecesById.Remove(id);
                 }
             }
         }
 
-        public void UpdateBasePieceMetadata(string guid, BasePieceMetadata metadata)
+        public void UpdateBasePieceMetadata(NitroxId id, BasePieceMetadata metadata)
         {
             BasePiece basePiece;
-            lock (basePiecesByGuid)
+            lock (basePiecesById)
             {
-                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                if (basePiecesById.TryGetValue(id, out basePiece))
                 {
                     basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
                 }
@@ -141,10 +142,10 @@ namespace NitroxServer.GameLogic.Bases
                 basePieces = new List<BasePiece>(completedBasePieceHistory);
             }
 
-            lock(basePiecesByGuid)
+            lock(basePiecesById)
             {
                 // Play back pieces that may not be completed yet.
-                foreach (BasePiece basePiece in basePiecesByGuid.Values)
+                foreach (BasePiece basePiece in basePiecesById.Values)
                 {
                     if (!basePieces.Contains(basePiece))
                     {

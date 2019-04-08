@@ -17,6 +17,5 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             entities.Spawn(packet.Entities);
         }
-
     }
 }

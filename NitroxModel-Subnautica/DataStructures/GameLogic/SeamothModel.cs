@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
 {
@@ -21,7 +20,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         }
 
-        public SeamothModel(NitroxModel.DataStructures.TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours) : base(techType, guid, position, rotation, interactiveChildIdentifiers, dockingBayGuid, name, hsb, colours)
+        public SeamothModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours) : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours)
         {
             LightOn = true;
         }

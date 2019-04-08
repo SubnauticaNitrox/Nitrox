@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -10,7 +11,7 @@ namespace NitroxModel.Packets
     public class VehicleChildUpdate : Packet
     {
         [ProtoMember(1)]
-        public string VehicleGuid { get; }
+        public NitroxId VehicleId { get; }
 
         [ProtoMember(2)]
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; set; }
@@ -20,9 +21,9 @@ namespace NitroxModel.Packets
 
         }
 
-        public VehicleChildUpdate(string vehicleGuid,List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public VehicleChildUpdate(NitroxId vehicleId,List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
-            VehicleGuid = vehicleGuid;
+            VehicleId = vehicleId;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
         }
     }

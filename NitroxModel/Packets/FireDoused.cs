@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -8,21 +9,21 @@ namespace NitroxModel.Packets
     [Serializable]
     public class FireDoused : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public float DouseAmount { get; }
 
-        /// <param name="guid">The Fire guid</param>
+        /// <param name="id">The Fire id</param>
         /// <param name="douseAmount">The amount to douse the fire by. A large number will extinguish the fire. A large number still calls the same 
         ///     method, <see cref="Fire.Douse(float)"/>, which will call <see cref="Fire.Extinguish"/> if the douse amount would extinguish it.</param>
-        public FireDoused(string guid, float douseAmount)
+        public FireDoused(NitroxId id, float douseAmount)
         {
-            Guid = guid;
+            Id = id;
             DouseAmount = douseAmount;
         }
 
         public override string ToString()
         {
-            return "[FireDoused Guid: " + Guid + "Douse Amount: " + DouseAmount + "]";
+            return "[FireDoused Id: " + Id + "Douse Amount: " + DouseAmount + "]";
         }
     }
 }

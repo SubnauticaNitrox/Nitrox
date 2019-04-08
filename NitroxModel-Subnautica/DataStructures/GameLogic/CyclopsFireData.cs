@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using ProtoBufNet;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
@@ -8,10 +9,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
     public class CyclopsFireData
     {
         [ProtoMember(1)]
-        public string FireGuid { get; set; }
+        public NitroxId FireId { get; set; }
 
         [ProtoMember(2)]
-        public string CyclopsGuid { get; set; }
+        public NitroxId CyclopsId { get; set; }
 
         [ProtoMember(3)]
         public CyclopsRooms Room { get; set; }
@@ -24,10 +25,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         }
 
-        public CyclopsFireData(string fireGuid, string cyclopsGuid, CyclopsRooms room, int nodeIndex)
+        public CyclopsFireData(NitroxId fireId, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
         {
-            FireGuid = fireGuid;
-            CyclopsGuid = cyclopsGuid;
+            FireId = fireId;
+            CyclopsId = cyclopsId;
             Room = room;
             NodeIndex = nodeIndex;
         }
@@ -35,8 +36,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         public override string ToString()
         {
             return "[CyclopsFireData"
-                + " FireGuid: " + FireGuid
-                + " CyclopsGuid: " + CyclopsGuid
+                + " FireId: " + FireId
+                + " CyclopsId: " + CyclopsId
                 + " Room: " + Room
                 + " FireNodeIndex: " + NodeIndex
                 + "]";

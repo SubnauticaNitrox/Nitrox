@@ -4,10 +4,9 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using UnityEngine;
-using NitroxServer.Communication;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxServer.Communication.NetworkingLayer;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer
 {
@@ -21,14 +20,16 @@ namespace NitroxServer
         public ushort Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
         public Vector3 Position { get; set; }
-        public Optional<string> SubRootGuid { get; set; }
+        public NitroxId GameObjectId { get; }
+        public Optional<NitroxId> SubRootId { get; set; }
 
-        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<string> subRootGuid)
+        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<NitroxId> subRootId)
         {
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;
-            SubRootGuid = subRootGuid;
+            SubRootId = subRootId;
+            GameObjectId = new NitroxId();
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)

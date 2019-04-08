@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.Unity.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -28,8 +24,8 @@ namespace NitroxPatcher.Patches
             if (__instance.GetComponentInParent<SeaMoth>() != null && powered)
             {                
                 gameObject = __instance.transform.parent.gameObject;
-                string guid = GuidHelper.GetGuid(gameObject);
-                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid);           
+                NitroxId id = NitroxIdentifier.GetId(gameObject);
+                SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);           
                 return (model.LightOn == __instance.lightsActive);
             }        
             

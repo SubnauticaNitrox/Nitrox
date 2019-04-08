@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleInternalLighting lightingPacket)
         {
-            cyclops.SetInternalLighting(lightingPacket.Guid, lightingPacket.IsOn);
+            cyclops.SetInternalLighting(lightingPacket.Id, lightingPacket.IsOn);
         }
     }
 }

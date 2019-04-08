@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
-using UnityEngine;
-
+using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -24,8 +23,8 @@ namespace NitroxPatcher.Patches
         // Send ping to other players        
         public static void Postfix(CyclopsSonarButton __instance)
         {
-            string guid = GuidHelper.GetGuid(__instance.subRoot.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(guid);
+            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(id);
         }
 
        

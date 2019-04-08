@@ -1,22 +1,23 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ItemContainerRemove : Packet
     {
-        public string OwnerGuid { get; }
-        public string ItemGuid { get; }
+        public NitroxId OwnerId { get; }
+        public NitroxId ItemId { get; }
 
-        public ItemContainerRemove(string ownerGuid, string itemGuid)
+        public ItemContainerRemove(NitroxId ownerId, NitroxId itemId)
         {
-            OwnerGuid = ownerGuid;
-            ItemGuid = itemGuid;
+            OwnerId = ownerId;
+            ItemId = itemId;
         }
 
         public override string ToString()
         {
-            return "[ItemContainerRemove OwnerGuid: " + OwnerGuid + " ItemGuid: " + ItemGuid + "]";
+            return "[ItemContainerRemove ownerId: " + OwnerId + " itemId: " + ItemId + "]";
         }
     }
 }

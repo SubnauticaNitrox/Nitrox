@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxClient.GameLogic.Bases.Metadata
 {
     public abstract class BasePieceMetadataProcessor
     {
-        public abstract void UpdateMetadata(string guid, BasePieceMetadata metadata);
+        public abstract void UpdateMetadata(NitroxId id, BasePieceMetadata metadata);
 
         private static NoOpBasePieceMetadataProcessor noOpProcessor = new NoOpBasePieceMetadataProcessor();
         private static Dictionary<Type, BasePieceMetadataProcessor> processorsByType = new Dictionary<Type, BasePieceMetadataProcessor>();

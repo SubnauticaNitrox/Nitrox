@@ -1,21 +1,22 @@
 ﻿using System;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CyclopsActivateHorn : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
 
-        public CyclopsActivateHorn(string guid)
+        public CyclopsActivateHorn(NitroxId id)
         {
-            Guid = guid;
+            Id = id;
         }
 
         public override string ToString()
         {
-            return "[CyclopsActivateHorn Guid: " + Guid + "]";
+            return "[CyclopsActivateHorn Id: " + Id + "]";
         }
     }
 }

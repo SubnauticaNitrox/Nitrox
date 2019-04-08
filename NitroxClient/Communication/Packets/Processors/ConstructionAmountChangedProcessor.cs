@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructionAmountChanged amountChanged)
         {
-            buildEventQueue.EnqueueAmountChanged(amountChanged.Guid, amountChanged.ConstructionAmount);
+            buildEventQueue.EnqueueAmountChanged(amountChanged.Id, amountChanged.ConstructionAmount);
         }
     }
 }

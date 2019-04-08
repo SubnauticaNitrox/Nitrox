@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -23,10 +20,9 @@ namespace NitroxPatcher.Patches
         {
             // Suppress powered on if a seamoth´s default is set to false            
             GameObject gameObject = __instance.gameObject;
-            string guid = GuidHelper.GetGuid(gameObject);
-            SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(guid);
-
-
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);
+            
             // Set lights of seamoth            
             ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();            
             toggleLights.lightsActive = model.LightOn;

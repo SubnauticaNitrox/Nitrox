@@ -1,10 +1,8 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -35,8 +33,8 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
-                    item.SetNewGuid(itemData.Guid);
-                    slots.AddItem(item, itemData.ContainerGuid,true);
+                    NitroxIdentifier.SetNewId(item, itemData.ItemId);
+                    slots.AddItem(item, itemData.ContainerId,true);
                 }
             }
         }

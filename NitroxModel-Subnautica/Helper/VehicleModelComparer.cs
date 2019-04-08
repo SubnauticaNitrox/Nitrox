@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel_Subnautica.Helper
@@ -12,7 +9,7 @@ namespace NitroxModel_Subnautica.Helper
         {
             if(x.TechType.Enum() == y.TechType.Enum())
             {
-                return x.Guid.CompareTo(y.Guid);
+                return 0;
             }
             else
             {

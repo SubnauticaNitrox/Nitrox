@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsChangeShieldMode shieldPacket)
         {
-            cyclops.ChangeShieldMode(shieldPacket.Guid, shieldPacket.IsOn);
+            cyclops.ChangeShieldMode(shieldPacket.Id, shieldPacket.IsOn);
         }
     }
 }

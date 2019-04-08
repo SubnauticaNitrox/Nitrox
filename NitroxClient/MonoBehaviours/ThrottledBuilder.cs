@@ -14,6 +14,7 @@ using System.Reflection;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 using NitroxModel_Subnautica.Helper;
+using NitroxModel.DataStructures;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -109,7 +110,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void BuildBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Guid + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
+            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
@@ -124,9 +125,9 @@ namespace NitroxClient.MonoBehaviours
 
             GameObject parentBase = null;
             
-            if(basePiece.ParentGuid.IsPresent())
+            if(basePiece.ParentId.IsPresent())
             {
-                parentBase = GuidHelper.GetObjectFrom(basePiece.ParentGuid.Get()).OrElse(null);
+                parentBase = NitroxIdentifier.GetObjectFrom(basePiece.ParentId.Get()).OrElse(null);
             }
             
             Constructable constructable;
@@ -145,7 +146,7 @@ namespace NitroxClient.MonoBehaviours
                 gameObject = constructable.gameObject;
             }
             
-            GuidHelper.SetNewGuid(gameObject, basePiece.Guid);
+            NitroxIdentifier.SetNewId(gameObject, basePiece.Id);
             
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.
@@ -157,8 +158,8 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
-            Log.Info("Constructed completed " + constructionCompleted.Guid);
-            GameObject constructing = GuidHelper.RequireObjectFrom(constructionCompleted.Guid);
+            Log.Info("Constructed completed " + constructionCompleted.PieceId);
+            GameObject constructing = NitroxIdentifier.RequireObjectFrom(constructionCompleted.PieceId);
 
             ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
 
@@ -172,7 +173,7 @@ namespace NitroxClient.MonoBehaviours
                 Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
                 GameObject finishedPiece = (GameObject)opBasePiece.Get();
                 UnityEngine.Object.Destroy(constructableBase.gameObject);
-                GuidHelper.SetNewGuid(finishedPiece, constructionCompleted.Guid);
+                NitroxIdentifier.SetNewId(finishedPiece, constructionCompleted.PieceId);
             }
             else
             {
@@ -181,33 +182,33 @@ namespace NitroxClient.MonoBehaviours
                 constructable.SetState(true, true);
             }
             
-            if (constructionCompleted.BaseGuid != null && GuidHelper.GetObjectFrom(constructionCompleted.BaseGuid).IsEmpty())
+            if (constructionCompleted.BaseId != null && NitroxIdentifier.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())
             {
-                Log.Info("Creating base: " + constructionCompleted.BaseGuid);
-                ConfigureNewlyConstructedBase(constructionCompleted.BaseGuid);
+                Log.Info("Creating base: " + constructionCompleted.BaseId);
+                ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
             }
         }
 
-        private void ConfigureNewlyConstructedBase(string newBaseGuid)
+        private void ConfigureNewlyConstructedBase(NitroxId newBaseId)
         {
             Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
             if (opNewlyCreatedBase.IsPresent())
             {
                 GameObject newlyCreatedBase = (GameObject)opNewlyCreatedBase.Get();
-                GuidHelper.SetNewGuid(newlyCreatedBase, newBaseGuid);
+                NitroxIdentifier.SetNewId(newlyCreatedBase, newBaseId);
             }
             else
             {
-                Log.Error("Could not assign new base guid as no newly constructed base was found");
+                Log.Error("Could not assign new base id as no newly constructed base was found");
             }
         }
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            Log.Info("Processing ConstructionAmountChanged " + amountChanged.Guid + " " + amountChanged.Amount);
+            Log.Info("Processing ConstructionAmountChanged " + amountChanged.Id + " " + amountChanged.Amount);
 
-            GameObject constructing = GuidHelper.RequireObjectFrom(amountChanged.Guid);
+            GameObject constructing = NitroxIdentifier.RequireObjectFrom(amountChanged.Id);
             BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
 
             // Bases don't  send a deconstruct being packet.  Instead, we just make sure
@@ -217,18 +218,18 @@ namespace NitroxClient.MonoBehaviours
             {
                 baseDeconstructable.Deconstruct();
 
-                // After we have begun the deconstructing for a base piece, we need to transfer the guid
+                // After we have begun the deconstructing for a base piece, we need to transfer the id
                 Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE);
 
                 if(opGhost.IsPresent())
                 {
                     GameObject ghost = (GameObject)opGhost.Get();
                     UnityEngine.Object.Destroy(constructing);
-                    GuidHelper.SetNewGuid(ghost, amountChanged.Guid);
+                    NitroxIdentifier.SetNewId(ghost, amountChanged.Id);
                 }
                 else
                 {
-                    Log.Info("Could not find newly created ghost to set deconstructed guid ");
+                    Log.Info("Could not find newly created ghost to set deconstructed id ");
                 }
             }
             else
@@ -245,7 +246,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void DeconstructionBegin(DeconstructionBeginEvent begin)
         {
-            GameObject deconstructing = GuidHelper.RequireObjectFrom(begin.Guid);
+            GameObject deconstructing = NitroxIdentifier.RequireObjectFrom(begin.PieceId);
             Constructable constructable = deconstructing.RequireComponent<Constructable>();
 
             constructable.SetState(false, false);
@@ -253,7 +254,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void DeconstructionCompleted(DeconstructionCompletedEvent completed)
         {
-            GameObject deconstructing = GuidHelper.RequireObjectFrom(completed.Guid);
+            GameObject deconstructing = NitroxIdentifier.RequireObjectFrom(completed.PieceId);
             UnityEngine.Object.Destroy(deconstructing);
         }
     }

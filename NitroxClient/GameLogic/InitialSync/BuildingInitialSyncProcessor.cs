@@ -51,11 +51,11 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     if (basePiece.ConstructionCompleted)
                     {
-                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Guid, basePiece.BaseGuid);
+                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Id, basePiece.BaseId);
                     }
                     else
                     {
-                        buildEventQueue.EnqueueAmountChanged(basePiece.Guid, basePiece.ConstructionAmount);
+                        buildEventQueue.EnqueueAmountChanged(basePiece.Id, basePiece.ConstructionAmount);
                     }
                 }
             }

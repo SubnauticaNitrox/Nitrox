@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleChildUpdate vehicleChildUpdate)
         {
-            vehicles.UpdateVehicleChildren(vehicleChildUpdate.VehicleGuid, vehicleChildUpdate.InteractiveChildIdentifiers);
+            vehicles.UpdateVehicleChildren(vehicleChildUpdate.VehicleId, vehicleChildUpdate.InteractiveChildIdentifiers);
         }
     }
 }

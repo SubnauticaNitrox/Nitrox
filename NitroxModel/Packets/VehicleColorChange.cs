@@ -1,19 +1,20 @@
 ﻿using System;
 using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleColorChange : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public int Index { get; }
         public Vector3 HSB { get; }
         public Color Color { get; }
 
-        public VehicleColorChange(int index, string guid, Vector3 hsb, Color color)
+        public VehicleColorChange(int index, NitroxId id, Vector3 hsb, Color color)
         {
-            Guid = guid;
+            Id = id;
             Index = index;
             HSB = hsb;
             Color = color;
@@ -21,7 +22,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[VehicleColorChange Guid: " + Guid + " Index: " + Index + " hsb: " + HSB + " Color: " + Color + "]";
+            return "[VehicleColorChange Id: " + Id + " Index: " + Index + " hsb: " + HSB + " Color: " + Color + "]";
         }
     }
 }

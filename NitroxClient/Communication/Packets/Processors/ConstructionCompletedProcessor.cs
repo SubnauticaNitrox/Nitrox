@@ -16,8 +16,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructionCompleted completedPacket)
         {
-            Log.Debug("Processing ConstructionCompleted " + completedPacket.Guid + " " + completedPacket.BaseGuid);
-            buildEventQueue.EnqueueConstructionCompleted(completedPacket.Guid, completedPacket.BaseGuid);
+            Log.Debug("Processing ConstructionCompleted " + completedPacket.PieceId + " " + completedPacket.BaseId);
+            buildEventQueue.EnqueueConstructionCompleted(completedPacket.PieceId, completedPacket.BaseId);
         }
     }
 }

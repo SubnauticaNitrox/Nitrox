@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -24,14 +25,14 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
         {
-            string ownerGuid = GuidHelper.GetGuid(owner);
-            string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
+            NitroxId ownerId = NitroxIdentifier.GetId(owner);
+            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
             TechType techType = pickupable.GetTechType();
 
             if (techType == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
@@ -39,7 +40,7 @@ namespace NitroxClient.GameLogic
             pickupable.gameObject.transform.SetParent(null);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
-            EquippedItemData equippedItem = new EquippedItemData(ownerGuid, itemGuid, bytes, slot, techType.Model());
+            EquippedItemData equippedItem = new EquippedItemData(ownerId, itemId, bytes, slot, techType.Model());
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
@@ -58,27 +59,27 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
-            string itemGuid = GuidHelper.GetGuid(pickupable.gameObject);
+            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
             {
                 TechType techType = pickupable.GetTechType();
-                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.Model(), itemGuid);
+                PlayerEquipmentRemoved equipmentAdded = new PlayerEquipmentRemoved(techType.Model(), itemId);
                 packetSender.Send(equipmentAdded);
 
                 return;
             }
 
-            string ownerGuid = GuidHelper.GetGuid(owner);
+            NitroxId ownerId = NitroxIdentifier.GetId(owner);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(owner);
-                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerGuid, childIdentifiers);
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
+                VehicleChildUpdate vehicleChildInteractiveData = new VehicleChildUpdate(ownerId, childIdentifiers);
                 packetSender.Send(vehicleChildInteractiveData);
             }
 
-            ModuleRemoved moduleRemoved = new ModuleRemoved(ownerGuid, slot, itemGuid);
+            ModuleRemoved moduleRemoved = new ModuleRemoved(ownerId, slot, itemId);
             packetSender.Send(moduleRemoved);
         }
 
@@ -89,13 +90,10 @@ namespace NitroxClient.GameLogic
             foreach (EquippedItemData equippedItem in equippedItems)
             {
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-
-                // Mark this entity as spawned by the server
-                gameObject.AddComponent<NitroxEntity>();
+                NitroxIdentifier.SetNewId(gameObject, equippedItem.ItemId);
 
                 Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-
-                Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(equippedItem.ContainerGuid);
+                Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(equippedItem.ContainerId);
 
                 if (opGameObject.IsPresent())
                 {

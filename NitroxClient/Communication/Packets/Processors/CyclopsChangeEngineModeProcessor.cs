@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsChangeEngineMode motorPacket)
         {
-            cyclops.ChangeEngineMode(motorPacket.Guid, motorPacket.Mode);
+            cyclops.ChangeEngineMode(motorPacket.Id, motorPacket.Mode);
         }
     }
 }

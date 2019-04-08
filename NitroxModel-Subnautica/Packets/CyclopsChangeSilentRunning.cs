@@ -1,23 +1,24 @@
 ﻿using System;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CyclopsChangeSilentRunning : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public bool IsOn { get; }
 
-        public CyclopsChangeSilentRunning(string guid, bool isOn)
+        public CyclopsChangeSilentRunning(NitroxId id, bool isOn)
         {
-            Guid = guid;
+            Id = id;
             IsOn = isOn;
         }
 
         public override string ToString()
         {
-            return "[CyclopsBeginSilentRunning Guid: " + Guid + " , IsOn: " + IsOn + "]";
+            return "[CyclopsBeginSilentRunning Id: " + Id + " , IsOn: " + IsOn + "]";
         }
     }
 }

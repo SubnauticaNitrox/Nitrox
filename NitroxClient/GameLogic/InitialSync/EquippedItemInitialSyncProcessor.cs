@@ -3,6 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -33,13 +34,10 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (EquippedItemData equippedItem in packet.EquippedItems)
                 {
                     GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-
-                    // Mark this entity as spawned by the server
-                    gameObject.AddComponent<NitroxEntity>();
+                    NitroxIdentifier.SetNewId(gameObject, equippedItem.ItemId);
 
                     Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-
-                    Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(equippedItem.ContainerGuid);
+                    Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(equippedItem.ContainerId);
 
                     if (opGameObject.IsPresent())
                     {

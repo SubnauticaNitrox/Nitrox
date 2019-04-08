@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -20,8 +20,7 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
         private readonly StorageSlots storageSlots;
-
-
+        
         public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles, StorageSlots storageSlots)
         {
             this.packetSender = packetSender;
@@ -31,9 +30,9 @@ namespace NitroxClient.GameLogic
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
         {
-            string constructorGuid = GuidHelper.GetGuid(constructor);
+            NitroxId constructorId = NitroxIdentifier.GetId(constructor);
 
-            Log.Debug("Building item from constructor with uuid: " + constructorGuid);
+            Log.Debug("Building item from constructor with id: " + constructorId);
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
@@ -41,9 +40,9 @@ namespace NitroxClient.GameLogic
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
 
-                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractGuidsOfInteractiveChildren(constructedObject);
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
                 Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
-                string constructedObjectGuid = GuidHelper.GetGuid(constructedObject);
+                NitroxId constructedObjectId = NitroxIdentifier.GetId(constructedObject);
                 Vector3[] HSB = new Vector3[5];
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
@@ -51,7 +50,7 @@ namespace NitroxClient.GameLogic
                 
                 if (!vehicle)
                 { // Cylcops
-                    GameObject target = GuidHelper.RequireObjectFrom(constructedObjectGuid);
+                    GameObject target = NitroxIdentifier.RequireObjectFrom(constructedObjectId);
                     SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                     SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
@@ -65,13 +64,11 @@ namespace NitroxClient.GameLogic
                     HSB = vehicle.subName.GetColors();
                     Colours = vehicle.subName.GetColors();
                 }
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorGuid, constructedObjectGuid, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorId, constructedObjectId, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
                     name, HSB, Colours);
                 vehicles.AddVehicle(VehicleModelFactory.BuildFrom(beginCrafting));
                 packetSender.Send(beginCrafting);
 
-                // Mark vehicle as controlled by nitrox (used for sending add/remove batteries aka storage slots)
-                constructedObject.AddComponent<NitroxEntity>();
                 SpawnDefaultBatteries(constructedObject, childIdentifiers);
             }
             else
@@ -91,16 +88,16 @@ namespace NitroxClient.GameLogic
                 mixin.ReflectionSet("allowedToPlaySounds", false);
                 mixin.SetBattery(mixin.defaultBattery, 1);
                 mixin.ReflectionSet("allowedToPlaySounds", true);
-
             }
+
             foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
             {
-                Optional<GameObject> opChildGameObject = GuidHelper.GetObjectFrom(identifier.Guid);
+                Optional<GameObject> opChildGameObject = NitroxIdentifier.GetObjectFrom(identifier.Id);
+
                 if (opChildGameObject.IsPresent())
                 {
-                                        
-                    opChildGameObject.Get().AddComponent<NitroxEntity>();
                     Optional<EnergyMixin> opEnergyMixin = Optional<EnergyMixin>.OfNullable(opChildGameObject.Get().GetComponent<EnergyMixin>());
+
                     if(opEnergyMixin.IsPresent())
                     {
                         

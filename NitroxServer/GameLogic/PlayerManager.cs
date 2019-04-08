@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxServer.Communication;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic.Players;
@@ -98,9 +98,9 @@ namespace NitroxServer.GameLogic
 
                 // Load previously persisted data for this player.
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);
-                Optional<string> subRootGuid = playerData.GetSubRootGuid(playerContext.PlayerName);
+                Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
 
-                Player player = new Player(playerContext, connection, position, subRootGuid);
+                Player player = new Player(playerContext, connection, position, subRootId);
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);

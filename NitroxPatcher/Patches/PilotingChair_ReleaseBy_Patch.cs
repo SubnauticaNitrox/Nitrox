@@ -2,10 +2,10 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -18,12 +18,12 @@ namespace NitroxPatcher.Patches
         {
             SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
             Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
-            string guid = GuidHelper.GetGuid(subRoot.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(subRoot.gameObject);
 
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
 
             // Request to be downgraded to a transient lock so we can still simulate the positioning.
-            simulationOwnership.RequestSimulationLock(guid, SimulationLockType.TRANSIENT, null);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, null);
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
+﻿using System.Reflection;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -28,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructorBeginCrafting packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.ConstructorGuid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.ConstructorId);
             Crafter crafter = gameObject.RequireComponentInChildren<Crafter>(true);
             vehicles.AddVehicle(VehicleModelFactory.BuildFrom(packet));
             MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -40,9 +38,8 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opConstructedObject.IsPresent())
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
-                constructedObject.AddComponent<NitroxEntity>();
-                GuidHelper.SetNewGuid(constructedObject, packet.ConstructedItemGuid);
-                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(constructedObject, packet.InteractiveChildIdentifiers);
+                NitroxIdentifier.SetNewId(constructedObject, packet.ConstructedItemId);
+                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(constructedObject, packet.InteractiveChildIdentifiers);
             }
             else
             {

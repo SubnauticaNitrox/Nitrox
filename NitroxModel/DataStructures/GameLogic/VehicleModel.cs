@@ -14,7 +14,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public TechType TechType { get; }
 
         [ProtoMember(2)]
-        public string Guid { get; set; }
+        public NitroxId Id { get; set; }
 
         [ProtoMember(3)]
         public Vector3 Position { get; set; }
@@ -30,10 +30,10 @@ namespace NitroxModel.DataStructures.GameLogic
         }
 
         [ProtoMember(6)]
-        public string SerializableDockingBayGuid
+        public NitroxId SerializableDockingBayId
         {
-            get { return (DockingBayGuid.IsPresent()) ? DockingBayGuid.Get() : null; }
-            set { DockingBayGuid = Optional<string>.OfNullable(value); }
+            get { return (DockingBayId.IsPresent()) ? DockingBayId.Get() : null; }
+            set { DockingBayId = Optional<NitroxId>.OfNullable(value); }
         }
 
         [ProtoMember(7)]
@@ -49,22 +49,22 @@ namespace NitroxModel.DataStructures.GameLogic
         public Optional<List<InteractiveChildObjectIdentifier>> InteractiveChildIdentifiers { get; set; }
 
         [ProtoIgnore]
-        public Optional<string> DockingBayGuid { get; set; }
+        public Optional<NitroxId> DockingBayId { get; set; }
 
         public VehicleModel()
         {
             InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.Empty();
-            DockingBayGuid = Optional<string>.Empty();
+            DockingBayId = Optional<NitroxId>.Empty();
         }
 
-        public VehicleModel(TechType techType, string guid, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<string> dockingBayGuid, string name, Vector3[] hsb, Vector3[] colours)
+        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
         {
             TechType = techType;
-            Guid = guid;
+            Id = id;
             Position = position;
             Rotation = rotation;
             InteractiveChildIdentifiers = interactiveChildIdentifiers;
-            DockingBayGuid = dockingBayGuid;
+            DockingBayId = dockingBayId;
             Name = name;
             HSB = hsb;
             Colours = colours;

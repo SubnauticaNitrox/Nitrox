@@ -1,22 +1,23 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class VehicleNameChange : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public string Name { get; }
 
-        public VehicleNameChange(string guid, string name)
+        public VehicleNameChange(NitroxId id, string name)
         {
-            Guid = guid;
+            Id = id;
             Name = name;
         }
 
         public override string ToString()
         {
-            return "[VehicleNameChange Guid: " + Guid + " Name: " + Name + "]";
+            return "[VehicleNameChange Id: " + Id + " Name: " + Name + "]";
         }
     }
 }

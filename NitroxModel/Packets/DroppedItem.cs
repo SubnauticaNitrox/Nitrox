@@ -1,8 +1,6 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Helper;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
@@ -10,17 +8,17 @@ namespace NitroxModel.Packets
     [Serializable]
     public class DroppedItem : Packet
     {
-        public string Guid { get; }
-        public Optional<string> WaterParkGuid { get; }
+        public NitroxId Id { get; }
+        public Optional<NitroxId> WaterParkId { get; }
         public TechType TechType { get; }
         public Vector3 ItemPosition { get; }
         public Quaternion ItemRotation { get; }
         public byte[] Bytes { get; }
 
-        public DroppedItem(string guid, Optional<string> waterParkGuid, TechType techType, Vector3 itemPosition, Quaternion itemRotation, byte[] bytes)
+        public DroppedItem(NitroxId id, Optional<NitroxId> waterParkId, TechType techType, Vector3 itemPosition, Quaternion itemRotation, byte[] bytes)
         {
-            Guid = guid;
-            WaterParkGuid = waterParkGuid;
+            Id = id;
+            WaterParkId = waterParkId;
             ItemPosition = itemPosition;
             ItemRotation = itemRotation;
             TechType = techType;
@@ -29,7 +27,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[DroppedItem - guid: " + Guid + " WaterParkGuid: " + WaterParkGuid + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
+            return "[DroppedItem - id: " + Id + " WaterParkId: " + WaterParkId + " techType: " + TechType + " itemPosition: " + ItemPosition + "]";
         }
     }
 }

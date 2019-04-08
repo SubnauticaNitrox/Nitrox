@@ -1,12 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -23,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(StorageSlotItemRemove packet)
         {
-            storageSlots.RemoveItem(packet.OwnerGuid);
+            storageSlots.RemoveItem(packet.OwnerId);
         }
     }
 }

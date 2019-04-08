@@ -10,22 +10,22 @@ namespace NitroxModel.DataStructures.GameLogic
     public class EscapePodModel
     {
         [ProtoMember(1)]
-        public string Guid { get; set; }
+        public NitroxId Id { get; set; }
 
         [ProtoMember(2)]
         public Vector3 Location { get; set; }
 
         [ProtoMember(3)]
-        public string FabricatorGuid { get; set; }
+        public NitroxId FabricatorId { get; set; }
 
         [ProtoMember(4)]
-        public string MedicalFabricatorGuid { get; set; }
+        public NitroxId MedicalFabricatorId { get; set; }
 
         [ProtoMember(5)]
-        public string StorageContainerGuid { get; set; }
+        public NitroxId StorageContainerId { get; set; }
 
         [ProtoMember(6)]
-        public string RadioGuid { get; set; }
+        public NitroxId RadioId { get; set; }
 
         [ProtoMember(7)]
         public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
@@ -36,21 +36,21 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool RadioDamaged { get; set; }
 
-        public void InitEscapePodModel(string guid, Vector3 location, string fabricatorGuid, string medicalFabricatorGuid, string storageContainerGuid, string radioGuid, bool damaged, bool radioDamaged)
+        public void InitEscapePodModel(NitroxId id, Vector3 location, NitroxId fabricatorId, NitroxId medicalFabricatorId, NitroxId storageContainerId, NitroxId radioId, bool damaged, bool radioDamaged)
         {
-            Guid = guid;
+            Id = id;
             Location = location;
-            FabricatorGuid = fabricatorGuid;
-            MedicalFabricatorGuid = medicalFabricatorGuid;
-            StorageContainerGuid = storageContainerGuid;
-            RadioGuid = radioGuid;
+            FabricatorId = fabricatorId;
+            MedicalFabricatorId = medicalFabricatorId;
+            StorageContainerId = storageContainerId;
+            RadioId = radioId;
             Damaged = damaged;
             RadioDamaged = radioDamaged;
         }
 
         public override string ToString()
         {
-            string toString = "[EscapePodModel - Guid: " + Guid + " Location:" + Location + " FabricatorGuid: " + FabricatorGuid + " MedicalFabricatorGuid: " + MedicalFabricatorGuid + " StorageContainerGuid: " + StorageContainerGuid + " RadioGuid: " + RadioGuid + " AssignedPlayers: {";
+            string toString = "[EscapePodModel - Id: " + Id + " Location:" + Location + " FabricatorId: " + FabricatorId + " MedicalFabricatorGuid: " + MedicalFabricatorId + " StorageContainerGuid: " + StorageContainerId + " RadioGuid: " + RadioId + " AssignedPlayers: {";
 
             foreach (ushort playerId in AssignedPlayers)
             {
