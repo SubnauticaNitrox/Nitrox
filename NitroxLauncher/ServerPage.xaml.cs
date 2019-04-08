@@ -25,6 +25,11 @@ namespace NitroxLauncher
         public ServerPage(LauncherLogic logic)
         {
             InitializeComponent();
+            if(Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1)
+            {
+                CBox.Style = (Style)Resources["ComboBoxStyle"];
+                CBox.ApplyTemplate();
+            }
             this.logic = logic;
         }
 
