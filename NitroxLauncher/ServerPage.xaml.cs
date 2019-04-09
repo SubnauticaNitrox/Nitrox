@@ -25,6 +25,13 @@ namespace NitroxLauncher
         public ServerPage(LauncherLogic logic)
         {
             InitializeComponent();
+
+            // Change style depending on windows version. Win 10 uses other definition of comboboxes then win 7 so win 10 has its own style
+            if(Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1)
+            {
+                CBox.Style = (Style)Resources["ComboBoxStyle"];
+                CBox.ApplyTemplate();
+            }
             this.logic = logic;
         }
 
