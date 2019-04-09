@@ -1,4 +1,4 @@
-﻿using System.Timers;
+using System.Timers;
 using NitroxModel.Logger;
 using NitroxServer.Serialization.World;
 using NitroxServer.ConfigParser;
@@ -26,7 +26,7 @@ namespace NitroxServer
             this.worldPersistence = worldPersistence;
             this.world = world;
             this.server = server;
-            
+
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
@@ -58,6 +58,15 @@ namespace NitroxServer
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
             Save();
+            server.Stop();
+            Log.Info("Nitrox Server Stopped");
+            IsRunning = false;
+        }
+
+        public void Stop_NOSAVE()
+        {
+            Log.Info("Nitrox Server Stopping...");
+            DisablePeriodicSaving();
             server.Stop();
             Log.Info("Nitrox Server Stopped");
             IsRunning = false;
