@@ -40,7 +40,7 @@ namespace NitroxServer.ConsoleCommands
                 else if(args[0] == "normal"){
                     saveMode = SaveMode.NORMAL;
                     Server.Instance.EnablePeriodicSaving();
-                    Log.InfoIG("Save mode toggled to normal.")
+                    Log.InfoIG("Save mode toggled to normal.");
                 }
                 else if(args[0] == "manual"){
                     saveMode = SaveMode.MANUAL;
@@ -49,7 +49,7 @@ namespace NitroxServer.ConsoleCommands
                 }
                 else if((args[0] == "help")||(args[0] == "-h")){
                     Log.InGame("Look at the console :-) (If you typed this CMD)"); //TODO: Make it send only to person, who typed it.
-                    Log.Info("Showing detailed help for save command... (MAY not work in WPF mode)")
+                    Log.Info("Showing detailed help for save command... (MAY not work in WPF mode)");
                     Console.WriteLine("help / -h - Show this help message");
                     Console.WriteLine("(no params) / -n / now - saves server status");
                     Console.WriteLine("manual - Auto-save: OFF Save-on-exit system: OFF");
@@ -57,10 +57,10 @@ namespace NitroxServer.ConsoleCommands
                     Console.WriteLine("onlyexit - Auto-save: OFF Save-on-exit system: ON");
                     Console.WriteLine("onlyauto - Auto-save: ON Save-on-exit system: OFF");
                     Console.WriteLine("(wrong param) - Shows error message.");
-                    Log.Info("Help diplayed.")
+                    Log.Info("Help diplayed.");
                 }
                 else{
-                    Log.ErrorIG("Save mode toggled to "+args[0]+". Or at least there was an attempt. Because this mode does not exist. Lol. Be (more intelligent and) careful or use save -h.")
+                    Log.ErrorIG("Save mode toggled to "+args[0]+". Or at least there was an attempt. Because this mode does not exist. Lol. Be (more intelligent and) careful or use save -h.");
                 }
             }
         }
