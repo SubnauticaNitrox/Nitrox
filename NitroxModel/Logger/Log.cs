@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
@@ -15,7 +15,7 @@ namespace NitroxModel.Logger
         private static bool inGameMessages;
 
         private static readonly ILog log = LogManager.GetLogger("Nitrox");
-        
+
         static Log()
         {
             Setup();
@@ -36,7 +36,7 @@ namespace NitroxModel.Logger
                 {
                     InGameLogger.Log(msg);
                 }
-                
+
                 Info(msg);
             }
         }
@@ -50,7 +50,7 @@ namespace NitroxModel.Logger
         {
             log.Error(Format(fmt, arg));
         }
-        
+
         public static void Error(string msg, Exception ex)
         {
             log.Error(msg, ex);
@@ -134,6 +134,24 @@ namespace NitroxModel.Logger
             hierarchy.Root.AddAppender(fileAppender);
 
             hierarchy.Configured = true;
+        }
+
+        //TODO: Add support for logs with more params
+        public static void InfoIG  (string msg){
+            Info  (msg);
+            InGame("I: "+ msg);
+        }
+        public static void WarnIG  (string msg){
+            Warn  (msg);
+            InGame("W: "+ msg);
+        }
+        public static void ErrorIG (string msg){
+            Error (msg);
+            InGame("E: "+ msg);
+        }
+        public static void DebugIG (string msg){
+            Debug (msg);
+            InGame("D: "+ msg);
         }
     }
 }
