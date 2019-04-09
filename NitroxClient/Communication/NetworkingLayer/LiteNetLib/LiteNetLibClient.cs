@@ -47,12 +47,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             
 
             punchListener = new EventBasedNatPunchListener();
-            bool introduced = false;
             punchListener.NatIntroductionSuccess += (point, token) =>
             {
-                Log.Debug("got nat introduction");
-                client.Connect(point, "nitrox");
-                introduced = true;
+                Log.Debug("Got nat introduction. Will connect: {0}",new object[] { IsConnected });
+                if (!IsConnected)
+                {
+                    connectedEvent.Set();
+                    client.Connect(point, "nitrox");
+                }
             };
 
             client = new NetManager(listener);
@@ -66,7 +68,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
             Log.Debug("Try to connect via hole punch");
             int rounds = 0;
-            while(rounds < 500 && !introduced && !IsConnected && !connectedEvent.WaitOne(10))
+            while(rounds < 500 && !IsConnected && !connectedEvent.WaitOne(10))
             {                
                 rounds++;
                 client.NatPunchModule.PollEvents();
