@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -26,7 +26,7 @@ namespace NitroxServer
                 // This is technically an error but will scare most users into thinking the server is not working
                 // generally this can happen on Mac / Wine due to issues fetching networking interfaces.  Simply
                 // ignore as this is not a big deal.  They can look these up themselves.
-                Log.Info("Unable to resolve IP Addresses... you are on your own.");
+                Log.Info("Unable to resolve IP Addresses... you are on your own. But don't worry. Server is working. You can try finding IPs by your own.");
             }
         }
 
@@ -98,7 +98,7 @@ namespace NitroxServer
             else
             {
                 Log.Warn("Could not get your external IP. You are on your own...");
-            }            
+            }
         }
     }
 }
