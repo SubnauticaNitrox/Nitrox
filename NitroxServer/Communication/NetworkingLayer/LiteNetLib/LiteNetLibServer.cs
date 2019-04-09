@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using LiteNetLib;
@@ -18,6 +18,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         private const string CONNECTION_KEY = "nitrox";
         private readonly NetManager server;
         private readonly EventBasedNetListener listener;
+        private readonly EventBasedNatPunchListener punchListener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
 
         public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
@@ -25,6 +26,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             netPacketProcessor.SubscribeReusable<WrapperPacket, NetPeer>(OnPacketReceived);
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
+            punchListener = new EventBasedNatPunchListener();
         }
         public override void Start()
         {
@@ -35,12 +37,21 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener.NetworkReceiveEvent += NetworkDataReceived;
             listener.ConnectionRequestEvent += OnConnectionRequest;
 
+            punchListener.NatIntroductionSuccess += (point, token) =>
+            {                
+                Log.Debug("Introduction success with {0}", point);
+            };
+            
+            server.NatPunchEnabled = true;
+            server.NatPunchModule.Init(punchListener);
+
             server.DiscoveryEnabled = true;
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
             server.Start(portNumber);
-
+            server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), "register");
+            Log.Debug("Register hole punch");
             isStopped = false;
         }
 

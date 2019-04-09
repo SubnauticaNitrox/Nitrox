@@ -17,6 +17,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
+        private EventBasedNatPunchListener punchListener;
 
         private NetManager client;
 
@@ -38,12 +39,40 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += Disconnected;
             listener.NetworkReceiveEvent += ReceivedNetworkData;
 
+            
+
+
+            
+            
+            
+
+            punchListener = new EventBasedNatPunchListener();
+            bool introduced = false;
+            punchListener.NatIntroductionSuccess += (point, token) =>
+            {
+                Log.Debug("got nat introduction");
+                client.Connect(point, "nitrox");
+                introduced = true;
+            };
+
             client = new NetManager(listener);
+            client.NatPunchEnabled = true;
+            client.NatPunchModule.Init(punchListener);
+
             client.UpdateTime = 15;
             client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
             client.Start();
             client.Connect(ipAddress, serverPort, "nitrox");
-
+            client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
+            Log.Debug("Try to connect via hole punch");
+            int rounds = 0;
+            while(rounds < 500 && !introduced && !IsConnected)
+            {                
+                rounds++;
+                Thread.Sleep(10);
+                client.NatPunchModule.PollEvents();
+            }
+            
             connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }
