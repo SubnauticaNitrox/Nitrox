@@ -66,14 +66,13 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
             Log.Debug("Try to connect via hole punch");
             int rounds = 0;
-            while(rounds < 500 && !introduced && !IsConnected)
+            while(rounds < 500 && !introduced && !IsConnected && !connectedEvent.WaitOne(10))
             {                
                 rounds++;
-                Thread.Sleep(10);
                 client.NatPunchModule.PollEvents();
             }
             
-            connectedEvent.WaitOne(2000);
+            //connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }
 
