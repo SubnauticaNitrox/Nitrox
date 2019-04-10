@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using LiteNetLib;
 using LiteNetLib.Utils;
 
-namespace NitroxUpdPunchServer.Communication.NetworkingLayer.LiteNetLib
+namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
 {
     class LiteNetLibPunchServer : INatPunchListener
     {
