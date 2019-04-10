@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer-Subnautica", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{E4A81E18-ABA0-4A8B-82FA-E4255BB2EF09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxUdpPunchServer", "NitroxUpdPunchServer\NitroxUdpPunchServer.csproj", "{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxUdpPunchServer", "NitroxUdpPunchServer\NitroxUdpPunchServer.csproj", "{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
