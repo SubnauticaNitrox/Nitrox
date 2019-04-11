@@ -67,6 +67,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
             {
                 Log.Debug("Got packet from upd server. Will poll from him");
+                server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), "register");
                 server.NatPunchModule.PollEvents();
             };
 

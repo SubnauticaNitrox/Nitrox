@@ -72,6 +72,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             {                
                 rounds++;
                 client.NatPunchModule.PollEvents();
+                Log.Debug("Round {0}", rounds);
             }
             
             //connectedEvent.WaitOne(2000);

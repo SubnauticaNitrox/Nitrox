@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="LiteNetLib">
+      <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\netcoreapp2.0\LiteNetLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
