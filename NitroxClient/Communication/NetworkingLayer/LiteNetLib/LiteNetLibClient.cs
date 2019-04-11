@@ -68,7 +68,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
             Log.Debug("Try to connect via hole punch");
             int rounds = 0;
-            while(rounds < 500 && !IsConnected && !connectedEvent.WaitOne(10))
+            while(rounds < 50 && !IsConnected && !connectedEvent.WaitOne(100))
             {                
                 rounds++;
                 client.NatPunchModule.PollEvents();
@@ -112,7 +112,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         {
             LostConnectionModal.Instance.Show();
             IsConnected = false;
-            Log.Info("Disconnected from server");
+            Log.Info("Disconnected from server {0}", peer.EndPoint);
         }
     }
 }

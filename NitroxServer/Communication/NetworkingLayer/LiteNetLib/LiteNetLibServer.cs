@@ -40,7 +40,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             punchListener.NatIntroductionSuccess += (point, token) =>
             {                
                 Log.Debug("Introduction success with {0}", point);
-                server.Connect(point,"nitrox");
+                //server.Connect(point,"nitrox");
             };
 
             EventBasedNetListener listener2 = new EventBasedNetListener();
@@ -107,7 +107,11 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         private void PeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
-            ClientDisconnected(GetConnection(peer.Id));
+            var connection = GetConnection(peer.Id);
+            if (connection != null)
+            {
+                ClientDisconnected(connection);
+            }
         }
 
         private void NetworkDataReceived(NetPeer peer, NetDataReader reader, DeliveryMethod deliveryMethod)
