@@ -40,16 +40,49 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             punchListener.NatIntroductionSuccess += (point, token) =>
             {                
                 Log.Debug("Introduction success with {0}", point);
+                server.Connect(point,"nitrox");
             };
-            
-            server.NatPunchEnabled = true;
-            server.NatPunchModule.Init(punchListener);
 
+            EventBasedNetListener listener2 = new EventBasedNetListener();
+            listener2.ConnectionRequestEvent += (request) =>
+            {
+                Log.Debug("Accept punch connection request from {0}", new object[] { request.RemoteEndPoint });
+                request.Accept();
+            };
+
+            listener2.PeerConnectedEvent += peer =>
+            {
+                Log.Debug("PeerConnected: " + peer.EndPoint.ToString());
+            };
+
+            listener2.PeerDisconnectedEvent += (peer, disconnectInfo) =>
+            {
+                Log.Debug("Peer {0} disconnected", peer.EndPoint);
+            };
+
+            listener2.NetworkErrorEvent += (peer, error) =>
+            {
+                Log.Debug("Got error from {0} with code {1}", peer, error);
+            };
+            listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
+            {
+                Log.Debug("Got packet from upd server. Will poll from him");
+                server.NatPunchModule.PollEvents();
+            };
+
+            NetManager netPeers = new NetManager(listener2);
+            netPeers.UnsyncedEvents = true;
+            netPeers.Start();
+            netPeers.Connect("ghaarg.ddns.net", 11001,"NitroxPunch");
+
+            server.NatPunchEnabled = true;
+            server.NatPunchModule.Init(punchListener);            
             server.DiscoveryEnabled = true;
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
             server.Start(portNumber);
+            
             server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), "register");
             Log.Debug("Register hole punch");
             isStopped = false;
@@ -63,6 +96,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         private void PeerConnected(NetPeer peer)
         {
+            Log.Debug("Peer connected: {0}", peer.EndPoint);
             LiteNetLibConnection connection = new LiteNetLibConnection(peer);
 
             lock (connectionsByRemoteIdentifier)

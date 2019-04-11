@@ -49,10 +49,10 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             punchListener = new EventBasedNatPunchListener();
             punchListener.NatIntroductionSuccess += (point, token) =>
             {
-                Log.Debug("Got nat introduction. Will connect: {0}",new object[] { IsConnected });
+                Log.Debug("Got nat introduction to {1}. Will connect: {0}", !IsConnected, point);
                 if (!IsConnected)
                 {
-                    connectedEvent.Set();
+                    //connectedEvent.Set();
                     client.Connect(point, "nitrox");
                 }
             };
@@ -64,7 +64,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.UpdateTime = 15;
             client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
             client.Start();
-            client.Connect(ipAddress, serverPort, "nitrox");
+            //client.Connect(ipAddress, serverPort, "nitrox");
             client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
             Log.Debug("Try to connect via hole punch");
             int rounds = 0;
@@ -105,7 +105,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         {
             connectedEvent.Set();
             IsConnected = true;
-            Log.Info("Connected to server");
+            Log.Info("Connected to server {0}", peer.EndPoint);
         }
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)

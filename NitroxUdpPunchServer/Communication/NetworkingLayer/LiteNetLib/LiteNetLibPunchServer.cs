@@ -39,14 +39,21 @@ namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
 
             listener.ConnectionRequestEvent += request =>
             {
+                Console.WriteLine("Get connection request from {0}", request.RemoteEndPoint);
                 request.AcceptIfKey(ConnectionKey);
             };
 
             listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
             {
+                Console.WriteLine("Peer {0} disconnected", peer.EndPoint);
                 var server = tokenServerDict[peer.EndPoint.Address.ToString()];
                 tokenServerDict.Remove(server.Item1.Address.ToString());
                 tokenServerDict.Remove(server.Item2.Address.ToString());
+            };
+
+            listener.NetworkErrorEvent += (peer, error) =>
+            {
+                Console.WriteLine("Got error from {0} with code {1}", peer, error);
             };
 
             server.Start(port);
@@ -80,6 +87,10 @@ namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
                     remoteEndPoint, // client external
                     token // request token
                     );
+                    var peer = (from p in server.ConnectedPeerList
+                                where p.EndPoint.Address.ToString() == token
+                                select p).First();
+                    peer.Send(new byte[] { 0 }, DeliveryMethod.ReliableUnordered);
                     Console.WriteLine("Introduced server {0} with client {1}", hostData.Item2, remoteEndPoint);
                 }
             }
@@ -93,7 +104,7 @@ namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
 
         public void Process()
         {
-            //server.PollEvents();
+            server.PollEvents();
             server.NatPunchModule.PollEvents();
         }
         
