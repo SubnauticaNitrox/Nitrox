@@ -9,6 +9,11 @@ using LiteNetLib.Utils;
 
 namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
 {
+    struct Endpoint
+    {
+
+    }
+
     class LiteNetLibPunchServer : INatPunchListener
     {
         private const string CONNECTION_KEY = "nitrox";
@@ -90,7 +95,10 @@ namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
                     var peer = (from p in server.ConnectedPeerList
                                 where p.EndPoint.Address.ToString() == token
                                 select p).First();
-                    peer.Send(new byte[] { 0 }, DeliveryMethod.ReliableUnordered);
+                    NetSerializer serializer = new NetSerializer();
+                    NetDataWriter writer = new NetDataWriter();
+                    writer.Put(hostData.Item2);
+                    peer.Send(writer.Data, DeliveryMethod.ReliableUnordered);
                     Console.WriteLine("Introduced server {0} with client {1}", hostData.Item2, remoteEndPoint);
                 }
             }
@@ -98,7 +106,7 @@ namespace NitroxUdpPunchServer.Communication.NetworkingLayer.LiteNetLib
 
         public void OnNatIntroductionSuccess(IPEndPoint targetEndPoint, string token)
         {
-            Console.WriteLine("Sucess... Why?");
+            Console.WriteLine("Success... Why?");
             // Not needed
         }
 

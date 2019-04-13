@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.DataStructures;
@@ -66,15 +67,15 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             };
             listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
             {
-                Log.Debug("Got packet from upd server. Will poll from him");
-                server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), "register");
-                server.NatPunchModule.PollEvents();
+                Log.Debug("Got packet from upd server. Do nothing");
+                //server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
+                //server.NatPunchModule.PollEvents();
             };
 
             NetManager netPeers = new NetManager(listener2);
             netPeers.UnsyncedEvents = true;
             netPeers.Start();
-            netPeers.Connect("ghaarg.ddns.net", 11001,"NitroxPunch");
+            netPeers.Connect("paschka.ddns.net", 11001,"NitroxPunch");
 
             server.NatPunchEnabled = true;
             server.NatPunchModule.Init(punchListener);            
@@ -83,8 +84,25 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
             server.Start(portNumber);
-            
-            server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), "register");
+
+            Thread backgroundPollThread = new Thread(() =>
+            {
+                DateTime time = DateTime.Now.Subtract(TimeSpan.FromMinutes(5));
+                Log.Debug("Start nat punch poll thread");
+                while (!isStopped)
+                {
+                    // Send punch register every minute
+                    if (time + TimeSpan.FromMinutes(1) <= DateTime.Now)
+                    {
+                        Log.Debug("Send poll request");
+                        time = DateTime.Now;
+                        server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
+                    }
+                    server.NatPunchModule.PollEvents();
+                    Thread.Sleep(1000);
+                }
+            });
+            backgroundPollThread.Start();
             Log.Debug("Register hole punch");
             isStopped = false;
         }

@@ -65,16 +65,18 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
             client.Start();
             //client.Connect(ipAddress, serverPort, "nitrox");
-            client.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("ghaarg.ddns.net", 11001), ipAddress);
-            Log.Debug("Try to connect via hole punch");
+            var endpoint = NetUtils.MakeEndPoint("paschka.ddns.net", 11001);
+            client.NatPunchModule.SendNatIntroduceRequest(endpoint, ipAddress);
+            Log.Debug("Try to connect via hole punch to {0}",endpoint);
             int rounds = 0;
-            while(rounds < 50 && !IsConnected && !connectedEvent.WaitOne(100))
+            while(rounds < 25 && !connectedEvent.WaitOne(200))
             {                
                 rounds++;
                 client.NatPunchModule.PollEvents();
-                Log.Debug("Round {0}", rounds);
+                
             }
-            
+            Log.Debug("Rounds {0}", rounds);
+            Thread.Sleep(100);
             //connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }

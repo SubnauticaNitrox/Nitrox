@@ -84,6 +84,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
+    <Compile Include="Client\Communication\LiteNetLib\LiteNetLibClientTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionJoinedStateTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservationRejectedStateTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservedStateTests.cs" />
