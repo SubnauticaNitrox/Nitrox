@@ -13,7 +13,7 @@ namespace NitroxTest.Client.Communication.LiteNetLib
     [TestClass]
     public class LiteNetLibClientTests
     {
-        private readonly string connection = "ghaarg.ddns.net";
+        private readonly string connection = "88.70.144.18";
         private readonly int port = 11000;
         private LiteNetLibClient liteNetLibClient;
 

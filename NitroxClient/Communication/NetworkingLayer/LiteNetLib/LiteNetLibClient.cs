@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
@@ -39,11 +40,28 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += Disconnected;
             listener.NetworkReceiveEvent += ReceivedNetworkData;
 
-            
+            client = new NetManager(listener);
 
+            EventBasedNetListener listener2 = new EventBasedNetListener();
+            listener2.PeerConnectedEvent += peer =>
+            {
+                Log.Debug("punchlisterner: connected to {0}", peer.EndPoint);
+            };
 
-            
-            
+            listener2.PeerDisconnectedEvent += (peer,reason) =>
+            {
+                Log.Debug("punchlisterner: disconnected from {0}", peer.EndPoint);
+            };
+            listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
+            {
+                EndPoint endPoint = data.GetNetEndPoint();
+                Log.Debug("Revieved endpoint {0} from puncher. try to connect...", endPoint);
+                client.Connect((IPEndPoint)endPoint, "nitrox");
+            };
+            NetManager punchClient = new NetManager(listener2);
+            punchClient.UnsyncedEvents = true;
+            punchClient.Start();
+            punchClient.Connect("paschka.ddns.net", 11001, "NitroxPunch");
             
 
             punchListener = new EventBasedNatPunchListener();
@@ -57,7 +75,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
                 }
             };
 
-            client = new NetManager(listener);
+            
             client.NatPunchEnabled = true;
             client.NatPunchModule.Init(punchListener);
 
@@ -67,13 +85,12 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             //client.Connect(ipAddress, serverPort, "nitrox");
             var endpoint = NetUtils.MakeEndPoint("paschka.ddns.net", 11001);
             client.NatPunchModule.SendNatIntroduceRequest(endpoint, ipAddress);
-            Log.Debug("Try to connect via hole punch to {0}",endpoint);
+            Log.Debug("Try to connect via hole punch to {0}", ipAddress);
             int rounds = 0;
             while(rounds < 25 && !connectedEvent.WaitOne(200))
             {                
                 rounds++;
-                client.NatPunchModule.PollEvents();
-                
+                client.NatPunchModule.PollEvents();                
             }
             Log.Debug("Rounds {0}", rounds);
             Thread.Sleep(100);

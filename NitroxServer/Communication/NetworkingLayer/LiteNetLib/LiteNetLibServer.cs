@@ -67,7 +67,9 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             };
             listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
             {
-                Log.Debug("Got packet from upd server. Do nothing");
+                Log.Debug("Got packet from upd server. Send packet to EndPoint");
+                EndPoint endPoint = data.GetNetEndPoint();
+                server.SendUnconnectedMessage(new byte[] { 0 }, (IPEndPoint)endPoint);
                 //server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
                 //server.NatPunchModule.PollEvents();
             };
@@ -87,19 +89,19 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
             Thread backgroundPollThread = new Thread(() =>
             {
-                DateTime time = DateTime.Now.Subtract(TimeSpan.FromMinutes(5));
+                DateTime time = DateTime.Now.Subtract(TimeSpan.FromDays(5));
                 Log.Debug("Start nat punch poll thread");
                 while (!isStopped)
                 {
                     // Send punch register every minute
-                    if (time + TimeSpan.FromMinutes(1) <= DateTime.Now)
+                    if (time + TimeSpan.FromSeconds(20) <= DateTime.Now)
                     {
                         Log.Debug("Send poll request");
                         time = DateTime.Now;
                         server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
                     }
                     server.NatPunchModule.PollEvents();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
             });
             backgroundPollThread.Start();

@@ -46,9 +46,16 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
             {
                 Console.WriteLine("Peer {0} disconnected", peer.EndPoint);
-                var server = tokenServerDict[peer.EndPoint.Address.ToString()];
-                tokenServerDict.Remove(server.Item1.Address.ToString());
-                tokenServerDict.Remove(server.Item2.Address.ToString());
+                try
+                {
+                    var server = tokenServerDict[peer.EndPoint.Address.ToString()];
+                    tokenServerDict.Remove(server.Item1.Address.ToString());
+                    tokenServerDict.Remove(server.Item2.Address.ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error retrieving server. Reason {0}, Message: {1}", e.InnerException, e.Message);
+                }
             };
 
             listener.NetworkErrorEvent += (peer, error) =>
@@ -90,7 +97,20 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
                     var peer = (from p in server.ConnectedPeerList
                                 where p.EndPoint.Address.ToString() == token
                                 select p).First();
-                    peer.Send(new byte[] { 0 }, DeliveryMethod.ReliableUnordered);
+                    NetDataWriter netDataWriter = new NetDataWriter();
+                    netDataWriter.Put(remoteEndPoint);
+                    peer.Send(netDataWriter, DeliveryMethod.Unreliable);
+
+                    var peers = (from p in server.ConnectedPeerList
+                                 where p.EndPoint.Address.ToString() == remoteEndPoint.Address.ToString()
+                             select p);
+                    if(peers.Count() > 0)
+                    {
+                        peer = peers.First();
+                        netDataWriter = new NetDataWriter();
+                        netDataWriter.Put(hostData.Item2);
+                        peer.Send(netDataWriter, DeliveryMethod.Unreliable);
+                    }
                     Console.WriteLine("Introduced server {0} with client {1}", hostData.Item2, remoteEndPoint);
                 }
             }
@@ -98,7 +118,7 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
 
         public void OnNatIntroductionSuccess(IPEndPoint targetEndPoint, string token)
         {
-            Console.WriteLine("Sucess... Why?");
+            Console.WriteLine("Success... Why?");
             // Not needed
         }
 
