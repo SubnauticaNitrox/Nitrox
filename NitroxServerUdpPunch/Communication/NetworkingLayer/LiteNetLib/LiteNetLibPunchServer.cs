@@ -94,20 +94,23 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
                     remoteEndPoint, // client external
                     token // request token
                     );
-                    var peer = (from p in server.ConnectedPeerList
-                                where p.EndPoint.Address.ToString() == token
-                                select p).First();
-                    NetDataWriter netDataWriter = new NetDataWriter();
-                    netDataWriter.Put(remoteEndPoint);
-                    peer.Send(netDataWriter, DeliveryMethod.Unreliable);
-
                     var peers = (from p in server.ConnectedPeerList
+                                 where p.EndPoint.Address.ToString() == token
+                                 select p);
+                    if (peers.Count() > 0)
+                    {
+                        var peer = peers.First();
+                        NetDataWriter netDataWriter = new NetDataWriter();
+                        netDataWriter.Put(remoteEndPoint);
+                        peer.Send(netDataWriter, DeliveryMethod.Unreliable);
+                    }
+                    peers = (from p in server.ConnectedPeerList
                                  where p.EndPoint.Address.ToString() == remoteEndPoint.Address.ToString()
                              select p);
                     if(peers.Count() > 0)
                     {
-                        peer = peers.First();
-                        netDataWriter = new NetDataWriter();
+                        var peer = peers.First();
+                        var netDataWriter = new NetDataWriter();
                         netDataWriter.Put(hostData.Item2);
                         peer.Send(netDataWriter, DeliveryMethod.Unreliable);
                     }
