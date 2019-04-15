@@ -14,6 +14,7 @@ namespace NitroxServer.Communication.NetworkingLayer
     {
         protected bool isStopped = true;
         protected int portNumber, maxConn;
+        protected ServerConfig serverConfig;
 
         protected readonly PacketHandler packetHandler;
         protected readonly EntitySimulation entitySimulation;
@@ -25,6 +26,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             this.packetHandler = packetHandler;
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
+            this.serverConfig = serverConfig;
 
             portNumber = serverConfig.ServerPort;
             maxConn = serverConfig.MaxConnections;

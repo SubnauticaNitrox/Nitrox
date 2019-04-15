@@ -11,16 +11,8 @@ namespace NitroxServerUdpPunch
             server.Start();
             while (true)
             {
-                if (Console.KeyAvailable)
-                {
-                    var key = Console.ReadKey(true).Key;
-                    if (key == ConsoleKey.Escape)
-                    {
-                        break;
-                    }
-                }
                 server.Process();
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
     }

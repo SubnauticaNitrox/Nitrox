@@ -19,6 +19,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
         private EventBasedNatPunchListener punchListener;
+        private readonly string udpPunchServerAddress = "paschka.ddns.net";
 
         private NetManager client;
 
@@ -60,8 +61,8 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             };
             NetManager punchClient = new NetManager(listener2);
             punchClient.UnsyncedEvents = true;
-            punchClient.Start();
-            punchClient.Connect("paschka.ddns.net", 11001, "NitroxPunch");
+            //punchClient.Start();
+            //punchClient.Connect("paschka.ddns.net", 11001, "NitroxPunch");
             
 
             punchListener = new EventBasedNatPunchListener();
@@ -83,7 +84,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
             client.Start();
             //client.Connect(ipAddress, serverPort, "nitrox");
-            var endpoint = NetUtils.MakeEndPoint("paschka.ddns.net", 11001);
+            var endpoint = NetUtils.MakeEndPoint(udpPunchServerAddress, 11001);
             client.NatPunchModule.SendNatIntroduceRequest(endpoint, ipAddress);
             Log.Debug("Try to connect via hole punch to {0}", ipAddress);
             int rounds = 0;

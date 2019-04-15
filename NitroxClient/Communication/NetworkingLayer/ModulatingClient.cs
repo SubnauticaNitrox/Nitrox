@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.NetworkingLayer.Lidgren;
@@ -16,9 +16,9 @@ namespace NitroxClient.Communication.NetworkingLayer
 
         public ModulatingClient()
         {
-            CurrentClient = new LidgrenClient();
+            CurrentClient = new LiteNetLibClient();
             fallbackClients = new Queue<IClient>();
-            fallbackClients.Enqueue(new LiteNetLibClient());
+            fallbackClients.Enqueue(new LidgrenClient());
         }
 
         public void Start(string ipAddress, int serverPort)

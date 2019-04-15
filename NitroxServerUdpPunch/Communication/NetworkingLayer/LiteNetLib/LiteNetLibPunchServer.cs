@@ -11,12 +11,12 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
 {
     class LiteNetLibPunchServer : INatPunchListener
     {
-        private const string CONNECTION_KEY = "nitrox";
         private readonly NetManager server;
         private readonly int port;
         private readonly EventBasedNetListener listener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private readonly Dictionary<string, Tuple<IPEndPoint, IPEndPoint, DateTime>> tokenServerDict = new Dictionary<string, Tuple<IPEndPoint, IPEndPoint, DateTime>>();
+        private double timeoutTimeInMinutes = 3;
 
         public string ConnectionKey { get; private set; }
 
@@ -46,16 +46,6 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
             {
                 Console.WriteLine("Peer {0} disconnected", peer.EndPoint);
-                try
-                {
-                    var server = tokenServerDict[peer.EndPoint.Address.ToString()];
-                    tokenServerDict.Remove(server.Item1.Address.ToString());
-                    tokenServerDict.Remove(server.Item2.Address.ToString());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error retrieving server. Reason {0}, Message: {1}", e.InnerException, e.Message);
-                }
             };
 
             listener.NetworkErrorEvent += (peer, error) =>
@@ -73,13 +63,43 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
 
         public void OnNatIntroductionRequest(IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string token)
         {
-            if (token == "register")
+            string[] tokenParse = token.Split("|");
+            if(tokenParse.Count() > 2)
             {
-                string localIp = localEndPoint.Address.ToString();
+                Console.WriteLine("Forbidden second | in token: {0}", token);
+            }
+            bool registerServer = tokenParse[0].ToLower() == "register"; 
+            if (registerServer)
+            {
+                var serverData = new Tuple<IPEndPoint, IPEndPoint, DateTime>(localEndPoint, remoteEndPoint, DateTime.Now);
+
                 string remoteIp = remoteEndPoint.Address.ToString();
-                tokenServerDict[localIp] = new Tuple<IPEndPoint, IPEndPoint, DateTime>(localEndPoint, remoteEndPoint, DateTime.Now);
-                tokenServerDict[remoteIp] = new Tuple<IPEndPoint, IPEndPoint, DateTime>(localEndPoint, remoteEndPoint, DateTime.Now);
-                Console.WriteLine("Registered new server with internal {0} and external {1} address", localEndPoint, remoteEndPoint);
+                bool alreadyRegistered = tokenServerDict.ContainsKey(remoteIp);
+                // Put registered or updated in console output
+                string registeredUpdated = alreadyRegistered ? "Updated" : "Registered";
+                tokenServerDict[remoteIp] = serverData;
+                Console.WriteLine("{2} server with internal {0} and external {1} address", localEndPoint, remoteEndPoint, registeredUpdated);
+                // Register with game name
+                if (tokenParse.Count() > 1 && tokenParse[1].Trim() != "")
+                {
+                    string serverName = tokenParse[1];
+                    alreadyRegistered = tokenServerDict.ContainsKey(serverName);
+                    if (alreadyRegistered && tokenServerDict[serverName].Item2.Address != remoteEndPoint.Address)
+                    {
+                        NetDataWriter netData = new NetDataWriter();
+                        string[] data = new string[2] { "Error", serverName };
+                        netData.PutArray(data);
+                        server.SendUnconnectedMessage(netData, remoteEndPoint);
+                        Console.WriteLine("Got same servername {0} for another server: {1}", serverName, remoteEndPoint.Address);
+                    }
+                    else
+                    {
+                        tokenServerDict[serverName] = serverData;
+                        // Put registered or Updated in string
+                        registeredUpdated = alreadyRegistered ? "Updated" : "Registered";
+                        Console.WriteLine("{0} server with game name {1}", registeredUpdated, serverName);
+                    }
+                }                                
             }
             else
             {
@@ -129,7 +149,25 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
         {
             server.PollEvents();
             server.NatPunchModule.PollEvents();
+            CheckTimeOuts();
         }
-        
+
+        private void CheckTimeOuts()
+        {
+            List<string> tokensToDelete = new List<string>();
+            foreach(var tokenServer in tokenServerDict)
+            {
+                if(tokenServer.Value.Item3 + TimeSpan.FromMinutes(timeoutTimeInMinutes) < DateTime.Now)
+                {
+                    tokensToDelete.Add(tokenServer.Key);
+                }
+            }
+            foreach(var token in tokensToDelete)
+            {
+                var serverData = tokenServerDict[token];
+                Console.WriteLine("Timeout for server with internal {0} and external {1} address", serverData.Item1, serverData.Item2);
+                tokenServerDict.Remove(token);
+            }
+        }
     }
 }

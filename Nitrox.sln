@@ -28,9 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer-Subnautica", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxLauncher", "NitroxLauncher\NitroxLauncher.csproj", "{E4A81E18-ABA0-4A8B-82FA-E4255BB2EF09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxUdpPunchServer", "NitroxUdpPunchServer\NitroxUdpPunchServer.csproj", "{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServerUdpPunch", "NitroxServerUdpPunch\NitroxServerUdpPunch.csproj", "{9A0CA3CA-CF61-48CB-BB79-7222892D58A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NitroxServerUdpPunch", "NitroxServerUdpPunch\NitroxServerUdpPunch.csproj", "{9A0CA3CA-CF61-48CB-BB79-7222892D58A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -162,18 +160,6 @@ Global
 		{E4A81E18-ABA0-4A8B-82FA-E4255BB2EF09}.Release|x64.Build.0 = Release|Any CPU
 		{E4A81E18-ABA0-4A8B-82FA-E4255BB2EF09}.Release|x86.ActiveCfg = Release|Any CPU
 		{E4A81E18-ABA0-4A8B-82FA-E4255BB2EF09}.Release|x86.Build.0 = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|x64.Build.0 = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Debug|x86.Build.0 = Debug|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|x64.ActiveCfg = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|x64.Build.0 = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|x86.ActiveCfg = Release|Any CPU
-		{09D3735C-DAC5-4D02-B0B3-A5F8ABED1B47}.Release|x86.Build.0 = Release|Any CPU
 		{9A0CA3CA-CF61-48CB-BB79-7222892D58A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A0CA3CA-CF61-48CB-BB79-7222892D58A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A0CA3CA-CF61-48CB-BB79-7222892D58A9}.Debug|x64.ActiveCfg = Debug|Any CPU

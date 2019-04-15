@@ -21,6 +21,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         private readonly EventBasedNetListener listener;
         private readonly EventBasedNatPunchListener punchListener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+        private bool serverNameTaken = false;
 
         public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
@@ -37,7 +38,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener.PeerDisconnectedEvent += PeerDisconnected;
             listener.NetworkReceiveEvent += NetworkDataReceived;
             listener.ConnectionRequestEvent += OnConnectionRequest;
-
+            listener.NetworkReceiveUnconnectedEvent += OnUnconnectedUdpPacketRecieved;
             punchListener.NatIntroductionSuccess += (point, token) =>
             {                
                 Log.Debug("Introduction success with {0}", point);
@@ -76,36 +77,47 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
             NetManager netPeers = new NetManager(listener2);
             netPeers.UnsyncedEvents = true;
-            netPeers.Start();
-            netPeers.Connect("paschka.ddns.net", 11001,"NitroxPunch");
-
-            server.NatPunchEnabled = true;
-            server.NatPunchModule.Init(punchListener);            
+            //netPeers.Start();
+            //netPeers.Connect("paschka.ddns.net", 11001,"NitroxPunch");
+            
             server.DiscoveryEnabled = true;
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
             server.Start(portNumber);
 
-            Thread backgroundPollThread = new Thread(() =>
+            if (serverConfig.UdpPunchServer.Length != 0)
             {
-                DateTime time = DateTime.Now.Subtract(TimeSpan.FromDays(5));
-                Log.Debug("Start nat punch poll thread");
-                while (!isStopped)
+                server.NatPunchEnabled = true;
+                server.NatPunchModule.Init(punchListener);
+
+                Thread backgroundPollThread = new Thread(() =>
                 {
-                    // Send punch register every minute
-                    if (time + TimeSpan.FromSeconds(20) <= DateTime.Now)
+                    DateTime time = DateTime.Now.Subtract(TimeSpan.FromDays(5));
+                    Log.Info("Start nat punch poll thread");
+                    string token = "register";
+                    if(serverConfig.ServerName != "")
                     {
-                        Log.Debug("Send poll request");
-                        time = DateTime.Now;
-                        server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
+                        token += "|";
+                        token += serverConfig.ServerName;
                     }
-                    server.NatPunchModule.PollEvents();
-                    Thread.Sleep(100);
-                }
-            });
-            backgroundPollThread.Start();
-            Log.Debug("Register hole punch");
+                    IPEndPoint punchAddress = NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001);
+                    while (!isStopped)
+                    {
+                        // Send punch register every minute
+                        if (time + TimeSpan.FromSeconds(serverConfig.UdpPunchRefreshTime) <= DateTime.Now)
+                        {
+                            Log.Info("Send poll request");
+                            time = DateTime.Now;                            
+                            server.NatPunchModule.SendNatIntroduceRequest(punchAddress, token);
+                        }
+                        server.NatPunchModule.PollEvents();
+                        Thread.Sleep(100);
+                    }
+                });
+                backgroundPollThread.Start();
+            }
+
             isStopped = false;
         }
 
@@ -156,6 +168,26 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             else
             {
                 request.Reject();
+            }
+        }
+
+        public void OnUnconnectedUdpPacketRecieved(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
+        {
+            if (remoteEndPoint == NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001))
+            {
+                string[] messages = reader.GetStringArray();
+                if(messages.Length > 1)
+                {
+                    if (messages[0] == "Error" && messages[1] == serverConfig.ServerName && !serverNameTaken)
+                    {
+                        Log.Error("Server name already taken. Try again later or with another server name.");
+                        serverNameTaken = true;
+                    }
+                }
+            }
+            else
+            {
+                Log.Warn("Got unconnected packet from unknown host {0} of type {1}.", remoteEndPoint, messageType);
             }
         }
 
