@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="dnlib, Version=3.1.0.0, Culture=neutral, PublicKeyToken=50e96378b6e77999, processorArchitecture=MSIL">
-      <HintPath>..\packages\dnlib.3.1.0\lib\net461\dnlib.dll</HintPath>
+      <HintPath>..\lib\dnlib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
@@ -164,15 +164,7 @@
   <ItemGroup>
     <Resource Include="Images\Nitrox.png" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Harmony</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{69bee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
+  <ItemGroup>    
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>

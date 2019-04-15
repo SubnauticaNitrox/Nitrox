@@ -110,10 +110,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Harmony\Harmony\Harmony.csproj">
-      <Project>{69aee16a-b6e7-4642-8081-3928b32455df}</Project>
-      <Name>Harmony</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
       <Project>{ed5034bd-66b5-4596-94b7-66a28d3eff49}</Project>
       <Name>NitroxClient</Name>
