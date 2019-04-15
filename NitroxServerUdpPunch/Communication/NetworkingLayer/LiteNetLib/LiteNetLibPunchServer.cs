@@ -84,13 +84,13 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
                 {
                     string serverName = tokenParse[1];
                     alreadyRegistered = tokenServerDict.ContainsKey(serverName);
-                    if (alreadyRegistered && tokenServerDict[serverName].Item2.Address != remoteEndPoint.Address)
+                    if (alreadyRegistered && !tokenServerDict[serverName].Item2.Address.Equals(remoteEndPoint.Address))
                     {
                         NetDataWriter netData = new NetDataWriter();
                         string[] data = new string[2] { "Error", serverName };
                         netData.PutArray(data);
                         server.SendUnconnectedMessage(netData, remoteEndPoint);
-                        Console.WriteLine("Got same servername {0} for another server: {1}", serverName, remoteEndPoint.Address);
+                        Console.WriteLine("Got same servername {0} from server {2} for another server: {1}", serverName, remoteEndPoint.Address, tokenServerDict[serverName].Item2.Address);
                     }
                     else
                     {

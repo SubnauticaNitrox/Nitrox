@@ -173,7 +173,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         public void OnUnconnectedUdpPacketRecieved(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
-            if (remoteEndPoint == NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001))
+            if (remoteEndPoint.Address.Equals(NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001)))
             {
                 string[] messages = reader.GetStringArray();
                 if(messages.Length > 1)
