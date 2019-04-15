@@ -69,14 +69,14 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
             {
                 Log.Debug("Got packet from upd server. Send packet to EndPoint");
-                EndPoint endPoint = data.GetNetEndPoint();
-                server.SendUnconnectedMessage(new byte[] { 0 }, (IPEndPoint)endPoint);
+                IPEndPoint endPoint = data.GetNetEndPoint();
+                server.SendUnconnectedMessage(new byte[] { 0 }, endPoint);
                 //server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
                 //server.NatPunchModule.PollEvents();
             };
 
-            NetManager netPeers = new NetManager(listener2);
-            netPeers.UnsyncedEvents = true;
+            //NetManager netPeers = new NetManager(listener2);
+            //netPeers.UnsyncedEvents = true;
             //netPeers.Start();
             //netPeers.Connect("paschka.ddns.net", 11001,"NitroxPunch");
             
