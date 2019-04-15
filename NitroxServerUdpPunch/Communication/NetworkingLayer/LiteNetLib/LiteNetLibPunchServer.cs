@@ -108,10 +108,10 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
                 if(tokenServerDict.TryGetValue(token,out hostData) || tokenServerDict.TryGetValue(token, out hostData))
                 {
                     server.NatPunchModule.NatIntroduce(
-                    hostData.Item1, // host internal
-                    hostData.Item2, // host external
                     localEndPoint, // client internal
                     remoteEndPoint, // client external
+                    hostData.Item1, // host internal
+                    hostData.Item2, // host external
                     token // request token
                     );
                     var peers = (from p in server.ConnectedPeerList
