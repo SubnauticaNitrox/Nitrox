@@ -1,4 +1,4 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.Helper;
@@ -33,9 +33,9 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             gameObject.transform.localRotation = entity.Rotation;
-            GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
 
+            NitroxIdentifier.SetNewId(gameObject, entity.Id);
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, techType);
 

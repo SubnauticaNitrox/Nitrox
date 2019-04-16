@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -24,13 +25,13 @@ namespace NitroxPatcher.Patches
                 return;
             }
    
-            string guid;
+            NitroxId id;
 
             string key = Base_ClearGeometry_Patch.getObjectKey(__result.name, __result.position);
 
-            if (Base_ClearGeometry_Patch.GuidByObjectKey.TryGetValue(key, out guid))
+            if (Base_ClearGeometry_Patch.NitroxIdByObjectKey.TryGetValue(key, out id))
             {
-                GuidHelper.SetNewGuid(__result.gameObject, guid);
+                NitroxIdentifier.SetNewId(__result.gameObject, id);
             }
         }
 

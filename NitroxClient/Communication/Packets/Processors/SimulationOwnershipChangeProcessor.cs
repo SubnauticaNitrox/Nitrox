@@ -1,7 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -30,12 +29,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     if(simulatedEntity.ChangesPosition)
                     {
-                        StartBroadcastingEntityPosition(simulatedEntity.Guid);
+                        StartBroadcastingEntityPosition(simulatedEntity.Id);
                     }
 
-                    simulationOwnershipManager.SimulateGuid(simulatedEntity.Guid, SimulationLockType.TRANSIENT);
+                    simulationOwnershipManager.SimulateEntity(simulatedEntity.Id, SimulationLockType.TRANSIENT);
                 }
-                else if(simulationOwnershipManager.HasAnyLockType(simulatedEntity.Guid))
+                else if(simulationOwnershipManager.HasAnyLockType(simulatedEntity.Id))
                 {
                     // The server has forcibly removed this lock from the client.  This is generally fine for
                     // transient locks because it is only broadcasting position.  However, exclusive locks may
@@ -43,28 +42,28 @@ namespace NitroxClient.Communication.Packets.Processors
                     // We can later add a forcibly removed callback but as of right now we have no use-cases for
                     // forcibly removing an exclusive lock.  Just log it if it happens....
 
-                    if(simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Guid))
+                    if(simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                     {
-                        Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Guid);
+                        Log.Warn("The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
                     }
 
-                    simulationOwnershipManager.StopSimulatingGuid(simulatedEntity.Guid);
-                    EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Guid);
+                    simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
+                    EntityPositionBroadcaster.StopWatchingEntity(simulatedEntity.Id);
                 }
             }
         }
 
-        private void StartBroadcastingEntityPosition(string guid)
+        private void StartBroadcastingEntityPosition(NitroxId id)
         {
-            Optional<GameObject> gameObject = GuidHelper.GetObjectFrom(guid);
+            Optional<GameObject> gameObject = NitroxIdentifier.GetObjectFrom(id);
 
             if (gameObject.IsPresent())
             {
-                EntityPositionBroadcaster.WatchEntity(guid, gameObject.Get());
+                EntityPositionBroadcaster.WatchEntity(id, gameObject.Get());
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + guid);
+                Log.Error("Expected to simulate an unknown entity: " + id);
             }
         }
     }

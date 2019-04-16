@@ -2,8 +2,9 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -32,8 +33,8 @@ namespace NitroxPatcher.Patches
                     parentVehicle = subRoot.gameObject;
                 }
                 
-                string guid = GuidHelper.GetGuid(parentVehicle);
-                VehicleNameChange packet = new VehicleNameChange(guid, subname.GetName());
+                NitroxId id = NitroxIdentifier.GetId(parentVehicle);
+                VehicleNameChange packet = new VehicleNameChange(id, subname.GetName());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

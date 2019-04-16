@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleFloodLights lightingPacket)
         {
-            cyclops.SetFloodLighting(lightingPacket.Guid, lightingPacket.IsOn);
+            cyclops.SetFloodLighting(lightingPacket.Id, lightingPacket.IsOn);
         }
     }
 }

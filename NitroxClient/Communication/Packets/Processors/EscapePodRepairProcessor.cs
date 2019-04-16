@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(EscapePodRepair packet)
         {
-            escapePodManager.OnRepair(packet.Guid);
+            escapePodManager.OnRepair(packet.Id);
         }
     }
 }

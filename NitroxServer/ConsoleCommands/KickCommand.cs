@@ -47,11 +47,11 @@ namespace NitroxServer.ConsoleCommands
 
             player.SendPacket(new PlayerKicked("You were kicked from the server! \n Reason: " + string.Join(" ", args))); // Notify player was kicked
             playerManager.PlayerDisconnected(player.connection); // Remove kicked player from the playerManager and 
-            List<SimulatedEntity> revokedGuids = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player); // Calculate Sim Changes
+            List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(player); // Calculate Sim Changes
 
-            if (revokedGuids.Count > 0)
+            if (revokedEntities.Count > 0)
             {
-                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedGuids);
+                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
                 playerManager.SendPacketToAllPlayers(ownershipChange);
             }
 

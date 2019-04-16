@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class EntityPositionBroadcaster : MonoBehaviour
     {
-        private static Dictionary<string, GameObject> watchingEntitiesByGuid = new Dictionary<string, GameObject>();
+        private static Dictionary<NitroxId, GameObject> watchingEntitiesById = new Dictionary<NitroxId, GameObject>();
         private Entities entityBroadcaster;
 
         private float time;
@@ -27,21 +28,21 @@ namespace NitroxClient.MonoBehaviours
             {
                 time = 0;
 
-                if (watchingEntitiesByGuid.Count > 0)
+                if (watchingEntitiesById.Count > 0)
                 {
-                    entityBroadcaster.BroadcastTransforms(watchingEntitiesByGuid);
+                    entityBroadcaster.BroadcastTransforms(watchingEntitiesById);
                 }
             }
         }
 
-        public static void WatchEntity(string guid, GameObject gameObject)
+        public static void WatchEntity(NitroxId id, GameObject gameObject)
         {
-            watchingEntitiesByGuid[guid] = gameObject;
+            watchingEntitiesById[id] = gameObject;
         }
 
-        public static void StopWatchingEntity(string guid)
+        public static void StopWatchingEntity(NitroxId id)
         {
-            watchingEntitiesByGuid.Remove(guid);
+            watchingEntitiesById.Remove(id);
         }
     }
 }

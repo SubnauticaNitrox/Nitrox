@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ModuleRemoved packet, Player player)
         {
-            playerData.RemoveModule(packet.ItemGuid);
+            playerData.RemoveModule(packet.ItemId);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

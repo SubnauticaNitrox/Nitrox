@@ -10,7 +10,7 @@ namespace NitroxPatcher.Patches
     /**
      * A DeconstructableBase is initialize when an base piece is fully created (unintuitively - this is the thing that tells the
      * build that this object can be deconstructed.) When this object is initialized, we store the game object in the transient
-     * object manager so that later we can transfer the guid to it from the ghost.
+     * object manager so that later we can transfer the id to it from the ghost.
      */
     public class BaseDeconstructable_Constructor_Patch : NitroxPatch
     {

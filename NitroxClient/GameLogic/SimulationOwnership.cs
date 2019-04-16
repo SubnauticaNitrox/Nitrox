@@ -8,12 +8,12 @@ namespace NitroxClient.GameLogic
 {
     public class SimulationOwnership
     {
-        public delegate void LockRequestCompleted(string guid, bool lockAquired);
+        public delegate void LockRequestCompleted(NitroxId id, bool lockAquired);
 
         private readonly IMultiplayerSession muliplayerSession;
         private readonly IPacketSender packetSender;
-        private readonly Dictionary<string, SimulationLockType> simulatedGuidsByLockType = new Dictionary<string, SimulationLockType>();
-        private readonly Dictionary<string, LockRequestCompleted> completeFunctionsByGuid = new Dictionary<string, LockRequestCompleted>();
+        private readonly Dictionary<NitroxId, SimulationLockType> simulatedIdsByLockType = new Dictionary<NitroxId, SimulationLockType>();
+        private readonly Dictionary<NitroxId, LockRequestCompleted> completeFunctionsById = new Dictionary<NitroxId, LockRequestCompleted>();
         
         public SimulationOwnership(IMultiplayerSession muliplayerSession, IPacketSender packetSender)
         {
@@ -21,16 +21,16 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public bool HasAnyLockType(string guid)
+        public bool HasAnyLockType(NitroxId id)
         {
-            return simulatedGuidsByLockType.ContainsKey(guid);
+            return simulatedIdsByLockType.ContainsKey(id);
         }
 
-        public bool HasExclusiveLock(string guid)
+        public bool HasExclusiveLock(NitroxId id)
         {
             SimulationLockType activeLockType;
 
-            if (simulatedGuidsByLockType.TryGetValue(guid, out activeLockType))
+            if (simulatedIdsByLockType.TryGetValue(id, out activeLockType))
             {
                 return (activeLockType == SimulationLockType.EXCLUSIVE);
             }
@@ -38,43 +38,43 @@ namespace NitroxClient.GameLogic
             return false;
         }
 
-        public void RequestSimulationLock(string guid, SimulationLockType lockType, LockRequestCompleted whenCompleted)
+        public void RequestSimulationLock(NitroxId id, SimulationLockType lockType, LockRequestCompleted whenCompleted)
         {
-            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, guid, lockType);
+            SimulationOwnershipRequest ownershipRequest = new SimulationOwnershipRequest(muliplayerSession.Reservation.PlayerId, id, lockType);
             packetSender.Send(ownershipRequest);
-            completeFunctionsByGuid[guid] = whenCompleted;
+            completeFunctionsById[id] = whenCompleted;
         }
 
-        public void ReceivedSimulationLockResponse(string guid, bool lockAquired, SimulationLockType lockType)
+        public void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
         {
-            Log.Info("Received lock response, guid: " + guid + " " + lockAquired + " " + lockType);
+            Log.Info("Received lock response, id: " + id + " " + lockAquired + " " + lockType);
 
             if (lockAquired)
             {
-                SimulateGuid(guid, lockType);
+                SimulateEntity(id, lockType);
             }
 
             LockRequestCompleted requestCompleted = null;
 
-            if (completeFunctionsByGuid.TryGetValue(guid, out requestCompleted) && requestCompleted != null)
+            if (completeFunctionsById.TryGetValue(id, out requestCompleted) && requestCompleted != null)
             {
-                completeFunctionsByGuid.Remove(guid);
-                requestCompleted(guid, lockAquired);
+                completeFunctionsById.Remove(id);
+                requestCompleted(id, lockAquired);
             }
             else
             {
-                Log.Warn("Did not have an outstanding simulation request for " + guid + " maybe there were multiple outstanding requests?");
+                Log.Warn("Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
             }
         }
 
-        public void SimulateGuid(string guid, SimulationLockType lockType)
+        public void SimulateEntity(NitroxId id, SimulationLockType lockType)
         {
-            simulatedGuidsByLockType[guid] = lockType;
+            simulatedIdsByLockType[id] = lockType;
         }
 
-        public void StopSimulatingGuid(string guid)
+        public void StopSimulatingEntity(NitroxId id)
         {
-            simulatedGuidsByLockType.Remove(guid);
+            simulatedIdsByLockType.Remove(id);
         }
     }
 }

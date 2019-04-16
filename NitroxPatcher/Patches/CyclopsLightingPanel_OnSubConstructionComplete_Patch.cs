@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.Unity.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
-using NitroxModel.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
@@ -23,8 +19,8 @@ namespace NitroxPatcher.Patches
         {
             // Suppress powered on if a cyclops´s floodlight is set to false            
             GameObject gameObject = __instance.gameObject;
-            string guid = GuidHelper.GetGuid(gameObject);
-            CyclopsModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<CyclopsModel>(guid);
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            CyclopsModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<CyclopsModel>(id);
             
             return model.FloodLightsOn;
         }

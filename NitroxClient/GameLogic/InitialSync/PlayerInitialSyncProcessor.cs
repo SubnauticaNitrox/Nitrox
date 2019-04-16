@@ -1,7 +1,8 @@
 ﻿using System;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -22,16 +23,16 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetPlayerGuid(packet.PlayerGuid);
+            SetPlayerGameObjectId(packet.PlayerGameObjectId);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             SetPlayerStats(packet.PlayerStatsData);
             SetPlayerGameMode((GameModeOption)Enum.Parse(typeof(GameModeOption), packet.GameMode));
         }
 
-        private void SetPlayerGuid(string playerguid)
+        private void SetPlayerGameObjectId(NitroxId id)
         {
-            GuidHelper.SetNewGuid(Player.mainObject, playerguid);
-            Log.Info("Received initial sync Player Guid: " + playerguid);
+            NitroxIdentifier.SetNewId(Player.mainObject, id);
+            Log.Info("Received initial sync Player GameObject Id: " + id);
         }
 
         private void AddStartingItemsToPlayer(bool firstTimeConnecting)
@@ -43,7 +44,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                     pickupable = pickupable.Initialize();
-                    itemContainers.AddItem(pickupable.gameObject, GuidHelper.GetGuid(Player.main.transform.gameObject));
+                    itemContainers.AddItem(pickupable.gameObject, NitroxIdentifier.GetId(Player.main.transform.gameObject));
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }
             }

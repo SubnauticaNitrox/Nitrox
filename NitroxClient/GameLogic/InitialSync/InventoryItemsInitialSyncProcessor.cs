@@ -47,16 +47,13 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("Error deserializing item data " + itemdata.Guid + " " + ex.Message);
+                        Log.Error("Error deserializing item data " + itemdata.ItemId + " " + ex.Message);
                         continue;
                     }
-
-                    // Mark this entity as spawned by the server
-                    item.AddComponent<NitroxEntity>();
-
+                    
                     Pickupable pickupable = item.GetComponent<Pickupable>();
 
-                    if (pickupable != null && itemdata.ContainerGuid == packet.PlayerGuid)
+                    if (pickupable != null && itemdata.ContainerId == packet.PlayerGameObjectId)
                     {
                         goals.Remove(pickupable.GetTechType());  // Remove Notification Goal Event On Item Player Already have On Any Container
 
@@ -69,7 +66,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        itemContainers.AddItem(item, itemdata.ContainerGuid);
+                        itemContainers.AddItem(item, itemdata.ContainerId);
                     }
                 }
             }

@@ -17,15 +17,15 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(SimulationOwnershipRequest ownershipRequest, Player player)
         {
-            bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Guid, player, ownershipRequest.LockType);
+            bool aquiredLock = simulationOwnershipData.TryToAcquire(ownershipRequest.Id, player, ownershipRequest.LockType);
             
             if (aquiredLock)
             {
-                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Guid, player.Id, ownershipRequest.LockType);
+                SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(ownershipRequest.Id, player.Id, ownershipRequest.LockType);
                 playerManager.SendPacketToOtherPlayers(simulationOwnershipChange, player);
             }
 
-            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(ownershipRequest.Guid, aquiredLock, ownershipRequest.LockType);
+            SimulationOwnershipResponse responseToPlayer = new SimulationOwnershipResponse(ownershipRequest.Id, aquiredLock, ownershipRequest.LockType);
             player.SendPacket(responseToPlayer);
         }
     }

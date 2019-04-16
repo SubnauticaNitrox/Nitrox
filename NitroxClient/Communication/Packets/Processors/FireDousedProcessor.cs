@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         /// </summary>
         public override void Process(FireDoused packet)
         {
-            GameObject fireGameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            GameObject fireGameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
 
             using (packetSender.Suppress<FireDoused>())
             {

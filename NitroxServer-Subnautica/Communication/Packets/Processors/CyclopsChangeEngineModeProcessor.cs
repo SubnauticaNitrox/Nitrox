@@ -25,7 +25,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
         public override void Process(CyclopsChangeEngineMode packet, NitroxServer.Player player)
         {
-            Optional<CyclopsModel> opCyclops = Vehicles.GetVehicleModel<CyclopsModel>(packet.Guid);
+            Optional<CyclopsModel> opCyclops = Vehicles.GetVehicleModel<CyclopsModel>(packet.Id);
             if (opCyclops.IsPresent())
             {
                 opCyclops.Get().EngineMode = packet.Mode;

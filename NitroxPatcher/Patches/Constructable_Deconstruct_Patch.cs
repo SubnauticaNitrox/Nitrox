@@ -4,7 +4,9 @@ using System.Reflection.Emit;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -21,7 +23,7 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(Constructable __instance)
         {
-            CheckToCopyGuidToGhost(__instance);
+            CheckToCopyIdToGhost(__instance);
 
             if (!__instance._constructed && __instance.constructedAmount > 0)
             {
@@ -40,23 +42,23 @@ namespace NitroxPatcher.Patches
         }
 
         /**
-         * On base pieces we need to have special logic during deconstruction to transfer the guid from the main 
+         * On base pieces we need to have special logic during deconstruction to transfer the id from the main 
          * object to the ghost.  This method will see if we have a stored LATEST_DECONSTRUCTED_BASE_PIECE_GUID 
-         * (set from deconstructor patch).  If we do, then we'll copy the guid to the new ghost.  This is in 
+         * (set from deconstructor patch).  If we do, then we'll copy the id to the new ghost.  This is in 
          * amount changed as we don't currently have a good hook for 'startDeconstruction'; this method will
          * run its logic on the first amount changed instead - effectively the same thing.
          */
-        public static void CheckToCopyGuidToGhost(Constructable __instance)
+        public static void CheckToCopyIdToGhost(Constructable __instance)
         {
-            Optional<object> opGuid = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
+            Optional<object> opId = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
 
-            if (opGuid.IsPresent())
+            if (opId.IsPresent())
             {
                 TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, null);
 
-                string guid = (string)opGuid.Get();
-                Log.Info("Setting ghost guid " + guid);
-                GuidHelper.SetNewGuid(__instance.gameObject, guid);
+                NitroxId id = (NitroxId)opId.Get();
+                Log.Info("Setting ghost id " + id);
+                NitroxIdentifier.SetNewId(__instance.gameObject, id);
             }
         }
 

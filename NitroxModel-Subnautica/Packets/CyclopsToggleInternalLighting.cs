@@ -1,23 +1,24 @@
 ﻿using System;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.Packets
 {
     [Serializable]
     public class CyclopsToggleInternalLighting : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public bool IsOn { get; }
 
-        public CyclopsToggleInternalLighting(string guid, bool isOn)
+        public CyclopsToggleInternalLighting(NitroxId id, bool isOn)
         {
-            Guid = guid;
+            Id = id;
             IsOn = isOn;
         }
 
         public override string ToString()
         {
-            return "[CyclopsToggleInternalLighting Guid: " + Guid + " IsOn: " + IsOn + "]";
+            return "[CyclopsToggleInternalLighting Id: " + Id + " IsOn: " + IsOn + "]";
         }
     }
 }

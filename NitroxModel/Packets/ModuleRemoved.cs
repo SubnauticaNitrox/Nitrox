@@ -1,24 +1,25 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ModuleRemoved : Packet
     {
-        public string OwnerGuid { get; }
+        public NitroxId OwnerId { get; }
         public string Slot { get; }
-        public string ItemGuid { get; }
+        public NitroxId ItemId { get; }
 
-        public ModuleRemoved(string ownerGuid, string slot, string itemGuid)
+        public ModuleRemoved(NitroxId ownerId, string slot, NitroxId itemId)
         {
-            OwnerGuid = ownerGuid;
+            OwnerId = ownerId;
             Slot = slot;
-            ItemGuid = itemGuid;
+            ItemId = itemId;
         }
 
         public override string ToString()
         {
-            return "[ModuleRemoved OwnerGuid: " + OwnerGuid + " Slot: " + Slot + " ItemGuid: " + ItemGuid + "]";
+            return "[ModuleRemoved ownerId: " + OwnerId + " Slot: " + Slot + " itemId: " + ItemId + "]";
         }
     }
 }

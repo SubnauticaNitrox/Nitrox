@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic.Helper
             CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT,
             BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT,
 
-            // These two entries are for transfering guids between ghosts and finished base pieces when construction completes:
+            // These two entries are for transfering ids between ghosts and finished base pieces when construction completes:
             LATEST_CONSTRUCTED_BASE_PIECE,
             LATEST_DECONSTRUCTED_BASE_PIECE,
             LATEST_DECONSTRUCTED_BASE_PIECE_GUID

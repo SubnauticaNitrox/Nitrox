@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning
@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.Spawning
             if (parent.IsPresent())
             {
                 CrashHome crashHome = parent.Get().GetComponent<CrashHome>();
-                LargeWorldStreamer.main.StartCoroutine(WaitToAssignGuid(entity.Guid, crashHome));
+                LargeWorldStreamer.main.StartCoroutine(WaitToAssignId(entity.Id, crashHome));
             }
 
             return Optional<GameObject>.Empty();
@@ -30,10 +30,11 @@ namespace NitroxClient.GameLogic.Spawning
          * the wrong orientation.  Maybe someone can figure out why this happens to we can create 
          * it without leveraging this hack.
          */
-        private IEnumerator WaitToAssignGuid(string guid, CrashHome crashHome)
+        private IEnumerator WaitToAssignId(NitroxId id, CrashHome crashHome)
         {
-            yield return new WaitForSeconds(0.25f); 
-            ((Crash)crashHome.ReflectionGet("crash")).gameObject.SetNewGuid(guid);
+            yield return new WaitForSeconds(0.25f);
+            GameObject crash = ((Crash)crashHome.ReflectionGet("crash")).gameObject;
+            NitroxIdentifier.SetNewId(crash, id);
         }
 
         public bool SpawnsOwnChildren()

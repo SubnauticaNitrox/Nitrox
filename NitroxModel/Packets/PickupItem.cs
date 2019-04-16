@@ -10,14 +10,14 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PickupItem : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public Vector3 ItemPosition { get; }
         public TechType TechType { get; }
 
-        public PickupItem(Vector3 itemPosition, string guid, TechType techType)
+        public PickupItem(Vector3 itemPosition, NitroxId id, TechType techType)
         {
             ItemPosition = itemPosition;
-            Guid = guid;
+            Id = id;
             TechType = techType;
         }
 
@@ -39,7 +39,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[Pickup Item - ItemPosition: " + ItemPosition + " Guid: " + Guid + " TechType: " + TechType + "]";
+            return "[Pickup Item - ItemPosition: " + ItemPosition + " Id: " + Id + " TechType: " + TechType + "]";
         }
     }
 }

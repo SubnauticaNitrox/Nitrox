@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -13,7 +14,7 @@ namespace NitroxClient.GameLogic
     /// <summary>
     /// Handles all of the <see cref="Fire"/>s in the game. Currently, the only known Fire spawning is in <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. The
     /// fires in the Aurora come loaded with the map and do not grow in size. If we want to create a Fire spawning mechanic outside of Cyclops fires, it should be
-    /// added to <see cref="Fires.Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>. Fire dousing goes by Guid and does not need to be 
+    /// added to <see cref="Fires.Create(string, Optional{string}, Optional{CyclopsRooms}, Optional{int})"/>. Fire dousing goes by Id and does not need to be 
     /// modified
     /// </summary>
     public class Fires
@@ -24,7 +25,7 @@ namespace NitroxClient.GameLogic
         /// Used to reduce the <see cref="FireDoused"/> packet spam as fires are being doused. A packet is only sent after
         /// the douse amount surpasses <see cref="FIRE_DOUSE_AMOUNT_TRIGGER"/>
         /// </summary>
-        private readonly Dictionary<string, float> fireDouseAmount = new Dictionary<string, float>();
+        private readonly Dictionary<NitroxId, float> fireDouseAmount = new Dictionary<NitroxId, float>();
 
         /// <summary>
         /// Each extinguisher hit is from 0.15 to 0.25. 5 is a bit less than half a second of full extinguishing
@@ -42,9 +43,9 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreate(Fire fire, SubFire.RoomFire room, int nodeIndex)
         {
-            string subRootGuid = GuidHelper.GetGuid(fire.fireSubRoot.gameObject);
+            NitroxId subRootId = NitroxIdentifier.GetId(fire.fireSubRoot.gameObject);
 
-            CyclopsFireCreated packet = new CyclopsFireCreated(GuidHelper.GetGuid(fire.gameObject), subRootGuid, room.roomLinks.room, nodeIndex);
+            CyclopsFireCreated packet = new CyclopsFireCreated(NitroxIdentifier.GetId(fire.gameObject), subRootId, room.roomLinks.room, nodeIndex);
             packetSender.Send(packet);
         }
 
@@ -53,23 +54,23 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDouse(Fire fire, float douseAmount)
         {
-            string fireGuid = GuidHelper.GetGuid(fire.gameObject);
+            NitroxId fireId = NitroxIdentifier.GetId(fire.gameObject);
 
             // Temporary packet limiter
-            if (!fireDouseAmount.ContainsKey(fireGuid))
+            if (!fireDouseAmount.ContainsKey(fireId))
             {
-                fireDouseAmount.Add(fireGuid, douseAmount);
+                fireDouseAmount.Add(fireId, douseAmount);
             }
             else
             {
-                float summedDouseAmount = fireDouseAmount[fireGuid] + douseAmount;
+                float summedDouseAmount = fireDouseAmount[fireId] + douseAmount;
 
                 if (summedDouseAmount > FIRE_DOUSE_AMOUNT_TRIGGER)
                 {
                     // It is significantly faster to keep the key as a 0 value than to remove it and re-add it later.
-                    fireDouseAmount[fireGuid] = 0;
+                    fireDouseAmount[fireId] = 0;
 
-                    FireDoused packet = new FireDoused(fireGuid, douseAmount);
+                    FireDoused packet = new FireDoused(fireId, douseAmount);
                     packetSender.Send(packet);
                 }
             }
@@ -78,31 +79,31 @@ namespace NitroxClient.GameLogic
         /// <summary>
         /// Create a new <see cref="Fire"/>. Majority of code copied from <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. Currently does not support Fires created outside of a Cyclops
         /// </summary>
-        /// <param name="fireGuid">Guid of the Fire. Used for identification when dousing the fire</param>
-        /// <param name="subRootGuid">Guid of the Cyclops <see cref="SubRoot"/></param>
+        /// <param name="fireGuid">Id of the Fire. Used for identification when dousing the fire</param>
+        /// <param name="subRootGuid">Id of the Cyclops <see cref="SubRoot"/></param>
         /// <param name="room">The room the Fire will be spawned in</param>
         /// <param name="spawnNodeIndex">Each <see cref="CyclopsRooms"/> has multiple static Fire spawn points called spawnNodes. If the wrong index is provided,
         ///     the clients will see fires in different places from the owner</param>
         public void Create(CyclopsFireData fireData)
         {
-            SubFire subFire = GuidHelper.RequireObjectFrom(fireData.CyclopsGuid).GetComponent<SubRoot>().damageManager.subFire;
+            SubFire subFire = NitroxIdentifier.RequireObjectFrom(fireData.CyclopsId).GetComponent<SubRoot>().damageManager.subFire;
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
             // Copied from SubFire_CreateFire_Patch, which copies from SubFire.CreateFire()
             Transform transform2 = roomFiresDict[fireData.Room].spawnNodes[fireData.NodeIndex];
 
-            // If a fire already exists at the node, replace the old Guid with the new one
+            // If a fire already exists at the node, replace the old Id with the new one
             if (transform2.childCount > 0)
             {
                 Fire existingFire = transform2.GetComponentInChildren<Fire>();
 
-                if (GuidHelper.GetGuid(existingFire.gameObject) != fireData.CyclopsGuid)
+                if (NitroxIdentifier.GetId(existingFire.gameObject) != fireData.CyclopsId)
                 {
                     Log.Error("[Fires.Create Fire already exists at node index " + fireData.NodeIndex
-                        + "! Replacing existing Fire Guid " + GuidHelper.GetGuid(existingFire.gameObject)
-                        + " with Guid " + fireData.CyclopsGuid
+                        + "! Replacing existing Fire Id " + NitroxIdentifier.GetId(existingFire.gameObject)
+                        + " with Id " + fireData.CyclopsId
                         + "]");
 
-                    GuidHelper.SetNewGuid(existingFire.gameObject, fireData.CyclopsGuid);
+                    NitroxIdentifier.SetNewId(existingFire.gameObject, fireData.CyclopsId);
                 }
 
                 return;
@@ -126,8 +127,8 @@ namespace NitroxClient.GameLogic
             else
             {
                 Log.Error("[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
-                    + " Fire Guid: " + fireData.FireGuid
-                    + " SubRoot Guid: " + fireData.CyclopsGuid
+                    + " Fire Id: " + fireData.FireId
+                    + " SubRoot Id: " + fireData.CyclopsId
                     + " Room: " + fireData.Room
                     + " NodeIndex: " + fireData.NodeIndex
                     + "]");
@@ -137,7 +138,7 @@ namespace NitroxClient.GameLogic
             if (componentInChildren)
             {
                 componentInChildren.fireSubRoot = subFire.subRoot;
-                GuidHelper.SetNewGuid(componentInChildren.gameObject, fireData.FireGuid);
+                NitroxIdentifier.SetNewId(componentInChildren.gameObject, fireData.FireId);
             }
 
             subFire.ReflectionSet("roomFires", roomFiresDict);

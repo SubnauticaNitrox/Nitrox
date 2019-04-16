@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsChangeSilentRunning packet)
         {
-            cyclops.ChangeSilentRunning(packet.Guid, packet.IsOn);
+            cyclops.ChangeSilentRunning(packet.Id, packet.IsOn);
         }
     }
 }

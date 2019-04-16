@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsToggleEngineState enginePacket)
         {
-            cyclops.ToggleEngineState(enginePacket.Guid, enginePacket.IsStarting, enginePacket.IsOn);
+            cyclops.ToggleEngineState(enginePacket.Id, enginePacket.IsStarting, enginePacket.IsOn);
         }
     }
 }

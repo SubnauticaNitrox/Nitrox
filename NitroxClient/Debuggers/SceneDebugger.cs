@@ -726,10 +726,10 @@ namespace NitroxClient.Debuggers
         {
             if (Multiplayer.Main != null)
             {
-                string guid = GetGameObjectPath(Component.gameObject);
+                string path = GetGameObjectPath(Component.gameObject);
                 int objectNumber = Component.gameObject.transform.GetSiblingIndex();
                 int componentNumber = GetComponentChildNumber(Component);
-                NitroxServiceLocator.LocateService<Debugger>().SceneDebuggerChange(guid, objectNumber, componentNumber, Field.Name, Value);
+                NitroxServiceLocator.LocateService<Debugger>().SceneDebuggerChange(path, objectNumber, componentNumber, Field.Name, Value);
             }
         }
 

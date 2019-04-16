@@ -3,8 +3,9 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -15,14 +16,14 @@ namespace NitroxPatcher.Patches
 
         public static void Prefix(SubRoot sub)
         {
-            string subGuid = null;
+            NitroxId subId = null;
 
             if (sub != null)
             {
-                subGuid = GuidHelper.GetGuid(sub.gameObject);
+                subId = NitroxIdentifier.GetId(sub.gameObject);
             }
 
-            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional<string>.OfNullable(subGuid));
+            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional<NitroxId>.OfNullable(subId));
         }
 
         public override void Patch(HarmonyInstance harmony)

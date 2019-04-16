@@ -3,10 +3,10 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
-using NitroxClient.GameLogic.Spawning;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxClient.GameLogic;
+using NitroxModel.DataStructures;
 
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
@@ -28,18 +28,18 @@ namespace NitroxPatcher.Patches.Persistent
 
         private static bool SpawnedWithoutServersPermission(ProtobufSerializer.GameObjectData goData, GameObject gameObject)
         {
-            NitroxEntity serverEntity = gameObject.GetComponent<NitroxEntity>();
+            NitroxIdentifier serverEntity = gameObject.GetComponent<NitroxIdentifier>();
 
             if(serverEntity)
             {
                 // if we have a NitroxEntity then the server is aware of this entity.
                 return false;
             }
-
-            UniqueIdentifier identifier = gameObject.GetComponent<UniqueIdentifier>();
+            
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
             Entities entities = NitroxServiceLocator.LocateService<Entities>();
 
-            if (identifier != null && entities.WasSpawnedByServer(identifier.Id))
+            if (id != null && entities.WasSpawnedByServer(id))
             {
                 // Looks like this ran through the main entity spawning code - the server knows about it.
                 return false;

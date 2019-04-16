@@ -2,10 +2,9 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
-using NitroxClient.Unity.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
-using NitroxModel.Helper;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches
 {
@@ -21,8 +20,8 @@ namespace NitroxPatcher.Patches
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {
             SubRoot cyclops = __instance.subRoot;
-            string guid = GuidHelper.GetGuid(cyclops.gameObject);
-            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(guid);
+            NitroxId id = NitroxIdentifier.GetId(cyclops.gameObject);
+            NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
         }
 
         public override void Patch(HarmonyInstance harmony)

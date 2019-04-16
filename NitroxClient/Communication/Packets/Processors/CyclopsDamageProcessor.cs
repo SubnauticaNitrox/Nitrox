@@ -3,8 +3,9 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -30,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsDamage packet)
         {
-            SubRoot subRoot = GuidHelper.RequireObjectFrom(packet.Guid).GetComponent<SubRoot>();
+            SubRoot subRoot = NitroxIdentifier.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
 
             using (packetSender.Suppress<CyclopsDamagePointRepaired>())
             {
@@ -113,8 +114,8 @@ namespace NitroxClient.Communication.Packets.Processors
                 // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
                 if (packetDamagePointsIndex < damagePointIndexes.Length)
                 {
-                    Log.Error("[CyclopsDamageProcessor packet.DamagePointGuids did not fully iterate! Guid: " + damagePointIndexes[packetDamagePointsIndex].ToString()
-                        + " had no matching Guid in damageManager.damagePoints, or the order is incorrect!]");
+                    Log.Error("[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: " + damagePointIndexes[packetDamagePointsIndex].ToString()
+                        + " had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
                 }
             }
             else
@@ -143,7 +144,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-            string subRootGuid = GuidHelper.GetGuid(subRoot.gameObject);
+            NitroxId subRootId = NitroxIdentifier.GetId(subRoot.gameObject);
             CyclopsFireData fireNode = null;
 
             if (roomFires != null && roomFires.Length > 0)
@@ -167,7 +168,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         {
                             if (keyValuePair.Value.spawnNodes[nodeIndex].childCount < 1)
                             {
-                                fires.Create(new CyclopsFireData(fireNode.FireGuid, subRootGuid, fireNode.Room, fireNode.NodeIndex));
+                                fires.Create(new CyclopsFireData(fireNode.FireId, subRootId, fireNode.Room, fireNode.NodeIndex));
                             }
                         }
                     }
