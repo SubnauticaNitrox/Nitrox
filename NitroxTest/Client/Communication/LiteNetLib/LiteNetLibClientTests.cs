@@ -14,7 +14,7 @@ namespace NitroxTest.Client.Communication.LiteNetLib
     [TestClass]
     public class LiteNetLibClientTests
     {
-        private readonly string connection = "109.41.67.22";
+        private readonly string connection = "ghaarg";
         private readonly int port = 11000;
         private LiteNetLibClient liteNetLibClient;
 
@@ -29,22 +29,7 @@ namespace NitroxTest.Client.Communication.LiteNetLib
         [TestMethod]
         public void ConnectViaPunch()
         {
-            string serverName = connection;
-            try
-            {
-                var addresses = Dns.GetHostAddresses(connection);
-                if (addresses.Count() == 0)
-                {
-                    Assert.Fail();
-                    return;
-                }
-                serverName = addresses[0].ToString();
-            } catch (SocketException e)
-            {
-                NitroxModel.Logger.Log.Debug("Socket exception thrown. This can be ok. Message: {0}", e.Message);
-            }
-
-            liteNetLibClient.Start(serverName, port);            
+            liteNetLibClient.Start(connection, port);            
             Assert.AreEqual(liteNetLibClient.IsConnected, true);
         }
     }

@@ -22,6 +22,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         private readonly EventBasedNatPunchListener punchListener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private bool serverNameTaken = false;
+        private readonly IPEndPoint punchServerEndPoint;
 
         public LiteNetLibServer(PacketHandler packetHandler, PlayerManager playerManager, EntitySimulation entitySimulation, ServerConfig serverConfig) : base(packetHandler, playerManager, entitySimulation, serverConfig)
         {
@@ -29,6 +30,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
             punchListener = new EventBasedNatPunchListener();
+            punchServerEndPoint = NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001);
         }
         public override void Start()
         {
@@ -41,44 +43,8 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener.NetworkReceiveUnconnectedEvent += OnUnconnectedUdpPacketRecieved;
             punchListener.NatIntroductionSuccess += (point, token) =>
             {                
-                Log.Debug("Introduction success with {0}", point);
-                //server.Connect(point,"nitrox");
-            };
-
-            EventBasedNetListener listener2 = new EventBasedNetListener();
-            listener2.ConnectionRequestEvent += (request) =>
-            {
-                Log.Debug("Accept punch connection request from {0}", new object[] { request.RemoteEndPoint });
-                request.Accept();
-            };
-
-            listener2.PeerConnectedEvent += peer =>
-            {
-                Log.Debug("PeerConnected: " + peer.EndPoint.ToString());
-            };
-
-            listener2.PeerDisconnectedEvent += (peer, disconnectInfo) =>
-            {
-                Log.Debug("Peer {0} disconnected", peer.EndPoint);
-            };
-
-            listener2.NetworkErrorEvent += (peer, error) =>
-            {
-                Log.Debug("Got error from {0} with code {1}", peer, error);
-            };
-            listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
-            {
-                Log.Debug("Got packet from upd server. Send packet to EndPoint");
-                IPEndPoint endPoint = data.GetNetEndPoint();
-                server.SendUnconnectedMessage(new byte[] { 0 }, endPoint);
-                //server.NatPunchModule.SendNatIntroduceRequest(NetUtils.MakeEndPoint("paschka.ddns.net", 11001), "register");
-                //server.NatPunchModule.PollEvents();
-            };
-
-            //NetManager netPeers = new NetManager(listener2);
-            //netPeers.UnsyncedEvents = true;
-            //netPeers.Start();
-            //netPeers.Connect("paschka.ddns.net", 11001,"NitroxPunch");
+                Log.Debug("Introduction success with {0}. This should not happen!", point);
+            };            
             
             server.DiscoveryEnabled = true;
             server.UnconnectedMessagesEnabled = true;
@@ -101,7 +67,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
                         token += "|";
                         token += serverConfig.ServerName;
                     }
-                    IPEndPoint punchAddress = NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001);
+                    
                     while (!isStopped)
                     {
                         // Send punch register every minute
@@ -109,7 +75,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
                         {
                             Log.Info("Send poll request");
                             time = DateTime.Now;                            
-                            server.NatPunchModule.SendNatIntroduceRequest(punchAddress, token);
+                            server.NatPunchModule.SendNatIntroduceRequest(punchServerEndPoint, token);
                         }
                         server.NatPunchModule.PollEvents();
                         Thread.Sleep(100);
@@ -173,15 +139,18 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 
         public void OnUnconnectedUdpPacketRecieved(IPEndPoint remoteEndPoint, NetPacketReader reader, UnconnectedMessageType messageType)
         {
-            if (remoteEndPoint.Address.Equals(NetUtils.MakeEndPoint(serverConfig.UdpPunchServer, 11001)))
+            if (remoteEndPoint.Address.Equals(punchServerEndPoint))
             {
                 string[] messages = reader.GetStringArray();
                 if(messages.Length > 1)
                 {
-                    if (messages[0] == "Error" && messages[1] == serverConfig.ServerName && !serverNameTaken)
+                    if (messages[0] == "Error")
                     {
-                        Log.Error("Server name already taken. Try again later or with another server name.");
-                        serverNameTaken = true;
+                        if (messages[1] == serverConfig.ServerName && !serverNameTaken)
+                        {
+                            Log.Error("Server name already taken. Try again later or with another server name.");
+                            serverNameTaken = true;
+                        }
                     }
                 }
             }

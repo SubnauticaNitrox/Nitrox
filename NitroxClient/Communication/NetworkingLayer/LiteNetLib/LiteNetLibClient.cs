@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using LiteNetLib;
 using LiteNetLib.Utils;
@@ -19,8 +21,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
         private EventBasedNatPunchListener punchListener;
-        private readonly string udpPunchServerAddress = "paschka.ddns.net";
-
+        private readonly IPEndPoint punchServerEndPoint = NetUtils.MakeEndPoint("paschka.ddns.net", 11001);
         private NetManager client;
 
         public LiteNetLibClient()
@@ -42,36 +43,13 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             listener.NetworkReceiveEvent += ReceivedNetworkData;
 
             client = new NetManager(listener);
-
-            EventBasedNetListener listener2 = new EventBasedNetListener();
-            listener2.PeerConnectedEvent += peer =>
-            {
-                Log.Debug("punchlisterner: connected to {0}", peer.EndPoint);
-            };
-
-            listener2.PeerDisconnectedEvent += (peer,reason) =>
-            {
-                Log.Debug("punchlisterner: disconnected from {0}", peer.EndPoint);
-            };
-            listener2.NetworkReceiveEvent += (peer, data, deliveryMethod) =>
-            {
-                EndPoint endPoint = data.GetNetEndPoint();
-                Log.Debug("Revieved endpoint {0} from puncher. try to connect...", endPoint);
-                client.Connect((IPEndPoint)endPoint, "nitrox");
-            };
-            NetManager punchClient = new NetManager(listener2);
-            punchClient.UnsyncedEvents = true;
-            //punchClient.Start();
-            //punchClient.Connect("paschka.ddns.net", 11001, "NitroxPunch");
             
-
             punchListener = new EventBasedNatPunchListener();
             punchListener.NatIntroductionSuccess += (point, token) =>
             {
                 Log.Debug("Got nat introduction to {1}. Will connect: {0}", !IsConnected, point);
                 if (!IsConnected)
                 {
-                    //connectedEvent.Set();
                     client.Connect(point, "nitrox");
                 }
             };
@@ -83,9 +61,24 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             client.UpdateTime = 15;
             client.UnsyncedEvents = true; //experimental feature, may need to replace with calls to client.PollEvents();
             client.Start();
-            //client.Connect(ipAddress, serverPort, "nitrox");
-            var endpoint = NetUtils.MakeEndPoint(udpPunchServerAddress, 11001);
-            client.NatPunchModule.SendNatIntroduceRequest(endpoint, ipAddress);
+
+            // Try to directly connect regardless of nat introduction.
+            // Will try to find out if ipAddress is a valid DNS or IP Address. Else only try to connect via nat punch server
+            try
+            {
+                var addresses = Dns.GetHostAddresses(ipAddress);
+                if (addresses.Length != 0)
+                {
+                    ipAddress = addresses[0].ToString();
+                    client.Connect(ipAddress, serverPort, "nitrox");
+                }                
+            }
+            catch (SocketException e)
+            {
+                Log.Warn("Socket exception thrown. No direct connection can be established. This can be ok for server names. Message: {0}", e.Message);
+            }
+            
+            client.NatPunchModule.SendNatIntroduceRequest(punchServerEndPoint, ipAddress);
             Log.Debug("Try to connect via hole punch to {0}", ipAddress);
             int rounds = 0;
             while(rounds < 25 && !connectedEvent.WaitOne(200))
@@ -95,7 +88,6 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
             }
             Log.Debug("Rounds {0}", rounds);
             Thread.Sleep(100);
-            //connectedEvent.WaitOne(2000);
             connectedEvent.Reset();
         }
 

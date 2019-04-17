@@ -15,18 +15,21 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
         private readonly int port;
         private readonly EventBasedNetListener listener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
-        private readonly Dictionary<string, Tuple<IPEndPoint, IPEndPoint, DateTime>> tokenServerDict = new Dictionary<string, Tuple<IPEndPoint, IPEndPoint, DateTime>>();
-        private double timeoutTimeInMinutes = 3;
+        private readonly Dictionary<string, ServerIpInfo> tokenServerDict = new Dictionary<string, ServerIpInfo>();
+        private readonly double timeoutInMinutes;
+        
 
-        public string ConnectionKey { get; private set; }
-
-        public LiteNetLibPunchServer(int port, string connectionKey)
+        private void ConsoleWriteLine(string text, params object[] param)
         {
-            //netPacketProcessor.SubscribeReusable<string, NetPeer>(OnPacketReceived);
+            Console.WriteLine(DateTime.Now + ": " + text, param);
+        }
+
+        public LiteNetLibPunchServer(int port, double timeoutInMinutes)
+        {
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
             this.port = port;
-            ConnectionKey = connectionKey;
+            this.timeoutInMinutes = timeoutInMinutes;
         }
 
         public void Start()
@@ -34,23 +37,23 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             
             listener.PeerConnectedEvent += peer =>
             {
-                Console.WriteLine("PeerConnected: " + peer.EndPoint.ToString());
+                ConsoleWriteLine("PeerConnected: {0}. This should not happen!" , peer.EndPoint.ToString());
             };
 
             listener.ConnectionRequestEvent += request =>
             {
-                Console.WriteLine("Get connection request from {0}", request.RemoteEndPoint);
-                request.AcceptIfKey(ConnectionKey);
+                ConsoleWriteLine("Get connection request from {0}", request.RemoteEndPoint);
+                request.Reject();
             };
 
             listener.PeerDisconnectedEvent += (peer, disconnectInfo) =>
             {
-                Console.WriteLine("Peer {0} disconnected", peer.EndPoint);
+                ConsoleWriteLine("Peer {0} disconnected", peer.EndPoint);
             };
 
             listener.NetworkErrorEvent += (peer, error) =>
             {
-                Console.WriteLine("Got error from {0} with code {1}", peer, error);
+                ConsoleWriteLine("Got error from {0} with code {1}", peer, error);
             };
 
             server.Start(port);
@@ -58,7 +61,7 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             server.NatPunchEnabled = true;
             server.NatPunchModule.Init(this);
             
-            Console.WriteLine("Server started on port {0}", port);
+            ConsoleWriteLine("Server started on port {0}", port);
         }       
 
         public void OnNatIntroductionRequest(IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string token)
@@ -66,82 +69,72 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             string[] tokenParse = token.Split("|");
             if(tokenParse.Count() > 2)
             {
-                Console.WriteLine("Forbidden second | in token: {0}", token);
+                ConsoleWriteLine("Forbidden second | in token: {0}", token);
             }
             bool registerServer = tokenParse[0].ToLower() == "register"; 
             if (registerServer)
-            {
-                var serverData = new Tuple<IPEndPoint, IPEndPoint, DateTime>(localEndPoint, remoteEndPoint, DateTime.Now);
-
+            {                
                 string remoteIp = remoteEndPoint.Address.ToString();
                 bool alreadyRegistered = tokenServerDict.ContainsKey(remoteIp);
+
+                ServerIpInfo serverData;
+
+                if(alreadyRegistered)
+                {
+                    serverData = tokenServerDict[remoteIp];
+                    serverData.UpdateEndpoints(localEndPoint, remoteEndPoint);
+                } else
+                {
+                    serverData = new ServerIpInfo(localEndPoint, remoteEndPoint);
+                }
+
                 // Put registered or updated in console output
                 string registeredUpdated = alreadyRegistered ? "Updated" : "Registered";
                 tokenServerDict[remoteIp] = serverData;
-                Console.WriteLine("{2} server with internal {0} and external {1} address", localEndPoint, remoteEndPoint, registeredUpdated);
+                ConsoleWriteLine("{2} server with internal {0} and external {1} address", localEndPoint, remoteEndPoint, registeredUpdated);
                 // Register with game name
                 if (tokenParse.Count() > 1 && tokenParse[1].Trim() != "")
                 {
                     string serverName = tokenParse[1];
                     alreadyRegistered = tokenServerDict.ContainsKey(serverName);
-                    if (alreadyRegistered && !tokenServerDict[serverName].Item2.Address.Equals(remoteEndPoint.Address))
+                    if (alreadyRegistered && !tokenServerDict[serverName].RemoteEndPoint.Address.Equals(remoteEndPoint.Address))
                     {
                         NetDataWriter netData = new NetDataWriter();
                         string[] data = new string[2] { "Error", serverName };
                         netData.PutArray(data);
                         server.SendUnconnectedMessage(netData, remoteEndPoint);
-                        Console.WriteLine("Got same servername {0} from server {2} for another server: {1}", serverName, remoteEndPoint.Address, tokenServerDict[serverName].Item2.Address);
+                        ConsoleWriteLine("Got same servername {0} from server {2} for another server: {1}", serverName, remoteEndPoint.Address, tokenServerDict[serverName].RemoteEndPoint.Address);
                     }
                     else
                     {
                         tokenServerDict[serverName] = serverData;
                         // Put registered or Updated in string
                         registeredUpdated = alreadyRegistered ? "Updated" : "Registered";
-                        Console.WriteLine("{0} server with game name {1}", registeredUpdated, serverName);
+                        ConsoleWriteLine("{0} server with game name {1}", registeredUpdated, serverName);
                     }
                 }                                
             }
             else
             {
-                Tuple<IPEndPoint, IPEndPoint, DateTime> hostData;
-                Console.WriteLine("Try to introduce {0} with e({1}) i({2})", token, remoteEndPoint, localEndPoint);
-                if(tokenServerDict.TryGetValue(token,out hostData) || tokenServerDict.TryGetValue(token, out hostData))
+                ConsoleWriteLine("Try to introduce {0} with i({2}) e({1})", token, remoteEndPoint, localEndPoint);
+                if (tokenServerDict.TryGetValue(token, out ServerIpInfo hostData) || tokenServerDict.TryGetValue(token, out hostData))
                 {
                     server.NatPunchModule.NatIntroduce(
                     localEndPoint, // client internal
                     remoteEndPoint, // client external
-                    hostData.Item1, // host internal
-                    hostData.Item2, // host external
+                    hostData.LocalEndPoint, // host internal
+                    hostData.RemoteEndPoint, // host external
                     token // request token
                     );
-                    var peers = (from p in server.ConnectedPeerList
-                                 where p.EndPoint.Address.ToString() == token
-                                 select p);
-                    if (peers.Count() > 0)
-                    {
-                        var peer = peers.First();
-                        NetDataWriter netDataWriter = new NetDataWriter();
-                        netDataWriter.Put(remoteEndPoint);
-                        peer.Send(netDataWriter, DeliveryMethod.Unreliable);
-                    }
-                    peers = (from p in server.ConnectedPeerList
-                                 where p.EndPoint.Address.ToString() == remoteEndPoint.Address.ToString()
-                             select p);
-                    if(peers.Count() > 0)
-                    {
-                        var peer = peers.First();
-                        var netDataWriter = new NetDataWriter();
-                        netDataWriter.Put(hostData.Item2);
-                        peer.Send(netDataWriter, DeliveryMethod.Unreliable);
-                    }
-                    Console.WriteLine("Introduced server {0} with client {1}", hostData.Item2, remoteEndPoint);
+                    
+                    ConsoleWriteLine("Introduced server {0} with client {1}", hostData.RemoteEndPoint, remoteEndPoint);
                 }
             }
         }
 
         public void OnNatIntroductionSuccess(IPEndPoint targetEndPoint, string token)
         {
-            Console.WriteLine("Success... Why?");
+            ConsoleWriteLine("Success... Why?");
             // Not needed
         }
 
@@ -157,7 +150,7 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             List<string> tokensToDelete = new List<string>();
             foreach(var tokenServer in tokenServerDict)
             {
-                if(tokenServer.Value.Item3 + TimeSpan.FromMinutes(timeoutTimeInMinutes) < DateTime.Now)
+                if(tokenServer.Value.LastUpdated + TimeSpan.FromMinutes(timeoutInMinutes) < DateTime.Now)
                 {
                     tokensToDelete.Add(tokenServer.Key);
                 }
@@ -165,7 +158,7 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
             foreach(var token in tokensToDelete)
             {
                 var serverData = tokenServerDict[token];
-                Console.WriteLine("Timeout for server with internal {0} and external {1} address", serverData.Item1, serverData.Item2);
+                ConsoleWriteLine("Timeout for server with internal {0} and external {1} address", serverData.LocalEndPoint, serverData.RemoteEndPoint);
                 tokenServerDict.Remove(token);
             }
         }
