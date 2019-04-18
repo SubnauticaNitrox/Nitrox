@@ -9,7 +9,7 @@ using LiteNetLib.Utils;
 
 namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
 {
-    class LiteNetLibPunchServer : INatPunchListener
+    class LiteNetLibPunchServer : INatPunchListener, IPunchServer
     {
         private readonly NetManager server;
         private readonly int port;
