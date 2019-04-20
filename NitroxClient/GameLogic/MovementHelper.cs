@@ -43,11 +43,9 @@ namespace NitroxClient.GameLogic
                 // This should be a one-off teleport.
                 gameObject.transform.position = remotePosition;
             }
-            // overcorrections can cause jitter when standing still.
-            else if (distance > 0.001f)
+            else
             {
-                float maxAdjustment = (float)Math.Log10(distance) * 4f;
-                remoteVelocity += MathUtil.ClampMagnitude(velocityToMakeUpDifference - remoteVelocity, maxAdjustment, -maxAdjustment);
+                remoteVelocity = velocityToMakeUpDifference;
             }
 
             return remoteVelocity;
