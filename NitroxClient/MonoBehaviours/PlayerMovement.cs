@@ -1,13 +1,11 @@
 ﻿using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
-using NitroxModel.DataStructures;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -45,12 +43,13 @@ namespace NitroxClient.MonoBehaviours
                 SubRoot subRoot = Player.main.GetCurrentSub();
                 // If in a subroot the position will be relative to the subroot
                 if (subRoot != null && !subRoot.isBase)
-                { 
+                {
                     // Rotate relative player position relative to the subroot (else there are problems with respawning)
-                    Quaternion vehicleAngle = subRoot.transform.rotation;                    
+                    Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
                     currentPosition = currentPosition - subRoot.transform.position;
-                    currentPosition = vehicleAngle.GetInverse() * currentPosition;
-
+                    currentPosition = undoVehicleAngle * currentPosition;
+                    bodyRotation = undoVehicleAngle * bodyRotation;
+                    aimingRotation = undoVehicleAngle * aimingRotation;
                 }
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
@@ -138,16 +137,16 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(  techType, 
-                                                                                        id, 
-                                                                                        position, 
-                                                                                        rotation, 
-                                                                                        velocity, 
-                                                                                        angularVelocity, 
-                                                                                        steeringWheelYaw, 
-                                                                                        steeringWheelPitch, 
-                                                                                        appliedThrottle, 
-                                                                                        leftArmPosition, 
+            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(techType,
+                                                                                        id,
+                                                                                        position,
+                                                                                        rotation,
+                                                                                        velocity,
+                                                                                        angularVelocity,
+                                                                                        steeringWheelYaw,
+                                                                                        steeringWheelPitch,
+                                                                                        appliedThrottle,
+                                                                                        leftArmPosition,
                                                                                         rightArmPosition);
             return Optional<VehicleMovementData>.Of(model);
         }
