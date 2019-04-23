@@ -66,7 +66,7 @@ namespace NitroxServerUdpPunch.Communication.NetworkingLayer.LiteNetLib
 
         public void OnNatIntroductionRequest(IPEndPoint localEndPoint, IPEndPoint remoteEndPoint, string token)
         {
-            string[] tokenParse = token.Split("|");
+            string[] tokenParse = token.Split('|');
             if(tokenParse.Count() > 2)
             {
                 ConsoleWriteLine("Forbidden second | in token: {0}", token);
