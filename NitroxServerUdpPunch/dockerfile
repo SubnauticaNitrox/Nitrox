@@ -1,0 +1,6 @@
+FROM microsoft/dotnet:latest
+
+ADD bin/Release/netcoreapp2.2/publish /app/
+
+ENTRYPOINT ["dotnet", "app/NitroxServerUdpPunch.dll"]
+
