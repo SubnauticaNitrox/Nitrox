@@ -89,6 +89,8 @@
     <Compile Include="Patches\ExosuitTorpedoArm_Shoot_Patch.cs" />
     <Compile Include="Patches\Exosuit_SpawnArm_Patch.cs" />
     <Compile Include="Patches\Exosuit_Update_Patch.cs" />
+    <Compile Include="Patches\IngameMenu_OnSelect_Patch.cs" />
+    <Compile Include="Patches\IngameMenu_QuitGameAsync_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\IngameMenu_QuitSubscreen_Patch.cs" />
     <Compile Include="Patches\Inventory_OnApplicationQuit_Patch.cs" />
