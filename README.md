@@ -31,7 +31,7 @@ The following milestones have been completed:
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. 
 
-We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing an package to use on each reoccurring update.
+We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing a package to use on each reoccurring update.
 
 If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
 
