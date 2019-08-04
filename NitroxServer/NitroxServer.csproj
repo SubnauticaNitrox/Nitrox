@@ -365,6 +365,7 @@
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
     <Compile Include="Serialization\World\PersistedWorldData.cs" />
     <Compile Include="Serialization\World\World.cs" />
+    <Compile Include="Serialization\World\WorldData.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
     <Compile Include="Serialization\World\WorldVersion.cs" />
     <Compile Include="Serialization\World\WorldVersionMismatchException.cs" />

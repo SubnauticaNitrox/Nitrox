@@ -16,44 +16,26 @@ namespace NitroxServer.Serialization.World
     public class PersistedWorldData
     {
         [ProtoMember(1)]
-        public List<Int3> ParsedBatchCells { get; set; }
-        
-        [ProtoMember(2)]
-        public DateTime ServerStartTime { get; set; }
-        
-        [ProtoMember(3)]
-        public EntityData EntityData { get; set; }
+        public WorldData WorldData { get; set; } = new WorldData();
 
-        [ProtoMember(4)]
+        [ProtoMember(2)]
         public BaseData BaseData { get; set; }
 
-        [ProtoMember(5)]
-        public VehicleData VehicleData { get; set; }
-
-        [ProtoMember(6)]
-        public InventoryData InventoryData { get; set; }
-
-        [ProtoMember(7)]
+        [ProtoMember(3)]
         public PlayerData PlayerData { get; set; }
-
-        [ProtoMember(8)]
-        public GameData GameData { get; set; }
-
-        [ProtoMember(9)]
-        public EscapePodData EscapePodData { get; set; }
 
         public bool IsValid()
         {
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (BaseData != null) &&
-                   (VehicleData != null) &&
-                   (InventoryData != null) &&
-                   (GameData != null) &&
+                   (WorldData.VehicleData != null) &&
+                   (WorldData.InventoryData != null) &&
+                   (WorldData.GameData != null) &&
                    (PlayerData != null) &&
-                   (EntityData != null) &&
-                   (EntityData.SerializableEntities.Count > 0) &&
-                   (EscapePodData != null);
+                   (WorldData.EntityData != null) &&
+                   (WorldData.EntityData.SerializableEntitiesById.Count > 0) &&
+                   (WorldData.EscapePodData != null);
         }
     }
 }
