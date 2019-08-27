@@ -13,9 +13,16 @@ namespace NitroxClient.MonoBehaviours
 
 #if DEBUG
             AttachWarpToCommand();
+            AttachGiveCommand();
 #endif
 
             CreateDebugger();
+        }
+
+        private void AttachGiveCommand()
+        {
+            GameObject consoleRoot = new GameObject();
+            consoleRoot.AddComponent<GiveCommand>();
         }
 
         private void AttachWarpToCommand()

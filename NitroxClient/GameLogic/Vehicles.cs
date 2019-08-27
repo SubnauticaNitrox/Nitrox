@@ -181,12 +181,16 @@ namespace NitroxClient.GameLogic
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                 SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
                 subNameInput.OnNameChange(name);
-                for (int i = 0; i < hsb.Length; i++)
+
+                if (colours != null)
                 {
-                    subNameInput.SetSelected(i);
-                    Color tmpColour = new Vector4(colours[i].x, colours[i].y, colours[i].z);
-                    subNameTarget.SetColor(i, hsb[i], tmpColour);
-                    subNameTarget.DeserializeColors(hsb);
+                    for (int i = 0; i < hsb.Length; i++)
+                    {
+                        subNameInput.SetSelected(i);
+                        Color tmpColour = new Vector4(colours[i].x, colours[i].y, colours[i].z);
+                        subNameTarget.SetColor(i, hsb[i], tmpColour);
+                        subNameTarget.DeserializeColors(hsb);
+                    }
                 }
 
                 // Set internal and external lights

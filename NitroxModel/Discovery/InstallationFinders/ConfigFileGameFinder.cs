@@ -26,6 +26,12 @@ namespace NitroxModel.Discovery.InstallationFinders
                 return Optional<string>.Empty();
             }
 
+            if (!Directory.Exists(Path.Combine(path, Path.Combine("Subnautica_Data", "Managed"))))
+            {
+                errors.Add($@"Game installation directory config file {path} is invalid. Please enter the path to the Subnautica installation.");
+                return Optional<string>.Empty();
+            }
+
             return Optional<string>.Of(path);
         }
     }
