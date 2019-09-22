@@ -26,11 +26,11 @@
             </TextBlock>
         </Grid>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,300,0,0" >
-            <Button Width="225" Height="80" Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource BTNOPTIONS}" Click="SinglePlayerButton_Click">
+            <Button Width="225" Height="80" Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource BTNOPTIONS}" Click="SinglePlayerButton_Click" ToolTip="Play alone">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="16" Padding="0,4,0,0" Foreground="White" >SINGLEPLAYER</TextBlock>
             </Button>
 
-            <Button Width="225" Height="80" Margin="10,0,0,0" Style="{StaticResource BTNCORNER}" Click="MultiplayerButton_Click" >
+            <Button Width="225" Height="80" Margin="10,0,0,0" Style="{StaticResource BTNCORNER}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." >
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FF00B1E9" Offset="0"/>
