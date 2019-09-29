@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
@@ -17,7 +17,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxModel.DataStructures.GameLogic;
+using System.Threading.Tasks;
 
 namespace NitroxServer.Serialization.World
 {
@@ -34,8 +34,6 @@ namespace NitroxServer.Serialization.World
 
         public void Save(World world)
         {
-            Log.Info("Saving world state.");
-
             try
             {
                 PersistedWorldData persistedData = new PersistedWorldData();
@@ -49,12 +47,55 @@ namespace NitroxServer.Serialization.World
                 persistedData.GameData = world.GameData;
                 persistedData.EscapePodData = world.EscapePodData;
 
-                using (Stream stream = File.OpenWrite(config.SaveName + ".nitrox"))
+                Task t = new Task(() => SaveAll(persistedData));
+                t.RunSynchronously();
+                //Log.Info("World state saved.");
+            }
+            catch (Exception ex)
+            {
+                Log.Info("Could not save world: " + ex);
+            }
+        }
+
+        private void SaveAll(PersistedWorldData pwd)
+        {
+            try
+            {
+                if (!Directory.Exists("saves"))
                 {
-                    serializer.Serialize(stream, persistedData);
+                    Directory.CreateDirectory("saves");
                 }
 
-                Log.Info("World state saved.");
+                List<DateTime> tmpList = new List<DateTime>();
+                Dictionary<DateTime, string> tmp = new Dictionary<DateTime, string>();
+                foreach(string f in Directory.GetFiles($"saves{Path.DirectorySeparatorChar}{config.SaveName}-*.nitrox"))
+                {
+                    tmp.Add(File.GetLastWriteTime(f), f);
+                }
+
+                if(tmpList.Count > 20)
+                {
+                    tmpList.Sort();
+                    tmpList.Reverse();
+                    tmpList.RemoveRange(0, 20);
+                    foreach(DateTime dt in tmpList)
+                    {
+                        if(tmp.ContainsKey(dt))
+                        {
+                            File.Delete(tmp[dt]);
+                        }
+                    }
+                }
+
+                if (File.Exists($"saves{Path.DirectorySeparatorChar}{config.SaveName}.nitrox"))
+                {
+                    File.Copy($"saves{Path.DirectorySeparatorChar}{config.SaveName}.nitrox", $"saves{Path.DirectorySeparatorChar}{config.SaveName}-{DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")}.nitrox");
+                }
+
+                using (Stream stream = File.OpenWrite($"saves{Path.DirectorySeparatorChar}{config.SaveName}.nitrox"))
+                {
+                    serializer.Serialize(stream, pwd);
+                }
             }
             catch (Exception ex)
             {
@@ -68,7 +109,7 @@ namespace NitroxServer.Serialization.World
             {
                 PersistedWorldData persistedData;
 
-                using (Stream stream = File.OpenRead(config.SaveName + ".nitrox"))
+                using (Stream stream = File.OpenRead($"saves{Path.DirectorySeparatorChar}{config.SaveName}.nitrox"))
                 {
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
