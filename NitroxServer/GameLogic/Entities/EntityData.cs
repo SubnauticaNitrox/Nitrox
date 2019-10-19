@@ -11,7 +11,7 @@ namespace NitroxServer.GameLogic.Entities
     [ProtoContract]
     public class EntityData
     {        
-        [ProtoMember(1)]
+        [ProtoIgnore]
         public Dictionary<NitroxId, Entity> SerializableEntitiesById
         {
             get
@@ -34,11 +34,19 @@ namespace NitroxServer.GameLogic.Entities
         [ProtoIgnore]
         private Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell = new Dictionary<AbsoluteEntityCell, List<Entity>>();
         
-        [ProtoIgnore]
+        [ProtoMember(1)]
         private Dictionary<NitroxId, Entity> entitiesById = new Dictionary<NitroxId, Entity>();
 
         [ProtoIgnore]
         private Dictionary<NitroxId, Entity> globalRootEntitiesById = new Dictionary<NitroxId, Entity>();
+
+        static EntityData()
+        {
+            // Since commit (cacf262) the server was unable to save EntityData.
+            // To fix this the thread lock was bypassed, since protobuff-net is Thread safe
+            // but the serialiser metadata is not, we have to prepare the metadata in a static constructor.
+            Serializer.PrepareSerializer<EntityData>();
+        }
 
         public void AddEntities(IEnumerable<Entity> entities)
         {
