@@ -7,7 +7,7 @@ namespace NitroxServer.GameLogic
     [ProtoContract]
     public class EscapePodData
     {
-        [ProtoMember(1)]
+        [ProtoIgnore]
         public List<EscapePodModel> SerializedEscapePods
         {
             get
@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        [ProtoMember(2)]
+        [ProtoIgnore]
         public Dictionary<ushort, EscapePodModel> SerializedEscapePodsByPlayerId
         {
             get
@@ -42,10 +42,18 @@ namespace NitroxServer.GameLogic
         [ProtoMember(3)]
         public EscapePodModel PodNotFullYet;
 
-        [ProtoIgnore]
+        [ProtoMember(1)]
         public List<EscapePodModel> EscapePods = new List<EscapePodModel>();
 
-        [ProtoIgnore]
+        [ProtoMember(2)]
         public Dictionary<ushort, EscapePodModel> EscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
+
+        static EscapePodData()
+        {
+            Serializer.PrepareSerializer<EscapePodData>();
+            Serializer.PrepareSerializer<Dictionary<ushort, EscapePodModel>>();
+            Serializer.PrepareSerializer<List<EscapePodModel>>();
+            Serializer.PrepareSerializer<EscapePodModel>();
+        }
     }
 }
