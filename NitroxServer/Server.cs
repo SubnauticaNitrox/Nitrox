@@ -57,6 +57,7 @@ namespace NitroxServer
         {
             Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
+            world.GameData.EventsData.PauseTimers();
             Save();
             server.Stop();
             Log.Info("Nitrox Server Stopped");

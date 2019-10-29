@@ -325,6 +325,10 @@
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
+    <Compile Include="GameLogic\EventData.cs" />
+    <Compile Include="GameLogic\NitroxTimer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
     <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
