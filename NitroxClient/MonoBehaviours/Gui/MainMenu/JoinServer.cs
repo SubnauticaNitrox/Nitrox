@@ -3,19 +3,15 @@ using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
-using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
-using NitroxModel.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -99,7 +95,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void OnDestroy()
         {
             UnsubscribeColorChanged();
-            RightSideMainMenu.groups.Remove(joinServerMenu);
             Destroy(joinServerMenu);
         }
 
@@ -293,7 +288,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerMenu.name = "Join Server";
 
             joinServerMenu.transform.SetParent(RightSideMainMenu.transform, false);
-            RightSideMainMenu.groups.Add(joinServerMenu);
+            RightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
 
             //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
             //Most of the UI elements seem to vanish behind this Image otherwise.

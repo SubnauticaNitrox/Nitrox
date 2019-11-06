@@ -49,7 +49,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static IEnumerator LoadAsync()
         {
-            WaitScreen.Item item = WaitScreen.Add("Loading Multiplayer", null);
+            WaitScreen.ManualWaitItem item = WaitScreen.Add("Loading Multiplayer");
             WaitScreen.ShowImmediately();
             yield return Main.StartCoroutine(Main.StartSession());
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
@@ -147,11 +147,11 @@ namespace NitroxClient.MonoBehaviours
         {
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
             property.SetValue(PAXTerrainController.main, false, null);
-
-            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
+            
+            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);        
             waitScreen.ReflectionCall("Hide");
-
-            HashSet<WaitScreen.Item> items = (HashSet<WaitScreen.Item>)waitScreen.ReflectionGet("items");
+            
+            List<WaitScreen.IWaitItem> items = (List<WaitScreen.IWaitItem>)waitScreen.ReflectionGet("items");
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
