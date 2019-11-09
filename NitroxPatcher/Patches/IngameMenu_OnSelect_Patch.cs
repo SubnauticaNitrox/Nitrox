@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
@@ -11,10 +10,7 @@ namespace NitroxPatcher.Patches
     {
         public static readonly Type TARGET_CLASS = typeof(IngameMenu);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnSelect");
-        public static readonly OpCode START_CUT_CODE = OpCodes.Call;
         public static readonly MethodInfo GAMEMODEUTILS_ISPERMADEATH_METHOD = typeof(GameModeUtils).GetMethod("IsPermadeath", BindingFlags.Public | BindingFlags.Static);
-        public static readonly OpCode END_CUT_CODE = OpCodes.Call;
-        public static readonly MethodInfo PLATFORMUTILS_GET_ISCONSOLEPLATFORM_METHOD = typeof(PlatformUtils).GetMethod("get_isConsolePlatform", BindingFlags.Public | BindingFlags.Static);
 
         public static void Postfix()
         {
@@ -24,10 +20,7 @@ namespace NitroxPatcher.Patches
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            List<CodeInstruction> instructionList = instructions.ToList();
-            int startCut = 0;
-            int endCut = instructionList.Count-1;
-            /* Cut out
+            /* Early return cuts out
              * if (GameModeUtils.IsPermadeath())
 		     * {
 			 *    this.quitToMainMenuText.text = Language.main.Get("SaveAndQuitToMainMenu");
@@ -38,22 +31,21 @@ namespace NitroxPatcher.Patches
 			 *     this.saveButton.interactable = this.GetAllowSaving();
 			 *     this.quitToMainMenuButton.interactable = true;
 		     * }
+             * if (PlatformUtils.isXboxOnePlatform)
+		     * {
+			 *      this.helpButton.gameObject.SetActive(true);
+		     * }
              */
-            for (int i = 1; i < instructionList.Count; i++)
+            foreach (CodeInstruction instruction in instructions)
             {
-                if (instructionList[i].opcode.Equals(START_CUT_CODE) && instructionList[i].operand.Equals(GAMEMODEUTILS_ISPERMADEATH_METHOD))
+                if(GAMEMODEUTILS_ISPERMADEATH_METHOD.Equals(instruction.operand))
                 {
-                    startCut = i;
+                    yield return new CodeInstruction(OpCodes.Ret);
+                    break;
                 }
-                if (instructionList[i].opcode.Equals(END_CUT_CODE) && instructionList[i].operand.Equals(PLATFORMUTILS_GET_ISCONSOLEPLATFORM_METHOD))
-                {
-                    endCut = i-1;
-                }
-            }
 
-            instructionList.RemoveRange(startCut, endCut);
-
-            return instructionList;
+                yield return instruction;
+            } 
         }
 
         public override void Patch(HarmonyInstance harmony)
