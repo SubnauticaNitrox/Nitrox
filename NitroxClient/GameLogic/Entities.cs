@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
@@ -20,6 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
+        private readonly Dictionary<NitroxModel.DataStructures.Int3, GameObject> spawnedBatches = new Dictionary<NitroxModel.DataStructures.Int3, GameObject>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -50,9 +52,10 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
+                GameObject batchRoot = EnsureBatchRoot(entity);
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
-                    Spawn(entity, Optional<GameObject>.Empty());
+                    Spawn(entity, Optional<GameObject>.Empty(), batchRoot);
                 }
                 else
                 {
@@ -60,8 +63,21 @@ namespace NitroxClient.GameLogic
                 }
             }
         }
-        
-        private void Spawn(Entity entity, Optional<GameObject> parent)
+
+        private GameObject EnsureBatchRoot(Entity entity)
+        {
+            GameObject batchRoot;
+            if (!spawnedBatches.TryGetValue(entity.AbsoluteEntityCell.BatchId, out batchRoot))
+            {
+                Log.Info("Making new Batch Group {0}", (Int3)entity.AbsoluteEntityCell.BatchId.ToVector3());
+                batchRoot = GameObject.Instantiate(LargeWorldStreamer.main.batchRootPrefab);
+                spawnedBatches.Add(entity.AbsoluteEntityCell.BatchId, batchRoot);
+            }
+
+            return batchRoot;
+        }
+
+        private void Spawn(Entity entity, Optional<GameObject> parent, GameObject batchRoot = null)
         {
             alreadySpawnedIds.Add(entity.Id);
 
@@ -77,7 +93,13 @@ namespace NitroxClient.GameLogic
 
                 alreadySpawnedIds.Add(childEntity.Id);
             }
-        }
+			if (batchRoot != null)
+			{
+                Log.Info((Int3)entity.AbsoluteEntityCell.BatchId.ToVector3());
+                gameObject.Get().transform.SetParent(batchRoot.transform, true);
+				typeof(LargeWorldStreamer).GetMethod("OnBatchObjectsLoaded", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(LargeWorldStreamer.main, BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { (Int3)entity.AbsoluteEntityCell.BatchId.ToVector3(), batchRoot }, null);
+			}
+		}
 
         private IEntitySpawner ResolveEntitySpawner(Entity entity)
         {
