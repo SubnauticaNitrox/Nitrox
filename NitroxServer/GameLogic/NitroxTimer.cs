@@ -49,6 +49,7 @@ namespace NitroxServer.GameLogic
             if (timeLeft != null)
             {
                 m_dueTime = DateTime.Now.AddMilliseconds(timeLeft.Value);
+                base.Interval = timeLeft.Value;
             }
             else
             {
