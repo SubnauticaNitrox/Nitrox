@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Timers;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxServer.GameLogic.Bases;
-using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
 {
