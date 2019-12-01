@@ -41,12 +41,10 @@ namespace NitroxServer.GameLogic
         {
             NitroxTimer timer = new NitroxTimer();
             timer.Key = key;
-            timer.Elapsed += delegate
-            {
-                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
-                playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
-            };
+            timer.EventType = eventType;
+            timer.PlayerManager = playerManager;
             timer.Interval = time;
+            timer.InitialInterval = time;
             timer.AutoReset = false;
             return timer;
         }

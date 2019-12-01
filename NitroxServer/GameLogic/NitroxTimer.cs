@@ -1,5 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
@@ -8,13 +9,9 @@ namespace NitroxServer.GameLogic
     [ProtoContract]
     public class NitroxTimer : System.Timers.Timer
     {
-        [ProtoIgnore]
-        private DateTime m_dueTime;
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public string Key;
-        [ProtoIgnore]
-        private double? timeLeft;
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double? TimeLeft
         {
             get
@@ -23,6 +20,16 @@ namespace NitroxServer.GameLogic
             }
             set { timeLeft = value; }
         }
+        [ProtoMember(3)]
+        public double InitialInterval;
+        [ProtoMember(4)]
+        public PlayerManager PlayerManager;
+        [ProtoMember(5)]
+        public StoryEventType EventType;
+        [ProtoIgnore]
+        private double? timeLeft;
+        [ProtoIgnore]
+        private DateTime m_dueTime;
 
         public NitroxTimer() : base()
         {
@@ -40,7 +47,7 @@ namespace NitroxServer.GameLogic
         {
             get
             {
-                return (m_dueTime - DateTime.Now).ToString(@"hh\:mm\:ss") + " - " + Key + " - " + timeLeft;
+                return (m_dueTime - DateTime.Now).ToString(@"hh\:mm\:ss") + " - " + Key;
             }
         }
 
@@ -66,9 +73,12 @@ namespace NitroxServer.GameLogic
 
         private void ElapsedAction(object sender, System.Timers.ElapsedEventArgs e)
         {
+            Log.Info("Triggering event type " + EventType.ToString() + " at time " + DateTime.Now.AddMilliseconds(Interval).ToString(@"hh\:mm\:ss") + " with param " + Key.ToString());
+            PlayerManager.SendPacketToAllPlayers(new StoryEventSend(EventType, Key));
             if (AutoReset)
             {
-                m_dueTime = DateTime.Now.AddMilliseconds(Interval);
+                Log.Debug("Interval: " + InitialInterval);
+                m_dueTime = DateTime.Now.AddMilliseconds(InitialInterval);
             }
         }
 

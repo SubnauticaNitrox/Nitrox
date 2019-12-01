@@ -10,10 +10,13 @@ using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.UnityStubs;
+using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
 {
     // TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
+    [Serializable]
+    [ProtoContract]
     public class PlayerManager
     {
         private readonly Dictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new Dictionary<NitroxConnection, ConnectionAssets>();
@@ -21,6 +24,10 @@ namespace NitroxServer.GameLogic
         private readonly ServerConfig serverConfig;
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
+
+        public PlayerManager()
+        {
+        }
 
         public PlayerManager(PlayerData playerData, ServerConfig serverConfig)
         {
