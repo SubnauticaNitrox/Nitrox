@@ -77,7 +77,6 @@ namespace NitroxServer.GameLogic
             PlayerManager.SendPacketToAllPlayers(new StoryEventSend(EventType, Key));
             if (AutoReset)
             {
-                Log.Debug("Interval: " + InitialInterval);
                 m_dueTime = DateTime.Now.AddMilliseconds(InitialInterval);
             }
         }
