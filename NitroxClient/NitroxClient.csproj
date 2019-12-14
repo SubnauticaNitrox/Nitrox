@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NitroxClient</RootNamespace>
     <AssemblyName>NitroxClient</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -79,14 +79,8 @@
     <Reference Include="UnityEngine.AudioModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.AudioModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.BaselibModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.BaselibModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.ClothModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.ClothModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CloudWebServicesModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.CloudWebServicesModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ClusterInputModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.ClusterInputModule.dll</HintPath>
@@ -102,9 +96,6 @@
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.DirectorModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.FacebookModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.FacebookModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.FileSystemHttpModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.FileSystemHttpModule.dll</HintPath>
@@ -127,26 +118,20 @@
     <Reference Include="UnityEngine.InputModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.InputModule.dll</HintPath>
     </Reference>
+	<Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>$(SubnauticaManaged)\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.JSONSerializeModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.LocalizationModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.LocalizationModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ParticlesLegacyModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ParticlesLegacyModule.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PerformanceReportingModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.PerformanceReportingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PerformanceTesting">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.PerformanceTesting.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.Physics2DModule.dll</HintPath>
@@ -163,9 +148,6 @@
     <Reference Include="UnityEngine.SharedInternalsModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.SharedInternalsModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.SpatialTracking.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.SpriteMaskModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.SpriteMaskModule.dll</HintPath>
     </Reference>
@@ -174,9 +156,6 @@
     </Reference>
     <Reference Include="UnityEngine.StreamingModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.StreamingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.StyleSheetsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.StyleSheetsModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SubstanceModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.SubstanceModule.dll</HintPath>
@@ -192,12 +171,6 @@
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.TilemapModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Timeline">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.Timeline.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TimelineModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TimelineModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.TLSModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.TLSModule.dll</HintPath>
