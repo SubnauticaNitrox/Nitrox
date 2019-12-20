@@ -151,13 +151,13 @@ namespace NitroxLauncher
         {
             foreach (var children in SideBarPanel.Children)
             {
-                if (children is Grid grid)
+                if (children is Button button)
                 {
-                    foreach (var item in grid.Children)
+                    if (button.Content is Grid grid)
                     {
-                        if (item is Button button)
+                        foreach (var item in grid.Children)
                         {
-                            if (button.Content is TextBlock block)
+                            if (item is TextBlock block)
                             {
                                 if (button == activeButton)
                                 {

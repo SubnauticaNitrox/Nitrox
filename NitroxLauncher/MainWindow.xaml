@@ -28,7 +28,7 @@
                 <BlurEffect Radius="7" />
             </Image.Effect>
         </Image>
-        <Grid Background="#B228292C" Margin="0,0,0,5">                
+        <Grid Background="#B228292C">                
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" />
