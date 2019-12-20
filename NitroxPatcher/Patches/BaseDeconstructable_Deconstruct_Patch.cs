@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches
                     /*
                      * BaseDeconstructable_Deconstruct_Patch.Callback(gameObject);
                      */
-                    yield return original.Ldloc<GameObject>(1);
+                    yield return original.Ldloc<ConstructableBase>(0);
                     yield return new CodeInstruction(OpCodes.Call, typeof(BaseDeconstructable_Deconstruct_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
                 }
             }
