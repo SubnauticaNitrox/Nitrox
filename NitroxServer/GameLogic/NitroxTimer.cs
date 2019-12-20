@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using ProtoBufNet;
@@ -29,7 +32,7 @@ namespace NitroxServer.GameLogic
         [ProtoIgnore]
         private double? timeLeft;
         [ProtoIgnore]
-        private DateTime m_dueTime;
+        private DateTime dueTime;
 
         public NitroxTimer() : base()
         {
@@ -47,7 +50,7 @@ namespace NitroxServer.GameLogic
         {
             get
             {
-                return (m_dueTime - DateTime.Now).ToString(@"hh\:mm\:ss") + " - " + Key;
+                return (dueTime - DateTime.Now).ToString(@"hh\:mm\:ss") + " - " + Key;
             }
         }
 
@@ -55,19 +58,19 @@ namespace NitroxServer.GameLogic
         {
             if (timeLeft != null)
             {
-                m_dueTime = DateTime.Now.AddMilliseconds(timeLeft.Value);
+                dueTime = DateTime.Now.AddMilliseconds(timeLeft.Value);
                 base.Interval = timeLeft.Value;
             }
             else
             {
-                m_dueTime = DateTime.Now.AddMilliseconds(Interval);
+                dueTime = DateTime.Now.AddMilliseconds(Interval);
             }
             base.Start();
         }
 
         new public void Stop()
         {
-            timeLeft = (m_dueTime - DateTime.Now).TotalMilliseconds;
+            timeLeft = (dueTime - DateTime.Now).TotalMilliseconds;
             base.Stop();
         }
 
@@ -77,7 +80,7 @@ namespace NitroxServer.GameLogic
             PlayerManager.SendPacketToAllPlayers(new StoryEventSend(EventType, Key));
             if (AutoReset)
             {
-                m_dueTime = DateTime.Now.AddMilliseconds(InitialInterval);
+                dueTime = DateTime.Now.AddMilliseconds(InitialInterval);
             }
         }
 

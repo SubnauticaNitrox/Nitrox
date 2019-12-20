@@ -40,13 +40,9 @@ namespace NitroxServer.GameLogic
         {
             lock (timers)
             {
-                //TODO: remove, Logs the count of timers
-                Log.Info("Paused " + timers.Count);
                 foreach(NitroxTimer timer in timers)
                 {
                     timer.Stop();
-                    //TODO: remove, how long left till event
-                    Log.Info(timer.TimeLeftDate);
                 }
             }
         }
@@ -55,13 +51,9 @@ namespace NitroxServer.GameLogic
         {
             lock (timers)
             {
-                //TODO: remove, Logs the count of timers
-                Log.Info("Started " + timers.Count);
                 foreach (NitroxTimer timer in timers)
                 {
                     timer.Start();
-                    //TODO: remove, how long left till event
-                    Log.Info("Started " + timer.TimeLeftDate);
                 }
             }
         }
