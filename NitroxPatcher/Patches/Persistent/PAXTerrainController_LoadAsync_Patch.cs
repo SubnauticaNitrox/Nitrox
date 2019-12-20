@@ -57,7 +57,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         private static MethodInfo getMethod()
         {
-            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(method);
 
             return method;
