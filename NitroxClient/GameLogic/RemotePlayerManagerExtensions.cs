@@ -1,10 +1,11 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic
 {
     public static class RemotePlayerManagerExtensions
     {
-        public static bool TryFind(this PlayerManager playerManager, ushort playerId, out RemotePlayer remotePlayer)
+        public static bool TryFind(this PlayerManager playerManager, NitroxId playerId, out RemotePlayer remotePlayer)
         {
             Optional<RemotePlayer> optional = playerManager.Find(playerId);
             remotePlayer = optional.IsPresent() ? optional.Get() : null;

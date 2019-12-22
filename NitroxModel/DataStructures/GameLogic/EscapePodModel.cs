@@ -28,7 +28,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId RadioId { get; set; }
 
         [ProtoMember(7)]
-        public List<ushort> AssignedPlayers { get; set; } = new List<ushort>();
+        public List<NitroxId> AssignedPlayers { get; set; } = new List<NitroxId>();
 
         [ProtoMember(8)]
         public bool Damaged { get; set; }
@@ -52,7 +52,7 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             string toString = "[EscapePodModel - Id: " + Id + " Location:" + Location + " FabricatorId: " + FabricatorId + " MedicalFabricatorGuid: " + MedicalFabricatorId + " StorageContainerGuid: " + StorageContainerId + " RadioGuid: " + RadioId + " AssignedPlayers: {";
 
-            foreach (ushort playerId in AssignedPlayers)
+            foreach (NitroxId playerId in AssignedPlayers)
             {
                 toString += playerId + " ";
             }

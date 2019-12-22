@@ -20,7 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             inventoryData.ItemRemoved(packet.ItemId);
 
-            if (packet.OwnerId != player.GameObjectId)
+            if (packet.OwnerId != player.Id)
             {
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }

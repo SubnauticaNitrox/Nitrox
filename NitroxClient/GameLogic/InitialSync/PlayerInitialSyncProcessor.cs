@@ -23,13 +23,13 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
-            SetPlayerGameObjectId(packet.PlayerGameObjectId);
+            SetPlayerId(packet.PlayerId);
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             SetPlayerStats(packet.PlayerStatsData);
             SetPlayerGameMode((GameModeOption)Enum.Parse(typeof(GameModeOption), packet.GameMode));
         }
 
-        private void SetPlayerGameObjectId(NitroxId id)
+        private void SetPlayerId(NitroxId id)
         {
             NitroxIdentifier.SetNewId(Player.mainObject, id);
             Log.Info("Received initial sync Player GameObject Id: " + id);

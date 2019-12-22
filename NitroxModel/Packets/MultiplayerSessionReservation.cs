@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.MultiplayerSession;
 
 namespace NitroxModel.Packets
@@ -7,7 +8,7 @@ namespace NitroxModel.Packets
     public class MultiplayerSessionReservation : CorrelatedPacket
     {
         public MultiplayerSessionReservationState ReservationState { get; }
-        public ushort PlayerId { get; }
+        public NitroxId PlayerId { get; }
         public string ReservationKey { get; }
 
         public MultiplayerSessionReservation(string correlationId, MultiplayerSessionReservationState reservationState)
@@ -16,7 +17,7 @@ namespace NitroxModel.Packets
             ReservationState = reservationState;
         }
 
-        public MultiplayerSessionReservation(string correlationId, ushort playerId, string reservationKey)
+        public MultiplayerSessionReservation(string correlationId, NitroxId playerId, string reservationKey)
             : this(correlationId, MultiplayerSessionReservationState.Reserved)
         {
             PlayerId = playerId;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -7,11 +8,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class CellVisibilityChanged : Packet
     {
-        public ushort PlayerId { get; }
+        public NitroxId PlayerId { get; }
         public AbsoluteEntityCell[] Added { get; }
         public AbsoluteEntityCell[] Removed { get; }
 
-        public CellVisibilityChanged(ushort playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public CellVisibilityChanged(NitroxId playerId, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
             PlayerId = playerId;
             Added = added;

@@ -35,10 +35,7 @@ namespace NitroxServer.GameLogic.Players
                 }
             }
             set { ModulesItemsById = value; }
-        }
-
-        [ProtoMember(3)]
-        public ushort currentPlayerId = 0;
+        }        
 
         public Dictionary<NitroxId, EquippedItemData> ModulesItemsById = new Dictionary<NitroxId, EquippedItemData>();
 
@@ -53,7 +50,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public ushort GetPlayerId(string playerName)
+        public NitroxId GetPlayerId(string playerName)
         {
             lock (playersByPlayerName)
             {
@@ -186,7 +183,7 @@ namespace NitroxServer.GameLogic.Players
 
             if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
             {
-                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId);
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, new NitroxId());
             }
 
             return playerPersistedData;
@@ -217,7 +214,7 @@ namespace NitroxServer.GameLogic.Players
             public Dictionary<NitroxId, EquippedItemData> EquippedItemsById { get; set; } = new Dictionary<NitroxId, EquippedItemData>();
 
             [ProtoMember(3)]
-            public ushort PlayerId { get; set; }
+            public NitroxId PlayerId { get; set; }
 
             [ProtoMember(4)]
             public Vector3 PlayerSpawnData { get; set; }
@@ -236,7 +233,7 @@ namespace NitroxServer.GameLogic.Players
                 // Constructor for serialization purposes
             }
 
-            public PersistedPlayerData(string playerName, ushort playerId)
+            public PersistedPlayerData(string playerName, NitroxId playerId)
             {
                 PlayerName = playerName;
                 PlayerId = playerId;

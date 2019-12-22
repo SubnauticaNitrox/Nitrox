@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
@@ -22,7 +23,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             if(simulationOwnershipData.RevokeOwnerOfId(packet.Id))
             {
-                ushort serverId = ushort.MaxValue;
+                NitroxId serverId = NitroxId.Empty;
                 SimulationOwnershipChange simulationOwnershipChange = new SimulationOwnershipChange(packet.Id, serverId, NitroxModel.DataStructures.SimulationLockType.TRANSIENT);
                 playerManager.SendPacketToAllPlayers(simulationOwnershipChange);
             }

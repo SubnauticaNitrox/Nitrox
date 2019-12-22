@@ -38,7 +38,7 @@ namespace NitroxClient.Communication.Packets.Processors
             vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleId, packet.PlayerId));
         }        
 
-        IEnumerator DisablePilotingAfterAnimation(NitroxId vehicleId, ushort playerId)
+        IEnumerator DisablePilotingAfterAnimation(NitroxId vehicleId, NitroxId playerId)
         {
             yield return new WaitForSeconds(3.0f);
             vehicles.SetOnPilotMode(vehicleId, playerId, false);
