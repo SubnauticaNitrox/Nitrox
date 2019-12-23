@@ -177,16 +177,7 @@ namespace NitroxServer.GameLogic.Players
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
                 return Optional<NitroxId>.OfNullable(playerPersistedData.SubRootId);
             }
-        }
-
-        public NitroxId GetGameObjectId(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                return playerPersistedData.GameObjectId;
-            }
-        }
+        }        
 
         // Must be called when playersByPlayerName is locked.
         private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
@@ -195,7 +186,7 @@ namespace NitroxServer.GameLogic.Players
 
             if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
             {
-                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId, new NitroxId());
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId);
             }
 
             return playerPersistedData;
@@ -240,19 +231,15 @@ namespace NitroxServer.GameLogic.Players
             [ProtoMember(7)]
             public Perms Permissions { get; set; } = Perms.PLAYER;
 
-            [ProtoMember(8)]
-            public NitroxId GameObjectId { get; set; }
-
             public PersistedPlayerData()
             {
                 // Constructor for serialization purposes
             }
 
-            public PersistedPlayerData(string playerName, ushort playerId, NitroxId gameobjectId)
+            public PersistedPlayerData(string playerName, ushort playerId)
             {
                 PlayerName = playerName;
-                PlayerId = playerId;
-                GameObjectId = gameobjectId;
+                PlayerId = playerId;                
             }
         }
 
