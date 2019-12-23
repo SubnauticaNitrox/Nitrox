@@ -239,7 +239,7 @@ namespace NitroxServer.GameLogic.Players
             public PersistedPlayerData(string playerName, ushort playerId)
             {
                 PlayerName = playerName;
-                PlayerId = playerId;         
+                PlayerId = playerId;
             }
         }
 
