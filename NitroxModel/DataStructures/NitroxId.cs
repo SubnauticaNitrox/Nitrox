@@ -52,5 +52,15 @@ namespace NitroxModel.DataStructures
         {
             return guid.ToString();
         }
+
+        public static bool operator ==(NitroxId id1, NitroxId id2)
+        {
+            return id1?.guid == id2?.guid;
+        }
+
+        public static bool operator !=(NitroxId id1, NitroxId id2)
+        {
+            return !(id1 == id2);
+        }
     }
 }
