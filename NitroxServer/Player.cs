@@ -23,13 +23,13 @@ namespace NitroxServer
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
 
-        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<NitroxId> subRootId)
+        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<NitroxId> subRootId, NitroxId gameObjectId)
         {
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;
             SubRootId = subRootId;
-            GameObjectId = new NitroxId();
+            GameObjectId = gameObjectId;
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
