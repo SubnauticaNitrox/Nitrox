@@ -98,7 +98,7 @@ namespace NitroxServer.GameLogic
 
                 // Load previously persisted data for this player.
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);
-                Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);                
+                Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
 
                 Player player = new Player(playerContext, connection, position, subRootId);
                 assetPackage.Player = player;

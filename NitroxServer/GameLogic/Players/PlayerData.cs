@@ -177,7 +177,7 @@ namespace NitroxServer.GameLogic.Players
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
                 return Optional<NitroxId>.OfNullable(playerPersistedData.SubRootId);
             }
-        }        
+        }
 
         // Must be called when playersByPlayerName is locked.
         private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
@@ -239,7 +239,7 @@ namespace NitroxServer.GameLogic.Players
             public PersistedPlayerData(string playerName, ushort playerId)
             {
                 PlayerName = playerName;
-                PlayerId = playerId;                
+                PlayerId = playerId;         
             }
         }
 
