@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.DiscordRP;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -16,7 +15,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly ILocalNitroxPlayer localPlayer;
         private readonly PlayerModelManager playerModelManager;
-        private readonly Dictionary<NitroxId, RemotePlayer> playersById = new Dictionary<NitroxId, RemotePlayer>();
+        private readonly Dictionary<ushort, RemotePlayer> playersById = new Dictionary<ushort, RemotePlayer>();
 
         public PlayerManager(ILocalNitroxPlayer localPlayer, PlayerModelManager playerModelManager)
         {
@@ -24,7 +23,7 @@ namespace NitroxClient.GameLogic
             this.playerModelManager = playerModelManager;
         }
 
-        public Optional<RemotePlayer> Find(NitroxId playerId)
+        public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
 
@@ -68,7 +67,7 @@ namespace NitroxClient.GameLogic
             return remotePlayer;
         }
 
-        public void RemovePlayer(NitroxId playerId)
+        public void RemovePlayer(ushort playerId)
         {
             Optional<RemotePlayer> opPlayer = Find(playerId);
             if (opPlayer.IsPresent())

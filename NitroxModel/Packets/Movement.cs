@@ -2,20 +2,19 @@
 using UnityEngine;
 using Lidgren.Network;
 using NitroxModel.Networking;
-using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class Movement : Packet
     {
-        public NitroxId PlayerId { get; }
+        public ushort PlayerId { get; }
         public Vector3 Position { get; }
         public Vector3 Velocity { get; }
         public Quaternion BodyRotation { get; }
         public Quaternion AimingRotation { get; }
 
-        public Movement(NitroxId playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
+        public Movement(ushort playerId, Vector3 position, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation)
         {
             PlayerId = playerId;
             Position = position;

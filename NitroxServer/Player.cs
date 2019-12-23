@@ -17,9 +17,10 @@ namespace NitroxServer
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; }
-        public NitroxId Id => PlayerContext.PlayerId;
+        public ushort Id => PlayerContext.PlayerId;
         public string Name => PlayerContext.PlayerName;
-        public Vector3 Position { get; set; }        
+        public Vector3 Position { get; set; }
+        public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
 
         public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<NitroxId> subRootId)
@@ -27,7 +28,8 @@ namespace NitroxServer
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;
-            SubRootId = subRootId;            
+            SubRootId = subRootId;
+            GameObjectId = new NitroxId();
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)

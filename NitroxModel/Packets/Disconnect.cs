@@ -1,14 +1,13 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class Disconnect : Packet
     {
-        public NitroxId PlayerId { get; }
+        public ushort PlayerId { get; }
 
-        public Disconnect(NitroxId playerId)
+        public Disconnect(ushort playerId)
         {
             PlayerId = playerId;
         }

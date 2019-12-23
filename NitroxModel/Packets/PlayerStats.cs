@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 using NitroxModel.Networking;
 
 namespace NitroxModel.Packets
@@ -7,14 +6,14 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerStats : Packet
     {
-        public NitroxId PlayerId { get; }
+        public ushort PlayerId { get; }
         public float Oxygen { get; }
         public float MaxOxygen { get; }
         public float Health { get; }
         public float Food { get; }
         public float Water { get; }
 
-        public PlayerStats(NitroxId playerId, float oxygen, float maxOxygen, float health, float food, float water)
+        public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water)
         {
             PlayerId = playerId;
             Oxygen = oxygen;

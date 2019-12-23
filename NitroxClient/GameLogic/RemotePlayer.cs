@@ -5,7 +5,6 @@ using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
-using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using UnityEngine;
@@ -25,7 +24,7 @@ namespace NitroxClient.GameLogic
         public ArmsController ArmsController { get; }
         public AnimationController AnimationController { get; }
 
-        public NitroxId PlayerId => PlayerContext.PlayerId;
+        public ushort PlayerId => PlayerContext.PlayerId;
         public string PlayerName => PlayerContext.PlayerName;
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
 

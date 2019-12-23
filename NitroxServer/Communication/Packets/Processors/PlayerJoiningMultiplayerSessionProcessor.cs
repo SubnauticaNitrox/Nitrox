@@ -45,7 +45,7 @@ namespace NitroxServer.Communication.Packets.Processors
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
-            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.Id,
+            InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
                                                                        wasBrandNewPlayer,
                                                                        world.EscapePodData.EscapePods,
                                                                        assignedEscapePodId,

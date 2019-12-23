@@ -223,7 +223,7 @@ namespace NitroxClient.GameLogic
 
                 if (isPiloting) //Check Remote Object Have Player inside
                 {
-                    NitroxId pilot = NitroxId.Parse(vehicle.pilotId);
+                    ushort pilot = ushort.Parse(vehicle.pilotId);
                     Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
                     if (remotePilot.IsPresent()) // Get Remote Player Inside == vehicle.pilotId  Remove From Vehicle Before Destroy
@@ -294,7 +294,7 @@ namespace NitroxClient.GameLogic
                 // detach the remote player before destroying the game object.
                 if (!string.IsNullOrEmpty(vehicle.pilotId)) 
                 {
-                    NitroxId pilot = NitroxId.Parse(vehicle.pilotId);
+                    ushort pilot = ushort.Parse(vehicle.pilotId);
                     Optional<RemotePlayer> remotePilot = playerManager.Find(pilot);
 
                     if (remotePilot.IsPresent())
@@ -327,7 +327,7 @@ namespace NitroxClient.GameLogic
             }
 
             NitroxId vehicleId = NitroxIdentifier.GetId(vehicle.gameObject);
-            NitroxId playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleDocking packet = new VehicleDocking(vehicleId, dockId, playerId);
             packetSender.Send(packet);
@@ -354,7 +354,7 @@ namespace NitroxClient.GameLogic
             }
 
             NitroxId vehicleId = NitroxIdentifier.GetId(vehicle.gameObject);
-            NitroxId playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleUndocking packet = new VehicleUndocking(vehicleId, dockId, playerId);
             packetSender.Send(packet);
@@ -381,13 +381,13 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
         {
-            NitroxId playerId = multiplayerSession.Reservation.PlayerId;
+            ushort playerId = multiplayerSession.Reservation.PlayerId;
 
             VehicleOnPilotModeChanged packet = new VehicleOnPilotModeChanged(NitroxIdentifier.GetId(vehicle.gameObject), playerId, isPiloting);
             packetSender.Send(packet);
         }
 
-        public void SetOnPilotMode(NitroxId vehicleId, NitroxId playerId, bool isPiloting)
+        public void SetOnPilotMode(NitroxId vehicleId, ushort playerId, bool isPiloting)
         {
             Optional<GameObject> opVehicle = NitroxIdentifier.GetObjectFrom(vehicleId);
 

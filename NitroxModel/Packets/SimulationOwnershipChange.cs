@@ -10,7 +10,7 @@ namespace NitroxModel.Packets
     {
         public List<SimulatedEntity> Entities { get; }
 
-        public SimulationOwnershipChange(NitroxId id, NitroxId owningPlayerId, SimulationLockType lockType)
+        public SimulationOwnershipChange(NitroxId id, ushort owningPlayerId, SimulationLockType lockType)
         {
             Entities = new List<SimulatedEntity>
             {

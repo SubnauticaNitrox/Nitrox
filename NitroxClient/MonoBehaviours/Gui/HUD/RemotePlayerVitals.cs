@@ -2,7 +2,6 @@
 using NitroxClient.MonoBehaviours.Gui.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,7 +33,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         /// </summary>
         /// <param name="playerId">Unique player id to create the vitals UI elements for.</param>
         /// <returns></returns>
-        public static RemotePlayerVitals CreateForPlayer(NitroxId playerId)
+        public static RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
             RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
             RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Get();

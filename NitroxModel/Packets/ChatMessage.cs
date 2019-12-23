@@ -1,16 +1,15 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ChatMessage : Packet
     {
-        public NitroxId PlayerId { get; }
+        public ushort PlayerId { get; }
         public string Text { get; }
-        public static readonly NitroxId SERVER_ID = NitroxId.Empty;
+        public const ushort SERVER_ID = ushort.MaxValue;
 
-        public ChatMessage(NitroxId playerId, string text)
+        public ChatMessage(ushort playerId, string text)
         {
             PlayerId = playerId;
             Text = text;

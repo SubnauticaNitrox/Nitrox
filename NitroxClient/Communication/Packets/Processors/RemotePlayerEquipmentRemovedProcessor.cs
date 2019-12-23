@@ -1,6 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 
@@ -17,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(RemotePlayerEquipmentRemoved packet)
         {
-            NitroxId playerId = packet.PlayerId;
+            ushort playerId = packet.PlayerId;
 
             RemotePlayer player;
             if (!playerManager.TryFind(playerId, out player))

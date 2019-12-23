@@ -1,6 +1,4 @@
-﻿using System;
-using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NSubstitute;
@@ -11,7 +9,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
     {
         public const string TEST_IP_ADDRESS = "#.#.#.#";
         public const int TEST_SERVER_PORT = 11000;
-        public static readonly NitroxId TEST_PLAYER_ID = new NitroxId(new Guid());
+        public const ushort TEST_PLAYER_ID = 1;
         public const string TEST_PLAYER_NAME = "TEST";
         public const string TEST_RESERVATION_KEY = "@#*(&";
         public const string TEST_CORRELATION_ID = "CORRELATED";

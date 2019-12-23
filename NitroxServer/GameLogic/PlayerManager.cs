@@ -76,7 +76,7 @@ namespace NitroxServer.GameLogic
 
                 bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
                 PlayerContext playerContext = new PlayerContext(playerName, playerData.GetPlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
-                NitroxId playerId = playerContext.PlayerId;
+                ushort playerId = playerContext.PlayerId;
                 string reservationKey = Guid.NewGuid().ToString();
 
                 reservations.Add(reservationKey, playerContext);

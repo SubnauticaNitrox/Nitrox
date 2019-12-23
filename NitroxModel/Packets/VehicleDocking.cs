@@ -8,9 +8,9 @@ namespace NitroxModel.Packets
     {
         public NitroxId VehicleId { get; }
         public NitroxId DockId { get; }
-        public NitroxId PlayerId { get; }
+        public ushort PlayerId { get; }
 
-        public VehicleDocking(NitroxId vehicleId, NitroxId dockId, NitroxId playerId)
+        public VehicleDocking(NitroxId vehicleId, NitroxId dockId, ushort playerId)
         {
             VehicleId = vehicleId;
             DockId = dockId;

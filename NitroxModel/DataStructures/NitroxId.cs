@@ -13,8 +13,6 @@ namespace NitroxModel.DataStructures
         [ProtoMember(1)]
         private Guid guid;
 
-        public static NitroxId Empty { get; } = new NitroxId(Guid.Empty);
-
         public NitroxId()
         {
             guid = Guid.NewGuid();
@@ -23,16 +21,6 @@ namespace NitroxModel.DataStructures
         public NitroxId(byte[] bytes)
         {
             guid = new Guid(bytes);
-        }
-
-        public NitroxId(Guid guid)
-        {
-            this.guid = guid;
-        }
-
-        public static NitroxId Parse(string input)
-        { 
-            return new NitroxId(Guid.Parse(input));
         }
 
         protected NitroxId(SerializationInfo info, StreamingContext context)
@@ -63,16 +51,6 @@ namespace NitroxModel.DataStructures
         public override string ToString()
         {
             return guid.ToString();
-        }
-
-        public static bool operator ==(NitroxId id1, NitroxId id2)
-        {
-            return id1?.guid == id2?.guid;
-        }
-
-        public static bool operator !=(NitroxId id1, NitroxId id2)
-        {
-            return !(id1 == id2);
         }
     }
 }

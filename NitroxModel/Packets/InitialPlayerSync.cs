@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
         public List<ItemData> StorageSlots { get; }
-        public NitroxId PlayerId { get; }
+        public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPdaData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
@@ -29,11 +29,11 @@ namespace NitroxModel.Packets
         public string GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(NitroxId playerId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodId = assignedEscapePodId;
-            PlayerId = playerId;
+            PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment;
             BasePieces = basePieces;
