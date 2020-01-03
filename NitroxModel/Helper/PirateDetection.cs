@@ -51,6 +51,7 @@ namespace NitroxModel.Helper
                     return true;
                 }
             }
+            return false;
         }
 
         private static void OnPirateDetected()
