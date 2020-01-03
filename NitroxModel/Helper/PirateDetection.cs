@@ -51,10 +51,6 @@ namespace NitroxModel.Helper
                     return true;
                 }
             }
-
-            // Check for ini files in the root
-            FileInfo[] iniFiles = new DirectoryInfo(subnauticaRoot).GetFiles("*.ini");
-            return iniFiles.Length > 0;
         }
 
         private static void OnPirateDetected()
