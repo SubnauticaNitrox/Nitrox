@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using FileAttributes = System.IO.FileAttributes;
 
 namespace NitroxLauncher.Patching
 {
@@ -22,25 +23,11 @@ namespace NitroxLauncher.Patching
 
         private readonly string subnauticaManagedPath;
 
+        public bool IsApplied => IsPatchApplied();
+
         public NitroxEntryPatch(string subnauticaBasePath)
         {
             subnauticaManagedPath = Path.Combine(subnauticaBasePath, "Subnautica_Data", "Managed");
-        }
-
-        public bool IsApplied => IsPatchApplied();
-
-        private bool IsPatchApplied()
-        {
-            string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
-
-            using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
-            {
-                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
-                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
-
-                return awakeMethod.Body.Instructions.Any(instruction => instruction.Operand?.ToString() == NITROX_EXECUTE_INSTRUCTION);
-            }
         }
 
         public void Apply()
@@ -49,7 +36,7 @@ namespace NitroxLauncher.Patching
             string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
             string modifiedAssemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_MODIFIED_NAME);
 
-            if(File.Exists(modifiedAssemblyCSharp))
+            if (File.Exists(modifiedAssemblyCSharp))
             {
                 File.Delete(modifiedAssemblyCSharp);
             }
@@ -71,7 +58,7 @@ namespace NitroxLauncher.Patching
                 module.Write(modifiedAssemblyCSharp);
             }
 
-            File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
+            File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
             File.Delete(assemblyCSharp);
             File.Move(modifiedAssemblyCSharp, assemblyCSharp);
         }
@@ -89,15 +76,15 @@ namespace NitroxLauncher.Patching
                 IList<Instruction> methodInstructions = awakeMethod.Body.Instructions;
                 int nitroxExecuteInstructionIndex = FindNitroxExecuteInstructionIndex(methodInstructions);
 
-                if(nitroxExecuteInstructionIndex == -1)
+                if (nitroxExecuteInstructionIndex == -1)
                 {
                     return;
                 }
-                
+
                 methodInstructions.RemoveAt(nitroxExecuteInstructionIndex);
                 module.Write(modifiedAssemblyCSharp);
 
-                File.SetAttributes(assemblyCSharp, System.IO.FileAttributes.Normal);
+                File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
             }
 
             File.Delete(assemblyCSharp);
@@ -117,6 +104,20 @@ namespace NitroxLauncher.Patching
             }
 
             return -1;
+        }
+
+        private bool IsPatchApplied()
+        {
+            string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
+            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
+
+            using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
+            {
+                TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);
+                MethodDef awakeMethod = gameInputType.Methods.First(x => x.Name == GAME_INPUT_METHOD_NAME);
+
+                return awakeMethod.Body.Instructions.Any(instruction => instruction.Operand?.ToString() == NITROX_EXECUTE_INSTRUCTION);
+            }
         }
     }
 }
