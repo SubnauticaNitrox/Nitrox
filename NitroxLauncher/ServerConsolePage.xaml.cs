@@ -1,36 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using NitroxLauncher.Events;
 
 namespace NitroxLauncher
-{    
+{
     public partial class ServerConsolePage : Page, INotifyPropertyChanged
     {
-        private LauncherLogic logic;
-        private Process serverProcess = null;
+        private readonly LauncherLogic logic;
         private string commandText = "";
 
         public string CommandText
         {
-            get
-            {
-                return commandText;
-            }
+            get => commandText;
             set
             {
                 commandText = value;
@@ -41,90 +28,66 @@ namespace NitroxLauncher
         public ServerConsolePage(LauncherLogic logic)
         {
             InitializeComponent();
-            this.logic = logic;
-            this.logic.StartServerEvent += OnStartServer;
-            PropertyChanged += PropertyChange;
-            CommandText = "";
-        }        
-
-        internal bool ServerRunning
-        {
-            get
-            {
-                return (serverProcess != null && !serverProcess.HasExited);
-            }
-        }
-
-        private void OnStartServer(object sender, EventArgs e)
-        {
-            CommandText = "";
-            serverProcess = (Process)sender;
-            serverProcess.OutputDataReceived += HandleOutputData;
-            serverProcess.BeginOutputReadLine();
-            // Use another thread to signal when the server is shut down
-            Thread thread = new Thread(new ThreadStart(() =>
-            {
-                serverProcess.WaitForExit();
-                Thread.Sleep(1000);
-                logic.EndServer();
-            }));
-            thread.Start();
+            PropertyChanged += OnPropertyChange;
             
-        }
+            this.logic = logic;
+            this.logic.ServerStarted += ServerStarted;
+            this.logic.ServerDataReceived += ServerDataReceived;
 
-        private void HandleOutputData(object sender, DataReceivedEventArgs e)
-        {
-            CommandText += e.Data + "\n";
-        }
-
-        internal void HandleInputData(string inputText)
-        {
-            CommandText += inputText + "\n";
-            serverProcess.StandardInput.WriteLineAsync(inputText);                        
-        }
-
-        private void CommandButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (ServerRunning)
-            {
-                HandleInputData(CommandLine.Text);
-                CommandLine.Text = "";
-            }
-        }
-
-        private void CommandLine_OnKeyDown(object sender, KeyEventArgs e)
-        {
-            if (ServerRunning)
-            {
-                if (e.Key == Key.Enter)
-                {
-                    HandleInputData(CommandLine.Text);
-                    CommandLine.Text = "";
-                }
-            }
+            OnPropertyChanged(nameof(CommandText));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void PropertyChange(object sender, PropertyChangedEventArgs propertyName)
-        {
-            ServerConsolePage serverConsolePage = (ServerConsolePage)sender;
-            Dispatcher.BeginInvoke(
-           new ThreadStart(() => serverConsolePage.ConsoleWindowScrollView.ScrollToEnd()));
-        }
-
         /// <summary>
-        /// Raises this object's PropertyChanged event.
+        ///     Raises this object's PropertyChanged event.
         /// </summary>
         /// <param name="propertyName">The property that has a new value.</param>
-        protected void OnPropertyChanged([CallerMemberName]string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal async Task SendServerCommandAsync(string inputText)
+        {
+            if (!logic.ServerRunning)
             {
-                var e = new PropertyChangedEventArgs(propertyName);
-                handler(this, e);
+                return;
             }
+            
+            CommandText += inputText + "\n";
+            await logic.WriteToServerAsync(inputText);
+        }
+
+        private void ServerStarted(object sender, ServerStartEventArgs e)
+        {
+            CommandText = "";
+        }
+
+        private void ServerDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            CommandText += e.Data + "\n";
+        }
+
+        private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await SendServerCommandAsync(CommandLine.Text);
+            CommandLine.Text = "";
+        }
+
+        private async void CommandLine_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                await SendServerCommandAsync(CommandLine.Text);
+                CommandLine.Text = "";
+            }
+        }
+
+        private void OnPropertyChange(object sender, PropertyChangedEventArgs propertyName)
+        {
+            ServerConsolePage serverConsolePage = (ServerConsolePage)sender;
+            Dispatcher?.BeginInvoke(new Action(() => serverConsolePage.ConsoleWindowScrollView.ScrollToEnd()));
         }
     }
 }

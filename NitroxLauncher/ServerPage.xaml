@@ -321,7 +321,7 @@
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="12"><Run Text="GAME VERSION"/></TextBlock>
                         <Border Height="43" Width="269" Margin="0,4,0,0" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="4">
-                            <ComboBox x:Name="CBox" Background="#9928292C" Foreground="White" FontSize="16" Padding="12,12,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange" >
+                            <ComboBox x:Name="CBox" Background="#9928292C" Foreground="White" FontSize="16" Padding="12,12,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange">
                                 <ComboBox.Resources>
                                     <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#9928292C" />
                                 </ComboBox.Resources>
@@ -330,8 +330,8 @@
                                     <StaticResource ResourceKey="Roboto"/>
                                 </ComboBox.FontFamily>
 
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Left" FontSize="16" Content="Launcher window" ToolTip="Server will run in the launcher."/>
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Left" FontSize="16" Content="Command line window" ToolTip="Server will run in a seperate window (CMD)" />
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Launcher window" ToolTip="Server will run in the launcher."/>
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Command line window" ToolTip="Server will run in a seperate window (CMD)" />
                             </ComboBox>
                             <!--<TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>-->
                         </Border>
