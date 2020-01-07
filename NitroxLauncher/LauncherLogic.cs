@@ -22,7 +22,8 @@ namespace NitroxLauncher
         private bool gameStarting;
         private Process serverProcess;
 
-        public bool HasSomethingRunning => !gameProcess?.HasExited ?? ServerRunning || gameStarting;
+        public bool HasSomethingRunning => ClientRunning || ServerRunning;
+        public bool ClientRunning => !gameProcess?.HasExited ?? gameStarting;
         public bool ServerRunning => !serverProcess?.HasExited ?? false;
 
         private LauncherLogic(string subnauticaPath)
@@ -75,7 +76,14 @@ namespace NitroxLauncher
         {
             if (ServerRunning)
             {
-                await serverProcess.StandardInput.WriteLineAsync(inputText);
+                try
+                {
+                    await serverProcess.StandardInput.WriteLineAsync(inputText);
+                }
+                catch (Exception)
+                {
+                    // Ignore errors while writing to process
+                }
             }
         }
 
