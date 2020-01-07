@@ -24,10 +24,8 @@ namespace NitroxModel.Discovery
         private static readonly Lazy<GameInstallationFinder> instance = new Lazy<GameInstallationFinder>(() => new GameInstallationFinder());
         public static GameInstallationFinder Instance => instance.Value;
 
-        public Optional<string> FindGame(List<string> errors)
+        public Optional<string> FindGame(List<string> errors = null)
         {
-            Validate.NotNull(errors);
-
             foreach (IFindGameInstallation finder in finders)
             {
                 Optional<string> path = finder.FindGame(errors);
@@ -36,7 +34,7 @@ namespace NitroxModel.Discovery
                     continue;
                 }
                 
-                errors.Clear();
+                errors?.Clear();
                 return path;
             }
 

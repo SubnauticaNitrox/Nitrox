@@ -1,21 +1,23 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using log4net;
 using log4net.Appender;
 using log4net.Core;
 using log4net.Filter;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
+using NitroxModel.Discovery;
 
 namespace NitroxModel.Logger
 {
     public class Log
     {
-        public static InGameLogger InGameLogger { get; set; }
-
         private static bool inGameMessages;
 
-        private static readonly ILog log = LogManager.GetLogger("Nitrox");
-        
+        private static readonly ILog log = LogManager.GetLogger(GetLoggerName());
+        public static InGameLogger InGameLogger { get; set; }
+
         static Log()
         {
             Setup();
@@ -32,11 +34,7 @@ namespace NitroxModel.Logger
         {
             if (inGameMessages)
             {
-                if(InGameLogger != null)
-                {
-                    InGameLogger.Log(msg);
-                }
-                
+                InGameLogger?.Log(msg);
                 Info(msg);
             }
         }
@@ -50,7 +48,7 @@ namespace NitroxModel.Logger
         {
             log.Error(Format(fmt, arg));
         }
-        
+
         public static void Error(string msg, Exception ex)
         {
             log.Error(msg, ex);
@@ -95,6 +93,16 @@ namespace NitroxModel.Logger
             Debug(msg);
         }
 
+        /// <summary>
+        ///     Get log file friendly name of the application that is currently logging.
+        /// </summary>
+        /// <returns>Friendly display name of the current application.</returns>
+        private static string GetLoggerName()
+        {
+            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
+            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+        }
+
         // Helping method for formatting string correctly with arguments
         private static string Format(string fmt, params object[] arg)
         {
@@ -106,7 +114,7 @@ namespace NitroxModel.Logger
             Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
 
             PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %level]: %m%n";
+            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %logger %level]: %m%n";
             patternLayout.ActivateOptions();
 
             LevelRangeFilter filter = new LevelRangeFilter();
@@ -114,8 +122,8 @@ namespace NitroxModel.Logger
             filter.LevelMax = Level.Fatal;
 
             RollingFileAppender fileAppender = new RollingFileAppender();
-            fileAppender.File = "Nitrox Logs/nitrox-.log";
-            fileAppender.AppendToFile = false;
+            fileAppender.File = Path.Combine(GameInstallationFinder.Instance.FindGame().OrElse(""), "Nitrox Logs", "nitrox-.log"); // Attempt to create 'Nitrox Logs' dir where the game is.
+            fileAppender.AppendToFile = true;
             fileAppender.RollingStyle = RollingFileAppender.RollingMode.Date;
             fileAppender.MaxSizeRollBackups = 10;
             fileAppender.DatePattern = "yyyy-MM-dd";
