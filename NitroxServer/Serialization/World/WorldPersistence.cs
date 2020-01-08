@@ -34,8 +34,6 @@ namespace NitroxServer.Serialization.World
 
         public void Save(World world)
         {
-            Log.Info("Saving world state.");
-
             try
             {
                 PersistedWorldData persistedData = new PersistedWorldData();

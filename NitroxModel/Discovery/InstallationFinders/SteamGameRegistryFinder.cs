@@ -11,7 +11,7 @@ namespace NitroxModel.Discovery.InstallationFinders
         public const int SUBNAUTICA_APP_ID = 264710;
         public const string SUBNAUTICA_GAME_NAME = "Subnautica";
 
-        public Optional<string> FindGame(List<string> errors)
+        public Optional<string> FindGame(List<string> errors = null)
         {
             string steamPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
             if (string.IsNullOrEmpty(steamPath))

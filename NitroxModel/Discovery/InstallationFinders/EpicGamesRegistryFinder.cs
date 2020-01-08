@@ -11,20 +11,20 @@ namespace NitroxModel.Discovery.InstallationFinders
     {
         private const string BASE_REGISTRY_KEY = @"Local Settings\Software\Microsoft\Windows\Shell\MuiCache";
 
-        public Optional<string> FindGame(List<string> errors)
+        public Optional<string> FindGame(List<string> errors = null)
         {
             using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(BASE_REGISTRY_KEY))
             {
                 if (key == null)
                 {
-                    errors.Add($"Could not find Win32 registry key '{BASE_REGISTRY_KEY}' to find Subnautica installation for Epic Games' launcher.");
+                    errors?.Add($"Could not find Win32 registry key '{BASE_REGISTRY_KEY}' to find Subnautica installation for Epic Games' launcher.");
                     return Optional<string>.Empty();
                 }
 
                 string subnauticaKeyName = key.GetValueNames().FirstOrDefault(name => name.IndexOf("subnautica.exe", StringComparison.OrdinalIgnoreCase) >= 0);
                 if (string.IsNullOrEmpty(subnauticaKeyName))
                 {
-                    errors.Add($"Registry key '{Path.Combine(key.Name, "subnautica.exe")}' does not exist. Can not determine Subnautica installation directory from Epic Games' launcher.");
+                    errors?.Add($"Registry key '{Path.Combine(key.Name, "subnautica.exe")}' does not exist. Can not determine Subnautica installation directory from Epic Games' launcher.");
                     return Optional<string>.Empty();
                 }
 
@@ -33,13 +33,13 @@ namespace NitroxModel.Discovery.InstallationFinders
 
                 if (!Directory.Exists(guessedInstallDirectory))
                 {
-                    errors.Add($"Path '{guessedInstallDirectory}' found in registry key for Epic Games' launcher is not a directory.");
+                    errors?.Add($"Path '{guessedInstallDirectory}' found in registry key for Epic Games' launcher is not a directory.");
                     return Optional<string>.Empty();
                 }
 
                 if (!Directory.GetFiles(guessedInstallDirectory, "*.exe").Any(fileName => fileName.IndexOf("subnautica.exe", StringComparison.OrdinalIgnoreCase) >= 0))
                 {
-                    errors.Add($"Path '{guessedInstallDirectory}' found in registry key for Epic Games' launcher does not contain the Subnautica executable.");
+                    errors?.Add($"Path '{guessedInstallDirectory}' found in registry key for Epic Games' launcher does not contain the Subnautica executable.");
                     return Optional<string>.Empty();
                 }
 
