@@ -23,10 +23,10 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = NitroxIdentifier.RequireObjectFrom(hornPacket.Id);
             CyclopsHornControl horn = cyclops.RequireComponentInChildren<CyclopsHornControl>();
 
-            FieldInfo property = typeof(FMOD_CustomEmitter).GetField("evt", BindingFlags.Instance | BindingFlags.NonPublic);
-            EventInstance eventInstance = (EventInstance)property.GetValue(horn.hornSound);
+            FieldInfo field = typeof(FMOD_CustomEmitter).GetField("evt", BindingFlags.Instance | BindingFlags.NonPublic);
+            EventInstance eventInstance = (EventInstance)field.GetValue(horn.hornSound);
             eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, 150f);
-            property.SetValue(horn.hornSound, eventInstance);
+            field.SetValue(horn.hornSound, eventInstance);
 
             horn.OnHandClick(null);
         }
