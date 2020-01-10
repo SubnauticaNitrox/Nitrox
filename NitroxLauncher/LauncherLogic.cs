@@ -50,13 +50,6 @@ namespace NitroxLauncher
         public event DataReceivedEventHandler ServerDataReceived;
         public event EventHandler ServerExited;
 
-        public string NormalizePath(string path)
-        {
-            return Path.GetFullPath(new Uri(path).LocalPath)
-                .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                .ToUpperInvariant();
-        }
-
         public void Dispose()
         {
             try
@@ -194,7 +187,8 @@ namespace NitroxLauncher
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
-                WorkingDirectory = subnauticaPath, FileName = subnauticaExe
+                WorkingDirectory = subnauticaPath,
+                FileName = subnauticaExe
             };
 
             if (PlatformDetection.IsEpic(subnauticaPath))
@@ -236,39 +230,41 @@ namespace NitroxLauncher
             }
 
             return await Task.Run(async () =>
-            {
-                int waitTimeInMill = 1000;
-                int maxStartingTimeSeconds = 10;
-                for (int i = 0; i < 1000; i++)
                 {
-                    // If wait more than ten seconds, mark game as not starting anymore.
-                    // This will not stop the thread. Just if someone closes the launcher before, it will work
-                    if (maxStartingTimeSeconds < i * waitTimeInMill)
+                    int waitTimeInMill = 1000;
+                    int maxStartingTimeSeconds = 10;
+                    for (int i = 0; i < 1000; i++)
                     {
+                        // If wait more than ten seconds, mark game as not starting anymore.
+                        // This will not stop the thread. Just if someone closes the launcher before, it will work
+                        if (maxStartingTimeSeconds < i * waitTimeInMill)
+                        {
+                            gameStarting = false;
+                        }
+                        Process[] processes = Process.GetProcessesByName("Subnautica");
+                        if (processes.Length == 1)
+                        {
+                            return processes[0];
+                        }
+
+                        await Task.Delay(waitTimeInMill);
+                    }
+                    if (gameProcess == null)
+                    {
+                        Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
                         gameStarting = false;
                     }
-                    Process[] processes = Process.GetProcessesByName("Subnautica");
-                    if (processes.Length == 1)
+                    return null;
+                })
+                .ContinueWith(task =>
                     {
-                        return processes[0];
-                    }
+                        gameStarting = false;
 
-                    await Task.Delay(waitTimeInMill);
-                }
-                if (gameProcess == null)
-                {
-                    Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
-                    gameStarting = false;
-                }
-                return null;
-            }).ContinueWith(task =>
-            {
-                gameStarting = false;
-
-                Process proc = task.Result;
-                proc.Exited += OnSubnauticaExited;
-                return proc;
-            }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                        Process proc = task.Result;
+                        proc.Exited += OnSubnauticaExited;
+                        return proc;
+                    },
+                    TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
         private void SyncAssembliesBetweenSubnauticaManagedAndLib()
@@ -316,25 +312,37 @@ namespace NitroxLauncher
 
         private void SyncAssetBundles()
         {
+            string NormalizePath(string path)
+            {
+                return Path.GetFullPath(new Uri(path).LocalPath)
+                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
+                    .ToUpperInvariant();
+            }
+
             if (PirateDetection.TriggerOnDirectory(subnauticaPath))
             {
                 return;
             }
+            
+            string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            string currentDirectory = Directory.GetCurrentDirectory();
-
-            // Don't try to sync Asset Bundles if the user placed the launcher in the root
-            // of the Subnautica folder.
+            // Don't try to sync Asset Bundles if the user placed the launcher in the root of the Subnautica folder.
             if (NormalizePath(currentDirectory) == NormalizePath(subnauticaPath))
             {
                 return;
             }
 
             string subnauticaAssetsPath = Path.Combine(subnauticaPath, "AssetBundles");
-            string[] assetBundles = Directory.GetFiles("AssetBundles");
+            string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
+            
+            string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
+            Log.Info($"Copying asset files from Launcher directory '{currentDirectoryAssetsPath}' to Subnautica '{subnauticaAssetsPath}'");
             foreach (string assetBundle in assetBundles)
             {
-                File.Copy(assetBundle, Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle)), true);
+                string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
+                string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
+                Log.Debug($"Copying asset file '{from}' to '{to}'");
+                File.Copy(from, to, true);
             }
         }
 
