@@ -1,4 +1,6 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Reflection;
+using FMOD.Studio;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -21,7 +23,12 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject cyclops = NitroxIdentifier.RequireObjectFrom(hornPacket.Id);
             CyclopsHornControl horn = cyclops.RequireComponentInChildren<CyclopsHornControl>();
 
-            Utils.PlayEnvSound(horn.hornSound, horn.hornSound.gameObject.transform.position, 20f);
+            FieldInfo property = typeof(FMOD_CustomEmitter).GetField("evt", BindingFlags.Instance | BindingFlags.NonPublic);
+            EventInstance eventInstance = (EventInstance)property.GetValue(horn.hornSound);
+            eventInstance.setProperty(EVENT_PROPERTY.MAXIMUM_DISTANCE, 150f);
+            property.SetValue(horn.hornSound, eventInstance);
+
+            horn.OnHandClick(null);
         }
     }
 }
