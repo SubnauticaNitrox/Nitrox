@@ -9,11 +9,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class WarpToCommand : MonoBehaviour
     {
-        private const string DEFAULT_IP_ADDRESS = "127.0.0.1";
-        private GameObject multiplayerClient;
-        private IMultiplayerSession multiplayerSession;
-        private string userName;
-
         public void Awake()
         {
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
@@ -25,7 +20,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         }
 
-        public void OnConsoleCommand_warpto(NotificationCenter.Notification n)
+        public void OnConsoleCommand_warpto(NotificationCenter.Notification n) // Shouldnt this be handled on the server?
         {
             if (n?.data?.Count > 0)
             {

@@ -40,7 +40,7 @@ namespace NitroxPatcher.Patches
             for (int i = 3; i < instructionList.Count(); i++)
             {
                 if (instructionList[i].opcode == START_INJECTION_CODE_INVINCIBLE &&
-                    instructionList[i].operand == LIVEMIXIN_INVINCIBLE)
+                    (FieldInfo)instructionList[i].operand == LIVEMIXIN_INVINCIBLE)
                 {
                     if (instructionList[i - 3].opcode == START_INJECTION_CODE)
                     {                                                
