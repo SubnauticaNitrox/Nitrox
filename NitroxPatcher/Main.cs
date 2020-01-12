@@ -7,7 +7,6 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxModel_Subnautica.Proxies;
 using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
@@ -102,7 +101,6 @@ namespace NitroxPatcher
         {
             ContainerBuilder builder = new ContainerBuilder();
             builder.RegisterModule(new NitroxPatchesModule());
-            builder.RegisterModule(new NitroxReflectionProxiesModule());
             return builder.Build();
         }
 

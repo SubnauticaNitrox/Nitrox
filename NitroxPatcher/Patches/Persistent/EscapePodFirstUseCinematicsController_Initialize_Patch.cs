@@ -17,8 +17,7 @@ namespace NitroxPatcher.Patches.Persistent
 
             __instance.bottomFirstUseCinematicTarget.gameObject.SetActive(false);
             __instance.topFirstUseCinematicTarget.gameObject.SetActive(false);
-
-
+            
             return !Multiplayer.Active;
         }
 

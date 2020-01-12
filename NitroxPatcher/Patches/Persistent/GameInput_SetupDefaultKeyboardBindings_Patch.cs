@@ -15,7 +15,6 @@ namespace NitroxPatcher.Patches.Persistent
         public static void Postfix()
         {
             KeyBindingManager keyBindingManager = new KeyBindingManager();
-
             foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
             {
                 ReflectionHelper.ReflectionCall<GameInput>(null, "SetBindingInternal", new[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet), typeof(string) }, false, true, keyBinding.Device, keyBinding.Button, keyBinding.DefaultKeyBinding.BindingSet, keyBinding.DefaultKeyBinding.Binding);
