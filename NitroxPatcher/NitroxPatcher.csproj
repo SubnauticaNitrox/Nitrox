@@ -220,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />

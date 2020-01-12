@@ -7,8 +7,8 @@ namespace NitroxModel.Core
 {
     public static class NitroxServiceLocator
     {
-        public static IContainer DependencyContainer { get; private set; }
-        public static ILifetimeScope CurrentLifetimeScope { get; private set; }
+        private static IContainer DependencyContainer { get; set; }
+        private static ILifetimeScope CurrentLifetimeScope { get; set; }
 
         public static void InitializeDependencyContainer(IAutoFacRegistrar dependencyRegistrar)
         {

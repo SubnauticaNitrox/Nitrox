@@ -7,6 +7,8 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.Proxies;
+using NitroxPatcher.Modules;
 using NitroxPatcher.Patches;
 using UnityEngine;
 
@@ -14,7 +16,11 @@ namespace NitroxPatcher
 {
     public static class Main
     {
-        private static IDynamicPatch[] patches;
+        /// <summary>
+        ///     Dependency Injection container used by NitroxPatcher only.
+        /// </summary>
+        private static IContainer container;
+
         private static readonly HarmonyInstance harmony = HarmonyInstance.Create("com.nitroxmod.harmony");
         private static bool isApplied;
 
@@ -22,47 +28,29 @@ namespace NitroxPatcher
         {
             Log.EnableInGameMessages();
 
-            if (patches != null)
+            if (container != null)
             {
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
 
             Log.Info("Registering Dependencies");
-
-            // Our application's entry point. First, register client dependencies with AutoFac.
+            container = CreatePatchingContainer();
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
-            Log.Info("Patching Subnautica...");
-
-            // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
-            HarmonyInstance.DEBUG = false;
-
-            IContainer container = InitializeDependencyContainer();
-            foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
-            {
-                Log.Info("Applying persistent patch " + patch.GetType().Name);
-                patch.Patch(harmony);
-            }
-            patches = container.Resolve<IDynamicPatch[]>();
-
-            Multiplayer.OnBeforeMultiplayerStart += Apply;
-            Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
-
+            InitPatches();
             ApplyNitroxBehaviours();
         }
 
         public static void Apply()
         {
-            Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
-
+            Validate.NotNull(container, "No patches have been discovered yet! Run Execute() first.");
             if (isApplied)
             {
                 return;
             }
 
-            foreach (IDynamicPatch patch in patches)
+            foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
                 Log.Info("Applying dynamic patch " + patch.GetType().Name);
                 patch.Patch(harmony);
@@ -77,13 +65,13 @@ namespace NitroxPatcher
         /// </summary>
         public static void Restore()
         {
-            Validate.NotNull(patches, "No patches have been discovered yet! Run Execute() first.");
+            Validate.NotNull(container, "No patches have been discovered yet! Run Execute() first.");
             if (!isApplied)
             {
                 return;
             }
 
-            foreach (IDynamicPatch patch in patches)
+            foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
                 Log.Info("Restoring dynamic patch " + patch.GetType().Name);
                 patch.Restore(harmony);
@@ -92,20 +80,29 @@ namespace NitroxPatcher
             isApplied = false;
         }
 
-        private static IContainer InitializeDependencyContainer()
+        private static void InitPatches()
+        {
+            Log.Info("Patching Subnautica...");
+
+            // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
+            HarmonyInstance.DEBUG = false;
+
+            foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
+            {
+                Log.Info("Applying persistent patch " + patch.GetType().Name);
+                patch.Patch(harmony);
+            }
+
+            Multiplayer.OnBeforeMultiplayerStart += Apply;
+            Multiplayer.OnAfterMultiplayerEnd += Restore;
+            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+        }
+
+        private static IContainer CreatePatchingContainer()
         {
             ContainerBuilder builder = new ContainerBuilder();
-
-            builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .AssignableTo<IPersistentPatch>()
-                .AsImplementedInterfaces();
-
-            builder
-                .RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
-                .AssignableTo<IDynamicPatch>()
-                .AsImplementedInterfaces();
-
+            builder.RegisterModule(new NitroxPatchesModule());
+            builder.RegisterModule(new NitroxReflectionProxiesModule());
             return builder.Build();
         }
 
