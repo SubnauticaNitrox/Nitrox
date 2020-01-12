@@ -1,6 +1,6 @@
 ﻿namespace NitroxPatcher.Patches
 {
-    public interface IPersistentPatch
+    public interface IPersistentPatch : INitroxPatch
     {
         
     }

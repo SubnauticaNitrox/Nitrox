@@ -1,6 +1,6 @@
 ﻿namespace NitroxPatcher.Patches
 {
-    public interface IDynamicPatch
+    public interface IDynamicPatch : INitroxPatch
     {
         
     }

@@ -39,6 +39,12 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da">
+      <HintPath>$(SubnauticaManaged)\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da">
+      <HintPath>$(SubnauticaManaged)\Autofac.Configuration.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -328,6 +334,7 @@
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeBegin_Patch.cs" />
     <Compile Include="Patches\Dynamic\Vehicle_OnPilotModeEnd_Patch.cs" />
     <Compile Include="Patches\IDynamicPatch.cs" />
+    <Compile Include="Patches\INitroxPatch.cs" />
     <Compile Include="Patches\IPersistentPatch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />

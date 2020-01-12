@@ -7,36 +7,41 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.MonoBehaviours.DiscordRP;
-using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
+using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
+using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using NitroxModel_Subnautica.Logger;
-using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.MonoBehaviours
 {
     public class Multiplayer : MonoBehaviour
     {
         public static Multiplayer Main;
-        
+
         private IMultiplayerSession multiplayerSession;
         private PacketReceiver packetReceiver;
+        public bool InitialSyncCompleted { get; set; }
+
+        /// <summary>
+        ///     True if multiplayer is loaded and client is connected to a server.
+        /// </summary>
+        public static bool Active => Main != null && Main.multiplayerSession.Client.IsConnected;
+
         public static event Action OnBeforeMultiplayerStart;
         public static event Action OnAfterMultiplayerEnd;
-        public bool InitialSyncCompleted;
 
         public static void SubnauticaLoadingCompleted()
         {
-            if (Main != null && Main.IsMultiplayer())
+            if (Active)
             {
                 Main.InitialSyncCompleted = false;
                 Main.StartCoroutine(LoadAsync());
@@ -76,11 +81,6 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        public bool IsMultiplayer()
-        {
-            return multiplayerSession.Client.IsConnected;
-        }
-
         public void ProcessPackets()
         {
             Queue<Packet> packets = packetReceiver.GetReceivedPackets();
@@ -105,7 +105,7 @@ namespace NitroxClient.MonoBehaviours
 
         public IEnumerator StartSession()
         {
-            DevConsole.RegisterConsoleCommand(this, "execute", false, false);
+            DevConsole.RegisterConsoleCommand(this, "execute");
             OnBeforeMultiplayerStart?.Invoke();
             yield return StartCoroutine(InitializeLocalPlayerState());
             multiplayerSession.JoinSession();
@@ -147,10 +147,10 @@ namespace NitroxClient.MonoBehaviours
         {
             PropertyInfo property = PAXTerrainController.main.GetType().GetProperty("isWorking");
             property.SetValue(PAXTerrainController.main, false, null);
-            
-            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);        
+
+            WaitScreen waitScreen = (WaitScreen)ReflectionHelper.ReflectionGet<WaitScreen>(null, "main", false, true);
             waitScreen.ReflectionCall("Hide");
-            
+
             List<WaitScreen.IWaitItem> items = (List<WaitScreen.IWaitItem>)waitScreen.ReflectionGet("items");
             items.Clear();
 

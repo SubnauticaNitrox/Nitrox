@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
          * and reconnect them.  (This is primarily for visual purposes so it can change
          * out the model if required.)  When these pieces are cleared, we need to persist
          * them so that we can update the newly placed pieces with the proper id.  The new
-         * pieces are added by Base.SpawnPiece (see that patch)
+         * pieces are added by <see cref="Base_SpawnPiece_Patch"/>
          */
         public static Dictionary<string, NitroxId> NitroxIdByObjectKey = new Dictionary<string, NitroxId>();
 

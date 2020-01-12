@@ -5,7 +5,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches
 {
-    public abstract class NitroxPatch
+    public abstract class NitroxPatch : INitroxPatch
     {
         private readonly List<MethodBase> activePatches = new List<MethodBase>();
 

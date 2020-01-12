@@ -18,9 +18,7 @@ namespace NitroxPatcher.Patches.Persistent
         
         public static void Postfix(ProtobufSerializer.GameObjectData goData, UniqueIdentifier uid)
         {
-            bool isMultiplayer = (Multiplayer.Main != null && Multiplayer.Main.IsMultiplayer());
-
-            if (isMultiplayer && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject) && uid.gameObject.name != "CellRoot(Clone)")
+            if (Multiplayer.Active && SerializationHelper.BLOCK_HAND_PLACED_DESERIALIZATION && SpawnedWithoutServersPermission(goData, uid.gameObject) && uid.gameObject.name != "CellRoot(Clone)")
             {
                 UnityEngine.Object.Destroy(uid.gameObject);
             }
