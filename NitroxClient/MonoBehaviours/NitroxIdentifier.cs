@@ -10,7 +10,7 @@ namespace NitroxClient.MonoBehaviours
 {
     [Serializable]
     [ProtoContract]
-    public class NitroxIdentifier : MonoBehaviour, IProtoEventListener
+    public class NitroxIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
         [ProtoMember(1)]
         public NitroxId Id { get; set; }
@@ -83,11 +83,10 @@ namespace NitroxClient.MonoBehaviours
             return newId;
         }
 
-        public void OnProtoSerialize(ProtobufSerializer serializer)
-        {
-        }
+        public void OnProtoSerializeObjectTree(ProtobufSerializer _)
+        {}
 
-        public void OnProtoDeserialize(ProtobufSerializer serializer)
+        public void OnProtoDeserializeObjectTree(ProtobufSerializer _)
         {
             NitroxModel.Logger.Log.Info("Deserialized " + Id);
             gameObjectsById[Id] = gameObject;

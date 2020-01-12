@@ -339,6 +339,9 @@
     <Compile Include="Patches\IPersistentPatch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerailizerPrecompiled_Serialize_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerializerPrecompiled_Deserialize_Patch.cs" />
+
     <Compile Include="Patches\Persistent\CellManager_TryLoadCacheBatchCells_Patch.cs" />
     <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
     <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />

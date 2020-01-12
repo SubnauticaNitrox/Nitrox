@@ -118,7 +118,7 @@
     <Reference Include="UnityEngine.InputModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.InputModule.dll</HintPath>
     </Reference>
-	<Reference Include="UnityEngine.InputLegacyModule">
+    <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
@@ -257,6 +257,7 @@
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
+    <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
     <Compile Include="MonoBehaviours\NitroxIdentifier.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
