@@ -431,7 +431,7 @@
     <Compile Include="GameLogic\PlayerPreferences\PlayerPreference.cs" />
     <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceManager.cs" />
     <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceState.cs" />
-    <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateStateProvider.cs" />
+    <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateProvider.cs" />
     <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\RadiationSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ReinforcedSuitVisibilityHandler.cs" />

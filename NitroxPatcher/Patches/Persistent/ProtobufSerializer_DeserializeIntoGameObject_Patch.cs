@@ -11,7 +11,7 @@ using NitroxModel.DataStructures;
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
 {
-    class ProtobufSerializer_DeserializeIntoGameObject_Patch : NitroxPatch
+    class ProtobufSerializer_DeserializeIntoGameObject_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(ProtobufSerializer);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("DeserializeIntoGameObject", BindingFlags.NonPublic | BindingFlags.Instance);

@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Autofac;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
@@ -32,7 +35,7 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
+            containerBuilder.RegisterType<UnityPreferenceStateProvider>()
                 .As<IPreferenceStateProvider>()
                 .SingleInstance();
 

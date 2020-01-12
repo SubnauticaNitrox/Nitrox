@@ -5,7 +5,7 @@ using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    class EscapePodFirstUseCinematicsController_Initialize_Patch : NitroxPatch
+    class EscapePodFirstUseCinematicsController_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(EscapePodFirstUseCinematicsController);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
