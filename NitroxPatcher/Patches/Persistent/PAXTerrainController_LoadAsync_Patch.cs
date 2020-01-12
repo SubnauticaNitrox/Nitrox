@@ -1,26 +1,26 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
-using NitroxModel.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     public class PAXTerrainController_LoadAsync_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(PAXTerrainController);
-
-        public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
         public static readonly object INJECTION_OPERAND = typeof(PAXTerrainController).GetMethod("LoadWorldTiles", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly FieldInfo LARGE_WORLD_STREAMER_FROZEN_FIELD = typeof(LargeWorldStreamer).GetField("frozen", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly FieldInfo PAX_TERRAIN_CONTROLLER_STREAMER_FIELD = typeof(PAXTerrainController).GetField("streamer", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, ILGenerator ilGenerator, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
             List<CodeInstruction> instrList = instructions.ToList();
-            Label jmpLabel = ilGenerator.DefineLabel();
+            Label jmpLabelStartOfMethod = ilGenerator.DefineLabel();
 
             for (int i = 0; i < instrList.Count; i++)
             {
@@ -29,25 +29,29 @@ namespace NitroxPatcher.Patches.Persistent
                 {
                     List<Label> labels = ((Label[])instruction.operand).ToList();
                     labels.RemoveRange(3, 5);
-                    CodeInstruction codeInstruction = new CodeInstruction(instruction.opcode, labels.ToArray());
-                    yield return codeInstruction;
+                    yield return new CodeInstruction(instruction.opcode, labels.ToArray());
                 }
                 else if (instruction.opcode == OpCodes.Brtrue && instruction.operand.GetHashCode() == 10)
                 {
-                    yield return new CodeInstruction(OpCodes.Brtrue, jmpLabel);
+                    yield return new CodeInstruction(OpCodes.Brtrue, jmpLabelStartOfMethod);
                 }
-                else if (instrList.Count > i + 2 && instrList[i + 1].opcode == OpCodes.Ldfld && instrList[i + 1].operand == (object)typeof(PAXTerrainController).GetField("streamer", BindingFlags.NonPublic | BindingFlags.Instance) && instrList[i+3].opcode == OpCodes.Stfld && instrList[i + 3].operand == (object)typeof(LargeWorldStreamer).GetField("frozen", BindingFlags.Public | BindingFlags.Instance))
+                else if (instrList.Count > i + 2 &&
+                         instrList[i + 1].opcode == OpCodes.Ldfld &&
+                         Equals(instrList[i + 1].operand, PAX_TERRAIN_CONTROLLER_STREAMER_FIELD) &&
+                         instrList[i + 3].opcode == OpCodes.Stfld &&
+                         Equals(instrList[i + 3].operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
-                    instruction.labels.Add(jmpLabel);
+                    instruction.labels.Add(jmpLabelStartOfMethod);
                     yield return instruction;
                 }
-                else if (instruction.opcode == OpCodes.Stfld && instruction.operand == (object)typeof(LargeWorldStreamer).GetField("frozen", BindingFlags.Public | BindingFlags.Instance))
+                else if (instruction.opcode == OpCodes.Stfld && 
+                         Equals(instruction.operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
                     yield return instruction;
                     yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
                     yield return new CodeInstruction(OpCodes.Ldarg_0);
                     yield return new CodeInstruction(OpCodes.Ldc_I4_8);
-                    yield return new CodeInstruction(OpCodes.Stfld, getStateField(getLoadAsyncEnumerableMethod()));
+                    yield return new CodeInstruction(OpCodes.Stfld, GetStateField(GetLoadAsyncEnumerableMethod()));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_1);
                     yield return new CodeInstruction(OpCodes.Ret);
                 }
@@ -58,11 +62,14 @@ namespace NitroxPatcher.Patches.Persistent
             }
         }
 
+        public override void Patch(HarmonyInstance harmony)
+        {
+            PatchTranspiler(harmony, GetMethod());
+        }
 
-        private static FieldInfo getStateField(Type type)
+        private static FieldInfo GetStateField(IReflect type)
         {
             FieldInfo stateField = null;
-
             foreach (FieldInfo field in type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance))
             {
                 if (field.Name.Contains("state"))
@@ -73,36 +80,30 @@ namespace NitroxPatcher.Patches.Persistent
             Validate.NotNull(stateField);
             return stateField;
         }
-        public override void Patch(HarmonyInstance harmony)
-        {
-            PatchTranspiler(harmony, getMethod());
-        }
 
-        private static Type getLoadAsyncEnumerableMethod()
+        private static Type GetLoadAsyncEnumerableMethod()
         {
             Type[] nestedTypes = TARGET_CLASS.GetNestedTypes(BindingFlags.NonPublic | BindingFlags.Static);
             Type targetEnumeratorClass = null;
 
             foreach (Type type in nestedTypes)
             {
-                if (type.FullName.Contains("LoadAsync"))
+                if (type.FullName?.Contains("LoadAsync") == true)
                 {
                     targetEnumeratorClass = type;
                 }
             }
 
             Validate.NotNull(targetEnumeratorClass);
-            
             return targetEnumeratorClass;
         }
 
-        private static MethodInfo getMethod()
+        private static MethodInfo GetMethod()
         {
-            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
+            MethodInfo method = GetLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(method);
 
             return method;
         }
     }
 }
-
