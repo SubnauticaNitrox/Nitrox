@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<NitroxModel.DataStructures.Int3, GameObject> spawnedBatches = new Dictionary<NitroxModel.DataStructures.Int3, GameObject>();
+        private readonly Dictionary<NitroxModel.DataStructures.Int3, EntityCell> EntityCells = new Dictionary<NitroxModel.DataStructures.Int3, EntityCell>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -52,10 +52,13 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
-                GameObject batchRoot = EnsureBatchRoot(entity);
+                LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
+                EntityCell entityCell = EnsureCell(entity);
+                entityCell.Initialize();
+                
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
-                    Spawn(entity, Optional<GameObject>.Empty(), batchRoot);
+                    Spawn(entity, Optional<GameObject>.Empty(), entityCell);
                 }
                 else
                 {
@@ -64,25 +67,37 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private GameObject EnsureBatchRoot(Entity entity)
+        private EntityCell EnsureCell(Entity entity)
         {
-            GameObject batchRoot;
-            if (!spawnedBatches.TryGetValue(entity.AbsoluteEntityCell.BatchId, out batchRoot))
+            EntityCell entityCell;
+            if (!EntityCells.TryGetValue(entity.AbsoluteEntityCell.CellId, out entityCell))
             {
-                Log.Info("Making new Batch Group {0}", (Int3)entity.AbsoluteEntityCell.BatchId.ToVector3());
-                batchRoot = GameObject.Instantiate(LargeWorldStreamer.main.batchRootPrefab);
-                spawnedBatches.Add(entity.AbsoluteEntityCell.BatchId, batchRoot);
+                Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
+                Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
+                entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
+                EntityCells.Add(entity.AbsoluteEntityCell.CellId, entityCell);
+                entityCell.EnsureRoot();
+                entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}", cellId.x, cellId.y, cellId.z);
             }
-
-            return batchRoot;
+            return entityCell;
         }
 
-        private void Spawn(Entity entity, Optional<GameObject> parent, GameObject batchRoot = null)
+        private Int3 ToInt3(NitroxModel.DataStructures.Int3 int3)
+        {
+            return new Int3(int3.X, int3.Y, int3.Z);
+        }
+
+        private void Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot = null)
         {
             alreadySpawnedIds.Add(entity.Id);
 
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
+            if (cellRoot != null)
+            {
+                cellRoot.AddEntity(gameObject.Get().GetComponent<LargeWorldEntity>());
+                LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
+            }
 
             foreach (Entity childEntity in entity.ChildEntities)
             {
@@ -93,12 +108,6 @@ namespace NitroxClient.GameLogic
 
                 alreadySpawnedIds.Add(childEntity.Id);
             }
-			if (batchRoot != null)
-			{
-                Log.Info((Int3)entity.AbsoluteEntityCell.BatchId.ToVector3());
-                gameObject.Get().transform.SetParent(batchRoot.transform, true);
-				typeof(LargeWorldStreamer).GetMethod("OnBatchObjectsLoaded", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(LargeWorldStreamer.main, BindingFlags.Instance | BindingFlags.NonPublic, null, new object[] { (Int3)entity.AbsoluteEntityCell.BatchId.ToVector3(), batchRoot }, null);
-			}
 		}
 
         private IEntitySpawner ResolveEntitySpawner(Entity entity)
