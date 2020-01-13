@@ -20,14 +20,26 @@ namespace NitroxClient.Helpers
 
         public NitroxProtobufSerializer(params string[] assemblies)
         {
+            Main = this;
             model = TypeModel.Create();
+            knownTypes = (Dictionary<Type, int>)typeof(ProtobufSerializerPrecompiled).GetField("knownTypes", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
 
             foreach (string assembly in assemblies)
             {
                 RegisterAssemblyClasses(assembly);
             }
 
-            knownTypes = (Dictionary<Type, int>)typeof(ProtobufSerializerPrecompiled).GetField("knownTypes", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null);
+            foreach (Type type in Assembly.GetExecutingAssembly().GetTypes())
+            {
+                bool hasUweProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
+
+                if (hasUweProtobuf)
+                {
+                    // As of the latest protobuf update they will automatically register detected attributes.
+                    model.Add(type, true);
+                    knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+                }
+            }
         }
 
         public void Serialize(Stream stream, object o)
@@ -62,13 +74,51 @@ namespace NitroxClient.Helpers
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
+                bool hasUweProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
 
-                if (hasNitroxProtobuf)
+                if (hasUweProtobuf)
                 {
                     // As of the latest protobuf update they will automatically register detected attributes.
                     model.Add(type, true);
                     knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+                }
+                else if (HasNitroxProtoContract(type))
+                {
+                    model.Add(type, true);
+                    knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+
+                    ManuallyRegisterNitroxProtoMembers(type.GetFields(), type);
+                    ManuallyRegisterNitroxProtoMembers(type.GetProperties(), type);
+                }
+            }
+        }
+
+        private bool HasNitroxProtoContract(Type type)
+        {
+            foreach (object o in type.GetCustomAttributes(true))
+            {
+                if (o.GetType().ToString().Contains("ProtoContractAttribute"))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void ManuallyRegisterNitroxProtoMembers(MemberInfo[] info, Type type)
+        {
+            foreach (MemberInfo property in info)
+            {
+                foreach (object customAttribute in property.GetCustomAttributes(true))
+                {
+                    Type attributeType = customAttribute.GetType();
+
+                    if (attributeType.ToString().Contains("ProtoMemberAttribute"))
+                    {
+                        int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
+                        model[type].Add(tag, property.Name);
+                    }
                 }
             }
         }

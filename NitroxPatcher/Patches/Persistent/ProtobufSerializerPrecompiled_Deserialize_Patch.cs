@@ -12,7 +12,7 @@ namespace NitroxPatcher.Patches.Persistent
     public class ProtobufSerializerPrecompiled_Deserialize_Patch : NitroxPatch
     {
         static Type TARGET_TYPE = typeof(ProtobufSerializerPrecompiled);
-        MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Deserialize", BindingFlags.Instance);
+        MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.NonPublic);
 
         public static bool Prefix(int num, object obj, ProtoReader reader, ref object __result)
         {
