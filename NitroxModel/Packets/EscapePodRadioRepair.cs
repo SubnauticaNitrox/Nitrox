@@ -1,21 +1,21 @@
 ﻿using System;
-using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class EscapePodRadioRepair : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
 
-        public EscapePodRadioRepair(string guid)
+        public EscapePodRadioRepair(NitroxId id)
         {
-            Guid = guid;
+            Id = id;
         }
 
         public override string ToString()
         {
-            return "[EscapePodRadioRepair guid: " + Guid + "]";
+            return "[EscapePodRadioRepair id: " + Id + "]";
         }
     }
 }

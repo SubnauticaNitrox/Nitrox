@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxModel.DataStructures;
+using NitroxModel_Subnautica.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches
@@ -32,20 +34,23 @@ namespace NitroxPatcher.Patches
         }
 
         public static void Postfix(ToggleLights __instance, bool __state)
-        {
+        {            
             if (__state != __instance.lightsActive)
             {
                 // Find the right gameobject in the hierarchy to sync on:
                 GameObject gameObject = null;
+                Type type = null;
                 foreach (Type t in syncedParents)
                 {
                     if (__instance.GetComponent(t))
                     {
+                        type = t;
                         gameObject = __instance.gameObject;
                         break;
                     }
                     else if (__instance.GetComponentInParent(t))
                     {
+                        type = t;
                         gameObject = __instance.transform.parent.gameObject;
                         break;
                     }
@@ -53,13 +58,16 @@ namespace NitroxPatcher.Patches
 
                 if (!gameObject)
                 {
-                    Log.Info("ToggleLights does not have a gameObject to sync on. Is this a new item?");
                     DebugUtils.PrintHierarchy(__instance.gameObject);
                 }
 
-                string guid = GuidHelper.GetGuid(gameObject);
-
-                NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(guid, __instance.lightsActive));
+                NitroxId id = NitroxIdentifier.GetId(gameObject);
+                // If the floodlight belongs to a seamoth, then set the lights for the model
+                if(type == typeof(SeaMoth))
+                {
+                    NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id).LightOn = __instance.lightsActive;
+                }
+                NitroxServiceLocator.LocateService<IPacketSender>().Send(new NitroxModel.Packets.ToggleLights(id, __instance.lightsActive));
             }
         }
 

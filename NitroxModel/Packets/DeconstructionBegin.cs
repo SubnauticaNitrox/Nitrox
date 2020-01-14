@@ -1,21 +1,21 @@
 ﻿using System;
-using UnityEngine;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class DeconstructionBegin : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
 
-        public DeconstructionBegin(string guid)
+        public DeconstructionBegin(NitroxId id)
         {
-            Guid = guid;
+            Id = id;
         }
 
         public override string ToString()
         {
-            return "[DeconstructionBegin Guid: " + Guid + "]";
+            return "[DeconstructionBegin Id: " + Id + "]";
         }
     }
 }

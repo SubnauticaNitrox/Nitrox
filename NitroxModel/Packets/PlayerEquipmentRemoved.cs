@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
@@ -6,12 +7,12 @@ namespace NitroxModel.Packets
     public class PlayerEquipmentRemoved : Packet
     {
         public TechType TechType { get; }
-        public string EquippedItemGuid { get; }
+        public NitroxId EquippedItemId { get; }
 
-        public PlayerEquipmentRemoved(TechType techType, string equippedItemGuid)
+        public PlayerEquipmentRemoved(TechType techType, NitroxId equippeditemId)
         {
             TechType = techType;
-            EquippedItemGuid = equippedItemGuid;
+            EquippedItemId = equippeditemId;
         }
     }
 }

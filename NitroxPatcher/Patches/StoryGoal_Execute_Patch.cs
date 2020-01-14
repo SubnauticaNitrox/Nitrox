@@ -13,10 +13,13 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(StoryGoal);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
 
-        public static void Prefix(string key, GoalType goalType)
+        public static void Prefix(string key, Story.GoalType goalType)
         {
-            StoryEventSend packet = new StoryEventSend((StoryEventType)goalType, key);
-            NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+            if (!StoryGoalManager.main.completedGoals.Contains(key))
+            {
+                StoryEventSend packet = new StoryEventSend((StoryEventType) goalType, key);
+                NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)

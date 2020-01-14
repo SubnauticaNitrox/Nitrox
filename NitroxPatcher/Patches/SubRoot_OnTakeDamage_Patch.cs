@@ -2,7 +2,7 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches
@@ -16,9 +16,9 @@ namespace NitroxPatcher.Patches
         public static readonly Type TARGET_CLASS = typeof(SubRoot);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnTakeDamage", BindingFlags.Instance | BindingFlags.Public, null, new Type[] { typeof(DamageInfo) }, null);
 
-        public static bool Prefix(SubRoot __instance, DamageInfo info)
+        public static bool Prefix(SubRoot __instance, DamageInfo damageInfo)
         {
-            return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(GuidHelper.GetGuid(__instance.gameObject));
+            return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxIdentifier.GetId(__instance.gameObject));
         }
 
         public override void Patch(HarmonyInstance harmony)

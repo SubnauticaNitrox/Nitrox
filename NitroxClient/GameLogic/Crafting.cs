@@ -1,7 +1,9 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -17,16 +19,16 @@ namespace NitroxClient.GameLogic
 
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
-            string crafterGuid = GuidHelper.GetGuid(crafter);
-            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterGuid, techType, duration);
+            NitroxId crafterId = NitroxIdentifier.GetId(crafter);
+            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.Model(), duration);
             packetSender.Send(fabricatorBeginCrafting);
         }
 
         public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
         {
-            string crafterGuid = GuidHelper.GetGuid(gameObject);
+            NitroxId crafterId = NitroxIdentifier.GetId(gameObject);
 
-            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterGuid, techType);
+            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.Model());
             packetSender.Send(fabricatorItemPickup);
             Log.Debug(fabricatorItemPickup);
         }

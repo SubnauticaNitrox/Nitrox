@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
-using NitroxServer.Communication;
+using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.UnityStubs;
@@ -15,7 +16,7 @@ namespace NitroxServer.GameLogic
     // TODO: These methods a a little chunky. Need to look at refactoring just to clean them up and get them around 30 lines a piece.
     public class PlayerManager
     {
-        private readonly Dictionary<Connection, ConnectionAssets> assetsByConnection = new Dictionary<Connection, ConnectionAssets>();
+        private readonly Dictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new Dictionary<NitroxConnection, ConnectionAssets>();
         private readonly PlayerData playerData;
         private readonly ServerConfig serverConfig;
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
@@ -36,7 +37,7 @@ namespace NitroxServer.GameLogic
         }
 
         public MultiplayerSessionReservation ReservePlayerContext(
-            Connection connection,
+            NitroxConnection connection,
             PlayerSettings playerSettings,
             AuthenticationContext authenticationContext,
             string correlationId)
@@ -85,7 +86,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public Player CreatePlayer(Connection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player CreatePlayer(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             lock (assetsByConnection)
             {
@@ -97,9 +98,9 @@ namespace NitroxServer.GameLogic
 
                 // Load previously persisted data for this player.
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);
-                Optional<string> subRootGuid = playerData.GetSubRootGuid(playerContext.PlayerName);
+                Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
 
-                Player player = new Player(playerContext, connection, position, subRootGuid);
+                Player player = new Player(playerContext, connection, position, subRootId);
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);
@@ -108,7 +109,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public void PlayerDisconnected(Connection connection)
+        public void PlayerDisconnected(NitroxConnection connection)
         {
             lock (assetsByConnection)
             {
@@ -155,7 +156,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public Player GetPlayer(Connection connection)
+        public Player GetPlayer(NitroxConnection connection)
         {
             lock (assetsByConnection)
             {

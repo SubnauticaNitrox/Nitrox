@@ -6,10 +6,9 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.DataStructures.GameLogic;
-using Lidgren.Network;
 using LZ4;
+using NitroxModel.Networking;
+using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
@@ -18,7 +17,7 @@ namespace NitroxModel.Packets
     {
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
-        private static readonly BinaryFormatter Serializer;
+        private static readonly BinaryFormatter serializer;
         
         static Packet()
         {
@@ -28,26 +27,26 @@ namespace NitroxModel.Packets
             Type[] types = Assembly.GetExecutingAssembly()
                 .GetTypes();
 
-            types.Where(t =>
-                    t.BaseType != null &&
-                    t.BaseType.IsGenericType &&
-                    t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                    t.IsClass &&
-                    !t.IsAbstract)
-                .ForEach(t =>
-                {
-                    ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(t);
-                    Type surrogatedType = t.BaseType.GetGenericArguments()[0];
-                    surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
+            IEnumerable<Type> surrogates = types.Where(t =>
+                                                       t.BaseType != null &&
+                                                       t.BaseType.IsGenericType &&
+                                                       t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
+                                                       t.IsClass &&
+                                                       !t.IsAbstract);
+            foreach(Type type in surrogates)
+            {
+                ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
+                Type surrogatedType = type.BaseType.GetGenericArguments()[0];
+                surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                    Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
-                });
+                Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
+            }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
-            Serializer = new BinaryFormatter(surrogateSelector, streamingContext);
+            serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public NetDeliveryMethod DeliveryMethod { get; protected set; } = NetDeliveryMethod.ReliableOrdered;
+        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.ReliableOrdered;
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId
@@ -65,7 +64,7 @@ namespace NitroxModel.Packets
             using (MemoryStream ms = new MemoryStream())
             using (LZ4Stream lz4Stream = new LZ4Stream(ms, LZ4StreamMode.Compress))
             {
-                Serializer.Serialize(lz4Stream, this);
+                serializer.Serialize(lz4Stream, this);
                 packetData = ms.ToArray();
             }
 
@@ -77,7 +76,7 @@ namespace NitroxModel.Packets
             using (Stream stream = new MemoryStream(data))
             using (LZ4Stream lz4Stream = new LZ4Stream(stream, LZ4StreamMode.Decompress))
             {
-                return (Packet)Serializer.Deserialize(lz4Stream);
+                return (Packet)serializer.Deserialize(lz4Stream);
             }
         }
 
@@ -88,17 +87,12 @@ namespace NitroxModel.Packets
             // System.Runtime.Serialization.Formatters.Binary.BinaryCommon.CheckSerializable
 
             ISurrogateSelector selector;
-            return (Serializer.SurrogateSelector.GetSurrogate(type, Packet.Serializer.Context, out selector) != null);
+            return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
         }
-
-        // Deferred cells are a replacement for the old DeferredPacket class.  The idea
-        // is that some packets should not be replayed until a player enters close proximity.
-        // when the player enters a deferred cell, the DeferredPacketReceiver will automatically
-        // allow the packet to be processed. This method is virtual as some packets may have
-        // complex logic to decide if it needs to defer.
-        public virtual Optional<AbsoluteEntityCell> GetDeferredCell()
+        
+        public WrapperPacket ToWrapperPacket()
         {
-            return Optional<AbsoluteEntityCell>.Empty();
+            return new WrapperPacket(Serialize());
         }
     }
 }

@@ -1,12 +1,15 @@
+root = true
 # See the documentation for reference:
 # https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference
 
-root = true
 
 [*]
 indent_style = space
 
-[*.{proj,csproj,targets}]
+# Microsoft .NET properties
+csharp_new_line_before_members_in_object_initializers = false
+
+[*.{proj, csproj, targets}]
 indent_size = 2
 insert_final_newline = true
 
@@ -78,18 +81,18 @@ csharp_prefer_braces = true:warning # Wrap everything in braces.
 dotnet_sort_system_directives_first = true
 
 # Symbols for naming conventions
-dotnet_naming_symbols.public_fields.applicable_kinds           = field
+dotnet_naming_symbols.public_fields.applicable_kinds = field
 dotnet_naming_symbols.public_fields.applicable_accessibilities = public
 #, protected, internal, protected_internal
 
-dotnet_naming_symbols.all_const.applicable_kinds           = *
+dotnet_naming_symbols.all_const.applicable_kinds = *
 dotnet_naming_symbols.all_const.applicable_accessibilities = *
-dotnet_naming_symbols.all_const.required_modifiers         = const
+dotnet_naming_symbols.all_const.required_modifiers = const
 
-dotnet_naming_symbols.private_fields.applicable_kinds           = field
+dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private
 
-dotnet_naming_symbols.types.applicable_kinds           = class, struct, interface, enum, namespace, type_parameter
+dotnet_naming_symbols.types.applicable_kinds = class, struct, interface, enum, namespace, type_parameter
 dotnet_naming_symbols.types.applicable_accessibilities = *
 
 dotnet_naming_symbols.parameters.applicable_kinds = parameter
@@ -103,22 +106,22 @@ dotnet_naming_style.all_const_style.capitalization = all_upper
 dotnet_naming_style.all_const_style.word_separator = _
 
 # Naming conventions
-dotnet_naming_rule.all_const.symbols  = all_const
-dotnet_naming_rule.all_const.style    = all_const_style
+dotnet_naming_rule.all_const.symbols = all_const
+dotnet_naming_rule.all_const.style = all_const_style
 dotnet_naming_rule.all_const.severity = warning
 
-dotnet_naming_rule.private_fields.symbols  = private_fields
-dotnet_naming_rule.private_fields.style    = camel_case_style
+dotnet_naming_rule.private_fields.symbols = private_fields
+dotnet_naming_rule.private_fields.style = camel_case_style
 dotnet_naming_rule.private_fields.severity = warning
 
-dotnet_naming_rule.parameters.symbols  = parameters
-dotnet_naming_rule.parameters.style    = camel_case_style
+dotnet_naming_rule.parameters.symbols = parameters
+dotnet_naming_rule.parameters.style = camel_case_style
 dotnet_naming_rule.parameters.severity = warning
 
-dotnet_naming_rule.public_fields.symbols  = public_fields
-dotnet_naming_rule.public_fields.style    = pascal_case_style
+dotnet_naming_rule.public_fields.symbols = public_fields
+dotnet_naming_rule.public_fields.style = pascal_case_style
 dotnet_naming_rule.public_fields.severity = warning
 
-dotnet_naming_rule.general_types.symbols  = types
-dotnet_naming_rule.general_types.style    = pascal_case_style
+dotnet_naming_rule.general_types.symbols = types
+dotnet_naming_rule.general_types.style = pascal_case_style
 dotnet_naming_rule.general_types.severity = warning

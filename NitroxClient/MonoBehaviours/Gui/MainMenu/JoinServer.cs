@@ -3,7 +3,6 @@ using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
@@ -96,7 +95,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void OnDestroy()
         {
             UnsubscribeColorChanged();
-            RightSideMainMenu.groups.Remove(joinServerMenu);
             Destroy(joinServerMenu);
         }
 
@@ -290,10 +288,10 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerMenu.name = "Join Server";
 
             joinServerMenu.transform.SetParent(RightSideMainMenu.transform, false);
-            RightSideMainMenu.groups.Add(joinServerMenu);
+            RightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
 
             //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
-            //Most of the UI elements seem to vanish behind this Image otherwise. 
+            //Most of the UI elements seem to vanish behind this Image otherwise.
             RectTransform joinServerBackground = joinServerMenu.GetComponent<Image>().rectTransform;
             joinServerBackground.anchorMin = new Vector2(0.5f, 0.5f);
             joinServerBackground.anchorMax = new Vector2(0.5f, 0.5f);
@@ -320,7 +318,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             return joinServerMenu;
         }
 
-        //This configures and re-positions the elements on the default "ColorGrayscale" menu to suite our purposes now. 
+        //This configures and re-positions the elements on the default "ColorGrayscale" menu to suite our purposes now.
         private void InitializePlayerSettingsPanel(RectTransform joinServerBackground)
         {
             GameObject playerSettingsPanel = CloneColorPickerPanelPrototype();
@@ -354,7 +352,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             colorPickerCanvasGroup.ignoreParentGroups = true;
             colorPickerCanvasGroup.interactable = true;
 
-            //Destroy everything that we know we will not be using. 
+            //Destroy everything that we know we will not be using.
             Destroy(playerSettingsPanel.transform.parent);
             Destroy(playerSettingsPanel.GetComponent<uGUI_NavigableControlGrid>());
             Destroy(playerSettingsPanel.GetComponent<Image>());

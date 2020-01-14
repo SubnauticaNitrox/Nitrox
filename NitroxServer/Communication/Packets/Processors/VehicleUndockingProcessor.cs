@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -20,14 +21,14 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleUndocking packet, Player player)
         {
-            Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleGuid);
+            Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleId);
             if (!vehicle.IsPresent())
             {
                 return;
             }
 
             VehicleModel vehicleModel = vehicle.Get();
-            vehicleModel.DockingBayGuid = Optional<string>.Empty();
+            vehicleModel.DockingBayId = Optional<NitroxId>.Empty();
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

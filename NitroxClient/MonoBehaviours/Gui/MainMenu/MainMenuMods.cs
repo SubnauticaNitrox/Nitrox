@@ -52,7 +52,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             panel.SavedGamesRef = savedGamesRef;
             panel.LoadedMultiplayerRef = LoadedMultiplayer;
 
-            rightSide.groups.Add(LoadedMultiplayer);
+            rightSide.groups.Add(LoadedMultiplayer.GetComponent<MainMenuGroup>());
         }
 
         private void ShowMultiplayerMenu()

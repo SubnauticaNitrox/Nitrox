@@ -6,13 +6,13 @@ namespace NitroxModel.DataStructures
     public class SimulatedEntity
     {
         public bool ChangesPosition { get; }
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public ushort PlayerId { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulatedEntity(string guid, ushort playerId, bool changesPosition, SimulationLockType lockType)
+        public SimulatedEntity(NitroxId id, ushort playerId, bool changesPosition, SimulationLockType lockType)
         {
-            Guid = guid;
+            Id = id;
             PlayerId = playerId;
             ChangesPosition = changesPosition;
             LockType = lockType;
@@ -20,7 +20,7 @@ namespace NitroxModel.DataStructures
 
         public override string ToString()
         {
-            return "[SimulatedEntity Guid: " + Guid + " PlayerId: " + PlayerId + " IsEntity: " + ChangesPosition + " LockType: " + LockType + "]";
+            return "[SimulatedEntity Id: " + Id + " PlayerId: " + PlayerId + " IsEntity: " + ChangesPosition + " LockType: " + LockType + "]";
         }
     }
 }

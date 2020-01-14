@@ -2,10 +2,10 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -33,8 +33,8 @@ namespace NitroxPatcher.Patches
                     parentVehicle = subRoot.gameObject;
                 }
 
-                string guid = GuidHelper.GetGuid(parentVehicle);
-                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, guid, eventData.hsb, eventData.color);
+                NitroxId id = NitroxIdentifier.GetId(parentVehicle);
+                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb, eventData.color);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

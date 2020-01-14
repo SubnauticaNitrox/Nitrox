@@ -1,12 +1,12 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
-using NitroxClient.Unity.Helper;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
@@ -17,11 +17,14 @@ namespace NitroxClient.GameLogic
         private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
 
         private readonly IPacketSender packetSender;
+        private readonly RotationMetadataFactory rotationMetadataFactory;
+
         private float timeSinceLastConstructionChangeEvent;
 
-        public Building(IPacketSender packetSender)
+        public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
+            this.rotationMetadataFactory = rotationMetadataFactory;
         }
 
         public void PlaceBasePiece(BaseGhost baseGhost, ConstructableBase constructableBase, Base targetBase, TechType techType, Quaternion quaternion)
@@ -31,13 +34,13 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            string guid = GuidHelper.GetGuid(constructableBase.gameObject);
-            string parentBaseGuid = (targetBase == null) ? null : GuidHelper.GetGuid(targetBase.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(constructableBase.gameObject);
+            NitroxId parentBaseId = (targetBase == null) ? null : NitroxIdentifier.GetId(targetBase.gameObject);
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
-            Optional<RotationMetadata> rotationMetadata = RotationMetadata.From(baseGhost);
+            Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
-            BasePiece basePiece = new BasePiece(guid, placedPosition, quaternion, camera.position, camera.rotation, techType, Optional<string>.OfNullable(parentBaseGuid), false, rotationMetadata);
+            BasePiece basePiece = new BasePiece(id, placedPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional<NitroxId>.OfNullable(parentBaseId), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
@@ -49,19 +52,19 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
 
-            Optional<string> subGuid = Optional<string>.Empty();
+            Optional<NitroxId> subId = Optional<NitroxId>.Empty();
             SubRoot sub = Player.main.currentSub;
             if (sub != null)
             {
-                subGuid = Optional<string>.Of(GuidHelper.GetGuid(sub.gameObject));
+                subId = Optional<NitroxId>.Of(NitroxIdentifier.GetId(sub.gameObject));
             }
 
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = Optional<RotationMetadata>.Empty();
 
-            BasePiece basePiece = new BasePiece(guid, itemPosition, quaternion, camera.position, camera.rotation, techType, subGuid, true, rotationMetadata);
+            BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), subId, true, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
@@ -77,29 +80,29 @@ namespace NitroxClient.GameLogic
 
             timeSinceLastConstructionChangeEvent = 0.0f;
             
-            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
 
             if (amount < 0.95f) // Construction complete event handled by function below
             {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(guid, amount);
+                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
                 packetSender.Send(amountChanged);
             }
         }
 
         public void ConstructionComplete(GameObject ghost)
         {
-            string baseGuid = null;
+            NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            string guid = GuidHelper.GetGuid(ghost);
+            NitroxId id = NitroxIdentifier.GetId(ghost);
 
             if (opConstructedBase.IsPresent())
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Get();
-                baseGuid = GuidHelper.GetGuid(constructedBase);
+                baseId = NitroxIdentifier.GetId(constructedBase);
             }
             
-            // For base pieces, we must switch the guid from the ghost to the newly constructed piece.
+            // For base pieces, we must switch the id from the ghost to the newly constructed piece.
             // Furniture just uses the same game object as the ghost for the final product.
             if(ghost.GetComponent<ConstructableBase>() != null)
             {
@@ -107,31 +110,31 @@ namespace NitroxClient.GameLogic
                 GameObject finishedPiece = (GameObject)opBasePiece.Get();
                 
                 UnityEngine.Object.Destroy(ghost);
-                GuidHelper.SetNewGuid(finishedPiece, guid);
+                NitroxIdentifier.SetNewId(finishedPiece, id);
 
-                if(baseGuid == null)
+                if(baseId == null)
                 {
-                    baseGuid = GuidHelper.GetGuid(finishedPiece.GetComponentInParent<Base>().gameObject);
+                    baseId = NitroxIdentifier.GetId(finishedPiece.GetComponentInParent<Base>().gameObject);
                 }
             }
 
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(guid, baseGuid);
+            ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
         }
 
         public void DeconstructionBegin(GameObject gameObject)
         {
-            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
 
-            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(guid);
+            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
         }
 
         public void DeconstructionComplete(GameObject gameObject)
         {
-            string guid = GuidHelper.GetGuid(gameObject);
+            NitroxId id = NitroxIdentifier.GetId(gameObject);
 
-            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(guid);
+            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
             packetSender.Send(deconstructionCompleted);
         }
     }

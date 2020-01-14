@@ -6,6 +6,8 @@ using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using System.Collections;
 using UnityEngine;
+using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -22,24 +24,24 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleDocking packet)
         {
-            GameObject vehicleGo = GuidHelper.RequireObjectFrom(packet.VehicleGuid);
-            GameObject vehicleDockingBayGo = GuidHelper.RequireObjectFrom(packet.DockGuid);
+            GameObject vehicleGo = NitroxIdentifier.RequireObjectFrom(packet.VehicleId);
+            GameObject vehicleDockingBayGo = NitroxIdentifier.RequireObjectFrom(packet.DockId);
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();
             
             using (packetSender.Suppress<VehicleDocking>())
             {
-                vehicleDockingBay.DockVehicle(vehicle);
+                vehicleDockingBay.SetVehicleDocked(vehicle);
             }
 
-            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleGuid, packet.PlayerId));
-        }
+            vehicle.StartCoroutine(DisablePilotingAfterAnimation(packet.VehicleId, packet.PlayerId));
+        }        
 
-        IEnumerator DisablePilotingAfterAnimation(string vehicleGuid, ushort playerId)
+        IEnumerator DisablePilotingAfterAnimation(NitroxId vehicleId, ushort playerId)
         {
             yield return new WaitForSeconds(3.0f);
-            vehicles.SetOnPilotMode(vehicleGuid, playerId, false);
+            vehicles.SetOnPilotMode(vehicleId, playerId, false);
         }
     }
 }

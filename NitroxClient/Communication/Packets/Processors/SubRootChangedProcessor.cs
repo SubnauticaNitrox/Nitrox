@@ -1,6 +1,6 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -24,9 +24,9 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 SubRoot subRoot = null;
 
-                if (packet.SubRootGuid.IsPresent())
+                if (packet.SubRootId.IsPresent())
                 {
-                    GameObject sub = GuidHelper.RequireObjectFrom(packet.SubRootGuid.Get());
+                    GameObject sub = NitroxIdentifier.RequireObjectFrom(packet.SubRootId.Get());
                     subRoot = sub.GetComponent<SubRoot>();
                 }
 

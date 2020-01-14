@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<VehicleDestroyed>())
             {
-                vehicles.DestroyVehicle(packet.Guid, packet.GetPilotingMode);
+                vehicles.DestroyVehicle(packet.Id, packet.GetPilotingMode);
             }
         }
     }

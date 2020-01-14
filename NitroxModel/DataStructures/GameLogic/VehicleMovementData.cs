@@ -1,19 +1,18 @@
-﻿using NitroxModel.DataStructures.Util;
-using ProtoBuf;
+﻿using ProtoBufNet;
 using System;
 using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]
+    [ProtoContract]    
     public class VehicleMovementData
     {
         [ProtoMember(1)]
         public TechType TechType { get; }
 
         [ProtoMember(2)]
-        public string Guid { get; set; }
+        public NitroxId Id { get; set; }
 
         [ProtoMember(3)]
         public Vector3 Position { get; }
@@ -36,15 +35,16 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public bool AppliedThrottle { get; }
 
+
         public VehicleMovementData()
         {
             // For serialization purposes
         }
 
-        public VehicleMovementData(TechType techType, string guid, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
+        public VehicleMovementData(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle)
         {
             TechType = techType;
-            Guid = guid;
+            Id = id;
             Position = position;
             Rotation = rotation;
             Velocity = velocity;

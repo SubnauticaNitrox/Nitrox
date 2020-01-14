@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using UnityEngine;
@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate entity in packet.Updates)
             {
-                Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(entity.Guid);
+                Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(entity.Id);
 
                 if (opGameObject.IsPresent())
                 {

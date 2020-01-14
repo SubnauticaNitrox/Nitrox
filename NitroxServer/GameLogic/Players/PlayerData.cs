@@ -4,6 +4,7 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -24,22 +25,22 @@ namespace NitroxServer.GameLogic.Players
         }
 
         [ProtoMember(2)]
-        public Dictionary<string, EquippedItemData> SerializableModules
+        public Dictionary<NitroxId, EquippedItemData> SerializableModules
         {
             get
             {
-                lock (ModulesItemsByGuid)
+                lock (ModulesItemsById)
                 {
-                    return new Dictionary<string, EquippedItemData>(ModulesItemsByGuid);
+                    return new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
                 }
             }
-            set { ModulesItemsByGuid = value; }
+            set { ModulesItemsById = value; }
         }
 
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
 
-        public Dictionary<string, EquippedItemData> ModulesItemsByGuid = new Dictionary<string, EquippedItemData>();
+        public Dictionary<NitroxId, EquippedItemData> ModulesItemsById = new Dictionary<NitroxId, EquippedItemData>();
 
         private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
         
@@ -48,7 +49,7 @@ namespace NitroxServer.GameLogic.Players
             lock (playersByPlayerName)
             {
                 PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquippedItemsByGuid.Add(equippedItem.Guid, equippedItem);
+                playerData.EquippedItemsById.Add(equippedItem.ItemId, equippedItem);
             }
         }
 
@@ -113,11 +114,11 @@ namespace NitroxServer.GameLogic.Players
             return false;
         }
         
-        public void UpdatePlayerSubRootGuid(string playerName, string subroot)
+        public void UpdatePlayerSubRootId(string playerName, NitroxId subrootId)
         {
             lock (playersByPlayerName)
             {
-                playersByPlayerName[playerName].SubRootGuid = subroot;
+                playersByPlayerName[playerName].SubRootId = subrootId;
             }
         }
 
@@ -140,12 +141,12 @@ namespace NitroxServer.GameLogic.Players
             }
         }
                 
-        public void RemoveEquipment(string playerName, string guid)
+        public void RemoveEquipment(string playerName, NitroxId id)
         {
             lock (playersByPlayerName)
             {
                 PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquippedItemsByGuid.Remove(guid);
+                playerData.EquippedItemsById.Remove(id);
             }
         }
 
@@ -154,8 +155,8 @@ namespace NitroxServer.GameLogic.Players
             lock (playersByPlayerName)
             {
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsByGuid.Values);
-                ItemData.AddRange((new List<EquippedItemData>(ModulesItemsByGuid.Values)));
+                List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsById.Values);
+                ItemData.AddRange((new List<EquippedItemData>(ModulesItemsById.Values)));
                 return ItemData;
             }
         }
@@ -169,12 +170,12 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Optional<string> GetSubRootGuid(string playerName)
+        public Optional<NitroxId> GetSubRootId(string playerName)
         {
             lock (playersByPlayerName)
             {
                 PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                return Optional<string>.OfNullable(playerPersistedData.SubRootGuid);
+                return Optional<NitroxId>.OfNullable(playerPersistedData.SubRootId);
             }
         }
 
@@ -193,16 +194,16 @@ namespace NitroxServer.GameLogic.Players
 
         public void AddModule(EquippedItemData equippedmodule)
         {
-            lock (ModulesItemsByGuid)
+            lock (ModulesItemsById)
             {
-                ModulesItemsByGuid.Add(equippedmodule.Guid, equippedmodule);
+                ModulesItemsById.Add(equippedmodule.ItemId, equippedmodule);
             }
         }
-        public void RemoveModule(string guid)
+        public void RemoveModule(NitroxId id)
         {
-            lock (ModulesItemsByGuid)
+            lock (ModulesItemsById)
             {
-                ModulesItemsByGuid.Remove(guid);
+                ModulesItemsById.Remove(id);
             }
         }
 
@@ -213,7 +214,7 @@ namespace NitroxServer.GameLogic.Players
             public string PlayerName { get; set; }
 
             [ProtoMember(2)]
-            public Dictionary<string, EquippedItemData> EquippedItemsByGuid { get; set; } = new Dictionary<string, EquippedItemData>();
+            public Dictionary<NitroxId, EquippedItemData> EquippedItemsById { get; set; } = new Dictionary<NitroxId, EquippedItemData>();
 
             [ProtoMember(3)]
             public ushort PlayerId { get; set; }
@@ -225,7 +226,7 @@ namespace NitroxServer.GameLogic.Players
             public PlayerStatsData CurrentStats { get; set; }
 
             [ProtoMember(6)]
-            public string SubRootGuid { get; set; }
+            public NitroxId SubRootId { get; set; }
 
             [ProtoMember(7)]
             public Perms Permissions { get; set; } = Perms.PLAYER;

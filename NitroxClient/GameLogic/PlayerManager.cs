@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours.DiscordRP;
-using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
@@ -81,7 +80,9 @@ namespace NitroxClient.GameLogic
 
         private GameObject CloneLocalPlayerBodyPrototype()
         {
-            return Object.Instantiate(localPlayer.BodyPrototype);
+            GameObject clone = Object.Instantiate(localPlayer.BodyPrototype);
+            clone.SetActive(true);
+            return clone;
         }
 
         public int GetTotalPlayerCount()

@@ -6,7 +6,7 @@ namespace NitroxClient.Unity.Smoothing
     {
         private const float SMOOTHING_SPEED = 10f;
         public Quaternion Target { get; set; }
-        public Quaternion SmoothValue { get; private set; }
+        public Quaternion SmoothValue { get; protected set; }
 
         public SmoothRotation(Quaternion initial)
         {

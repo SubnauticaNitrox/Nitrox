@@ -1,4 +1,5 @@
-﻿using NitroxModel.Packets;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Players;
@@ -19,13 +20,12 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerEquipmentRemoved packet, Player player)
         {
             string playerName = player.Name;
-            string itemGuid = packet.EquippedItemGuid;
+            NitroxId itemId = packet.EquippedItemId;
 
-            playerData.RemoveEquipment(playerName, itemGuid);
+            playerData.RemoveEquipment(playerName, itemId);
 
             ushort playerId = player.Id;
-            TechType techType = packet.TechType;
-            RemotePlayerEquipmentRemoved equipmentRemoved = new RemotePlayerEquipmentRemoved(playerId, techType);
+            RemotePlayerEquipmentRemoved equipmentRemoved = new RemotePlayerEquipmentRemoved(playerId, packet.TechType);
 
             playerManager.SendPacketToOtherPlayers(equipmentRemoved, player);
         }

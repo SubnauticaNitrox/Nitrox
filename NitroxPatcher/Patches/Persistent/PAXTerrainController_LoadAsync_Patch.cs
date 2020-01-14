@@ -13,26 +13,21 @@ namespace NitroxPatcher.Patches.Persistent
         public static readonly Type TARGET_CLASS = typeof(PAXTerrainController);
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Call;
-        public static readonly object INJECTION_OPERAND = TARGET_CLASS.GetMethod("set_isWorking", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly object INJECTION_OPERAND = typeof(uGUI_BuilderMenu).GetMethod("EnsureCreated", BindingFlags.Public | BindingFlags.Static);
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
-
-            bool alreadyInjected = false;
-
+            
             foreach (CodeInstruction instruction in instructions)
             {
-                if (alreadyInjected || instruction.opcode != OpCodes.Ldc_I4_0)
+                if (instruction.opcode == INJECTION_OPCODE && instruction.operand == INJECTION_OPERAND)
                 {
-                    yield return instruction;
+                    yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
                 }
                 else
                 {
-                    alreadyInjected = true;
-                    
-                    yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_1) { labels = instruction.labels };
+                    yield return instruction;
                 }
             }
         }
@@ -62,7 +57,7 @@ namespace NitroxPatcher.Patches.Persistent
 
         private static MethodInfo getMethod()
         {
-            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.Public | BindingFlags.Instance);
+            MethodInfo method = getLoadAsyncEnumerableMethod().GetMethod("MoveNext", BindingFlags.NonPublic | BindingFlags.Instance);
             Validate.NotNull(method);
 
             return method;

@@ -1,6 +1,7 @@
-﻿using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UWE;
 
@@ -10,14 +11,15 @@ namespace NitroxClient.GameLogic.Spawning
     {
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
         {
+            TechType techType = entity.TechType.Enum();
             GameObject prefab;
 
             if (!PrefabDatabase.TryGetPrefab(entity.ClassId, out prefab))
             {
-                prefab = CraftData.GetPrefabForTechType(entity.TechType, false);
+                prefab = CraftData.GetPrefabForTechType(techType, false);
                 if (prefab == null)
                 {
-                    return Optional<GameObject>.Of(Utils.CreateGenericLoot(entity.TechType));
+                    return Optional<GameObject>.Of(Utils.CreateGenericLoot(techType));
                 }
             }
 
@@ -31,11 +33,11 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             gameObject.transform.localRotation = entity.Rotation;
-            GuidHelper.SetNewGuid(gameObject, entity.Guid);
             gameObject.SetActive(true);
 
+            NitroxIdentifier.SetNewId(gameObject, entity.Id);
             LargeWorldEntity.Register(gameObject);
-            CrafterLogic.NotifyCraftEnd(gameObject, entity.TechType);
+            CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
             return Optional<GameObject>.Of(gameObject);
         }

@@ -17,18 +17,18 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        Dictionary<string, PlayerLock> playerLocksByGuid = new Dictionary<string, PlayerLock>();
+        Dictionary<NitroxId, PlayerLock> playerLocksById = new Dictionary<NitroxId, PlayerLock>();
         
-        public bool TryToAcquire(string guid, Player player, SimulationLockType requestedLock)
+        public bool TryToAcquire(NitroxId id, Player player, SimulationLockType requestedLock)
         {
-            lock (playerLocksByGuid)
+            lock (playerLocksById)
             {
                 PlayerLock playerLock;
 
                 // If no one is simulating then aquire a lock for this player
-                if (!playerLocksByGuid.TryGetValue(guid, out playerLock))
+                if (!playerLocksById.TryGetValue(id, out playerLock))
                 {
-                    playerLocksByGuid[guid] = new PlayerLock(player, requestedLock);
+                    playerLocksById[id] = new PlayerLock(player, requestedLock);
                     return true;
                 }
 
@@ -36,14 +36,14 @@ namespace NitroxServer.GameLogic
                 if (playerLock.Player == player)
                 {
                     // update the lock type in case they are attempting to downgrade
-                    playerLocksByGuid[guid] = new PlayerLock(player, requestedLock);
+                    playerLocksById[id] = new PlayerLock(player, requestedLock);
                     return true;
                 }
 
                 // If the current lock owner has a transient lock then only override if we are requesting exclusive access
                 if (playerLock.LockType == SimulationLockType.TRANSIENT && requestedLock == SimulationLockType.EXCLUSIVE)
                 {
-                    playerLocksByGuid[guid] = new PlayerLock(player, requestedLock);
+                    playerLocksById[id] = new PlayerLock(player, requestedLock);
                     return true;
                 }
                 
@@ -53,15 +53,15 @@ namespace NitroxServer.GameLogic
             }
         }
         
-        public bool RevokeIfOwner(string guid, Player player)
+        public bool RevokeIfOwner(NitroxId id, Player player)
         {
-            lock (playerLocksByGuid)
+            lock (playerLocksById)
             {
                 PlayerLock playerLock;
 
-                if (playerLocksByGuid.TryGetValue(guid, out playerLock) && playerLock.Player == player)
+                if (playerLocksById.TryGetValue(id, out playerLock) && playerLock.Player == player)
                 {
-                    playerLocksByGuid.Remove(guid);
+                    playerLocksById.Remove(id);
                     return true;
                 }
 
@@ -69,36 +69,36 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public List<string> RevokeAllForOwner(Player player)
+        public List<NitroxId> RevokeAllForOwner(Player player)
         {
-            lock (playerLocksByGuid)
+            lock (playerLocksById)
             {
-                List<string> revokedGuids = new List<string>();
+                List<NitroxId> revokedIds = new List<NitroxId>();
 
-                foreach(KeyValuePair<string, PlayerLock> guidWithPlayerLock in playerLocksByGuid)
+                foreach(KeyValuePair<NitroxId, PlayerLock> idWithPlayerLock in playerLocksById)
                 {
-                    if(guidWithPlayerLock.Value.Player == player)
+                    if(idWithPlayerLock.Value.Player == player)
                     {
-                        revokedGuids.Add(guidWithPlayerLock.Key);
+                        revokedIds.Add(idWithPlayerLock.Key);
                     }
                 }
 
-                foreach(string guid in revokedGuids)
+                foreach(NitroxId id in revokedIds)
                 {
-                    playerLocksByGuid.Remove(guid);
+                    playerLocksById.Remove(id);
                 }
 
-                return revokedGuids;
+                return revokedIds;
             }
         }
 
-        public bool RevokeOwnerOfGuid(string guid)
+        public bool RevokeOwnerOfId(NitroxId id)
         {
-            lock (playerLocksByGuid)
+            lock (playerLocksById)
             {
-                if(playerLocksByGuid.ContainsKey(guid))
+                if(playerLocksById.ContainsKey(id))
                 {
-                    playerLocksByGuid.Remove(guid);
+                    playerLocksById.Remove(id);
                     return true;
                 }
             }

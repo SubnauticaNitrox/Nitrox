@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -21,18 +22,17 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleDocking packet, Player player)
         {
-            Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleGuid);
+            Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleId);
             if (!vehicle.IsPresent())
             {
-                Log.Error("VehicleDocking received for vehicle guid {0} that does not exist!", packet.VehicleGuid);
+                Log.Error("VehicleDocking received for vehicle id {0} that does not exist!", packet.VehicleId);
                 return;
             }
 
             VehicleModel vehicleModel = vehicle.Get();
-            vehicleModel.DockingBayGuid = Optional<string>.Of(packet.DockGuid);
+            vehicleModel.DockingBayId = Optional<NitroxId>.Of(packet.DockId);
 
-            // We don't need to send this packet to the other clients, as those clients
-            // will automatically dock the vehicle when it enters the trigger
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

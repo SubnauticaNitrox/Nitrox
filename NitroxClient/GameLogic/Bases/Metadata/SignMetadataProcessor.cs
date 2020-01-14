@@ -1,5 +1,5 @@
-﻿using System;
-using NitroxClient.GameLogic.Helper;
+﻿using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using UnityEngine;
 
@@ -7,9 +7,9 @@ namespace NitroxClient.GameLogic.Bases.Metadata
 {
     public class SignMetadataProcessor : GenericBasePieceMetadataProcessor<SignMetadata>
     {
-        public override void UpdateMetadata(string guid, SignMetadata metadata)
+        public override void UpdateMetadata(NitroxId id, SignMetadata metadata)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(guid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(id);
             uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>();
 
             sign.text = metadata.Text;

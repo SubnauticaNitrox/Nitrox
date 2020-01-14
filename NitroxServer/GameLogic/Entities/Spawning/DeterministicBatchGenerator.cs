@@ -1,11 +1,10 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public class DeterministicBatchGenerator
     {
-        private static readonly string prefix = "nitrox-";
-
         private Random random;
 
         public DeterministicBatchGenerator(Int3 batchId)
@@ -23,12 +22,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             return random.Next(min, max);
         }
 
-        public string NextGuid()
+        public NitroxId NextId()
         {
             byte[] bytes = new byte[16];
             random.NextBytes(bytes);
 
-            return prefix + Convert.ToBase64String(bytes);
+            return new NitroxId(bytes);
         }
     }
 }

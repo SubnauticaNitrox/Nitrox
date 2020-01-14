@@ -24,10 +24,10 @@ namespace NitroxClient.Communication.Packets.Processors
              * vehicles like the cyclops.  However, we may one day want to add a watcher here
              * to ensure broadcast one day, ex:
              * 
-             * EntityPositionBroadcaster.WatchEntity(simulatedEntity.Guid, gameObject.Get());
+             * EntityPositionBroadcaster.WatchEntity(simulatedEntity.Id, gameObject.Get());
              * 
              */
-            simulationOwnershipManager.ReceivedSimulationLockResponse(response.Guid, response.LockAquired, response.LockType);
+            simulationOwnershipManager.ReceivedSimulationLockResponse(response.Id, response.LockAquired, response.LockType);
         }
     }
 }

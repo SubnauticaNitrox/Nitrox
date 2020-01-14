@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
-using Story;
-using UnityEngine;
+using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -25,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                KnownTech.Add(packet.TechType, packet.Verbose);
+                KnownTech.Add(packet.TechType.Enum(), packet.Verbose);
             }
         }
     }

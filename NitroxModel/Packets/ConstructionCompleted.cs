@@ -1,22 +1,23 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructionCompleted : Packet
     {
-        public string Guid { get; }
-        public string BaseGuid { get; }
+        public NitroxId PieceId { get; }
+        public NitroxId BaseId { get; }
 
-        public ConstructionCompleted(string guid, string baseGuid)
+        public ConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            Guid = guid;
-            BaseGuid = baseGuid;
+            PieceId = id;
+            BaseId = baseId;
         }
 
         public override string ToString()
         {
-            return "[ConstructionCompleted Guid: " + Guid + " BaseGuid: " + BaseGuid + "]";
+            return "[ConstructionCompleted Id: " + PieceId + " BaseId: " + BaseId + "]";
         }
     }
 }

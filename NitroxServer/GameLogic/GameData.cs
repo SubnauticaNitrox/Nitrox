@@ -10,5 +10,8 @@ namespace NitroxServer.GameLogic.Bases
     {
         [ProtoMember(1)]
         public PDAStateData PDAState { get; set; }
+        
+        [ProtoMember(2)]
+        public StoryGoalData StoryGoals { get; set; }
     }
 }

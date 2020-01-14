@@ -1,6 +1,5 @@
 ﻿using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.HUD;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
@@ -8,6 +7,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using System;
 using System.Reflection;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches
 {
@@ -34,20 +34,20 @@ namespace NitroxPatcher.Patches
 
             SubRoot subRoot = __instance.GetComponentInParent<SubRoot>();
             Validate.NotNull(subRoot, "PilotingChair cannot find it's corresponding SubRoot!");
-            string guid = GuidHelper.GetGuid(subRoot.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(subRoot.gameObject);
 
-            if (simulationOwnership.HasExclusiveLock(guid))
+            if (simulationOwnership.HasExclusiveLock(id))
             {
-                Log.Debug($"Already have an exclusive lock on the piloting chair: {guid}");
+                Log.Debug($"Already have an exclusive lock on the piloting chair: {id}");
                 return true;
             }
 
-            simulationOwnership.RequestSimulationLock(guid, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
+            simulationOwnership.RequestSimulationLock(id, SimulationLockType.EXCLUSIVE, ReceivedSimulationLockResponse);
 
             return false;
         }
 
-        private static void ReceivedSimulationLockResponse(string guid, bool lockAquired)
+        private static void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired)
         {
             if (lockAquired)
             {

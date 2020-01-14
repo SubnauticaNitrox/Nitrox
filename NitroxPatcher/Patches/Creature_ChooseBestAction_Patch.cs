@@ -2,8 +2,9 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches
 {
@@ -16,28 +17,28 @@ namespace NitroxPatcher.Patches
 
         public static bool Prefix(Creature __instance, ref CreatureAction __result)
         {
-            string guid = GuidHelper.GetGuid(__instance.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
                 previousAction = (CreatureAction)typeof(Creature).GetField("prevBestAction", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(__instance);
                 return true;
             }
 
-            // CreatureActionChangedProcessor.ActionByGuid.TryGetValue(guid, out __result);
+            // CreatureActionChangedProcessor.ActionById.TryGetValue(id, out __result);
 
             return false;
         }
 
         public static void Postfix(Creature __instance, ref CreatureAction __result)
         {
-            string guid = GuidHelper.GetGuid(__instance.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
 
-            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(guid))
+            if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
                 if (previousAction != __result)
                 {
-                    // Multiplayer.Logic.AI.CreatureActionChanged(guid, __result);
+                    // Multiplayer.Logic.AI.CreatureActionChanged(id, __result);
                 }
             }
         }

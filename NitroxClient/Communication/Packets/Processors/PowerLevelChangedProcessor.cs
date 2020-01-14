@@ -1,5 +1,5 @@
 ﻿using NitroxClient.Communication.Packets.Processors.Abstract;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(PowerLevelChanged packet)
         {
-            GameObject gameObject = GuidHelper.RequireObjectFrom(packet.Guid);
+            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
 
             if (packet.PowerType == PowerType.ENERGY_INTERFACE)
             {

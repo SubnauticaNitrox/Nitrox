@@ -1,4 +1,5 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
@@ -6,20 +7,20 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PowerLevelChanged : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public float Amount { get; }
         public PowerType PowerType { get; }
 
-        public PowerLevelChanged(string guid, float amount, PowerType powerType)
+        public PowerLevelChanged(NitroxId id, float amount, PowerType powerType)
         {
-            Guid = guid;
+            Id = id;
             Amount = amount;
             PowerType = powerType;
         }
 
         public override string ToString()
         {
-            return "[PowerLevelChanged - Amount: " + Amount + " PowerType: " + PowerType + " guid: " + Guid + "]";
+            return "[PowerLevelChanged - Amount: " + Amount + " PowerType: " + PowerType + " id: " + Id + "]";
         }
     }
 }

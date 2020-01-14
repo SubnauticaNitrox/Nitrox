@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -16,8 +17,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ModuleRemoved packet)
         {
-            GameObject owner = GuidHelper.RequireObjectFrom(packet.OwnerGuid);
-            GameObject item = GuidHelper.RequireObjectFrom(packet.ItemGuid);
+            GameObject owner = NitroxIdentifier.RequireObjectFrom(packet.OwnerId);
+            GameObject item = NitroxIdentifier.RequireObjectFrom(packet.ItemId);
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 

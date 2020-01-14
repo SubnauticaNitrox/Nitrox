@@ -66,6 +66,7 @@ namespace NitroxClient.GameLogic
         public void ResetModel(ILocalNitroxPlayer localPlayer)
         {
             Body = Object.Instantiate(localPlayer.BodyPrototype);
+            Body.SetActive(true);
             PlayerModel = Body.RequireGameObject("player_view");
         }
 
@@ -91,7 +92,15 @@ namespace NitroxClient.GameLogic
             // When receiving movement packets, a player can not be controlling a vehicle (they can walk through subroots though).
             SetVehicle(null);
             SetPilotingChair(null);
-
+            // If in a subroot the position will be relative to the subroot
+            if (SubRoot != null && !SubRoot.isBase)
+            {
+                Quaternion vehicleAngle = SubRoot.transform.rotation;
+                position = vehicleAngle * position;
+                position = position + SubRoot.transform.position;
+                bodyRotation = vehicleAngle * bodyRotation;
+                aimingRotation = vehicleAngle * aimingRotation;
+            }
             RigidBody.velocity = AnimationController.Velocity = MovementHelper.GetCorrectedVelocity(position, velocity, Body, PlayerMovement.BROADCAST_INTERVAL);
             RigidBody.angularVelocity = MovementHelper.GetCorrectedAngularVelocity(bodyRotation, Vector3.zero, Body, PlayerMovement.BROADCAST_INTERVAL);
 
@@ -217,7 +226,7 @@ namespace NitroxClient.GameLogic
         private void UpdateEquipmentVisibility()
         {
             ReadOnlyCollection<TechType> currentEquipment = new ReadOnlyCollection<TechType>(equipment.ToList());
-            
+
             playerModelManager.UpdateEquipmentVisibility(PlayerModel, currentEquipment);
         }
     }

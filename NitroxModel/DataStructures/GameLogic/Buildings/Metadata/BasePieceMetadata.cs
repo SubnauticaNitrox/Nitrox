@@ -1,5 +1,5 @@
 ﻿using System;
-using ProtoBuf;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 {

@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
             SignMetadata signMetadata = packet.SignMetadata;
 
             BasePieceMetadataProcessor metadataProcessor = BasePieceMetadataProcessor.FromMetaData(signMetadata);
-            metadataProcessor.UpdateMetadata(signMetadata.Guid, signMetadata);
+            metadataProcessor.UpdateMetadata(signMetadata.Id, signMetadata);
         }
     }
 }

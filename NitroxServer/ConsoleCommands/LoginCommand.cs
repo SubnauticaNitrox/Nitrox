@@ -9,7 +9,7 @@ using NitroxServer.ConfigParser;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class LoginCommand : Command
+    internal class LoginCommand : Command
     {
         private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;

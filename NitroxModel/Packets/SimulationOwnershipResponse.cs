@@ -6,20 +6,20 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SimulationOwnershipResponse : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public bool LockAquired { get; }
         public SimulationLockType LockType { get; }
 
-        public SimulationOwnershipResponse(string guid, bool lockAquired, SimulationLockType lockType)
+        public SimulationOwnershipResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
         {
-            Guid = guid;
+            Id = id;
             LockAquired = lockAquired;
             LockType = lockType;
         }
 
         public override string ToString()
         {
-            return "[SimulationOwnershipResponse - Guid: " + Guid + " LockAquired: " + LockAquired + " LockType: " + LockType + "]";
+            return "[SimulationOwnershipResponse - Id: " + Id + " LockAquired: " + LockAquired + " LockType: " + LockType + "]";
         }
     }
 }

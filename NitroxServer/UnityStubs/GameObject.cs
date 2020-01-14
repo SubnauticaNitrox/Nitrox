@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxServer.Serialization;
 
 namespace NitroxServer.UnityStubs
 {
@@ -16,7 +17,7 @@ namespace NitroxServer.UnityStubs
 
         private readonly Dictionary<Type, object> components = new Dictionary<Type, object>();
 
-        public GameObject(ProtobufSerializer.GameObjectData goData)
+        public GameObject(GameObjectData goData)
         {
             IsActive = goData.IsActive;
             Layer = goData.Layer;

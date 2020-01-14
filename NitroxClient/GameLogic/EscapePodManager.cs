@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.GameLogic
 {
@@ -17,9 +18,9 @@ namespace NitroxClient.GameLogic
 
         public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
-        private readonly Dictionary<string, GameObject> escapePodsByGuid = new Dictionary<string, GameObject>();
+        private readonly Dictionary<NitroxId, GameObject> escapePodsById = new Dictionary<NitroxId, GameObject>();
 
-        public string MyEscapePodGuid;
+        public NitroxId MyEscapePodId;
 
         public EscapePodManager(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
         {
@@ -47,24 +48,24 @@ namespace NitroxClient.GameLogic
             Player.main.transform.position = EscapePod.main.playerSpawn.position;
             Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
 
-            MyEscapePodGuid = escapePod.Guid;
+            MyEscapePodId = escapePod.Id;
         }
 
         public void AddNewEscapePod(EscapePodModel escapePod)
         {
-            if (!escapePodsByGuid.ContainsKey(escapePod.Guid))
+            if (!escapePodsById.ContainsKey(escapePod.Id))
             {
-                escapePodsByGuid[escapePod.Guid] = CreateNewEscapePod(escapePod);
+                escapePodsById[escapePod.Id] = CreateNewEscapePod(escapePod);
             }
         }
 
-        public void SyncEscapePodGuids(List<EscapePodModel> escapePods)
+        public void SyncEscapePodIds(List<EscapePodModel> escapePods)
         {
             foreach (EscapePodModel model in escapePods)
             {
-                if (!escapePodsByGuid.ContainsKey(model.Guid))
+                if (!escapePodsById.ContainsKey(model.Id))
                 {
-                    escapePodsByGuid[model.Guid] = CreateNewEscapePod(model);
+                    escapePodsById[model.Id] = CreateNewEscapePod(model);
                 }
             }
         }
@@ -75,7 +76,7 @@ namespace NitroxClient.GameLogic
 
             GameObject escapePod;
 
-            if (model.Guid == MyEscapePodGuid)
+            if (model.Id == MyEscapePodId)
             {
                 escapePod = EscapePod.main.gameObject;
             }
@@ -94,16 +95,16 @@ namespace NitroxClient.GameLogic
                 storageContainer.container.Clear();
             }
 
-            GuidHelper.SetNewGuid(storageContainer.gameObject, model.StorageContainerGuid);
+            NitroxIdentifier.SetNewId(storageContainer.gameObject, model.StorageContainerId);
 
             MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();
-            GuidHelper.SetNewGuid(medicalCabinet.gameObject, model.MedicalFabricatorGuid);
+            NitroxIdentifier.SetNewId(medicalCabinet.gameObject, model.MedicalFabricatorId);
 
             Fabricator fabricator = escapePod.RequireComponentInChildren<Fabricator>();
-            GuidHelper.SetNewGuid(fabricator.gameObject, model.FabricatorGuid);
+            NitroxIdentifier.SetNewId(fabricator.gameObject, model.FabricatorId);
 
             Radio radio = escapePod.RequireComponentInChildren<Radio>();
-            GuidHelper.SetNewGuid(radio.gameObject, model.RadioGuid);
+            NitroxIdentifier.SetNewId(radio.gameObject, model.RadioId);
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
 
@@ -133,46 +134,47 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void OnRepair(string guid)
+        public void OnRepair(NitroxId id)
         {
-            if (escapePodsByGuid.ContainsKey(guid))
+            if (escapePodsById.ContainsKey(id))
             {
-                EscapePod pod = escapePodsByGuid[guid].GetComponent<EscapePod>();
+                EscapePod pod = escapePodsById[id].GetComponent<EscapePod>();
                 pod.liveMixin.health = pod.liveMixin.maxHealth;
                 pod.animator.SetFloat("lifepod_damage", 1.0f);
                 pod.fixPanelGoal.Trigger();
                 pod.fixPanelPowerUp.Play();
             } else
             {
-                Log.Warn("No escape pod to be repaired by guid " + guid);
+                Log.Warn("No escape pod to be repaired by id " + id);
             }
         }
 
         public void OnRepairedByMe(EscapePod pod)
         {
-            string guid = "";
-            foreach(KeyValuePair<string, GameObject> dict in escapePodsByGuid)
+            NitroxId id = null;
+
+            foreach(KeyValuePair<NitroxId, GameObject> dict in escapePodsById)
             {
-                if(dict.Value.GetGuid() == pod.gameObject.GetGuid())
+                if(NitroxIdentifier.GetId(dict.Value) == NitroxIdentifier.GetId(pod.gameObject))
                 {
-                    guid = dict.Key; // we're looking for serverside guid here
+                    id = dict.Key; // we're looking for serverside id here
                     break;
                 }
             }
 
-            if (!guid.Equals(""))
+            if (id != null)
             {
-                EscapePodRepair repair = new EscapePodRepair(guid);
+                EscapePodRepair repair = new EscapePodRepair(id);
                 packetSender.Send(repair);
             } else
             {
-                Log.Warn("Couldn't find escape pod guid on repair");
+                Log.Warn("Couldn't find escape pod id on repair");
             }
         }
 
-        public void OnRadioRepair(string guid)
+        public void OnRadioRepair(NitroxId id)
         {
-            Optional<GameObject> radObj = GuidHelper.GetObjectFrom(guid);
+            Optional<GameObject> radObj = NitroxIdentifier.GetObjectFrom(id);
             if (radObj.IsPresent())
             {
                 Radio radio = radObj.Get().GetComponent<Radio>();
@@ -187,9 +189,9 @@ namespace NitroxClient.GameLogic
         {
             // todo: can this apply to non-escape pod radios?
 
-            string guid = GuidHelper.GetGuid(radio.gameObject);
+            NitroxId id = NitroxIdentifier.GetId(radio.gameObject);
             
-            EscapePodRadioRepair repair = new EscapePodRadioRepair(guid);
+            EscapePodRadioRepair repair = new EscapePodRadioRepair(id);
             packetSender.Send(repair);
         }
     }

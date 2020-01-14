@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -14,7 +16,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
-        private readonly HashSet<string> alreadySpawnedGuids = new HashSet<string>();  //TODO: refresh on pickup
+        private readonly HashSet<NitroxId> alreadySpawnedIds = new HashSet<NitroxId>();
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
@@ -27,17 +29,17 @@ namespace NitroxClient.GameLogic
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
         }
 
-        public void BroadcastTransforms(Dictionary<string, GameObject> gameObjectsByGuid)
+        public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
         {
             EntityTransformUpdates update = new EntityTransformUpdates();
 
-            foreach (KeyValuePair<string, GameObject> gameObjectWithGuid in gameObjectsByGuid)
+            foreach (KeyValuePair<NitroxId, GameObject> gameObjectWithId in gameObjectsById)
             {
-                GameObject go = gameObjectWithGuid.Value;
+                GameObject go = gameObjectWithId.Value;
 
                 if (go != null)
                 {
-                    update.AddUpdate(gameObjectWithGuid.Key, gameObjectWithGuid.Value.transform.position, gameObjectWithGuid.Value.transform.rotation);
+                    update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position, gameObjectWithId.Value.transform.rotation);
                 }
             }
 
@@ -48,7 +50,7 @@ namespace NitroxClient.GameLogic
         {
             foreach (Entity entity in entities)
             {
-                if (!alreadySpawnedGuids.Contains(entity.Guid))
+                if (!alreadySpawnedIds.Contains(entity.Id))
                 {
                     Spawn(entity, Optional<GameObject>.Empty());
                 }
@@ -61,24 +63,19 @@ namespace NitroxClient.GameLogic
         
         private void Spawn(Entity entity, Optional<GameObject> parent)
         {
-            alreadySpawnedGuids.Add(entity.Guid);
+            alreadySpawnedIds.Add(entity.Id);
 
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
 
             foreach (Entity childEntity in entity.ChildEntities)
             {
-                alreadySpawnedGuids.Add(childEntity.Guid);
-
-                if (!entitySpawner.SpawnsOwnChildren())
+                if (!alreadySpawnedIds.Contains(childEntity.Id) && !entitySpawner.SpawnsOwnChildren())
                 {
                     Spawn(childEntity, gameObject);
                 }
-            }
 
-            if (gameObject.IsPresent())
-            {
-                gameObject.Get().AddComponent<NitroxEntity>();
+                alreadySpawnedIds.Add(childEntity.Id);
             }
         }
 
@@ -89,9 +86,11 @@ namespace NitroxClient.GameLogic
                 return serializedEntitySpawner;
             }
 
-            if (customSpawnersByTechType.ContainsKey(entity.TechType))
+            TechType techType = entity.TechType.Enum();
+
+            if (customSpawnersByTechType.ContainsKey(techType))
             {
-                return customSpawnersByTechType[entity.TechType];
+                return customSpawnersByTechType[techType];
             }
 
             return defaultEntitySpawner;
@@ -99,7 +98,7 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(Entity entity)
         {
-            Optional<GameObject> opGameObject = GuidHelper.GetObjectFrom(entity.Guid);
+            Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(entity.Id);
 
             if (opGameObject.IsPresent())
             {
@@ -109,13 +108,18 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Entity was already spawned but not found(is it in another chunk?) guid: " + entity.Guid + " " + entity.TechType + " " + entity.ClassId);
+                Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Position: " + entity.Position);
             }
         }
 
-        public bool WasSpawnedByServer(string guid)
+        public bool WasSpawnedByServer(NitroxId id)
         {
-            return alreadySpawnedGuids.Contains(guid);
+            return alreadySpawnedIds.Contains(id);
+        }
+
+        public bool RemoveEntity(NitroxId id)
+        {
+            return alreadySpawnedIds.Remove(id);
         }
 
     }

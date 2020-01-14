@@ -2,8 +2,9 @@
 using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches
 {
@@ -22,8 +23,8 @@ namespace NitroxPatcher.Patches
         {
             if (__state != __instance.lightingOn)
             {
-                string guid = GuidHelper.GetGuid(__instance.cyclopsRoot.gameObject);
-                NitroxServiceLocator.LocateService<Cyclops>().ToggleInternalLight(guid, __instance.lightingOn);
+                NitroxId id = NitroxIdentifier.GetId(__instance.cyclopsRoot.gameObject);
+                NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleInternalLight(id, __instance.lightingOn);
             }
         }
 

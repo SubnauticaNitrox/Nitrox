@@ -1,22 +1,23 @@
 ﻿using System;
+using NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ToggleLights : Packet
     {
-        public string Guid { get; }
+        public NitroxId Id { get; }
         public bool IsOn { get; }
 
-        public ToggleLights(string guid, bool isOn)
+        public ToggleLights(NitroxId id, bool isOn)
         {
-            Guid = guid;
+            Id = id;
             IsOn = isOn;
         }
 
         public override string ToString()
         {
-            return "[ToggleLightsPacket Guid: " + Guid + " IsOn: " + IsOn + "]";
+            return "[ToggleLightsPacket Id: " + Id + " IsOn: " + IsOn + "]";
         }
     }
 }

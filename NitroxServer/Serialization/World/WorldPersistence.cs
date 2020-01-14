@@ -12,23 +12,28 @@ using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.ConfigParser;
+using NitroxModel.DataStructures;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxServer.GameLogic.Entities.EntityBootstrappers;
+using NitroxServer.Serialization.Resources.Datastructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        private readonly ServerProtobufSerializer serializer = new ServerProtobufSerializer();
+        private readonly ServerProtobufSerializer serializer;
         private readonly ServerConfig config;
 
-        public WorldPersistence(ServerConfig config)
+        public WorldPersistence(ServerProtobufSerializer serializer, ServerConfig config)
         {
+            this.serializer = serializer;
             this.config = config;
         }
 
         public void Save(World world)
         {
-            Log.Info("Saving world state.");
-
             try
             {
                 PersistedWorldData persistedData = new PersistedWorldData();
@@ -111,7 +116,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
@@ -122,9 +127,9 @@ namespace NitroxServer.Serialization.World
                                   InventoryData inventoryData,
                                   PlayerData playerData,
                                   GameData gameData,
-                                  List<Int3> ParsedBatchCells,
+                                  List<Int3> parsedBatchCells,
                                   EscapePodData escapePodData,
-                                  GameModeOption gameMode)
+                                  string gameMode)
         {
             World world = new World();
             world.TimeKeeper = new TimeKeeper();
@@ -141,16 +146,25 @@ namespace NitroxServer.Serialization.World
             world.GameData = gameData;
             world.EscapePodData = escapePodData;
             world.EscapePodManager = new EscapePodManager(escapePodData);
-            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager);
+
+            HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
+            world.EntitySimulation = new EntitySimulation(world.EntityData, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
             world.GameMode = gameMode;
+            
+            world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
+                                                              NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
+                                                              NitroxServiceLocator.LocateService<UwePrefabFactory>(),
+                                                              parsedBatchCells,
+                                                              serializer,
+                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
+                                                              NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
 
-            ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
-            world.BatchEntitySpawner = new BatchEntitySpawner(resourceAssets, ParsedBatchCells, serializer);
-
-            Log.Info("World GameMode " + gameMode);
+            Log.Info("World GameMode: " + gameMode);
 
             Log.Info("Server Password: " + (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword));
-            Log.Info("Admin Password: " + config.AdminPassword + ". You can edit the server config file or run /changeadminpassword NEW_PASSWORD to change it");
+            Log.Info("Admin Password: " + config.AdminPassword);
+
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

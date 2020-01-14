@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxModel.DataStructures.GameLogic.Creatures.Actions;
-using NitroxModel.Packets;
+using NitroxModel.DataStructures;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Creatures.Actions;
+using NitroxModel_Subnautica.Packets;
 
 namespace NitroxClient.GameLogic
 {
@@ -13,7 +14,7 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void CreatureActionChanged(string guid, CreatureAction newAction)
+        public void CreatureActionChanged(NitroxId id, CreatureAction newAction)
         {
             SerializableCreatureAction creatureAction = null;
 
@@ -27,7 +28,7 @@ namespace NitroxClient.GameLogic
 
             if (creatureAction != null)
             {
-                CreatureActionChanged actionChanged = new CreatureActionChanged(guid, creatureAction);
+                CreatureActionChanged actionChanged = new CreatureActionChanged(id, creatureAction);
                 packetSender.Send(actionChanged);
             }
         }

@@ -8,11 +8,11 @@ using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    class WhisperCommand : Command
+    internal class WhisperCommand : Command
     {
         private readonly PlayerManager playerManager;
 
-        public WhisperCommand(PlayerManager playerManager) : base("w", Perms.PLAYER, "w <PlayerName> <msg>")
+        public WhisperCommand(PlayerManager playerManager) : base("w", Perms.PLAYER, "<PlayerName> <msg>")
         {
             this.playerManager = playerManager;
         }
