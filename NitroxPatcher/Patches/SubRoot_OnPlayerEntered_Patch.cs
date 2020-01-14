@@ -37,10 +37,10 @@ namespace NitroxPatcher.Patches
             
             int injectionPoint = 0;
             Label newJumpPoint = generator.DefineLabel();
-            for (int i = 3; i < instructionList.Count(); i++)
+            for (int i = 3; i < instructionList.Count; i++)
             {
                 if (instructionList[i].opcode == START_INJECTION_CODE_INVINCIBLE &&
-                    instructionList[i].operand == LIVEMIXIN_INVINCIBLE)
+                    Equals(instructionList[i].operand, LIVEMIXIN_INVINCIBLE))
                 {
                     if (instructionList[i - 3].opcode == START_INJECTION_CODE)
                     {                                                

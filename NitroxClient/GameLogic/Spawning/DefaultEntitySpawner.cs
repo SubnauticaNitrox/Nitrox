@@ -13,8 +13,8 @@ namespace NitroxClient.GameLogic.Spawning
         {
             TechType techType = entity.TechType.Enum();
             GameObject prefab;
-
-            if (!PrefabDatabase.TryGetPrefab(entity.ClassId, out prefab))
+            IPrefabRequest prefabRequest = PrefabDatabase.GetPrefabAsync(entity.ClassId);
+            if (!prefabRequest.TryGetPrefab(out prefab)) // I realize its more code but Sorry couldnt stand all the warnings
             {
                 prefab = CraftData.GetPrefabForTechType(techType, false);
                 if (prefab == null)
