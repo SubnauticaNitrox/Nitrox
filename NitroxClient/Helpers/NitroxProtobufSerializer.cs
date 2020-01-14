@@ -11,7 +11,9 @@ namespace NitroxClient.Helpers
 {
     public class NitroxProtobufSerializer
     {
-        private readonly RuntimeTypeModel model;
+        public readonly RuntimeTypeModel model;
+        public readonly Dictionary<Type, int> NitroxTypes = new Dictionary<Type, int>();
+
         private readonly Dictionary<Type, int> knownTypes;
 
         public static NitroxProtobufSerializer Main;
@@ -38,6 +40,7 @@ namespace NitroxClient.Helpers
                     // As of the latest protobuf update they will automatically register detected attributes.
                     model.Add(type, true);
                     knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+                    NitroxTypes[type] = int.MaxValue;
                 }
             }
         }
@@ -47,22 +50,10 @@ namespace NitroxClient.Helpers
             model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
         }
 
-        public void Serialize(ProtoWriter writer, object o)
-        {
-            Stream stream = (Stream)writer.GetType().GetField("dest", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(writer); // really...
-            model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
-        }
-
         public T Deserialize<T>(Stream stream)
         {
             T t = (T)Activator.CreateInstance(typeof(T));
             return (T)Deserialize(stream, t, typeof(T));
-        }
-
-        public object Deserialize(ProtoReader reader, object o, Type t)
-        {
-            Stream stream = (Stream)reader.GetType().GetField("_source", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(reader); // really...
-            return Deserialize(stream, o, t);
         }
 
         public object Deserialize(Stream stream, object o, Type t)
@@ -81,14 +72,16 @@ namespace NitroxClient.Helpers
                     // As of the latest protobuf update they will automatically register detected attributes.
                     model.Add(type, true);
                     knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+                    NitroxTypes[type] = int.MaxValue;
                 }
                 else if (HasNitroxProtoContract(type))
                 {
                     model.Add(type, true);
                     knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+                    NitroxTypes[type] = int.MaxValue;
 
-                    ManuallyRegisterNitroxProtoMembers(type.GetFields(), type);
-                    ManuallyRegisterNitroxProtoMembers(type.GetProperties(), type);
+                    ManuallyRegisterNitroxProtoMembers(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
+                    ManuallyRegisterNitroxProtoMembers(type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
                 }
             }
         }

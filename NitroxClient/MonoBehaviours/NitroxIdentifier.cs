@@ -13,9 +13,12 @@ namespace NitroxClient.MonoBehaviours
     public class NitroxIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
         [ProtoMember(1)]
-        public NitroxId Id { get; set; }
+        public NitroxId Id;
 
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
+
+        private NitroxIdentifier() // Default for Proto
+        {}
 
         public void Start()
         {
@@ -88,7 +91,6 @@ namespace NitroxClient.MonoBehaviours
 
         public void OnProtoDeserializeObjectTree(ProtobufSerializer _)
         {
-            NitroxModel.Logger.Log.Info("Deserialized " + Id);
             gameObjectsById[Id] = gameObject;
         }
     }

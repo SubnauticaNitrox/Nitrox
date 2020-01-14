@@ -5,20 +5,22 @@ using System.Reflection;
 using System.Text;
 using Harmony;
 using ProtoBuf;
+using System.IO;
 using NitroxClient.Helpers;
 
 namespace NitroxPatcher.Patches.Persistent
 {
     public class ProtobufSerializerPrecompiled_Serialize_Patch : NitroxPatch
     {
-        static Type TARGET_TYPE = typeof(ProtobufSerializerPrecompiled);
-        MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        static Type TARGET_TYPE = typeof(ProtobufSerializer);
+        static MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        public static bool Prefix(int num, object obj, ProtoWriter writer)
+        public static bool Prefix(Stream stream, object source, Type type)
         {
-            if (num == int.MaxValue)
+            int key;
+            if (NitroxProtobufSerializer.Main.NitroxTypes.TryGetValue(type, out key))
             {
-                NitroxProtobufSerializer.Main.Serialize(writer, obj);
+                NitroxProtobufSerializer.Main.Serialize(stream, source);
                 return false;
             }
 
