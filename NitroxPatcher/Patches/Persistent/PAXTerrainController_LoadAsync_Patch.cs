@@ -8,7 +8,7 @@ using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class PAXTerrainController_LoadAsync_Patch : NitroxPatch
+    public class PAXTerrainController_LoadAsync_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(PAXTerrainController);
 

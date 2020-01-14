@@ -1,20 +1,21 @@
 ﻿using System.Reflection;
 using Autofac;
+using Autofac.Core;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.NetworkingLayer;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.HUD;
+using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.GameLogic.PlayerModel;
+using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Map;
 using NitroxModel.Core;
-using NitroxClient.GameLogic.Bases;
-using NitroxClient.GameLogic.PlayerModel;
-using NitroxClient.GameLogic.PlayerModel.Abstract;
-using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 
@@ -22,8 +23,20 @@ namespace NitroxClient
 {
     public class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
+        private readonly IModule[] modules;
+
+        public ClientAutoFacRegistrar(params IModule[] modules)
+        {
+            this.modules = modules;
+        }
+
         public void RegisterDependencies(ContainerBuilder containerBuilder)
         {
+            foreach (IModule module in modules)
+            {
+                containerBuilder.RegisterModule(module);
+            }
+            
             RegisterCoreDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
@@ -32,7 +45,7 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<UnityPreferenceStateStateProvider>()
+            containerBuilder.RegisterType<UnityPreferenceStateProvider>()
                 .As<IPreferenceStateProvider>()
                 .SingleInstance();
 

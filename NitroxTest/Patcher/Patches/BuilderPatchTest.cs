@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxPatcher.Patches;
 using NitroxTest.Patcher.Test;
 using System.Reflection.Emit;
+using NitroxPatcher.Patches.Dynamic;
 
 namespace NitroxTest.Patcher.Patches
 {

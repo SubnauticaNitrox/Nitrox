@@ -9,7 +9,7 @@ using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class GameInput_Initialize_Patch : NitroxPatch
+    public class GameInput_Initialize_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(GameInput);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance);
