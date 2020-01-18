@@ -4,6 +4,7 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures;
+using System.Linq;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -11,17 +12,8 @@ namespace NitroxServer.GameLogic.Bases
     public class BaseData
     {
         [ProtoMember(1)]
-        public Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
-        {
-            get
-            {
-                lock (basePiecesById)
-                {
-                    return new Dictionary<NitroxId, BasePiece>(basePiecesById);
-                }
-            }
-            set { basePiecesById = value; }
-        }
+        private List<BasePiece> serializableBasePieces = new List<BasePiece>();
+
 
         [ProtoMember(2)]
         public List<BasePiece> SerializableCompletedBasePieceHistory
@@ -155,6 +147,22 @@ namespace NitroxServer.GameLogic.Bases
             }
 
             return basePieces;
+        }
+
+        [ProtoBeforeSerialization]
+        private void BeforeSerialization()
+        {
+            serializableBasePieces = basePiecesById.Values.ToList();
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            foreach (BasePiece basePiece in serializableBasePieces)
+            {
+                basePiecesById.Add(basePiece.BaseId, basePiece);
+            }
+            serializableBasePieces = null;
         }
     }
 }

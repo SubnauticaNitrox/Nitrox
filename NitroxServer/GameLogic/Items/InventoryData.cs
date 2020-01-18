@@ -2,6 +2,7 @@
 using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using System.Linq;
 
 namespace NitroxServer.GameLogic.Items
 {
@@ -9,30 +10,10 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryData
     {
         [ProtoMember(1)]
-        public Dictionary<NitroxId, ItemData> SerializableInsertedInventoryItemsById
-        {
-            get
-            {
-                lock (insertedInventoryItemsById)
-                {
-                    return new Dictionary<NitroxId, ItemData>(insertedInventoryItemsById);
-                }
-            }
-            set { insertedInventoryItemsById = value; }
-        }
-        
+        private List<ItemData> serializableInsertedInventoryItems = new List<ItemData>();
+
         [ProtoMember(2)]
-        public Dictionary<NitroxId, ItemData> SerializableStorageSlotItemsById
-        {
-            get
-            {
-                lock (storageSlotItemsById)
-                {
-                    return new Dictionary<NitroxId, ItemData>(storageSlotItemsById);
-                }
-            }
-            set { storageSlotItemsById = value; }
-        }
+        private List<ItemData> serializableStorageSlotItems = new List<ItemData>();
         
         [ProtoIgnore]
         private Dictionary<NitroxId, ItemData> insertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
@@ -88,6 +69,28 @@ namespace NitroxServer.GameLogic.Items
             {
                 return new List<ItemData>(storageSlotItemsById.Values);
             }
-        }        
+        }
+
+        [ProtoBeforeSerialization]
+        private void BeforeSerialization()
+        {
+            serializableInsertedInventoryItems = insertedInventoryItemsById.Values.ToList();
+            serializableStorageSlotItems = storageSlotItemsById.Values.ToList();
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            foreach (ItemData item in serializableInsertedInventoryItems)
+            {
+                insertedInventoryItemsById.Add(item.ItemId, item);
+            }
+            foreach (ItemData item in serializableStorageSlotItems)
+            {
+                insertedInventoryItemsById.Add(item.ContainerId, item);
+            }
+            serializableStorageSlotItems = null;
+            serializableInsertedInventoryItems = null;
+        }
     }
 }
