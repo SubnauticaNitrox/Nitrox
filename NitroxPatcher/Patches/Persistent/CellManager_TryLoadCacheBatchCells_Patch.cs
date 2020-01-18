@@ -15,7 +15,7 @@ using System.Reflection.Emit;
 // TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
 {
-    class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch
+    class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
     {
         public static readonly Type TARGET_CLASS = typeof(CellManager);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryLoadCacheBatchCells", BindingFlags.Public | BindingFlags.Instance);

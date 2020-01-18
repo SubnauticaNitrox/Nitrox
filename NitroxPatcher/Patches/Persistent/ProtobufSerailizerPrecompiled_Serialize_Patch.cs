@@ -10,7 +10,7 @@ using NitroxClient.Helpers;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    public class ProtobufSerializerPrecompiled_Serialize_Patch : NitroxPatch
+    public class ProtobufSerializerPrecompiled_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
         static Type TARGET_TYPE = typeof(ProtobufSerializer);
         static MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
