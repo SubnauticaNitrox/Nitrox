@@ -2,7 +2,6 @@
 using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using System.Linq;
 
 namespace NitroxServer.GameLogic.Items
 {
