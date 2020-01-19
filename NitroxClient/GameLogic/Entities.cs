@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<NitroxModel.DataStructures.Int3, EntityCell> EntityCells = new Dictionary<NitroxModel.DataStructures.Int3, EntityCell>();
+        private readonly Dictionary<CellRoot, EntityCell> EntityCells = new Dictionary<CellRoot, EntityCell>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -54,7 +54,6 @@ namespace NitroxClient.GameLogic
             {
                 LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
                 EntityCell entityCell = EnsureCell(entity);
-                entityCell.Initialize();
                 
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
@@ -70,14 +69,22 @@ namespace NitroxClient.GameLogic
         private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
-            if (!EntityCells.TryGetValue(entity.AbsoluteEntityCell.CellId, out entityCell))
+            CellRoot cellRoot = new CellRoot()
+            {
+                CellId = entity.AbsoluteEntityCell.CellId,
+                BatchId = entity.AbsoluteEntityCell.BatchId,
+                Level = entity.AbsoluteEntityCell.Level
+            };
+
+            if (!EntityCells.TryGetValue(cellRoot, out entityCell))
             {
                 Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
                 Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
                 entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
-                EntityCells.Add(entity.AbsoluteEntityCell.CellId, entityCell);
+                EntityCells.Add(cellRoot, entityCell);
                 entityCell.EnsureRoot();
                 entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}", cellId.x, cellId.y, cellId.z);
+                entityCell.Initialize();
             }
             return entityCell;
         }

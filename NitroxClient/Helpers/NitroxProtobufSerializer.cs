@@ -37,12 +37,17 @@ namespace NitroxClient.Helpers
 
                 if (hasUweProtobuf)
                 {
-                    // As of the latest protobuf update they will automatically register detected attributes.
-                    model.Add(type, true);
-                    knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
-                    NitroxTypes[type] = int.MaxValue;
+                    AddType(type);
                 }
             }
+        }
+
+        private void AddType(Type type)
+        {
+            // As of the latest protobuf update they will automatically register detected attributes.
+            model.Add(type, true);
+            knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
+            NitroxTypes[type] = int.MaxValue;
         }
 
         public void Serialize(Stream stream, object o)
@@ -69,16 +74,11 @@ namespace NitroxClient.Helpers
 
                 if (hasUweProtobuf)
                 {
-                    // As of the latest protobuf update they will automatically register detected attributes.
-                    model.Add(type, true);
-                    knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
-                    NitroxTypes[type] = int.MaxValue;
+                    AddType(type);
                 }
                 else if (HasNitroxProtoContract(type))
                 {
-                    model.Add(type, true);
-                    knownTypes[type] = int.MaxValue; // UWE precompiled is going to pass everything to us
-                    NitroxTypes[type] = int.MaxValue;
+                    AddType(type);
 
                     ManuallyRegisterNitroxProtoMembers(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
                     ManuallyRegisterNitroxProtoMembers(type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
