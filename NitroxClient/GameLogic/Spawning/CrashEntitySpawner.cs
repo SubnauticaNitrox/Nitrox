@@ -18,23 +18,14 @@ namespace NitroxClient.GameLogic.Spawning
             if (parent.IsPresent())
             {
                 CrashHome crashHome = parent.Get().GetComponent<CrashHome>();
-                LargeWorldStreamer.main.StartCoroutine(WaitToAssignId(entity.Id, crashHome));
+
+                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(crashHome.crashPrefab, Vector3.zero, Quaternion.Euler(-90f, 0f, 0f));
+                gameObject.transform.SetParent(crashHome.transform, false);
+                NitroxIdentifier.SetNewId(gameObject, entity.Id);
+                ReflectionHelper.ReflectionSet<CrashHome>(crashHome, "crash", gameObject.GetComponent<Crash>());
             }
 
             return Optional<GameObject>.Empty();
-        }
-
-        /**
-         * Wait for some time so the CrashHome can load and spawn the Crash fish.
-         * If we try to manually spawn the crash fish (and assign to the CrashHome) it will be at
-         * the wrong orientation.  Maybe someone can figure out why this happens to we can create 
-         * it without leveraging this hack.
-         */
-        private IEnumerator WaitToAssignId(NitroxId id, CrashHome crashHome)
-        {
-            yield return new WaitForSeconds(0.25f);
-            GameObject crash = ((Crash)crashHome.ReflectionGet("crash")).gameObject;
-            NitroxIdentifier.SetNewId(crash, id);
         }
 
         public bool SpawnsOwnChildren()
