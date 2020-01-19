@@ -13,10 +13,30 @@ namespace NitroxServer.GameLogic.Players
     public class PlayerData
     {
         [ProtoMember(1)]
-        private List<PersistedPlayerData> serializablePlayers;
+        public Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
+        {
+            get
+            {
+                lock (playersByPlayerName)
+                {
+                    return new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
+                }
+            }
+            set { playersByPlayerName = value; }
+        }
 
         [ProtoMember(2)]
-        private List<EquippedItemData> serializableModules;
+        public Dictionary<NitroxId, EquippedItemData> SerializableModules
+        {
+            get
+            {
+                lock (ModulesItemsById)
+                {
+                    return new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
+                }
+            }
+            set { ModulesItemsById = value; }
+        }
 
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
@@ -188,30 +208,6 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-
-        [ProtoBeforeSerialization]
-        private void BeforeSerialization()
-        {
-            serializableModules = ModulesItemsById.Values.ToList();
-            serializablePlayers = playersByPlayerName.Values.ToList();
-        }
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            foreach (PersistedPlayerData playerData in serializablePlayers)
-            {
-                playersByPlayerName.Add(playerData.PlayerName, playerData);
-            }
-            foreach (EquippedItemData module in serializableModules)
-            {
-                ModulesItemsById.Add(module.ItemId, module);
-            }
-
-            serializablePlayers = null;
-            serializableModules = null;
-        }
-
         [ProtoContract]
         public class PersistedPlayerData
         {
@@ -219,9 +215,6 @@ namespace NitroxServer.GameLogic.Players
             public string PlayerName { get; set; }
 
             [ProtoMember(2)]
-            private List<EquippedItemData> serializableEquippedItems;
-
-            [ProtoIgnore]
             public Dictionary<NitroxId, EquippedItemData> EquippedItemsById { get; set; } = new Dictionary<NitroxId, EquippedItemData>();
 
             [ProtoMember(3)]
@@ -248,22 +241,6 @@ namespace NitroxServer.GameLogic.Players
             {
                 PlayerName = playerName;
                 PlayerId = playerId;
-            }
-
-            [ProtoBeforeSerialization]
-            private void BeforeSerialization()
-            {
-                serializableEquippedItems = EquippedItemsById.Values.ToList();
-            }
-
-            [ProtoAfterDeserialization]
-            private void AfterDeserialization()
-            {
-                foreach (EquippedItemData equippedItem in serializableEquippedItems)
-                {
-                    EquippedItemsById.Add(equippedItem.ItemId, equippedItem);
-                }
-                serializableEquippedItems = null;
             }
         }
     }

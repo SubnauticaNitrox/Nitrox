@@ -12,7 +12,17 @@ namespace NitroxServer.GameLogic.Bases
     public class BaseData
     {
         [ProtoMember(1)]
-        private List<BasePiece> serializableBasePieces = new List<BasePiece>();
+        public Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
+        {
+            get
+            {
+                lock (basePiecesById)
+                {
+                    return new Dictionary<NitroxId, BasePiece>(basePiecesById);
+                }
+            }
+            set { basePiecesById = value; }
+        }
 
 
         [ProtoMember(2)]
@@ -147,22 +157,6 @@ namespace NitroxServer.GameLogic.Bases
             }
 
             return basePieces;
-        }
-
-        [ProtoBeforeSerialization]
-        private void BeforeSerialization()
-        {
-            serializableBasePieces = basePiecesById.Values.ToList();
-        }
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            foreach (BasePiece basePiece in serializableBasePieces)
-            {
-                basePiecesById.Add(basePiece.BaseId, basePiece);
-            }
-            serializableBasePieces = null;
         }
     }
 }

@@ -12,7 +12,20 @@ namespace NitroxServer.GameLogic.Entities
     public class EntityData
     {
         [ProtoMember(1)]
-        private List<Entity> serializedEntities = new List<Entity>();
+        public Dictionary<NitroxId, Entity> SerializableEntities
+        {
+            get
+            {
+                serializableEntities = new Dictionary<NitroxId, Entity>(entitiesById);
+                return serializableEntities;
+            }
+            set
+            {
+                serializableEntities = value;
+            }
+        }
+
+        private Dictionary<NitroxId, Entity> serializableEntities = new Dictionary<NitroxId, Entity>();
 
         // Phasing entities can disappear if you go out of range.  This is in contrast to global root entities that are always visible.
         [ProtoIgnore]
@@ -204,25 +217,10 @@ namespace NitroxServer.GameLogic.Entities
             return result;
         }
 
-        public bool IsValid()
-        {
-            return entitiesById.Count > 0;
-        }
-
-        [ProtoBeforeSerialization]
-        private void BeforeSerialization()
-        {
-            serializedEntities = entitiesById.Values.ToList();
-        }
-
         [ProtoAfterDeserialization]
         private void AfterDeserialization()
         {
-            foreach (Entity ent in serializedEntities)
-            {
-                AddEntity(ent);
-            }
-            serializedEntities = null;
+            AddEntities(serializableEntities.Values);
         }
     }
 }
