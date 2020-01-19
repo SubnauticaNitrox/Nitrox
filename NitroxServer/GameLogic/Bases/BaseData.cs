@@ -4,7 +4,6 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures;
-using System.Linq;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -23,7 +22,6 @@ namespace NitroxServer.GameLogic.Bases
             }
             set { basePiecesById = value; }
         }
-
 
         [ProtoMember(2)]
         public List<BasePiece> SerializableCompletedBasePieceHistory
