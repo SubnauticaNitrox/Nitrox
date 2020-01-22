@@ -3,19 +3,15 @@ using System.Collections;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
-using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.GameLogic.PlayerPreferences;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
-using NitroxModel.Networking;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,7 +30,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject playerSettingsPanel;
         private PlayerPreferenceManager preferencesManager;
         public string ServerIp = "";
-        public int serverPort;
+        public int ServerPort;
         public static GameObject SaveGameMenuPrototype { get; set; }
 
         private static MainMenuRightSide RightSideMainMenu => MainMenuRightSide.main;
@@ -99,7 +95,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         public void OnDestroy()
         {
             UnsubscribeColorChanged();
-            RightSideMainMenu.groups.Remove(joinServerMenu);
             Destroy(joinServerMenu);
         }
 
@@ -160,11 +155,11 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             try
             {
-                multiplayerSession.Connect(ServerIp, serverPort);
+                multiplayerSession.Connect(ServerIp, ServerPort);
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{serverPort}");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
                 OnCancelClick();
             }
         }
@@ -232,7 +227,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
 
+#pragma warning disable CS0618 // God Damn it UWE...
                     IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
+#pragma warning restore CS0618 // God damn it UWE...
                     StartCoroutine(startNewGame);
 
                     break;
@@ -248,7 +245,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         () =>
                         {
                             multiplayerSession.Disconnect();
-                            multiplayerSession.Connect(ServerIp, serverPort);
+                            multiplayerSession.Connect(ServerIp, ServerPort);
                         });
 
                     break;
@@ -293,7 +290,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             joinServerMenu.name = "Join Server";
 
             joinServerMenu.transform.SetParent(RightSideMainMenu.transform, false);
-            RightSideMainMenu.groups.Add(joinServerMenu);
+            RightSideMainMenu.groups.Add(joinServerMenu.GetComponent<MainMenuGroup>());
 
             //Not sure what is up with this menu, but we have to use the RectTransform of the Image component as the parent for our color picker panel.
             //Most of the UI elements seem to vanish behind this Image otherwise.
@@ -311,8 +308,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private static GameObject CloneSaveGameMenuPrototype()
         {
             GameObject joinServerMenu = Instantiate(SaveGameMenuPrototype);
-            DestroyObject(joinServerMenu.RequireGameObject("Header"));
-            DestroyObject(joinServerMenu.RequireGameObject("Scroll View"));
+            Destroy(joinServerMenu.RequireGameObject("Header"));
+            Destroy(joinServerMenu.RequireGameObject("Scroll View"));
             Destroy(joinServerMenu.GetComponent<LayoutGroup>());
             Destroy(joinServerMenu.GetComponent<MainMenuLoadPanel>());
             joinServerMenu.GetAllComponentsInChildren<LayoutGroup>().ForEach(Destroy);

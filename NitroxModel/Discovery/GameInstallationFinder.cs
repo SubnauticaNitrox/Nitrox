@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery.InstallationFinders;
 using NitroxModel.Helper;
@@ -11,27 +12,30 @@ namespace NitroxModel.Discovery
     /// </summary>
     public class GameInstallationFinder : IFindGameInstallation
     {
-        private readonly List<IFindGameInstallation> finders = new List<IFindGameInstallation>
-        {
+        private readonly IFindGameInstallation[] finders = {
             new ConfigFileGameFinder(),
             new SteamGameRegistryFinder(),
             new EpicGamesRegistryFinder()
         };
+        
+        /// <summary>
+        /// Thread safe backing field for Singleton instance.
+        /// </summary>
+        private static readonly Lazy<GameInstallationFinder> instance = new Lazy<GameInstallationFinder>(() => new GameInstallationFinder());
+        public static GameInstallationFinder Instance => instance.Value;
 
-        public static GameInstallationFinder Instance { get; } = new GameInstallationFinder();
-
-        public Optional<string> FindGame(List<string> errors)
+        public Optional<string> FindGame(List<string> errors = null)
         {
-            Validate.NotNull(errors);
-
             foreach (IFindGameInstallation finder in finders)
             {
                 Optional<string> path = finder.FindGame(errors);
-                if (path.IsPresent())
+                if (!path.IsPresent())
                 {
-                    errors.Clear();
-                    return path;
+                    continue;
                 }
+                
+                errors?.Clear();
+                return path;
             }
 
             return Optional<string>.Empty();

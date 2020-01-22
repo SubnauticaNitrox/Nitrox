@@ -65,7 +65,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
                 JoinServer joinServer = gameObject.AddComponent<JoinServer>();
                 string[] serverIpPort = secret.Split(':');
                 joinServer.ServerIp = serverIpPort[0];
-                joinServer.serverPort = int.Parse(serverIpPort[1]);
+                joinServer.ServerPort = int.Parse(serverIpPort[1]);
             }
             else
             {

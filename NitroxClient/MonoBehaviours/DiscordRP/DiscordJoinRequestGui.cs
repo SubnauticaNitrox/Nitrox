@@ -3,6 +3,7 @@ using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
@@ -82,19 +83,21 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IEnumerator LoadAvatar(string id, string avatar_id)
         {
-            WWW avatarURL = new WWW("https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png");
-            yield return avatarURL;
+            UnityWebRequest avatarURL = UnityWebRequestTexture.GetTexture("https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png");
+            yield return avatarURL.SendWebRequest();
 
-            if (avatarURL.texture != null && avatarURL.texture.height >= 128)
+            Texture2D avatarTexture = ((DownloadHandlerTexture)avatarURL.downloadHandler).texture;
+
+            if (avatarTexture != null && avatarTexture.height >= 128)
             {
-                avatar = avatarURL.texture;
+                avatar = avatarTexture;
             }
             else
             {
-                WWW standardAvatarURL = new WWW("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png");
-                yield return standardAvatarURL;
+                UnityWebRequest standardAvatarURL = UnityWebRequestTexture.GetTexture("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png");
+                yield return standardAvatarURL.SendWebRequest();
 
-                avatar = standardAvatarURL.texture;
+                avatar = ((DownloadHandlerTexture)standardAvatarURL.downloadHandler).texture;
             }
             TextureScaler.Scale(avatar, 64, 64);
 

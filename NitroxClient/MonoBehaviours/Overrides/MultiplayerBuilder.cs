@@ -143,7 +143,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 MultiplayerBuilder.ghostModelRotation = Quaternion.identity;
                 MultiplayerBuilder.ghostModelScale = Vector3.one;
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
-                MaterialExtensions.SetLocalScale(MultiplayerBuilder.renderers);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.ghostModel);
             }
             else
@@ -163,7 +162,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
-                MaterialExtensions.SetLocalScale(MultiplayerBuilder.renderers);
                 MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
@@ -184,7 +182,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Transform transform = componentInParent.transform;
                 transform.position = MultiplayerBuilder.placePosition;
                 transform.rotation = MultiplayerBuilder.placeRotation;
-                flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag);
+                flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
                 if(rotationMetadata.IsPresent())
                 {
@@ -940,7 +938,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
             if (gameObject != null)
             {
                 PowerRelay component = gameObject.GetComponent<PowerRelay>();
-                global::Utils.Assert(component != null, "see log", null);
                 if (component.powerFX != null && component.powerFX.attachPoint != null)
                 {
                     PowerFX powerFX = ghostModel.AddComponent<PowerFX>();

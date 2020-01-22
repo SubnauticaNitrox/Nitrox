@@ -56,7 +56,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string ToHelpText()
         {
             string cmd = Name;
-            string text = "";
             if (Alias.Length > 0)
             {
                 cmd += "/" + string.Join("/", Alias);

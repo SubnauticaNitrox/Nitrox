@@ -28,7 +28,7 @@
                 <BlurEffect Radius="7" />
             </Image.Effect>
         </Image>
-        <Grid Background="#B228292C" Margin="0,0,0,0">                
+        <Grid Background="#B228292C">                
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" />
@@ -55,17 +55,17 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
-                    <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" >
+                    <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" HorizontalAlignment="Left" Width="225" >
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" >PLAY GAME</TextBlock>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" ToolTip="Play the game" >PLAY GAME</TextBlock>
                         </Grid>
                     </Button>
-                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" >
+                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" ToolTip="Configure server options" >
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >SERVER</TextBlock>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" ><Run Text="SERVER"/></TextBlock>
                         </Grid>
                     </Button>
-                    <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick">
+                    <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick" ToolTip="Launcher settings">
                         <Grid Width="225">
                             <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
                         </Grid>
