@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
 
-// TODO: Temporarily persistent to run before everything.  When we migrate the patch hook to an early point then make this non-persistent
 namespace NitroxPatcher.Patches.Persistent
 {
     class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
@@ -28,13 +27,13 @@ namespace NitroxPatcher.Patches.Persistent
                 CodeInstruction instruction = instrList[i];
                 if (instrList.Count > i + 2 && instrList[i+2].opcode == OpCodes.Callvirt && instrList[i+2].operand == (object)typeof(LargeWorldStreamer).GetProperty("pathPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
                 {
-                    yield return new CodeInstruction(OpCodes.Ldstr, "");
+                    yield return new CodeInstruction(OpCodes.Ldstr, ""); // Replace pathPrefix with an empty string
                     i += 2;
                 }
                 else if (instrList.Count > i + 2 && instrList[i + 2].opcode == OpCodes.Callvirt && instrList[i + 2].operand == (object)typeof(LargeWorldStreamer).GetProperty("fallbackPrefix", BindingFlags.Public | BindingFlags.Instance).GetGetMethod())
                 {
-                    yield return new CodeInstruction(OpCodes.Ldstr, "");
-                    i += 2;
+                    yield return new CodeInstruction(OpCodes.Ldstr, ""); // Replace fallbackPrefix with an empty string
+                    i += 2; // Now that I think of it this is skipping the entire call?
                 }
                 else
                 {

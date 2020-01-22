@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opGameObject.IsPresent())
             {
                 UnityEngine.Object.Destroy(opGameObject.Get());
-               entities.RemoveEntity(pickup.Id);
+                entities.RemoveEntity(pickup.Id);
             }
         }
     }

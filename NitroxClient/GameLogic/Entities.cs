@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<CellRoot, EntityCell> EntityCells = new Dictionary<CellRoot, EntityCell>();
+        private readonly Dictionary<AbsoluteEntityCell, EntityCell> EntityCells = new Dictionary<AbsoluteEntityCell, EntityCell>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -69,21 +69,15 @@ namespace NitroxClient.GameLogic
         private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
-            CellRoot cellRoot = new CellRoot()
-            {
-                CellId = entity.AbsoluteEntityCell.CellId,
-                BatchId = entity.AbsoluteEntityCell.BatchId,
-                Level = entity.AbsoluteEntityCell.Level
-            };
 
-            if (!EntityCells.TryGetValue(cellRoot, out entityCell))
+            if (!EntityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell))
             {
                 Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
                 Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
                 entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
-                EntityCells.Add(cellRoot, entityCell);
+                EntityCells.Add(entity.AbsoluteEntityCell, entityCell);
                 entityCell.EnsureRoot();
-                entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}", cellId.x, cellId.y, cellId.z);
+                entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}; Batch {3}, {4}, {5}", cellId.x, cellId.y, cellId.z, batchId.x, batchId.y, batchId.z);
                 entityCell.Initialize();
             }
             return entityCell;

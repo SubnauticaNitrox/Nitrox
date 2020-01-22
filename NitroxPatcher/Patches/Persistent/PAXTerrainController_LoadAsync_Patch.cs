@@ -27,13 +27,13 @@ namespace NitroxPatcher.Patches.Persistent
                 CodeInstruction instruction = instrList[i];
                 if (instrList[i].opcode == OpCodes.Switch)
                 {
-                    List<Label> labels = ((Label[])instruction.operand).ToList();
+                    List<Label> labels = ((Label[])instruction.operand).ToList(); // removing unneccessary labels
                     labels.RemoveRange(3, 5);
                     yield return new CodeInstruction(instruction.opcode, labels.ToArray());
                 }
                 else if (instruction.opcode == OpCodes.Brtrue && instruction.operand.GetHashCode() == 10)
                 {
-                    yield return new CodeInstruction(OpCodes.Brtrue, jmpLabelStartOfMethod);
+                    yield return new CodeInstruction(OpCodes.Brtrue, jmpLabelStartOfMethod); // replace previous jump with new one
                 }
                 else if (instrList.Count > i + 2 &&
                          instrList[i + 1].opcode == OpCodes.Ldfld &&
@@ -42,17 +42,17 @@ namespace NitroxPatcher.Patches.Persistent
                          Equals(instrList[i + 3].operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
                     instruction.labels.Add(jmpLabelStartOfMethod);
-                    yield return instruction;
+                    yield return instruction; // Add a label for jumping
                 }
                 else if (instruction.opcode == OpCodes.Stfld && 
                          Equals(instruction.operand, LARGE_WORLD_STREAMER_FROZEN_FIELD))
                 {
                     yield return instruction;
                     yield return new CodeInstruction(OpCodes.Call, typeof(Multiplayer).GetMethod(nameof(Multiplayer.SubnauticaLoadingCompleted), BindingFlags.Public | BindingFlags.Static));
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_8);
-                    yield return new CodeInstruction(OpCodes.Stfld, GetStateField(GetLoadAsyncEnumerableMethod()));
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_1);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0); // this
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_8); // Load 8 onto the stack
+                    yield return new CodeInstruction(OpCodes.Stfld, GetStateField(GetLoadAsyncEnumerableMethod())); // Store last stack item into state field
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_1); // return true
                     yield return new CodeInstruction(OpCodes.Ret);
                 }
                 else
