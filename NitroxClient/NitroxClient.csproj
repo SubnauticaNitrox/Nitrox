@@ -118,7 +118,7 @@
     <Reference Include="UnityEngine.InputModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.InputModule.dll</HintPath>
     </Reference>
-	<Reference Include="UnityEngine.InputLegacyModule">
+    <Reference Include="UnityEngine.InputLegacyModule">
       <HintPath>$(SubnauticaManaged)\UnityEngine.InputLegacyModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.JSONSerializeModule">
