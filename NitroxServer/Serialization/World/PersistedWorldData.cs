@@ -26,16 +26,9 @@ namespace NitroxServer.Serialization.World
 
         public bool IsValid()
         {
-            return (ParsedBatchCells != null) &&
-                   (ServerStartTime != null) &&
+            return (WorldData.IsValid()) &&
                    (BaseData != null) &&
-                   (WorldData.VehicleData != null) &&
-                   (WorldData.InventoryData != null) &&
-                   (WorldData.GameData != null) &&
-                   (PlayerData != null) &&
-                   (WorldData.EntityData != null) &&
-                   (WorldData.EntityData.SerializableEntitiesById.Count > 0) &&
-                   (WorldData.EscapePodData != null);
+                   (PlayerData != null);
         }
     }
 }

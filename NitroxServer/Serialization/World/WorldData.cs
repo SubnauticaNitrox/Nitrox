@@ -36,5 +36,16 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(7)]
         public EscapePodData EscapePodData { get; set; }
 
+        public bool IsValid()
+        {
+            return (ParsedBatchCells != null) && // Always returns false on empty saves
+                   (ServerStartTime.Equals(default(DateTime))) &&
+                   (VehicleData != null) &&
+                   (InventoryData != null) &&
+                   (GameData != null) &&
+                   (EntityData != null) &&
+                   (EntityData.SerializableEntitiesById.Count > 0) &&
+                   (EscapePodData != null);
+        }
     }
 }
