@@ -25,13 +25,13 @@ The following milestones have been completed:
 * New HUD for remote players
 * Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
-* Friendly Installer
+* Friendly Launcher
 * Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
 
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. 
 
-We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing an installation package to install on each reoccurring update.
+We finally have reached a stage, where we feel comfortable enough to give the public easy access to the mod by providing a launcher to use on each reoccurring update.
 
 If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
 
