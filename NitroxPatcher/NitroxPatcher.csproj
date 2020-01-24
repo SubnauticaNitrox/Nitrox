@@ -221,6 +221,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
+    <Compile Include="Patches\Dynamic\CrashHome_Spawn_Patch.cs" />
     <Compile Include="Patches\Dynamic\ArmsController_Start_Patch.cs" />
     <Compile Include="Patches\Dynamic\ArmsController_Update_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddBulkheadGhost_UpdatePlacement_Patch.cs" />
@@ -339,7 +340,9 @@
     <Compile Include="Patches\IPersistentPatch.cs" />
     <Compile Include="Patches\NitroxPatch.cs" />
     <Compile Include="Patches\Persistent\PAXTerrainController_LoadAsync_Patch.cs" />
-    <Compile Include="Patches\Persistent\ProtobufSerializer_DeserializeIntoGameObject_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerializer_Serialize_Patch.cs" />
+    <Compile Include="Patches\Persistent\ProtobufSerializer_Deserialize_Patch.cs" />
+    <Compile Include="Patches\Persistent\CellManager_TryLoadCacheBatchCells_Patch.cs" />
     <Compile Include="Patches\Persistent\CellManager_GetPrefabForSlot_Patch.cs" />
     <Compile Include="Patches\Persistent\EscapePodFirstUseCinematicsController_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />

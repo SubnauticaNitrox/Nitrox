@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (multiplayerSession.Client.IsConnected)
             {
-                multiplayerSession.Disconnect();
+                multiplayerSession.Disconnect(); // Should really be put into several different methods
             }
         }
 
