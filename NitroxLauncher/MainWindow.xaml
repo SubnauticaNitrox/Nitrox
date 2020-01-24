@@ -6,79 +6,95 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
-    <Window.Resources>
+        Title="{DynamicResource ResourceKey=NitroxMainTitle}" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
 
-    </Window.Resources>
     <WindowChrome.WindowChrome>
-        <WindowChrome
-            ResizeBorderThickness="0"
-            CaptionHeight="72"
-            CornerRadius="0"
-            GlassFrameThickness="3"
-            />
+        <WindowChrome ResizeBorderThickness="0" CaptionHeight="72" CornerRadius="0" GlassFrameThickness="3" />
     </WindowChrome.WindowChrome>
+
     <Grid Margin="0,0,0,0">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="72"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
         <Image x:Name="BackgroundImage" Margin="0,0,0,0" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom">
             <Image.Effect>
                 <BlurEffect Radius="7" />
             </Image.Effect>
         </Image>
-        <Grid Background="#B228292C">                
+
+        <Grid Background="#B228292C">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
+
             <StackPanel Grid.Row="0" Orientation="Horizontal"  >
-                <TextBlock FontFamily="{StaticResource Roboto}" Text="NITROX" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
+                <TextBlock FontFamily="{StaticResource Roboto}" Text="{DynamicResource ResourceKey=NitroxTitle}" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
                 <TextBlock FontFamily="{StaticResource Roboto}" VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
             </StackPanel>
+
             <Button Grid.Column="1" Margin="0,6.25,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="#00000000" Background="#00000000" Foreground="White" Visibility="Visible" IsEnabled="True" Click="Minimze_Click" Style="{StaticResource OpaqueButton}"  WindowChrome.IsHitTestVisibleInChrome="True">
                 <Image Height="16" Width="16" Source="Images/minimise.png" Stretch="None" Margin="5,5,5,5" />
             </Button>
+
             <Button Grid.Column="1"  HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6.25,5.76,0" BorderBrush="#00000000" Background="#00000000" Foreground="White" Visibility="Visible" IsEnabled="True" Click="Close_Click" Style="{StaticResource OpaqueButton}"  WindowChrome.IsHitTestVisibleInChrome="True">
                 <Image Source="Images/exit.png" Stretch="None" Margin="5,5,5,5" />
             </Button>
         </Grid>
+
         <Grid Grid.Row="1">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="225"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  Background="#B2151414">
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#B2151414">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
+
                 <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
+
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" HorizontalAlignment="Left" Width="225" >
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" ToolTip="Play the game" >PLAY GAME</TextBlock>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" ToolTip="{DynamicResource ResourceKey=NitroxPlayButtonTooltip}" Text="{DynamicResource ResourceKey=NitroxPlayButton}"/>
                         </Grid>
                     </Button>
-                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" ToolTip="Configure server options" >
+
+                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" ToolTip="{DynamicResource ResourceKey=NitroxServerButtonTooltip}" >
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" ><Run Text="SERVER"/></TextBlock>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >
+                                <Run Text="{DynamicResource ResourceKey=NitroxServerButton}"/>
+                            </TextBlock>
                         </Grid>
                     </Button>
-                    <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick" ToolTip="Launcher settings">
+
+                    <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick" ToolTip="{DynamicResource ResourceKey=NitroxOptionButtonTooltip}">
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >OPTIONS</TextBlock>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" Text="{DynamicResource ResourceKey=NitroxOptionButtonTooltip}" />
                         </Grid>
-                    </Button>                    
+                    </Button>
+
                 </StackPanel>
+
                 <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
-                    <TextBlock FontFamily="{StaticResource Roboto}" Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" >NITROX RELEASE</TextBlock>
+                    <TextBlock FontFamily="{StaticResource Roboto}" Margin="0,0,0,3" Foreground="#BFFFFFFF" FontSize="10" Text="{DynamicResource ResourceKey=NitroxRelease}" />
                     <TextBlock FontFamily="{StaticResource Roboto}" Margin="0,0,3,0" Foreground="#BFFFFFFF" x:Name="NitroxVersionLabel" Text="{Binding Version , RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
                 </StackPanel>
+
             </Grid>
+
             <Grid Grid.Column="1" x:Name="FrameGrid">
-                <Frame  x:Name="MainPage" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"/>                
+                <Frame x:Name="MainPage" NavigationUIVisibility="Hidden" Content="{Binding CurrentPage, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}" />
             </Grid>
         </Grid>
     </Grid>
+
 </Window>

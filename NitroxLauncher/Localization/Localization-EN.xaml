@@ -1,0 +1,73 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:NitroxLauncher"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <sys:String x:Key="Localization">en-US</sys:String>
+    
+    <!-- Main Window -->
+    
+    <sys:String x:Key="NitroxMainTitle">Nitrox Launcher</sys:String>
+    <sys:String x:Key="NitroxTitle">NITROX</sys:String>
+    
+    <sys:String x:Key="NitroxPlayButton">PLAY GAME</sys:String>
+    <sys:String x:Key="NitroxPlayButtonTooltip">Play the game</sys:String>
+
+    <sys:String x:Key="NitroxServerButton">SERVER</sys:String>
+    <sys:String x:Key="NitroxServerButtonTooltip">Configure server options</sys:String>
+
+    <sys:String x:Key="NitroxOptionButton">OPTIONS</sys:String>
+    <sys:String x:Key="NitroxOptionButtonTooltip">Launcher settings</sys:String>
+
+    <sys:String x:Key="NitroxRelease">NITROX RELEASE</sys:String>
+    
+    <!-- Launch Game Page -->
+
+    <sys:String x:Key="NitroxGameTitle">Launch Game</sys:String>
+
+    <sys:String x:Key="NitroxPresentation" xml:space="preserve">
+    Nitrox is an open-source, multiplayer modification for the game Subnautica
+    
+    The mod is in the very early stages of development
+    However, a solid foundation has been laid for the community to iterate on
+    </sys:String>
+
+    <sys:String x:Key="NitroxGameSinglerplayerButton">SINGLEPLAYER</sys:String>
+    <sys:String x:Key="NitroxGameSinglerplayerButtonTooltip">Play alone</sys:String>
+
+    <sys:String x:Key="NitroxGameMultiplayerButton">MULTIPLAYER</sys:String>
+    <sys:String x:Key="NitroxGameMultiplayerButtonTooltip">Launch the game with multiplayer enabled</sys:String>
+
+    
+    <!-- Options Page -->
+
+    <sys:String x:Key="NitroxOptionTitle">Option Page</sys:String>
+    <sys:String x:Key="NitroxOTitle">Settings</sys:String>
+
+    <sys:String x:Key="NitroxOptionGameDirectory">GAME DIRECTORY</sys:String>
+    <sys:String x:Key="NitroxOptionGameDirectoryTooltip">Subnautica install location</sys:String>
+    
+    <sys:String x:Key="NitroxOptionSubmit">Confirm</sys:String>
+    <sys:String x:Key="NitroxOptionSubmitTooltip">Confirm the configuration changings</sys:String>
+    
+    <!-- Server Page -->
+
+    <sys:String x:Key="NitroxServerTitle">Server Page</sys:String>
+    
+    <sys:String x:Key="NitroxServerSTitle">Server Options</sys:String>
+    <sys:String x:Key="NitroxServerGameVersion">GAME VERSION</sys:String>
+
+    <sys:String x:Key="NitroxServerWinLauncher">Launcher window</sys:String>
+    <sys:String x:Key="NitroxServerWinLauncherTooltip">Server will run in the launcher</sys:String>
+    <sys:String x:Key="NitroxServerCmdLauncher">Command line window</sys:String>
+    <sys:String x:Key="NitroxServerCmdLauncherTooltip">Server will run in a seperate window (CMD)</sys:String>
+
+    <sys:String x:Key="NitroxServerStart">START SERVER</sys:String>
+    <sys:String x:Key="NitroxServerStartTooltip">Start the server with chosen options</sys:String>
+    
+    <!-- Server Console -->
+
+    <sys:String x:Key="NitroxServerConsoleTitle">Server Console Page</sys:String>
+    <sys:String x:Key="NitroxServerConsoleSendButton">Send</sys:String>
+
+</ResourceDictionary>
