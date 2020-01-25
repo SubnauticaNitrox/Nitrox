@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using UnityEngine;
+using System;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -215,7 +216,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               classId,
                                               true,
                                               deterministicBatchGenerator.NextId());
-            
+
+            spawnedEntity.ChildEntities = SpawnChildren(entitySpawnPoint.Children, deterministicBatchGenerator);
             
             yield return spawnedEntity;
 
@@ -234,6 +236,28 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 yield return childEntity;
             }
+        }
+
+        private List<Entity> SpawnChildren(List<EntitySpawnPoint> children, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            List<Entity> entities = new List<Entity>();
+            foreach (EntitySpawnPoint esp in children)
+            {
+                if (esp.Density > 0)
+                {
+                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
+
+                    if (prefabs.Count > 0)
+                    {
+                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator));
+                    }
+                    else if (esp.ClassId != null)
+                    {
+                        entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator));
+                    }
+                }
+            }
+            return entities;
         }
 
         private void AssignPlaceholderEntitiesIfRequired(Entity entity, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)

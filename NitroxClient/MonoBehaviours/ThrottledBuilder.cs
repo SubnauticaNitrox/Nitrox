@@ -127,7 +127,7 @@ namespace NitroxClient.MonoBehaviours
             
             if(basePiece.ParentId.IsPresent())
             {
-                parentBase = NitroxIdentifier.GetObjectFrom(basePiece.ParentId.Get()).OrElse(null);
+                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Get()).OrElse(null);
             }
             
             Constructable constructable;
@@ -146,7 +146,7 @@ namespace NitroxClient.MonoBehaviours
                 gameObject = constructable.gameObject;
             }
             
-            NitroxIdentifier.SetNewId(gameObject, basePiece.Id);
+            NitroxEntity.SetNewId(gameObject, basePiece.Id);
             
             /**
              * Manually call start to initialize the object as we may need to interact with it within the same frame.
@@ -159,7 +159,7 @@ namespace NitroxClient.MonoBehaviours
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
             Log.Info("Constructed completed " + constructionCompleted.PieceId);
-            GameObject constructing = NitroxIdentifier.RequireObjectFrom(constructionCompleted.PieceId);
+            GameObject constructing = NitroxEntity.RequireObjectFrom(constructionCompleted.PieceId);
 
             ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
 
@@ -173,7 +173,7 @@ namespace NitroxClient.MonoBehaviours
                 Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
                 GameObject finishedPiece = (GameObject)opBasePiece.Get();
                 UnityEngine.Object.Destroy(constructableBase.gameObject);
-                NitroxIdentifier.SetNewId(finishedPiece, constructionCompleted.PieceId);
+                NitroxEntity.SetNewId(finishedPiece, constructionCompleted.PieceId);
             }
             else
             {
@@ -182,7 +182,7 @@ namespace NitroxClient.MonoBehaviours
                 constructable.SetState(true, true);
             }
             
-            if (constructionCompleted.BaseId != null && NitroxIdentifier.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())
+            if (constructionCompleted.BaseId != null && NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())
             {
                 Log.Info("Creating base: " + constructionCompleted.BaseId);
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
@@ -196,7 +196,7 @@ namespace NitroxClient.MonoBehaviours
             if (opNewlyCreatedBase.IsPresent())
             {
                 GameObject newlyCreatedBase = (GameObject)opNewlyCreatedBase.Get();
-                NitroxIdentifier.SetNewId(newlyCreatedBase, newBaseId);
+                NitroxEntity.SetNewId(newlyCreatedBase, newBaseId);
             }
             else
             {
@@ -208,7 +208,7 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("Processing ConstructionAmountChanged " + amountChanged.Id + " " + amountChanged.Amount);
 
-            GameObject constructing = NitroxIdentifier.RequireObjectFrom(amountChanged.Id);
+            GameObject constructing = NitroxEntity.RequireObjectFrom(amountChanged.Id);
             BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
 
             // Bases don't  send a deconstruct being packet.  Instead, we just make sure
@@ -225,7 +225,7 @@ namespace NitroxClient.MonoBehaviours
                 {
                     GameObject ghost = (GameObject)opGhost.Get();
                     UnityEngine.Object.Destroy(constructing);
-                    NitroxIdentifier.SetNewId(ghost, amountChanged.Id);
+                    NitroxEntity.SetNewId(ghost, amountChanged.Id);
                 }
                 else
                 {
@@ -246,7 +246,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void DeconstructionBegin(DeconstructionBeginEvent begin)
         {
-            GameObject deconstructing = NitroxIdentifier.RequireObjectFrom(begin.PieceId);
+            GameObject deconstructing = NitroxEntity.RequireObjectFrom(begin.PieceId);
             Constructable constructable = deconstructing.RequireComponent<Constructable>();
 
             constructable.SetState(false, false);
@@ -254,7 +254,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void DeconstructionCompleted(DeconstructionCompletedEvent completed)
         {
-            GameObject deconstructing = NitroxIdentifier.RequireObjectFrom(completed.PieceId);
+            GameObject deconstructing = NitroxEntity.RequireObjectFrom(completed.PieceId);
             UnityEngine.Object.Destroy(deconstructing);
         }
     }

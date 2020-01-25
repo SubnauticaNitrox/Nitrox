@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             if (subRootId.IsPresent())
             {
-                Optional<GameObject> sub = NitroxIdentifier.GetObjectFrom(subRootId.Get());
+                Optional<GameObject> sub = NitroxEntity.GetObjectFrom(subRootId.Get());
 
                 if (sub.IsPresent())
                 {

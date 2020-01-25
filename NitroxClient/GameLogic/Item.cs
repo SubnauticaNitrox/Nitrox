@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic
 
         public void PickedUp(GameObject gameObject, TechType techType)
         {
-            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetId(gameObject);
             Vector3 itemPosition = gameObject.transform.position;
 
             PickedUp(itemPosition, id, techType);
@@ -43,7 +43,7 @@ namespace NitroxClient.GameLogic
         public void Dropped(GameObject gameObject, TechType techType, Vector3 dropPosition)
         {
             Optional<NitroxId> waterparkId = GetCurrentWaterParkId();
-            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetId(gameObject);
             byte[] bytes = SerializationHelper.GetBytes(gameObject);
             
             Log.Debug("Dropping item with id: " + id);
@@ -62,7 +62,7 @@ namespace NitroxClient.GameLogic
 
                 if (currentWaterPark != null)
                 {
-                    NitroxId waterParkId = NitroxIdentifier.GetId(currentWaterPark.gameObject);
+                    NitroxId waterParkId = NitroxEntity.GetId(currentWaterPark.gameObject);
                     return Optional<NitroxId>.Of(waterParkId);
                 }
             }

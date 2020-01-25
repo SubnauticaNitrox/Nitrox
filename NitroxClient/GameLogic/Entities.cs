@@ -21,7 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<AbsoluteEntityCell, EntityCell> EntityCells = new Dictionary<AbsoluteEntityCell, EntityCell>();
+        private readonly Dictionary<AbsoluteEntityCell, EntityCell> entityCells = new Dictionary<AbsoluteEntityCell, EntityCell>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -53,11 +53,11 @@ namespace NitroxClient.GameLogic
             foreach (Entity entity in entities)
             {
                 LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
-                EntityCell entityCell = EnsureCell(entity);
+                
                 
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
-                    Spawn(entity, Optional<GameObject>.Empty(), entityCell);
+                    Spawn(entity, Optional<GameObject>.Empty());
                 }
                 else
                 {
@@ -66,17 +66,17 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private EntityCell EnsureCell(Entity entity)
+        private EntityCell EnsureCell(Entity entity, Optional<GameObject> liveRoot)
         {
             EntityCell entityCell;
 
-            if (!EntityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell))
+            if (!entityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell) && liveRoot.IsPresent() && liveRoot.Get().GetComponent<LargeWorldEntityCell>())
             {
                 Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
                 Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
                 entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
-                EntityCells.Add(entity.AbsoluteEntityCell, entityCell);
-                entityCell.EnsureRoot();
+                entityCells.Add(entity.AbsoluteEntityCell, entityCell);
+                entityCell.liveRoot = liveRoot.Get();
                 entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}; Batch {3}, {4}, {5}", cellId.x, cellId.y, cellId.z, batchId.x, batchId.y, batchId.z);
                 entityCell.Initialize();
             }
@@ -88,15 +88,17 @@ namespace NitroxClient.GameLogic
             return new Int3(int3.X, int3.Y, int3.Z);
         }
 
-        private void Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot = null)
+        private void Spawn(Entity entity, Optional<GameObject> parent)
         {
             alreadySpawnedIds.Add(entity.Id);
 
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
-            if (cellRoot != null)
+
+            EntityCell cellRoot = EnsureCell(entity, gameObject);
+
+            if (cellRoot != null && gameObject.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
-                cellRoot.AddEntity(gameObject.Get().GetComponent<LargeWorldEntity>());
                 LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
             }
 
@@ -130,12 +132,12 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(Entity entity)
         {
-            Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(entity.Id);
+            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
             if (opGameObject.IsPresent())
             {
                 opGameObject.Get().transform.position = entity.Position;
-                opGameObject.Get().transform.localRotation = entity.Rotation;
+                opGameObject.Get().transform.rotation = entity.Rotation;
                 opGameObject.Get().transform.localScale = entity.Scale;
             }
             else

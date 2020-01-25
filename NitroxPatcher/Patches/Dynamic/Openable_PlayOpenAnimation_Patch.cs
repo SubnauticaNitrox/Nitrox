@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__instance.isOpen != openState)
             {
-                NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
                 NitroxServiceLocator.LocateService<Interior>().OpenableStateChanged(id, openState, duration);
             }
 

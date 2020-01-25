@@ -55,7 +55,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         private void StartBroadcastingEntityPosition(NitroxId id)
         {
-            Optional<GameObject> gameObject = NitroxIdentifier.GetObjectFrom(id);
+            Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
 
             if (gameObject.IsPresent())
             {

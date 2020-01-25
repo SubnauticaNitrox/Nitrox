@@ -11,7 +11,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(MedicalCabinetClicked packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             MedicalCabinet cabinet = gameObject.RequireComponent<MedicalCabinet>();
 
             bool medkitPickedUp = !packet.HasMedKit && cabinet.hasMedKit;

@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorItemPickup packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.FabricatorId);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.FabricatorId);
             CrafterLogic crafterLogic = gameObject.RequireComponentInChildren<CrafterLogic>(true);
 
             if (crafterLogic.numCrafted > 0)

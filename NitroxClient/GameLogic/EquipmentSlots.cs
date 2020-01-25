@@ -25,8 +25,8 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastEquip(Pickupable pickupable, GameObject owner, string slot)
         {
-            NitroxId ownerId = NitroxIdentifier.GetId(owner);
-            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
+            NitroxId ownerId = NitroxEntity.GetId(owner);
+            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             TechType techType = pickupable.GetTechType();
 
             if (techType == TechType.VehicleStorageModule)
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastUnequip(Pickupable pickupable, GameObject owner, string slot)
         {
-            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
+            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             Player player = owner.GetComponent<Player>();
 
             if (player != null)
@@ -71,7 +71,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            NitroxId ownerId = NitroxIdentifier.GetId(owner);
+            NitroxId ownerId = NitroxEntity.GetId(owner);
             if (pickupable.GetTechType() == TechType.VehicleStorageModule)
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(owner);
@@ -90,10 +90,10 @@ namespace NitroxClient.GameLogic
             foreach (EquippedItemData equippedItem in equippedItems)
             {
                 GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-                NitroxIdentifier.SetNewId(gameObject, equippedItem.ItemId);
+                NitroxEntity.SetNewId(gameObject, equippedItem.ItemId);
 
                 Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-                Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(equippedItem.ContainerId);
+                Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
 
                 if (opGameObject.IsPresent())
                 {

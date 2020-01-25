@@ -10,14 +10,14 @@ namespace NitroxClient.MonoBehaviours
 {
     [Serializable]
     [ProtoContract]
-    public class NitroxIdentifier : MonoBehaviour, IProtoTreeEventListener
+    public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
         [ProtoMember(1)]
         public NitroxId Id;
 
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
 
-        private NitroxIdentifier() // Default for Proto
+        private NitroxEntity() // Default for Proto
         {}
 
         public void Start()
@@ -56,7 +56,7 @@ namespace NitroxClient.MonoBehaviours
             Validate.NotNull(gameObject);
             Validate.NotNull(id);
 
-            NitroxIdentifier identifier = gameObject.GetComponent<NitroxIdentifier>();
+            NitroxEntity identifier = gameObject.GetComponent<NitroxEntity>();
 
             if (identifier != null)
             {
@@ -64,7 +64,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                identifier = gameObject.AddComponent<NitroxIdentifier>();
+                identifier = gameObject.AddComponent<NitroxEntity>();
             }
 
             identifier.Id = id;
@@ -73,7 +73,7 @@ namespace NitroxClient.MonoBehaviours
 
         public static NitroxId GetId(GameObject gameObject)
         {
-            NitroxIdentifier identifier = gameObject.GetComponent<NitroxIdentifier>();
+            NitroxEntity identifier = gameObject.GetComponent<NitroxEntity>();
 
             if(identifier != null)
             {

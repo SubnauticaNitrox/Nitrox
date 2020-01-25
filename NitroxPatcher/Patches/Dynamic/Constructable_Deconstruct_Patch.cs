@@ -58,7 +58,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 NitroxId id = (NitroxId)opId.Get();
                 Log.Info("Setting ghost id " + id);
-                NitroxIdentifier.SetNewId(__instance.gameObject, id);
+                NitroxEntity.SetNewId(__instance.gameObject, id);
             }
         }
 

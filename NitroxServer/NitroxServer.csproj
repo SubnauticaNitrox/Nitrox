@@ -317,6 +317,7 @@
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />
+    <Compile Include="ConsoleCommands\LoadBatchCommand.cs" />
     <Compile Include="ConsoleCommands\NightCommand.cs" />
     <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />

@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {
             SubRoot cyclops = __instance.subRoot;
-            NitroxId id = NitroxIdentifier.GetId(cyclops.gameObject);
+            NitroxId id = NitroxEntity.GetId(cyclops.gameObject);
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastActivateFireSuppression(id);
         }
 

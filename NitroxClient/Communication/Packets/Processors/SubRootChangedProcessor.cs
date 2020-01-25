@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                 if (packet.SubRootId.IsPresent())
                 {
-                    GameObject sub = NitroxIdentifier.RequireObjectFrom(packet.SubRootId.Get());
+                    GameObject sub = NitroxEntity.RequireObjectFrom(packet.SubRootId.Get());
                     subRoot = sub.GetComponent<SubRoot>();
                 }
 

@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleColorChange colorPacket)
         {
-            GameObject target = NitroxIdentifier.RequireObjectFrom(colorPacket.Id);
+            GameObject target = NitroxEntity.RequireObjectFrom(colorPacket.Id);
             SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
             SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 

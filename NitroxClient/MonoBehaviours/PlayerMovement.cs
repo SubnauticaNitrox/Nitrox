@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (vehicle != null)
             {
-                id = NitroxIdentifier.GetId(vehicle.gameObject);
+                id = NitroxEntity.GetId(vehicle.gameObject);
                 position = vehicle.gameObject.transform.position;
                 rotation = vehicle.gameObject.transform.rotation;
                 techType = CraftData.GetTechType(vehicle.gameObject);
@@ -119,7 +119,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else if (sub != null && Player.main.isPiloting)
             {
-                id = NitroxIdentifier.GetId(sub.gameObject);
+                id = NitroxEntity.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
                 rotation = sub.gameObject.transform.rotation;
                 Rigidbody rigidbody = sub.GetComponent<Rigidbody>();

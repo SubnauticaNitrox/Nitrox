@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
         // Send ping to other players        
         public static void Postfix(CyclopsSonarButton __instance)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastSonarPing(id);
         }
 

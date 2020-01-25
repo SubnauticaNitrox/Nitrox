@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ItemPosition drop)
         {
-            Optional<GameObject> opItem = NitroxIdentifier.GetObjectFrom(drop.Id);
+            Optional<GameObject> opItem = NitroxEntity.GetObjectFrom(drop.Id);
 
             if (opItem.IsPresent())
             {

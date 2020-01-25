@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2002
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxServer", "NitroxServer\NitroxServer.csproj", "{0FC864B0-694E-4FCA-B78C-8EF98BC6F262}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxTest", "NitroxTest\NitroxTest.csproj", "{7787384E-3B08-4D6F-9C0E-A9E3701BA9F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{BE983E25-24CC-4FC8-9017-61EEC43DD618}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Harmony", "Harmony\Harmony\Harmony.csproj", "{69AEE16A-B6E7-4642-8081-3928B32455DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj", "{69BEE16A-B6E7-4642-8081-3928B32455DF}"
 EndProject
@@ -98,18 +96,6 @@ Global
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x64.Build.0 = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.ActiveCfg = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.Build.0 = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.Build.0 = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x86.Build.0 = Debug|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|x64.ActiveCfg = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|x64.Build.0 = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|x86.ActiveCfg = Release|Any CPU
-		{69AEE16A-B6E7-4642-8081-3928B32455DF}.Release|x86.Build.0 = Release|Any CPU
 		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.ActiveCfg = Debug|Any CPU
