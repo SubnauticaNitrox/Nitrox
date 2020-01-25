@@ -9,6 +9,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -498,6 +499,7 @@ namespace NitroxClient.Debuggers
                 {
                     string[] fieldTypeNames = field.FieldType.ToString().Split('.');
                     GUILayout.Label("[" + fieldTypeNames[fieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
+
                     if (field.FieldType == typeof(bool))
                     {
                         bool boolVal = bool.Parse(GetValue(field, selectedMonoBehaviour));
@@ -549,6 +551,10 @@ namespace NitroxClient.Debuggers
                         style.fixedWidth = 250;
 
                         GUILayout.Box(img, style);
+                    }
+                    else if (field.FieldType == typeof(NitroxId))
+                    {
+                        GUILayout.Box(((NitroxId)field.GetValue(selectedMonoBehaviour)).ToString(), "options");
                     }
                     else
                     {
@@ -649,6 +655,8 @@ namespace NitroxClient.Debuggers
             selectedObject.SetActive(selectedObjectActiveSelf);
             selectedObject.transform.position = selectedObjectPos;
             selectedObject.transform.rotation = selectedObjectRot;
+            selectedObject.transform.localPosition = selectedObjectLocPos;
+            selectedObject.transform.localRotation = selectedObjectLocRot;
             selectedObject.transform.localScale = selectedObjectScale;
             if (sendToServer)
             {

@@ -1,16 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
+using ProtoBuf;
 
 namespace NitroxClient.MonoBehaviours
 {
-    public class NitroxIdentifier : MonoBehaviour
+    [Serializable]
+    [ProtoContract]
+    public class NitroxIdentifier : MonoBehaviour, IProtoTreeEventListener
     {
-        public NitroxId Id { get; set; }
+        [ProtoMember(1)]
+        public NitroxId Id;
 
         private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
+
+        private NitroxIdentifier() // Default for Proto
+        {}
 
         public void Start()
         {
@@ -76,6 +84,14 @@ namespace NitroxClient.MonoBehaviours
             SetNewId(gameObject, newId);
 
             return newId;
+        }
+
+        public void OnProtoSerializeObjectTree(ProtobufSerializer _)
+        {}
+
+        public void OnProtoDeserializeObjectTree(ProtobufSerializer _)
+        {
+            gameObjectsById[Id] = gameObject;
         }
     }
 }
