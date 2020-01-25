@@ -49,7 +49,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
             EntitySpawnPoint parent;
             if (gameObject.Parent != null && spawnPointsByUid.TryGetValue(gameObject.Parent, out parent))
             {
-                entitySpawnPoint.SetParent(parent);
+                entitySpawnPoint.Parent = parent;
                 parent.Children.Add(entitySpawnPoint);
             }
 
