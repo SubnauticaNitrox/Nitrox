@@ -78,18 +78,6 @@ namespace NitroxServer.Serialization
             }
         }
 
-        internal void SerializeVersion(Stream stream, long version)
-        {
-            BinaryWriter writer = new BinaryWriter(stream);
-            writer.Write(version);
-        }
-
-        internal long DeserializeVersion(Stream stream)
-        {
-            BinaryReader reader = new BinaryReader(stream);
-            return reader.ReadInt64();
-        }
-
         private bool HasUweProtoContract(Type type)
         {
             foreach(object o in type.GetCustomAttributes(true))
