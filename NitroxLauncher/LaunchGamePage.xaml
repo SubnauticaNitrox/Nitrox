@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:NitroxLauncher"
       mc:Ignorable="d" d:DesignHeight="470" d:DesignWidth="719"
-      Title="{DynamicResource ResourceKey=NitroxGamePageTitle}"
+      Title="{DynamicResource ResourceKey=NitroxGameTitle}"
       Margin="0">
     
     <Grid >

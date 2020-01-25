@@ -40,7 +40,9 @@ namespace NitroxLauncher
         private void OnSelectionChange(object sender, SelectionChangedEventArgs e)
         {
             ComboBox box = (ComboBox)sender;
-            embeddedServer = box.SelectedIndex == 0;
+            ComboBoxItem item = (ComboBoxItem)box.SelectedValue;
+            
+            embeddedServer = item.Tag.ToString() == "embedded";
         }
     }
 }

@@ -71,13 +71,16 @@ namespace NitroxLauncher
 
         private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await SendServerCommandAsync(CommandLine.Text);
-            CommandLine.Text = "";
+            if (!string.IsNullOrWhiteSpace(CommandLine.Text))
+            {
+                await SendServerCommandAsync(CommandLine.Text);
+                CommandLine.Text = "";
+            }
         }
 
         private async void CommandLine_OnKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(CommandLine.Text))
             {
                 await SendServerCommandAsync(CommandLine.Text);
                 CommandLine.Text = "";

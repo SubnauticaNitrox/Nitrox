@@ -47,7 +47,7 @@
     <sys:String x:Key="NitroxOptionGameDirectory">GAME DIRECTORY</sys:String>
     <sys:String x:Key="NitroxOptionGameDirectoryTooltip">Subnautica install location</sys:String>
     
-    <sys:String x:Key="NitroxOptionSubmit">Confirm</sys:String>
+    <sys:String x:Key="NitroxOptionSubmit">Change</sys:String>
     <sys:String x:Key="NitroxOptionSubmitTooltip">Confirm the configuration changings</sys:String>
     
     <!-- Server Page -->

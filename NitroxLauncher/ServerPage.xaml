@@ -342,8 +342,9 @@
                                     <StaticResource ResourceKey="Roboto"/>
                                 </ComboBox.FontFamily>
 
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="{DynamicResource ResourceKey=NitroxServerWinLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerWinLauncherTooltip}"/>
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="{DynamicResource ResourceKey=NitroxServerCmdLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerCmdLauncherTooltip}" />
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="{DynamicResource ResourceKey=NitroxServerCmdLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerCmdLauncherTooltip}" Tag="external" />
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="{DynamicResource ResourceKey=NitroxServerWinLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerWinLauncherTooltip}" Tag="embedded" />
+
                             </ComboBox>
                         </Border>
                     </StackPanel>
