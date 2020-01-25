@@ -330,8 +330,8 @@
                                     <StaticResource ResourceKey="Roboto"/>
                                 </ComboBox.FontFamily>
 
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Launcher window" ToolTip="Server will run in the launcher."/>
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Command line window" ToolTip="Server will run in a seperate window (CMD)" />
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Command line window" ToolTip="Server will run in a seperate window (CMD)" Tag="external"/>
+                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Launcher window" ToolTip="Server will run in the launcher." Tag="embedded" />
                             </ComboBox>
                             <!--<TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>-->
                         </Border>
