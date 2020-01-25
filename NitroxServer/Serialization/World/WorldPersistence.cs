@@ -91,7 +91,7 @@ namespace NitroxServer.Serialization.World
                     persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "WorldData.nitrox")))
                 {
                     WorldVersion worldVersion = serializer.Deserialize<WorldVersion>(stream);
                     if (!worldVersion.IsValid())
@@ -108,7 +108,7 @@ namespace NitroxServer.Serialization.World
                 }
                 
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime,
+                World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData,
                                           persistedData.BaseData,
                                           persistedData.WorldData.VehicleData,

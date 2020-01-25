@@ -19,7 +19,7 @@ namespace NitroxServer.Serialization.World
         public List<Int3> ParsedBatchCells { get; set; }
 
         [ProtoMember(2)]
-        public DateTime ServerStartTime { get; set; }
+        public DateTime? ServerStartTime { get; set; }
 
         [ProtoMember(3)]
         public EntityData EntityData { get; set; }
@@ -39,7 +39,7 @@ namespace NitroxServer.Serialization.World
         public bool IsValid()
         {
             return (ParsedBatchCells != null) && // Always returns false on empty saves
-                   (ServerStartTime.Equals(default(DateTime))) &&
+                   (ServerStartTime.HasValue) &&
                    (VehicleData != null) &&
                    (InventoryData != null) &&
                    (GameData != null) &&
