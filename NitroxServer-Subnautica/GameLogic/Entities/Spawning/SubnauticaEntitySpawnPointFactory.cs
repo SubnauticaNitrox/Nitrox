@@ -31,33 +31,20 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                                              entitySlotData.biomeType.ToString());
 
 
-                    BuildChildren(entitySpawnPoint, gameObject);
-                    if (gameObject.Parent == null)
-                    {
-                        spawnPoints.Add(
-                            entitySpawnPoint
-                        );
-                    }
+                    HandleParenting(spawnPoints, entitySpawnPoint, gameObject);
                 }
             }
             else
             {
                 EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId);
 
-                BuildChildren(entitySpawnPoint, gameObject);
-
-                if (gameObject.Parent == null)
-                {
-                    spawnPoints.Add(
-                        entitySpawnPoint
-                    );
-                }
+                HandleParenting(spawnPoints, entitySpawnPoint, gameObject);
             }
 
             return spawnPoints;
         }
 
-        private void BuildChildren(EntitySpawnPoint entitySpawnPoint, GameObject gameObject)
+        private void HandleParenting(List<EntitySpawnPoint> spawnPoints, EntitySpawnPoint entitySpawnPoint, GameObject gameObject)
         {
             EntitySpawnPoint parent;
             if (gameObject.Parent != null && spawnPointsByUid.TryGetValue(gameObject.Parent, out parent))
@@ -67,6 +54,13 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
             }
 
             spawnPointsByUid[gameObject.Id] = entitySpawnPoint;
+
+            if (gameObject.Parent == null)
+            {
+                spawnPoints.Add(
+                    entitySpawnPoint
+                );
+            }
         }
     }
 }

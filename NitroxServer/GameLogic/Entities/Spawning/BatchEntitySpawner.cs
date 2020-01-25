@@ -75,22 +75,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             List<Entity> entities = new List<Entity>();
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
 
-            foreach (EntitySpawnPoint esp in spawnPoints)
-            {
-                if (esp.Density > 0)
-                {
-                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
-
-                    if (prefabs.Count > 0)
-                    {
-                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator));
-                    }
-                    else if(esp.ClassId != null)
-                    {
-                        entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator));
-                    }
-                }
-            }
+            entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
             if(entities.Count == 0)
             {
@@ -217,7 +202,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               true,
                                               deterministicBatchGenerator.NextId());
 
-            spawnedEntity.ChildEntities = SpawnChildren(entitySpawnPoint.Children, deterministicBatchGenerator);
+            spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator);
             
             yield return spawnedEntity;
 
@@ -238,10 +223,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private List<Entity> SpawnChildren(List<EntitySpawnPoint> children, DeterministicBatchGenerator deterministicBatchGenerator)
+        private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             List<Entity> entities = new List<Entity>();
-            foreach (EntitySpawnPoint esp in children)
+            foreach (EntitySpawnPoint esp in entitySpawnPoints)
             {
                 if (esp.Density > 0)
                 {

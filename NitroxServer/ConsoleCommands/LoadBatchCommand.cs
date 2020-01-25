@@ -9,11 +9,14 @@ using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
+    /// <summary>
+    /// Mainly used for testing but can be used to pregen the world
+    /// </summary>
     class LoadBatchCommand : Command
     {
         private BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE)
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Load batch x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
         }
