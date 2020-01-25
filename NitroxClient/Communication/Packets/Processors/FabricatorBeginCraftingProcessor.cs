@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(FabricatorBeginCrafting packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.FabricatorId);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.FabricatorId);
             Fabricator fabricator = gameObject.RequireComponentInChildren<Fabricator>(true);
 
             float buildDuration = packet.Duration + 0.2f; // small increase to prevent this player from swiping item from remote player

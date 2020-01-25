@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleOnPilotModeChanged packet)
         {
-            GameObject vehicleGo = NitroxIdentifier.RequireObjectFrom(packet.VehicleId);
+            GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             
             // If the vehicle is docked, then we will manually set the piloting mode

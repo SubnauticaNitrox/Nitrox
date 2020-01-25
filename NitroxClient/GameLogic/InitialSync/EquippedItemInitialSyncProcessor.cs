@@ -34,10 +34,10 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (EquippedItemData equippedItem in packet.EquippedItems)
                 {
                     GameObject gameObject = SerializationHelper.GetGameObject(equippedItem.SerializedData);
-                    NitroxIdentifier.SetNewId(gameObject, equippedItem.ItemId);
+                    NitroxEntity.SetNewId(gameObject, equippedItem.ItemId);
 
                     Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-                    Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(equippedItem.ContainerId);
+                    Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
 
                     if (opGameObject.IsPresent())
                     {

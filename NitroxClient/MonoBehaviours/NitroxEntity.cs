@@ -3,27 +3,22 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using UnityEngine;
 using ProtoBuf;
+using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
 {
     [Serializable]
     [ProtoContract]
-    public class NitroxIdentifier : MonoBehaviour, IProtoTreeEventListener
+    public class NitroxEntity : MonoBehaviour, IProtoTreeEventListener
     {
+        private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
+
         [ProtoMember(1)]
         public NitroxId Id;
 
-        private static Dictionary<NitroxId, GameObject> gameObjectsById = new Dictionary<NitroxId, GameObject>();
-
-        private NitroxIdentifier() // Default for Proto
-        {}
-
-        public void Start()
+        private NitroxEntity() // Default for Proto
         {
-            // Just in case this object comes to life via serialization
-            gameObjectsById[Id] = gameObject;
         }
 
         public static GameObject RequireObjectFrom(NitroxId id)
@@ -56,28 +51,26 @@ namespace NitroxClient.MonoBehaviours
             Validate.NotNull(gameObject);
             Validate.NotNull(id);
 
-            NitroxIdentifier identifier = gameObject.GetComponent<NitroxIdentifier>();
-
-            if (identifier != null)
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+            if (entity != null)
             {
-                gameObjectsById.Remove(identifier.Id);
+                gameObjectsById.Remove(entity.Id);
             }
             else
             {
-                identifier = gameObject.AddComponent<NitroxIdentifier>();
+                entity = gameObject.AddComponent<NitroxEntity>();
             }
 
-            identifier.Id = id;
+            entity.Id = id;
             gameObjectsById[id] = gameObject;
         }
 
         public static NitroxId GetId(GameObject gameObject)
         {
-            NitroxIdentifier identifier = gameObject.GetComponent<NitroxIdentifier>();
-
-            if(identifier != null)
+            NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
+            if (entity != null)
             {
-                return identifier.Id;
+                return entity.Id;
             }
 
             NitroxId newId = new NitroxId();
@@ -86,8 +79,15 @@ namespace NitroxClient.MonoBehaviours
             return newId;
         }
 
+        public void Start()
+        {
+            // Just in case this object comes to life via serialization
+            gameObjectsById[Id] = gameObject;
+        }
+
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
-        {}
+        {
+        }
 
         public void OnProtoDeserializeObjectTree(ProtobufSerializer _)
         {

@@ -19,14 +19,14 @@ namespace NitroxClient.GameLogic
 
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
-            NitroxId crafterId = NitroxIdentifier.GetId(crafter);
+            NitroxId crafterId = NitroxEntity.GetId(crafter);
             FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.Model(), duration);
             packetSender.Send(fabricatorBeginCrafting);
         }
 
         public void FabricatorItemPickedUp(GameObject gameObject, TechType techType)
         {
-            NitroxId crafterId = NitroxIdentifier.GetId(gameObject);
+            NitroxId crafterId = NitroxEntity.GetId(gameObject);
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.Model());
             packetSender.Send(fabricatorItemPickup);

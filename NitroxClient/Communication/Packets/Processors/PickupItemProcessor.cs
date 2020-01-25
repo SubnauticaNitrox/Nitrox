@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PickupItem pickup)
         {
-            Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(pickup.Id);
+            Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(pickup.Id);
 
             if (opGameObject.IsPresent())
             {

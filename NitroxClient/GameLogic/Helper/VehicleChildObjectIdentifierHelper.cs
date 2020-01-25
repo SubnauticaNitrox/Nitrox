@@ -40,7 +40,7 @@ namespace NitroxClient.GameLogic.Helper
 
                 foreach (Component component in components)
                 {
-                    NitroxId id = NitroxIdentifier.GetId(component.gameObject);
+                    NitroxId id = NitroxEntity.GetId(component.gameObject);
                     string componentName = component.gameObject.GetFullName();
                     string relativePathName = componentName.Replace(constructedObjectsName, "");
 
@@ -65,7 +65,7 @@ namespace NitroxClient.GameLogic.Helper
                 if (transform != null)
                 {
                     GameObject gameObject = transform.gameObject;
-                    NitroxIdentifier.SetNewId(gameObject, childIdentifier.Id);
+                    NitroxEntity.SetNewId(gameObject, childIdentifier.Id);
                 }
                 else
                 {

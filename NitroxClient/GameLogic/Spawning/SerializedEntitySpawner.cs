@@ -28,7 +28,7 @@ namespace NitroxClient.GameLogic.Spawning
             EnableRigidBody(gameObject);
             ExecuteDropItemAction(entity.TechType.Enum(), gameObject);
 
-            NitroxIdentifier.SetNewId(gameObject, entity.Id);
+            NitroxEntity.SetNewId(gameObject, entity.Id);
 
             return Optional<GameObject>.Of(gameObject);
         }
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic.Spawning
         private void AssignToWaterPark(GameObject gameObject, NitroxId waterParkId)
         {
             Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
-            GameObject waterParkGo = NitroxIdentifier.RequireObjectFrom(waterParkId);
+            GameObject waterParkGo = NitroxEntity.RequireObjectFrom(waterParkId);
             WaterPark waterPark = waterParkGo.RequireComponent<WaterPark>();
 
             waterPark.AddItem(pickupable);

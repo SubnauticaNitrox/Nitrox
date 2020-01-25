@@ -70,7 +70,8 @@ namespace NitroxServer_Subnautica.GameLogic.Entities
             TechType.Shuttlebug.Model(),
             TechType.Bloom.Model(),
             TechType.RockPuncher.Model(),
-            TechType.Peeper.Model()
+            TechType.Peeper.Model(),
+            TechType.Jumper.Model()
         };
     }
 }

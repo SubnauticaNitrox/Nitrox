@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
             ItemData itemData = packet.ItemData;
             GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);            
             
-            NitroxIdentifier.SetNewId(item, itemData.ItemId);
+            NitroxEntity.SetNewId(item, itemData.ItemId);
 
             storageSlots.AddItem(item, itemData.ContainerId);            
         }

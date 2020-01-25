@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             // Suppress powered on if a cyclops´s floodlight is set to false            
             GameObject gameObject = __instance.gameObject;
-            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetId(gameObject);
             CyclopsModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<CyclopsModel>(id);
             
             return model.FloodLightsOn;

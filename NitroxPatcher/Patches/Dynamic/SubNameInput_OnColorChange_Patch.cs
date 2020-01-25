@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     parentVehicle = subRoot.gameObject;
                 }
 
-                NitroxId id = NitroxIdentifier.GetId(parentVehicle);
+                NitroxId id = NitroxEntity.GetId(parentVehicle);
                 VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb, eventData.color);
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }

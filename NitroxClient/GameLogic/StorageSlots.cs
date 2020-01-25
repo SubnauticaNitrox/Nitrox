@@ -26,9 +26,9 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
-            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetId(gameObject);
             
-            NitroxId itemId = NitroxIdentifier.GetId(item.item.gameObject);
+            NitroxId itemId = NitroxEntity.GetId(item.item.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(item.item.gameObject);
 
             ItemData itemData = new ItemData(id, itemId, bytes);
@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastItemRemoval(GameObject gameObject)
         {
-            NitroxId id = NitroxIdentifier.GetId(gameObject);
+            NitroxId id = NitroxEntity.GetId(gameObject);
             
             StorageSlotItemRemove slotItemRemove = new StorageSlotItemRemove(id);
             packetSender.Send(slotItemRemove);
@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
 
         public void AddItem(GameObject item, NitroxId containerId, bool silent = false)
         {
-            GameObject owner = NitroxIdentifier.RequireObjectFrom(containerId);
+            GameObject owner = NitroxEntity.RequireObjectFrom(containerId);
 
             // only need to watch EnergyMixin slots for now (only other type will be propulsion cannon)
             Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
@@ -82,7 +82,7 @@ namespace NitroxClient.GameLogic
 
         public void RemoveItem(NitroxId ownerId, bool silent = false)
         {
-            GameObject owner = NitroxIdentifier.RequireObjectFrom(ownerId);            
+            GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);            
             Optional<EnergyMixin> opMixin = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
             
             if (opMixin.IsPresent())

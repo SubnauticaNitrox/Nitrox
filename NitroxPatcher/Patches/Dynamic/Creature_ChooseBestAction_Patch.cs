@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Creature __instance, ref CreatureAction __result)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
             if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {
@@ -32,7 +32,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(Creature __instance, ref CreatureAction __result)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
 
             if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(id))
             {

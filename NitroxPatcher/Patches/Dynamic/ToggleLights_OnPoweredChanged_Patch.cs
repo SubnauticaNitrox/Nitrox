@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
             if (__instance.GetComponentInParent<SeaMoth>() != null && powered)
             {                
                 gameObject = __instance.transform.parent.gameObject;
-                NitroxId id = NitroxIdentifier.GetId(gameObject);
+                NitroxId id = NitroxEntity.GetId(gameObject);
                 SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);           
                 return (model.LightOn == __instance.lightsActive);
             }        

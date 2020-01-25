@@ -20,7 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (sub != null)
             {
-                subId = NitroxIdentifier.GetId(sub.gameObject);
+                subId = NitroxEntity.GetId(sub.gameObject);
             }
 
             NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional<NitroxId>.OfNullable(subId));

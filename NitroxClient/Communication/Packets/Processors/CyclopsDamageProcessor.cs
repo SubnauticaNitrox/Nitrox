@@ -31,7 +31,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsDamage packet)
         {
-            SubRoot subRoot = NitroxIdentifier.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
+            SubRoot subRoot = NitroxEntity.RequireObjectFrom(packet.Id).GetComponent<SubRoot>();
 
             using (packetSender.Suppress<CyclopsDamagePointRepaired>())
             {
@@ -144,7 +144,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             SubFire subFire = subRoot.gameObject.RequireComponent<SubFire>();
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
-            NitroxId subRootId = NitroxIdentifier.GetId(subRoot.gameObject);
+            NitroxId subRootId = NitroxEntity.GetId(subRoot.gameObject);
             CyclopsFireData fireNode = null;
 
             if (roomFires != null && roomFires.Length > 0)

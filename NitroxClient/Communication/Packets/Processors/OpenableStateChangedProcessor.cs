@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(OpenableStateChanged packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             Openable openable = gameObject.RequireComponent<Openable>();
 
             using (packetSender.Suppress<OpenableStateChanged>())
