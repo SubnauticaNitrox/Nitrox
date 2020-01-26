@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using NitroxLauncher.Events;
 using NitroxModel;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -42,7 +41,7 @@ namespace NitroxLauncher
         public MainWindow()
         {
             InitializeComponent();
-            
+
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {
@@ -53,7 +52,8 @@ namespace NitroxLauncher
                                    "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"/>" +
                                    "</head><body>" +
                                    "<iframe width=\"854\" height=\"564\" src=\"{0}\"" +
-                                   "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" + "</body></html>";
+                                   "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
+                                   "</body></html>";
                     Height = 662;
                     Width = 1106;
                     WebBrowser webBrowser = new WebBrowser();
@@ -91,12 +91,6 @@ namespace NitroxLauncher
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
 
-            AppDomain.CurrentDomain.UnhandledException += (sender, e) =>
-            {
-                Log.Error(e.ExceptionObject.ToString());
-                MessageBox.Show(e.ExceptionObject.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            };
-
             if (!File.Exists("path.txt"))
             {
                 ChangeFrameContent(optionPage);
@@ -131,9 +125,9 @@ namespace NitroxLauncher
 
         private bool CanClose()
         {
-            if (logic.HasSomethingRunning)
+            if (logic.ServerRunning && isServerEmbedded)
             {
-                MessageBox.Show("Cannot close as long as server or game is running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Cannot close as long as the embedded server is running.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
