@@ -499,10 +499,6 @@
     <Compile Include="Unity\Smoothing\SmoothVector.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{69BEE16A-B6E7-4642-8081-3928B32455DF}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NitroxModel-Subnautica\NitroxModel-Subnautica.csproj">
       <Project>{0a377218-6b36-4522-89a3-a39cfc999209}</Project>
       <Name>NitroxModel-Subnautica</Name>
