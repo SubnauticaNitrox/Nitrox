@@ -49,6 +49,7 @@ namespace NitroxServer.Serialization.World
 
                 using (Stream stream = File.OpenWrite(config.SaveName + ".nitrox"))
                 {
+                    serializer.Serialize(stream, new WorldVersion());
                     serializer.Serialize(stream, persistedData);
                 }
 
@@ -68,6 +69,12 @@ namespace NitroxServer.Serialization.World
 
                 using (Stream stream = File.OpenRead(config.SaveName + ".nitrox"))
                 {
+                    WorldVersion worldVersion = serializer.Deserialize<WorldVersion>(stream);
+                    if (!worldVersion.IsValid())
+                    {
+                        throw new WorldVersionMismatchException("World file is too old");
+                    }
+
                     persistedData = serializer.Deserialize<PersistedWorldData>(stream);
                 }
 

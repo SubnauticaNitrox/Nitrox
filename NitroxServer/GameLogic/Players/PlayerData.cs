@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
+using System.Linq;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -242,6 +243,5 @@ namespace NitroxServer.GameLogic.Players
                 PlayerId = playerId;
             }
         }
-
     }
 }

@@ -15,46 +15,35 @@ namespace NitroxServer.Serialization.World
     [ProtoContract]
     public class PersistedWorldData
     {
-        private const long CURRENT_VERSION = 10;
-
         [ProtoMember(1)]
-        public long version { get; set; } = CURRENT_VERSION;
-
-        [ProtoMember(2)]
         public List<Int3> ParsedBatchCells { get; set; }
         
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public DateTime ServerStartTime { get; set; }
         
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public EntityData EntityData { get; set; }
 
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public BaseData BaseData { get; set; }
 
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         public VehicleData VehicleData { get; set; }
 
-        [ProtoMember(7)]
+        [ProtoMember(6)]
         public InventoryData InventoryData { get; set; }
 
-        [ProtoMember(8)]
+        [ProtoMember(7)]
         public PlayerData PlayerData { get; set; }
 
-        [ProtoMember(9)]
+        [ProtoMember(8)]
         public GameData GameData { get; set; }
 
-        [ProtoMember(10)]
+        [ProtoMember(9)]
         public EscapePodData EscapePodData { get; set; }
 
         public bool IsValid()
         {
-            if(version < CURRENT_VERSION)
-            {
-                Log.Error("Version " + version + " save file is no longer supported.  Creating world under version " + CURRENT_VERSION);
-                return false;
-            }
-
             return (ParsedBatchCells != null) &&
                    (ServerStartTime != null) &&
                    (BaseData != null) &&
@@ -63,7 +52,7 @@ namespace NitroxServer.Serialization.World
                    (GameData != null) &&
                    (PlayerData != null) &&
                    (EntityData != null) &&
-                   (EntityData.SerializableEntitiesById.Count > 0) &&
+                   (EntityData.SerializableEntities.Count > 0) &&
                    (EscapePodData != null);
         }
     }
