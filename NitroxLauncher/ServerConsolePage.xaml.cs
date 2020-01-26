@@ -26,8 +26,8 @@ namespace NitroxLauncher
             }
         }
 
-        private List<string> commandLinesHistory;
-        private int commandLinesHistoryIndex;
+        private List<string> commandLinesHistory = new List<string>();
+        private int commandLinesHistoryIndex = -1;
 
         public ServerConsolePage(LauncherLogic logic)
         {
@@ -37,9 +37,6 @@ namespace NitroxLauncher
             this.logic = logic;
             this.logic.ServerStarted += ServerStarted;
             this.logic.ServerDataReceived += ServerDataReceived;
-
-            commandLinesHistory = new List<string>();
-            commandLinesHistoryIndex = -1;
 
             OnPropertyChanged(nameof(CommandText));
         }
