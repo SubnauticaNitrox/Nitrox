@@ -42,14 +42,6 @@ namespace NitroxServer
             
             containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
             {
-                ServerConfig config = ctx.Resolve<ServerConfig>();
-
-                if (config.NetworkingType.ToLower() == "litenetlib") {
-                    return ctx.Resolve<LiteNetLibServer>();
-                }
-
-                Log.Warn("Entered networking type not recognised. Falling back to LiteNetLib. The only available type is 'LiteNetLib'");
-
                 return ctx.Resolve<LiteNetLibServer>();
             }).SingleInstance();
 
