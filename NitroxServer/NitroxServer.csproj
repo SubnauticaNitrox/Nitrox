@@ -367,8 +367,8 @@
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldData.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
-    <Compile Include="Serialization\World\WorldVersion.cs" />
-    <Compile Include="Serialization\World\WorldVersionMismatchException.cs" />
+    <Compile Include="Serialization\World\SaveVersion.cs" />
+    <Compile Include="Serialization\World\VersionMismatchException.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="ServerAutoFacRegistrar.cs" />
     <Compile Include="UnityStubs\GameObject.cs" />

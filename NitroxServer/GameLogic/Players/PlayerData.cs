@@ -12,6 +12,8 @@ namespace NitroxServer.GameLogic.Players
     [ProtoContract]
     public class PlayerData
     {
+        public const long VERSION = 1;
+
         [ProtoMember(1)]
         public Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
         {
