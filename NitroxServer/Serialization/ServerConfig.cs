@@ -15,7 +15,7 @@ namespace NitroxServer.ConfigParser
         private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
         private readonly ServerConfigItem<string> adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", GenerateRandomString(12, false));
         private readonly ServerConfigItem<string> gameModeSetting    = new ServerConfigItem<string>("GameMode", "Survival");
-        private readonly ServerConfigItem<string> networkingType = new ServerConfigItem<string>("NetworkingType", "lidgren");
+        private readonly ServerConfigItem<string> networkingType = new ServerConfigItem<string>("NetworkingType", "litenetlib");
         
         public int ServerPort { get { return portSetting.Value; } }
         public int SaveInterval { get { return saveIntervalSetting.Value; } }

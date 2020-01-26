@@ -4,7 +4,6 @@ using System.Reflection;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Communication.NetworkingLayer.Lidgren;
 using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
 using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Entities;
@@ -40,7 +39,6 @@ namespace NitroxServer
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
             containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
-            containerBuilder.RegisterType<LidgrenServer>().SingleInstance();
             
             containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
             {
@@ -48,13 +46,11 @@ namespace NitroxServer
 
                 if (config.NetworkingType.ToLower() == "litenetlib") {
                     return ctx.Resolve<LiteNetLibServer>();
-                } else if (config.NetworkingType.ToLower() == "lidgren") {
-                    return ctx.Resolve<LidgrenServer>();
                 }
 
-                Log.Warn("Entered networking type not recognised. Falling back to Lidgren. Available types are 'LiteNetLib' and 'Lidgren'");
+                Log.Warn("Entered networking type not recognised. Falling back to LiteNetLib. The only available type is 'LiteNetLib'");
 
-                return ctx.Resolve<LidgrenServer>();
+                return ctx.Resolve<LiteNetLibServer>();
             }).SingleInstance();
 
         }
