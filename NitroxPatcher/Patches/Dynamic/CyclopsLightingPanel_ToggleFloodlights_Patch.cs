@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if (__state != __instance.floodlightsOn)
             {
-                NitroxId id = NitroxIdentifier.GetId(__instance.cyclopsRoot.gameObject);
+                NitroxId id = NitroxEntity.GetId(__instance.cyclopsRoot.gameObject);
                 NitroxServiceLocator.LocateService<Cyclops>().BroadcastToggleFloodLights(id, __instance.floodlightsOn);
             }
         }

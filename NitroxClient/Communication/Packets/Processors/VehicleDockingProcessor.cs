@@ -24,8 +24,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(VehicleDocking packet)
         {
-            GameObject vehicleGo = NitroxIdentifier.RequireObjectFrom(packet.VehicleId);
-            GameObject vehicleDockingBayGo = NitroxIdentifier.RequireObjectFrom(packet.DockId);
+            GameObject vehicleGo = NitroxEntity.RequireObjectFrom(packet.VehicleId);
+            GameObject vehicleDockingBayGo = NitroxEntity.RequireObjectFrom(packet.DockId);
 
             Vehicle vehicle = vehicleGo.RequireComponent<Vehicle>();
             VehicleDockingBay vehicleDockingBay = vehicleDockingBayGo.RequireComponentInChildren<VehicleDockingBay>();

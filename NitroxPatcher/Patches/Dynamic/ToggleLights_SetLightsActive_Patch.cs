@@ -61,7 +61,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     DebugUtils.PrintHierarchy(__instance.gameObject);
                 }
 
-                NitroxId id = NitroxIdentifier.GetId(gameObject);
+                NitroxId id = NitroxEntity.GetId(gameObject);
                 // If the floodlight belongs to a seamoth, then set the lights for the model
                 if(type == typeof(SeaMoth))
                 {

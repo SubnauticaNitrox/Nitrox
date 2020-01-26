@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.Bases.Metadata
     {
         public override void UpdateMetadata(NitroxId id, SignMetadata metadata)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(id);
             uGUI_SignInput sign = gameObject.GetComponentInChildren<uGUI_SignInput>();
 
             sign.text = metadata.Text;

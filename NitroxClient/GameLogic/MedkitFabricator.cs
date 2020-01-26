@@ -17,7 +17,7 @@ namespace NitroxClient.GameLogic
 
         public void Clicked(MedicalCabinet medicalCabinet)
         {
-            NitroxId id = NitroxIdentifier.GetId(medicalCabinet.gameObject);
+            NitroxId id = NitroxEntity.GetId(medicalCabinet.gameObject);
             bool doorOpen = (bool)medicalCabinet.ReflectionGet("doorOpen");
 
             MedicalCabinetClicked cabinetClicked = new MedicalCabinetClicked(id, doorOpen, medicalCabinet.hasMedKit, medicalCabinet.timeSpawnMedKit);

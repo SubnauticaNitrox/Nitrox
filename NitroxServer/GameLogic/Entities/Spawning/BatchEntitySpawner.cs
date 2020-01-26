@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using UnityEngine;
+using System;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -74,22 +75,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             List<Entity> entities = new List<Entity>();
             List<EntitySpawnPoint> spawnPoints = batchCellsParser.ParseBatchData(batchId);
 
-            foreach (EntitySpawnPoint esp in spawnPoints)
-            {
-                if (esp.Density > 0)
-                {
-                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
-
-                    if (prefabs.Count > 0)
-                    {
-                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator));
-                    }
-                    else if(esp.ClassId != null)
-                    {
-                        entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator));
-                    }
-                }
-            }
+            entities = SpawnEntities(spawnPoints, deterministicBatchGenerator);
 
             if(entities.Count == 0)
             {
@@ -215,7 +201,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               classId,
                                               true,
                                               deterministicBatchGenerator.NextId());
-            
+
+            spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator);
             
             yield return spawnedEntity;
 
@@ -234,6 +221,28 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 yield return childEntity;
             }
+        }
+
+        private List<Entity> SpawnEntities(List<EntitySpawnPoint> entitySpawnPoints, DeterministicBatchGenerator deterministicBatchGenerator)
+        {
+            List<Entity> entities = new List<Entity>();
+            foreach (EntitySpawnPoint esp in entitySpawnPoints)
+            {
+                if (esp.Density > 0)
+                {
+                    List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(esp.BiomeType);
+
+                    if (prefabs.Count > 0)
+                    {
+                        entities.AddRange(SpawnEntitiesUsingRandomDistribution(esp, prefabs, deterministicBatchGenerator));
+                    }
+                    else if (esp.ClassId != null)
+                    {
+                        entities.AddRange(SpawnEntitiesStaticly(esp, deterministicBatchGenerator));
+                    }
+                }
+            }
+            return entities;
         }
 
         private void AssignPlaceholderEntitiesIfRequired(Entity entity, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator)

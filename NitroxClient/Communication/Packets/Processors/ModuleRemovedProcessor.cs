@@ -17,8 +17,8 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ModuleRemoved packet)
         {
-            GameObject owner = NitroxIdentifier.RequireObjectFrom(packet.OwnerId);
-            GameObject item = NitroxIdentifier.RequireObjectFrom(packet.ItemId);
+            GameObject owner = NitroxEntity.RequireObjectFrom(packet.OwnerId);
+            GameObject item = NitroxEntity.RequireObjectFrom(packet.ItemId);
             Pickupable pickupable = item.RequireComponent<Pickupable>();
             Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
 

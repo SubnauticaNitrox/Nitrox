@@ -79,7 +79,7 @@ namespace NitroxClient.MonoBehaviours
 
                 if (runningDelta != 0)
                 {
-                    NitroxId id = NitroxIdentifier.GetId(gameObject);
+                    NitroxId id = NitroxEntity.GetId(gameObject);
                     powerBoardcaster.ChargeChanged(id, runningDelta, PowerType.ENERGY_INTERFACE);
                     runningDelta = 0;
                 }

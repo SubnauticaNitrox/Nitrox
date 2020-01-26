@@ -22,7 +22,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsActivateHorn hornPacket)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(hornPacket.Id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(hornPacket.Id);
             CyclopsHornControl horn = cyclops.RequireComponentInChildren<CyclopsHornControl>();
 
             EventInstance eventInstance = (EventInstance)fieldInfo.GetValue(horn.hornSound);

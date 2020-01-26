@@ -13,7 +13,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             foreach (EntityTransformUpdate entity in packet.Updates)
             {
-                Optional<GameObject> opGameObject = NitroxIdentifier.GetObjectFrom(entity.Id);
+                Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
 
                 if (opGameObject.IsPresent())
                 {

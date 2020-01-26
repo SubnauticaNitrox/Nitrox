@@ -39,10 +39,10 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                ownerId = NitroxIdentifier.GetId(ownerTransform.transform.parent.gameObject);
+                ownerId = NitroxEntity.GetId(ownerTransform.transform.parent.gameObject);
             }
 
-            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
+            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             byte[] bytes = SerializationHelper.GetBytes(pickupable.gameObject);
 
             ItemData itemData = new ItemData(ownerId, itemId, bytes);
@@ -66,17 +66,17 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                ownerId = NitroxIdentifier.GetId(ownerTransform.transform.parent.gameObject);
+                ownerId = NitroxEntity.GetId(ownerTransform.transform.parent.gameObject);
             }
 
-            NitroxId itemId = NitroxIdentifier.GetId(pickupable.gameObject);
+            NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             ItemContainerRemove remove = new ItemContainerRemove(ownerId, itemId);
             packetSender.Send(remove);
         }
 
         public void AddItem(GameObject item, NitroxId containerId)
         {
-            Optional<GameObject> owner = NitroxIdentifier.GetObjectFrom(containerId);
+            Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
 
             if (owner.IsEmpty())
             {
@@ -104,8 +104,8 @@ namespace NitroxClient.GameLogic
         
         public void RemoveItem(NitroxId ownerId, NitroxId itemId)
         {
-            GameObject owner = NitroxIdentifier.RequireObjectFrom(ownerId);
-            GameObject item = NitroxIdentifier.RequireObjectFrom(itemId);
+            GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);
+            GameObject item = NitroxEntity.RequireObjectFrom(itemId);
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
 
             if (opContainer.IsPresent())
@@ -135,7 +135,7 @@ namespace NitroxClient.GameLogic
 
                 if (SC != null)
                 {
-                    return NitroxIdentifier.GetId(SC.gameObject);
+                    return NitroxEntity.GetId(SC.gameObject);
                 }
                 else
                 {
@@ -153,7 +153,7 @@ namespace NitroxClient.GameLogic
         public NitroxId GetEscapePodStorageId(Transform ownerTransform)
         {
             StorageContainer SC = ownerTransform.parent.gameObject.RequireComponentInChildren<StorageContainer>();
-            return NitroxIdentifier.GetId(SC.gameObject);
+            return NitroxEntity.GetId(SC.gameObject);
         }
     }
 }

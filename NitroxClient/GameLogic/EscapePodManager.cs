@@ -95,16 +95,16 @@ namespace NitroxClient.GameLogic
                 storageContainer.container.Clear();
             }
 
-            NitroxIdentifier.SetNewId(storageContainer.gameObject, model.StorageContainerId);
+            NitroxEntity.SetNewId(storageContainer.gameObject, model.StorageContainerId);
 
             MedicalCabinet medicalCabinet = escapePod.RequireComponentInChildren<MedicalCabinet>();
-            NitroxIdentifier.SetNewId(medicalCabinet.gameObject, model.MedicalFabricatorId);
+            NitroxEntity.SetNewId(medicalCabinet.gameObject, model.MedicalFabricatorId);
 
             Fabricator fabricator = escapePod.RequireComponentInChildren<Fabricator>();
-            NitroxIdentifier.SetNewId(fabricator.gameObject, model.FabricatorId);
+            NitroxEntity.SetNewId(fabricator.gameObject, model.FabricatorId);
 
             Radio radio = escapePod.RequireComponentInChildren<Radio>();
-            NitroxIdentifier.SetNewId(radio.gameObject, model.RadioId);
+            NitroxEntity.SetNewId(radio.gameObject, model.RadioId);
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
 
@@ -155,7 +155,7 @@ namespace NitroxClient.GameLogic
 
             foreach(KeyValuePair<NitroxId, GameObject> dict in escapePodsById)
             {
-                if(NitroxIdentifier.GetId(dict.Value) == NitroxIdentifier.GetId(pod.gameObject))
+                if(NitroxEntity.GetId(dict.Value) == NitroxEntity.GetId(pod.gameObject))
                 {
                     id = dict.Key; // we're looking for serverside id here
                     break;
@@ -174,7 +174,7 @@ namespace NitroxClient.GameLogic
 
         public void OnRadioRepair(NitroxId id)
         {
-            Optional<GameObject> radObj = NitroxIdentifier.GetObjectFrom(id);
+            Optional<GameObject> radObj = NitroxEntity.GetObjectFrom(id);
             if (radObj.IsPresent())
             {
                 Radio radio = radObj.Get().GetComponent<Radio>();
@@ -189,7 +189,7 @@ namespace NitroxClient.GameLogic
         {
             // todo: can this apply to non-escape pod radios?
 
-            NitroxId id = NitroxIdentifier.GetId(radio.gameObject);
+            NitroxId id = NitroxEntity.GetId(radio.gameObject);
             
             EscapePodRadioRepair repair = new EscapePodRadioRepair(id);
             packetSender.Send(repair);

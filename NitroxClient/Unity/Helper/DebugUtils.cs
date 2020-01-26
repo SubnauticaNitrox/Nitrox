@@ -42,7 +42,7 @@ namespace NitroxClient.Unity.Helper
 
         private static void TravelDown(GameObject gameObject, bool listComponents = false, string linePrefix = "", bool travelDown = true)
         {
-            Log.Debug("{0}+GameObject GUID={1} NAME={2} POSITION={3}", linePrefix, NitroxIdentifier.GetId(gameObject), gameObject.name, gameObject.transform.position);
+            Log.Debug("{0}+GameObject GUID={1} NAME={2} POSITION={3}", linePrefix, NitroxEntity.GetId(gameObject), gameObject.name, gameObject.transform.position);
             if (listComponents)
             {
                 ListComponents(gameObject, linePrefix);

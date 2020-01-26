@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsShieldButton __instance)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
             // Shield is activated, if activeSprite is set as sprite
             bool isActive = (__instance.activeSprite == __instance.image.sprite);
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeShieldState(id, isActive);

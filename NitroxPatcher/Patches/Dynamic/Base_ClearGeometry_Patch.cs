@@ -49,7 +49,7 @@ namespace NitroxPatcher.Patches.Dynamic
                         {
                             if(child.gameObject.GetComponent<UniqueIdentifier>() != null)
                             {
-                                NitroxId id = NitroxIdentifier.GetId(child.gameObject);
+                                NitroxId id = NitroxEntity.GetId(child.gameObject);
                                 string key = getObjectKey(child.gameObject.name, child.position);
                                 NitroxIdByObjectKey[key] = id;
                             }

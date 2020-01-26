@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (Base_ClearGeometry_Patch.NitroxIdByObjectKey.TryGetValue(key, out id))
             {
-                NitroxIdentifier.SetNewId(__result.gameObject, id);
+                NitroxEntity.SetNewId(__result.gameObject, id);
             }
         }
 

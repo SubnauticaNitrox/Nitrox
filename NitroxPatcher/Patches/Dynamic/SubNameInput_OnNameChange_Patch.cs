@@ -33,7 +33,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     parentVehicle = subRoot.gameObject;
                 }
                 
-                NitroxId id = NitroxIdentifier.GetId(parentVehicle);
+                NitroxId id = NitroxEntity.GetId(parentVehicle);
                 VehicleNameChange packet = new VehicleNameChange(id, subname.GetName());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
