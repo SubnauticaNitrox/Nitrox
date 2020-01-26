@@ -9,7 +9,7 @@ namespace NitroxModel.Discovery.InstallationFinders
 {
     public class EpicGamesInstallationFinder : IFindGameInstallation
     {
-        private readonly Regex installLocationRegex = new Regex("\"InstallLocation\"[^\"]*\"(.*)\",?");
+        private readonly Regex installLocationRegex = new Regex("\"InstallLocation\"[^\"]*\"(.*)\"");
 
         public Optional<string> FindGame(List<string> errors = null)
         {
