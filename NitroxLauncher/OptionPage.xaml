@@ -25,7 +25,7 @@
 
             <Grid Grid.Row="0" Height="32"></Grid>
             <Grid Grid.Row="1">
-                <TextBlock FontSize="22" Foreground="White">Settings</TextBlock>
+                <TextBlock FontSize="22" Foreground="White">Options</TextBlock>
             </Grid>
             <StackPanel Grid.Row="2" Margin="0,17,0,0">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="12" Foreground="White">GAME DIRECTORY</TextBlock>
