@@ -9,12 +9,12 @@ namespace NitroxLauncher
     public partial class ServerPage : Page
     {
         public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
-        private bool suppressFeeback;
+        private bool suppressFeedback;
         private readonly LauncherLogic logic;
 
         public ServerPage(LauncherLogic logic)
         {
-            suppressFeeback = true;
+            suppressFeedback = true;
             InitializeComponent();
 
             foreach (ComboBoxItem boxItem in CBox.Items)
@@ -26,7 +26,7 @@ namespace NitroxLauncher
                 }
             }
 
-            suppressFeeback = false;
+            suppressFeedback = false;
 
             // Change style depending on windows version. Win 10 uses other definition of comboboxes then win 7 so win 10 has its own style
             if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1)
@@ -52,7 +52,7 @@ namespace NitroxLauncher
 
         private void OnSelectionChange(object sender, SelectionChangedEventArgs e)
         {
-            if (!suppressFeeback)
+            if (!suppressFeedback)
             {
                 ComboBox box = (ComboBox)sender;
                 ComboBoxItem item = (ComboBoxItem)box.SelectedValue;
