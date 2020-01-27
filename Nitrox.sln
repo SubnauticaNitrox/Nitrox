@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxTest", "NitroxTest\Ni
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxPatcher", "NitroxPatcher\NitroxPatcher.csproj", "{BE983E25-24CC-4FC8-9017-61EEC43DD618}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lidgren.Network", "lidgren-network-gen3\Lidgren.Network\Lidgren.Network.csproj", "{69BEE16A-B6E7-4642-8081-3928B32455DF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{56490579-3996-40AB-8FB8-0B91F083FC39}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -96,18 +94,6 @@ Global
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x64.Build.0 = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.ActiveCfg = Release|Any CPU
 		{BE983E25-24CC-4FC8-9017-61EEC43DD618}.Release|x86.Build.0 = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x64.Build.0 = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Debug|x86.Build.0 = Debug|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|x64.ActiveCfg = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|x64.Build.0 = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|x86.ActiveCfg = Release|Any CPU
-		{69BEE16A-B6E7-4642-8081-3928B32455DF}.Release|x86.Build.0 = Release|Any CPU
 		{0A377218-6B36-4522-89A3-A39CFC999209}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0A377218-6B36-4522-89A3-A39CFC999209}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0A377218-6B36-4522-89A3-A39CFC999209}.Debug|x64.ActiveCfg = Debug|Any CPU
