@@ -15,7 +15,7 @@ namespace NitroxModel.Discovery
         private readonly IFindGameInstallation[] finders = {
             new ConfigFileGameFinder(),
             new SteamGameRegistryFinder(),
-            new EpicGamesRegistryFinder()
+            new EpicGamesInstallationFinder()
         };
         
         /// <summary>
@@ -26,6 +26,10 @@ namespace NitroxModel.Discovery
 
         public Optional<string> FindGame(List<string> errors = null)
         {
+            if (errors == null)
+            {
+                errors = new List<string>();
+            }
             foreach (IFindGameInstallation finder in finders)
             {
                 Optional<string> path = finder.FindGame(errors);

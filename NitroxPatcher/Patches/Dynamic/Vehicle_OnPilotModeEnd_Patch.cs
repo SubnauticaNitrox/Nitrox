@@ -17,7 +17,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxServiceLocator.LocateService<Vehicles>().BroadcastOnPilotModeChanged(__instance, false);
 
-            NitroxId id = NitroxIdentifier.GetId(__instance.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             SimulationOwnership simulationOwnership = NitroxServiceLocator.LocateService<SimulationOwnership>();
             simulationOwnership.RequestSimulationLock(id, SimulationLockType.TRANSIENT, null);
         }

@@ -18,7 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(CyclopsDamagePointRepaired packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             SubRoot cyclops = GameObjectHelper.RequireComponent<SubRoot>(gameObject);
 
             using (packetSender.Suppress<CyclopsDamage>())

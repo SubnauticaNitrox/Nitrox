@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsSilentRunningAbilityButton __instance)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
 
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastChangeSilentRunning(id, false);
         }

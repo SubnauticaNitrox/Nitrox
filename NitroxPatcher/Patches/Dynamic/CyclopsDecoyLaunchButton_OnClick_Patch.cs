@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Postfix(CyclopsHornButton __instance)
         {
-            NitroxId id = NitroxIdentifier.GetId(__instance.subRoot.gameObject);
+            NitroxId id = NitroxEntity.GetId(__instance.subRoot.gameObject);
             NitroxServiceLocator.LocateService<Cyclops>().BroadcastLaunchDecoy(id);
         }
 

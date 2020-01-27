@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)
         {
-            NitroxId constructorId = NitroxIdentifier.GetId(constructor);
+            NitroxId constructorId = NitroxEntity.GetId(constructor);
 
             Log.Debug("Building item from constructor with id: " + constructorId);
 
@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
                 Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
-                NitroxId constructedObjectId = NitroxIdentifier.GetId(constructedObject);
+                NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
                 Vector3[] HSB = new Vector3[5];
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
                 
                 if (!vehicle)
                 { // Cylcops
-                    GameObject target = NitroxIdentifier.RequireObjectFrom(constructedObjectId);
+                    GameObject target = NitroxEntity.RequireObjectFrom(constructedObjectId);
                     SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                     SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
@@ -92,7 +92,7 @@ namespace NitroxClient.GameLogic
 
             foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
             {
-                Optional<GameObject> opChildGameObject = NitroxIdentifier.GetObjectFrom(identifier.Id);
+                Optional<GameObject> opChildGameObject = NitroxEntity.GetObjectFrom(identifier.Id);
 
                 if (opChildGameObject.IsPresent())
                 {

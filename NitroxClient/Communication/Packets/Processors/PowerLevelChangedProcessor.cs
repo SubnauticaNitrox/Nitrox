@@ -12,7 +12,7 @@ namespace NitroxClient.Communication.Packets.Processors
     {
         public override void Process(PowerLevelChanged packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
 
             if (packet.PowerType == PowerType.ENERGY_INTERFACE)
             {

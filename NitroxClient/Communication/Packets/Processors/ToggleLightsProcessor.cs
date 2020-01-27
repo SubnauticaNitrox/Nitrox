@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         }
         public override void Process(NitroxModel.Packets.ToggleLights packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
             ToggleLights toggleLights = gameObject.GetComponent<ToggleLights>();
             if (toggleLights == null)
             {

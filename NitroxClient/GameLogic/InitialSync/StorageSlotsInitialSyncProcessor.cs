@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
-                    NitroxIdentifier.SetNewId(item, itemData.ItemId);
+                    NitroxEntity.SetNewId(item, itemData.ItemId);
                     slots.AddItem(item, itemData.ContainerId,true);
                 }
             }

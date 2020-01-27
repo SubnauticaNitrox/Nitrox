@@ -103,7 +103,7 @@ namespace NitroxClient.GameLogic
 
         public void SetInternalLighting(NitroxId id, bool isOn)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
             if (lighting.lightingOn != isOn)
             {
@@ -120,7 +120,7 @@ namespace NitroxClient.GameLogic
 
         public void SetFloodLighting(NitroxId id, bool isOn)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsLightingPanel lighting = cyclops.RequireComponentInChildren<CyclopsLightingPanel>();
 
             if (lighting.floodlightsOn != isOn)
@@ -138,7 +138,7 @@ namespace NitroxClient.GameLogic
 
         public void ToggleEngineState(NitroxId id, bool isStarting, bool isOn, bool silent = false)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsEngineChangeState engineState = cyclops.RequireComponentInChildren<CyclopsEngineChangeState>();
             CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
 
@@ -167,7 +167,7 @@ namespace NitroxClient.GameLogic
 
         public void ChangeEngineMode(NitroxId id, CyclopsMotorMode.CyclopsMotorModes mode)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsMotorMode motorMode = cyclops.RequireComponentInChildren<CyclopsMotorMode>();
             if (motorMode.cyclopsMotorMode != mode)
             {
@@ -177,7 +177,7 @@ namespace NitroxClient.GameLogic
 
         public void ChangeSilentRunning(NitroxId id, bool isOn)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsSilentRunningAbilityButton ability = cyclops.RequireComponentInChildren<CyclopsSilentRunningAbilityButton>();
 
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
@@ -204,7 +204,7 @@ namespace NitroxClient.GameLogic
 
         public void ChangeShieldMode(NitroxId id, bool isOn)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsShieldButton shield = cyclops.GetComponentInChildren<CyclopsShieldButton>();
             if (shield != null)
             {
@@ -227,7 +227,7 @@ namespace NitroxClient.GameLogic
 
         public void ChangeSonarMode(NitroxId id, bool isOn)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsSonarButton sonar = cyclops.GetComponentInChildren<CyclopsSonarButton>();
             if (sonar != null)
             {
@@ -255,7 +255,7 @@ namespace NitroxClient.GameLogic
 
         public void SonarPing(NitroxId id)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsSonarButton sonar = cyclops.GetComponentInChildren<CyclopsSonarButton>();
             if (sonar != null)
             {
@@ -268,7 +268,7 @@ namespace NitroxClient.GameLogic
 
         public void LaunchDecoy(NitroxId id)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsDecoyManager decoyManager = cyclops.RequireComponent<CyclopsDecoyManager>();
             using (packetSender.Suppress<CyclopsChangeSilentRunning>())
             {
@@ -283,7 +283,7 @@ namespace NitroxClient.GameLogic
 
         public void StartFireSuppression(NitroxId id)
         {
-            GameObject cyclops = NitroxIdentifier.RequireObjectFrom(id);
+            GameObject cyclops = NitroxEntity.RequireObjectFrom(id);
             CyclopsFireSuppressionSystemButton fireSuppButton = cyclops.RequireComponentInChildren<CyclopsFireSuppressionSystemButton>();
             using (packetSender.Suppress<CyclopsFireSuppression>())
             {
@@ -323,7 +323,7 @@ namespace NitroxClient.GameLogic
         {
             // We need to wait till the cyclops is powered up to start all advanced modes
             // At this time all Equipment will be loaded into the cyclops, so we do not need other structures
-            SubRoot root = NitroxIdentifier.GetObjectFrom(cyclopsModel.Id).Get().GetComponent<SubRoot>();
+            SubRoot root = NitroxEntity.GetObjectFrom(cyclopsModel.Id).Get().GetComponent<SubRoot>();
             UWE.Event<PowerRelay>.HandleFunction handleFunction = null;
             handleFunction = new UWE.Event<PowerRelay>.HandleFunction((relay) =>
             {
@@ -361,7 +361,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnDamagePointRepaired(SubRoot subRoot, CyclopsDamagePoint damagePoint, float repairAmount)
         {
-            NitroxId subId = NitroxIdentifier.GetId(subRoot.gameObject);
+            NitroxId subId = NitroxEntity.GetId(subRoot.gameObject);
 
             for (int i = 0; i < subRoot.damageManager.damagePoints.Length; i++)
             {
@@ -380,7 +380,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private void BroadcastDamageState(SubRoot subRoot, Optional<DamageInfo> info)
         {
-            NitroxId subId = NitroxIdentifier.GetId(subRoot.gameObject);
+            NitroxId subId = NitroxEntity.GetId(subRoot.gameObject);
             LiveMixin subHealth = subRoot.gameObject.RequireComponent<LiveMixin>();
 
             if (subHealth.health > 0)
@@ -393,7 +393,7 @@ namespace NitroxClient.GameLogic
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
                     CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subId,
-                        damage.dealer != null ? NitroxIdentifier.GetId(damage.dealer) : null,
+                        damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
                         damage.originalDamage,
                         damage.damage,
                         damage.position,
@@ -434,7 +434,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         private IEnumerable<CyclopsFireData> GetActiveRoomFires(SubFire subFire)
         {
-            NitroxId subRootId = NitroxIdentifier.GetId(subFire.subRoot.gameObject);
+            NitroxId subRootId = NitroxEntity.GetId(subFire.subRoot.gameObject);
             Dictionary<CyclopsRooms, SubFire.RoomFire> roomFires = (Dictionary<CyclopsRooms, SubFire.RoomFire>)subFire.ReflectionGet("roomFires");
 
             foreach (KeyValuePair<CyclopsRooms, SubFire.RoomFire> roomFire in roomFires)
@@ -443,7 +443,7 @@ namespace NitroxClient.GameLogic
                 {
                     if (roomFire.Value.spawnNodes[i].childCount > 0)
                     {
-                        yield return new CyclopsFireData(NitroxIdentifier.GetId(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
+                        yield return new CyclopsFireData(NitroxEntity.GetId(roomFire.Value.spawnNodes[i].GetComponentInChildren<Fire>().gameObject),
                             subRootId,
                             roomFire.Key,
                             i);

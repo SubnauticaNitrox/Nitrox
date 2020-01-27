@@ -21,7 +21,7 @@ namespace NitroxClient.Communication.Packets.Processors
             using (packetSender.Suppress<SeamothModulesAction>())
             using (packetSender.Suppress<ItemContainerRemove>())
             {
-                GameObject _gameObject = NitroxIdentifier.RequireObjectFrom(packet.Id);
+                GameObject _gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
                 if (seamoth != null)
                 {

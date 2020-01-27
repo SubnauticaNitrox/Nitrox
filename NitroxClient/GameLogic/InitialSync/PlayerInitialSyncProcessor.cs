@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetPlayerGameObjectId(NitroxId id)
         {
-            NitroxIdentifier.SetNewId(Player.mainObject, id);
+            NitroxEntity.SetNewId(Player.mainObject, id);
             Log.Info("Received initial sync Player GameObject Id: " + id);
         }
 
@@ -44,7 +44,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     GameObject gameObject = CraftData.InstantiateFromPrefab(techType, false);
                     Pickupable pickupable = gameObject.GetComponent<Pickupable>();
                     pickupable = pickupable.Initialize();
-                    itemContainers.AddItem(pickupable.gameObject, NitroxIdentifier.GetId(Player.main.transform.gameObject));
+                    itemContainers.AddItem(pickupable.gameObject, NitroxEntity.GetId(Player.main.transform.gameObject));
                     itemContainers.BroadcastItemAdd(pickupable, Inventory.main.container.tr);
                 }
             }

@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic
 
         public void SpawnedArm(Exosuit exosuit)
         {
-            NitroxId id = NitroxIdentifier.GetId(exosuit.gameObject);            
+            NitroxId id = NitroxEntity.GetId(exosuit.gameObject);            
             ExosuitModel exosuitModel = vehicles.GetVehicles<ExosuitModel>(id);
             
             IExosuitArm rightArm = (IExosuitArm)exosuit.ReflectionGet("rightArm");            
@@ -35,10 +35,10 @@ namespace NitroxClient.GameLogic
             try
             {
                 GameObject rightArmGameObject = rightArm.GetGameObject();
-                NitroxIdentifier.SetNewId(rightArmGameObject, exosuitModel.RightArmId);
+                NitroxEntity.SetNewId(rightArmGameObject, exosuitModel.RightArmId);
 
                 GameObject leftArmGameObject = leftArm.GetGameObject();
-                NitroxIdentifier.SetNewId(leftArmGameObject, exosuitModel.LeftArmId);
+                NitroxEntity.SetNewId(leftArmGameObject, exosuitModel.LeftArmId);
             }
             catch (Exception e)
             {
@@ -50,7 +50,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)
         {
-            NitroxId id = NitroxIdentifier.GetId(clawArm.gameObject);
+            NitroxId id = NitroxEntity.GetId(clawArm.gameObject);
             ExosuitArmAction action;
 
             // If cooldown of claw arm matches pickup cooldown, the exosuit arm performed a pickup action
@@ -103,7 +103,7 @@ namespace NitroxClient.GameLogic
 
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null, Optional<Quaternion> opRotation = null)
         {
-            NitroxId id = NitroxIdentifier.GetId(exosuitArm.GetGameObject());            
+            NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());            
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
             packetSender.Send(packet);
         }        

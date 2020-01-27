@@ -18,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(SubRoot __instance, DamageInfo damageInfo)
         {
-            return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxIdentifier.GetId(__instance.gameObject));
+            return NitroxServiceLocator.LocateService<SimulationOwnership>().HasAnyLockType(NitroxEntity.GetId(__instance.gameObject));
         }
 
         public override void Patch(HarmonyInstance harmony)

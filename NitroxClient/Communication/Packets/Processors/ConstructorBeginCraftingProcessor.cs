@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(ConstructorBeginCrafting packet)
         {
-            GameObject gameObject = NitroxIdentifier.RequireObjectFrom(packet.ConstructorId);
+            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.ConstructorId);
             Crafter crafter = gameObject.RequireComponentInChildren<Crafter>(true);
             vehicles.AddVehicle(VehicleModelFactory.BuildFrom(packet));
             MethodInfo onCraftingBegin = typeof(Crafter).GetMethod("OnCraftingBegin", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -38,7 +38,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opConstructedObject.IsPresent())
             {
                 GameObject constructedObject = (GameObject)opConstructedObject.Get();
-                NitroxIdentifier.SetNewId(constructedObject, packet.ConstructedItemId);
+                NitroxEntity.SetNewId(constructedObject, packet.ConstructedItemId);
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(constructedObject, packet.InteractiveChildIdentifiers);
             }
             else
