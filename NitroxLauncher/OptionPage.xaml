@@ -11,20 +11,16 @@
 
     <Grid >
         <Image x:Name="BackgroundImage" Source="Images/Vines.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        
         <Grid Margin="25,0,0,0">
-            
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
             <Grid Grid.Row="1">
                 <TextBlock FontSize="22" Foreground="White" Text="{DynamicResource ResourceKey=NitroxOTitle}"/>
             </Grid>
-            
             <StackPanel Grid.Row="2" Margin="0,17,0,0">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="12" Foreground="White" Text="{DynamicResource ResourceKey=NitroxOptionGameDirectory}"/>
 
@@ -32,13 +28,11 @@
                     <TextBox FontFamily="{StaticResource Roboto}" Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" SelectionOpacity="-1" ToolTip="{DynamicResource ResourceKey=NitroxOptionGameDirectoryTooltip}" />
                 </Border>
             </StackPanel>
-            
             <StackPanel Grid.Row="3" Margin="0,18,0,0">
                 <Button Style="{StaticResource BTNOPTIONS}" Background="#19FFFFFF"  Width="147" Height="36" HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ChangeOptions_Click" ToolTip="{DynamicResource ResourceKey=NitroxOptionSubmitTooltip}">
                     <TextBlock FontFamily="{StaticResource Roboto}" Padding="0,1,0,0" FontSize="16" Foreground="White" Text="{DynamicResource ResourceKey=NitroxOptionSubmit}" />
                 </Button>
             </StackPanel>
-            
         </Grid>
     </Grid>
 </Page>

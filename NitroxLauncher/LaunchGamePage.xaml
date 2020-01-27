@@ -8,23 +8,18 @@
       Title="{DynamicResource ResourceKey=NitroxGameTitle}"
       Margin="0">
     
-    <Grid >
+    <Grid>
         <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        
         <Grid Height="470" Width="719" Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Image Stretch="Fill" Source="Images/SubnauticaMain.png" RenderTransformOrigin="0.478,0.444" Margin="108,2,108,392" />
         </Grid>
-        
         <Grid Margin="0,204,0,0" HorizontalAlignment="Center" VerticalAlignment="Top" Width="522.07" Height="98">
             <TextBlock Text="{DynamicResource ResourceKey=NitroxPresentation}" FontFamily="{StaticResource Roboto}" FontSize="12" Foreground="White" TextWrapping="Wrap" Margin="0,0,0.07,0" />
         </Grid>
-        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,300,0,0" >
-
             <Button Width="225" Height="80" Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource BTNOPTIONS}" Click="SinglePlayerButton_Click" ToolTip="{DynamicResource ResourceKey=NitroxGameSinglerplayerButtonTooltip}">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="16" Padding="0,4,0,0" Foreground="White" Text="{DynamicResource ResourceKey=NitroxGameSinglerplayerButton}" />
             </Button>
-
             <Button Width="225" Height="80" Margin="10,0,0,0" Style="{StaticResource BTNCORNER}" Click="MultiplayerButton_Click" ToolTip="{DynamicResource ResourceKey=NitroxGameMultiplayerButtonTooltip}" >
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -32,10 +27,8 @@
                         <GradientStop Color="#FF006BE9" Offset="1"/>
                     </LinearGradientBrush>
                 </Button.Background>
-
                 <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Text="{DynamicResource ResourceKey=NitroxGameMultiplayerButton}" />
             </Button>
-            
         </StackPanel>
     </Grid>
 </Page>
