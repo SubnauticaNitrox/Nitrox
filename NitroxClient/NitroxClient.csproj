@@ -272,7 +272,6 @@
     <Compile Include="Communication\Abstract\IMultiplayerSessionState.cs" />
     <Compile Include="Communication\Abstract\IPacketSender.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibClient.cs" />
-    <Compile Include="Communication\NetworkingLayer\ModulatingClient.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RemotePlayerEquipmentAddedProcessor.cs" />
