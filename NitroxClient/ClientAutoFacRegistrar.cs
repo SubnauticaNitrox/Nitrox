@@ -4,7 +4,7 @@ using Autofac.Core;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
-using NitroxClient.Communication.NetworkingLayer;
+using NitroxClient.Communication.NetworkingLayer.LiteNetLib;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Bases;
@@ -36,7 +36,7 @@ namespace NitroxClient
             {
                 containerBuilder.RegisterModule(module);
             }
-            
+
             RegisterCoreDependencies(containerBuilder);
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
@@ -56,7 +56,7 @@ namespace NitroxClient
                 .As<IPacketSender>()
                 .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<ModulatingClient>()
+            containerBuilder.RegisterType<LiteNetLibClient>()
                 .As<IClient>()
                 .InstancePerLifetimeScope();
 
