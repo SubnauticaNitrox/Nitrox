@@ -23,15 +23,6 @@ namespace NitroxServer
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
 
-        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, Optional<NitroxId> subRootId)
-        {
-            PlayerContext = playerContext;
-            this.connection = connection;
-            Position = position;
-            SubRootId = subRootId;
-            GameObjectId = new NitroxId();
-        }
-
         public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId)
         {
             PlayerContext = playerContext;

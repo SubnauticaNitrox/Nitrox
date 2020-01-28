@@ -207,7 +207,7 @@ namespace NitroxServer.GameLogic.Players
 
             if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
             {
-                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId);
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId, new NitroxId());
             }
 
             return playerPersistedData;
@@ -259,12 +259,6 @@ namespace NitroxServer.GameLogic.Players
             public PersistedPlayerData()
             {
                 // Constructor for serialization purposes
-            }
-
-            public PersistedPlayerData(string playerName, ushort playerId)
-            {
-                PlayerName = playerName;
-                PlayerId = playerId;
             }
 
             public PersistedPlayerData(string playerName, ushort playerId, NitroxId nitroxId)
