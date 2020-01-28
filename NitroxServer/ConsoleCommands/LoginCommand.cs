@@ -30,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
 
             if (pass == serverConfig.AdminPassword)
             {
-                if (playerData.UpdatePlayerPermissions(playerName, Perms.ADMIN))
+                if (playerData.SetPermissions(playerName, Perms.ADMIN))
                 {
                     message = "Updated permissions to admin for " + playerName;
                 }
