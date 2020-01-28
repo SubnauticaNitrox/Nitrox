@@ -102,16 +102,14 @@ namespace NitroxServer.GameLogic
 
                 // Try to load a NitroxID for the newly connected Player
                 NitroxId id = playerData.GetNitroxId(playerContext.PlayerName);
-                //NitroxModel.Logger.Log.Info("Loaded ID:" + id.ToString());
 
                 Player player;
 
-                // If a NitroxId was found in persisted data then create a player with the same id as the old one
+                // If id was found create player with that id or create and register a new one
                 if (id != null)
                 {
                     player = new Player(playerContext, connection, position, id, subRootId);
                 }
-                // If no NitroxId was found then just create a new ID and then save it to persisted data
                 else
                 {
                     player = new Player(playerContext, connection, position, subRootId);

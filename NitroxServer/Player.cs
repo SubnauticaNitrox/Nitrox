@@ -32,14 +32,6 @@ namespace NitroxServer
             GameObjectId = new NitroxId();
         }
 
-        /// <summary>
-        /// This overload is used when a NitroxId is already present
-        /// </summary>
-        /// <param name="playerContext"></param>
-        /// <param name="connection"></param>
-        /// <param name="position">the stored position</param>
-        /// <param name="playerId">the stored playerId for the new player</param>
-        /// <param name="subRootId"></param>
         public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId)
         {
             PlayerContext = playerContext;
@@ -47,7 +39,6 @@ namespace NitroxServer
             Position = position;
             SubRootId = subRootId;
             GameObjectId = playerId;
-            //NitroxModel.Logger.Log.Info("Player ID: " + GameObjectId.ToString());
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)

@@ -19,8 +19,7 @@ namespace NitroxModel.DataStructures
         }
 
         /// <summary>
-        /// This is used to "recreate" a NitroxID from a String
-        /// The XML-serializer needs this after deserializing to convert from "Helper-Types" to internal data Types
+        /// Create a NitroxId from a string
         /// </summary>
         /// <param name="str">a NitroxID as string</param>
         public NitroxId(string str)
