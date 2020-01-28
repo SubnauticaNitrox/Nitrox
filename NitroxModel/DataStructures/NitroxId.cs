@@ -17,7 +17,17 @@ namespace NitroxModel.DataStructures
         {
             guid = Guid.NewGuid();
         }
-        
+
+        /// <summary>
+        /// This is used to "recreate" a NitroxID from a String
+        /// The XML-serializer needs this after deserializing to convert from "Helper-Types" to internal data Types
+        /// </summary>
+        /// <param name="str">a NitroxID as string</param>
+        public NitroxId(string str)
+        {
+            guid = new Guid(str);
+        }
+
         public NitroxId(byte[] bytes)
         {
             guid = new Guid(bytes);

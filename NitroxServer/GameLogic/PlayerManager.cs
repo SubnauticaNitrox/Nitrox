@@ -100,7 +100,24 @@ namespace NitroxServer.GameLogic
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);
                 Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
 
-                Player player = new Player(playerContext, connection, position, subRootId);
+                // Try to load a NitroxID for the newly connected Player
+                NitroxId id = playerData.GetNitroxId(playerContext.PlayerName);
+                //NitroxModel.Logger.Log.Info("Loaded ID:" + id.ToString());
+
+                Player player;
+
+                // If a NitroxId was found in persisted data then create a player with the same id as the old one
+                if (id != null)
+                {
+                    player = new Player(playerContext, connection, position, id, subRootId);
+                }
+                // If no NitroxId was found then just create a new ID and then save it to persisted data
+                else
+                {
+                    player = new Player(playerContext, connection, position, subRootId);
+                    playerData.SetPlayerNitroxID(playerContext.PlayerName, player.GameObjectId);  
+                }
+
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);

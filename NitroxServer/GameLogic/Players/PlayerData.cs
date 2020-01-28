@@ -182,6 +182,33 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        /// <summary>
+        /// Searches in the persisted playerdata for a NitroxID associated to the given PlayerName
+        /// </summary>
+        /// <param name="playerName">the player to search for</param>
+        /// <returns></returns>
+        public NitroxId GetNitroxId(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return playerPersistedData.PlayerNitroxId;
+            }
+        }
+
+        /// <summary>
+        /// Sets a NitroxID corresponding to a given PlayerName in persisted playerdata
+        /// </summary>
+        /// <param name="playerName">the playername to set the ID for</param>
+        /// <param name="id">the NitroxID to set</param>
+        public void SetPlayerNitroxID(string playerName, NitroxId id)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].PlayerNitroxId = id;
+            }
+        }
+
         // Must be called when playersByPlayerName is locked.
         private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
         {
@@ -234,6 +261,13 @@ namespace NitroxServer.GameLogic.Players
             [ProtoMember(7)]
             public Perms Permissions { get; set; } = Perms.PLAYER;
 
+            /// <summary>
+            /// This is needed to assign loaded inventory data to a player
+            /// </summary>
+            [ProtoMember(8)]
+            public NitroxId PlayerNitroxId { get; set; }
+
+
             public PersistedPlayerData()
             {
                 // Constructor for serialization purposes
@@ -243,6 +277,19 @@ namespace NitroxServer.GameLogic.Players
             {
                 PlayerName = playerName;
                 PlayerId = playerId;
+            }
+
+            /// <summary>
+            /// Overload for creating new PersistedPlayerData if a nitroxID is present
+            /// </summary>
+            /// <param name="playerName">the players name</param>
+            /// <param name="playerId">the players id</param>
+            /// <param name="nitroxId">the players NitroxID</param>
+            public PersistedPlayerData(string playerName, ushort playerId, NitroxId nitroxId)
+            {
+                PlayerName = playerName;
+                PlayerId = playerId;
+                PlayerNitroxId = nitroxId;
             }
         }
     }
