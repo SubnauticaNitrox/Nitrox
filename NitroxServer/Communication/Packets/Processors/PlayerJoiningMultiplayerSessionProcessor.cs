@@ -53,7 +53,6 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.PlayerData.SetPermissions(player.Name, Perms.ADMIN);
             }
             Perms initialPerms = world.PlayerData.GetPermissions(player.Name);
-            Log.Info($"Changed player '{player.Name}' on '{connection.Endpoint.Address}' permissions to '{initialPerms.ToString()}'");
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
                 wasBrandNewPlayer,
