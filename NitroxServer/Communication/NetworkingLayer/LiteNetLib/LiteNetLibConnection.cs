@@ -1,3 +1,4 @@
+using System.Net;
 using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxModel.Logger;
@@ -8,8 +9,10 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 {
     public class LiteNetLibConnection : NitroxConnection
     {
-        private readonly NetPeer peer;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
+        private readonly NetPeer peer;
+
+        public IPEndPoint Endpoint => peer.EndPoint;
 
         public LiteNetLibConnection(NetPeer peer)
         {

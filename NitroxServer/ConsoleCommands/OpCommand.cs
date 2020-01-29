@@ -1,9 +1,9 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Players;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -23,13 +23,13 @@ namespace NitroxServer.ConsoleCommands
             string playerName = args[0];
             string message;
 
-            if(playerData.UpdatePlayerPermissions(playerName, Perms.ADMIN))
+            if (playerData.SetPermissions(playerName, Perms.ADMIN))
             {
-                message = "Updated " + playerName + " permissions to admin";
+                message = $"Updated '{playerName}' permissions to admin";
             }
             else
             {
-                message = "Could not update permissions on unknown player " + playerName;
+                message = $"Could not update permissions on unknown player '{playerName}'";
             }
 
             Log.Info(message);
