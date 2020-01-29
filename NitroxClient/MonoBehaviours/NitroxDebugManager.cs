@@ -84,7 +84,8 @@ namespace NitroxClient.MonoBehaviours
             {
                 UWE.Utils.PopLockCursor();
                 HideDebuggers();
-            }
+                Debuggers.ForEach(debugger => debugger.ResetWindowPosition());
+           }
         }
 
         private void DoWindow(int windowId)
