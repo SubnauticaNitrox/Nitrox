@@ -24,6 +24,9 @@ namespace NitroxClient.Debuggers
         private readonly BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic;
         public readonly KeyCode RayCastKey = KeyCode.F9;
         private bool editMode;
+        private bool sendToServer;
+        private bool showUnityMethods;
+        private bool showSystemMethods;
         private bool hitMode = false;
         private Vector2 gameObjectScrollPos;
 
@@ -39,17 +42,16 @@ namespace NitroxClient.Debuggers
 
         private Vector2 hierarchyScrollPos;
         private Vector2 monoBehaviourScrollPos;
-        private MonoBehaviour selectedMonoBehaviour;
-        private GameObject selectedObject;
 
+        private Scene selectedScene;
+        private GameObject selectedObject;
         private bool selectedObjectActiveSelf;
         private Vector3 selectedObjectPos;
         private Vector3 selectedObjectLocPos;
         private Quaternion selectedObjectRot;
         private Quaternion selectedObjectLocRot;
         private Vector3 selectedObjectScale;
-        private Scene selectedScene;
-        private bool sendToServer;
+        private MonoBehaviour selectedMonoBehaviour;
 
         public SceneDebugger() : base(500, null, KeyCode.S, true, false, false, GUISkinCreationOptions.DERIVEDCOPY)
         {
@@ -554,27 +556,39 @@ namespace NitroxClient.Debuggers
 
         private void RenderAllMonoBehaviourMethods(MonoBehaviour mono)
         {
+            using (new GUILayout.HorizontalScope("Box"))
+            {
+                showSystemMethods = GUILayout.Toggle(showSystemMethods, "Show System inherit mehods", GUILayout.Height(25));
+                showUnityMethods = GUILayout.Toggle(showUnityMethods, "Show Unity inherit mehods", GUILayout.Height(25));
+            }
+
             MethodInfo[] methods = mono.GetType().GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy).OrderBy(m => m.Name).ToArray();
             foreach (MethodInfo method in methods)
             {
-                using (new GUILayout.VerticalScope("Box"))
+                string methodeAssemblyName = method.DeclaringType.Assembly.GetName().Name;
+                if (!(!showSystemMethods && (methodeAssemblyName.Contains("System") || methodeAssemblyName.Contains("mscorlib"))) &&
+                    !(!showUnityMethods && methodeAssemblyName.Contains("UnityEngine")))
                 {
-                    GUILayout.Label(method.ToString());
-                    using (new GUILayout.HorizontalScope())
+
+                    using (new GUILayout.VerticalScope("Box"))
                     {
-                        // TODO: Allow methods with parameters to be called.
-                        if (!method.GetParameters().Any())
+                        GUILayout.Label(method.ToString());
+                        using (new GUILayout.HorizontalScope())
                         {
-                            if (GUILayout.Button("Invoke"))
+                            // TODO: Allow methods with parameters to be called.
+                            if (!method.GetParameters().Any())
                             {
-                                object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
-                                if (result != null)
+                                if (GUILayout.Button("Invoke", GUILayout.MaxWidth(150)))
                                 {
-                                    Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
-                                }
-                                else
-                                {
-                                    Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
+                                    object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
+                                    if (result != null)
+                                    {
+                                        Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
+                                    }
+                                    else
+                                    {
+                                        Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
+                                    }
                                 }
                             }
                         }
