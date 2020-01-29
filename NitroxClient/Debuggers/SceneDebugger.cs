@@ -476,7 +476,11 @@ namespace NitroxClient.Debuggers
                     string[] fieldTypeNames = field.FieldType.ToString().Split('.');
                     GUILayout.Label("[" + fieldTypeNames[fieldTypeNames.Length - 1] + "]: " + field.Name, "options_label");
 
-                    if (field.FieldType == typeof(bool))
+                    if (field.GetValue(selectedMonoBehaviour) == null)
+                    {
+                        GUILayout.Box("Field is null");
+                    }
+                    else if (field.FieldType == typeof(bool))
                     {
                         bool boolVal = bool.Parse(GetValue(field, selectedMonoBehaviour));
                         if (GUILayout.Button(boolVal.ToString()))
@@ -523,9 +527,8 @@ namespace NitroxClient.Debuggers
                         }
 
                         GUIStyle style = new GUIStyle("box");
-                        style.fixedHeight = 250 * (img.width / img.height);
+                        style.fixedHeight = img.height * (250f / img.width);
                         style.fixedWidth = 250;
-
                         GUILayout.Box(img, style);
                     }
                     else if (field.FieldType == typeof(NitroxId))
