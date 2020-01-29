@@ -210,13 +210,7 @@ namespace NitroxClient.Debuggers
 
                     if (GUILayout.Button("<"))
                     {
-                        selectedObject = selectedObject?.transform.parent?.gameObject;
-                        selectedObjectActiveSelf = selectedObject.activeSelf;
-                        selectedObjectPos = selectedObject.transform.position;
-                        selectedObjectRot = selectedObject.transform.rotation;
-                        selectedObjectLocPos = selectedObject.transform.localPosition;
-                        selectedObjectLocRot = selectedObject.transform.localRotation;
-                        selectedObjectScale = selectedObject.transform.localScale;
+                        UpdateSelectedObject(selectedObject?.transform.parent?.gameObject);
                     }
                 }
             }
@@ -245,7 +239,7 @@ namespace NitroxClient.Debuggers
                 }
             }
 
-            if(hitMode)
+            if (hitMode)
             {
                 using (new GUILayout.VerticalScope("Box"))
                 {
@@ -253,19 +247,13 @@ namespace NitroxClient.Debuggers
                     {
                         using (GUILayout.ScrollViewScope scroll = new GUILayout.ScrollViewScope(hierarchyScrollPos))
                         {
-                            hierarchyScrollPos = scroll.scrollPosition;                            
+                            hierarchyScrollPos = scroll.scrollPosition;
                             foreach (GameObject child in gameObjectSearchResult)
                             {
                                 string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
                                 if (GUILayout.Button($"{child.name}", guiStyle))
                                 {
-                                    selectedObject = child.gameObject;
-                                    selectedObjectActiveSelf = selectedObject.activeSelf;
-                                    selectedObjectPos = selectedObject.transform.position;
-                                    selectedObjectRot = selectedObject.transform.rotation;
-                                    selectedObjectLocPos = selectedObject.transform.localPosition;
-                                    selectedObjectLocRot = selectedObject.transform.localRotation;
-                                    selectedObjectScale = selectedObject.transform.localScale;
+                                    UpdateSelectedObject(child);
                                 }
                             }
                         }
@@ -304,13 +292,7 @@ namespace NitroxClient.Debuggers
                                 string guiStyle = child.transform.childCount > 0 ? "bold" : "label";
                                 if (GUILayout.Button($"{child.name}", guiStyle))
                                 {
-                                    selectedObject = child.gameObject;
-                                    selectedObjectActiveSelf = selectedObject.activeSelf;
-                                    selectedObjectPos = selectedObject.transform.position;
-                                    selectedObjectRot = selectedObject.transform.rotation;
-                                    selectedObjectLocPos = selectedObject.transform.localPosition;
-                                    selectedObjectLocRot = selectedObject.transform.localRotation;
-                                    selectedObjectScale = selectedObject.transform.localScale;
+                                    UpdateSelectedObject(child);
                                 }
                             }
                         }
@@ -368,13 +350,7 @@ namespace NitroxClient.Debuggers
                             string guiStyle = item.transform.childCount > 0 ? "bold" : "label";
                             if (GUILayout.Button($"{item.name}", guiStyle))
                             {
-                                selectedObject = item.gameObject;
-                                selectedObjectActiveSelf = selectedObject.activeSelf;
-                                selectedObjectPos = selectedObject.transform.position;
-                                selectedObjectRot = selectedObject.transform.rotation;
-                                selectedObjectLocPos = selectedObject.transform.localPosition;
-                                selectedObjectLocRot = selectedObject.transform.localRotation;
-                                selectedObjectScale = selectedObject.transform.localScale;
+                                UpdateSelectedObject(item);
                             }
                         }
                     }
@@ -400,46 +376,46 @@ namespace NitroxClient.Debuggers
                                 selectedObjectActiveSelf = GUILayout.Toggle(selectedObjectActiveSelf, "Active");
                             }
 
-                            GUILayout.Label("Position");
                             using (new GUILayout.HorizontalScope())
                             {
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectPos.z);
+                                GUILayout.Label("Position", GUILayout.Width(83), GUILayout.Height(27.5f));
+                                GUILayout.TextField(selectedObjectPos.x.ToString(), GUILayout.Width(120));
+                                GUILayout.TextField(selectedObjectPos.y.ToString(), GUILayout.Width(120));
+                                GUILayout.TextField(selectedObjectPos.z.ToString(), GUILayout.Width(120));
                             }
 
-                            GUILayout.Label("Local Position");
                             using (new GUILayout.HorizontalScope())
                             {
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.z);
+                                GUILayout.Label("Local Position", GUILayout.Width(83), GUILayout.Height(27.5f));
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.z);
                             }
 
-                            GUILayout.Label("Rotation");
                             using (new GUILayout.HorizontalScope())
                             {
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.z);
-                                float.TryParse(GUILayout.TextField(selectedObjectRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectRot.w);
+                                GUILayout.Label("Rotation", GUILayout.Width(83), GUILayout.Height(27.5f));
+                                GUILayout.TextField(selectedObjectRot.eulerAngles.x.ToString(), GUILayout.Width(120));
+                                GUILayout.TextField(selectedObjectRot.eulerAngles.y.ToString(), GUILayout.Width(120));
+                                GUILayout.TextField(selectedObjectRot.eulerAngles.z.ToString(), GUILayout.Width(120));
                             }
 
-                            GUILayout.Label("Local Rotation");
                             using (new GUILayout.HorizontalScope())
                             {
-                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.z);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocRot.w.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocRot.w);
+                                GUILayout.Label("Local Rotation", GUILayout.Width(83), GUILayout.Height(27.5f));
+                                Vector3 locRotEulerAngles = selectedObjectLocRot.eulerAngles;
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.x);
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.y);
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.z);
+                                selectedObjectLocRot.eulerAngles = locRotEulerAngles;
                             }
 
-                            GUILayout.Label("Scale");
                             using (new GUILayout.HorizontalScope())
                             {
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString()), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.z);
+                                GUILayout.Label("Scale", GUILayout.Width(83), GUILayout.Height(27.5f));
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.z);
                             }
                         }
 
@@ -608,13 +584,14 @@ namespace NitroxClient.Debuggers
         {
             using (new GUILayout.HorizontalScope())
             {
-                GUILayout.Label(label, "bold");
-                editMode = GUILayout.Toggle(editMode, "EditMode");
+                GUILayout.Label(label, "bold", GUILayout.Height(25));
+                editMode = GUILayout.Toggle(editMode, "EditMode", GUILayout.Height(25));
                 sendToServer = Multiplayer.Main != null && GUILayout.Toggle(sendToServer, "Send to server");
-                if (GUILayout.Button("Save"))
+                if (GUILayout.Button("Save", GUILayout.Height(20)))
                 {
                     SaveChanges();
                 }
+                GUILayout.Space(5);
             }
         }
 
@@ -650,32 +627,44 @@ namespace NitroxClient.Debuggers
             return field.GetValue(instance).ToString();
         }
 
+        private void UpdateSelectedObject(GameObject item)
+        {
+            selectedObject = item.gameObject;
+            selectedObjectActiveSelf = selectedObject.activeSelf;
+            selectedObjectPos = selectedObject.transform.position;
+            selectedObjectRot = selectedObject.transform.rotation;
+            selectedObjectLocPos = selectedObject.transform.localPosition;
+            selectedObjectLocRot = selectedObject.transform.localRotation;
+            selectedObjectScale = selectedObject.transform.localScale;
+        }
+
         private void SaveChanges()
         {
-            selectedObject.SetActive(selectedObjectActiveSelf);
-            selectedObject.transform.position = selectedObjectPos;
-            selectedObject.transform.rotation = selectedObjectRot;
-            selectedObject.transform.localPosition = selectedObjectLocPos;
-            selectedObject.transform.localRotation = selectedObjectLocRot;
-            selectedObject.transform.localScale = selectedObjectScale;
-            if (sendToServer)
+            if (editMode)
             {
-                DebuggerAction.SendValueChangeToServer(selectedObject.transform, "enabled", selectedObjectActiveSelf);
-                DebuggerAction.SendValueChangeToServer(selectedObject.transform, "position", selectedObjectPos);
-                DebuggerAction.SendValueChangeToServer(selectedObject.transform, "rotation", selectedObjectRot);
-                DebuggerAction.SendValueChangeToServer(selectedObject.transform, "scale", selectedObjectScale);
-            }
-
-            foreach (DebuggerAction action in actionList)
-            {
-                action.SaveFieldValue();
+                selectedObject.SetActive(selectedObjectActiveSelf);
+                selectedObject.transform.localPosition = selectedObjectLocPos;
+                selectedObject.transform.localRotation = selectedObjectLocRot;
+                selectedObject.transform.localScale = selectedObjectScale;
                 if (sendToServer)
                 {
-                    action.SendValueChangeToServer();
+                    DebuggerAction.SendValueChangeToServer(selectedObject.transform, "enabled", selectedObjectActiveSelf);
+                    DebuggerAction.SendValueChangeToServer(selectedObject.transform, "localPosition", selectedObjectLocPos);
+                    DebuggerAction.SendValueChangeToServer(selectedObject.transform, "localRotation", selectedObjectLocRot);
+                    DebuggerAction.SendValueChangeToServer(selectedObject.transform, "scale", selectedObjectScale);
+                }
+
+                foreach (DebuggerAction action in actionList)
+                {
+                    action.SaveFieldValue();
+                    if (sendToServer)
+                    {
+                        action.SendValueChangeToServer();
+                    }
                 }
             }
-
             actionList.Clear();
+            UpdateSelectedObject(selectedObject);
         }
     }
 
