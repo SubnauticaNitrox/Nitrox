@@ -7,7 +7,6 @@
       mc:Ignorable="d" d:DesignHeight="470" d:DesignWidth="719"
       Title="{DynamicResource ResourceKey=NitroxGameTitle}"
       Margin="0">
-    
     <Grid>
         <Image x:Name="BackgroundImage" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <Grid Height="470" Width="719" Margin="0,52,0,0" HorizontalAlignment="Center" VerticalAlignment="Top">

@@ -76,6 +76,7 @@
     </ApplicationDefinition>
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
+    <Compile Include="Localization\Localization.cs" />
     <Compile Include="Patching\NitroxEntryPatch.cs" />
     <Compile Include="Patching\PlatformDetection.cs" />
     <Compile Include="ServerConsolePage.xaml.cs">
@@ -88,11 +89,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Resource Include="Localization\Localization-EN.xaml">
+    <Content Include="Localization\Localization-en.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    </Content>
+    <Content Include="Localization\Localization-fr.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Localization\Localization-es.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

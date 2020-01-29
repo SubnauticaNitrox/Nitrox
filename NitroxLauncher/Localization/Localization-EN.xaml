@@ -3,7 +3,8 @@
                     xmlns:local="clr-namespace:NitroxLauncher"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
-    <sys:String x:Key="Localization">en-US</sys:String>
+    <sys:String x:Key="LocalizationString">en</sys:String>
+    <sys:String x:Key="Version">1</sys:String>
     
     <!-- Main Window -->
     

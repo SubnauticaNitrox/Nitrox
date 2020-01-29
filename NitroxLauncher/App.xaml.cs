@@ -7,6 +7,13 @@ namespace NitroxLauncher
 {
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            //Change the launcher language based on the OS if possible
+            Localization.SetupLanguage(Resources, Localization.GetCurrentCultureName());
+            base.OnStartup(e);
+        }
+
         protected override void OnExit(ExitEventArgs e)
         {
             MainWindow window = (MainWindow)Current.MainWindow;

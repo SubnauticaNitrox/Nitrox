@@ -38,7 +38,6 @@
                 <Image Source="Images/exit.png" Stretch="None" Margin="5,5,5,5" />
             </Button>
         </Grid>
-
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="225"/>
@@ -64,7 +63,7 @@
                     </Button>
                     <Button x:Name="OptionsNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToOptions_OnClick" ToolTip="{DynamicResource ResourceKey=NitroxOptionButtonTooltip}">
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" Text="{DynamicResource ResourceKey=NitroxOptionButtonTooltip}" />
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" Text="{DynamicResource ResourceKey=NitroxOptionButton}" />
                         </Grid>
                     </Button>
                 </StackPanel>

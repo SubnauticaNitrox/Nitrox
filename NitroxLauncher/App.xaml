@@ -3,25 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:NitroxLauncher"
              StartupUri="MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
-    
     <Application.Resources>
         <ResourceDictionary>
-
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Localization/Localization-EN.xaml" />
+                <ResourceDictionary Source="Localization/Localization-en.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <!-- for styling button's mouse over color -->
             <FontFamily x:Key="Roboto">
                 pack://application:,,,/font/#Roboto
             </FontFamily>
-            
             <ControlTemplate x:Key="buttonTemplate" TargetType="{x:Type Button}">
                 <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                 </Border>
             </ControlTemplate>
-            
             <Style x:Key="OpaqueButton" TargetType="Button">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="Cursor" Value="Hand" />
@@ -41,7 +36,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
             <Style TargetType="Button" x:Key="BTNCORNER">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -58,7 +52,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
             <Style TargetType="Button" x:Key="BTNOPTIONS">
                 <Setter Property="Template">
                     <Setter.Value>
@@ -75,8 +68,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
-        </ResourceDictionary>        
+        </ResourceDictionary>
     </Application.Resources>
-    
 </Application>
