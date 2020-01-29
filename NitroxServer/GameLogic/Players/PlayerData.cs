@@ -10,7 +10,7 @@ using System.Linq;
 namespace NitroxServer.GameLogic.Players
 {
     [ProtoContract]
-    public class PlayerData
+    public class PlayerData : IPlayerData
     {
         public const long VERSION = 1;
 
@@ -208,6 +208,11 @@ namespace NitroxServer.GameLogic.Players
             {
                 ModulesItemsById.Remove(id);
             }
+        }
+
+        public PlayerData ToPlayerData()
+        {
+            return this;
         }
 
         [ProtoContract]

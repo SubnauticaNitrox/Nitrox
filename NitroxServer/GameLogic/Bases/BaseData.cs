@@ -8,7 +8,7 @@ using NitroxModel.DataStructures;
 namespace NitroxServer.GameLogic.Bases
 {
     [ProtoContract]
-    public class BaseData
+    public class BaseData : IBaseData
     {
         public const long VERSION = 1;
         [ProtoMember(1)]
@@ -156,6 +156,11 @@ namespace NitroxServer.GameLogic.Bases
             }
 
             return basePieces;
+        }
+
+        public BaseData ToBaseData()
+        {
+            return this;
         }
     }
 }

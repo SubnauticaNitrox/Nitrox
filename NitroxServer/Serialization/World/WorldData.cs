@@ -13,7 +13,7 @@ using ProtoBufNet;
 namespace NitroxServer.Serialization.World
 {
     [ProtoContract]
-    public class WorldData
+    public class WorldData : IWorldData
     {
         public const long VERSION = 1;
 
@@ -48,6 +48,11 @@ namespace NitroxServer.Serialization.World
                    (EntityData != null) &&
                    (EntityData.SerializableEntities.Count > 0) &&
                    (EscapePodData != null);
+        }
+
+        public WorldData ToWorldData()
+        {
+            return this;
         }
     }
 }

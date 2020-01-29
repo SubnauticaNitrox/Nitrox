@@ -322,8 +322,10 @@
     <Compile Include="ConsoleCommands\SayCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
+    <Compile Include="GameLogic\Bases\IBaseData.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
+    <Compile Include="GameLogic\Players\IPlayerData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
     <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
@@ -361,6 +363,8 @@
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\GenericNode.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\World\IPersistedWorldData.cs" />
+    <Compile Include="Serialization\World\IWorldData.cs" />
     <Compile Include="Serialization\World\PersistedWorldData.cs" />
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldData.cs" />

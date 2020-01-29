@@ -82,55 +82,15 @@ namespace NitroxServer.Serialization.World
         {
             try
             {
-                PersistedWorldData persistedData = new PersistedWorldData();
-
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
-                {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != BaseData.VERSION)
-                    {
-                        throw new VersionMismatchException("BaseData file is too old");
-                    }
-                    persistedData.BaseData = serializer.Deserialize<BaseData>(stream);
-                }
-
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "PlayerData.nitrox")))
-                {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != PlayerData.VERSION)
-                    {
-                        throw new VersionMismatchException("PlayerData file is too old");
-                    }
-                    persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
-                }
-
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "WorldData.nitrox")))
-                {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != WorldData.VERSION)
-                    {
-                        throw new VersionMismatchException("WorldData file is too old");
-                    }
-
-                    persistedData.WorldData = serializer.Deserialize<WorldData>(stream);
-                }
+                IPersistedWorldData persistedData = DeserializeWorldData();
 
                 if (persistedData == null || !persistedData.IsValid())
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
-                
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
-                                          persistedData.WorldData.EntityData,
-                                          persistedData.BaseData,
-                                          persistedData.WorldData.VehicleData,
-                                          persistedData.WorldData.InventoryData,
-                                          persistedData.PlayerData,
-                                          persistedData.WorldData.GameData,
-                                          persistedData.WorldData.ParsedBatchCells,
-                                          persistedData.WorldData.EscapePodData,
-                                          config.GameMode);
+
+                World world = persistedData.ToWorld();
 
                 return Optional<World>.Of(world);
             }
@@ -144,6 +104,61 @@ namespace NitroxServer.Serialization.World
             }
 
             return Optional<World>.Empty();
+        }
+
+        private IPersistedWorldData DeserializeWorldData()
+        {
+            IPersistedWorldData persistedData = null;
+
+            if (Directory.Exists(config.SaveName))
+            {
+                PersistedWorldData persistedWorld = new PersistedWorldData();
+                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
+                {
+                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
+                    if (version.Version != BaseData.VERSION)
+                    {
+                        throw new VersionMismatchException("BaseData file is too old");
+                    }
+                    persistedWorld.BaseData = serializer.Deserialize<IBaseData>(stream).ToBaseData();
+                }
+
+                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "PlayerData.nitrox")))
+                {
+                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
+                    if (version.Version != PlayerData.VERSION)
+                    {
+                        throw new VersionMismatchException("PlayerData file is too old");
+                    }
+                    persistedWorld.PlayerData = serializer.Deserialize<IPlayerData>(stream).ToPlayerData();
+                }
+
+                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "WorldData.nitrox")))
+                {
+                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
+                    if (version.Version != WorldData.VERSION)
+                    {
+                        throw new VersionMismatchException("WorldData file is too old");
+                    }
+
+                    persistedWorld.WorldData = serializer.Deserialize<IWorldData>(stream).ToWorldData();
+                }
+                persistedData = persistedWorld;
+            }
+            else if (File.Exists(config.SaveName))
+            {
+                using (Stream stream = File.OpenRead(config.SaveName))
+                {
+                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
+                    if (version.Version != WorldData.VERSION)
+                    {
+                        throw new VersionMismatchException("save file is too old");
+                    }
+
+                    persistedData = serializer.Deserialize<IPersistedWorldData>(stream);
+                }
+            }
+            return persistedData;
         }
 
         public World Load()
