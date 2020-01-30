@@ -33,7 +33,7 @@ namespace NitroxLauncher
         {
             InitializeComponent();
             PropertyChanged += OnPropertyChange;
-            
+
             this.logic = logic;
             this.logic.ServerStarted += ServerStarted;
             this.logic.ServerDataReceived += ServerDataReceived;
@@ -78,11 +78,11 @@ namespace NitroxLauncher
             await SendServerCommandWrapper();
         }
 
-        private async void ExitButton_Click(object sender, RoutedEventArgs e)
+        private async void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
-            await SendServerCommandAsync("exit");
-            commandLinesHistory.Add("exit");
+            await SendServerCommandAsync("stop");
+            commandLinesHistory.Add("stop");
             commandLinesHistoryIndex = commandLinesHistory.Count;
         }
 

@@ -17,24 +17,10 @@ namespace NitroxLauncher
             suppressFeedback = true;
             InitializeComponent();
 
-            foreach (ComboBoxItem boxItem in CBox.Items)
-            {
-                if ( (Properties.Settings.Default.IsEmbeddedServer && boxItem.Tag.ToString() == "embedded") ||
-                    (!Properties.Settings.Default.IsEmbeddedServer && boxItem.Tag.ToString() != "embedded"))
-                {
-                    CBox.SelectedItem = boxItem;
-                }
-            }
+            RBIsDocked.IsChecked = !Properties.Settings.Default.IsExternalServer;
+            RBIsExternal.IsChecked = Properties.Settings.Default.IsExternalServer;
 
             suppressFeedback = false;
-
-            // Change style depending on windows version. Win 10 uses other definition of comboboxes then win 7 so win 10 has its own style
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1)
-            {
-                CBox.Style = (Style)Resources["ComboBoxStyle"];
-                CBox.ApplyTemplate();
-            }
-
             this.logic = logic;
         }
 
@@ -42,7 +28,7 @@ namespace NitroxLauncher
         {
             try
             {
-                logic.StartServer(!Properties.Settings.Default.IsEmbeddedServer);
+                logic.StartServer((bool)RBIsExternal.IsChecked);
             }
             catch (Exception ex)
             {
@@ -50,13 +36,11 @@ namespace NitroxLauncher
             }
         }
 
-        private void OnSelectionChange(object sender, SelectionChangedEventArgs e)
+        private void RBServer_Checked(object sender, RoutedEventArgs e)
         {
             if (!suppressFeedback)
             {
-                ComboBox box = (ComboBox)sender;
-                ComboBoxItem item = (ComboBoxItem)box.SelectedValue;
-                Properties.Settings.Default.IsEmbeddedServer = item.Tag.ToString() == "embedded";
+                Properties.Settings.Default.IsExternalServer = (bool)RBIsExternal.IsChecked;
                 Properties.Settings.Default.Save();
             }
         }
