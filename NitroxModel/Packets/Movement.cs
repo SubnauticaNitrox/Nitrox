@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using Lidgren.Network;
 using NitroxModel.Networking;
 
 namespace NitroxModel.Packets

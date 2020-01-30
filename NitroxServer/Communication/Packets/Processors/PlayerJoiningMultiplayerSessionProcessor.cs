@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
@@ -13,8 +15,8 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class PlayerJoiningMultiplayerSessionProcessor : UnauthenticatedPacketProcessor<PlayerJoiningMultiplayerSession>
     {
-        private readonly TimeKeeper timeKeeper;
         private readonly PlayerManager playerManager;
+        private readonly TimeKeeper timeKeeper;
         private readonly World world;
 
         public PlayerJoiningMultiplayerSessionProcessor(TimeKeeper timeKeeper,
@@ -33,36 +35,43 @@ namespace NitroxServer.Communication.Packets.Processors
 
             Optional<EscapePodModel> newlyCreatedEscapePod;
             NitroxId assignedEscapePodId = world.EscapePodManager.AssignPlayerToEscapePod(player.Id, out newlyCreatedEscapePod);
-            if(newlyCreatedEscapePod.IsPresent())
+            if (newlyCreatedEscapePod.IsPresent())
             {
                 AddEscapePod addEscapePod = new AddEscapePod(newlyCreatedEscapePod.Get());
                 playerManager.SendPacketToOtherPlayers(addEscapePod, player);
             }
 
             List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(player.Name);
-            List<NitroxModel.DataStructures.TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+            List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
 
+            // Make players on localhost admin by default.
+            if (IPAddress.IsLoopback(connection.Endpoint.Address))
+            {
+                world.PlayerData.SetPermissions(player.Name, Perms.ADMIN);
+            }
+            Perms initialPerms = world.PlayerData.GetPermissions(player.Name);
+
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
-                                                                       wasBrandNewPlayer,
-                                                                       world.EscapePodData.EscapePods,
-                                                                       assignedEscapePodId,
-                                                                       equippedItems,
-                                                                       world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
-                                                                       world.VehicleData.GetVehiclesForInitialSync(),
-                                                                       world.InventoryData.GetAllItemsForInitialSync(),
-                                                                       world.InventoryData.GetAllStorageItemsForInitialSync(),
-                                                                       world.GameData.PDAState.GetInitialPdaData(),
-                                                                       world.GameData.StoryGoals.GetInitialStoryGoalData(),
-                                                                       world.PlayerData.GetPlayerSpawn(player.Name),
-                                                                       world.PlayerData.GetSubRootId(player.Name),
-                                                                       world.PlayerData.GetPlayerStats(player.Name),
-                                                                       getRemotePlayerData(player),
-                                                                       world.EntityData.GetGlobalRootEntities(),
-                                                                       world.GameMode,
-                                                                       world.PlayerData.GetPermissions(player.Name));
+                wasBrandNewPlayer,
+                world.EscapePodData.EscapePods,
+                assignedEscapePodId,
+                equippedItems,
+                world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
+                world.VehicleData.GetVehiclesForInitialSync(),
+                world.InventoryData.GetAllItemsForInitialSync(),
+                world.InventoryData.GetAllStorageItemsForInitialSync(),
+                world.GameData.PDAState.GetInitialPdaData(),
+                world.GameData.StoryGoals.GetInitialStoryGoalData(),
+                world.PlayerData.GetPlayerSpawn(player.Name),
+                world.PlayerData.GetSubRootId(player.Name),
+                world.PlayerData.GetPlayerStats(player.Name),
+                getRemotePlayerData(player),
+                world.EntityData.GetGlobalRootEntities(),
+                world.GameMode,
+                initialPerms);
 
             player.SendPacket(initialPlayerSync);
         }
@@ -76,7 +85,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 if (!player.Equals(otherPlayer))
                 {
                     List<EquippedItemData> equippedItems = world.PlayerData.GetEquippedItemsForInitialSync(otherPlayer.Name);
-                    List<NitroxModel.DataStructures.TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+                    List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
                     InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
                     playerData.Add(remotePlayer);
