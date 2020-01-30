@@ -6,6 +6,7 @@ using UnityEngine;
 using NitroxModel.Core;
 using NitroxServer.GameLogic.Items;
 using NitroxModel.DataStructures;
+using System.Linq;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -24,6 +25,7 @@ namespace NitroxServer.GameLogic.Vehicles
             }
             set { vehiclesById = value; }
         }
+
         [ProtoIgnore]
         private Dictionary<NitroxId, VehicleModel> vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         

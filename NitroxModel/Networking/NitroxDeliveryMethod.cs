@@ -1,6 +1,4 @@
-using Lidgren.Network;
-
-namespace NitroxModel.Networking
+﻿namespace NitroxModel.Networking
 {
 
     public class NitroxDeliveryMethod
@@ -9,19 +7,6 @@ namespace NitroxModel.Networking
         {
             UnreliableSequenced,
             ReliableOrdered
-        }
-
-        public static NetDeliveryMethod ToLidgren(DeliveryMethod deliveryMethod)
-        {
-            switch (deliveryMethod)
-            {
-                case DeliveryMethod.UnreliableSequenced:
-                    return NetDeliveryMethod.UnreliableSequenced;
-                case DeliveryMethod.ReliableOrdered:
-                    return NetDeliveryMethod.ReliableOrdered;
-                default:
-                    return NetDeliveryMethod.ReliableOrdered;
-            }
         }
 
         public static LiteNetLib.DeliveryMethod ToLiteNetLib(DeliveryMethod deliveryMethod)

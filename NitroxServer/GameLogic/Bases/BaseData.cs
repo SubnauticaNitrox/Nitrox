@@ -10,6 +10,7 @@ namespace NitroxServer.GameLogic.Bases
     [ProtoContract]
     public class BaseData
     {
+        public const long VERSION = 1;
         [ProtoMember(1)]
         public Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
         {

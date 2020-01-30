@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Communication.NetworkingLayer.Lidgren;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Core;

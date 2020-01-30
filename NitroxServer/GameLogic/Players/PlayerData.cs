@@ -5,12 +5,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
+using System.Linq;
 
 namespace NitroxServer.GameLogic.Players
 {
     [ProtoContract]
     public class PlayerData
     {
+        public const long VERSION = 1;
+
         [ProtoMember(1)]
         public Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
         {
@@ -99,7 +102,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public bool UpdatePlayerPermissions(string playerName, Perms permissions)
+        public bool SetPermissions(string playerName, Perms permissions)
         {
             lock (playersByPlayerName)
             {
@@ -242,6 +245,5 @@ namespace NitroxServer.GameLogic.Players
                 PlayerId = playerId;
             }
         }
-
     }
 }

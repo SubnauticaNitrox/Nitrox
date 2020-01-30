@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Threading;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -9,7 +11,7 @@ namespace NitroxLauncher
         {
             MainWindow window = (MainWindow)Current.MainWindow;
             window?.CloseInternalServerAndRemovePatchAsync();
-            
+
             base.OnExit(e);
         }
 
@@ -19,7 +21,17 @@ namespace NitroxLauncher
             MainWindow window = (MainWindow)Current.MainWindow;
             window?.CloseInternalServerAndRemovePatchAsync();
 
-            throw e.Exception;
+            Log.Error(e.Exception.GetBaseException().ToString());
+            MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private string GetExceptionError(Exception e)
+        {
+#if RELEASE
+            return e.GetBaseException().Message;
+#else
+            return e.GetBaseException().ToString();
+#endif
         }
     }
 }
