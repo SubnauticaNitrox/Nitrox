@@ -87,32 +87,43 @@ namespace NitroxServer.Serialization.World
                 using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != BaseData.VERSION)
+                    if (version.Version == BaseData.VERSION)
                     {
-                        throw new VersionMismatchException("BaseData file is too old");
+                        persistedData.BaseData = serializer.Deserialize<BaseData>(stream);
                     }
-                    persistedData.BaseData = serializer.Deserialize<BaseData>(stream);
+                    else
+                    {
+                        Log.Debug("BaseData file is too old, recreating");
+                        persistedData.BaseData = new BaseData();
+                    }
                 }
 
                 using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "PlayerData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != PlayerData.VERSION)
+                    if (version.Version == PlayerData.VERSION)
                     {
-                        throw new VersionMismatchException("PlayerData file is too old");
+                        persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
                     }
-                    persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
+                    else
+                    {
+                        Log.Debug("PlayerData file is too old, recreating");
+                        persistedData.PlayerData = new PlayerData();
+                    }
                 }
 
                 using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "WorldData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != WorldData.VERSION)
+                    if (version.Version == WorldData.VERSION)
                     {
-                        throw new VersionMismatchException("WorldData file is too old");
+                        persistedData.WorldData = serializer.Deserialize<WorldData>(stream);
                     }
-
-                    persistedData.WorldData = serializer.Deserialize<WorldData>(stream);
+                    else
+                    {
+                        Log.Debug("WorldData file is too old, recreating");
+                        persistedData.WorldData = new WorldData();
+                    }
                 }
 
                 if (persistedData == null || !persistedData.IsValid())
