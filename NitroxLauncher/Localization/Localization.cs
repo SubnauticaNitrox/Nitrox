@@ -1,46 +1,35 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Windows;
+using NitroxModel;
 
 namespace NitroxLauncher
 {
-    public static partial class Localization
+    public enum Language
     {
-        public static readonly string DefaultLocalization = "en";
+        [Description("en")]
+        EN,
+        [Description("es")]
+        ES,
+        [Description("fr")]
+        FR,
+        [Description("en")]
+        DEFAULT,
+    }
 
-        public enum Language
+    public static class Localization
+    {
+        public static Language GetCurrentCultureName()
         {
-            EN,
-            ES,
-            FR
-        }
-
-        public static string GetCurrentCultureName()
-        {
-            string cultureName = CultureInfo.CurrentCulture.Name;
-
-            if (string.IsNullOrEmpty(cultureName))
-            {
-                CultureInfo.CurrentCulture = new CultureInfo("en-US", false);
-                cultureName = "en";
-            }
-
-            return cultureName.Substring(0, 2);
-        }
-
-        public static void SetupLanguage(ResourceDictionary element, string lang)
-        {
-            if (!string.IsNullOrEmpty(lang) && lang != DefaultLocalization)
-            {
-                string path = GetLocalizationPath(lang);
-                SwapRessourceDictionnary(element, path);
-            }
+            string cultureName = CultureInfo.CurrentCulture.Name?.Substring(0, 2);
+            return Enum.TryParse<Language>(cultureName, true, out Language lang) ? lang : Language.DEFAULT;
         }
 
         public static void SetupLanguage(ResourceDictionary element, Language lang)
         {
-            string path = GetLocalizationPath(lang.ToString().ToLower());
+            string path = GetLocalizationPath(lang.GetAttribute<DescriptionAttribute>().Description);
             SwapRessourceDictionnary(element, path);
         }
 
