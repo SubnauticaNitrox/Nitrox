@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Debuggers;
 using NitroxModel.Logger;
 using UnityEngine;
@@ -84,8 +83,11 @@ namespace NitroxClient.MonoBehaviours
             {
                 UWE.Utils.PopLockCursor();
                 HideDebuggers();
-                Debuggers.ForEach(debugger => debugger.ResetWindowPosition());
-           }
+                foreach (BaseDebugger baseDebugger in Debuggers)
+                {
+                    baseDebugger.ResetWindowPosition();
+                }
+            }
         }
 
         private void DoWindow(int windowId)

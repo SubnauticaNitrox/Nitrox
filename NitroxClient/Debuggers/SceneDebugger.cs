@@ -381,43 +381,43 @@ namespace NitroxClient.Debuggers
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label("Position", GUILayout.Width(83), GUILayout.Height(27.5f));
-                                GUILayout.TextField(selectedObjectPos.x.ToString(), GUILayout.Width(120));
-                                GUILayout.TextField(selectedObjectPos.y.ToString(), GUILayout.Width(120));
-                                GUILayout.TextField(selectedObjectPos.z.ToString(), GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectPos.x.ToString(), "TextField", GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectPos.y.ToString(), "TextField", GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectPos.z.ToString(), "TextField", GUILayout.Width(120));
                             }
 
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label("Local Position", GUILayout.Width(83), GUILayout.Height(27.5f));
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectLocPos.z);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectLocPos.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectLocPos.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectLocPos.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectLocPos.z);
                             }
 
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label("Rotation", GUILayout.Width(83), GUILayout.Height(27.5f));
-                                GUILayout.TextField(selectedObjectRot.eulerAngles.x.ToString(), GUILayout.Width(120));
-                                GUILayout.TextField(selectedObjectRot.eulerAngles.y.ToString(), GUILayout.Width(120));
-                                GUILayout.TextField(selectedObjectRot.eulerAngles.z.ToString(), GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectRot.eulerAngles.x.ToString(), "TextField", GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectRot.eulerAngles.y.ToString(), "TextField", GUILayout.Width(120));
+                                GUILayout.Label(selectedObjectRot.eulerAngles.z.ToString(), "TextField", GUILayout.Width(120));
                             }
 
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label("Local Rotation", GUILayout.Width(83), GUILayout.Height(27.5f));
                                 Vector3 locRotEulerAngles = selectedObjectLocRot.eulerAngles;
-                                float.TryParse(GUILayout.TextField(locRotEulerAngles.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.x);
-                                float.TryParse(GUILayout.TextField(locRotEulerAngles.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.y);
-                                float.TryParse(GUILayout.TextField(locRotEulerAngles.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out locRotEulerAngles.z);
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out locRotEulerAngles.x);
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out locRotEulerAngles.y);
+                                float.TryParse(GUILayout.TextField(locRotEulerAngles.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out locRotEulerAngles.z);
                                 selectedObjectLocRot.eulerAngles = locRotEulerAngles;
                             }
 
                             using (new GUILayout.HorizontalScope())
                             {
                                 GUILayout.Label("Scale", GUILayout.Width(83), GUILayout.Height(27.5f));
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.x);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.y);
-                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.InvariantCulture, out selectedObjectScale.z);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.x.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectScale.x);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.y.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectScale.y);
+                                float.TryParse(GUILayout.TextField(selectedObjectScale.z.ToString(), GUILayout.Width(120)), NumberStyles.Float, CultureInfo.CurrentUICulture, out selectedObjectScale.z);
                             }
                         }
 
