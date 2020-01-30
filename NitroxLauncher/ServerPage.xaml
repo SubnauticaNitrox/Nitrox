@@ -323,10 +323,6 @@
                         <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="22"><Run Text="SERVER TYPE"/></TextBlock>
                         <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
                         <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External command prompt" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
-                        <!--
-                        <CheckBox Name="ChkIsExternal" Content="External command prompt process" Margin="0,5,0,5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="16"/>
-                        <TextBlock FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" TextWrapping="Wrap"><Run Text="Launches server in external command prompt process."/></TextBlock>
-                        -->
                     </StackPanel>
                     <Button Grid.Column="2" Width="240" Height="80"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="Start the server with chosen options" >
                         <Button.Background>
@@ -340,7 +336,6 @@
                             <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Text="{Binding Version, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}}"/>
                         </StackPanel>
                     </Button>
-                    
                 </Grid>
             </Grid>
         </Grid>
