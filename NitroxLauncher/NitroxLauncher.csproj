@@ -213,6 +213,16 @@
       <Name>NitroxServer</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\material-design-icons\baseline_send_white_24dp.png" />
+    <Resource Include="Images\material-design-icons\baseline_stop_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\material-design-icons\LICENSE.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />

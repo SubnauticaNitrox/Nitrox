@@ -25,13 +25,13 @@ namespace NitroxLauncher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsEmbeddedServer {
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsExternalServer {
             get {
-                return ((bool)(this["IsEmbeddedServer"]));
+                return ((bool)(this["IsExternalServer"]));
             }
             set {
-                this["IsEmbeddedServer"] = value;
+                this["IsExternalServer"] = value;
             }
         }
     }
