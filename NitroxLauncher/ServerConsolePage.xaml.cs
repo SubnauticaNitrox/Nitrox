@@ -145,6 +145,9 @@ namespace NitroxLauncher
                 case Key.Enter:
                     await SendCommandInputToServerAsync();
                     break;
+                case Key.Escape:
+                    HideCommandHistory();
+                    break;
                 case Key.Up:
                     CommandHistoryIndex--;
                     break;
