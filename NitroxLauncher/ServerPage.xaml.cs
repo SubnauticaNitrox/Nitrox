@@ -9,19 +9,18 @@ namespace NitroxLauncher
     public partial class ServerPage : Page
     {
         public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
-        private bool embeddedServer;
+        private bool suppressFeedback;
         private readonly LauncherLogic logic;
 
         public ServerPage(LauncherLogic logic)
         {
+            suppressFeedback = true;
             InitializeComponent();
 
-            // Change style depending on windows version. Win 10 uses other definition of comboboxes then win 7 so win 10 has its own style
-            if (Environment.OSVersion.Version.Major >= 6 && Environment.OSVersion.Version.Minor > 1)
-            {
-                CBox.Style = (Style)Resources["ComboBoxStyle"];
-                CBox.ApplyTemplate();
-            }
+            RBIsDocked.IsChecked = !Properties.Settings.Default.IsExternalServer;
+            RBIsExternal.IsChecked = Properties.Settings.Default.IsExternalServer;
+
+            suppressFeedback = false;
             this.logic = logic;
         }
 
@@ -29,7 +28,7 @@ namespace NitroxLauncher
         {
             try
             {
-                logic.StartServer(!embeddedServer);
+                logic.StartServer((bool)RBIsExternal.IsChecked);
             }
             catch (Exception ex)
             {
@@ -37,12 +36,13 @@ namespace NitroxLauncher
             }
         }
 
-        private void OnSelectionChange(object sender, SelectionChangedEventArgs e)
+        private void RBServer_Checked(object sender, RoutedEventArgs e)
         {
-            ComboBox box = (ComboBox)sender;
-            ComboBoxItem item = (ComboBoxItem)box.SelectedValue;
-            
-            embeddedServer = item.Tag.ToString() == "embedded";
+            if (!suppressFeedback)
+            {
+                Properties.Settings.Default.IsExternalServer = (bool)RBIsExternal.IsChecked;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }

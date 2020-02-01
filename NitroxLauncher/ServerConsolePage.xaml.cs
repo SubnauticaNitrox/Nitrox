@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -25,11 +26,14 @@ namespace NitroxLauncher
             }
         }
 
+        private List<string> commandLinesHistory = new List<string>();
+        private int commandLinesHistoryIndex = -1;
+
         public ServerConsolePage(LauncherLogic logic)
         {
             InitializeComponent();
             PropertyChanged += OnPropertyChange;
-            
+
             this.logic = logic;
             this.logic.ServerStarted += ServerStarted;
             this.logic.ServerDataReceived += ServerDataReceived;
@@ -55,32 +59,72 @@ namespace NitroxLauncher
                 return;
             }
             
-            CommandText += inputText + "\n";
+            CommandText += inputText + Environment.NewLine;
             await logic.WriteToServerAsync(inputText);
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)
         {
-            CommandText = "";
+            CommandText = string.Empty;
         }
 
         private void ServerDataReceived(object sender, DataReceivedEventArgs e)
         {
-            CommandText += e.Data + "\n";
+            CommandText += e.Data + Environment.NewLine;
         }
 
         private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
         {
-            await SendServerCommandAsync(CommandLine.Text);
-            CommandLine.Text = "";
+            await SendServerCommandWrapper();
         }
 
-        private async void CommandLine_OnKeyDown(object sender, KeyEventArgs e)
+        private async void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
+            await SendServerCommandAsync("stop");
+            commandLinesHistory.Add("stop");
+            commandLinesHistoryIndex = commandLinesHistory.Count;
+        }
+
+        private async Task SendServerCommandWrapper()
+        {
+            await SendServerCommandAsync(CommandLine.Text);
+            commandLinesHistory.Add(CommandLine.Text);
+            // Index is out of bounds after an entry
+            commandLinesHistoryIndex = commandLinesHistory.Count;
+            CommandLine.Text = string.Empty;
+        }
+
+        private async void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                await SendServerCommandAsync(CommandLine.Text);
-                CommandLine.Text = "";
+                await SendServerCommandWrapper();
+            }
+            else if (e.Key == Key.Up)
+            {
+                if (commandLinesHistoryIndex > 0 && commandLinesHistoryIndex <= commandLinesHistory.Count)
+                {
+                    commandLinesHistoryIndex--;
+                    CommandLine.Text = commandLinesHistory[commandLinesHistoryIndex];
+                    CommandLine.SelectionStart = CommandLine.Text.Length;
+                    CommandLine.SelectionLength = 0;
+                }
+            }
+            else if (e.Key == Key.Down)
+            {
+                if (commandLinesHistoryIndex >= 0 && commandLinesHistoryIndex < commandLinesHistory.Count - 1)
+                {
+                    commandLinesHistoryIndex++;
+                    CommandLine.Text = commandLinesHistory[commandLinesHistoryIndex];
+                    CommandLine.SelectionStart = CommandLine.Text.Length;
+                    CommandLine.SelectionLength = 0;
+                }
+                else if (commandLinesHistoryIndex >= 0 && commandLinesHistoryIndex == commandLinesHistory.Count - 1)
+                {
+                    commandLinesHistoryIndex++;
+                    CommandLine.Text = string.Empty;
+                }
             }
         }
 

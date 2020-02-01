@@ -307,36 +307,24 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0"/>
-            <Grid Grid.Row="1"/>
+            <Grid Grid.Row="1">
+                <TextBlock FontFamily="{StaticResource Roboto}" FontSize="22" Foreground="White" ><Run Text="Server Options"/></TextBlock>
+            </Grid>
             <Grid Grid.Row="2"/>
             <Grid Grid.Row="3">
-                <TextBlock FontFamily="{StaticResource Roboto}" FontSize="22" Foreground="White" Margin="0,-206,0,206" ><Run Text="Server Options"/></TextBlock>
             </Grid>
-            <Grid Grid.Row="4" Margin="0,19,0,0">
+            <Grid Grid.Row="4" Margin="0,0,0,0">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="269" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="300" />
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
-                        <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="12"><Run Text="GAME VERSION"/></TextBlock>
-                        <Border Height="43" Width="269" Margin="0,4,0,0" BorderBrush="#33FFFFFF" BorderThickness="1" CornerRadius="4">
-                            <ComboBox x:Name="CBox" Background="#9928292C" Foreground="White" FontSize="16" Padding="12,12,0,0" SelectedIndex="0" SelectionChanged="OnSelectionChange">
-                                <ComboBox.Resources>
-                                    <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#9928292C" />
-                                </ComboBox.Resources>
-
-                                <ComboBox.FontFamily>
-                                    <StaticResource ResourceKey="Roboto"/>
-                                </ComboBox.FontFamily>
-
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBWindow" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Command line window" ToolTip="Server will run in a seperate window (CMD)" Tag="external"/>
-                                <ComboBoxItem FontFamily="{StaticResource Roboto}" x:Name="CBInner" Foreground="White" HorizontalAlignment="Stretch" FontSize="16" Content="Launcher window" ToolTip="Server will run in the launcher." Tag="embedded" />
-                            </ComboBox>
-                            <!--<TextBlock Foreground="White" HorizontalAlignment="Left" FontSize="16" Margin="12,12,0,0">Only base game available</TextBlock>-->
-                        </Border>
+                        <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="22"><Run Text="SERVER TYPE"/></TextBlock>
+                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
+                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External command prompt" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
                     </StackPanel>
-                    <Button Grid.Column="2" Width="334" Height="80" Margin="48,0,38,45" HorizontalAlignment="Right" VerticalAlignment="Bottom" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="Start the server with chosen options" >
+                    <Button Grid.Column="2" Width="240" Height="80"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="Start the server with chosen options" >
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FF00B1E9" Offset="0"/>

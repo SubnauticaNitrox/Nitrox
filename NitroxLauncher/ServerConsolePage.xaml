@@ -16,25 +16,34 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" Width="709"  HorizontalAlignment="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="5,5,5,5">
-                <ScrollViewer x:Name="ConsoleWindowScrollView">
-                    <TextBlock FontFamily="{StaticResource Roboto}" FontSize="16" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" TextWrapping="Wrap"/>
-                </ScrollViewer>
-            </Border>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="5" >
-                <Border  HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
-                    <TextBox FontFamily="{StaticResource Roboto}" Width="620" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="6" Background="{x:Null}" BorderBrush="{x:Null}"  SelectionOpacity="-1" x:Name="CommandLine" KeyDown="CommandLine_OnKeyDown" />
+                <Border Grid.Row="0" Width="Auto" HorizontalAlignment="Stretch" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="2">
+                    <ScrollViewer x:Name="ConsoleWindowScrollView">
+                    <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"/>
+                    </ScrollViewer>
                 </Border>
-                <Button Margin="5,0,0,0" Width="84"  Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="CommandButton" Click="CommandButton_OnClick">
+            <DockPanel Grid.Row="1" Margin="2">
+                <Button TabIndex="3" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="StopButton" ToolTip="Stop (exit) server" Click="StopButton_Click" >
+                    <Button.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <GradientStop Color="#FFE97000" Offset="0"/>
+                            <GradientStop Color="#FFE90000" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Button.Background>
+                    <Image Source="Images/material-design-icons/baseline_stop_white_24dp.png"/>
+                </Button>
+                <Button TabIndex="2" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="CommandButton" ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF00B1E9" Offset="0"/>
                             <GradientStop Color="#FF006BE9" Offset="1"/>
                         </LinearGradientBrush>
                     </Button.Background>
-                    Send
+                    <Image Source="Images/material-design-icons/baseline_send_white_24dp.png"/>
                 </Button>
-            </StackPanel>
+                <Border DockPanel.Dock="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
+                    <TextBox TabIndex="1" FontFamily="{StaticResource RobotoMono}" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" x:Name="CommandLine" PreviewKeyDown="CommandLine_PreviewKeyDown"/>
+                </Border>
+            </DockPanel>
         </Grid>
     </Grid>
 </Page>

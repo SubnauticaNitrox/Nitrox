@@ -149,6 +149,16 @@
     <Resource Include="Fonts\Roboto-Regular.ttf" />
     <Resource Include="Fonts\Roboto-Thin.ttf" />
     <Resource Include="Fonts\Roboto-ThinItalic.ttf" />
+    <Resource Include="Fonts\RobotoMono-Bold.ttf" />
+    <Resource Include="Fonts\RobotoMono-BoldItalic.ttf" />
+    <Resource Include="Fonts\RobotoMono-Italic.ttf" />
+    <Resource Include="Fonts\RobotoMono-Light.ttf" />
+    <Resource Include="Fonts\RobotoMono-LightItalic.ttf" />
+    <Resource Include="Fonts\RobotoMono-Medium.ttf" />
+    <Resource Include="Fonts\RobotoMono-MediumItalic.ttf" />
+    <Resource Include="Fonts\RobotoMono-Regular.ttf" />
+    <Resource Include="Fonts\RobotoMono-Thin.ttf" />
+    <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -202,6 +212,16 @@
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
       <Name>NitroxServer</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\material-design-icons\baseline_send_white_24dp.png" />
+    <Resource Include="Images\material-design-icons\baseline_stop_white_24dp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Images\material-design-icons\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
