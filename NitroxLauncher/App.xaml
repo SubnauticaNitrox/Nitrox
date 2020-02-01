@@ -9,9 +9,8 @@
                 <ResourceDictionary Source="Localization/Localization-en.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <!-- for styling button's mouse over color -->
-            <FontFamily x:Key="Roboto">
-                pack://application:,,,/font/#Roboto
-            </FontFamily>
+            <FontFamily x:Key="Roboto"    >pack://application:,,,/Fonts/#Roboto</FontFamily>
+            <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
             <ControlTemplate x:Key="buttonTemplate" TargetType="{x:Type Button}">
                 <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1">
                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />

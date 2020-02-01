@@ -177,7 +177,7 @@ namespace NitroxLauncher
             else
             {
                 ChangeFrameContent(serverConsolePage);
-                serverConsolePage.CommandLine.Focus();
+                serverConsolePage.CommandInput.Focus();
             }
             SetActive(ServerNav);
         }
@@ -219,7 +219,7 @@ namespace NitroxLauncher
             if (e.Embedded)
             {
                 ChangeFrameContent(serverConsolePage);
-                serverConsolePage.CommandLine.Focus();
+                serverConsolePage.CommandInput.Focus();
             }
             SetActive(ServerNav);
         }
