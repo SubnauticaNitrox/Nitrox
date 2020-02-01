@@ -14,10 +14,11 @@ namespace NitroxLauncher
 {
     public partial class ServerConsolePage : Page, INotifyPropertyChanged
     {
-        private readonly List<string> commandLinesHistory = new List<string>();
         private readonly LauncherLogic logic;
         private int commandHistoryIndex;
         private string commandInputText;
+
+        private readonly List<string> commandLinesHistory = new List<string>();
         private string serverOutput = "";
 
         public string ServerOutput
