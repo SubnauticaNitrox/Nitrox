@@ -61,7 +61,7 @@ namespace NitroxServer.Serialization
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoBufNet.ProtoContractAttribute), true).Length > 0);
+                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
 
                 if (hasNitroxProtobuf)
                 {
@@ -72,15 +72,14 @@ namespace NitroxServer.Serialization
                 {
                     model.Add(type, true);
 
-                    ManuallyRegisterUweProtoMembers(type.GetFields(), type);
-                    ManuallyRegisterUweProtoMembers(type.GetProperties(), type);
+                    ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
                 }
             }
         }
 
         private bool HasUweProtoContract(Type type)
         {
-            foreach(object o in type.GetCustomAttributes(true))
+            foreach(object o in type.GetCustomAttributes(false))
             {
                 if (o.GetType().ToString().Contains("ProtoContractAttribute"))
                 {
@@ -95,25 +94,17 @@ namespace NitroxServer.Serialization
         {
             foreach (MemberInfo property in info)
             {
-                foreach (object customAttribute in property.GetCustomAttributes(true))
+                if (!(property.DeclaringType != type))
                 {
-                    Type attributeType = customAttribute.GetType();
-
-                    if (attributeType.ToString().Contains("ProtoMemberAttribute"))
+                    foreach (object customAttribute in property.GetCustomAttributes(false))
                     {
-                        int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
-                        
-                        try
+                        Type attributeType = customAttribute.GetType();
+
+                        if (attributeType.ToString().Contains("ProtoMemberAttribute"))
                         {
+                            int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
 
                             model[type].Add(tag, property.Name);
-                        }
-                        catch (Exception ex)
-                        {
-                            if("Peeper" != type.ToString()) // srsly peeper we know you are broken...
-                            {
-                                Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name + " " + ex);
-                            }
                         }
                     }
                 }

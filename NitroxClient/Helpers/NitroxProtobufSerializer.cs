@@ -80,8 +80,7 @@ namespace NitroxClient.Helpers
                 {
                     AddType(type);
 
-                    ManuallyRegisterNitroxProtoMembers(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
-                    ManuallyRegisterNitroxProtoMembers(type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static), type);
+                    ManuallyRegisterNitroxProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
                 }
             }
         }
@@ -103,7 +102,7 @@ namespace NitroxClient.Helpers
         {
             foreach (MemberInfo property in info)
             {
-                foreach (object customAttribute in property.GetCustomAttributes(true))
+                foreach (object customAttribute in property.GetCustomAttributes(false))
                 {
                     Type attributeType = customAttribute.GetType();
 
