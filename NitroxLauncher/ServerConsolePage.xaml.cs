@@ -55,7 +55,9 @@ namespace NitroxLauncher
                 else
                 {
                     CommandInputText = commandLinesHistory[commandHistoryIndex];
-                    CommandInput.SelectAll();
+                    // Move cursor at the end of the text
+                    CommandInput.SelectionStart = CommandInputText.Length;
+                    CommandInput.SelectionLength = 0;
                 }
                 
                 OnPropertyChanged();
