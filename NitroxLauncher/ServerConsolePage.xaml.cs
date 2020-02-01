@@ -59,7 +59,7 @@ namespace NitroxLauncher
                     CommandInput.SelectionStart = CommandInputText.Length;
                     CommandInput.SelectionLength = 0;
                 }
-                
+
                 OnPropertyChanged();
             }
         }
@@ -107,7 +107,7 @@ namespace NitroxLauncher
             ServerOutput += e.Data + Environment.NewLine;
         }
 
-        private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
+        private async Task SendCommandInputToServerAsync()
         {
             await SendServerCommandAsync(CommandInputText);
             // Deduplication of command history
@@ -118,6 +118,16 @@ namespace NitroxLauncher
             HideCommandHistory();
         }
 
+        private void HideCommandHistory()
+        {
+            CommandHistoryIndex = commandLinesHistory.Count;
+        }
+
+        private async void CommandButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await SendCommandInputToServerAsync();
+        }
+
         private async void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
@@ -126,19 +136,14 @@ namespace NitroxLauncher
             HideCommandHistory();
         }
 
-        private void HideCommandHistory()
-        {
-            CommandHistoryIndex = commandLinesHistory.Count;
-        }
-
-        private void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
+        private async void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             e.Handled = true; // Required for CommandInput.SelectAll() to work
-            
+
             switch (e.Key)
             {
                 case Key.Enter:
-                    CommandButton_OnClick(sender, e);
+                    await SendCommandInputToServerAsync();
                     break;
                 case Key.Up:
                     CommandHistoryIndex--;
