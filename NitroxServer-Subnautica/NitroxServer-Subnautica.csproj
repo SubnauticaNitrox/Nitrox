@@ -231,6 +231,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeEngineModeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeShieldModeProcessor.cs" />
