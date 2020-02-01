@@ -109,7 +109,7 @@ namespace NitroxLauncher
         {
             await SendServerCommandAsync(CommandInputText);
             // Deduplication of command history
-            if (CommandInputText != commandLinesHistory.LastOrDefault())
+            if (!string.IsNullOrWhiteSpace(CommandInputText) && CommandInputText != commandLinesHistory.LastOrDefault())
             {
                 commandLinesHistory.Add(CommandInputText);
             }
@@ -137,10 +137,10 @@ namespace NitroxLauncher
                     CommandButton_OnClick(sender, e);
                     break;
                 case Key.Up:
-                    CommandHistoryIndex++;
+                    CommandHistoryIndex--;
                     break;
                 case Key.Down:
-                    CommandHistoryIndex--;
+                    CommandHistoryIndex++;
                     break;
             }
         }
