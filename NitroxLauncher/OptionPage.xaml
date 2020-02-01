@@ -27,9 +27,8 @@
             
             <StackPanel Grid.Row="2" Margin="0,17,0,0">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="12" Foreground="White" Text="{DynamicResource ResourceKey=NitroxOptionGameDirectory}"/>
-
                 <Border HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,4,0,0">
-                    <TextBox FontFamily="{StaticResource Roboto}" Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding PathToSubnautica}" SelectionOpacity="-1" ToolTip="{DynamicResource ResourceKey=NitroxOptionGameDirectoryTooltip}" />
+                    <TextBox IsReadOnly="True" FontFamily="{StaticResource Roboto}" Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, Mode=OneWay}" SelectionOpacity="-1" ToolTip="{DynamicResource ResourceKey=NitroxOptionGameDirectoryTooltip}" />
                 </Border>
             </StackPanel>
             
@@ -41,9 +40,8 @@
 
             <StackPanel Grid.Row="4" Margin="0,30,0,0">
                 <TextBlock FontFamily="{StaticResource Roboto}" FontSize="12" Foreground="White" Text="{DynamicResource ResourceKey=NitroxOptionLanguage}"/>
-
                 <Border HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,4,0,0" ToolTip="{DynamicResource ResourceKey=NitroxOptionLanguageTooltip}">
-                    <TextBox FontFamily="{StaticResource Roboto}" Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding Lang}" SelectionOpacity="-1"/>
+                    <TextBox IsReadOnly="True" FontFamily="{StaticResource Roboto}" Width="427" Height="43" FontSize="16" MaxLines="1" Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding Lang, Mode=OneWay}" SelectionOpacity="-1"/>
                 </Border>
             </StackPanel>
         </Grid>

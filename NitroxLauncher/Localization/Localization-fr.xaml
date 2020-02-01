@@ -61,9 +61,10 @@
     <sys:String x:Key="NitroxServerSTitle">Options du serveur</sys:String>
     <sys:String x:Key="NitroxServerGameVersion">VERSION</sys:String>
 
-    <sys:String x:Key="NitroxServerWinLauncher">Launcher intégré</sys:String>
+    <sys:String x:Key="NitroxServerServerType">TYPE DE SERVEUR</sys:String>
+    <sys:String x:Key="NitroxServerWinLauncher">Serveur intégré</sys:String>
     <sys:String x:Key="NitroxServerWinLauncherTooltip">Le serveur sera lancé dans la même fenêtre</sys:String>
-    <sys:String x:Key="NitroxServerCmdLauncher">Launcher Window</sys:String>
+    <sys:String x:Key="NitroxServerCmdLauncher">Serveur externe Window</sys:String>
     <sys:String x:Key="NitroxServerCmdLauncherTooltip">Le serveur sera lancé dans une fenêtre à part (CMD)</sys:String>
 
     <sys:String x:Key="NitroxServerStart">LANCER LE SERVEUR</sys:String>
@@ -72,6 +73,8 @@
     <!-- Server Console -->
 
     <sys:String x:Key="NitroxServerConsoleTitle">Page Console</sys:String>
-    <sys:String x:Key="NitroxServerConsoleSendButton">Envoyer</sys:String>
+
+    <sys:String x:Key="NitroxServerConsoleStopButtonTooltip">Arrêter le serveur</sys:String>
+    <sys:String x:Key="NitroxServerConsoleSendButtonTooltip">Envoyer</sys:String>
 
 </ResourceDictionary>

@@ -33,7 +33,7 @@
     Sin embargo, se ha establecido una base sólida para que la comunidad trabaje en ello.
     </sys:String>
 
-    <sys:String x:Key="NitroxGameSinglerplayerButton">Solo</sys:String>
+    <sys:String x:Key="NitroxGameSinglerplayerButton">Jugar</sys:String>
     <sys:String x:Key="NitroxGameSinglerplayerButtonTooltip">Jugar solo</sys:String>
 
     <sys:String x:Key="NitroxGameMultiplayerButton">Multijugador</sys:String>
@@ -61,9 +61,10 @@
     <sys:String x:Key="NitroxServerSTitle">Opciones del servidor</sys:String>
     <sys:String x:Key="NitroxServerGameVersion">VERSIÓN</sys:String>
 
-    <sys:String x:Key="NitroxServerWinLauncher">Lanzador integrado</sys:String>
+    <sys:String x:Key="NitroxServerServerType">TIPO DE SERVIDOR</sys:String>
+    <sys:String x:Key="NitroxServerWinLauncher">Servidor integrado</sys:String>
     <sys:String x:Key="NitroxServerWinLauncherTooltip">El servidor se iniciará en la misma ventana</sys:String>
-    <sys:String x:Key="NitroxServerCmdLauncher">Lanzador Window</sys:String>
+    <sys:String x:Key="NitroxServerCmdLauncher">Servidor externo Window</sys:String>
     <sys:String x:Key="NitroxServerCmdLauncherTooltip">El servidor se iniciará en una ventana separada (CMD)</sys:String>
 
     <sys:String x:Key="NitroxServerStart">LANZAR EL SERVIDOR</sys:String>
@@ -72,6 +73,8 @@
     <!-- Server Console -->
 
     <sys:String x:Key="NitroxServerConsoleTitle">Página de consola</sys:String>
-    <sys:String x:Key="NitroxServerConsoleSendButton">Enviar</sys:String>
+
+    <sys:String x:Key="NitroxServerConsoleStopButtonTooltip">Detener el servidor</sys:String>
+    <sys:String x:Key="NitroxServerConsoleSendButtonTooltip">Enviar</sys:String>
 
 </ResourceDictionary>

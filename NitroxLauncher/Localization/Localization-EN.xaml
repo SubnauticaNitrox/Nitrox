@@ -61,9 +61,10 @@
     <sys:String x:Key="NitroxServerSTitle">Server Options</sys:String>
     <sys:String x:Key="NitroxServerGameVersion">GAME VERSION</sys:String>
 
-    <sys:String x:Key="NitroxServerWinLauncher">Launcher window</sys:String>
+    <sys:String x:Key="NitroxServerServerType">SERVER TYPE</sys:String>
+    <sys:String x:Key="NitroxServerWinLauncher">Docked console</sys:String>
     <sys:String x:Key="NitroxServerWinLauncherTooltip">Server will run in the launcher</sys:String>
-    <sys:String x:Key="NitroxServerCmdLauncher">Command line window</sys:String>
+    <sys:String x:Key="NitroxServerCmdLauncher">External command prompt</sys:String>
     <sys:String x:Key="NitroxServerCmdLauncherTooltip">Server will run in a seperate window (CMD)</sys:String>
 
     <sys:String x:Key="NitroxServerStart">START SERVER</sys:String>
@@ -72,6 +73,8 @@
     <!-- Server Console -->
 
     <sys:String x:Key="NitroxServerConsoleTitle">Server Console Page</sys:String>
-    <sys:String x:Key="NitroxServerConsoleSendButton">Send</sys:String>
+
+    <sys:String x:Key="NitroxServerConsoleStopButtonTooltip">Stop server</sys:String>
+    <sys:String x:Key="NitroxServerConsoleSendButtonTooltip">Send</sys:String>
 
 </ResourceDictionary>
