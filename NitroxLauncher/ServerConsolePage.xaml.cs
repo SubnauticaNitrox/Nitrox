@@ -138,7 +138,7 @@ namespace NitroxLauncher
 
         private async void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            e.Handled = true; // Required for CommandInput.SelectAll() to work
+            e.Handled = true;
 
             switch (e.Key)
             {
