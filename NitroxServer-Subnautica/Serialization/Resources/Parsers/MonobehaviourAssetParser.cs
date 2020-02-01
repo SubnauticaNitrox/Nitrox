@@ -23,9 +23,10 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
         {
             MonobehaviourAsset monobehaviour = new MonobehaviourAsset();
 
-            monobehaviour.GameObjectIdentifier = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
-            monobehaviour.Enabled = reader.ReadInt32(); // unknown but assume this is what it is
-            monobehaviour.MonoscriptIdentifier = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+            monobehaviour.GameObjectIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
+            monobehaviour.Enabled = reader.ReadBoolean();
+            reader.Align();
+            monobehaviour.MonoscriptIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
             monobehaviour.Name = reader.ReadCountStringInt32();
 
             // Hack - If we have not yet loaded monoscripts then we are currently processing unit monobehaviours 

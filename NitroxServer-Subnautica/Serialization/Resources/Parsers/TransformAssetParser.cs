@@ -37,11 +37,11 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             for (int i = 0; i < childrenCount; i++)
             {
-                AssetIdentifier child = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+                AssetIdentifier child = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
                 ChildrenIdToParentId.Add(child, identifier);
             }
 
-            transformAsset.ParentIdentifier = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+            transformAsset.ParentIdentifier = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
 
             TransformsByAssetId.Add(identifier, transformAsset);
         }

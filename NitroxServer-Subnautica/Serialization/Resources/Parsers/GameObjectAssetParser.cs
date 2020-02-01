@@ -17,7 +17,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             for (int i = 0; i < componentCount; i++)
             {
-                AssetIdentifier component = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+                AssetIdentifier component = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
                 gameObjectAsset.Components.Add(component);
             }
 

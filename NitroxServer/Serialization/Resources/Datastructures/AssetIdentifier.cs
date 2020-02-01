@@ -2,10 +2,10 @@
 {
     public class AssetIdentifier
     {
-        public uint FileId { get; }
-        public ulong IndexId { get; }
+        public int FileId { get; }
+        public long IndexId { get; }
 
-        public AssetIdentifier(uint fileId, ulong indexId)
+        public AssetIdentifier(int fileId, long indexId)
         {
             FileId = fileId;
             IndexId = indexId;

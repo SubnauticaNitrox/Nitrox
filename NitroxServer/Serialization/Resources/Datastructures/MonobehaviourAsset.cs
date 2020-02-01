@@ -5,7 +5,7 @@
         public string Name { get; set; }
         public string MonoscriptName { get; set; }
         public AssetIdentifier GameObjectIdentifier { get; set; }
-        public int Enabled { get; set; }
+        public bool Enabled { get; set; }
         public AssetIdentifier MonoscriptIdentifier { get; set; }
     }
 }
