@@ -61,7 +61,7 @@ namespace NitroxServer.Serialization
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), true).Length > 0);
+                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0);
 
                 if (hasNitroxProtobuf)
                 {
