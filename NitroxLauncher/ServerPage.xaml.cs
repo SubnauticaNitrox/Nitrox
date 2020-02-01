@@ -2,25 +2,23 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using NitroxLauncher.Properties;
 using NitroxModel;
 
 namespace NitroxLauncher
 {
     public partial class ServerPage : Page
     {
-        public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
-        private bool suppressFeedback;
         private readonly LauncherLogic logic;
+        public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
 
         public ServerPage(LauncherLogic logic)
         {
-            suppressFeedback = true;
             InitializeComponent();
 
-            RBIsDocked.IsChecked = !Properties.Settings.Default.IsExternalServer;
-            RBIsExternal.IsChecked = Properties.Settings.Default.IsExternalServer;
+            RBIsDocked.IsChecked = !Settings.Default.IsExternalServer;
+            RBIsExternal.IsChecked = Settings.Default.IsExternalServer;
 
-            suppressFeedback = false;
             this.logic = logic;
         }
 
@@ -28,7 +26,7 @@ namespace NitroxLauncher
         {
             try
             {
-                logic.StartServer((bool)RBIsExternal.IsChecked);
+                logic.StartServer(RBIsExternal.IsChecked == true);
             }
             catch (Exception ex)
             {
@@ -36,13 +34,10 @@ namespace NitroxLauncher
             }
         }
 
-        private void RBServer_Checked(object sender, RoutedEventArgs e)
+        private void RBServer_Clicked(object sender, RoutedEventArgs e)
         {
-            if (!suppressFeedback)
-            {
-                Properties.Settings.Default.IsExternalServer = (bool)RBIsExternal.IsChecked;
-                Properties.Settings.Default.Save();
-            }
+            Settings.Default.IsExternalServer = RBIsExternal.IsChecked == true;
+            Settings.Default.Save();
         }
     }
 }
