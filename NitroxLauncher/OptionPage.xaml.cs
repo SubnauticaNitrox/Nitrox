@@ -28,22 +28,27 @@ namespace NitroxLauncher
             }
         }
 
+        private string lang;
+        public string Lang
+        {
+            get => lang;
+            set
+            {
+                lang = value;
+                OnPropertyChanged();
+            }
+        }
+
         public OptionPage()
         {
             InitializeComponent();
             PathToSubnautica = GameInstallationFinder.Instance.FindGame(new List<string>()).OrElse(@"C:\Program Files\Epic Games\Subnautica");
+            Lang = Localization.GetCurrentCultureLanguage().ToString();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        ///     Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">The property that has a new value.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private void ChangeOptions_Click(object sender, RoutedEventArgs e)
         {
@@ -56,6 +61,7 @@ namespace NitroxLauncher
                 IsFolderPicker = true,
                 Title = "Select Subnautica installation directory"
             };
+
             if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
             {
                 return;

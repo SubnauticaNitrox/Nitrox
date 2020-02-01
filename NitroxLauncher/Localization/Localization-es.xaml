@@ -4,7 +4,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:String x:Key="LocalizationString">fr</sys:String>
-    <sys:String x:Key="Version">1</sys:String>
+    <sys:Int16 x:Key="Version">1</sys:Int16>
 
     <!-- Main Window -->
 
@@ -47,6 +47,9 @@
 
     <sys:String x:Key="NitroxOptionGameDirectory">DIRECTORIO DE JUEGO</sys:String>
     <sys:String x:Key="NitroxOptionGameDirectoryTooltip">El directorio de instalación de Subnautica</sys:String>
+
+    <sys:String x:Key="NitroxOptionLanguage">IDIOMA</sys:String>
+    <sys:String x:Key="NitroxOptionLanguageTooltip">Cambiar el idioma del lanzador</sys:String>
 
     <sys:String x:Key="NitroxOptionSubmit">Editar</sys:String>
     <sys:String x:Key="NitroxOptionSubmitTooltip">Cambiar el directorio del juego</sys:String>

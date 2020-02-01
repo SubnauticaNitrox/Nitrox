@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using NitroxModel;
 
@@ -21,11 +22,17 @@ namespace NitroxLauncher
 
     public static class Localization
     {
-        public static Language GetCurrentCultureName()
+        public static readonly short Version = 1;
+
+        public static Language GetCurrentCultureLanguage()
         {
-            string cultureName = CultureInfo.CurrentCulture.Name?.Substring(0, 2);
-            return Enum.TryParse<Language>(cultureName, true, out Language lang) ? lang : Language.DEFAULT;
+            string cultureName = CultureInfo.CurrentUICulture.Name?.Substring(0, 2);
+            return getLanguage(cultureName);
         }
+
+        public static Language getLanguage(string val) => Enum.TryParse<Language>(val, true, out Language lang) ? lang : Language.DEFAULT;
+
+        public static Language[] getAvailableLanguages() => (Language[]) Enum.GetValues(typeof(Language));
 
         public static void SetupLanguage(ResourceDictionary element, Language lang)
         {
@@ -35,8 +42,8 @@ namespace NitroxLauncher
 
         private static string GetLocalizationPath(string lang)
         {
-            string directory = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            return Path.Combine(directory, $"Localization/Localization-{lang}.xaml");
+            string directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            return Path.Combine(directory, "Localization", $"Localization-{lang}.xaml");
         }
 
         private static void SwapRessourceDictionnary(ResourceDictionary element, string path)
@@ -47,6 +54,12 @@ namespace NitroxLauncher
                 {
                     Source = new Uri(path)
                 };
+
+                if ((languageDictionary["Version"] as short? ?? -1) < Version)
+                {
+                    MessageBox.Show($"The language at '{path}' is Outdated, it must be in version {Version} instead");
+                    return;
+                }
 
                 int id = -1;
 
@@ -68,12 +81,14 @@ namespace NitroxLauncher
                     element.MergedDictionaries[id] = languageDictionary;
                 }
             }
-#if DEBUG
             else
             {
+#if DEBUG
                 MessageBox.Show($"The language at '{path}' not found");
-            }
 #endif
+                CultureInfo.CurrentUICulture = new CultureInfo("en-US");
+            }
+
         }
     }
 }

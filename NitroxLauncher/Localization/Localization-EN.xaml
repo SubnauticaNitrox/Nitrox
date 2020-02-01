@@ -4,7 +4,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:String x:Key="LocalizationString">en</sys:String>
-    <sys:String x:Key="Version">1</sys:String>
+    <sys:Int16 x:Key="Version">1</sys:Int16>
     
     <!-- Main Window -->
     
@@ -47,7 +47,10 @@
 
     <sys:String x:Key="NitroxOptionGameDirectory">GAME DIRECTORY</sys:String>
     <sys:String x:Key="NitroxOptionGameDirectoryTooltip">Subnautica install location</sys:String>
-    
+
+    <sys:String x:Key="NitroxOptionLanguage">LANGUAGE</sys:String>
+    <sys:String x:Key="NitroxOptionLanguageTooltip">Change the localization of the launcher</sys:String>
+
     <sys:String x:Key="NitroxOptionSubmit">Change</sys:String>
     <sys:String x:Key="NitroxOptionSubmitTooltip">Confirm the configuration changings</sys:String>
     

@@ -4,7 +4,7 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <sys:String x:Key="LocalizationString">fr</sys:String>
-    <sys:String x:Key="Version">1</sys:String>
+    <sys:Int16 x:Key="Version">1</sys:Int16>
 
     <!-- Main Window -->
 
@@ -33,7 +33,7 @@
     Cependant, une base solide a été établie pour que la communauté puisse travailler dessus
     </sys:String>
 
-    <sys:String x:Key="NitroxGameSinglerplayerButton">Solo</sys:String>
+    <sys:String x:Key="NitroxGameSinglerplayerButton">Jouer</sys:String>
     <sys:String x:Key="NitroxGameSinglerplayerButtonTooltip">Jouer tout seul</sys:String>
 
     <sys:String x:Key="NitroxGameMultiplayerButton">Multijoueur</sys:String>
@@ -47,6 +47,9 @@
 
     <sys:String x:Key="NitroxOptionGameDirectory">REPERTOIRE DU JEU</sys:String>
     <sys:String x:Key="NitroxOptionGameDirectoryTooltip">Le répertoire d'installation de Subnautica</sys:String>
+
+    <sys:String x:Key="NitroxOptionLanguage">LANGAGE</sys:String>
+    <sys:String x:Key="NitroxOptionLanguageTooltip">Change le langage du launcher</sys:String>
 
     <sys:String x:Key="NitroxOptionSubmit">Modifier</sys:String>
     <sys:String x:Key="NitroxOptionSubmitTooltip">Changer le répertoire du jeu</sys:String>

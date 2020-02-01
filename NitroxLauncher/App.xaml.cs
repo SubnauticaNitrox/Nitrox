@@ -10,7 +10,7 @@ namespace NitroxLauncher
         protected override void OnStartup(StartupEventArgs e)
         {
             //Change the launcher language based on the OS if possible
-            Localization.SetupLanguage(Resources, Localization.GetCurrentCultureName());
+            Localization.SetupLanguage(Resources, Localization.GetCurrentCultureLanguage());
             base.OnStartup(e);
         }
 
