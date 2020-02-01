@@ -321,8 +321,8 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="22"><Run Text="SERVER TYPE"/></TextBlock>
-                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
-                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External command prompt" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Checked="RBServer_Checked"/>
+                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked"/>
+                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External command prompt" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked"/>
                     </StackPanel>
                     <Button Grid.Column="2" Width="240" Height="80"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="Start the server with chosen options" >
                         <Button.Background>
