@@ -55,9 +55,9 @@ namespace NitroxLauncher
                 else
                 {
                     CommandInputText = commandLinesHistory[commandHistoryIndex];
-                    CommandInput.SelectionStart = CommandInputText.Length;
-                    CommandInput.SelectionLength = 0;
+                    CommandInput.SelectAll();
                 }
+                
                 OnPropertyChanged();
             }
         }
@@ -131,6 +131,8 @@ namespace NitroxLauncher
 
         private void CommandLine_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            e.Handled = true; // Required for CommandInput.SelectAll() to work
+            
             switch (e.Key)
             {
                 case Key.Enter:
@@ -141,6 +143,9 @@ namespace NitroxLauncher
                     break;
                 case Key.Down:
                     CommandHistoryIndex++;
+                    break;
+                default:
+                    e.Handled = false;
                     break;
             }
         }
