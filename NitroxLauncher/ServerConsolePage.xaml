@@ -22,7 +22,7 @@
                     <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding ServerOutput, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"/>
                 </ScrollViewer>
             </Border>
-            
+
             <DockPanel Grid.Row="1" Margin="2">
                 <Button TabIndex="3" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="StopButton" ToolTip="{DynamicResource ResourceKey=NitroxServerConsoleStopButtonTooltip}" Click="StopButton_Click" >
                     <Button.Background>
