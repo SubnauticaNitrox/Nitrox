@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             if (parent.IsPresent())
             {
-                gameObject.transform.SetParent(parent.Get().transform, false);
+                gameObject.transform.SetParent(parent.Get().transform, true);
             }
 
             gameObject.SetActive(true);

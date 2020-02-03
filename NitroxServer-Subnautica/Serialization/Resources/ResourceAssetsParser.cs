@@ -59,7 +59,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
             string path = Path.Combine(basePath, fileName);
 
-            using (FileStream resStream = new FileStream(path, FileMode.Open))
+            using (FileStream resStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (AssetsFileReader reader = new AssetsFileReader(resStream))
             {
                 AssetsFile file = new AssetsFile(reader);
@@ -96,7 +96,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         {
             string path = Path.Combine(basePath, fileName);
 
-            using (FileStream resStream = new FileStream(path, FileMode.Open))
+            using (FileStream resStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             using (AssetsFileReader reader = new AssetsFileReader(resStream))
             {
                 AssetsFile file = new AssetsFile(reader);

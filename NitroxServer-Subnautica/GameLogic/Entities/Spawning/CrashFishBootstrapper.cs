@@ -21,7 +21,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         {
             NitroxId id = deterministicBatchGenerator.NextId();
 
-            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, id);
+            return new Entity(parentEntity.LocalPosition, parentEntity.LocalRotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, id);
         }
     }
 }

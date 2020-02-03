@@ -27,6 +27,14 @@ namespace NitroxServer.UnityStubs
             Parent = goData.Parent;
         }
 
+        public override string ToString()
+        {
+            object transform = null;
+            components.TryGetValue(typeof(Transform), out transform); // Honestly this should never be null every gameObject has a Transform
+
+            return string.Format("Id: {0}, Class Id: {1}, Transform: {2}", Id, ClassId, transform as Transform);
+        }
+
         public void AddComponent(object component, Type componentType)
         {
             components.Add(componentType, component);

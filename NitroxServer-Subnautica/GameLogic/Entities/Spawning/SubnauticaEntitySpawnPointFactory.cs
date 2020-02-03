@@ -15,7 +15,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             EntitySlotsPlaceholder entitySlotsPlaceholder = gameObject.GetComponent<EntitySlotsPlaceholder>();
-            
+
 
             if (!ReferenceEquals(entitySlotsPlaceholder, null))
             {
@@ -36,7 +36,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
             }
             else
             {
-                EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(absoluteEntityCell, transform.Position, transform.Rotation, transform.Scale, gameObject.ClassId);
+                EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(absoluteEntityCell, transform.localPosition, transform.localRotation, transform.localScale, gameObject.ClassId);
 
                 HandleParenting(spawnPoints, entitySpawnPoint, gameObject);
             }
@@ -61,6 +61,8 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                     entitySpawnPoint
                 );
             }
+
+            //NitroxModel.Logger.Log.Info("Server Object: " + entitySpawnPoint.ToString());
         }
     }
 }
