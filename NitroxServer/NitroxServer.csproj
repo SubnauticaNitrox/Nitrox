@@ -73,9 +73,6 @@
     <Reference Include="LitJson">
       <HintPath>$(SubnauticaManaged)\LitJson.dll</HintPath>
     </Reference>
-    <Reference Include="AssetsTools.NET">
-      <HintPath>..\lib\AssetsTools.NET.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="protobuf-net">
       <HintPath>..\lib\protobuf-net.dll</HintPath>
