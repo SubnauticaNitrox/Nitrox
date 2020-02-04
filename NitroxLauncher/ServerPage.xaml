@@ -5,25 +5,27 @@
       xmlns:local="clr-namespace:NitroxLauncher"
       xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero2"
       x:Class="NitroxLauncher.ServerPage"
-      mc:Ignorable="d" d:DesignHeight="470" d:DesignWidth="719"
+      mc:Ignorable="d"
+      d:DesignHeight="470"
+      d:DesignWidth="719"
       DataContext="{Binding RelativeSource={RelativeSource Self}}"
-      Title="{DynamicResource ResourceKey=NitroxServerTitle}"
+      Title="{DynamicResource ResourceKey=NitroxServerPageTitle}"
       Margin="0">
 
     <Grid>
-        <Image x:Name="BackgroundImage" Source="Images/EscapePod.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Image x:Name="BackgroundImage" Source="Images/EscapePod.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom" />
         <Grid Margin="25,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="36"/>
-                <RowDefinition Height="110"/>
-                <RowDefinition Height="95"/>
-                <RowDefinition Height="26"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="36" />
+                <RowDefinition Height="110" />
+                <RowDefinition Height="95" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="1">
                 <TextBlock FontSize="22" Foreground="White">
-                    <Run Text="{DynamicResource ResourceKey=NitroxServerSTitle}"/>
+                    <Run Text="{DynamicResource ResourceKey=NitroxServerTitle}" />
                 </TextBlock>
             </Grid>
 
@@ -36,24 +38,24 @@
 
                     <StackPanel Grid.Column="0" VerticalAlignment="Center">
                         <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" FontSize="22">
-                            <Run Text="SERVER TYPE"/>
+                            <Run Text="{DynamicResource ResourceKey=NitroxServerServerType}" />
                         </TextBlock>
-                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="{DynamicResource ResourceKey=NitroxServerWinLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerWinLauncherTooltip}" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked"/>
-                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="{DynamicResource ResourceKey=NitroxServerCmdLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerCmdLauncherTooltip}" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked"/>
+                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="{DynamicResource ResourceKey=NitroxServerWinLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerWinLauncherTooltip}" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked" />
+                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="{DynamicResource ResourceKey=NitroxServerCmdLauncher}" ToolTip="{DynamicResource ResourceKey=NitroxServerCmdLauncherTooltip}" Margin="5" FontFamily="{StaticResource Roboto}" Foreground="LightGray" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top" Click="RBServer_Clicked" />
                     </StackPanel>
 
-                    <Button Grid.Column="2" Width="240" Height="80"  HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="{DynamicResource ResourceKey=NitroxServerStartTooltip}" >
+                    <Button Grid.Column="2" Width="240" Height="80" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource BTNCORNER}" Click="StartServer_Click" ToolTip="{DynamicResource ResourceKey=NitroxServerStartTooltip}">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                                <GradientStop Color="#FF00B1E9" Offset="0"/>
-                                <GradientStop Color="#FF006BE9" Offset="1"/>
+                                <GradientStop Color="#FF00B1E9" Offset="0" />
+                                <GradientStop Color="#FF006BE9" Offset="1" />
                             </LinearGradientBrush>
                         </Button.Background>
                         <StackPanel>
-                            <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" >
-                                <Run Text="{DynamicResource ResourceKey=NitroxServerStart}"/>
+                            <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">
+                                <Run Text="{DynamicResource ResourceKey=NitroxServerStart}" />
                             </TextBlock>
-                            <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Text="{Binding Version, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}}"/>
+                            <TextBlock FontFamily="{StaticResource Roboto}" Foreground="White" HorizontalAlignment="Center" FontSize="16" Text="{Binding Version, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}}" />
                         </StackPanel>
                     </Button>
                 </Grid>

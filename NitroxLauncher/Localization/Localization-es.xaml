@@ -8,8 +8,8 @@
 
     <!-- Main Window -->
 
-    <sys:String x:Key="NitroxMainTitle">Nitrox Launcher</sys:String>
-    <sys:String x:Key="NitroxTitle">NITROX</sys:String>
+    <sys:String x:Key="NitroxMainPageTitle">Nitrox Launcher</sys:String>
+    <sys:String x:Key="NitroxMainTitle">NITROX</sys:String>
 
     <sys:String x:Key="NitroxPlayButton">JUGAR</sys:String>
     <sys:String x:Key="NitroxPlayButtonTooltip">Comienza el juego</sys:String>
@@ -24,7 +24,7 @@
 
     <!-- Launch Game Page -->
 
-    <sys:String x:Key="NitroxGameTitle">Pagina de inicio</sys:String>
+    <sys:String x:Key="NitroxGamePageTitle">Pagina de inicio</sys:String>
 
     <sys:String x:Key="NitroxPresentation" xml:space="preserve">
     Nitrox es un proyecto de código abierto que agrega multijugador al juego Subnautica
@@ -42,23 +42,20 @@
 
     <!-- Options Page -->
 
-    <sys:String x:Key="NitroxOptionTitle">Página de opciones</sys:String>
-    <sys:String x:Key="NitroxOTitle">Opciones</sys:String>
+    <sys:String x:Key="NitroxOptionPageTitle">Página de opciones</sys:String>
+    <sys:String x:Key="NitroxOptionTitle">Opciones</sys:String>
 
     <sys:String x:Key="NitroxOptionGameDirectory">DIRECTORIO DE JUEGO</sys:String>
     <sys:String x:Key="NitroxOptionGameDirectoryTooltip">El directorio de instalación de Subnautica</sys:String>
-
-    <sys:String x:Key="NitroxOptionLanguage">IDIOMA</sys:String>
-    <sys:String x:Key="NitroxOptionLanguageTooltip">Cambiar el idioma del lanzador</sys:String>
 
     <sys:String x:Key="NitroxOptionSubmit">Editar</sys:String>
     <sys:String x:Key="NitroxOptionSubmitTooltip">Cambiar el directorio del juego</sys:String>
 
     <!-- Server Page -->
 
-    <sys:String x:Key="NitroxServerTitle">Página del servidor</sys:String>
+    <sys:String x:Key="NitroxServerPageTitle">Página del servidor</sys:String>
 
-    <sys:String x:Key="NitroxServerSTitle">Opciones del servidor</sys:String>
+    <sys:String x:Key="NitroxServerTitle">Opciones del servidor</sys:String>
     <sys:String x:Key="NitroxServerGameVersion">VERSIÓN</sys:String>
 
     <sys:String x:Key="NitroxServerServerType">TIPO DE SERVIDOR</sys:String>
@@ -72,7 +69,7 @@
 
     <!-- Server Console -->
 
-    <sys:String x:Key="NitroxServerConsoleTitle">Página de consola</sys:String>
+    <sys:String x:Key="NitroxServerConsolePageTitle">Página de consola</sys:String>
 
     <sys:String x:Key="NitroxServerConsoleStopButtonTooltip">Detener el servidor</sys:String>
     <sys:String x:Key="NitroxServerConsoleSendButtonTooltip">Enviar</sys:String>

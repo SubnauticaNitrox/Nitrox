@@ -28,22 +28,10 @@ namespace NitroxLauncher
             }
         }
 
-        private string lang;
-        public string Lang
-        {
-            get => lang;
-            set
-            {
-                lang = value;
-                OnPropertyChanged();
-            }
-        }
-
         public OptionPage()
         {
             InitializeComponent();
             PathToSubnautica = GameInstallationFinder.Instance.FindGame(new List<string>()).OrElse(@"C:\Program Files\Epic Games\Subnautica");
-            Lang = Localization.GetCurrentCultureLanguage().ToString();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

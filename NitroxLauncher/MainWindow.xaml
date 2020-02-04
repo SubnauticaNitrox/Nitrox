@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="{DynamicResource ResourceKey=NitroxMainTitle}" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
+        Title="{DynamicResource ResourceKey=NitroxMainPageTitle}" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
 
     <WindowChrome.WindowChrome>
         <WindowChrome ResizeBorderThickness="0" CaptionHeight="72" CornerRadius="0" GlassFrameThickness="3" />
@@ -14,8 +14,8 @@
 
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="72"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="72" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Image x:Name="BackgroundImage" Margin="0,0,0,0" Source="Images/PlayGameImage.png" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" Height="553" Width="1125.43" Opacity="100" HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -26,11 +26,11 @@
 
         <Grid Background="#B228292C">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal"  >
-                <TextBlock FontFamily="{StaticResource Roboto}" Text="{DynamicResource ResourceKey=NitroxTitle}" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
+                <TextBlock FontFamily="{StaticResource Roboto}" Text="{DynamicResource ResourceKey=NitroxMainTitle}" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
                 <TextBlock FontFamily="{StaticResource Roboto}" VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
             </StackPanel>
             <Button Grid.Column="1" Margin="0,6.25,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" BorderBrush="#00000000" Background="#00000000" Foreground="White" Visibility="Visible" IsEnabled="True" Click="Minimze_Click" Style="{StaticResource OpaqueButton}"  WindowChrome.IsHitTestVisibleInChrome="True">
@@ -43,26 +43,26 @@
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="225"/>
+                <ColumnDefinition Width="225" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#B2151414">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
                     <Button x:Name="PlayGameNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToPlayGame_OnClick" HorizontalAlignment="Left" Width="225" >
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" ToolTip="{DynamicResource ResourceKey=NitroxPlayButtonTooltip}" Text="{DynamicResource ResourceKey=NitroxPlayButton}"/>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Bold" Foreground="White" FontSize="18" ToolTip="{DynamicResource ResourceKey=NitroxPlayButtonTooltip}" Text="{DynamicResource ResourceKey=NitroxPlayButton}" />
                         </Grid>
                     </Button>
-                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" ToolTip="{DynamicResource ResourceKey=NitroxServerButtonTooltip}" >
+                    <Button x:Name="ServerNav" Background="#00000000" BorderBrush="#00000000" Style="{StaticResource OpaqueButton}" Click="ToServer_OnClick" ToolTip="{DynamicResource ResourceKey=NitroxServerButtonTooltip}">
                         <Grid Width="225">
-                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18" >
-                                <Run Text="{DynamicResource ResourceKey=NitroxServerButton}"/>
+                            <TextBlock FontFamily="{StaticResource Roboto}" HorizontalAlignment="Left" Margin="30,14,0,14" FontWeight="Normal" Foreground="#B2FFFFFF" FontSize="18">
+                                <Run Text="{DynamicResource ResourceKey=NitroxServerButton}" />
                             </TextBlock>
                         </Grid>
                     </Button>
