@@ -23,7 +23,7 @@ namespace NitroxServer.ConsoleCommands
             string playerName = args[0];
             string message;
 
-            if (playerData.UpdatePlayerPermissions(playerName, Perms.PLAYER))
+            if (playerData.SetPermissions(playerName, Perms.PLAYER))
             {
                 message = "Updated " + playerName + " permissions to player";
             }

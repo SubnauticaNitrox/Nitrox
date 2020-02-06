@@ -102,7 +102,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public bool UpdatePlayerPermissions(string playerName, Perms permissions)
+        public bool SetPermissions(string playerName, Perms permissions)
         {
             lock (playersByPlayerName)
             {

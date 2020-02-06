@@ -252,6 +252,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibConnection.cs" />
     <Compile Include="Communication\NetworkingLayer\LiteNetLib\LiteNetLibServer.cs" />
     <Compile Include="Communication\NetworkingLayer\NitroxConnection.cs" />
