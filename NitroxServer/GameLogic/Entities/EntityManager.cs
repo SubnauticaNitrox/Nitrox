@@ -44,8 +44,8 @@ namespace NitroxServer.GameLogic.Entities
                 Entity entity = opEntity.Get();
                 AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
 
-                //entity.Transform.LocalPosition = position;
-                //entity.Transform.LocalRotation = rotation;
+                entity.Transform.LocalPosition = position;
+                entity.Transform.LocalRotation = rotation;
 
                 AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
 
