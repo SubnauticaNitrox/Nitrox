@@ -1,51 +1,77 @@
 ﻿using System;
 using ProtoBufNet;
+using NitroxModel.Helper;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public class NitroxVector3
+    public struct NitroxVector3
     {
-#pragma warning disable IDE1006 // Naming Styles
         [ProtoMember(1)]
-        public float x { get; set; }
+        public float X;
 
         [ProtoMember(2)]
-        public float y { get; set; }
+        public float Y;
 
         [ProtoMember(3)]
-        public float z { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
+        public float Z;
 
-        public NitroxVector3()
-        {
-        }
+        public static NitroxVector3 Zero = new NitroxVector3(0, 0, 0);
 
         public NitroxVector3(float x, float y, float z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         public NitroxVector3(UnityEngine.Vector3 unityVector)
         {
-            x = unityVector.x;
-            y = unityVector.y;
-            z = unityVector.z;
+            X = unityVector.x;
+            Y = unityVector.y;
+            Z = unityVector.z;
         }
 
         public static NitroxVector3 operator +(NitroxVector3 a, NitroxVector3 b)
         {
-            return new NitroxVector3(a.x + b.x,
-            a.y + b.y,
-            a.z + b.z);
+            return new NitroxVector3(a.X + b.X,
+            a.Y + b.Y,
+            a.Z + b.Z);
+        }
+
+        public static NitroxVector3 operator -(NitroxVector3 a, NitroxVector3 b)
+        {
+            return new NitroxVector3(a.X - b.X,
+            a.Y - b.Y,
+            a.Z - b.Z);
+        }
+
+        public static NitroxVector3 operator -(NitroxVector3 a)
+        {
+            return new NitroxVector3(-a.X,
+            -a.Y,
+            -a.Z);
+        }
+
+        public static NitroxVector3 Normalize(NitroxVector3 value)
+        {
+            float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
+            float length = Mathf.Sqrt(ls);
+            return new NitroxVector3(value.X / length, value.Y / length, value.Z / length);
+        }
+
+        public static NitroxVector3 Cross(NitroxVector3 vector1, NitroxVector3 vector2)
+        {
+            return new NitroxVector3(
+                vector1.Y * vector2.Z - vector1.Z * vector2.Y,
+                vector1.Z * vector2.X - vector1.X * vector2.Z,
+                vector1.X * vector2.Y - vector1.Y * vector2.X);
         }
 
         public override string ToString()
         {
-            return "[Vector3 - {" + x + ", " + y + ", " + z + "}]";
+            return "[Vector3 - {" + X + ", " + Y + ", " + Z + "}]";
         }
 
         public static implicit operator NitroxVector3(UnityEngine.Vector3 unityVector)
@@ -55,7 +81,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static implicit operator UnityEngine.Vector3(NitroxVector3 vector)
         {
-            return new UnityEngine.Vector3(vector.x, vector.y, vector.z);
+            return new UnityEngine.Vector3(vector.X, vector.Y, vector.Z);
         }
     }
 }

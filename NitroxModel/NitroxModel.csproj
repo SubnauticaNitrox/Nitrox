@@ -238,7 +238,9 @@
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxMatrix4x4.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
@@ -259,6 +261,7 @@
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
