@@ -18,19 +18,32 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(3)]
         public NitroxVector3 LocalScale;
 
+        public NitroxMatrix4x4 localToWorldMatrix 
+        {
+            get
+            {
+                NitroxMatrix4x4 localMatrix = NitroxMatrix4x4.TRS(LocalPosition, LocalRotation, LocalScale);
+                return Parent != null ? Parent.localToWorldMatrix * localMatrix : localMatrix;
+            }
+        }
+
         public NitroxTransform Parent;
         public Entity Entity;
-        public NitroxVector3 Position => Parent != null ? Parent.Position + LocalPosition : LocalPosition;
-        public NitroxQuaternion Rotation => Parent != null ? Parent.Rotation * LocalRotation : LocalRotation;
+        public NitroxVector3 Position;
+        public NitroxQuaternion Rotation;
 
         public void SetParent(NitroxTransform parent)
         {
             Parent = parent;
+            NitroxVector3 _;
+            NitroxMatrix4x4 local2WorldMatrix = localToWorldMatrix;
+            NitroxMatrix4x4.DecomposeMatrix(ref local2WorldMatrix, out Position, out Rotation, out _);
+            
         }
 
         public void SetParent(NitroxTransform parent, bool worldPositionStays)
         {
-            throw new NotImplementedException("This is not Implemented yet. Added by killzoms");
+            throw new NotImplementedException("This is not Implementwaed yet. Added by killzoms");
         }
 
         private NitroxTransform()

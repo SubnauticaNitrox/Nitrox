@@ -61,6 +61,12 @@ namespace NitroxModel.DataStructures.GameLogic
             return new NitroxVector3(value.X / length, value.Y / length, value.Z / length);
         }
 
+        public static float Length(NitroxVector3 value)
+        {
+            float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;
+            return Mathf.Sqrt(ls);
+        }
+
         public static NitroxVector3 Cross(NitroxVector3 vector1, NitroxVector3 vector2)
         {
             return new NitroxVector3(
