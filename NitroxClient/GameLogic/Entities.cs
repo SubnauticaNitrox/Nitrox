@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
@@ -53,8 +54,8 @@ namespace NitroxClient.GameLogic
             foreach (Entity entity in entities)
             {
                 LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
-                
-                
+                Console.WriteLine(entity.ToString());
+
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
                     Spawn(entity, Optional<GameObject>.Empty());
@@ -91,6 +92,8 @@ namespace NitroxClient.GameLogic
         private void Spawn(Entity entity, Optional<GameObject> parent)
         {
             alreadySpawnedIds.Add(entity.Id);
+
+            Log.Info(entity);
 
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
@@ -136,13 +139,13 @@ namespace NitroxClient.GameLogic
 
             if (opGameObject.IsPresent())
             {
-                opGameObject.Get().transform.position = entity.Position;
-                opGameObject.Get().transform.rotation = entity.Rotation;
-                opGameObject.Get().transform.localScale = entity.Scale;
+                opGameObject.Get().transform.position = entity.Transform.Position;
+                opGameObject.Get().transform.rotation = entity.Transform.Rotation;
+                opGameObject.Get().transform.localScale = entity.Transform.LocalScale;
             }
             else
             {
-                Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Position: " + entity.LocalPosition);
+                Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Transform: " + entity.Transform);
             }
         }
 

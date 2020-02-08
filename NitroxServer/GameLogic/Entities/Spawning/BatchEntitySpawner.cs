@@ -206,8 +206,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                               parentEntity);
 
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
-            
-            yield return spawnedEntity;
 
             AssignPlaceholderEntitiesIfRequired(spawnedEntity, classId, deterministicBatchGenerator);
 
@@ -217,6 +215,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             {
                 bootstrapper.Prepare(spawnedEntity, deterministicBatchGenerator);
             }
+
+            yield return spawnedEntity;
 
             // Children are yielded as well so they can be indexed at the top level (for use by simulation 
             // ownership and various other consumers).  The parent should always be yielded before the children
@@ -280,9 +280,10 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                             prefab.ClassId,
                                             true,
                                             deterministicBatchGenerator.NextId(),
-                                            entity.Parent);
+                                            entity);
 
                     entity.ChildEntities.Add(prefabEntity);
+                    System.Diagnostics.Debug.WriteLine("Parent: " + entity + ", \nChild" + prefabEntity);
                 }
             }
         }

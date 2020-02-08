@@ -24,9 +24,9 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             GameObject gameObject = Utils.SpawnFromPrefab(prefab, null);
-            gameObject.transform.position = entity.Position;
-            gameObject.transform.rotation = entity.Rotation;
-            gameObject.transform.localScale = entity.Scale;
+            gameObject.transform.position = entity.Transform.Position;
+            gameObject.transform.rotation = entity.Transform.Rotation;
+            gameObject.transform.localScale = entity.Transform.LocalScale;
 
             if (parent.IsPresent())
             {

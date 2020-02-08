@@ -238,6 +238,7 @@
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
@@ -248,6 +249,8 @@
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />

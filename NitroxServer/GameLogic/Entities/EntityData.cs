@@ -44,7 +44,19 @@ namespace NitroxServer.GameLogic.Entities
                 lock (phasingEntitiesByAbsoluteCell)
                 {
                     foreach (Entity entity in entities)
-                    {           
+                    {
+                        if (entity.ParentId != null)
+                        {
+                            Optional<Entity> opEnt = GetEntityById(entity.ParentId);
+                            if (opEnt.IsPresent())
+                            {
+                                entity.Transform.SetParent(opEnt.Get().Transform);
+                            }
+                            else
+                            {
+                                Log.Error("Parent not Found! Are you sure it exists? " + entity.ParentId);
+                            }
+                        }
                         List<Entity> entitiesInCell = EntitiesFromCell(entity.AbsoluteEntityCell);
                         entitiesInCell.Add(entity);
 

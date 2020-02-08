@@ -164,7 +164,7 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
-        public Vector3 GetPosition(string playerName)
+        public NitroxVector3 GetPosition(string playerName)
         {
             lock (playersByPlayerName)
             {

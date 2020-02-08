@@ -24,7 +24,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         {
             for(int spawnPointCounter = 0; spawnPointCounter < LocalCreatureSpawnPoints.Count; spawnPointCounter++)
             {
-                Vector3 localSpawnPosition = LocalCreatureSpawnPoints[spawnPointCounter];
+                NitroxVector3 localSpawnPosition = LocalCreatureSpawnPoints[spawnPointCounter];
                 float targetProbabilitySum = (float)deterministicBatchGenerator.NextDouble() * creatureProbabiltySum;
                 float probabilitySum = 0;
 
@@ -39,7 +39,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
                         for(int i = 0; i < totalToSpawn; i++)
                         {
                             NitroxId id = deterministicBatchGenerator.NextId();
-                            Entity child = new Entity(parentEntity.Position + (UnityEngine.Vector3)localSpawnPosition, parentEntity.LocalRotation, parentEntity.Scale, creature.techType.Model(), parentEntity.Level, creature.classId, true, id);
+                            Entity child = new Entity(parentEntity.Transform.Position + localSpawnPosition, parentEntity.Transform.Rotation, parentEntity.Transform.LocalScale, creature.techType.Model(), parentEntity.Level, creature.classId, true, id);
                             parentEntity.ChildEntities.Add(child);
                         }
 

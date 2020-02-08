@@ -1,4 +1,5 @@
-﻿using NitroxServer.UnityStubs;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization.Resources.Datastructures
 {
@@ -6,8 +7,8 @@ namespace NitroxServer.Serialization.Resources.Datastructures
     {
         public AssetIdentifier Identifier { get; set; }
         public AssetIdentifier ParentIdentifier { get; set; }
-        public Quaternion Rotation { get; set; }
-        public Vector3 Position { get; set; }
-        public Vector3 Scale { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
+        public NitroxVector3 Position { get; set; }
+        public NitroxVector3 Scale { get; set; }
     }
 }
