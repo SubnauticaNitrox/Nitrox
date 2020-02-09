@@ -53,6 +53,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             panel.LoadedMultiplayerRef = LoadedMultiplayer;
 
             rightSide.groups.Add(LoadedMultiplayer.GetComponent<MainMenuGroup>());
+            
+            // Remove singleplayer button because SP is broken when Nitrox is injected. TODO: Allow SP to work and co-exist with Nitrox MP in the future
+            startButton.SetActive(false);
         }
 
         private void ShowMultiplayerMenu()
