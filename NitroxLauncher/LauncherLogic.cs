@@ -368,8 +368,10 @@ namespace NitroxLauncher
                     {
                         Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
                         Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
+                        FileInfo destFileInfo = new FileInfo(destinationFilePath);
+                        FileInfo sourceFileInfo = new FileInfo(sourceFilePath);
 
-                        if (sourceVersion != destinationVersion)
+                        if (sourceVersion != destinationVersion || destFileInfo.LastWriteTime != sourceFileInfo.LastWriteTime)
                         {
                             File.Delete(destinationFilePath);
                             File.Copy(sourceFilePath, destinationFilePath, true);
