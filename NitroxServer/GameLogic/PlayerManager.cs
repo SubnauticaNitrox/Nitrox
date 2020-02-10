@@ -91,7 +91,7 @@ namespace NitroxServer.GameLogic
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
 
-            if (ConnectedPlayers().Count() > 0 && reservedPlayerNames.Count == 1)
+            if (ConnectedPlayers().Count() == 1)
             {
                 Server.Instance.EnablePeriodicSaving();
             }
