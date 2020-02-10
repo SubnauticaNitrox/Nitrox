@@ -6,19 +6,16 @@ namespace NitroxLauncher
 {
     public partial class LaunchGamePage : Page
     {
-        private readonly LauncherLogic logic;
-
-        public LaunchGamePage(LauncherLogic logic)
+        public LaunchGamePage()
         {
             InitializeComponent();
-            this.logic = logic;
         }
 
         private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                await logic.StartSingleplayerAsync();
+                await LauncherLogic.Instance.StartSingleplayerAsync();
             }
             catch (Exception ex)
             {
@@ -30,7 +27,7 @@ namespace NitroxLauncher
         {
             try
             {
-                await logic.StartMultiplayerAsync();
+                await LauncherLogic.Instance.StartMultiplayerAsync();
             }
             catch (Exception ex)
             {

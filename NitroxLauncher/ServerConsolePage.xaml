@@ -22,7 +22,7 @@
                     </ScrollViewer>
                 </Border>
             <DockPanel Grid.Row="1" Margin="2">
-                <Button TabIndex="3" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="StopButton" ToolTip="Stop (exit) server" Click="StopButton_Click" >
+                <Button TabIndex="3" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource LargeButton}" Foreground="White" FontSize="16" x:Name="StopButton" ToolTip="Stop (exit) server" Click="StopButton_Click" >
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FFE97000" Offset="0"/>
@@ -31,7 +31,7 @@
                     </Button.Background>
                     <Image Source="Images/material-design-icons/baseline_stop_white_24dp.png"/>
                 </Button>
-                <Button TabIndex="2" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource BTNCORNER}" Foreground="White" FontSize="16" x:Name="CommandButton" ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559">
+                <Button TabIndex="2" DockPanel.Dock="Right" Margin="5,0,0,0" Width="42" Height="30" Style="{StaticResource LargeButton}" Foreground="White" FontSize="16" x:Name="CommandButton" ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF00B1E9" Offset="0"/>

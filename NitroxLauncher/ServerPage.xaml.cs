@@ -9,24 +9,21 @@ namespace NitroxLauncher
 {
     public partial class ServerPage : Page
     {
-        private readonly LauncherLogic logic;
         public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
 
-        public ServerPage(LauncherLogic logic)
+        public ServerPage()
         {
             InitializeComponent();
 
             RBIsDocked.IsChecked = !Settings.Default.IsExternalServer;
             RBIsExternal.IsChecked = Settings.Default.IsExternalServer;
-
-            this.logic = logic;
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                logic.StartServer(RBIsExternal.IsChecked == true);
+                LauncherLogic.Instance.StartServer(RBIsExternal.IsChecked == true);
             }
             catch (Exception ex)
             {

@@ -76,6 +76,8 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="AttachedProperties\ButtonProperties.cs" />
+    <Compile Include="Commands\RelayCommand.cs" />
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
     <Compile Include="Patching\NitroxEntryPatch.cs" />

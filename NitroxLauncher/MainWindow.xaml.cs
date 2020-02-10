@@ -1,42 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using NitroxLauncher.Commands;
 using NitroxLauncher.Events;
 using NitroxModel;
+using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using Button = System.Windows.Controls.Button;
+using HorizontalAlignment = System.Windows.HorizontalAlignment;
+using MessageBox = System.Windows.Forms.MessageBox;
+using WebBrowser = System.Windows.Controls.WebBrowser;
 
 namespace NitroxLauncher
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly Dictionary<Page, BitmapImage> imageDict;
-        private readonly LaunchGamePage launchPage;
-        private readonly LauncherLogic logic;
-        private readonly OptionPage optionPage;
-        private readonly ServerConsolePage serverConsolePage;
-        private readonly ServerPage serverPage;
-        private object currentPage;
+        // private readonly Dictionary<Page, BitmapImage> imageDict;
+        private readonly LauncherLogic logic = new LauncherLogic();
         private bool isServerEmbedded;
+        private RelayCommand<Page> navigationCommand;
 
         public string Version => "ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
+        
 
-        public object CurrentPage
-        {
-            get => currentPage;
-            private set
-            {
-                currentPage = value;
-                OnPropertyChanged();
-            }
-        }
+        public RelayCommand<Page> NavigationCommand => navigationCommand ??= new RelayCommand<Page>(NavigationExecute);
 
         public MainWindow()
         {
@@ -57,7 +54,7 @@ namespace NitroxLauncher
                     Height = 662;
                     Width = 1106;
                     WebBrowser webBrowser = new WebBrowser();
-                    CurrentPage = webBrowser;
+                    MainFrame.Content = webBrowser;
                     webBrowser.HorizontalAlignment = HorizontalAlignment.Stretch;
                     webBrowser.VerticalAlignment = VerticalAlignment.Stretch;
                     webBrowser.Margin = new Thickness(0);
@@ -66,39 +63,40 @@ namespace NitroxLauncher
                 };
             };
 
-            logic = LauncherLogic.Create();
-            launchPage = new LaunchGamePage(logic);
-            serverPage = new ServerPage(logic);
-            optionPage = new OptionPage(logic);
-            serverConsolePage = new ServerConsolePage(logic);
-
-            imageDict = new Dictionary<Page, BitmapImage>
-            {
-                {
-                    launchPage, new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative))
-                },
-                {
-                    serverPage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative))
-                },
-                {
-                    serverConsolePage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative))
-                },
-                {
-                    optionPage, new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative))
-                }
-            };
+            // imageDict = new Dictionary<Page, BitmapImage>
+            // {
+            //     {
+            //         launchPage, new BitmapImage(new Uri(@"/Images/PlayGameImage.png", UriKind.Relative))
+            //     },
+            //     {
+            //         serverPage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative))
+            //     },
+            //     {
+            //         serverConsolePage, new BitmapImage(new Uri(@"/Images/EscapePod.png", UriKind.Relative))
+            //     },
+            //     {
+            //         optionPage, new BitmapImage(new Uri(@"/Images/Vines.png", UriKind.Relative))
+            //     }
+            // };
 
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
 
-            if (!File.Exists("path.txt"))
-            {
-                ChangeFrameContent(optionPage);
-            }
-            else
-            {
-                ChangeFrameContent(launchPage);
-            }
+            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame().OrElse(null))
+                .ContinueWith(task =>
+                    {
+                        if (logic.IsSubnauticaDirectory(task.Result))
+                        {
+                            LauncherLogic.Instance.NavigateTo<LaunchGamePage>();
+                        }
+                        else
+                        {
+                            LauncherLogic.Instance.NavigateTo<OptionPage>();
+                        }
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -119,15 +117,20 @@ namespace NitroxLauncher
 
         internal async Task CloseInternalServerAndRemovePatchAsync()
         {
-            await serverConsolePage.SendServerCommandAsync("stop\n");
+            await LauncherLogic.Instance.SendServerCommandAsync("stop\n");
             logic.Dispose();
+        }
+
+        private void NavigationExecute(Page page)
+        {
+            LauncherLogic.Instance.NavigateTo(page.GetType());
         }
 
         private bool CanClose()
         {
             if (logic.ServerRunning && isServerEmbedded)
             {
-                MessageBox.Show("Cannot close as long as the embedded server is running.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                System.Windows.MessageBox.Show("Cannot close as long as the embedded server is running.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
@@ -156,91 +159,21 @@ namespace NitroxLauncher
             WindowState = WindowState.Minimized;
         }
 
-        private void ToPlayGame_OnClick(object sender, RoutedEventArgs e)
-        {
-            ChangeFrameContent(launchPage);
-            SetActive(PlayGameNav);
-        }
-
-        private void ToOptions_OnClick(object sender, RoutedEventArgs e)
-        {
-            ChangeFrameContent(optionPage);
-            SetActive(OptionsNav);
-        }
-
-        private void ToServer_OnClick(object sender, RoutedEventArgs e)
-        {
-            if (!logic.ServerRunning || !isServerEmbedded)
-            {
-                ChangeFrameContent(serverPage);
-            }
-            else
-            {
-                ChangeFrameContent(serverConsolePage);
-                serverConsolePage.CommandInput.Focus();
-            }
-            SetActive(ServerNav);
-        }
-
-        private void SetActive(Button activeButton)
-        {
-            foreach (object children in SideBarPanel.Children)
-            {
-                if (children is Button button)
-                {
-                    if (button.Content is Grid grid)
-                    {
-                        foreach (object item in grid.Children)
-                        {
-                            if (item is TextBlock block)
-                            {
-                                if (button == activeButton)
-                                {
-                                    block.FontWeight = FontWeights.Bold;
-                                    block.Foreground = Brushes.White;
-                                }
-                                else // set as not active
-                                {
-                                    block.FontWeight = FontWeights.Normal;
-                                    BrushConverter bc = new BrushConverter();
-                                    block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private void ServerStarted(object sender, ServerStartEventArgs e)
         {
             isServerEmbedded = e.Embedded;
 
             if (e.Embedded)
             {
-                ChangeFrameContent(serverConsolePage);
-                serverConsolePage.CommandInput.Focus();
+                LauncherLogic.Instance.NavigateTo<ServerConsolePage>();
             }
-            SetActive(ServerNav);
         }
 
         private void ServerExited(object sender, EventArgs e)
         {
-            if (CurrentPage == serverConsolePage)
+            if (LauncherLogic.Instance.NavigationIsOn<ServerConsolePage>())
             {
-                CurrentPage = serverPage;
-            }
-        }
-
-        private void ChangeFrameContent(object frameContent)
-        {
-            if (frameContent is Page page)
-            {
-                Height = 542;
-                Width = 946;
-                CurrentPage = page;
-                BackgroundImage.Source = imageDict[page];
-                BackgroundImage.Visibility = Visibility.Visible;
+                LauncherLogic.Instance.NavigateTo<ServerPage>();
             }
         }
     }
