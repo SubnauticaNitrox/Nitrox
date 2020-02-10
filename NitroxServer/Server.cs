@@ -29,7 +29,6 @@ namespace NitroxServer
             this.world = world;
             this.server = server;
             
-            // TODO: Save once after last player leaves then stop saving.
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
@@ -93,12 +92,12 @@ namespace NitroxServer
             IsRunning = false;
         }
 
-        private void EnablePeriodicSaving()
+        public void EnablePeriodicSaving()
         {
             saveTimer.Start();
         }
 
-        private void DisablePeriodicSaving()
+        public void DisablePeriodicSaving()
         {
             saveTimer.Stop();
         }
