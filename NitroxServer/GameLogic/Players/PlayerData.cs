@@ -21,11 +21,14 @@ namespace NitroxServer.GameLogic.Players
             {
                 lock (playersByPlayerName)
                 {
-                    return new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
+                    serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
+                    return serializablePlayersByPlayerName;
                 }
             }
             set { playersByPlayerName = value; }
         }
+
+        private Dictionary<string, PersistedPlayerData> serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>();
 
         [ProtoMember(2)]
         public Dictionary<NitroxId, EquippedItemData> SerializableModules
@@ -34,11 +37,14 @@ namespace NitroxServer.GameLogic.Players
             {
                 lock (ModulesItemsById)
                 {
-                    return new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
+                    serializableModules = new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
+                    return serializableModules;
                 }
             }
             set { ModulesItemsById = value; }
         }
+
+        Dictionary<NitroxId, EquippedItemData> serializableModules = new Dictionary<NitroxId, EquippedItemData>();
 
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
@@ -226,6 +232,13 @@ namespace NitroxServer.GameLogic.Players
             {
                 ModulesItemsById.Remove(id);
             }
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            playersByPlayerName = serializablePlayersByPlayerName;
+            ModulesItemsById = serializableModules;
         }
 
         [ProtoContract]
