@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using NitroxLauncher.Events;
@@ -14,10 +16,36 @@ using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
-    public class LauncherLogic : IDisposable
+    public class LauncherLogic : IDisposable, INotifyPropertyChanged
     {
-        private readonly NitroxEntryPatch nitroxEntryPatch;
-        private readonly string subnauticaPath;
+        private NitroxEntryPatch nitroxEntryPatch;
+        private string subnauticaPath;
+
+        public string SubnauticaPath
+        {
+            get => subnauticaPath;
+            set
+            {
+                if (subnauticaPath == value)
+                {
+                    return;
+                } 
+                
+                value = Path.GetFullPath(value); // Ensures the path looks alright (no mixed / and \ path separators)
+                subnauticaPath = value;
+                
+                OnPropertyChanged();
+                
+                // TODO: make async
+                PirateDetection.TriggerOnDirectory(value);
+                File.WriteAllText("path.txt", value);
+                if (nitroxEntryPatch?.IsApplied == true)
+                {
+                    nitroxEntryPatch.Remove();
+                }
+                nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            }
+        }
         private Process gameProcess;
         private bool gameStarting;
         private Process serverProcess;
@@ -28,9 +56,7 @@ namespace NitroxLauncher
 
         private LauncherLogic(string subnauticaPath)
         {
-            this.subnauticaPath = subnauticaPath;
-            PirateDetection.TriggerOnDirectory(subnauticaPath);
-            nitroxEntryPatch = new NitroxEntryPatch(subnauticaPath);
+            SubnauticaPath = subnauticaPath;
         }
 
         public static LauncherLogic Create()
@@ -82,10 +108,6 @@ namespace NitroxLauncher
 
         internal async Task StartSingleplayerAsync()
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return;
-            }
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
                 throw new Exception("An instance of Subnautica is already running");
@@ -98,10 +120,6 @@ namespace NitroxLauncher
 
         internal async Task StartMultiplayerAsync()
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return;
-            }
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
                 throw new Exception("An instance of Subnautica is already running");
@@ -129,10 +147,6 @@ namespace NitroxLauncher
 
         internal Process StartServer(bool standalone)
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return null;
-            }
             if (ServerRunning)
             {
                 throw new Exception("An instance of Nitrox Server is already running");
@@ -179,11 +193,6 @@ namespace NitroxLauncher
 
         private Process StartSubnautica()
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return null;
-            }
-
             string subnauticaExe = Path.Combine(subnauticaPath, "Subnautica.exe");
             ProcessStartInfo startInfo = new ProcessStartInfo
             {
@@ -269,11 +278,6 @@ namespace NitroxLauncher
 
         private void SyncAssembliesBetweenSubnauticaManagedAndLib()
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return;
-            }
-
             string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
             string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
 
@@ -318,11 +322,6 @@ namespace NitroxLauncher
                     .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                     .ToUpperInvariant();
             }
-
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return;
-            }
             
             string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -348,11 +347,6 @@ namespace NitroxLauncher
 
         private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)
         {
-            if (PirateDetection.TriggerOnDirectory(subnauticaPath))
-            {
-                return;
-            }
-
             foreach (string sourceFilePath in Directory.GetFiles(source))
             {
                 string fileName = Path.GetFileName(sourceFilePath);
@@ -397,6 +391,13 @@ namespace NitroxLauncher
                     File.Copy(sourceFilePath, destinationFilePath, true);
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

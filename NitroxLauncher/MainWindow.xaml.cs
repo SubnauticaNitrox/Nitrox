@@ -69,7 +69,7 @@ namespace NitroxLauncher
             logic = LauncherLogic.Create();
             launchPage = new LaunchGamePage(logic);
             serverPage = new ServerPage(logic);
-            optionPage = new OptionPage();
+            optionPage = new OptionPage(logic);
             serverConsolePage = new ServerConsolePage(logic);
 
             imageDict = new Dictionary<Page, BitmapImage>

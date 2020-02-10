@@ -13,23 +13,20 @@ namespace NitroxLauncher
 {
     public partial class OptionPage : Page, INotifyPropertyChanged
     {
-        private string pathToSubnautica;
-
+        private readonly LauncherLogic logic;
         public string PathToSubnautica
         {
-            get => pathToSubnautica;
+            get => logic.SubnauticaPath;
             set
             {
-                value = Path.GetFullPath(value); // Ensures the path looks alright (no mixed / and \ path separators)
-
-                pathToSubnautica = value;
+                logic.SubnauticaPath = value;
                 OnPropertyChanged();
-                File.WriteAllText("path.txt", value);
             }
         }
 
-        public OptionPage()
+        public OptionPage(LauncherLogic logic)
         {
+            this.logic = logic;
             InitializeComponent();
             PathToSubnautica = GameInstallationFinder.Instance.FindGame(new List<string>()).OrElse(@"C:\Program Files\Epic Games\Subnautica");
         }
@@ -47,6 +44,8 @@ namespace NitroxLauncher
 
         private void ChangeOptions_Click(object sender, RoutedEventArgs e)
         {
+            string selectedDirectory = "";
+
             // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
             CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
@@ -56,12 +55,15 @@ namespace NitroxLauncher
                 IsFolderPicker = true,
                 Title = "Select Subnautica installation directory"
             };
-            if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+            using (dialog)
             {
-                return;
+                if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+                {
+                    return;
+                }
+                selectedDirectory = Path.GetFullPath(dialog.FileName);
             }
 
-            string selectedDirectory = Path.GetFullPath(dialog.FileName);
             if (IsSubnauticaDirectory(selectedDirectory))
             {
                 PathToSubnautica = selectedDirectory;
