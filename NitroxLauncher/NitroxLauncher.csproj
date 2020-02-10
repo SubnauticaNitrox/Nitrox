@@ -42,9 +42,8 @@
     <Reference Include="dnlib, Version=3.1.0.0, Culture=neutral, PublicKeyToken=50e96378b6e77999, processorArchitecture=MSIL">
       <HintPath>..\packages\dnlib.3.1.0\lib\net461\dnlib.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
@@ -228,15 +227,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
-    <Move SourceFiles="@(MoveToUweLibFolder)" DestinationFolder="$(OutputPath)uwe_lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer-Subnautica.exe ; $(OutputPath)NitroxServer-Subnautica.exe.config ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)Autofac.Configuration.dll ; ../$(OutputPath)NitroxServer.dll" />
+      <MoveToLibFolder Include="../$(OutputPath)0Harmony.dll ; $(OutputPath)AssetsTools.NET.dll ; ../$(OutputPath)Autofac.dll ; $(OutputPath)dnlib.dll ; ../$(OutputPath)LZ4.dll ; ../$(OutputPath)NitroxClient.dll ; ../$(OutputPath)NitroxModel.dll ; ../$(OutputPath)NitroxModel-Subnautica.dll ; ../$(OutputPath)NitroxPatcher.dll ; ../$(OutputPath)log4net.dll ; ../$(OutputPath)LitJson.dll ; ../$(OutputPath)protobuf-net.dll ; ../$(OutputPath)*.pdb ; $(OutputPath)NitroxServer-Subnautica.exe ; $(OutputPath)NitroxServer-Subnautica.exe.config ; ../$(OutputPath)LiteNetLib.dll ; ../$(OutputPath)Autofac.Configuration.dll ; ../$(OutputPath)NitroxServer.dll ; $(OutputPath)Microsoft.WindowsAPICodePack.dll ; $(OutputPath)Microsoft.WindowsAPICodePack.Shell.dll" />
     </ItemGroup>
     <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
-      <CopyToMonoFolder Include=" ../lib/discord-rpc.dll" />
+      <DiscordRpcCopy Include="../lib/discord-rpc.dll" />
     </ItemGroup>
-    <Copy SourceFiles="@(CopyToMonoFolder)" DestinationFolder="$(OutputPath)lib/Mono" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(DiscordRpcCopy)" DestinationFolder="$(OutputPath)lib/Mono" OverwriteReadOnlyFiles="true" />
+    <Copy SourceFiles="@(DiscordRpcCopy)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
     <ItemGroup>
       <MoveToAssets Include="$(SolutionDir)AssetBundles/*" />
     </ItemGroup>
