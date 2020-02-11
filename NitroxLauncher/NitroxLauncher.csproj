@@ -161,6 +161,9 @@
     <Resource Include="Fonts\RobotoMono-Regular.ttf" />
     <Resource Include="Fonts\RobotoMono-Thin.ttf" />
     <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

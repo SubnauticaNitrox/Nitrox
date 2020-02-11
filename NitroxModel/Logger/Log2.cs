@@ -28,7 +28,6 @@ namespace NitroxModel.Logger
         private InGameLogger _inGameLogger;
         private Log2()
         {
-            ConfigureLogging();
             _logger = LogManager.GetCurrentClassLogger();
         }
 
@@ -106,30 +105,6 @@ namespace NitroxModel.Logger
         }
 
         // Private methods
-
-        /*
-         Doing this config here instead of XML because it keeps the code together
-         Sometimes trying to congif in XML can be a pain
-        */
-        private void ConfigureLogging()
-        {
-            var config = new NLog.Config.LoggingConfiguration();
-
-            // Targets where to log to: File and Console
-            var logfile = new NLog.Targets.FileTarget("logfile") { FileName = "logfile.txt" };
-            var logconsole = new NLog.Targets.ConsoleTarget("logconsole");
-
-            // Better to be safe by making sure we can write to the file async.
-            var wrapper = new AsyncTargetWrapper(logfile, 5000, AsyncTargetWrapperOverflowAction.Discard);
-
-            // Rules for mapping loggers to targets            
-            config.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, wrapper);
-            
-
-            // Apply config    
-            LogManager.Configuration = config;
-        }
 
         private string Format(string format, params object[] args)
         {
