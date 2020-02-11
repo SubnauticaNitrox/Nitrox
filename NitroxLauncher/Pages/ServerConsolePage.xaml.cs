@@ -6,13 +6,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using NitroxLauncher.Events;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Pages
 {
-    public partial class ServerConsolePage : Page, INotifyPropertyChanged
+    public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
     {
         private readonly List<string> commandLinesHistory = new List<string>();
         private int commandHistoryIndex;
@@ -66,7 +65,7 @@ namespace NitroxLauncher
         public ServerConsolePage()
         {
             InitializeComponent();
-            
+
             LauncherLogic.Instance.ServerStarted += ServerStarted;
             LauncherLogic.Instance.ServerDataReceived += ServerDataReceived;
 
@@ -103,7 +102,7 @@ namespace NitroxLauncher
         {
             await LauncherLogic.Instance.SendServerCommandAsync(CommandInputText);
             ServerOutput += CommandInputText + Environment.NewLine;
-            
+
             // Deduplication of command history
             if (!string.IsNullOrWhiteSpace(CommandInputText) && CommandInputText != commandLinesHistory.LastOrDefault())
             {
@@ -127,7 +126,7 @@ namespace NitroxLauncher
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
             await LauncherLogic.Instance.SendServerCommandAsync("stop");
             ServerOutput += $"stop{Environment.NewLine}";
-            
+
             commandLinesHistory.Add("stop");
             HideCommandHistory();
         }

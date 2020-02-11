@@ -1,15 +1,12 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
 using Microsoft.WindowsAPICodePack.Dialogs;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Pages
 {
-    public partial class OptionPage : Page, INotifyPropertyChanged
+    public partial class OptionPage : PageBase, INotifyPropertyChanged
     {
         public string PathToSubnautica => LauncherLogic.Instance.SubnauticaPath;
 

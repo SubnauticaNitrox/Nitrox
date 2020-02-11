@@ -6,23 +6,30 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using NitroxLauncher.Events;
+using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
+using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxPatcher;
 
 namespace NitroxLauncher
 {
     public class LauncherLogic : IDisposable, INotifyPropertyChanged
     {
+        public const string ReleasePhase = "ALPHA";
         private Process gameProcess;
         private NitroxEntryPatch nitroxEntryPatch;
         private Process serverProcess;
         private string subnauticaPath;
+        public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
         public static LauncherLogic Instance { get; private set; }
 
         public string SubnauticaPath
@@ -85,17 +92,20 @@ namespace NitroxLauncher
             }
             SubnauticaPath = path;
 
-            return await Task.Run(() =>
-            {
-                PirateDetection.TriggerOnDirectory(path);
-                File.WriteAllText("path.txt", path);
-                if (nitroxEntryPatch?.IsApplied == true)
+            return await Task.Factory.StartNew(() =>
                 {
-                    nitroxEntryPatch.Remove();
-                }
-                nitroxEntryPatch = new NitroxEntryPatch(path);
-                return path;
-            });
+                    PirateDetection.TriggerOnDirectory(path);
+                    File.WriteAllText("path.txt", path);
+                    if (nitroxEntryPatch?.IsApplied == true)
+                    {
+                        nitroxEntryPatch.Remove();
+                    }
+                    nitroxEntryPatch = new NitroxEntryPatch(path);
+                    return path;
+                },
+                CancellationToken.None,
+                TaskCreationOptions.None,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -110,7 +120,11 @@ namespace NitroxLauncher
             {
                 page = typeof(ServerConsolePage);
             }
-            (Application.Current.MainWindow as MainWindow)?.MainFrame.Navigate(Application.Current.FindResource(page.Name));
+
+            if (Application.Current.MainWindow != null)
+            {
+                ((MainWindow)Application.Current.MainWindow).FrameContent = Application.Current.FindResource(page.Name);
+            }
         }
 
         public void NavigateTo<TPage>() where TPage : Page
@@ -120,12 +134,12 @@ namespace NitroxLauncher
 
         public bool NavigationIsOn<TPage>() where TPage : Page
         {
-            Window window = Application.Current.MainWindow;
+            MainWindow window = Application.Current.MainWindow as MainWindow;
             if (window == null)
             {
                 return false;
             }
-            return NavigationService.GetNavigationService(window)?.Source.GetType() == typeof(TPage);
+            return window.FrameContent?.GetType() == typeof(TPage);
         }
 
         public bool IsSubnauticaDirectory(string directory)

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
 using NitroxLauncher.Properties;
-using NitroxModel;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Pages
 {
-    public partial class ServerPage : Page
+    public partial class ServerPage : PageBase
     {
-        public string Version => "NITROX ALPHA " + Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString(3);
+        public string StartButtonSubtitle => $"NITROX {LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
 
         public ServerPage()
         {

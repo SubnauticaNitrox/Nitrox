@@ -3,25 +3,60 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:NitroxLauncher"
              xmlns:ap="clr-namespace:NitroxLauncher.AttachedProperties"
-             xmlns:system="clr-namespace:System;assembly=System"
+             xmlns:pages="clr-namespace:NitroxLauncher.Pages"
              StartupUri="MainWindow.xaml" DispatcherUnhandledException="Application_DispatcherUnhandledException">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Fonts -->
             <FontFamily x:Key="Roboto">pack://application:,,,/Fonts/#Roboto</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
             <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Roboto</FontFamily>
 
-            <local:LaunchGamePage x:Key="LaunchGamePage" />
-            <local:OptionPage x:Key="OptionPage" />
-            <local:ServerPage x:Key="ServerPage" />
-            <local:ServerConsolePage x:Key="ServerConsolePage" />
-            
+            <!-- Background images -->
+            <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Images/Vines.png" />
+            <BitmapImage x:Key="PlayGameImage" UriSource="pack://application:,,,/Images/PlayGameImage.png" />
+            <BitmapImage x:Key="SubnauticaMainImage" UriSource="pack://application:,,,/Images/SubnauticaMain.png" />
+            <BitmapImage x:Key="EscapePodImage" UriSource="pack://application:,,,/Images/EscapePod.png" />
+
+            <!-- Foreground images -->
+            <BitmapImage x:Key="NitroxImage" UriSource="pack://application:,,,/Images/Nitrox.png" />
+            <BitmapImage x:Key="ExitImage" UriSource="pack://application:,,,/Images/exit.png" />
+            <BitmapImage x:Key="MinimizeImage" UriSource="pack://application:,,,/Images/minimize.png" />
+
+            <!-- Icons -->
+            <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
+            <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
+
+            <!-- Pages -->
+            <pages:LaunchGamePage x:Key="LaunchGamePage">
+                <pages:LaunchGamePage.Background>
+                    <ImageBrush ImageSource="{StaticResource PlayGameImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
+                </pages:LaunchGamePage.Background>
+            </pages:LaunchGamePage>
+            <pages:OptionPage x:Key="OptionPage">
+                <pages:OptionPage.Background>
+                    <ImageBrush ImageSource="{StaticResource VinesImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
+                </pages:OptionPage.Background>
+            </pages:OptionPage>
+            <pages:ServerPage x:Key="ServerPage">
+                <pages:ServerPage.Background>
+                    <ImageBrush ImageSource="{StaticResource EscapePodImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
+                </pages:ServerPage.Background>
+            </pages:ServerPage>
+            <pages:ServerConsolePage x:Key="ServerConsolePage">
+                <pages:ServerConsolePage.Background>
+                    <ImageBrush ImageSource="{StaticResource EscapePodImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
+                </pages:ServerConsolePage.Background>
+            </pages:ServerConsolePage>
+
+            <!-- Styles -->
             <Style TargetType="Window">
                 <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
             </Style>
 
             <Style TargetType="Page">
                 <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
+                <Setter Property="Margin" Value="0" />
             </Style>
 
             <Style TargetType="RadioButton">
@@ -59,13 +94,13 @@
             </Style>
 
             <Style TargetType="Button" x:Key="LargeButton" BasedOn="{StaticResource {x:Type Button}}">
-                <Setter Property="Width" Value="240"></Setter>
-                <Setter Property="Height" Value="80"></Setter>
-                <Setter Property="FontSize" Value="16"></Setter>
+                <Setter Property="Width" Value="240" />
+                <Setter Property="Height" Value="80" />
+                <Setter Property="FontSize" Value="16" />
                 <Style.Resources>
                     <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="4"></Setter>
-                        <Setter Property="BorderThickness" Value="1"></Setter>
+                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Style.Resources>
             </Style>
@@ -84,10 +119,13 @@
                 </Style.Resources>
             </Style>
 
-            <!-- <Style TargetType="Button" x:Key="BTNOPTIONS" BasedOn="{StaticResource {x:Type Button}}"> -->
-            <!--     <Setter Property="Border.CornerRadius" Value="4"></Setter> -->
-            <!--     <Setter Property="Border.BorderThickness" Value="1"></Setter> -->
-            <!-- </Style> -->
+            <Style TargetType="Image" x:Key="PageImage">
+                <Setter Property="Width" Value="1125.43" />
+                <Setter Property="Height" Value="553" />
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="VerticalAlignment" Value="Bottom" />
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

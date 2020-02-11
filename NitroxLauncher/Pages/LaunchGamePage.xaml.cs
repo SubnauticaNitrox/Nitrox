@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Pages
 {
-    public partial class LaunchGamePage : Page
+    public partial class LaunchGamePage : PageBase
     {
         public LaunchGamePage()
         {
@@ -19,7 +18,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.ToString(), "Error while starting in singleplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -31,7 +30,7 @@ namespace NitroxLauncher
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.ToString(), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

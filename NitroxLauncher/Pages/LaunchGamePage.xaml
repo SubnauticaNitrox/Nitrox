@@ -1,0 +1,49 @@
+﻿<local:PageBase x:Class="NitroxLauncher.Pages.LaunchGamePage"
+                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:local="clr-namespace:NitroxLauncher"
+                mc:Ignorable="d"
+                d:DesignHeight="470" d:DesignWidth="719"
+                Title="Launch Game">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Image Grid.Row="1" Stretch="Uniform" Margin="100 0" Source="{StaticResource SubnauticaMainImage}" />
+
+        <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="80 0">
+                Nitrox is an open-source, multiplayer modification for the game Subnautica
+                <LineBreak />
+                <LineBreak />
+                The mod is in the very early stages of development; however, a solid foundation
+                has been laid for the community to iterate on
+            </TextBlock>
+        </Grid>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone">
+                <TextBlock Padding="0,4,0,0" Foreground="White">SINGLEPLAYER</TextBlock>
+            </Button>
+
+            <Button Margin="10,0,0,0" Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled.">
+                <Button.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FF00B1E9" Offset="0" />
+                        <GradientStop Color="#FF006BE9" Offset="1" />
+                    </LinearGradientBrush>
+                </Button.Background>
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">PLAY</TextBlock>
+                    <TextBlock HorizontalAlignment="Center" FontSize="16">MULTIPLAYER</TextBlock>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+    </Grid>
+</local:PageBase>
