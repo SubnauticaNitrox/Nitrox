@@ -270,8 +270,10 @@
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
+    <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Logger\Log2.cs" />
+    <Compile Include="Logger\LogType.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
