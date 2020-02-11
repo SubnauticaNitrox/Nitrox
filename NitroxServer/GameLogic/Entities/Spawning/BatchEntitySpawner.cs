@@ -283,7 +283,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                             entity);
 
                     entity.ChildEntities.Add(prefabEntity);
-                    System.Diagnostics.Debug.WriteLine("Parent: " + entity + ", \nChild" + prefabEntity);
                 }
             }
         }

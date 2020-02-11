@@ -29,15 +29,37 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxTransform Parent;
         public Entity Entity;
-        public NitroxVector3 Position;
-        public NitroxQuaternion Rotation;
+        public NitroxVector3 Position
+        {
+            get 
+            {
+                NitroxMatrix4x4 matrix = localToWorldMatrix;
+                //System.Diagnostics.Debug.WriteLine(matrix.ToString());
+                return NitroxMatrix4x4.ExtractTranslation(ref matrix);
+            }
+            set
+            {
+                NitroxVector3 _ = value;
+            }
+        }
+        public NitroxQuaternion Rotation
+        {
+            get
+            {
+                NitroxMatrix4x4 matrix = localToWorldMatrix;
+                NitroxMatrix4x4.ExtractScale(ref matrix);
+                return NitroxMatrix4x4.ExtractRotation(ref matrix);
+            }
+            set
+            {
+                NitroxQuaternion _ = value;
+            }
+        }
 
         public void SetParent(NitroxTransform parent)
         {
             Parent = parent;
-            NitroxVector3 _;
-            NitroxMatrix4x4 local2WorldMatrix = localToWorldMatrix;
-            NitroxMatrix4x4.DecomposeMatrix(ref local2WorldMatrix, out Position, out Rotation, out _);
+            
             
         }
 

@@ -8,7 +8,6 @@ namespace NitroxModel.DataStructures.GameLogic
     public struct NitroxMatrix4x4
     {
         public float[,] M;
-
         private static readonly NitroxMatrix4x4 identity = new NitroxMatrix4x4
             (
             1f, 0f, 0f, 0f,
@@ -16,6 +15,14 @@ namespace NitroxModel.DataStructures.GameLogic
             0f, 0f, 1f, 0f,
             0f, 0f, 0f, 1f
             );
+
+        public override string ToString()
+        {
+            return $"[\n[{M[0,0]}], [{M[0,1]}], [{M[0,2]}], [{M[0,3]}],\n" +
+                $"[{M[1, 0]}], [{M[1, 1]}], [{M[1, 2]}], [{M[1, 3]}],\n" +
+                $"[{M[2, 0]}], [{M[2, 1]}], [{M[2, 2]}], [{M[2, 3]}],\n" +
+                $"[{M[3, 0]}], [{M[3, 1]}], [{M[3, 2]}], [{M[3, 3]}],\n]";
+        }
 
         public float this[int x, int y]
         {
@@ -68,6 +75,18 @@ namespace NitroxModel.DataStructures.GameLogic
             M[3, 1] = m42;
             M[3, 2] = m43;
             M[3, 3] = m44;
+        }
+
+        public NitroxMatrix4x4(NitroxMatrix4x4 matrix)
+        {
+            M = new float[4, 4];
+            for (int x = 0; x < 4; x++)
+            {
+                for (int y = 0; y < 4; y++)
+                {
+                    M[x, y] = matrix[x, y];
+                }
+            }
         }
 
         public static NitroxMatrix4x4 SetScale(NitroxVector3 localScale)
@@ -140,28 +159,33 @@ namespace NitroxModel.DataStructures.GameLogic
             rotationMatrix.M = new float[4, 4];
             rotationMatrix[3, 3] = 1f;
 
-            float xx = localRotation.X * localRotation.X;
-            float yy = localRotation.Y * localRotation.Y;
-            float zz = localRotation.Z * localRotation.Z;
+            float sqw = localRotation.W * localRotation.W;
+            float sqx = localRotation.X * localRotation.X;
+            float sqy = localRotation.Y * localRotation.Y;
+            float sqz = localRotation.Z * localRotation.Z;
 
-            float xy = localRotation.X * localRotation.Y;
-            float wz = localRotation.W * localRotation.Z;
-            float xz = localRotation.X * localRotation.Z;
-            float wy = localRotation.W * localRotation.Y;
-            float yz = localRotation.Y * localRotation.Z;
-            float wx = localRotation.W * localRotation.X;
+            float invs = 1 / (sqx + sqy + sqz + sqw);
+            rotationMatrix[0, 0] = (sqx - sqy - sqz + sqw) * invs;
+            rotationMatrix[1, 1] = (-sqx + sqy - sqz + sqw) * invs;
+            rotationMatrix[2, 2] = (-sqx - sqy + sqz + sqw) * invs;
 
-            rotationMatrix[0, 0] = 1f - 2f * (yy + zz);
-            rotationMatrix[0, 1] = 2f * (xy + wz);
-            rotationMatrix[0, 2] = 2f * (xz - wy);
+            float tmp1 = localRotation.X * localRotation.Y;
+            float tmp2 = localRotation.Z * localRotation.W;
 
-            rotationMatrix[1, 0] = 2f * (xy - wz);
-            rotationMatrix[1, 1] = 1f - 2f * (zz + xx);
-            rotationMatrix[1, 2] = 2f * (yz + wy);
+            rotationMatrix[1, 0] = 2 * (tmp1 + tmp2) * invs;
+            rotationMatrix[0, 1] = 2 * (tmp1 - tmp2) * invs;
 
-            rotationMatrix[2, 0] = 2f * (xz - wy);
-            rotationMatrix[2, 1] = 2f * (yz + wx);
-            rotationMatrix[2, 2] = 1f - 2f * (yz - wy);
+            tmp1 = localRotation.X * localRotation.Z;
+            tmp2 = localRotation.Y * localRotation.W;
+
+            rotationMatrix[2, 0] = 2 * (tmp1 - tmp2) * invs;
+            rotationMatrix[0, 2] = 2 * (tmp1 + tmp2) * invs;
+
+            tmp1 = localRotation.Y * localRotation.Z;
+            tmp2 = localRotation.X * localRotation.W;
+
+            rotationMatrix[2, 1] = 2 * (tmp1 + tmp2) * invs;
+            rotationMatrix[1, 2] = 2 * (tmp1 - tmp2) * invs;
 
             return rotationMatrix;
         }
@@ -243,33 +267,33 @@ namespace NitroxModel.DataStructures.GameLogic
             NitroxMatrix4x4 scaleMatrix = SetScale(localScale);
             NitroxMatrix4x4 rotationMatrix = SetRotation(localRotation);
             NitroxMatrix4x4 translationMatrix = SetTranslation(localPos);
-            NitroxMatrix4x4 result = translationMatrix * rotationMatrix * scaleMatrix;
+            NitroxMatrix4x4 result = scaleMatrix * rotationMatrix * translationMatrix;
             return result;
         }
 
-        public static NitroxVector3 ExtractScale(NitroxMatrix4x4 matrix)
+        public static NitroxVector3 ExtractScale(ref NitroxMatrix4x4 matrix)
         {
             NitroxVector3 scale;
             scale.X = NitroxVector3.Length(new NitroxVector3(matrix[0, 0], matrix[0, 1], matrix[0, 2]));
             scale.Y = NitroxVector3.Length(new NitroxVector3(matrix[1, 0], matrix[1, 1], matrix[1, 2]));
             scale.Z = NitroxVector3.Length(new NitroxVector3(matrix[2, 0], matrix[2, 1], matrix[2, 2]));
 
-            matrix[0, 0] = -matrix[0, 0];
-            matrix[0, 1] = -matrix[0, 1];
-            matrix[0, 2] = -matrix[0, 2];
+            matrix[0, 0] /= scale.X;
+            matrix[0, 1] /= scale.X;
+            matrix[0, 2] /= scale.X;
 
-            matrix[1, 0] = -matrix[1, 0];
-            matrix[1, 1] = -matrix[1, 1];
-            matrix[1, 2] = -matrix[1, 2];
+            matrix[1, 0] /= scale.Y;
+            matrix[1, 1] /= scale.Y;
+            matrix[1, 2] /= scale.Y;
 
-            matrix[2, 0] = -matrix[2, 0];
-            matrix[2, 1] = -matrix[2, 1];
-            matrix[2, 2] = -matrix[2, 2];
+            matrix[2, 0] /= scale.Z;
+            matrix[2, 1] /= scale.Z;
+            matrix[2, 2] /= scale.Z;
 
             return scale;
         }
 
-        public static NitroxVector3 ExtractTranslation(NitroxMatrix4x4 matrix)
+        public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
         {
             NitroxVector3 position;
             position.X = matrix[0,3];
@@ -278,26 +302,59 @@ namespace NitroxModel.DataStructures.GameLogic
             return position;
         }
 
-        public static NitroxQuaternion ExtractRotation(NitroxMatrix4x4 matrix)
+        public static NitroxQuaternion ExtractRotation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 forward;
-            forward.X = matrix[0,2];
-            forward.Y = matrix[1,2];
-            forward.Z = matrix[2,2];
+            NitroxQuaternion q = new NitroxQuaternion(0f, 0f, 0f, 1f);
 
-            NitroxVector3 upwards;
-            upwards.X = matrix[0,1];
-            upwards.Y = matrix[1,1];
-            upwards.Z = matrix[2,1];
+            float trace = matrix[0,0] + matrix[1,1] + matrix[2,2];
+            if (trace > 0)
+            {
+                float s = 0.5f / (float)Math.Sqrt(trace + 1.0f);
+                q.W = 0.25f / s;
+                q.X = (matrix[2, 1] - matrix[1, 2]) * s;
+                q.Y = (matrix[0, 2] - matrix[2, 0]) * s;
+                q.Z = (matrix[1, 0] - matrix[0, 1]) * s;
+            }
+            else
+            {
+                if (matrix[0, 0] > matrix[1, 1] && matrix[0, 0] > matrix[2, 2])
+                {
+                    float s = 2.0f * (float)Math.Sqrt(1.0f + matrix[0, 0] - matrix[1, 1] - matrix[2, 2]);
+                    q.W = (matrix[2, 1] - matrix[1, 2]) / s;
+                    q.X = 0.25f * s;
+                    q.Y = (matrix[0, 1] + matrix[1, 0]) / s;
+                    q.Z = (matrix[0, 2] + matrix[2, 0]) / s;
+                }
+                else if (matrix[1, 1] > matrix[2, 2])
+                {
+                    float s = 2.0f * (float)Math.Sqrt(1.0f + matrix[1, 1] - matrix[0, 0] - matrix[2, 2]);
+                    q.W = (matrix[0, 2] - matrix[2, 0]) / s;
+                    q.X = (matrix[0, 1] + matrix[1, 0]) / s;
+                    q.Y = 0.25f * s;
+                    q.Z = (matrix[1, 2] + matrix[2, 1]) / s;
+                }
+                else
+                {
+                    float s = 2.0f * (float)Math.Sqrt(1.0f + matrix[2, 2] - matrix[0, 0] - matrix[1, 1]);
+                    q.W = (matrix[1, 0] - matrix[0, 1]) / s;
+                    q.W = (matrix[0, 2] + matrix[2, 0]) / s;
+                    q.Y = (matrix[1, 2] + matrix[2, 1]) / s;
+                    q.Z = 0.25f * s;
+                }
+            }
 
-            return NitroxQuaternion.LookRotation(forward, upwards);
+            return q;
         }
 
         public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out NitroxVector3 localPosition, out NitroxQuaternion localRotation, out NitroxVector3 localScale)
         {
-            localPosition = ExtractTranslation(matrix);
-            localScale = ExtractScale(matrix);
-            localRotation = ExtractRotation(matrix);
+            NitroxMatrix4x4 before = new NitroxMatrix4x4(matrix);
+
+            localScale = ExtractScale(ref matrix);
+            localRotation = ExtractRotation(ref matrix);
+            localPosition = ExtractTranslation(ref matrix);
+
+            matrix = before;
         }
     }
 }
