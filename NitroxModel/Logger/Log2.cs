@@ -24,40 +24,88 @@ namespace NitroxModel.Logger
         }
 
         // Private  vars
-        private readonly NLog.Logger logger;
-
-        // Public API
-        public Log2()
+        private readonly NLog.Logger _logger;
+        private InGameLogger _inGameLogger;
+        private Log2()
         {
-            logger = LogManager.GetCurrentClassLogger();
-
             ConfigureLogging();
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
-        public void log(LogType type, string message)
+        // Public API
+        public void LogMessage(LogType type, string message)
         {
             switch (type)
             {
                 case LogType.Debug:
-                    logger.Debug(message);
+                    _logger.Debug(message);
                     break;
                 case LogType.Trace:
-                    logger.Trace(message);
+                    _logger.Trace(message);
                     break;
                 case LogType.Info:
-                    logger.Info(message);
+                    _logger.Info(message);
                     break;
                 case LogType.Warn:
-                    logger.Warn(message);
+                    _logger.Warn(message);
                     break;
                 case LogType.Error:
-                    logger.Error(message);
+                    _logger.Error(message);
                     break;
                 case LogType.Fatal:
-                    logger.Fatal(message);
+                    _logger.Fatal(message);
                     break;
             }
         }
+
+        public void LogMessage(LogType type, string messageFormat, params object[] args)
+        {
+            switch (type)
+            {
+                case LogType.Debug:
+                    _logger.Debug(Format(messageFormat, args));
+                    break;
+                case LogType.Trace:
+                    _logger.Trace(Format(messageFormat, args));
+                    break;
+                case LogType.Info:
+                    _logger.Info(Format(messageFormat, args));
+                    break;
+                case LogType.Warn:
+                    _logger.Warn(Format(messageFormat, args));
+                    break;
+                case LogType.Error:
+                    _logger.Error(Format(messageFormat, args));
+                    break;
+                case LogType.Fatal:
+                    _logger.Fatal(Format(messageFormat, args));
+                    break;
+            }
+        }
+
+        public void LogException(string message, Exception ex)
+        {
+            _logger.Error(ex, message);
+        }
+
+        public void ShowInGameMessage(string message)
+        {
+            if (_inGameLogger == null)
+            {
+                _logger.Warn("InGameLogger has not been registered");
+                return;
+            }
+            _inGameLogger.Log(message);
+            _logger.Debug(message);
+        }
+
+        public void RegisterInGameLogger(InGameLogger gameLogger)
+        {
+            _logger.Info("Registered InGameLogger");
+            _inGameLogger = gameLogger;
+        }
+
+        // Private methods
 
         /*
          Doing this config here instead of XML because it keeps the code together
@@ -79,8 +127,13 @@ namespace NitroxModel.Logger
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, wrapper);
             
 
-            // Apply config           
+            // Apply config    
             LogManager.Configuration = config;
+        }
+
+        private string Format(string format, params object[] args)
+        {
+            return string.Format(format, args);
         }
     }
 }

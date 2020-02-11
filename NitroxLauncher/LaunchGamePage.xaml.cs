@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -28,14 +30,23 @@ namespace NitroxLauncher
 
         private async void MultiplayerButton_Click(object sender, RoutedEventArgs e)
         {
-            try
+            Task.Run(() =>
             {
-                await logic.StartMultiplayerAsync();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                Log2.Instance.LogMessage(LogType.Info, "Task");
+                Log2.Instance.LogMessage(LogType.Info, "Task");
+                Log2.Instance.LogMessage(LogType.Info, "Task");
+                Log2.Instance.LogMessage(LogType.Info, "Task");
+                Log2.Instance.LogMessage(LogType.Info, "Task");
+            });
+            Log2.Instance.LogMessage(LogType.Info, "Hello");
+            //try
+            //{
+            //    await logic.StartMultiplayerAsync();
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
     }
 }
