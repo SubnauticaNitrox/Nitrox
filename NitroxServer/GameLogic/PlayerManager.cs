@@ -100,7 +100,11 @@ namespace NitroxServer.GameLogic
                 Vector3 position = playerData.GetPosition(playerContext.PlayerName);
                 Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
 
-                Player player = new Player(playerContext, connection, position, subRootId);
+                // Load a NitroxID for the newly connected Player
+                NitroxId id = playerData.GetNitroxId(playerContext.PlayerName);
+
+                Player player = new Player(playerContext, connection, position, id, subRootId);
+
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
                 reservations.Remove(reservationKey);

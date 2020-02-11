@@ -17,7 +17,16 @@ namespace NitroxModel.DataStructures
         {
             guid = Guid.NewGuid();
         }
-        
+
+        /// <summary>
+        /// Create a NitroxId from a string
+        /// </summary>
+        /// <param name="str">a NitroxID as string</param>
+        public NitroxId(string str)
+        {
+            guid = new Guid(str);
+        }
+
         public NitroxId(byte[] bytes)
         {
             guid = new Guid(bytes);
