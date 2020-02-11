@@ -73,7 +73,7 @@ namespace NitroxServer.GameLogic
         {
             lock(escapePodData.EscapePods)
             {
-                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.Id.Equals(id));
+                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.Id == id);
                 escapePod.Damaged = false;
             }
         }
@@ -82,7 +82,7 @@ namespace NitroxServer.GameLogic
         {
             lock (escapePodData.EscapePods)
             {
-                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.RadioId.Equals(id));
+                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.RadioId == id);
                 escapePod.RadioDamaged = false;
             }
         }
