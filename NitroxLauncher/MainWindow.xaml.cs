@@ -27,20 +27,12 @@ namespace NitroxLauncher
             get => frameContent;
             set
             {
-                object previousFrameContent = frameContent;
                 frameContent = value;
 
                 // Update navigation buttons styling
                 foreach (Button button in SideBarPanel.GetChildrenOfType<Button>())
                 {
-                    if (button.Tag == previousFrameContent)
-                    {
-                        button.SetValue(ButtonProperties.SelectedProperty, false);
-                    }
-                    else if (button.Tag == frameContent)
-                    {
-                        button.SetValue(ButtonProperties.SelectedProperty, true);
-                    }
+                    button.SetValue(ButtonProperties.SelectedProperty, button.Tag == value || button.Tag?.GetType() == typeof(ServerPage) && value?.GetType() == typeof(ServerConsolePage));
                 }
 
                 OnPropertyChanged();
