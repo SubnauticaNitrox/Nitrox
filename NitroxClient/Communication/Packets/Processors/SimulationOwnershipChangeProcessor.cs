@@ -63,7 +63,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Expected to simulate an unknown entity: " + id);
+                Log2.Instance.LogMessage(NLogType.Error, "Expected to simulate an unknown entity: " + id);
             }
         }
     }

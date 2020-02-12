@@ -30,7 +30,7 @@ namespace NitroxPatcher
         
         public static void Execute()
         {
-            Log.EnableInGameMessages();
+            Log2.Instance.SetInGameMessagesEnabled(true);
 
             if (container != null)
             {

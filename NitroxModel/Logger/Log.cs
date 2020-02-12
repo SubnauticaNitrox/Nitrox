@@ -23,32 +23,6 @@ namespace NitroxModel.Logger
             Setup();
         }
 
-        // Enable the in-game notifications
-        public static void EnableInGameMessages()
-        {
-            inGameMessages = true;
-        }
-
-        // For in-game notifications
-        public static void InGame(string msg)
-        {
-            if (inGameMessages)
-            {
-                InGameLogger?.Log(msg);
-                Info(msg);
-            }
-        }
-
-        public static void Error(string msg)
-        {
-            log.Error(msg);
-        }
-
-        public static void Error(string fmt, params object[] arg)
-        {
-            log.Error(Format(fmt, arg));
-        }
-
         public static void Error(string msg, Exception ex)
         {
             log.Error(msg, ex);

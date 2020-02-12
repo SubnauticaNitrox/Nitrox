@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Could not find container field on object " + owner.Get().name);
+                Log2.Instance.LogMessage(NLogType.Error, "Could not find container field on object " + owner.Get().name);
             }
         }
         
@@ -120,7 +120,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Could not find container field on object " + owner.name);
+                Log2.Instance.LogMessage(NLogType.Error, "Could not find container field on object " + owner.name);
             }
         }
 

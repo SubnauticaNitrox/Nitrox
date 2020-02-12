@@ -60,7 +60,7 @@ namespace NitroxClient.GameLogic
                 }
                 else
                 {
-                    Log.Error("No prefab for tech type: " + techType);
+                    Log2.Instance.LogMessage(NLogType.Error, "No prefab for tech type: " + techType);
                 }
             }
         }
@@ -108,7 +108,7 @@ namespace NitroxClient.GameLogic
                             mvc.SetArmPositions(exoSuitMovement.LeftAimTarget, exoSuitMovement.RightAimTarget);
                         } else
                         {
-                            Log.Error("Got exosuit vehicle but no ExosuitMovementData");
+                            Log2.Instance.LogMessage(NLogType.Error, "Got exosuit vehicle but no ExosuitMovementData");
                         }
                     }
                 }

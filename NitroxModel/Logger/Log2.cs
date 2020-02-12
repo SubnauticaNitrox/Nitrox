@@ -23,61 +23,62 @@ namespace NitroxModel.Logger
             }
         }
 
-        // Private  vars
+        // Private  variables
         private readonly NLog.Logger _logger;
         private InGameLogger _inGameLogger;
+        private bool _inGameMessagesEnabled = false;
         private Log2()
         {
             _logger = LogManager.GetCurrentClassLogger();
         }
 
         // Public API
-        public void LogMessage(LogType type, string message)
+        public void LogMessage(NLogType type, string message)
         {
             switch (type)
             {
-                case LogType.Debug:
+                case NLogType.Debug:
                     _logger.Debug(message);
                     break;
-                case LogType.Trace:
+                case NLogType.Trace:
                     _logger.Trace(message);
                     break;
-                case LogType.Info:
+                case NLogType.Info:
                     _logger.Info(message);
                     break;
-                case LogType.Warn:
+                case NLogType.Warn:
                     _logger.Warn(message);
                     break;
-                case LogType.Error:
+                case NLogType.Error:
                     _logger.Error(message);
                     break;
-                case LogType.Fatal:
+                case NLogType.Fatal:
                     _logger.Fatal(message);
                     break;
             }
         }
 
-        public void LogMessage(LogType type, string messageFormat, params object[] args)
+        public void LogMessageWithPersonal(NLogType type, string message, params object[] args)
         {
             switch (type)
             {
-                case LogType.Debug:
-                    _logger.Debug(Format(messageFormat, args));
+                case NLogType.Debug:
+                    _logger.Debug(Format(message, args));
                     break;
-                case LogType.Trace:
-                    _logger.Trace(Format(messageFormat, args));
+                case NLogType.Trace:
+                    _logger.Trace(Format(message, args));
                     break;
-                case LogType.Info:
-                    _logger.Info(Format(messageFormat, args));
+                case NLogType.Info:
+                    _logger.Info(Format(message, args));
                     break;
-                case LogType.Warn:
-                    _logger.Warn(Format(messageFormat, args));
+                case NLogType.Warn:
+                    _logger.Warn(Format(message, args));
                     break;
-                case LogType.Error:
-                    _logger.Error(Format(messageFormat, args));
+                case NLogType.Error:
+                    _logger.Error(Format(message, args));
                     break;
-                case LogType.Fatal:
-                    _logger.Fatal(Format(messageFormat, args));
+                case NLogType.Fatal:
+                    _logger.Fatal(Format(message, args));
                     break;
             }
         }
@@ -87,21 +88,38 @@ namespace NitroxModel.Logger
             _logger.Error(ex, message);
         }
 
-        public void ShowInGameMessage(string message)
+        // In game messages
+        public void ShowInGameMessage(string message, bool containsPersonalInfo)
         {
             if (_inGameLogger == null)
             {
                 _logger.Warn("InGameLogger has not been registered");
                 return;
             }
+
+            if (!_inGameMessagesEnabled)
+            {
+                _logger.Warn("InGameMessages has not been enabled");
+            }
             _inGameLogger.Log(message);
-            _logger.Debug(message);
+            
+            // Only log locally if it contains no personal information
+            if (!containsPersonalInfo)
+            {
+                _logger.Debug(message);
+            }
+            
         }
 
         public void RegisterInGameLogger(InGameLogger gameLogger)
         {
             _logger.Info("Registered InGameLogger");
             _inGameLogger = gameLogger;
+        }
+
+        public void SetInGameMessagesEnabled(bool enabled)
+        {
+            _inGameMessagesEnabled = enabled;
         }
 
         // Private methods

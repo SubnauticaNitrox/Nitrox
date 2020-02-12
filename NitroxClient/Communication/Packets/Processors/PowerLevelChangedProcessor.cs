@@ -60,7 +60,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Error("Unsupported packet power type: " + packet.PowerType);
+                Log2.Instance.LogMessage(NLogType.Error, "Unsupported packet power type: " + packet.PowerType);
             }
         }
     }

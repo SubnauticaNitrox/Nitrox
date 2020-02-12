@@ -7,10 +7,13 @@ namespace NitroxModel.Logger
 {
     public interface ILogger
     {
-        void LogMessage(LogType type, string message);
-        void LogMessage(LogType type, string messageFormat, params object[] args);
+        void LogMessage(NLogType type, string message);
+        void LogMessageWithPersonal(NLogType type, string message, params object[] args);
         void LogException(string message, Exception ex);
-        void ShowInGameMessage(string message);
+        
+        // In game messaging
+        void ShowInGameMessage(string message, bool containsPersonalInfo = false);
         void RegisterInGameLogger(InGameLogger gameLogger);
+        void SetInGameMessagesEnabled(bool enabled); 
     }
 }

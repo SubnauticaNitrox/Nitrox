@@ -186,7 +186,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                     else
                     {
-                        Log.Error("Id did not have a corresponding entity in GetEntitiesByIds: " + id);
+                        Log2.Instance.LogMessage(NLogType.Error, "Id did not have a corresponding entity in GetEntitiesByIds: " + id);
                     }
                 }
             }

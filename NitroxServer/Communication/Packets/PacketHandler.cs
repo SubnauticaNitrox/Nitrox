@@ -76,8 +76,7 @@ namespace NitroxServer.Communication.Packets
             }
             catch (Exception ex)
             {
-                Log.Info("Received invalid, unauthenticated packet: " + packet);
-                Log.Error("Exception:", ex);
+                Log2.Instance.LogException("Received invalid, unauthenticated packet: " + packet, ex);
             }
         }
     }

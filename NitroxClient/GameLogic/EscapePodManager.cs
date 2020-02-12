@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Error("Escape pod did not have a rigid body!");
+                Log2.Instance.LogMessage(NLogType.Error, "Escape pod did not have a rigid body!");
             }
 
             Player.main.transform.position = EscapePod.main.playerSpawn.position;

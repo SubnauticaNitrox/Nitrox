@@ -159,7 +159,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+                Log2.Instance.ShowInGameMessage($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
                 OnCancelClick();
             }
         }
@@ -212,17 +212,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.EstablishingServerPolicy:
-                    Log.InGame("Requesting session policy information...");
+                    Log2.Instance.ShowInGameMessage("Requesting session policy information...");
                     break;
                 case MultiplayerSessionConnectionStage.AwaitingReservationCredentials:
-                    Log.InGame("Waiting for User Input...");
+                    Log2.Instance.ShowInGameMessage("Waiting for User Input...");
 
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
 
                     break;
                 case MultiplayerSessionConnectionStage.SessionReserved:
-                    Log.InGame("Launching game...");
+                    Log2.Instance.ShowInGameMessage("Launching game...");
 
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
@@ -234,7 +234,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     break;
                 case MultiplayerSessionConnectionStage.SessionReservationRejected:
-                    Log.InGame("Reservation rejected...");
+                    Log2.Instance.ShowInGameMessage("Reservation rejected...");
 
                     MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 

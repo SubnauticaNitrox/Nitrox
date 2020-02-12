@@ -20,8 +20,7 @@ namespace NitroxLauncher
             // If something went wrong. Close the server
             MainWindow window = (MainWindow)Current.MainWindow;
             window?.CloseInternalServerAndRemovePatchAsync();
-
-            Log.Error(e.Exception.GetBaseException().ToString());
+            Log2.Instance.LogException(e.Exception.GetBaseException().ToString(), e.Exception);
             MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

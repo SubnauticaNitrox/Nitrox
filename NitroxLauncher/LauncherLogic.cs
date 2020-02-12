@@ -251,7 +251,7 @@ namespace NitroxLauncher
                     }
                     if (gameProcess == null)
                     {
-                        Log.Error("No or multiple subnautica processes found. Cannot remove patches after exited.");
+                        Log2.Instance.LogMessage(NLogType.Error, "No or multiple subnautica processes found. Cannot remove patches after exited.");
                         gameStarting = false;
                     }
                     return null;
@@ -384,12 +384,12 @@ namespace NitroxLauncher
                         // Only in case of other dll's the error will be logged.
                         if (!fileName.Equals("discord-rpc.dll"))
                         {
-                            Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
+                            Log2.Instance.LogMessage(NLogType.Error, $"There was an BadImageFormatException determining the version of the assembly: {fileName}");
                         }
                     }
                     catch (Exception e)
                     {
-                        Log.Error($"There was error during copying the assembly: {fileName}", e);
+                        Log2.Instance.LogException($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
                 else if (!File.Exists(destinationFilePath))

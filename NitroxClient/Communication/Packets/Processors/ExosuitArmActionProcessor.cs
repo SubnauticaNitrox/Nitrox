@@ -25,7 +25,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.ArmId);
             if(opGameObject.IsEmpty())
             {
-                Log.Error("Could not find exosuit arm");
+                Log2.Instance.LogMessage(NLogType.Error, "Could not find exosuit arm");
                 return;
             }
             GameObject gameObject = opGameObject.Get();
@@ -45,7 +45,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         exosuitModuleEvent.UseTorpedo(gameObject.GetComponent<ExosuitTorpedoArm>(), packet.ArmAction, packet.OpVector, packet.OpRotation);                    
                     break;
                 default:
-                    Log.Error("Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
+                    Log2.Instance.LogMessage(NLogType.Error, "Got an arm tech that is not handled: " + packet.TechType + " with action: " + packet.ArmAction + " for id " + packet.ArmId);
                     break;
             }
             

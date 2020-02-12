@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log.Error("Error attempting to change admin password: " + args[0], ex);
+                Log2.Instance.LogException("Error attempting to change admin password:", ex);
             }
         }
 
