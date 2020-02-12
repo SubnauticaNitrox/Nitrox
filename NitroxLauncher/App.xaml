@@ -27,7 +27,7 @@
             <BitmapImage x:Key="StopWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_stop_white_24dp.png" />
             <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
 
-            <!-- Pages -->
+            <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
             <pages:LaunchGamePage x:Key="LaunchGamePage">
                 <pages:LaunchGamePage.Background>
                     <ImageBrush ImageSource="{StaticResource PlayGameImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
