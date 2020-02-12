@@ -5,6 +5,7 @@ using System.Threading;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -16,7 +17,8 @@ namespace NitroxServer_Subnautica
     {
         private static void Main(string[] args)
         {
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+            Log.Info($"Nitrox version {ReflectionHelper.VersionStr}");
+            Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();

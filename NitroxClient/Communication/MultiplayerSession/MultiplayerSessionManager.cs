@@ -52,7 +52,7 @@ namespace NitroxClient.Communication.MultiplayerSession
         {
             SessionPolicy = policy;
             NitroxConsole.DisableConsole = SessionPolicy.DisableConsole;
-            Version localVersion = typeof(Extensions).Assembly.GetName().Version;
+            Version localVersion = ReflectionHelper.Version;
             localVersion = new Version(localVersion.Major, localVersion.Minor);
             switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {

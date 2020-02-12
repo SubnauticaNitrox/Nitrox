@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.png" Closing="OnClosing">
+        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946" WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="Images/Nitrox.ico" Closing="OnClosing">
     <Window.Resources>
 
     </Window.Resources>

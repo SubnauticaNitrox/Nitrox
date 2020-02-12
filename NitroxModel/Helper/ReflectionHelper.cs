@@ -6,6 +6,10 @@ namespace NitroxModel.Helper
 {
     public static class ReflectionHelper
     {
+
+        public static string VersionStr => "ALPHA " + Version.ToString(3);
+        public static System.Version Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version;
+
         // Public calls are useful for reflected, inaccessible objects.
         public static object ReflectionCall<T>(this T o, string methodName, bool isPublic = false, bool isStatic = false, params object[] args)
         {

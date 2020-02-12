@@ -31,6 +31,7 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.EnableInGameMessages();
+            Log.Info($"Nitrox version {ReflectionHelper.VersionStr}");
 
             if (container != null)
             {
