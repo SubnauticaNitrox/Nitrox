@@ -57,7 +57,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         public void JoinCallback(string secret)
         {
             Log.Info(string.Format("Discord: join ({0})", secret));
-            Log.Debug("Discord" + SceneManager.GetActiveScene().name);
+            Log2.Instance.Log(NLogType.Debug, "Discord" + SceneManager.GetActiveScene().name);
             if (SceneManager.GetActiveScene().name == "StartScreen")
             {
                 NitroxServiceLocator.BeginNewLifetimeScope();

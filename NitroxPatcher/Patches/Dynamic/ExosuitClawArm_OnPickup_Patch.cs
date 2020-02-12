@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
                     NitroxServiceLocator.LocateService<Item>().PickedUp(pickupable.gameObject, pickupable.GetTechType());
                 } else if(component != null)
                 {
-                    Log.Debug("Delete Pickprefab for exosuit claw arm");
+                    Log2.Instance.Log(NLogType.Debug, "Delete Pickprefab for exosuit claw arm");
                     NitroxServiceLocator.LocateService<Item>().PickedUp(component.gameObject, component.pickTech);
                 }
             }

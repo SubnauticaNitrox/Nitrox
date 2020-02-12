@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic
             NitroxId id = NitroxEntity.GetId(gameObject);
             byte[] bytes = SerializationHelper.GetBytes(gameObject);
             
-            Log.Debug("Dropping item with id: " + id);
+            Log2.Instance.Log(NLogType.Debug, "Dropping item with id: " + id);
 
             DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.Model(), dropPosition, gameObject.transform.rotation, bytes);
             packetSender.Send(droppedItem);

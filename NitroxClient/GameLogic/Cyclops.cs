@@ -184,7 +184,7 @@ namespace NitroxClient.GameLogic
             {
                 if ((bool)ability.ReflectionGet("active") != isOn)
                 {
-                    Log.Debug("Set silent running to " + isOn + " for " + id);
+                    Log2.Instance.Log(NLogType.Debug, "Set silent running to " + isOn + " for " + id);
                     ability.ReflectionSet("active", isOn);
                     if (isOn)
                     {

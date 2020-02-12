@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic
                 Log2.Instance.Log(NLogType.Warn, "Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
             }
 
-            Log.Debug("Spawn exosuit arms for: " + id);
+            Log2.Instance.Log(NLogType.Debug, "Spawn exosuit arms for: " + id);
         }                
 
         public void BroadcastClawUse(ExosuitClawArm clawArm, float cooldown)

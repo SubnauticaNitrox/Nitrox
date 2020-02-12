@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (simulationOwnership.HasExclusiveLock(id))
             {
-                Log.Debug($"Already have an exclusive lock on the piloting chair: {id}");
+                Log2.Instance.Log(NLogType.Debug, $"Already have an exclusive lock on the piloting chair: {id}");
                 return true;
             }
 

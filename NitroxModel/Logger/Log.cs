@@ -29,18 +29,6 @@ namespace NitroxModel.Logger
             log.Info(msg);
         }
 
-        public static void Info(string fmt, params object[] arg)
-        {
-            log.Info(Format(fmt, arg));
-        }
-
-        // Only for debug prints. Should not be displayed to general user.
-        // Should we print the calling method for this for more debug context?
-        public static void Debug(string fmt, params object[] arg)
-        {
-            log.Debug(Format(fmt, arg));
-        }
-
         /// <summary>
         ///     Get log file friendly name of the application that is currently logging.
         /// </summary>

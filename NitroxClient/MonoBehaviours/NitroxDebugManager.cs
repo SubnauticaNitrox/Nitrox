@@ -157,17 +157,17 @@ namespace NitroxClient.MonoBehaviours
 
         private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode loadMode)
         {
-            Log.Debug($"Scene '{scene.name}' loaded as {loadMode}");
+            Log2.Instance.Log(NLogType.Debug, $"Scene '{scene.name}' loaded as {loadMode}");
         }
 
         private void SceneManager_sceneUnloaded(Scene scene)
         {
-            Log.Debug($"Scene '{scene.name}' unloaded.");
+            Log2.Instance.Log(NLogType.Debug, $"Scene '{scene.name}' unloaded.");
         }
 
         private void SceneManager_activeSceneChanged(Scene fromScene, Scene toScene)
         {
-            Log.Debug($"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
+            Log2.Instance.Log(NLogType.Debug, $"Active scene changed from '{fromScene.name}' to '{toScene.name}'");
         }
     }
 }

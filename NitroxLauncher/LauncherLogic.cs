@@ -341,7 +341,7 @@ namespace NitroxLauncher
             {
                 string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
                 string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
-                Log.Debug($"Copying asset file '{from}' to '{to}'");
+                Log2.Instance.Log(NLogType.Debug, $"Copying asset file '{from}' to '{to}'");
                 File.Copy(from, to, true);
             }
         }

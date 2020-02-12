@@ -99,7 +99,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (MultiplayerBuilder.CreateGhost())
             {
-                Log.Debug("Ghost Created!");
+                Log2.Instance.Log(NLogType.Debug, "Ghost Created!");
             }
 
             MultiplayerBuilder.canPlace = MultiplayerBuilder.UpdateAllowed();

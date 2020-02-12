@@ -37,7 +37,7 @@ namespace NitroxClient.GameLogic
 
             if (rigidbody != null)
             {
-                Log.Debug("Freezing escape pod rigidbody");
+                Log2.Instance.Log(NLogType.Debug, "Freezing escape pod rigidbody");
                 rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else

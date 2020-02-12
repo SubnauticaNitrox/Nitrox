@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId constructorId = NitroxEntity.GetId(constructor);
 
-            Log.Debug("Building item from constructor with id: " + constructorId);
+            Log2.Instance.Log(NLogType.Debug, "Building item from constructor with id: " + constructorId);
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
