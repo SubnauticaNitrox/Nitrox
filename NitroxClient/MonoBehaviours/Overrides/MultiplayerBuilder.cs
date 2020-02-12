@@ -221,7 +221,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             else if (component is BaseAddCorridorGhost)
             {
-                Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
+                Log2.Instance.Log(NLogType.Info, "Placing BaseAddCorridorGhost Rotation Metadata");
 
                 CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
                 BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
@@ -234,7 +234,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             else if (component is BaseAddMapRoomGhost)
             {
-                Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
+                Log2.Instance.Log(NLogType.Info, "Placing MapRoomRotationMetadata Rotation Metadata");
 
                 MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
                 BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);

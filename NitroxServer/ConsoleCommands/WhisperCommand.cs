@@ -41,7 +41,7 @@ namespace NitroxServer.ConsoleCommands
                 string errorMessage = "Unable to whisper " + args[0] + " - player not found.";
 
                 SendServerMessageIfPlayerIsPresent(player, errorMessage);
-                Log.Info(errorMessage);
+                Log2.Instance.Log(NLogType.Info, errorMessage);
             }
         }
 

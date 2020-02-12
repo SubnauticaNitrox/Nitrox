@@ -110,7 +110,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void BuildBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
+            Log2.Instance.Log(NLogType.Info, "BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
@@ -158,7 +158,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
-            Log.Info("Constructed completed " + constructionCompleted.PieceId);
+            Log2.Instance.Log(NLogType.Info, "Constructed completed " + constructionCompleted.PieceId);
             GameObject constructing = NitroxEntity.RequireObjectFrom(constructionCompleted.PieceId);
 
             ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
@@ -184,7 +184,7 @@ namespace NitroxClient.MonoBehaviours
             
             if (constructionCompleted.BaseId != null && NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())
             {
-                Log.Info("Creating base: " + constructionCompleted.BaseId);
+                Log2.Instance.Log(NLogType.Info, "Creating base: " + constructionCompleted.BaseId);
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
             }
         }
@@ -206,7 +206,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            Log.Info("Processing ConstructionAmountChanged " + amountChanged.Id + " " + amountChanged.Amount);
+            Log2.Instance.Log(NLogType.Info, "Processing ConstructionAmountChanged " + amountChanged.Id + " " + amountChanged.Amount);
 
             GameObject constructing = NitroxEntity.RequireObjectFrom(amountChanged.Id);
             BaseDeconstructable baseDeconstructable = constructing.GetComponent<BaseDeconstructable>();
@@ -229,7 +229,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 else
                 {
-                    Log.Info("Could not find newly created ghost to set deconstructed id ");
+                    Log2.Instance.Log(NLogType.Info, "Could not find newly created ghost to set deconstructed id ");
                 }
             }
             else

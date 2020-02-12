@@ -303,7 +303,6 @@
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
-    <Compile Include="Logger\Log.cs" />
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />

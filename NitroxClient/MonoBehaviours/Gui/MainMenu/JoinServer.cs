@@ -250,7 +250,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     break;
                 case MultiplayerSessionConnectionStage.Disconnected:
-                    Log.Info("Disconnected from server");
+                    Log2.Instance.Log(NLogType.Info, "Disconnected from server");
                     break;
             }
         }

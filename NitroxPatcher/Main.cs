@@ -38,7 +38,7 @@ namespace NitroxPatcher
                 return;
             }
 
-            Log.Info("Registering Dependencies");
+            Log2.Instance.Log(NLogType.Info, "Registering Dependencies");
             container = CreatePatchingContainer();
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
@@ -56,7 +56,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Info("Applying dynamic patch " + patch.GetType().Name);
+                Log2.Instance.Log(NLogType.Info, "Applying dynamic patch " + patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
@@ -77,7 +77,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Info("Restoring dynamic patch " + patch.GetType().Name);
+                Log2.Instance.Log(NLogType.Info, "Restoring dynamic patch " + patch.GetType().Name);
                 patch.Restore(harmony);
             }
 
@@ -86,20 +86,20 @@ namespace NitroxPatcher
 
         private static void InitPatches()
         {
-            Log.Info("Patching Subnautica...");
+            Log2.Instance.Log(NLogType.Info, "Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
-                Log.Info("Applying persistent patch " + patch.GetType().Name);
+                Log2.Instance.Log(NLogType.Info, "Applying persistent patch " + patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Completed patching using {0}", Assembly.GetExecutingAssembly().FullName);
         }
 
         private static IContainer CreatePatchingContainer()
@@ -111,14 +111,14 @@ namespace NitroxPatcher
 
         private static void ApplyNitroxBehaviours()
         {
-            Log.Info("Applying Nitrox behaviours..");
+            Log2.Instance.Log(NLogType.Info, "Applying Nitrox behaviours..");
 
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
             NitroxClient.Helpers.NitroxProtobufSerializer serializer = new NitroxClient.Helpers.NitroxProtobufSerializer(assemblies);
 
-            Log.Info("Behaviours applied.");
+            Log2.Instance.Log(NLogType.Info, "Behaviours applied.");
         }
     }
 }

@@ -80,7 +80,7 @@ namespace NitroxClient.GameLogic
 
             if (owner.IsEmpty())
             {
-                Log.Info("Unable to find inventory container with id: " + containerId);
+                Log2.Instance.Log(NLogType.Info, "Unable to find inventory container with id: " + containerId);
                 return;
             }
 

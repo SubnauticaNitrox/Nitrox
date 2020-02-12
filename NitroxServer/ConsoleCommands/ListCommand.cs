@@ -27,7 +27,7 @@ namespace NitroxServer.ConsoleCommands
                 playerList += "No Players Online";
             }
 
-            Log.Info(playerList);
+            Log2.Instance.Log(NLogType.Info, playerList);
             SendServerMessageIfPlayerIsPresent(player, playerList);
         }
 

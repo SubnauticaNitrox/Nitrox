@@ -41,12 +41,12 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
         {
-            Log.Info("Discord: ready");
+            Log2.Instance.Log(NLogType.Info, "Discord: ready");
         }
 
         public void DisconnectedCallback(int errorCode, string message)
         {
-            Log.Info(string.Format("Discord: disconnect {0}: {1}", errorCode, message));
+            Log2.Instance.Log(NLogType.Info, string.Format("Discord: disconnect {0}: {1}", errorCode, message));
         }
 
         public void ErrorCallback(int errorCode, string message)
@@ -56,7 +56,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void JoinCallback(string secret)
         {
-            Log.Info(string.Format("Discord: join ({0})", secret));
+            Log2.Instance.Log(NLogType.Info, string.Format("Discord: join ({0})", secret));
             Log2.Instance.Log(NLogType.Debug, "Discord" + SceneManager.GetActiveScene().name);
             if (SceneManager.GetActiveScene().name == "StartScreen")
             {
@@ -76,14 +76,14 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void SpectateCallback(string secret)
         {
-            Log.Info(string.Format("Discord: spectate ({0})", secret));
+            Log2.Instance.Log(NLogType.Info, string.Format("Discord: spectate ({0})", secret));
         }
 
         public void RequestCallback(ref DiscordRpc.DiscordUser request)
         {
             if (!ShowingWindow)
             {
-                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
+                Log2.Instance.Log(NLogType.Info, string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
                 DiscordJoinRequestGui acceptRequest = gameObject.AddComponent<DiscordJoinRequestGui>();
                 acceptRequest.Request = request;
                 lastJoinRequestUserID = request.userId;
@@ -91,7 +91,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             }
             else
             {
-                Log.Info("Discord: Request window is allready active.");
+                Log2.Instance.Log(NLogType.Info, "Discord: Request window is allready active.");
             }
         }
 
@@ -102,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         void OnEnable()
         {
-            Log.Info("Discord: init");
+            Log2.Instance.Log(NLogType.Info, "Discord: init");
             handlers = new DiscordRpc.EventHandlers();
             handlers.readyCallback = ReadyCallback;
             handlers.disconnectedCallback += DisconnectedCallback;
@@ -117,7 +117,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         void OnDisable()
         {
-            Log.Info("Discord: shutdown");
+            Log2.Instance.Log(NLogType.Info, "Discord: shutdown");
             DiscordRpc.Shutdown();
         }
 
@@ -154,7 +154,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RespondLastJoinRequest(int accept)
         {
-            Log.Info("Discord: responding to Join request => " + (accept.Equals("1") ? "true" : "false"));
+            Log2.Instance.Log(NLogType.Info, "Discord: responding to Join request => " + (accept.Equals("1") ? "true" : "false"));
             DiscordRpc.Respond(lastJoinRequestUserID, (DiscordRpc.Reply)accept);
         }
 

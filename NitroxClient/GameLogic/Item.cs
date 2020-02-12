@@ -35,7 +35,7 @@ namespace NitroxClient.GameLogic
 
         public void PickedUp(Vector3 itemPosition, NitroxId id, TechType techType)
         {
-            Log.Info("PickedUp " + id + " " + techType);
+            Log2.Instance.Log(NLogType.Info, "PickedUp " + id + " " + techType);
             PickupItem pickupItem = new PickupItem(itemPosition, id, techType.Model());
             packetSender.Send(pickupItem);
         }

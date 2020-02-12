@@ -62,7 +62,7 @@ namespace NitroxClient.Communication.Packets.Processors
             {
                 if (IsWaitingToRun(processor.GetType()) && HasDependenciesSatisfied(processor))
                 {
-                    Log.Info("Running " + processor.GetType());
+                    Log2.Instance.Log(NLogType.Info, "Running " + processor.GetType());
                     alreadyRan.Add(processor.GetType());
                     processorsRan++;
 

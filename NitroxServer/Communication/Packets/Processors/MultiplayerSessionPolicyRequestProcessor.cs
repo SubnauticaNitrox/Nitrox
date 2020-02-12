@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
         // This will extend in the future when we look into different options for auth
         public override void Process(MultiplayerSessionPolicyRequest packet, NitroxConnection connection)
         {
-            Log.Info("Providing session policies...");
+            Log2.Instance.Log(NLogType.Info, "Providing session policies...");
             connection.SendPacket(new MultiplayerSessionPolicy(packet.CorrelationId, config.DisableConsole));
         }
     }

@@ -50,17 +50,17 @@ namespace NitroxServer
             IsRunning = true;
             IpLogger.PrintServerIps();
             server.Start();
-            Log.Info("Nitrox Server Started");
+            Log2.Instance.Log(NLogType.Info, "Nitrox Server Started");
             EnablePeriodicSaving();
         }
 
         public void Stop()
         {
-            Log.Info("Nitrox Server Stopping...");
+            Log2.Instance.Log(NLogType.Info, "Nitrox Server Stopping...");
             DisablePeriodicSaving();
             Save();
             server.Stop();
-            Log.Info("Nitrox Server Stopped");
+            Log2.Instance.Log(NLogType.Info, "Nitrox Server Stopped");
             IsRunning = false;
         }
 

@@ -107,7 +107,7 @@ namespace NitroxServer_Subnautica
 
         private static void StopAndExitServer()
         {
-            Log.Info("Exiting ...");
+            Log2.Instance.Log(NLogType.Info, "Exiting ...");
             Server.Instance.Stop();
             Environment.Exit(0);
         }

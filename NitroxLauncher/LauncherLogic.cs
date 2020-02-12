@@ -219,7 +219,7 @@ namespace NitroxLauncher
             {
                 MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            Log.Info("Finished removing patches!");
+            Log2.Instance.Log(NLogType.Info, "Finished removing patches!");
         }
 
         private async Task<Process> WaitForProcessAsync()
@@ -336,7 +336,7 @@ namespace NitroxLauncher
             string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
             
             string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
-            Log.Info($"Copying asset files from Launcher directory '{currentDirectoryAssetsPath}' to Subnautica '{subnauticaAssetsPath}'");
+            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
             foreach (string assetBundle in assetBundles)
             {
                 string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));

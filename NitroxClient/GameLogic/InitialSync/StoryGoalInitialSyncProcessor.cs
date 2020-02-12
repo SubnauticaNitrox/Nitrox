@@ -29,7 +29,7 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 StoryGoalManager.main.completedGoals.Add(completedGoal);
             }
-            Log.Info("Received initial sync packet with " + storyGoalData.Count + " completed story goals");
+            Log2.Instance.Log(NLogType.Info, "Received initial sync packet with " + storyGoalData.Count + " completed story goals");
         }
     }
 }

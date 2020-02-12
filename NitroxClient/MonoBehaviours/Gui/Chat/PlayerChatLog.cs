@@ -135,7 +135,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             asset = AssetBundle.LoadFromFileAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles/chatlog"));
             if (asset == null)
             {
-                Log.Info("Failed to load AssetBundle!");
+                Log2.Instance.Log(NLogType.Info, "Failed to load AssetBundle!");
                 yield break;
             }
 
@@ -145,7 +145,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
 
             string sceneName = asset.assetBundle.GetAllScenePaths().First();
-            Log.Info($"Trying to load scene: {sceneName}");
+            Log2.Instance.Log(NLogType.Info, $"Trying to load scene: {sceneName}");
             yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             chatScrollRect = GameObject.Find("ChatLogContent");
             mainChatLog = GameObject.Find("ChatLogScrollView");

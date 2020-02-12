@@ -51,7 +51,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Info("Could not find Container for " + gameObject.name);
+                Log2.Instance.Log(NLogType.Info, "Could not find Container for " + gameObject.name);
             }
         }
     }

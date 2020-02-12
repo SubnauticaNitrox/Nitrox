@@ -31,7 +31,7 @@ namespace NitroxServer.GameLogic
             Timer timer = new Timer();
             timer.Elapsed += delegate
             {
-                Log.Info("Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
+                Log2.Instance.Log(NLogType.Info, "Triggering event type " + eventType.ToString() + " at time " + time.ToString() + " with param " + key.ToString());
                 playerManager.SendPacketToAllPlayers(new StoryEventSend(eventType, key));
             };
             timer.Interval = time;

@@ -16,7 +16,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(MultiplayerSessionPolicy packet)
         {
-            Log.Info("Processing session policy information.");
+            Log2.Instance.Log(NLogType.Info, "Processing session policy information.");
             multiplayerSession.ProcessSessionPolicy(packet);
         }
     }

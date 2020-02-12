@@ -40,7 +40,7 @@ namespace NitroxServer.ConsoleCommands
         private void ChangeAdminPassword(string password, string name)
         {
             serverConfig.ChangeAdminPassword(password);
-            Log.Info($"Admin password changed to \"{password}\" by {name}");
+            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Admin password changed to {0} by {1}", password, name);
         }
     }
 }

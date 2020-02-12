@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic.InitialSync
         public override void Process(InitialPlayerSync packet)
         {
             List<BasePiece> basePieces = packet.BasePieces;
-            Log.Info("Received initial sync packet with " + basePieces.Count + " base pieces");
+            Log2.Instance.Log(NLogType.Info, "Received initial sync packet with " + basePieces.Count + " base pieces");
 
             if (basePieces.Count == 0)
             {

@@ -67,7 +67,7 @@ namespace NitroxClient.MonoBehaviours
             Log2.Instance.ShowInGameMessage("Multiplayer Client Loaded...");
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
-            Log.InGameLogger = new SubnauticaInGameLogger();
+            Log2.Instance.RegisterInGameLogger(new SubnauticaInGameLogger());
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
             Main = this;
             DontDestroyOnLoad(gameObject);

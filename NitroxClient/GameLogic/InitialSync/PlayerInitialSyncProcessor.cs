@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetPlayerGameObjectId(NitroxId id)
         {
             NitroxEntity.SetNewId(Player.mainObject, id);
-            Log.Info("Received initial sync Player GameObject Id: " + id);
+            Log2.Instance.Log(NLogType.Info, "Received initial sync Player GameObject Id: " + id);
         }
 
         private void AddStartingItemsToPlayer(bool firstTimeConnecting)
@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic.InitialSync
         
         private void SetPlayerGameMode(GameModeOption gameMode)
         {
-            Log.Info("Recieved initial sync packet with game mode " + gameMode);
+            Log2.Instance.Log(NLogType.Info, "Recieved initial sync packet with game mode " + gameMode);
             GameModeUtils.SetGameMode(gameMode, GameModeOption.None);
         }
     }
