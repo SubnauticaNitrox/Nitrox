@@ -43,7 +43,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log2.Instance.Log(NLogType.Error,"Could not find constructed object!");
+                Log.Instance.LogMessage(LogCategory.Error,"Could not find constructed object!");
             }
         }
     }

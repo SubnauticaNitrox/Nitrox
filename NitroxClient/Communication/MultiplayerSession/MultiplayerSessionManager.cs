@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public MultiplayerSessionManager(IClient client)
         {
-            Log2.Instance.Log(NLogType.Info, "Initializing MultiplayerSessionManager...");
+            Log.Instance.LogMessage(LogCategory.Info, "Initializing MultiplayerSessionManager...");
             Client = client;
             CurrentState = new Disconnected();
         }
@@ -57,11 +57,11 @@ namespace NitroxClient.Communication.MultiplayerSession
             switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
-                    Log2.Instance.ShowInGameMessage($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.Instance.ShowInGameMessage($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
                     CurrentState.Disconnect(this);
                     return;
                 case 1:
-                    Log2.Instance.ShowInGameMessage($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.Instance.ShowInGameMessage($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
                     CurrentState.Disconnect(this);
                     return;
             }
@@ -111,7 +111,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Updating session stage from {0} to {1} for {2}", fromStage, sessionConnectionState.CurrentStage, username);
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Updating session stage from {0} to {1} for {2}", fromStage, sessionConnectionState.CurrentStage, username);
 
             CurrentState = sessionConnectionState;
 

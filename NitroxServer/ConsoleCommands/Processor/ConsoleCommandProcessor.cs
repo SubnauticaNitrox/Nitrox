@@ -56,7 +56,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             if (!commands.TryGetValue(parts[0], out cmd))
             {
                 string errorMessage = "Command Not Found: " + parts[0];
-                Log2.Instance.Log(NLogType.Info, errorMessage);
+                Log.Instance.LogMessage(LogCategory.Info, errorMessage);
 
                 if (player.IsPresent())
                 {
@@ -87,7 +87,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             else
             {
                 string errorMessage = string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription);
-                Log2.Instance.Log(NLogType.Info, errorMessage);
+                Log.Instance.LogMessage(LogCategory.Info, errorMessage);
                 command.SendServerMessageIfPlayerIsPresent(player, errorMessage);
             }
         }

@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic
         {
             OpenableStateChanged stateChange = new OpenableStateChanged(id, isOpen, animationDuration);
             packetSender.Send(stateChange);
-            Log2.Instance.Log(NLogType.Debug, $"{stateChange}");
+            Log.Instance.LogMessage(LogCategory.Debug, $"{stateChange}");
         }
     }
 }

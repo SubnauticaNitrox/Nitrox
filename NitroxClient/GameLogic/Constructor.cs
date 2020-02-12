@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId constructorId = NitroxEntity.GetId(constructor);
 
-            Log2.Instance.Log(NLogType.Debug, "Building item from constructor with id: " + constructorId);
+            Log.Instance.LogMessage(LogCategory.Debug, "Building item from constructor with id: " + constructorId);
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.Log(NLogType.Error, "Could not send packet because there wasn't a corresponding constructed object!");
+                Log.Instance.LogMessage(LogCategory.Error, "Could not send packet because there wasn't a corresponding constructed object!");
             }
         }
 

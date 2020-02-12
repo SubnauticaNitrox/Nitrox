@@ -47,12 +47,12 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        Log2.Instance.Log(NLogType.Error, "Could not find subroot for player for subroot with id: " + subRootId.Get());
+                        Log.Instance.LogMessage(LogCategory.Error, "Could not find subroot for player for subroot with id: " + subRootId.Get());
                     }
                 }
                 else
                 {
-                    Log2.Instance.Log(NLogType.Error, "Could not spawn player into subroot with id: " + subRootId.Get());
+                    Log.Instance.LogMessage(LogCategory.Error, "Could not spawn player into subroot with id: " + subRootId.Get());
                 }
             }
         }

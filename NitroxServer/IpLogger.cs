@@ -27,7 +27,7 @@ namespace NitroxServer
                 // This is technically an error but will scare most users into thinking the server is not working
                 // generally this can happen on Mac / Wine due to issues fetching networking interfaces.  Simply
                 // ignore as this is not a big deal.  They can look these up themselves.
-                Log2.Instance.Log(NLogType.Info, "Unable to resolve IP Addresses... you are on your own.");
+                Log.Instance.LogMessage(LogCategory.Info, "Unable to resolve IP Addresses... you are on your own.");
             }
         }
 
@@ -41,7 +41,7 @@ namespace NitroxServer
             IEnumerable<string> ips = netInterface.GetIPProperties().UnicastAddresses
                 .Select(address => address.Address.ToString())
                 .Where(address => !address.ToString().Contains("fe80::"));
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "If using Hamachi, use this IP: {0}", string.Join(" or ", ips));
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "If using Hamachi, use this IP: {0}", string.Join(" or ", ips));
         }
 
         private static void PrintIfLan(NetworkInterface netInterface)
@@ -62,7 +62,7 @@ namespace NitroxServer
 
                 if (splitIpParts[0] == "10" || splitIpParts[0] == "192" && splitIpParts[1] == "168" || splitIpParts[0] == "172" && secondPart > 15 && secondPart < 32) //To get if IP is private
                 {
-                    Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "If playing on LAN, use this IP: {0}", eachIp.Address);
+                    Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "If playing on LAN, use this IP: {0}", eachIp.Address);
                 }
             }
         }
@@ -94,11 +94,11 @@ namespace NitroxServer
         {
             if (!e.Cancelled && e.Error == null)
             {
-                Log2.Instance.Log(NLogType.Info, $"If using port forwarding, use this IP: {e.Result}");
+                Log.Instance.LogMessage(LogCategory.Info, $"If using port forwarding, use this IP: {e.Result}");
             }
             else
             {
-                Log2.Instance.Log(NLogType.Warn, "Could not get your external IP. You are on your own...");
+                Log.Instance.LogMessage(LogCategory.Warn, "Could not get your external IP. You are on your own...");
             }            
         }
     }

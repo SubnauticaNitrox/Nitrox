@@ -44,7 +44,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if(simulationOwnershipManager.HasExclusiveLock(simulatedEntity.Id))
                     {
-                        Log2.Instance.Log(NLogType.Warn, "The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
+                        Log.Instance.LogMessage(LogCategory.Warn, "The server has forcibly revoked an exlusive lock - this may cause undefined behaviour.  GUID: " + simulatedEntity.Id);
                     }
 
                     simulationOwnershipManager.StopSimulatingEntity(simulatedEntity.Id);
@@ -63,7 +63,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log2.Instance.Log(NLogType.Error, "Expected to simulate an unknown entity: " + id);
+                Log.Instance.LogMessage(LogCategory.Error, "Expected to simulate an unknown entity: " + id);
             }
         }
     }

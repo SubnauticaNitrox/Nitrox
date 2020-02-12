@@ -20,7 +20,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ChatMessage packet, Player player)
         {
-            Log2.Instance.Log(NLogType.Info, string.Format("{0} said: {1}", player.Name, packet.Text));
+            Log.Instance.LogMessage(LogCategory.Info, string.Format("{0} said: {1}", player.Name, packet.Text));
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

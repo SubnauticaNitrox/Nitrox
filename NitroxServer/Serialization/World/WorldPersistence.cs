@@ -70,11 +70,11 @@ namespace NitroxServer.Serialization.World
                     serializer.Serialize(stream, persistedData.WorldData);
                 }
 
-                Log2.Instance.Log(NLogType.Info, "World state saved.");
+                Log.Instance.LogMessage(LogCategory.Info, "World state saved.");
             }
             catch (Exception ex)
             {
-                Log2.Instance.Log(NLogType.Info, "Could not save world: " + ex);
+                Log.Instance.LogMessage(LogCategory.Info, "Could not save world: " + ex);
             }
         }
 
@@ -136,11 +136,11 @@ namespace NitroxServer.Serialization.World
             }
             catch (FileNotFoundException)
             {
-                Log2.Instance.Log(NLogType.Info, "No previous save file found - creating a new one.");
+                Log.Instance.LogMessage(LogCategory.Info, "No previous save file found - creating a new one.");
             }
             catch (Exception ex)
             {
-                Log2.Instance.Log(NLogType.Info, "Could not load world: " + ex.ToString() + " creating a new one.");
+                Log.Instance.LogMessage(LogCategory.Info, "Could not load world: " + ex.ToString() + " creating a new one.");
             }
 
             return Optional<World>.Empty();
@@ -203,12 +203,12 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
                                                               NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
 
-            Log2.Instance.Log(NLogType.Info, "World GameMode: " + gameMode);
+            Log.Instance.LogMessage(LogCategory.Info, "World GameMode: " + gameMode);
             var serverPass = (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Server Password: {0} ", serverPass);
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Admin Password: {0}", config.AdminPassword);
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Server Password: {0} ", serverPass);
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Admin Password: {0}", config.AdminPassword);
             
-            Log2.Instance.Log(NLogType.Info, "To get help for commands, run help in console or /help in chatbox");
+            Log.Instance.LogMessage(LogCategory.Info, "To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

@@ -32,7 +32,7 @@ namespace NitroxServer.ConsoleCommands
                 message = "Could not update permissions on unknown player " + playerName;
             }
 
-            Log2.Instance.Log(NLogType.Info, message);
+            Log.Instance.LogMessage(LogCategory.Info, message);
             SendServerMessageIfPlayerIsPresent(player, message);
         }
 

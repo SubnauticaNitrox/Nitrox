@@ -40,10 +40,6 @@
       <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\packages\log4net.2.0.8\lib\net35-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="LZ4">
       <HintPath>..\lib\LZ4.dll</HintPath>
     </Reference>
@@ -270,10 +266,10 @@
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
-    <Compile Include="Logger\ILogger.cs" />
+    <Compile Include="Logger\ILog.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
-    <Compile Include="Logger\Log2.cs" />
-    <Compile Include="Logger\NLogType.cs" />
+    <Compile Include="Logger\Log.cs" />
+    <Compile Include="Logger\LogCategory.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />

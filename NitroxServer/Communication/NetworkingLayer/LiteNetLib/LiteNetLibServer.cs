@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
         }
         public override void Start()
         {
-            Log2.Instance.Log(NLogType.Info, "Using LiteNetLib as networking library");
+            Log.Instance.LogMessage(LogCategory.Info, "Using LiteNetLib as networking library");
 
             listener.PeerConnectedEvent += PeerConnected;
             listener.PeerDisconnectedEvent += PeerDisconnected;

@@ -41,7 +41,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     else
                     {
-                        Log2.Instance.Log(NLogType.Error, "Could not spawn remote player into subroot with id: " + playerData.SubRootId.Get());
+                        Log.Instance.LogMessage(LogCategory.Error, "Could not spawn remote player into subroot with id: " + playerData.SubRootId.Get());
                     }
                 }
             }

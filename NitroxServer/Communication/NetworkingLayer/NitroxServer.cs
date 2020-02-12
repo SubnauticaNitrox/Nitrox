@@ -63,7 +63,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             }
             catch (Exception ex)
             {
-                Log2.Instance.Log(NLogType.Info, "Exception while processing packet: " + packet + " " + ex);
+                Log.Instance.LogMessage(LogCategory.Info, "Exception while processing packet: " + packet + " " + ex);
             }
         }
     }

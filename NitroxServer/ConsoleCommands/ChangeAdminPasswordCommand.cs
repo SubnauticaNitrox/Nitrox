@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log2.Instance.LogException("Error attempting to change admin password:", ex);
+                Log.Instance.LogException("Error attempting to change admin password:", ex);
             }
         }
 
@@ -40,7 +40,7 @@ namespace NitroxServer.ConsoleCommands
         private void ChangeAdminPassword(string password, string name)
         {
             serverConfig.ChangeAdminPassword(password);
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Admin password changed to {0} by {1}", password, name);
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Admin password changed to {0} by {1}", password, name);
         }
     }
 }

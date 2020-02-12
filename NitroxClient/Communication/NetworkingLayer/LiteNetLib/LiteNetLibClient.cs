@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Start(string ipAddress, int serverPort)
         {
-            Log2.Instance.Log(NLogType.Info, "Initializing LiteNetLibClient...");
+            Log.Instance.LogMessage(LogCategory.Info, "Initializing LiteNetLibClient...");
 
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
 
@@ -75,14 +75,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         {
             connectedEvent.Set();
             IsConnected = true;
-            Log2.Instance.Log(NLogType.Info, "Connected to server");
+            Log.Instance.LogMessage(LogCategory.Info, "Connected to server");
         }
 
         private void Disconnected(NetPeer peer, DisconnectInfo disconnectInfo)
         {
             LostConnectionModal.Instance.Show();
             IsConnected = false;
-            Log2.Instance.Log(NLogType.Info, "Disconnected from server");
+            Log.Instance.LogMessage(LogCategory.Info, "Disconnected from server");
         }
     }
 }

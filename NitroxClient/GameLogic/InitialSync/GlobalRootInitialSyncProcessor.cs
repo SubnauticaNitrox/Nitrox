@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
-            Log2.Instance.Log(NLogType.Info, "Received initial sync packet with " + packet.GlobalRootEntities.Count + " global root entities");
+            Log.Instance.LogMessage(LogCategory.Info, "Received initial sync packet with " + packet.GlobalRootEntities.Count + " global root entities");
             entities.Spawn(packet.GlobalRootEntities);
         }
     }

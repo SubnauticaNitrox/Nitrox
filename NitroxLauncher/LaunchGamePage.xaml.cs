@@ -30,17 +30,14 @@ namespace NitroxLauncher
 
         private async void MultiplayerButton_Click(object sender, RoutedEventArgs e)
         {
-            Log2.Instance.LogMessage(NLogType.Info, "This is a test Message");
-            Log2.Instance.LogMessage(NLogType.Info, "This is also a test Message but its reallllyyyyyy reallllyyyyyyyyy longgggggggggggggggggggg longggggggggggggggggggggggggggggggg");
-            Log2.Instance.LogException("Crash!", new DivideByZeroException());
-            //try
-            //{
-            //    await logic.StartMultiplayerAsync();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+            try
+            {
+                await logic.StartMultiplayerAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

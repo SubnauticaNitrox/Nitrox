@@ -8,7 +8,7 @@ namespace NitroxModel.Logger
     /// <summary>
     /// https://github.com/nlog/nlog/wiki/Configuration-file#log-levels
     /// </summary>
-    public enum NLogType
+    public enum LogCategory
     {
         Trace,
         Debug,

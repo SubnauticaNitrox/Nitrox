@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using NitroxLauncher.Events;
 using NitroxModel;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -41,7 +42,6 @@ namespace NitroxLauncher
         public MainWindow()
         {
             InitializeComponent();
-
             // Pirate trigger should happen after UI is loaded.
             Loaded += (sender, args) =>
             {

@@ -19,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
         public override void RunCommand(string[] args, Optional<Player> player)
         {
             string message = "Saying: " + string.Join(" ", args);
-            Log2.Instance.Log(NLogType.Info, message);
+            Log.Instance.LogMessage(LogCategory.Info, message);
 
             if(player.IsPresent())
             {

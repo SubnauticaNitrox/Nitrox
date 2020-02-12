@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(VehicleCreated packet, Player player)
         {
-            Log2.Instance.Log(NLogType.Info, $"{packet}");
+            Log.Instance.LogMessage(LogCategory.Info, $"{packet}");
             vehicleData.AddVehicle(packet.CreatedVehicle);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

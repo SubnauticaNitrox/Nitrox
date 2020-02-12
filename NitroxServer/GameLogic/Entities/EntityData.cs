@@ -71,7 +71,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                     else
                     {
-                        Log2.Instance.Log(NLogType.Info, "Entity Already Exists for Id: " + entity.Id + " Item: " + entity.TechType);
+                        Log.Instance.LogMessage(LogCategory.Info, "Entity Already Exists for Id: " + entity.Id + " Item: " + entity.TechType);
                     }
                 }
             }
@@ -186,7 +186,7 @@ namespace NitroxServer.GameLogic.Entities
                     }
                     else
                     {
-                        Log2.Instance.Log(NLogType.Error, "Id did not have a corresponding entity in GetEntitiesByIds: " + id);
+                        Log.Instance.LogMessage(LogCategory.Error, "Id did not have a corresponding entity in GetEntitiesByIds: " + id);
                     }
                 }
             }

@@ -29,7 +29,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (remotePlayer.IsPresent())
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);
-                Log2.Instance.ShowInGameMessage(remotePlayer.Get().PlayerName + " disconnected");
+                Log.Instance.ShowInGameMessage(remotePlayer.Get().PlayerName + " disconnected");
             }
         }
     }

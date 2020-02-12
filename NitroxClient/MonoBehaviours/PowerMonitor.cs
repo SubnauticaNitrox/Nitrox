@@ -97,7 +97,7 @@ namespace NitroxClient.MonoBehaviours
                 return isMethodActive;
             }
 
-            Log2.Instance.Log(NLogType.Error, "Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
+            Log.Instance.LogMessage(LogCategory.Error, "Could not find a whitelisted power method for " + method + " (from " + method.DeclaringType + ") - it might be newly introduced!");
 
             return true;
         }

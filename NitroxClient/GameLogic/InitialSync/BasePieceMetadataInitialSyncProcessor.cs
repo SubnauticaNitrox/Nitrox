@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
 
-            Log2.Instance.Log(NLogType.Info, "Received initial sync packet with " + basePieceMetadatas + " base piece meta data");
+            Log.Instance.LogMessage(LogCategory.Info, "Received initial sync packet with " + basePieceMetadatas + " base piece meta data");
         }
     }
 }

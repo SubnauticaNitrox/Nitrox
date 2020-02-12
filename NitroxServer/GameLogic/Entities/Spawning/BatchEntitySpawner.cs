@@ -86,7 +86,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
             else
             {
-                Log2.Instance.Log(NLogType.Info, "Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
+                Log.Instance.LogMessage(LogCategory.Info, "Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
             }
 
             return entities;

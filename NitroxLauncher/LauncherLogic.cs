@@ -219,7 +219,7 @@ namespace NitroxLauncher
             {
                 MessageBox.Show(ex.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            Log2.Instance.Log(NLogType.Info, "Finished removing patches!");
+            Log.Instance.LogMessage(LogCategory.Info, "Finished removing patches!");
         }
 
         private async Task<Process> WaitForProcessAsync()
@@ -251,7 +251,7 @@ namespace NitroxLauncher
                     }
                     if (gameProcess == null)
                     {
-                        Log2.Instance.Log(NLogType.Error, "No or multiple subnautica processes found. Cannot remove patches after exited.");
+                        Log.Instance.LogMessage(LogCategory.Error, "No or multiple subnautica processes found. Cannot remove patches after exited.");
                         gameStarting = false;
                     }
                     return null;
@@ -336,12 +336,12 @@ namespace NitroxLauncher
             string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
             
             string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
-            Log2.Instance.LogRemovePersonalInfo(NLogType.Info, "Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
+            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
             foreach (string assetBundle in assetBundles)
             {
                 string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
                 string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
-                Log2.Instance.Log(NLogType.Debug, $"Copying asset file '{from}' to '{to}'");
+                Log.Instance.LogMessage(LogCategory.Debug, $"Copying asset file '{from}' to '{to}'");
                 File.Copy(from, to, true);
             }
         }
@@ -384,12 +384,12 @@ namespace NitroxLauncher
                         // Only in case of other dll's the error will be logged.
                         if (!fileName.Equals("discord-rpc.dll"))
                         {
-                            Log2.Instance.Log(NLogType.Error, $"There was an BadImageFormatException determining the version of the assembly: {fileName}");
+                            Log.Instance.LogMessage(LogCategory.Error, $"There was an BadImageFormatException determining the version of the assembly: {fileName}");
                         }
                     }
                     catch (Exception e)
                     {
-                        Log2.Instance.LogException($"There was error during copying the assembly: {fileName}", e);
+                        Log.Instance.LogException($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
                 else if (!File.Exists(destinationFilePath))

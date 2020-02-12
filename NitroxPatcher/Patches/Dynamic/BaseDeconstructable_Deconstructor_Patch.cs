@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(BaseDeconstructable __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            Log2.Instance.Log(NLogType.Info, "Deconstructing " + id);
+            Log.Instance.LogMessage(LogCategory.Info, "Deconstructing " + id);
             TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
         }
 

@@ -5,10 +5,10 @@ using System.Text;
 
 namespace NitroxModel.Logger
 {
-    public interface ILogger
+    public interface ILog
     {
-        void Log(NLogType type, string message);
-        void LogRemovePersonalInfo(NLogType type, string message, params object[] args);
+        void LogMessage(LogCategory type, string message);
+        void LogRemovePersonalInfo(LogCategory category, string message, params object[] args);
         void LogException(string message, Exception ex);
         
         // In game messaging

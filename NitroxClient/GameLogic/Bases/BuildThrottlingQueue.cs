@@ -28,31 +28,31 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log2.Instance.Log(NLogType.Info, "Enqueuing base piece to be placed " + basePiece.Id + " " + basePiece.Id);
+            Log.Instance.LogMessage(LogCategory.Info, "Enqueuing base piece to be placed " + basePiece.Id + " " + basePiece.Id);
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
         public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            Log2.Instance.Log(NLogType.Info, "Enqueuing item to have construction completed " + id);
+            Log.Instance.LogMessage(LogCategory.Info, "Enqueuing item to have construction completed " + id);
             Enqueue(new ConstructionCompletedEvent(id, baseId));
         }
 
         public void EnqueueAmountChanged(NitroxId id, float amount)
         {
-            Log2.Instance.Log(NLogType.Info, "Enqueuing item to have construction amount changed " + id);
+            Log.Instance.LogMessage(LogCategory.Info, "Enqueuing item to have construction amount changed " + id);
             Enqueue(new ConstructionAmountChangedEvent(id, amount));
         }
 
         public void EnqueueDeconstructionBegin(NitroxId id)
         {
-            Log2.Instance.Log(NLogType.Info, "Enqueuing item to have deconstruction beginning " + id);
+            Log.Instance.LogMessage(LogCategory.Info, "Enqueuing item to have deconstruction beginning " + id);
             Enqueue(new DeconstructionBeginEvent(id));
         }
 
         public void EnqueueDeconstructionCompleted(NitroxId id)
         {
-            Log2.Instance.Log(NLogType.Info, "Enqueuing item to have deconstruction completed " + id);
+            Log.Instance.LogMessage(LogCategory.Info, "Enqueuing item to have deconstruction completed " + id);
             Enqueue(new DeconstructionCompletedEvent(id));
         }
     }

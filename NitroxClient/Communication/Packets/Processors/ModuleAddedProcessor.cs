@@ -46,12 +46,12 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 else
                 {
-                    Log2.Instance.Log(NLogType.Error, "Could not find equipment type for " + gameObject.name);
+                    Log.Instance.LogMessage(LogCategory.Error, "Could not find equipment type for " + gameObject.name);
                 }
             }
             else
             {
-                Log2.Instance.Log(NLogType.Info, "Could not find Container for " + gameObject.name);
+                Log.Instance.LogMessage(LogCategory.Info, "Could not find Container for " + gameObject.name);
             }
         }
     }

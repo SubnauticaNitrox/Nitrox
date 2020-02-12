@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic
 
         public void ReceivedSimulationLockResponse(NitroxId id, bool lockAquired, SimulationLockType lockType)
         {
-            Log2.Instance.Log(NLogType.Info, "Received lock response, id: " + id + " " + lockAquired + " " + lockType);
+            Log.Instance.LogMessage(LogCategory.Info, "Received lock response, id: " + id + " " + lockAquired + " " + lockType);
 
             if (lockAquired)
             {
@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.Log(NLogType.Warn, "Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
+                Log.Instance.LogMessage(LogCategory.Warn, "Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
             }
         }
 
