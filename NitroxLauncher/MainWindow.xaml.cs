@@ -114,7 +114,7 @@ namespace NitroxLauncher
         {
             if (logic.ServerRunning && isServerEmbedded)
             {
-                MessageBox.Show("Cannot closButtonNavigation_Clickmbedded server is running.", "Close aborted", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("The embedded server is still running.", "Close aborted", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
