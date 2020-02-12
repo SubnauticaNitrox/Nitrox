@@ -63,7 +63,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Warn("Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
+                Log2.Instance.Log(NLogType.Warn, "Did not have an outstanding simulation request for " + id + " maybe there were multiple outstanding requests?");
             }
         }
 

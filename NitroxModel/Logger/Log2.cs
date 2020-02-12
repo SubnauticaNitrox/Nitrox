@@ -33,15 +33,15 @@ namespace NitroxModel.Logger
         }
 
         // Public API
-        public void LogMessage(NLogType type, string message)
+        public void Log(NLogType type, string message)
         {
             switch (type)
             {
-                case NLogType.Debug:
-                    _logger.Debug(message);
-                    break;
                 case NLogType.Trace:
                     _logger.Trace(message);
+                    break;
+                case NLogType.Debug:
+                    _logger.Debug(message);
                     break;
                 case NLogType.Info:
                     _logger.Info(message);
@@ -58,27 +58,29 @@ namespace NitroxModel.Logger
             }
         }
 
-        public void LogMessageWithPersonal(NLogType type, string message, params object[] args)
+        public void LogRemovePersonalInfo(NLogType type, string message, params object[] args)
         {
+            _logger.Trace(message, args);
+            args = null;
             switch (type)
             {
-                case NLogType.Debug:
-                    _logger.Debug(Format(message, args));
-                    break;
                 case NLogType.Trace:
-                    _logger.Trace(Format(message, args));
+                    _logger.Trace(message, args);
+                    break;
+                case NLogType.Debug:
+                    _logger.Debug(message, args);
                     break;
                 case NLogType.Info:
-                    _logger.Info(Format(message, args));
+                    _logger.Info(message, args);
                     break;
                 case NLogType.Warn:
-                    _logger.Warn(Format(message, args));
+                    _logger.Warn(message, args);
                     break;
                 case NLogType.Error:
-                    _logger.Error(Format(message, args));
+                    _logger.Error(message, args);
                     break;
                 case NLogType.Fatal:
-                    _logger.Fatal(Format(message, args));
+                    _logger.Fatal(message, args);
                     break;
             }
         }
@@ -120,13 +122,6 @@ namespace NitroxModel.Logger
         public void SetInGameMessagesEnabled(bool enabled)
         {
             _inGameMessagesEnabled = enabled;
-        }
-
-        // Private methods
-
-        private string Format(string format, params object[] args)
-        {
-            return string.Format(format, args);
         }
     }
 }

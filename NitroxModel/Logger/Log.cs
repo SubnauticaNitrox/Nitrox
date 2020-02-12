@@ -23,20 +23,6 @@ namespace NitroxModel.Logger
             Setup();
         }
 
-        public static void Error(string msg, Exception ex)
-        {
-            log.Error(msg, ex);
-        }
-
-        public static void Warn(string msg)
-        {
-            log.Warn(msg);
-        }
-
-        public static void Warn(string fmt, params object[] arg)
-        {
-            log.Warn(Format(fmt, arg));
-        }
 
         public static void Info(string msg)
         {
@@ -48,23 +34,11 @@ namespace NitroxModel.Logger
             log.Info(Format(fmt, arg));
         }
 
-        public static void Info(object o)
-        {
-            string msg = o == null ? "null" : o.ToString();
-            Info(msg);
-        }
-
         // Only for debug prints. Should not be displayed to general user.
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
             log.Debug(Format(fmt, arg));
-        }
-
-        public static void Debug(object o)
-        {
-            string msg = o == null ? "null" : o.ToString();
-            Debug(msg);
         }
 
         /// <summary>

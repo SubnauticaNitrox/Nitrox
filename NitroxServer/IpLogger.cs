@@ -98,7 +98,7 @@ namespace NitroxServer
             }
             else
             {
-                Log.Warn("Could not get your external IP. You are on your own...");
+                Log2.Instance.Log(NLogType.Warn, "Could not get your external IP. You are on your own...");
             }            
         }
     }

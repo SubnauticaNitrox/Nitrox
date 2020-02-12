@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Could not send packet because there wasn't a corresponding constructed object!");
+                Log2.Instance.Log(NLogType.Error, "Could not send packet because there wasn't a corresponding constructed object!");
             }
         }
 

@@ -20,7 +20,7 @@ namespace NitroxServer
         {
             if (ConfigurationManager.AppSettings.Count == 0)
             {
-                Log.Warn("Nitrox Server Cant Read Config File.");
+                Log2.Instance.Log(NLogType.Warn, "Nitrox Server Cant Read Config File.");
             }
             Instance = this;
             this.worldPersistence = worldPersistence;

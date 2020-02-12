@@ -72,7 +72,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log2.Instance.LogMessage(NLogType.Error, "Error processing buildEvent in ThrottledBuilder" + ex);
+                    Log2.Instance.Log(NLogType.Error, "Error processing buildEvent in ThrottledBuilder" + ex);
                 }
 
                 if (nextEvent.RequiresFreshFrame())
@@ -200,7 +200,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Could not assign new base id as no newly constructed base was found");
+                Log2.Instance.Log(NLogType.Error, "Could not assign new base id as no newly constructed base was found");
             }
         }
 

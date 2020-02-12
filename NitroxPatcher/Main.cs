@@ -34,7 +34,7 @@ namespace NitroxPatcher
 
             if (container != null)
             {
-                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
+                Log2.Instance.Log(NLogType.Warn, "Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
 

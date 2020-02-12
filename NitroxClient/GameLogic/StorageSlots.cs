@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Add storage slot item: Could not find BatterySource field on object " + owner.name);
+                Log2.Instance.Log(NLogType.Error, "Add storage slot item: Could not find BatterySource field on object " + owner.name);
             }
         }
 
@@ -109,7 +109,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Removing storage slot item: Could not find storage slot field on object " + owner.name);
+                Log2.Instance.Log(NLogType.Error, "Removing storage slot item: Could not find storage slot field on object " + owner.name);
             }
         }
 

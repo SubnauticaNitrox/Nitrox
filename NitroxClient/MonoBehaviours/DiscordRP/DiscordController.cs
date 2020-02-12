@@ -51,7 +51,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void ErrorCallback(int errorCode, string message)
         {
-            Log2.Instance.LogMessage(NLogType.Error, $"Discord: error {errorCode}: {message}");
+            Log2.Instance.Log(NLogType.Error, $"Discord: error {errorCode}: {message}");
         }
 
         public void JoinCallback(string secret)
@@ -70,7 +70,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             else
             {
                 Log2.Instance.ShowInGameMessage("Please be in the mainmenu if you want to join a session.");
-                Log.Warn("Discord: Can't join a server outside of the mainmenu.");
+                Log2.Instance.Log(NLogType.Warn, "Discord: Can't join a server outside of the mainmenu.");
             }
         }
 

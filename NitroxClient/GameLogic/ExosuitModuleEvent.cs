@@ -42,7 +42,7 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception e)
             {
-                Log.Warn("Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
+                Log2.Instance.Log(NLogType.Warn, "Got error setting arm GameObjects. This is probably due to docking sync and can be ignored\nErromessage: " + e.Message + "\n" + e.StackTrace);
             }
 
             Log.Debug("Spawn exosuit arms for: " + id);
@@ -64,7 +64,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Cooldown time does not match pickup or punch time");
+                Log2.Instance.Log(NLogType.Error, "Cooldown time does not match pickup or punch time");
                 return;
             }
             BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action);
@@ -97,7 +97,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Drill arm got an arm action he should not get: " + armAction);
+                Log2.Instance.Log(NLogType.Error, "Drill arm got an arm action he should not get: " + armAction);
             }
         }       
 
@@ -133,7 +133,7 @@ namespace NitroxClient.GameLogic
                 
                 if(opHitVector.IsEmpty())
                 {
-                    Log2.Instance.LogMessage(NLogType.Error, "No vector given that contains the hook direction");
+                    Log2.Instance.Log(NLogType.Error, "No vector given that contains the hook direction");
                     return;
                 }
                 
@@ -143,7 +143,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Grappling arm got an arm action he should not get: " + armAction);
+                Log2.Instance.Log(NLogType.Error, "Grappling arm got an arm action he should not get: " + armAction);
             }
         }
 
@@ -153,7 +153,7 @@ namespace NitroxClient.GameLogic
             {
                 if(opVector.IsEmpty() || opRotation.IsEmpty())
                 {
-                    Log2.Instance.LogMessage(NLogType.Error, "Torpedo arm action shoot: no vector or rotation present");
+                    Log2.Instance.Log(NLogType.Error, "Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
                 Vector3 forward = opVector.Get();
@@ -204,7 +204,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Torpedo arm got an arm action he should not get: " + armAction);
+                Log2.Instance.Log(NLogType.Error, "Torpedo arm got an arm action he should not get: " + armAction);
             }
         }
 

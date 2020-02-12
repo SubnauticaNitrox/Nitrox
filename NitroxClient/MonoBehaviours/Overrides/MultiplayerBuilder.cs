@@ -213,11 +213,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (component == null)
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Was unable to apply rotation metadata - no BaseGhost found");
+                Log2.Instance.Log(NLogType.Error, "Was unable to apply rotation metadata - no BaseGhost found");
             }
             else if (component.GetType() != rotationMetadata.GhostType)
             {
-                Log2.Instance.LogMessage(NLogType.Error, "Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
+                Log2.Instance.Log(NLogType.Error, "Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
             }
             else if (component is BaseAddCorridorGhost)
             {
@@ -347,7 +347,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 else
                 {
-                    Log2.Instance.LogMessage(NLogType.Error, "Could not find base component on the given game object: " + targetBaseGameObject.name);
+                    Log2.Instance.Log(NLogType.Error, "Could not find base component on the given game object: " + targetBaseGameObject.name);
                 }
             }
 

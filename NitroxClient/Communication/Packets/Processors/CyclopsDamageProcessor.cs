@@ -114,7 +114,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 // Looks like the list came in unordered. I've uttered "That shouldn't happen" enough to do sanity checks for what should be impossible.
                 if (packetDamagePointsIndex < damagePointIndexes.Length)
                 {
-                    Log2.Instance.LogMessage(NLogType.Error, "[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: " + damagePointIndexes[packetDamagePointsIndex].ToString()
+                    Log2.Instance.Log(NLogType.Error, "[CyclopsDamageProcessor packet.DamagePointIds did not fully iterate! Id: " + damagePointIndexes[packetDamagePointsIndex].ToString()
                         + " had no matching Id in damageManager.damagePoints, or the order is incorrect!]");
                 }
             }
