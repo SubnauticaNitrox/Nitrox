@@ -41,7 +41,7 @@ namespace NitroxServer
             IEnumerable<string> ips = netInterface.GetIPProperties().UnicastAddresses
                 .Select(address => address.Address.ToString())
                 .Where(address => !address.ToString().Contains("fe80::"));
-            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "If using Hamachi, use this IP: {0}", string.Join(" or ", ips));
+            Log.Instance.LogSensitive(LogCategory.Info, "If using Hamachi, use this IP: {0}", string.Join(" or ", ips));
         }
 
         private static void PrintIfLan(NetworkInterface netInterface)
@@ -62,7 +62,7 @@ namespace NitroxServer
 
                 if (splitIpParts[0] == "10" || splitIpParts[0] == "192" && splitIpParts[1] == "168" || splitIpParts[0] == "172" && secondPart > 15 && secondPart < 32) //To get if IP is private
                 {
-                    Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "If playing on LAN, use this IP: {0}", eachIp.Address);
+                    Log.Instance.LogSensitive(LogCategory.Info, "If playing on LAN, use this IP: {0}", eachIp.Address);
                 }
             }
         }

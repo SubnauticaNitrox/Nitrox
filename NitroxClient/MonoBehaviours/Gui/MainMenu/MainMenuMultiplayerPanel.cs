@@ -168,7 +168,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (SocketException e)
             {
-                Log.Instance.LogRemovePersonalInfo(LogCategory.Error, "Unable to resolve the address: {0}", serverIp);
+                Log.Instance.LogSensitive(LogCategory.Error, "Unable to resolve the address: {0}", serverIp);
                 Log.Instance.LogException(e.Message, e);
             }
         }

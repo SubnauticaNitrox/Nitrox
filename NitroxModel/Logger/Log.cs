@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NLog;
-using NLog.Targets.Wrappers;
 
 namespace NitroxModel.Logger
 {
     public sealed class Log : ILog
     {
-        // Instance
+        #region Instance
         private static ILog instance;
         public static ILog Instance
         {
@@ -22,8 +18,9 @@ namespace NitroxModel.Logger
                 return instance;
             }
         }
+        #endregion
 
-        // Private  variables
+        #region Private variables
         private readonly NLog.Logger logger;
         private InGameLogger inGameLogger;
         private bool inGameMessagesEnabled = false;
@@ -31,16 +28,19 @@ namespace NitroxModel.Logger
         {
             logger = LogManager.GetCurrentClassLogger();
         }
+        #endregion
 
-        // Public API
+        #region Public API
         public void LogMessage(LogCategory category, string message)
         {
             LogWithCategory(category, message);
         }
 
-        public void LogRemovePersonalInfo(LogCategory category, string message, params object[] args)
+        public void LogSensitive(LogCategory category, string message, params object[] args)
         {
+#if DEBUG
             logger.Trace(message, args);
+#endif
             LogWithCategory(category, message);
         }
 
@@ -82,17 +82,22 @@ namespace NitroxModel.Logger
         {
             inGameMessagesEnabled = enabled;
         }
+        #endregion
 
-        // Private Methods
+        #region Private methods
         private void LogWithCategory(LogCategory category, string message)
         {
             switch (category)
             {
                 case LogCategory.Trace:
+#if DEBUG
                     logger.Trace(message);
+#endif
                     break;
                 case LogCategory.Debug:
+#if DEBUG
                     logger.Debug(message);
+#endif
                     break;
                 case LogCategory.Info:
                     logger.Info(message);
@@ -108,5 +113,6 @@ namespace NitroxModel.Logger
                     break;
             }
         }
+#endregion
     }
 }

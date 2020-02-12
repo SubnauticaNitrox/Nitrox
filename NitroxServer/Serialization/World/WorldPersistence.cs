@@ -205,8 +205,8 @@ namespace NitroxServer.Serialization.World
 
             Log.Instance.LogMessage(LogCategory.Info, "World GameMode: " + gameMode);
             var serverPass = (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
-            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Server Password: {0} ", serverPass);
-            Log.Instance.LogRemovePersonalInfo(LogCategory.Info, "Admin Password: {0}", config.AdminPassword);
+            Log.Instance.LogSensitive(LogCategory.Info, "Server Password: {0} ", serverPass);
+            Log.Instance.LogSensitive(LogCategory.Info, "Admin Password: {0}", config.AdminPassword);
             
             Log.Instance.LogMessage(LogCategory.Info, "To get help for commands, run help in console or /help in chatbox");
 
