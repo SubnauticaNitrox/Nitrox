@@ -36,7 +36,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public NitroxMatrix4x4 Identity
+        public static NitroxMatrix4x4 Identity
         {
             get
             {
@@ -208,29 +208,43 @@ namespace NitroxModel.DataStructures.GameLogic
             return transMatrix;
         }
 
+        public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
+        {
+            NitroxVector3 position;
+            position.X = matrix[0, 3];
+            position.Y = matrix[1, 3];
+            position.Z = matrix[2, 3];
+            return position;
+        }
+
         public static NitroxMatrix4x4 operator *(NitroxMatrix4x4 lhs, NitroxMatrix4x4 rhs)
         {
             NitroxMatrix4x4 result;
             result.M = new float[4, 4]; // 4x4 array
-            result[0, 0] = lhs[0, 0] * rhs[0, 0] + lhs[0, 1] * rhs[1, 0] + lhs[0, 2] * rhs[2, 0] + lhs[0, 3] * rhs[3, 0];
-            result[0, 1] = lhs[0, 0] * rhs[0, 1] + lhs[0, 1] * rhs[1, 1] + lhs[0, 2] * rhs[2, 1] + lhs[0, 3] * rhs[3, 1];
-            result[0, 2] = lhs[0, 0] * rhs[0, 2] + lhs[0, 1] * rhs[1, 2] + lhs[0, 2] * rhs[2, 2] + lhs[0, 3] * rhs[3, 2];
-            result[0, 3] = lhs[0, 0] * rhs[0, 3] + lhs[0, 1] * rhs[1, 3] + lhs[0, 2] * rhs[2, 3] + lhs[0, 3] * rhs[3, 3];
 
-            result[1, 0] = lhs[1, 0] * rhs[0, 0] + lhs[1, 1] * rhs[1, 0] + lhs[1, 2] * rhs[2, 0] + lhs[1, 3] * rhs[3, 0];
-            result[1, 1] = lhs[1, 0] * rhs[0, 1] + lhs[1, 1] * rhs[1, 1] + lhs[1, 2] * rhs[2, 1] + lhs[1, 3] * rhs[3, 1];
-            result[1, 2] = lhs[1, 0] * rhs[0, 2] + lhs[1, 1] * rhs[1, 2] + lhs[1, 2] * rhs[2, 2] + lhs[1, 3] * rhs[3, 2];
-            result[1, 3] = lhs[1, 0] * rhs[0, 3] + lhs[1, 1] * rhs[1, 3] + lhs[1, 2] * rhs[2, 3] + lhs[1, 3] * rhs[3, 3];
+            // First row
+            result[0,0] = lhs[0,0] * rhs[0,0] + lhs[0,1] * rhs[1,0] + lhs[0,2] * rhs[2,0] + lhs[0,3] * rhs[3,0];
+            result[0,1] = lhs[0,0] * rhs[0,1] + lhs[0,1] * rhs[1,1] + lhs[0,2] * rhs[2,1] + lhs[0,3] * rhs[3,1];
+            result[0,2] = lhs[0,0] * rhs[0,2] + lhs[0,1] * rhs[1,2] + lhs[0,2] * rhs[2,2] + lhs[0,3] * rhs[3,2];
+            result[0,3] = lhs[0,0] * rhs[0,3] + lhs[0,1] * rhs[1,3] + lhs[0,2] * rhs[2,3] + lhs[0,3] * rhs[3,3];
 
-            result[2, 0] = lhs[2, 0] * rhs[0, 0] + lhs[2, 1] * rhs[1, 0] + lhs[2, 2] * rhs[2, 0] + lhs[2, 3] * rhs[3, 0];
-            result[2, 1] = lhs[2, 0] * rhs[0, 1] + lhs[2, 1] * rhs[1, 1] + lhs[2, 2] * rhs[2, 1] + lhs[2, 3] * rhs[3, 1];
-            result[2, 2] = lhs[2, 0] * rhs[0, 2] + lhs[2, 1] * rhs[1, 2] + lhs[2, 2] * rhs[2, 2] + lhs[2, 3] * rhs[3, 2];
-            result[2, 3] = lhs[2, 0] * rhs[0, 3] + lhs[2, 1] * rhs[1, 3] + lhs[2, 2] * rhs[2, 3] + lhs[2, 3] * rhs[3, 3];
+            // Second row
+            result[1,0] = lhs[1,0] * rhs[0,0] + lhs[1,1] * rhs[1,0] + lhs[1,2] * rhs[2,0] + lhs[1,3] * rhs[3,0];
+            result[1,1] = lhs[1,0] * rhs[0,1] + lhs[1,1] * rhs[1,1] + lhs[1,2] * rhs[2,1] + lhs[1,3] * rhs[3,1];
+            result[1,2] = lhs[1,0] * rhs[0,2] + lhs[1,1] * rhs[1,2] + lhs[1,2] * rhs[2,2] + lhs[1,3] * rhs[3,2];
+            result[1,3] = lhs[1,0] * rhs[0,3] + lhs[1,1] * rhs[1,3] + lhs[1,2] * rhs[2,3] + lhs[1,3] * rhs[3,3];
 
-            result[3, 0] = lhs[3, 0] * rhs[0, 0] + lhs[3, 1] * rhs[1, 0] + lhs[3, 2] * rhs[2, 0] + lhs[3, 3] * rhs[3, 0];
-            result[3, 1] = lhs[3, 0] * rhs[0, 1] + lhs[3, 1] * rhs[1, 1] + lhs[3, 2] * rhs[2, 1] + lhs[3, 3] * rhs[3, 1];
-            result[3, 2] = lhs[3, 0] * rhs[0, 2] + lhs[3, 1] * rhs[1, 2] + lhs[3, 2] * rhs[2, 2] + lhs[3, 3] * rhs[3, 2];
-            result[3, 3] = lhs[3, 0] * rhs[0, 3] + lhs[3, 1] * rhs[1, 3] + lhs[3, 2] * rhs[2, 3] + lhs[3, 3] * rhs[3, 3];
+            // Third row
+            result[2,0] = lhs[2,0] * rhs[0,0] + lhs[2,1] * rhs[1,0] + lhs[2,2] * rhs[2,0] + lhs[2,3] * rhs[3,0];
+            result[2,1] = lhs[2,0] * rhs[0,1] + lhs[2,1] * rhs[1,1] + lhs[2,2] * rhs[2,1] + lhs[2,3] * rhs[3,1];
+            result[2,2] = lhs[2,0] * rhs[0,2] + lhs[2,1] * rhs[1,2] + lhs[2,2] * rhs[2,2] + lhs[2,3] * rhs[3,2];
+            result[2,3] = lhs[2,0] * rhs[0,3] + lhs[2,1] * rhs[1,3] + lhs[2,2] * rhs[2,3] + lhs[2,3] * rhs[3,3];
+
+            // Fourth row
+            result[3,0] = lhs[3,0] * rhs[0,0] + lhs[3,1] * rhs[1,0] + lhs[3,2] * rhs[2,0] + lhs[3,3] * rhs[3,0];
+            result[3,1] = lhs[3,0] * rhs[0,1] + lhs[3,1] * rhs[1,1] + lhs[3,2] * rhs[2,1] + lhs[3,3] * rhs[3,1];
+            result[3,2] = lhs[3,0] * rhs[0,2] + lhs[3,1] * rhs[1,2] + lhs[3,2] * rhs[2,2] + lhs[3,3] * rhs[3,2];
+            result[3,3] = lhs[3,0] * rhs[0,3] + lhs[3,1] * rhs[1,3] + lhs[3,2] * rhs[2,3] + lhs[3,3] * rhs[3,3];
 
             return result;
         }
@@ -262,6 +276,24 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
+        public NitroxVector3 MultiplyPoint(NitroxVector3 localPosition)
+        {
+            float x = M[0, 0] * localPosition.X + M[0, 1] * localPosition.Y + M[0, 2] * localPosition.Z + M[0, 3];
+            float y = M[1, 0] * localPosition.X + M[1, 1] * localPosition.Y + M[1, 2] * localPosition.Z + M[1, 3];
+            float z = M[2, 0] * localPosition.X + M[2, 1] * localPosition.Y + M[2, 2] * localPosition.Z + M[2, 3];
+            float w = M[3, 0] * localPosition.X + M[3, 1] * localPosition.Y + M[3, 2] * localPosition.Z + M[3, 3];
+
+            if (w == 1)
+            {
+                return new NitroxVector3(x, y, z);
+            }
+            else
+            {
+                NitroxVector3 vector = new NitroxVector3(x, y, z) / w;
+                return vector;
+            }
+        }
+
         public static NitroxMatrix4x4 TRS(NitroxVector3 localPos, NitroxQuaternion localRotation, NitroxVector3 localScale)
         {
             NitroxMatrix4x4 scaleMatrix = SetScale(localScale);
@@ -291,15 +323,6 @@ namespace NitroxModel.DataStructures.GameLogic
             matrix[2, 2] /= scale.Z;
 
             return scale;
-        }
-
-        public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
-        {
-            NitroxVector3 position;
-            position.X = matrix[0,3];
-            position.Y = matrix[1,3];
-            position.Z = matrix[2,3];
-            return position;
         }
 
         public static NitroxQuaternion ExtractRotation(ref NitroxMatrix4x4 matrix)

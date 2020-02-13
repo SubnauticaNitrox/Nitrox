@@ -272,9 +272,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     UweWorldEntity worldEntity = opWorldEntity.Get();
 
-                    Entity prefabEntity = new Entity(transform.Position,
-                                            transform.Rotation,
-                                            transform.Scale,
+                    Entity prefabEntity = new Entity(transform.LocalPosition,
+                                            transform.LocalRotation,
+                                            worldEntity.Scale,
                                             worldEntity.TechType,
                                             worldEntity.CellLevel,
                                             prefab.ClassId,

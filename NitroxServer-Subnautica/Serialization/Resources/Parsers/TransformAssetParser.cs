@@ -18,18 +18,18 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             reader.Position += 12;
 
-            transformAsset.Rotation = new NitroxQuaternion(
+            transformAsset.LocalRotation = new NitroxQuaternion(
                 reader.ReadSingle(), // Quaternion X
                 reader.ReadSingle(), // Quaternion Y
                 reader.ReadSingle(), // Quaternion Z
                 reader.ReadSingle()); // Quaternion W
 
-            transformAsset.Position = new NitroxVector3(
+            transformAsset.LocalPosition = new NitroxVector3(
                reader.ReadSingle(), // Position X
                reader.ReadSingle(), // Position Y
                reader.ReadSingle()); // Position Z
 
-            transformAsset.Scale = new NitroxVector3(
+            transformAsset.LocalScale = new NitroxVector3(
                reader.ReadSingle(), // Scale X
                reader.ReadSingle(), // Scale Y
                reader.ReadSingle()); // Scale Z

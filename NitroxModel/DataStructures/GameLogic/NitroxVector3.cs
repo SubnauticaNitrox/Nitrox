@@ -54,6 +54,11 @@ namespace NitroxModel.DataStructures.GameLogic
             -a.Z);
         }
 
+        public static NitroxVector3 operator /(NitroxVector3 lhs, float rhs)
+        {
+            return new NitroxVector3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
+        }
+
         public static NitroxVector3 Normalize(NitroxVector3 value)
         {
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z;

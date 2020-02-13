@@ -23,7 +23,7 @@ namespace NitroxModel.DataStructures.GameLogic
             get
             {
                 NitroxMatrix4x4 localMatrix = NitroxMatrix4x4.TRS(LocalPosition, LocalRotation, LocalScale);
-                return Parent != null ? Parent.localToWorldMatrix * localMatrix : localMatrix;
+                return Parent != null ? localMatrix * Parent.localToWorldMatrix : localMatrix;
             }
         }
 
@@ -33,9 +33,8 @@ namespace NitroxModel.DataStructures.GameLogic
         {
             get 
             {
-                NitroxMatrix4x4 matrix = localToWorldMatrix;
-                //System.Diagnostics.Debug.WriteLine(matrix.ToString());
-                return NitroxMatrix4x4.ExtractTranslation(ref matrix);
+                NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
+                return matrix.MultiplyPoint(LocalPosition);
             }
             set
             {
@@ -47,7 +46,7 @@ namespace NitroxModel.DataStructures.GameLogic
             get
             {
                 NitroxMatrix4x4 matrix = localToWorldMatrix;
-                NitroxMatrix4x4.ExtractScale(ref matrix);
+                NitroxMatrix4x4.ExtractScale(ref matrix); // This is to just get the scale out of the matrix so the rotation is accurate
                 return NitroxMatrix4x4.ExtractRotation(ref matrix);
             }
             set
