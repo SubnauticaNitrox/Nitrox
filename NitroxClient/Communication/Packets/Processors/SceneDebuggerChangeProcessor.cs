@@ -35,7 +35,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 }
                 catch
                 {
-                    Log.Instance.LogMessage(LogCategory.Error, "SceneDebuggerChange: SetValue has trown a error");
+                    Log.Error("SceneDebuggerChange: SetValue has trown a error");
                 }
             }
             else

@@ -30,15 +30,15 @@ namespace NitroxPatcher
         
         public static void Execute()
         {
-            Log.Instance.SetInGameMessagesEnabled(true);
+            Log.SetInGameMessagesEnabled(true);
 
             if (container != null)
             {
-                Log.Instance.LogMessage(LogCategory.Warn, "Patches have already been detected! Call Apply or Restore instead.");
+                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
                 return;
             }
 
-            Log.Instance.LogMessage(LogCategory.Info, "Registering Dependencies");
+            Log.Info("Registering Dependencies");
             container = CreatePatchingContainer();
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
@@ -56,7 +56,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Applying dynamic patch " + patch.GetType().Name);
+                Log.Info("Applying dynamic patch " + patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
@@ -77,7 +77,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Restoring dynamic patch " + patch.GetType().Name);
+                Log.Info("Restoring dynamic patch " + patch.GetType().Name);
                 patch.Restore(harmony);
             }
 
@@ -86,20 +86,20 @@ namespace NitroxPatcher
 
         private static void InitPatches()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Patching Subnautica...");
+            Log.Info("Patching Subnautica...");
 
             // Enabling this creates a log file on your desktop (why there?), showing the emitted IL instructions.
             HarmonyInstance.DEBUG = false;
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Applying persistent patch " + patch.GetType().Name);
+                Log.Info("Applying persistent patch " + patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Instance.LogSensitive(LogCategory.Info, "Completed patching using {0}", Assembly.GetExecutingAssembly().FullName);
+            Log.LogSensitive(LogCategory.Info, "Completed patching using {0}", Assembly.GetExecutingAssembly().FullName);
         }
 
         private static IContainer CreatePatchingContainer()
@@ -111,14 +111,14 @@ namespace NitroxPatcher
 
         private static void ApplyNitroxBehaviours()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Applying Nitrox behaviours..");
+            Log.Info("Applying Nitrox behaviours..");
 
             GameObject nitroxRoot = new GameObject();
             nitroxRoot.name = "Nitrox";
             nitroxRoot.AddComponent<NitroxBootstrapper>();
             NitroxClient.Helpers.NitroxProtobufSerializer serializer = new NitroxClient.Helpers.NitroxProtobufSerializer(assemblies);
 
-            Log.Instance.LogMessage(LogCategory.Info, "Behaviours applied.");
+            Log.Info("Behaviours applied.");
         }
     }
 }

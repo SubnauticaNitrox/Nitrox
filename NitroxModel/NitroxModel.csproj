@@ -266,7 +266,6 @@
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
-    <Compile Include="Logger\ILog.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Logger\Log.cs" />
     <Compile Include="Logger\LogCategory.cs" />

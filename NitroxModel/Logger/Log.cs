@@ -1,56 +1,81 @@
 ﻿using System;
+using System.Diagnostics;
 using NLog;
 
 namespace NitroxModel.Logger
 {
-    public sealed class Log : ILog
+    public static class Log
     {
-        #region Instance
-        private static ILog instance;
-        public static ILog Instance
+        // Private variables
+        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
+        private static InGameLogger inGameLogger;
+        private static bool inGameMessagesEnabled = false;
+
+        // Public API
+        [Conditional("DEBUG")]
+        public static void Trace(string message)
         {
-            get
+            logger.Trace(message);
+        }
+        [Conditional("DEBUG")]
+        public static void Debug(string message)
+        {
+            logger.Debug(message);
+        }
+
+        public static void Info(string message)
+        {
+            logger.Info(message);
+        }
+
+        public static void Warn(string message)
+        {
+            logger.Warn(message);
+        }
+
+        public static void Error(string message)
+        {
+            logger.Error(message);
+        }
+
+        public static void Fatal(string message)
+        {
+            logger.Fatal(message);
+        }
+
+        public static void LogSensitive(LogCategory category, string message, params object[] args)
+        {
+            logger.Trace(message, args);
+            switch (category)
             {
-                if (instance == null)
-                {
-                    instance = new Log();
-                }
-                return instance;
+                case LogCategory.Trace:
+                    Trace(message);
+                    break;
+                case LogCategory.Debug:
+                    Debug(message);
+                    break;
+                case LogCategory.Info:
+                    Info(message);
+                    break;
+                case LogCategory.Warn:
+                    Warn(message);
+                    break;
+                case LogCategory.Error:
+                    Error(message);
+                    break;
+                case LogCategory.Fatal:
+                    Fatal(message);
+                    break;
             }
         }
-        #endregion
 
-        #region Private variables
-        private readonly NLog.Logger logger;
-        private InGameLogger inGameLogger;
-        private bool inGameMessagesEnabled = false;
-        private Log()
-        {
-            logger = LogManager.GetCurrentClassLogger();
-        }
-        #endregion
-
-        #region Public API
-        public void LogMessage(LogCategory category, string message)
-        {
-            LogWithCategory(category, message);
-        }
-
-        public void LogSensitive(LogCategory category, string message, params object[] args)
-        {
-#if DEBUG
-            logger.Trace(message, args);
-#endif
-            LogWithCategory(category, message);
-        }
-
-        public void LogException(string message, Exception ex)
+        public static void Exception(string message, Exception ex)
         {
             logger.Error(ex, message);
         }
 
         // In game messages
-        public void ShowInGameMessage(string message, bool containsPersonalInfo)
+        public static void ShowInGameMessage(string message, bool containsPersonalInfo = false)
         {
             if (inGameLogger == null)
             {
@@ -72,47 +97,15 @@ namespace NitroxModel.Logger
             
         }
 
-        public void RegisterInGameLogger(InGameLogger gameLogger)
+        public static void RegisterInGameLogger(InGameLogger gameLogger)
         {
             logger.Info("Registered InGameLogger");
             inGameLogger = gameLogger;
         }
 
-        public void SetInGameMessagesEnabled(bool enabled)
+        public static void SetInGameMessagesEnabled(bool enabled)
         {
             inGameMessagesEnabled = enabled;
         }
-        #endregion
-
-        #region Private methods
-        private void LogWithCategory(LogCategory category, string message)
-        {
-            switch (category)
-            {
-                case LogCategory.Trace:
-#if DEBUG
-                    logger.Trace(message);
-#endif
-                    break;
-                case LogCategory.Debug:
-#if DEBUG
-                    logger.Debug(message);
-#endif
-                    break;
-                case LogCategory.Info:
-                    logger.Info(message);
-                    break;
-                case LogCategory.Warn:
-                    logger.Warn(message);
-                    break;
-                case LogCategory.Error:
-                    logger.Error(message);
-                    break;
-                case LogCategory.Fatal:
-                    logger.Fatal(message);
-                    break;
-            }
-        }
-#endregion
     }
 }

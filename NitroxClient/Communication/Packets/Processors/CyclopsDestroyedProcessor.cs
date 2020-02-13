@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             // it all manually below. At least this way I can make the screen shake hard enough to cause motion sickness, or disable it if I wanted to.
             if (cyclops.IsPresent())
             {
-                Log.Instance.LogMessage(LogCategory.Debug, "[CyclopsDestroyedProcessor Id: " + packet.Id + "]");
+                Log.Debug("[CyclopsDestroyedProcessor Id: " + packet.Id + "]");
 
                 SubRoot subRoot = cyclops.Get().RequireComponent<SubRoot>();
 

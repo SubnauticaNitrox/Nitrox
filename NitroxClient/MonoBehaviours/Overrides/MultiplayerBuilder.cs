@@ -99,7 +99,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (MultiplayerBuilder.CreateGhost())
             {
-                Log.Instance.LogMessage(LogCategory.Debug, "Ghost Created!");
+                Log.Debug("Ghost Created!");
             }
 
             MultiplayerBuilder.canPlace = MultiplayerBuilder.UpdateAllowed();
@@ -213,15 +213,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             if (component == null)
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Was unable to apply rotation metadata - no BaseGhost found");
+                Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
             }
             else if (component.GetType() != rotationMetadata.GhostType)
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
+                Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
             }
             else if (component is BaseAddCorridorGhost)
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Placing BaseAddCorridorGhost Rotation Metadata");
+                Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
                 CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
                 BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
@@ -234,7 +234,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
             else if (component is BaseAddMapRoomGhost)
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Placing MapRoomRotationMetadata Rotation Metadata");
+                Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
                 MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
                 BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);
@@ -347,7 +347,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
                 else
                 {
-                    Log.Instance.LogMessage(LogCategory.Error, "Could not find base component on the given game object: " + targetBaseGameObject.name);
+                    Log.Error("Could not find base component on the given game object: " + targetBaseGameObject.name);
                 }
             }
 

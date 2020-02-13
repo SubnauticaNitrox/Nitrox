@@ -32,7 +32,7 @@ namespace NitroxServer_Subnautica
             }
             catch (Exception e)
             {
-                Log.Instance.LogException(e.Message, e);
+                Log.Exception(e.Message, e);
                 return;
             }
 
@@ -107,7 +107,7 @@ namespace NitroxServer_Subnautica
 
         private static void StopAndExitServer()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Exiting ...");
+            Log.Info("Exiting ...");
             Server.Instance.Stop();
             Environment.Exit(0);
         }

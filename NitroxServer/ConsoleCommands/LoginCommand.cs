@@ -43,7 +43,7 @@ namespace NitroxServer.ConsoleCommands
             {
                 message = "Incorrect Password";
             }
-            Log.Instance.LogMessage(LogCategory.Info, message);
+            Log.Info(message);
             SendServerMessageIfPlayerIsPresent(player, message);
         }
 

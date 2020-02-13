@@ -41,23 +41,23 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void ReadyCallback(ref DiscordRpc.DiscordUser connectedUser)
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Discord: ready");
+            Log.Info("Discord: ready");
         }
 
         public void DisconnectedCallback(int errorCode, string message)
         {
-            Log.Instance.LogMessage(LogCategory.Info, string.Format("Discord: disconnect {0}: {1}", errorCode, message));
+            Log.Info(string.Format("Discord: disconnect {0}: {1}", errorCode, message));
         }
 
         public void ErrorCallback(int errorCode, string message)
         {
-            Log.Instance.LogMessage(LogCategory.Error, $"Discord: error {errorCode}: {message}");
+            Log.Error($"Discord: error {errorCode}: {message}");
         }
 
         public void JoinCallback(string secret)
         {
-            Log.Instance.LogMessage(LogCategory.Info, string.Format("Discord: join ({0})", secret));
-            Log.Instance.LogMessage(LogCategory.Debug, "Discord" + SceneManager.GetActiveScene().name);
+            Log.Info(string.Format("Discord: join ({0})", secret));
+            Log.Debug("Discord" + SceneManager.GetActiveScene().name);
             if (SceneManager.GetActiveScene().name == "StartScreen")
             {
                 NitroxServiceLocator.BeginNewLifetimeScope();
@@ -69,21 +69,21 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             }
             else
             {
-                Log.Instance.ShowInGameMessage("Please be in the mainmenu if you want to join a session.");
-                Log.Instance.LogMessage(LogCategory.Warn, "Discord: Can't join a server outside of the mainmenu.");
+                Log.ShowInGameMessage("Please be in the mainmenu if you want to join a session.");
+                Log.Warn("Discord: Can't join a server outside of the mainmenu.");
             }
         }
 
         public void SpectateCallback(string secret)
         {
-            Log.Instance.LogMessage(LogCategory.Info, string.Format("Discord: spectate ({0})", secret));
+            Log.Info(string.Format("Discord: spectate ({0})", secret));
         }
 
         public void RequestCallback(ref DiscordRpc.DiscordUser request)
         {
             if (!ShowingWindow)
             {
-                Log.Instance.LogMessage(LogCategory.Info, string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
+                Log.Info(string.Format("Discord: join request {0}#{1}: {2}", request.username, request.discriminator, request.userId));
                 DiscordJoinRequestGui acceptRequest = gameObject.AddComponent<DiscordJoinRequestGui>();
                 acceptRequest.Request = request;
                 lastJoinRequestUserID = request.userId;
@@ -91,7 +91,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Discord: Request window is allready active.");
+                Log.Info("Discord: Request window is allready active.");
             }
         }
 
@@ -102,7 +102,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         void OnEnable()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Discord: init");
+            Log.Info("Discord: init");
             handlers = new DiscordRpc.EventHandlers();
             handlers.readyCallback = ReadyCallback;
             handlers.disconnectedCallback += DisconnectedCallback;
@@ -117,7 +117,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         void OnDisable()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Discord: shutdown");
+            Log.Info("Discord: shutdown");
             DiscordRpc.Shutdown();
         }
 
@@ -154,7 +154,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public void RespondLastJoinRequest(int accept)
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Discord: responding to Join request => " + (accept.Equals("1") ? "true" : "false"));
+            Log.Info("Discord: responding to Join request => " + (accept.Equals("1") ? "true" : "false"));
             DiscordRpc.Respond(lastJoinRequestUserID, (DiscordRpc.Reply)accept);
         }
 

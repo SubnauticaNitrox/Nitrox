@@ -22,7 +22,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 foreach (KeyBinding keyBinding in keyBindingManager.KeyboardKeyBindings)
                 {
-                    Log.Instance.LogMessage(LogCategory.Debug, $"Getting keybinding: {keyBinding.Device}, {keyBinding.Label} ({keyBinding.Button}), {bindingSet}");
+                    Log.Debug($"Getting keybinding: {keyBinding.Device}, {keyBinding.Label} ({keyBinding.Button}), {bindingSet}");
                     string binding = (string)ReflectionHelper.ReflectionCall<GameInput>(null, "GetBinding", new Type[] { typeof(GameInput.Device), typeof(GameInput.Button), typeof(GameInput.BindingSet) }, true, true, keyBinding.Device, keyBinding.Button, bindingSet);
                     string name = string.Format(serializerFormat, keyBinding.Device, keyBinding.Button, bindingSet);
 

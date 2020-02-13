@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic
 
                 if (NitroxEntity.GetId(existingFire.gameObject) != fireData.CyclopsId)
                 {
-                    Log.Instance.LogMessage(LogCategory.Error, "[Fires.Create Fire already exists at node index " + fireData.NodeIndex
+                    Log.Error("[Fires.Create Fire already exists at node index " + fireData.NodeIndex
                         + "! Replacing existing Fire Id " + NitroxEntity.GetId(existingFire.gameObject)
                         + " with Id " + fireData.CyclopsId
                         + "]");
@@ -126,7 +126,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Error, "[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
+                Log.Error("[FireCreatedProcessor Cannot create new Cyclops fire! PrefabSpawn component could not be found in fire node!"
                     + " Fire Id: " + fireData.FireId
                     + " SubRoot Id: " + fireData.CyclopsId
                     + " Room: " + fireData.Room

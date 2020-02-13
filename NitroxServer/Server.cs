@@ -20,7 +20,7 @@ namespace NitroxServer
         {
             if (ConfigurationManager.AppSettings.Count == 0)
             {
-                Log.Instance.LogMessage(LogCategory.Warn, "Nitrox Server Cant Read Config File.");
+                Log.Warn("Nitrox Server Cant Read Config File.");
             }
             Instance = this;
             this.worldPersistence = worldPersistence;
@@ -50,17 +50,17 @@ namespace NitroxServer
             IsRunning = true;
             IpLogger.PrintServerIps();
             server.Start();
-            Log.Instance.LogMessage(LogCategory.Info, "Nitrox Server Started");
+            Log.Info("Nitrox Server Started");
             EnablePeriodicSaving();
         }
 
         public void Stop()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Nitrox Server Stopping...");
+            Log.Info("Nitrox Server Stopping...");
             DisablePeriodicSaving();
             Save();
             server.Stop();
-            Log.Instance.LogMessage(LogCategory.Info, "Nitrox Server Stopped");
+            Log.Info("Nitrox Server Stopped");
             IsRunning = false;
         }
 

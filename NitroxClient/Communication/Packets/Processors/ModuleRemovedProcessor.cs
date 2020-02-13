@@ -36,7 +36,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Could not find equipment type for " + owner.name);
+                Log.Error("Could not find equipment type for " + owner.name);
             }
 
             UnityEngine.Object.Destroy(item);

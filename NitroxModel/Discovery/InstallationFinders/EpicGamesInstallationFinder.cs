@@ -27,7 +27,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 Match match = installLocationRegex.Match(fileText);
                 if (fileText.Contains("Subnautica") && match.Success)
                 {
-                    Log.Instance.LogMessage(LogCategory.Debug, $"Found Subnautica install path in '{Path.GetFullPath(file)}'. Full pattern match: '{match.Value}'");
+                    Log.Debug($"Found Subnautica install path in '{Path.GetFullPath(file)}'. Full pattern match: '{match.Value}'");
                     return Optional<string>.Of(match.Groups[1].Value);
                 }
             }

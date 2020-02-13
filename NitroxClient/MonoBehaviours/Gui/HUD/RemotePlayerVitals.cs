@@ -168,7 +168,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
                 default:
-                    Log.Instance.LogMessage(LogCategory.Info, "Unhandled bar type: " + type);
+                    Log.Info("Unhandled bar type: " + type);
                     break;
             }
 

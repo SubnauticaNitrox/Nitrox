@@ -31,7 +31,7 @@ namespace NitroxClient.GameLogic.InitialSync
         
         private void SetEncyclopediaEntry(List<string> entries)
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Received initial sync packet with " + entries.Count + " encyclopedia entries");
+            Log.Info("Received initial sync packet with " + entries.Count + " encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 complete.Add(item.Enum());
             }
 
-            Log.Instance.LogMessage(LogCategory.Info, "PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
+            Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
 
         }
 
@@ -64,12 +64,12 @@ namespace NitroxClient.GameLogic.InitialSync
                 partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
             }
 
-            Log.Instance.LogMessage(LogCategory.Info, "PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
+            Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
         
         private void SetKnownTech(List<TechTypeModel> techTypes)
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Received initial sync packet with " + techTypes.Count + " known tech types");
+            Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
@@ -83,7 +83,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void SetPDALog(List<PDALogEntry> logEntries)
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Received initial sync packet with " + logEntries.Count + " pda log entries");
+            Log.Info("Received initial sync packet with " + logEntries.Count + " pda log entries");
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {

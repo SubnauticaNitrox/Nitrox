@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
             Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleId);
             if (!vehicle.IsPresent())
             {
-                Log.Instance.LogMessage(LogCategory.Error, $"VehicleDocking received for vehicle id {packet.VehicleId} that does not exist!");
+                Log.Error($"VehicleDocking received for vehicle id {packet.VehicleId} that does not exist!");
                 return;
             }
 

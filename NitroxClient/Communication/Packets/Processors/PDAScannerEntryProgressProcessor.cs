@@ -30,13 +30,13 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     if (packet.Unlocked > entry.unlocked)
                     {
-                        Log.Instance.LogMessage(LogCategory.Info, "PDAEntryProgress Upldate Old:" + entry.unlocked + " New" + packet.Unlocked);
+                        Log.Info("PDAEntryProgress Upldate Old:" + entry.unlocked + " New" + packet.Unlocked);
                         entry.unlocked = packet.Unlocked;
                     }
                 }
                 else
                 {
-                    Log.Instance.LogMessage(LogCategory.Info, "PDAEntryProgress New TechType:" + techType + " Unlocked:" + packet.Unlocked);
+                    Log.Info("PDAEntryProgress New TechType:" + techType + " Unlocked:" + packet.Unlocked);
                     MethodInfo methodAdd = typeof(PDAScanner).GetMethod("Add", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[] { typeof(TechType), typeof(int) }, null);
                     entry = (PDAScanner.Entry)methodAdd.Invoke(null, new object[] { techType, packet.Unlocked });
                 }

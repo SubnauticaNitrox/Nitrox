@@ -70,11 +70,11 @@ namespace NitroxServer.Serialization.World
                     serializer.Serialize(stream, persistedData.WorldData);
                 }
 
-                Log.Instance.LogMessage(LogCategory.Info, "World state saved.");
+                Log.Info("World state saved.");
             }
             catch (Exception ex)
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Could not save world: " + ex);
+                Log.Info("Could not save world: " + ex);
             }
         }
 
@@ -136,11 +136,11 @@ namespace NitroxServer.Serialization.World
             }
             catch (FileNotFoundException)
             {
-                Log.Instance.LogMessage(LogCategory.Info, "No previous save file found - creating a new one.");
+                Log.Info("No previous save file found - creating a new one.");
             }
             catch (Exception ex)
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Could not load world: " + ex.ToString() + " creating a new one.");
+                Log.Info("Could not load world: " + ex.ToString() + " creating a new one.");
             }
 
             return Optional<World>.Empty();
@@ -203,12 +203,12 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
                                                               NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
 
-            Log.Instance.LogMessage(LogCategory.Info, "World GameMode: " + gameMode);
+            Log.Info("World GameMode: " + gameMode);
             var serverPass = (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
-            Log.Instance.LogSensitive(LogCategory.Info, "Server Password: {0} ", serverPass);
-            Log.Instance.LogSensitive(LogCategory.Info, "Admin Password: {0}", config.AdminPassword);
+            Log.LogSensitive(LogCategory.Info, "Server Password: {0} ", serverPass);
+            Log.LogSensitive(LogCategory.Info, "Admin Password: {0}", config.AdminPassword);
             
-            Log.Instance.LogMessage(LogCategory.Info, "To get help for commands, run help in console or /help in chatbox");
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

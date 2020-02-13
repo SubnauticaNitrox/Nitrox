@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             else
             {
                 List<string> cmdsText = GetHelpText(Perms.CONSOLE);
-                cmdsText.ForEach(cmdText => Log.Instance.LogMessage(LogCategory.Info, cmdText));
+                cmdsText.ForEach(cmdText => Log.Info(cmdText));
             }
         }
 

@@ -22,10 +22,10 @@ namespace NitroxClient.MonoBehaviours
 
         private void EnableDeveloperFeatures()
         {
-            Log.Instance.LogMessage(LogCategory.Info, "Enabling developer console.");
+            Log.Info("Enabling developer console.");
             DevConsole.disableConsole = false;
             Application.runInBackground = true;
-            Log.Instance.LogMessage(LogCategory.Info, $"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
+            Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
         }
 
         private void AttachWarpToCommand()

@@ -80,7 +80,7 @@ namespace NitroxClient.GameLogic
 
             if (owner.IsEmpty())
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Unable to find inventory container with id: " + containerId);
+                Log.Info("Unable to find inventory container with id: " + containerId);
                 return;
             }
 
@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Could not find container field on object " + owner.Get().name);
+                Log.Error("Could not find container field on object " + owner.Get().name);
             }
         }
         
@@ -120,7 +120,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Could not find container field on object " + owner.name);
+                Log.Error("Could not find container field on object " + owner.name);
             }
         }
 

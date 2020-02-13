@@ -54,7 +54,7 @@ namespace NitroxServer.Serialization
 
             if (subnauticaPath.IsEmpty())
             {
-                Log.Instance.LogMessage(LogCategory.Info, $"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
                 return;
             }
 

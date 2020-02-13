@@ -37,12 +37,12 @@ namespace NitroxClient.GameLogic
 
             if (rigidbody != null)
             {
-                Log.Instance.LogMessage(LogCategory.Debug, "Freezing escape pod rigidbody");
+                Log.Debug("Freezing escape pod rigidbody");
                 rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Error, "Escape pod did not have a rigid body!");
+                Log.Error("Escape pod did not have a rigid body!");
             }
 
             Player.main.transform.position = EscapePod.main.playerSpawn.position;
@@ -145,7 +145,7 @@ namespace NitroxClient.GameLogic
                 pod.fixPanelPowerUp.Play();
             } else
             {
-                Log.Instance.LogMessage(LogCategory.Warn, "No escape pod to be repaired by id " + id);
+                Log.Warn("No escape pod to be repaired by id " + id);
             }
         }
 
@@ -168,7 +168,7 @@ namespace NitroxClient.GameLogic
                 packetSender.Send(repair);
             } else
             {
-                Log.Instance.LogMessage(LogCategory.Warn, "Couldn't find escape pod id on repair");
+                Log.Warn("Couldn't find escape pod id on repair");
             }
         }
 

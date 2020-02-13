@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
 
             FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.Model());
             packetSender.Send(fabricatorItemPickup);
-            Log.Instance.LogMessage(LogCategory.Debug, $"{fabricatorItemPickup}");
+            Log.Debug($"{fabricatorItemPickup}");
         }
     }
 }

@@ -38,7 +38,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
             if (simulationOwnership.HasExclusiveLock(id))
             {
-                Log.Instance.LogMessage(LogCategory.Debug, $"Already have an exclusive lock on this vehicle: {id}");
+                Log.Debug($"Already have an exclusive lock on this vehicle: {id}");
                 return true;
             }
 

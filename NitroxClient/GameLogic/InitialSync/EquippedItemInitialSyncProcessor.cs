@@ -61,12 +61,12 @@ namespace NitroxClient.GameLogic.InitialSync
                         }
                         else
                         {
-                            Log.Instance.LogMessage(LogCategory.Info, "Could not find equipment type for " + gameObject.name);
+                            Log.Info("Could not find equipment type for " + gameObject.name);
                         }
                     }
                     else
                     {
-                        Log.Instance.LogMessage(LogCategory.Info, "Could not find Container for " + gameObject.name);
+                        Log.Info("Could not find Container for " + gameObject.name);
                     }
                 }
             }

@@ -28,7 +28,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             }
             else
             {
-                Log.Instance.LogMessage(LogCategory.Info, "Cannot send packet to a closed connection.");
+                Log.Info("Cannot send packet to a closed connection.");
             }
         }
     }

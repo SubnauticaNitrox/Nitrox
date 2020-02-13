@@ -19,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(SubRootChanged packet, Player player)
         {
-            Log.Instance.LogMessage(LogCategory.Info, $"{packet}");
+            Log.Info($"{packet}");
             world.PlayerData.UpdatePlayerSubRootId(player.Name, packet.SubRootId.OrElse(null));
             player.SubRootId = packet.SubRootId;
             playerManager.SendPacketToOtherPlayers(packet, player);
