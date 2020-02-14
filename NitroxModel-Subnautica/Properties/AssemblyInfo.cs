@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+
 using System.Runtime.InteropServices;
+
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -8,16 +9,16 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NitroxModel-Subnautica")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+// COMMON: [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("NitroxModel-Subnautica")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+// COMMON: [assembly: AssemblyCopyright("")]
+// COMMON: [assembly: AssemblyTrademark("")]
+// COMMON: [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
 // COM, set the ComVisible attribute to true on that type.
-[assembly: ComVisible(false)]
+// COMMON: [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("0a377218-6b36-4522-89a3-a39cfc999209")]
@@ -32,5 +33,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.0")]
-[assembly: AssemblyFileVersion("1.1.0.0")]
+// COMMON: [assembly: AssemblyVersion("X.X.X.X")]
+// COMMON: [assembly: AssemblyFileVersion("X.X.X.X")]

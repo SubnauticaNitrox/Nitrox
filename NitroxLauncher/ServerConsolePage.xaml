@@ -18,7 +18,7 @@
             </Grid.RowDefinitions>
                 <Border Grid.Row="0" Width="Auto" HorizontalAlignment="Stretch" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="2">
                     <ScrollViewer x:Name="ConsoleWindowScrollView">
-                    <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding CommandText, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType=Page}}" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"/>
+                    <TextBox TabIndex="0" FontFamily="{StaticResource RobotoMono}" FontSize="12" Foreground="White" x:Name="ConsoleWindow" Text="{Binding ServerOutput, Mode=OneWay}" IsReadOnly="True" TextWrapping="Wrap" Background="Transparent"/>
                     </ScrollViewer>
                 </Border>
             <DockPanel Grid.Row="1" Margin="2">
@@ -41,7 +41,7 @@
                     <Image Source="Images/material-design-icons/baseline_send_white_24dp.png"/>
                 </Button>
                 <Border DockPanel.Dock="Left" BorderBrush="#33FFFFFF" Background="#9928292C" BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,0,0,0">
-                    <TextBox TabIndex="1" FontFamily="{StaticResource RobotoMono}" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" x:Name="CommandLine" PreviewKeyDown="CommandLine_PreviewKeyDown"/>
+                    <TextBox TabIndex="1" FontFamily="{StaticResource RobotoMono}" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput" PreviewKeyDown="CommandLine_PreviewKeyDown"/>
                 </Border>
             </DockPanel>
         </Grid>

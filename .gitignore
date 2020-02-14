@@ -278,3 +278,4 @@ paket-files/
 # Sonar
 /.sonarqube
 sonar.config.bat
+*.bak

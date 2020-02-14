@@ -48,7 +48,7 @@ namespace NitroxLauncher
         private void ChangeOptions_Click(object sender, RoutedEventArgs e)
         {
             // Don't use FolderBrowserDialog because its UI sucks. See: https://stackoverflow.com/a/31082
-            using CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
             {
                 Multiselect = false,
                 InitialDirectory = PathToSubnautica,
