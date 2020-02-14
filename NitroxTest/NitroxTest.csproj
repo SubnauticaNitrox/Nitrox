@@ -31,7 +31,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>RELEASE,TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -248,6 +248,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="..\AssemblyInfoCommon.cs">
+      <Link>Properties\AssemblyInfoCommon.cs</Link>
+    </Compile>
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionJoinedStateTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservationRejectedStateTests.cs" />

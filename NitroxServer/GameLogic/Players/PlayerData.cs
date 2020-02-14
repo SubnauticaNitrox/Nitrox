@@ -21,11 +21,14 @@ namespace NitroxServer.GameLogic.Players
             {
                 lock (playersByPlayerName)
                 {
-                    return new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
+                    serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
+                    return serializablePlayersByPlayerName;
                 }
             }
             set { playersByPlayerName = value; }
         }
+
+        private Dictionary<string, PersistedPlayerData> serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>();
 
         [ProtoMember(2)]
         public Dictionary<NitroxId, EquippedItemData> SerializableModules
@@ -34,11 +37,14 @@ namespace NitroxServer.GameLogic.Players
             {
                 lock (ModulesItemsById)
                 {
-                    return new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
+                    serializableModules = new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
+                    return serializableModules;
                 }
             }
             set { ModulesItemsById = value; }
         }
+
+        Dictionary<NitroxId, EquippedItemData> serializableModules = new Dictionary<NitroxId, EquippedItemData>();
 
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
@@ -182,6 +188,24 @@ namespace NitroxServer.GameLogic.Players
             }
         }
 
+        public NitroxId GetNitroxId(string playerName)
+        {
+            lock (playersByPlayerName)
+            {
+                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
+                return playerPersistedData.PlayerNitroxId;
+            }
+        }
+
+
+        public void SetPlayerNitroxID(string playerName, NitroxId id)
+        {
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName[playerName].PlayerNitroxId = id;
+            }
+        }
+
         // Must be called when playersByPlayerName is locked.
         private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
         {
@@ -189,7 +213,7 @@ namespace NitroxServer.GameLogic.Players
 
             if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
             {
-                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId);
+                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId, new NitroxId());
             }
 
             return playerPersistedData;
@@ -208,6 +232,13 @@ namespace NitroxServer.GameLogic.Players
             {
                 ModulesItemsById.Remove(id);
             }
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            playersByPlayerName = serializablePlayersByPlayerName;
+            ModulesItemsById = serializableModules;
         }
 
         [ProtoContract]
@@ -234,15 +265,20 @@ namespace NitroxServer.GameLogic.Players
             [ProtoMember(7)]
             public Perms Permissions { get; set; } = Perms.PLAYER;
 
+            [ProtoMember(8)]
+            public NitroxId PlayerNitroxId { get; set; }
+
+
             public PersistedPlayerData()
             {
                 // Constructor for serialization purposes
             }
 
-            public PersistedPlayerData(string playerName, ushort playerId)
+            public PersistedPlayerData(string playerName, ushort playerId, NitroxId nitroxId)
             {
                 PlayerName = playerName;
                 PlayerId = playerId;
+                PlayerNitroxId = nitroxId;
             }
         }
     }
