@@ -274,7 +274,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     Entity prefabEntity = new Entity(transform.LocalPosition,
                                             transform.LocalRotation,
-                                            worldEntity.Scale,
+                                            transform.LocalScale,
                                             worldEntity.TechType,
                                             worldEntity.CellLevel,
                                             prefab.ClassId,

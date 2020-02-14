@@ -28,6 +28,22 @@ namespace NitroxModel.DataStructures.GameLogic
             W = w;
         }
 
+        public static NitroxQuaternion Normalize(NitroxQuaternion value)
+        {
+            NitroxQuaternion ans;
+
+            float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
+
+            float invNorm = 1.0f / (float)Math.Sqrt((double)ls);
+
+            ans.X = value.X * invNorm;
+            ans.Y = value.Y * invNorm;
+            ans.Z = value.Z * invNorm;
+            ans.W = value.W * invNorm;
+
+            return ans;
+        }
+
         public static NitroxQuaternion LookRotation(NitroxVector3 forward, NitroxVector3 up)
         {
             NitroxVector3 vector = NitroxVector3.Normalize(forward);

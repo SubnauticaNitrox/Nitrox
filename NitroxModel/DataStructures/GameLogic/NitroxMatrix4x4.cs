@@ -226,34 +226,35 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public static NitroxMatrix4x4 SetRotation(NitroxQuaternion localRotation)
         {
+            NitroxQuaternion rot = NitroxQuaternion.Normalize(localRotation);
             NitroxMatrix4x4 rotationMatrix;
             rotationMatrix.M = new float[4, 4];
             rotationMatrix[3, 3] = 1f;
 
-            float sqw = localRotation.W * localRotation.W;
-            float sqx = localRotation.X * localRotation.X;
-            float sqy = localRotation.Y * localRotation.Y;
-            float sqz = localRotation.Z * localRotation.Z;
+            float sqw = rot.W * rot.W;
+            float sqx = rot.X * rot.X;
+            float sqy = rot.Y * rot.Y;
+            float sqz = rot.Z * rot.Z;
 
             float invs = 1 / (sqx + sqy + sqz + sqw);
             rotationMatrix[0, 0] = (sqx - sqy - sqz + sqw) * invs;
             rotationMatrix[1, 1] = (-sqx + sqy - sqz + sqw) * invs;
             rotationMatrix[2, 2] = (-sqx - sqy + sqz + sqw) * invs;
 
-            float tmp1 = localRotation.X * localRotation.Y;
-            float tmp2 = localRotation.Z * localRotation.W;
+            float tmp1 = rot.X * rot.Y;
+            float tmp2 = rot.Z * rot.W;
 
             rotationMatrix[1, 0] = 2 * (tmp1 + tmp2) * invs;
             rotationMatrix[0, 1] = 2 * (tmp1 - tmp2) * invs;
 
-            tmp1 = localRotation.X * localRotation.Z;
-            tmp2 = localRotation.Y * localRotation.W;
+            tmp1 = rot.X * rot.Z;
+            tmp2 = rot.Y * rot.W;
 
             rotationMatrix[2, 0] = 2 * (tmp1 - tmp2) * invs;
             rotationMatrix[0, 2] = 2 * (tmp1 + tmp2) * invs;
 
-            tmp1 = localRotation.Y * localRotation.Z;
-            tmp2 = localRotation.X * localRotation.W;
+            tmp1 = rot.Y * rot.Z;
+            tmp2 = rot.X * rot.W;
 
             rotationMatrix[2, 1] = 2 * (tmp1 + tmp2) * invs;
             rotationMatrix[1, 2] = 2 * (tmp1 - tmp2) * invs;
@@ -451,6 +452,8 @@ namespace NitroxModel.DataStructures.GameLogic
                     q.Z = 0.25f * s;
                 }
             }
+
+            NitroxQuaternion.Normalize(q);
 
             return q;
         }

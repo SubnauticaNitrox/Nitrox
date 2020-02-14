@@ -60,8 +60,6 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning
                     entitySpawnPoint
                 );
             }
-
-            //NitroxModel.Logger.Log.Info("Server Object: " + entitySpawnPoint.ToString());
         }
     }
 }

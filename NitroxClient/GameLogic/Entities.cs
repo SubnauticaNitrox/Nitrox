@@ -54,7 +54,6 @@ namespace NitroxClient.GameLogic
             foreach (Entity entity in entities)
             {
                 LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
-                Console.WriteLine(entity.ToString());
 
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
