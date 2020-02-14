@@ -42,7 +42,7 @@ namespace NitroxLauncher
 
         private static string GetLocalizationPath(string lang)
         {
-            return Path.Combine("Localization", $"Localization-es.xaml");
+            return Path.Combine("Localization", $"Localization-{lang}.xaml");
         }
 
         private static void SwapResourceDictionary(ResourceDictionary element, string path)
@@ -56,7 +56,9 @@ namespace NitroxLauncher
 
                 if ((languageDictionary["Version"] as short? ?? -1) < Version)
                 {
+#if DEBUG
                     MessageBox.Show($"The language at '{outUri.OriginalString}' is Outdated, it must be in version {Version} instead");
+#endif
                     return;
                 }
 
