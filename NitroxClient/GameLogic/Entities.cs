@@ -93,8 +93,6 @@ namespace NitroxClient.GameLogic
         {
             alreadySpawnedIds.Add(entity.Id);
 
-            Log.Info(entity);
-
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
 
