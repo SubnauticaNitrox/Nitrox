@@ -299,7 +299,7 @@ namespace NitroxModel.DataStructures.GameLogic
             NitroxMatrix4x4 scaleMatrix = SetScale(localScale);
             NitroxMatrix4x4 rotationMatrix = SetRotation(localRotation);
             NitroxMatrix4x4 translationMatrix = SetTranslation(localPos);
-            NitroxMatrix4x4 result = scaleMatrix * rotationMatrix * translationMatrix;
+            NitroxMatrix4x4 result = translationMatrix * rotationMatrix * scaleMatrix;
             return result;
         }
 

@@ -23,7 +23,7 @@ namespace NitroxModel.DataStructures.GameLogic
             get
             {
                 NitroxMatrix4x4 localMatrix = NitroxMatrix4x4.TRS(LocalPosition, LocalRotation, LocalScale);
-                return Parent != null ? localMatrix * Parent.localToWorldMatrix : localMatrix;
+                return Parent != null ? Parent.localToWorldMatrix * localMatrix : localMatrix;
             }
         }
 

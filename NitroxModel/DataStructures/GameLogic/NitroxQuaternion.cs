@@ -22,10 +22,10 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxQuaternion(float x, float y, float z, float w)
         {
-            this.X = x;
-            this.Y = y;
-            this.Z = z;
-            this.W = w;
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
         }
 
         public static NitroxQuaternion LookRotation(NitroxVector3 forward, NitroxVector3 up)
