@@ -95,7 +95,7 @@ namespace NitroxClient.GameLogic
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
 
-            EntityCell cellRoot = EnsureCell(entity, gameObject);
+            EntityCell cellRoot = EnsureCell(entity, parent);
 
             if (cellRoot != null && gameObject.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
