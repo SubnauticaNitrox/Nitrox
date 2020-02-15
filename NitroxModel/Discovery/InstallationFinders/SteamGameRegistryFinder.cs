@@ -23,7 +23,7 @@ namespace NitroxModel.Discovery.InstallationFinders
             string appsPath = Path.Combine(steamPath, "steamapps");
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
-                return Optional<string>.Of(Path.Combine(Path.Combine(appsPath, "common"), SUBNAUTICA_GAME_NAME));
+                return Optional<string>.Of(Path.Combine(appsPath, "common", SUBNAUTICA_GAME_NAME));
             }
 
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
@@ -67,7 +67,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 {
                     if (File.Exists(Path.Combine(value, $"steamapps/appmanifest_{appid}.acf")))
                     {
-                        return Path.Combine(Path.Combine(value, "steamapps/common"), gameName);
+                        return Path.Combine(value, "steamapps/common", gameName);
                     }
                 }
             }

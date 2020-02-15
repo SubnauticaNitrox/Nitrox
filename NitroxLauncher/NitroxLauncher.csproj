@@ -76,20 +76,25 @@
     <Compile Include="..\AssemblyInfoCommon.cs">
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
+    <Compile Include="AttachedProperties\ButtonProperties.cs" />
+    <Compile Include="DependencyObjectExtensions.cs" />
     <Compile Include="Events\ServerStartEventArgs.cs" />
     <Compile Include="LauncherLogic.cs" />
-    <Compile Include="Patching\NitroxEntryPatch.cs" />
-    <Compile Include="Patching\PlatformDetection.cs" />
-    <Compile Include="ServerConsolePage.xaml.cs">
+    <Compile Include="PageBase.cs" />
+    <Compile Include="Pages\LaunchGamePage.xaml.cs">
+      <DependentUpon>LaunchGamePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\OptionPage.xaml.cs">
+      <DependentUpon>OptionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\ServerConsolePage.xaml.cs">
       <DependentUpon>ServerConsolePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ServerPage.xaml.cs">
+    <Compile Include="Pages\ServerPage.xaml.cs">
       <DependentUpon>ServerPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="LaunchGamePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="Patching\NitroxEntryPatch.cs" />
+    <Compile Include="Patching\PlatformDetection.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -98,30 +103,28 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LaunchGamePage.xaml.cs">
-      <DependentUpon>LaunchGamePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="OptionPage.xaml">
+    <Page Include="Pages\LaunchGamePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ServerConsolePage.xaml">
+    <Page Include="Pages\OptionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ServerPage.xaml">
+    <Page Include="Pages\ServerConsolePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\ServerPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OptionPage.xaml.cs">
-      <DependentUpon>OptionPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -136,7 +139,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="Fonts\Roboto-Black.ttf" />
@@ -174,7 +177,7 @@
     <Resource Include="Images\PlayGameImage.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\minimise.png" />
+    <Resource Include="Images\minimize.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\exit.png" />
