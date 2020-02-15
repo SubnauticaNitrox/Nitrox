@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using UnityEngine;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers
@@ -29,18 +30,18 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
             new ReefbackEntity() { techType = TechType.HoopfishSchool, probability = 1, minNumber = 3, maxNumber = 3, classId = "08cb3290-504b-4191-97ee-6af1588af5c0" }
         };
 
-        public static List<Vector3> LocalCreatureSpawnPoints { get; } = new List<Vector3>()
+        public static List<NitroxVector3> LocalCreatureSpawnPoints { get; } = new List<NitroxVector3>()
         {
-            new Vector3(-22.9f, 17.0f, 0.0f),
-            new Vector3(5.1f, 17.9f, 22.1f),
-            new Vector3(5.1f, 17.9f, -11.6f),
-            new Vector3(-5.1f, 17.9f, 5.6f),
-            new Vector3(23.6f, 17.9f, 5.6f),
-            new Vector3(-16.4f, 17.9f, 25.9f),
-            new Vector3(-8.7f, 17.9f, -30.3f),
-            new Vector3(15.4f, 17.9f, -30.3f),
-            new Vector3(20.9f, 17.9f, -13.9f),
-            new Vector3(-17.3f, 17.9f, 22.1f)
+            new NitroxVector3(-22.9f, 17.0f, 0.0f),
+            new NitroxVector3(5.1f, 17.9f, 22.1f),
+            new NitroxVector3(5.1f, 17.9f, -11.6f),
+            new NitroxVector3(-5.1f, 17.9f, 5.6f),
+            new NitroxVector3(23.6f, 17.9f, 5.6f),
+            new NitroxVector3(-16.4f, 17.9f, 25.9f),
+            new NitroxVector3(-8.7f, 17.9f, -30.3f),
+            new NitroxVector3(15.4f, 17.9f, -30.3f),
+            new NitroxVector3(20.9f, 17.9f, -13.9f),
+            new NitroxVector3(-17.3f, 17.9f, 22.1f)
         };
     }
 }

@@ -33,7 +33,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             foreach (Player player in playerManager.GetPlayers())
             {
-                if (player != simulatingPlayer)
+                if (!player.Equals(simulatingPlayer))
                 {
                     visibleUpdatesByPlayer[player] = new List<EntityTransformUpdate>();
                 }

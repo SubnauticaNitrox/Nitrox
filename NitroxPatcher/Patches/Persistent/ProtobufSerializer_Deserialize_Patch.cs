@@ -7,6 +7,7 @@ using System.IO;
 using Harmony;
 using ProtoBuf;
 using NitroxClient.Helpers;
+using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -18,7 +19,7 @@ namespace NitroxPatcher.Patches.Persistent
         public static bool Prefix(Stream stream, object target, Type type)
         {
             int key;
-            if (NitroxProtobufSerializer.Main.NitroxTypes.TryGetValue(type, out key))
+            if (Multiplayer.Active && NitroxProtobufSerializer.Main.NitroxTypes.TryGetValue(type, out key))
             {
                 NitroxProtobufSerializer.Main.Deserialize(stream, target, type);
                 return false;

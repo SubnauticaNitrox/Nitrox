@@ -12,7 +12,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         public void Prepare(Entity parentEntity, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             Entity crashFish = SpawnChild(parentEntity, deterministicBatchGenerator, TechType.Crash, "7d307502-46b7-4f86-afb0-65fe8867f893");
-            crashFish.Rotation = parentEntity.Rotation * new Quaternion(-0.7071068f, 0, 0, 0.7071068f);
+            crashFish.Transform.LocalRotation = new NitroxQuaternion(-0.7071068f, 0, 0, 0.7071068f);
             parentEntity.ChildEntities.Add(crashFish);
 
             Entity crashPowder = SpawnChild(parentEntity, deterministicBatchGenerator, TechType.CrashPowder, "1ce074ee-1a58-439b-bb5b-e5e3d9f0886f");
@@ -23,7 +23,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrapper
         {
             NitroxId id = deterministicBatchGenerator.NextId();
 
-            return new Entity(parentEntity.Position, parentEntity.Rotation, new UnityEngine.Vector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, id);
+            return new Entity(new NitroxVector3(0, 0, 0), new NitroxQuaternion(0, 0, 0, 1), new NitroxVector3(1, 1, 1), techType.Model(), parentEntity.Level, classId, true, id, parentEntity);
         }
     }
 }
