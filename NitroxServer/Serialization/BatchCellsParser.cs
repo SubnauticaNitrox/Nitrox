@@ -33,9 +33,9 @@ namespace NitroxServer.Serialization
             this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;
 
-            surrogateTypes.Add("UnityEngine.Transform", typeof(Transform));
-            surrogateTypes.Add("UnityEngine.Vector3", typeof(Vector3));
-            surrogateTypes.Add("UnityEngine.Quaternion", typeof(Quaternion));
+            surrogateTypes.Add("UnityEngine.Transform", typeof(NitroxTransform));
+            surrogateTypes.Add("UnityEngine.Vector3", typeof(NitroxVector3));
+            surrogateTypes.Add("UnityEngine.Quaternion", typeof(NitroxQuaternion));
         }
 
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
@@ -142,7 +142,7 @@ namespace NitroxServer.Serialization
                 {
 
                     AbsoluteEntityCell absoluteEntityCell = new AbsoluteEntityCell(batchId, cellId, level);
-                    Transform transform = gameObject.GetComponent<Transform>();
+                    NitroxTransform transform = gameObject.GetComponent<NitroxTransform>();
                     spawnPoints.AddRange(entitySpawnPointFactory.From(absoluteEntityCell, transform, gameObject));
                 }
             }

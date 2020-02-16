@@ -8,12 +8,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         public readonly List<EntitySpawnPoint> Children = new List<EntitySpawnPoint>();
 
-        private readonly Vector3 position;
+        public Vector3 LocalPosition;
 
-        private readonly Quaternion rotation;
+        public Quaternion LocalRotation;
         public AbsoluteEntityCell AbsoluteEntityCell { get; }
-        public Vector3 Position => Parent != null ? Parent.Position + position : position;
-        public Quaternion Rotation => Parent != null ? Parent.Rotation * rotation : rotation;
+        public Vector3 Position => Parent != null ? Parent.Position + LocalPosition : LocalPosition;
+        public Quaternion Rotation => Parent != null ? Parent.Rotation * LocalRotation : LocalRotation;
         public Vector3 Scale { get; }
         public string ClassId { get; }
         public string BiomeType { get; }
@@ -26,8 +26,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, List<string> allowedTypes, float density, string biomeType)
         {
             AbsoluteEntityCell = absoluteEntityCell;
-            position = localPosition;
-            rotation = localRotation;
+            LocalPosition = localPosition;
+            LocalRotation = localRotation;
             BiomeType = biomeType;
             Density = density;
             AllowedTypes = allowedTypes;
@@ -38,9 +38,9 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             AbsoluteEntityCell = absoluteEntityCell;
             ClassId = classId;
             Density = 1;
-            position = localPosition;
+            LocalPosition = localPosition;
             Scale = scale;
-            rotation = localRotation;
+            LocalRotation = localRotation;
         }
 
         public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, Scale: {Scale}, ClassId: {ClassId}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";

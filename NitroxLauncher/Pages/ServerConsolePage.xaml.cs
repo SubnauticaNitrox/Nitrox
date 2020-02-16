@@ -6,19 +6,16 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using NitroxLauncher.Events;
 
-namespace NitroxLauncher
+namespace NitroxLauncher.Pages
 {
-    public partial class ServerConsolePage : Page, INotifyPropertyChanged
+    public partial class ServerConsolePage : PageBase, INotifyPropertyChanged
     {
-        private readonly LauncherLogic logic;
+        private readonly List<string> commandLinesHistory = new List<string>();
         private int commandHistoryIndex;
         private string commandInputText;
-
-        private readonly List<string> commandLinesHistory = new List<string>();
         private string serverOutput = "";
 
         public string ServerOutput
@@ -65,13 +62,17 @@ namespace NitroxLauncher
             }
         }
 
-        public ServerConsolePage(LauncherLogic logic)
+        public ServerConsolePage()
         {
             InitializeComponent();
 
-            this.logic = logic;
-            this.logic.ServerStarted += ServerStarted;
-            this.logic.ServerDataReceived += ServerDataReceived;
+            LauncherLogic.Instance.ServerStarted += ServerStarted;
+            LauncherLogic.Instance.ServerDataReceived += ServerDataReceived;
+
+            Loaded += (sender, args) =>
+            {
+                CommandInput.Focus();
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -83,17 +84,6 @@ namespace NitroxLauncher
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        internal async Task SendServerCommandAsync(string inputText)
-        {
-            if (!logic.ServerRunning)
-            {
-                return;
-            }
-
-            ServerOutput += inputText + Environment.NewLine;
-            await logic.WriteToServerAsync(inputText);
         }
 
         private void ServerStarted(object sender, ServerStartEventArgs e)
@@ -110,7 +100,9 @@ namespace NitroxLauncher
 
         private async Task SendCommandInputToServerAsync()
         {
-            await SendServerCommandAsync(CommandInputText);
+            await LauncherLogic.Instance.SendServerCommandAsync(CommandInputText);
+            ServerOutput += CommandInputText + Environment.NewLine;
+
             // Deduplication of command history
             if (!string.IsNullOrWhiteSpace(CommandInputText) && CommandInputText != commandLinesHistory.LastOrDefault())
             {
@@ -132,7 +124,9 @@ namespace NitroxLauncher
         private async void StopButton_Click(object sender, RoutedEventArgs e)
         {
             // Suggest referencing NitroxServer.ConsoleCommands.ExitCommand.name, but the class is internal
-            await SendServerCommandAsync("stop");
+            await LauncherLogic.Instance.SendServerCommandAsync("stop");
+            ServerOutput += $"stop{Environment.NewLine}";
+
             commandLinesHistory.Add("stop");
             HideCommandHistory();
         }

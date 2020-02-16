@@ -54,11 +54,10 @@ namespace NitroxModel.Core
         /// </summary>
         /// <typeparam name="T">Type of service to try to locate.</typeparam>
         /// <returns>Optional that might or might not hold the service instance.</returns>
-        public static Optional<T> LocateOptionalService<T>()
+        public static Optional<T> LocateOptionalService<T>() where T : class
         {
             CheckServiceResolutionViability();
-            T obj;
-            return CurrentLifetimeScope.TryResolve(out obj) ? Optional<T>.Of(obj) : Optional<T>.Empty();
+            return Optional<T>.OfNullable(CurrentLifetimeScope.ResolveOptional<T>());
         }
 
         /// <summary>
@@ -70,7 +69,7 @@ namespace NitroxModel.Core
         {
             CheckServiceResolutionViability();
             object obj;
-            return CurrentLifetimeScope.TryResolve(serviceType, out obj) ? Optional<object>.Of(obj) : Optional<object>.Empty();
+            return Optional<object>.OfNullable(CurrentLifetimeScope.ResolveOptional(serviceType));
         }
 
         private static void CheckServiceResolutionViability()

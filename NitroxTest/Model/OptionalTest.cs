@@ -60,7 +60,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalValueTypeIsPresent()
         {
-            Optional<int> op = Optional<int>.Of(1);
+            Optional<int> op = Optional<int>.Of(0);
             Assert.AreEqual(true, op.IsPresent());
         }
 
@@ -76,6 +76,14 @@ namespace NitroxTest.Model
         {
             Optional<int> op = Optional<int>.Of(1);
             Assert.AreEqual(1, op.OrElse(2));
+        }
+
+        [TestMethod]
+        public void OptionalSetValue()
+        {
+            Optional<int> op = Optional<int>.Of(0);
+            op = null;
+            Assert.IsTrue(op.IsEmpty());
         }
 
         [TestMethod]

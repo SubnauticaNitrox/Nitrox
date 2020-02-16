@@ -15,6 +15,7 @@ namespace NitroxTest.Core
         {
             TestAutoFacRegistrar registrar = new TestAutoFacRegistrar();
             NitroxServiceLocator.InitializeDependencyContainer(registrar);
+            NitroxServiceLocator.BeginNewLifetimeScope();
         }
 
         [TestMethod]

@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Validate.NotNull(onCraftingBegin);
             onCraftingBegin.Invoke(crafter, new object[] { packet.TechType.Enum(), packet.Duration }); //TODO: take into account latency for duration   
 
-            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+            Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
             if (opConstructedObject.IsPresent())
             {

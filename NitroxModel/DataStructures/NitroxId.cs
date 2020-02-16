@@ -52,6 +52,24 @@ namespace NitroxModel.DataStructures
                    guid.Equals(id.guid);
         }
 
+        public static bool operator ==(NitroxId id1, NitroxId id2)
+        {
+            if (Object.ReferenceEquals(id1, null))
+            {
+                if (Object.ReferenceEquals(id2, null))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return id1.Equals(id2);
+        }
+
+        public static bool operator !=(NitroxId id1, NitroxId id2)
+        {
+            return !(id1 == id2);
+        }
+
         public override int GetHashCode()
         {
             return -1324198676 + EqualityComparer<Guid>.Default.GetHashCode(guid);
