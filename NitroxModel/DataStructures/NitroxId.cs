@@ -17,7 +17,16 @@ namespace NitroxModel.DataStructures
         {
             guid = Guid.NewGuid();
         }
-        
+
+        /// <summary>
+        /// Create a NitroxId from a string
+        /// </summary>
+        /// <param name="str">a NitroxID as string</param>
+        public NitroxId(string str)
+        {
+            guid = new Guid(str);
+        }
+
         public NitroxId(byte[] bytes)
         {
             guid = new Guid(bytes);
@@ -41,6 +50,24 @@ namespace NitroxModel.DataStructures
 
             return id != null &&
                    guid.Equals(id.guid);
+        }
+
+        public static bool operator ==(NitroxId id1, NitroxId id2)
+        {
+            if (Object.ReferenceEquals(id1, null))
+            {
+                if (Object.ReferenceEquals(id2, null))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return id1.Equals(id2);
+        }
+
+        public static bool operator !=(NitroxId id1, NitroxId id2)
+        {
+            return !(id1 == id2);
         }
 
         public override int GetHashCode()

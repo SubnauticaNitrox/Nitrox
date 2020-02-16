@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>RELEASE,TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -241,6 +241,9 @@
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxMatrix4x4.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
     <Compile Include="DataStructures\GameLogic\PDAEntry.cs" />
     <Compile Include="DataStructures\GameLogic\ItemEquipment.cs" />
     <Compile Include="DataStructures\GameLogic\Entity.cs" />
@@ -251,6 +254,8 @@
     <Compile Include="DataStructures\GameLogic\Perms.cs" />
     <Compile Include="DataStructures\GameLogic\PlayerStatsData.cs" />
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
@@ -259,6 +264,7 @@
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
+    <Compile Include="Helper\Mathf.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />

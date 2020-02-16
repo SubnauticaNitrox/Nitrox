@@ -1,106 +1,135 @@
 ﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Util
 {
     [Serializable]
-    public class HasValueOptional<T> : Optional<T>
+    [ProtoContract]
+    public class Optional<T>
     {
-        private readonly T value;
+        public T Value
+        { 
+            get
+            {
+                if (!HasValue)
+                {
+                    throw new OptionalEmptyException<T>();
+                }
+                return value;
+            }
+        }
 
-        public HasValueOptional(T value)
+        public bool HasValue
+        {
+            get
+            {
+                return hasValue;
+            }
+        }
+
+        [ProtoMember(1)]
+        private T value;
+
+        [ProtoMember(2)]
+        private bool hasValue;
+
+        private Optional()
+        {}
+
+        private Optional(T value)
         {
             this.value = value;
+            hasValue = true;
         }
 
-        public override T Get()
-        {
-            return value;
-        }
-
-        public override bool IsPresent()
-        {
-            return true;
-        }
-
-        public override bool IsEmpty()
-        {
-            return false;
-        }
-
-        public override T OrElse(T elseValue)
-        {
-            return value;
-        }
-
-        public override string ToString()
-        {
-            return $"Optional[{Get()}]";
-        }
-    }
-
-    [Serializable]
-    public class NoValueOptional<T> : Optional<T>
-    {
-        public override T Get()
-        {
-            throw new InvalidOperationException("Optional did not have a value");
-        }
-
-        public override bool IsPresent()
-        {
-            return false;
-        }
-
-        public override bool IsEmpty()
-        {
-            return true;
-        }
-
-        public override T OrElse(T elseValue)
-        {
-            return elseValue;
-        }
-
-        public override string ToString()
-        {
-            return $"Optional<{typeof(T)}>.Empty()";
-        }
-    }
-
-    [Serializable]
-    public abstract class Optional<T>
-    {
         public static Optional<T> Empty()
         {
-            return new NoValueOptional<T>();
+            return new Optional<T>();
         }
 
         public static Optional<T> Of(T value)
         {
-            if (value == null || value.Equals(default(T)))
+            if (value == null)
             {
                 throw new ArgumentNullException(nameof(value), "Value cannot be null");
             }
 
-            return new HasValueOptional<T>(value);
+            return new Optional<T>(value);
         }
 
         public static Optional<T> OfNullable(T value)
         {
             if (value == null || value.Equals(default(T)))
             {
-                return new NoValueOptional<T>();
+                return new Optional<T>();
             }
 
-            return new HasValueOptional<T>(value);
+            return new Optional<T>(value);
         }
 
-        public abstract T Get();
-        public abstract bool IsPresent();
-        public abstract bool IsEmpty();
-        public abstract T OrElse(T elseValue);
+        public static implicit operator Optional<T>(T obj)
+        {
+            return new Optional<T>(obj);
+        }
+
+        public static explicit operator T(Optional<T> value)
+        {
+            return value.Value;
+        }
     }
-    
+
+    public static class OptionalExtensions
+    {
+        public static bool IsPresent<T>(this Optional<T> optional)
+        {
+            if (optional == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return optional.HasValue;
+        }
+
+        public static bool IsEmpty<T>(this Optional<T> optional)
+        {
+            if (optional == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return !optional.HasValue;
+        }
+
+        public static T Get<T>(this Optional<T> optional)
+        {
+            if (optional.IsEmpty())
+            {
+                throw new OptionalEmptyException<T>();
+            }
+
+            return optional.Value;
+        }
+
+        public static T OrElse<T>(this Optional<T> optional, T elseValue)
+        {
+            if (optional.IsEmpty())
+            {
+                return elseValue;
+            }
+
+            return (optional).Value;
+        }
+    }
+
+    public sealed class OptionalNullException<T> : Exception
+    {
+        public OptionalNullException() : base($"Optional <{nameof(T)}> is null!")
+        {}
+
+        public OptionalNullException(string message) : base($"Optional <{nameof(T)}> is null:\n\t{message}")
+        {}
+    }
+
     [Serializable]
     public sealed class OptionalEmptyException<T> : Exception
     {

@@ -82,6 +82,11 @@ namespace NitroxServer.Serialization.World
         {
             try
             {
+                if (!Directory.Exists(config.SaveName))
+                {
+                    throw new DirectoryNotFoundException();
+                }
+
                 PersistedWorldData persistedData = new PersistedWorldData();
 
                 using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
@@ -134,7 +139,7 @@ namespace NitroxServer.Serialization.World
 
                 return Optional<World>.Of(world);
             }
-            catch (FileNotFoundException)
+            catch (DirectoryNotFoundException)
             {
                 Log.Info("No previous save file found - creating a new one.");
             }

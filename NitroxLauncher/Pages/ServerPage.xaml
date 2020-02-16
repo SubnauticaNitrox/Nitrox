@@ -1,0 +1,53 @@
+﻿<local:PageBase xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:local="clr-namespace:NitroxLauncher"
+                x:Class="NitroxLauncher.Pages.ServerPage"
+                mc:Ignorable="d"
+                d:DesignHeight="470" d:DesignWidth="719"
+                DataContext="{Binding RelativeSource={RelativeSource Self}}"
+                Title="Server Page">
+    <Grid>
+        <Grid Margin="30,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32" />
+                <RowDefinition Height="110" />
+                <RowDefinition Height="95" />
+                <RowDefinition Height="26" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <TextBlock FontSize="22" Foreground="White" Text="Server Options" />
+            </Grid>
+            <Grid Grid.Row="4" Margin="0,0,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="300" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <TextBlock Foreground="White" FontSize="22" Text="SERVER WINDOW TYPE" />
+                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
+                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
+                    </StackPanel>
+                    
+                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options">
+                        <Button.Background>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="#FF00B1E9" Offset="0" />
+                                <GradientStop Color="#FF006BE9" Offset="1" />
+                            </LinearGradientBrush>
+                        </Button.Background>
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold" Text="START SERVER" />
+                            <TextBlock HorizontalAlignment="Center" FontSize="16" Text="{Binding StartButtonSubtitle}" />
+                        </StackPanel>
+                    </Button>
+                    
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</local:PageBase>

@@ -51,9 +51,9 @@ namespace NitroxServer.Serialization
             model.Add(typeof(UnityEngine.BoxCollider), true);
             model.Add(typeof(UnityEngine.SphereCollider), true);
             model.Add(typeof(UnityEngine.MeshCollider), true);
-            model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(UnityStubs.Vector3));
-            model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(UnityStubs.Quaternion));
-            model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(UnityStubs.Transform));
+            model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(NitroxVector3));
+            model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(NitroxQuaternion));
+            model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
             model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
         }
         

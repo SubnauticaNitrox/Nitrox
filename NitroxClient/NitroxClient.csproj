@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>RELEASE,TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -233,6 +233,7 @@
     </Compile>
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
+    <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
