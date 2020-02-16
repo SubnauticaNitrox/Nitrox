@@ -67,11 +67,6 @@ namespace NitroxModel.DataStructures.Util
             return new Optional<T>(value);
         }
 
-        public T Get()
-        {
-            return Value;
-        }
-
         public static implicit operator Optional<T>(T obj)
         {
             return new Optional<T>(obj);
@@ -87,12 +82,22 @@ namespace NitroxModel.DataStructures.Util
     {
         public static bool IsPresent<T>(this Optional<T> optional)
         {
-            return optional != null ? (optional).HasValue : false;
+            if (optional == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return optional.HasValue;
         }
 
         public static bool IsEmpty<T>(this Optional<T> optional)
         {
-            return optional != null ? !((Optional<T>)optional).HasValue : true;
+            if (optional == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return !optional.HasValue;
         }
 
         public static T OrElse<T>(this Optional<T> optional, T elseValue)
@@ -104,6 +109,15 @@ namespace NitroxModel.DataStructures.Util
 
             return (optional).Value;
         }
+    }
+
+    public sealed class OptionalNullException<T> : Exception
+    {
+        public OptionalNullException() : base($"Optional <{nameof(T)}> is null!")
+        {}
+
+        public OptionalNullException(string message) : base($"Optional <{nameof(T)}> is null:\n\t{message}")
+        {}
     }
 
     [Serializable]
