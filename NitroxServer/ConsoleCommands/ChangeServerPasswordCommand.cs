@@ -40,7 +40,7 @@ namespace NitroxServer.ConsoleCommands
         private void ChangeServerPassword(string password, string name)
         {
             serverConfig.ChangeServerPassword(password);
-            Log.LogSensitive(LogCategory.Info, "Server password changed to {0} by {1}", password, name);
+            Log.DebugSensitive("Server password changed to {0} by {1}", password, name);
         }
     }
 }

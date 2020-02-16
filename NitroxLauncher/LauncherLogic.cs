@@ -336,12 +336,12 @@ namespace NitroxLauncher
             string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
             
             string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
-            Log.LogSensitive(LogCategory.Info, "Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
+            Log.DebugSensitive("Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
             foreach (string assetBundle in assetBundles)
             {
                 string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
                 string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
-                Log.LogSensitive(LogCategory.Debug, "Copying asset file {0} to {1}", from, to);
+                Log.DebugSensitive("Copying asset file {0} to {1}", from, to);
                 File.Copy(from, to, true);
             }
         }

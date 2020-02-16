@@ -268,7 +268,6 @@
     <Compile Include="Helper\IPHelper.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Logger\Log.cs" />
-    <Compile Include="Logger\LogCategory.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
@@ -375,6 +374,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

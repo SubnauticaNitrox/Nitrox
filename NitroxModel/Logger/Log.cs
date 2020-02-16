@@ -43,31 +43,25 @@ namespace NitroxModel.Logger
             logger.Fatal(message);
         }
 
-        public static void LogSensitive(LogCategory category, string message, params object[] args)
+        // Sensitive
+        [Conditional("DEBUG")]
+        public static void DebugSensitive(string message, params object[] args)
         {
-            logger.Trace(message, args);
-            switch (category)
-            {
-                case LogCategory.Trace:
-                    Trace(message);
-                    break;
-                case LogCategory.Debug:
-                    Debug(message);
-                    break;
-                case LogCategory.Info:
-                    Info(message);
-                    break;
-                case LogCategory.Warn:
-                    Warn(message);
-                    break;
-                case LogCategory.Error:
-                    Error(message);
-                    break;
-                case LogCategory.Fatal:
-                    Fatal(message);
-                    break;
-            }
+            LogFullSensitiveInfo(message, args);
+            Debug(message);
         }
+
+        public static void InfoSensitive(string message, params object[] args)
+        {
+            LogFullSensitiveInfo(message, args);
+            Info(message);
+        }
+
+        public static void ErrorSensitive(string message, params object[] args)
+        {
+            LogFullSensitiveInfo(message, args);
+            Error(message);
+        } 
 
         public static void Exception(string message, Exception ex)
         {
@@ -106,6 +100,15 @@ namespace NitroxModel.Logger
         public static void SetInGameMessagesEnabled(bool enabled)
         {
             inGameMessagesEnabled = enabled;
+        }
+
+        // Private methods
+        /// <summary>
+        /// When we log with sensitive info we still want to see the info in the console log.
+        /// </summary>
+        private static void LogFullSensitiveInfo(string message, params object[] args)
+        {
+            logger.Trace(message, args);
         }
     }
 }

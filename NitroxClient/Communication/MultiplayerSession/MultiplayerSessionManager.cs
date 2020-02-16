@@ -111,7 +111,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
-            Log.LogSensitive(LogCategory.Info, "Updating session stage from {0} to {1} for {2}", fromStage, sessionConnectionState.CurrentStage, username);
+            Log.DebugSensitive("Updating session stage from {0} to {1} for {2}", fromStage, sessionConnectionState.CurrentStage, username);
 
             CurrentState = sessionConnectionState;
 
