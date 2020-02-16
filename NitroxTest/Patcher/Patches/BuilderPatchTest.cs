@@ -21,7 +21,7 @@ namespace NitroxTest.Patcher.Patches
             instructions.Add(new CodeInstruction(Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPCODE, Builder_TryPlace_Patch.PLACE_FURNITURE_INJECTION_OPERAND));
 
             IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(null, instructions);
-            Assert.AreEqual(121, result.Count());
+            Assert.AreEqual(120, result.Count());
         }
 
         [TestMethod]

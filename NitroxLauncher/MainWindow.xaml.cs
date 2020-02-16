@@ -11,6 +11,7 @@ using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxLauncher
 {
