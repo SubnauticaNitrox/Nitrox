@@ -78,6 +78,7 @@ namespace NitroxModel.DataStructures.Util
         }
     }
 
+    [Serializable]
     public static class OptionalExtensions
     {
         public static bool IsPresent<T>(this Optional<T> optional)
