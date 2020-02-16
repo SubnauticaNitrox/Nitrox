@@ -5,7 +5,7 @@ namespace NitroxModel.DataStructures.Util
 {
     [Serializable]
     [ProtoContract]
-    public class Optional<T>
+    public struct Optional<T>
     {
         public T Value
         { 
@@ -33,13 +33,50 @@ namespace NitroxModel.DataStructures.Util
         [ProtoMember(2)]
         private bool hasValue;
 
-        private Optional()
-        {}
-
         private Optional(T value)
         {
             this.value = value;
             hasValue = true;
+        }
+
+        public bool IsPresent()
+        {
+            if (Value == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return HasValue;
+        }
+
+        public bool IsEmpty()
+        {
+            if (Value == null)
+            {
+                throw new OptionalNullException<T>();
+            }
+
+            return !HasValue;
+        }
+
+        public T Get()
+        {
+            if (IsEmpty())
+            {
+                throw new OptionalEmptyException<T>();
+            }
+
+            return Value;
+        }
+
+        public T OrElse(T elseValue)
+        {
+            if (IsEmpty())
+            {
+                return elseValue;
+            }
+
+            return Value;
         }
 
         public static Optional<T> Empty()
@@ -69,6 +106,10 @@ namespace NitroxModel.DataStructures.Util
 
         public static implicit operator Optional<T>(T obj)
         {
+            if (obj == null)
+            {
+                return new Optional<T>();
+            }
             return new Optional<T>(obj);
         }
 
@@ -81,45 +122,7 @@ namespace NitroxModel.DataStructures.Util
     [Serializable]
     public static class OptionalExtensions
     {
-        public static bool IsPresent<T>(this Optional<T> optional)
-        {
-            if (optional == null)
-            {
-                throw new OptionalNullException<T>();
-            }
-
-            return optional.HasValue;
-        }
-
-        public static bool IsEmpty<T>(this Optional<T> optional)
-        {
-            if (optional == null)
-            {
-                throw new OptionalNullException<T>();
-            }
-
-            return !optional.HasValue;
-        }
-
-        public static T Get<T>(this Optional<T> optional)
-        {
-            if (optional.IsEmpty())
-            {
-                throw new OptionalEmptyException<T>();
-            }
-
-            return optional.Value;
-        }
-
-        public static T OrElse<T>(this Optional<T> optional, T elseValue)
-        {
-            if (optional.IsEmpty())
-            {
-                return elseValue;
-            }
-
-            return (optional).Value;
-        }
+        
     }
 
     public sealed class OptionalNullException<T> : Exception

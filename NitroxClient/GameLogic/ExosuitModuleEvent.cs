@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
-            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action);
+            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
         }
 
         public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
@@ -101,12 +101,19 @@ namespace NitroxClient.GameLogic
             }
         }       
 
-        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector = null, Optional<Quaternion> opRotation = null)
+        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector, Optional<Quaternion> opRotation)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());            
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
             packetSender.Send(packet);
-        }        
+        }
+
+        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
+        {
+            NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
+            packetSender.Send(packet);
+        }
 
         public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Optional<Vector3> opHitVector)
         {
