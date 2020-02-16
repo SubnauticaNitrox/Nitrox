@@ -233,6 +233,7 @@ namespace NitroxServer.GameLogic.Entities
         private void AfterDeserialization()
         {
             AddEntities(serializableEntities.Values);
+            serializableEntities.Clear();
         }
     }
 }

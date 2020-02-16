@@ -14,19 +14,21 @@ namespace NitroxServer.GameLogic.Vehicles
     public class VehicleData
     {
         [ProtoMember(1)]
-        public Dictionary<NitroxId, VehicleModel> SerializableVehiclesById
+        private Dictionary<NitroxId, VehicleModel> SerializableVehiclesById
         {
             get
             {
                 lock (vehiclesById)
                 {
-                    return new Dictionary<NitroxId, VehicleModel>(vehiclesById);
+                    serializableVehiclesById = new Dictionary<NitroxId, VehicleModel>(vehiclesById);
+                    return serializableVehiclesById;
                 }
             }
-            set { vehiclesById = value; }
+            set { serializableVehiclesById = vehiclesById = value; }
         }
 
-        [ProtoIgnore]
+        private Dictionary<NitroxId, VehicleModel> serializableVehiclesById = new Dictionary<NitroxId, VehicleModel>();
+
         private Dictionary<NitroxId, VehicleModel> vehiclesById = new Dictionary<NitroxId, VehicleModel>();
         
         public void UpdateVehicle(VehicleMovementData vehicleMovement)
@@ -150,6 +152,15 @@ namespace NitroxServer.GameLogic.Vehicles
                 {
                     return Optional<T>.Empty();
                 }
+            }
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            lock (vehiclesById)
+            {
+                vehiclesById = serializableVehiclesById;
             }
         }
     }

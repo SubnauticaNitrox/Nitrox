@@ -8,44 +8,62 @@ namespace NitroxServer.GameLogic
     public class EscapePodData
     {
         [ProtoMember(1)]
-        public List<EscapePodModel> SerializedEscapePods
+        private List<EscapePodModel> SerializedEscapePods
         {
             get
             {
                 lock (EscapePods)
                 {
+                    serializedEscapePods = new List<EscapePodModel>(EscapePods);
                     return EscapePods;
                 }
             }
             set
             {
-                EscapePods = value;
+                serializedEscapePods = EscapePods = value;
             }
         }
 
+        private List<EscapePodModel> serializedEscapePods = new List<EscapePodModel>();
+
         [ProtoMember(2)]
-        public Dictionary<ushort, EscapePodModel> SerializedEscapePodsByPlayerId
+        private Dictionary<ushort, EscapePodModel> SerializedEscapePodsByPlayerId
         {
             get
             {
                 lock (EscapePodsByPlayerId)
                 {
-                    return new Dictionary<ushort, EscapePodModel>(EscapePodsByPlayerId);
+                    serializedEscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>(EscapePodsByPlayerId);
+                    return serializedEscapePodsByPlayerId;
                 }
             }
             set
             {
-                EscapePodsByPlayerId = value;
+                serializedEscapePodsByPlayerId = EscapePodsByPlayerId = value;
             }
         }
+
+        Dictionary<ushort, EscapePodModel> serializedEscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
 
         [ProtoMember(3)]
         public EscapePodModel PodNotFullYet;
 
-        [ProtoIgnore]
         public List<EscapePodModel> EscapePods = new List<EscapePodModel>();
 
-        [ProtoIgnore]
         public Dictionary<ushort, EscapePodModel> EscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            lock (EscapePods)
+            {
+                EscapePods = serializedEscapePods;
+            }
+
+            lock (EscapePodsByPlayerId)
+            {
+                EscapePodsByPlayerId = serializedEscapePodsByPlayerId;
+            }
+        }
     }
 }
