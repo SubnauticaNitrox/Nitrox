@@ -11,10 +11,11 @@ namespace NitroxModel.DataStructures.Util
         { 
             get
             {
-                if (!HasValue)
+                if (IsEmpty())
                 {
                     throw new OptionalEmptyException<T>();
                 }
+
                 return value;
             }
         }
@@ -61,11 +62,6 @@ namespace NitroxModel.DataStructures.Util
 
         public T Get()
         {
-            if (IsEmpty())
-            {
-                throw new OptionalEmptyException<T>();
-            }
-
             return Value;
         }
 
@@ -106,7 +102,7 @@ namespace NitroxModel.DataStructures.Util
 
         public static implicit operator Optional<T>(T obj)
         {
-            if (obj == null)
+            if (obj == null) // null is passed when T is a reference type
             {
                 return new Optional<T>();
             }
