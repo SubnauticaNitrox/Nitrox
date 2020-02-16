@@ -28,6 +28,7 @@ namespace NitroxTest.Client.Communication
         public void TestInitialize()
         {
             packetReceiver = new PacketReceiver();
+            NitroxModel.Helper.Map.Main = new NitroxModel_Subnautica.Helper.SubnauticaMap();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
             unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
