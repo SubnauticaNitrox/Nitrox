@@ -99,7 +99,7 @@ namespace NitroxPatcher
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.DebugSensitive("Completed patching using {0}", Assembly.GetExecutingAssembly().FullName);
+            Log.Debug($"Completed patching using {Assembly.GetExecutingAssembly().FullName}");
         }
 
         private static IContainer CreatePatchingContainer()
