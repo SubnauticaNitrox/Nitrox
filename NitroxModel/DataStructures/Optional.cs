@@ -100,6 +100,16 @@ namespace NitroxModel.DataStructures.Util
             return !optional.HasValue;
         }
 
+        public static T Get<T>(this Optional<T> optional)
+        {
+            if (optional.IsEmpty())
+            {
+                throw new OptionalEmptyException<T>();
+            }
+
+            return optional.Value;
+        }
+
         public static T OrElse<T>(this Optional<T> optional, T elseValue)
         {
             if (optional.IsEmpty())
