@@ -16,12 +16,18 @@ namespace NitroxServer.GameLogic.Entities
         {
             get
             {
-                serializableEntities = new Dictionary<NitroxId, Entity>(entitiesById);
-                return serializableEntities;
+                lock (entitiesById)
+                {
+                    serializableEntities = new Dictionary<NitroxId, Entity>(entitiesById);
+                    return serializableEntities;
+                }
             }
             set
             {
-                serializableEntities = value;
+                lock (entitiesById)
+                {
+                    serializableEntities = entitiesById = value;
+                }
             }
         }
 

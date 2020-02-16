@@ -19,7 +19,13 @@ namespace NitroxServer.GameLogic.Items
                     return serializableInsertedInventoryItemsById;
                 }
             }
-            set { insertedInventoryItemsById = value; }
+            set
+            {
+                lock (insertedInventoryItemsById)
+                {
+                    serializableInsertedInventoryItemsById = insertedInventoryItemsById = value;
+                }
+            }
         }
 
         private Dictionary<NitroxId, ItemData> serializableInsertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
@@ -37,7 +43,13 @@ namespace NitroxServer.GameLogic.Items
                     return serializableStorageSlotItemsById;
                 }
             }
-            set { storageSlotItemsById = value; }
+            set
+            {
+                lock (storageSlotItemsById)
+                {
+                    serializableStorageSlotItemsById= storageSlotItemsById = value;
+                }
+            }
         }
 
         private Dictionary<NitroxId, ItemData> serializableStorageSlotItemsById = new Dictionary<NitroxId, ItemData>();

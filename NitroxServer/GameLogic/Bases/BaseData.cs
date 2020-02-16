@@ -23,7 +23,13 @@ namespace NitroxServer.GameLogic.Bases
                     return serializableBasePiecesById;
                 }
             }
-            set { serializableBasePiecesById = basePiecesById = value; }
+            set
+            {
+                lock (basePiecesById)
+                {
+                    serializableBasePiecesById = basePiecesById = value;
+                }
+            }
         }
 
         [ProtoMember(2)]
@@ -38,7 +44,13 @@ namespace NitroxServer.GameLogic.Bases
                     return serializableCompletedBasePieceHistory;
                 }
             }
-            set { serializableCompletedBasePieceHistory = completedBasePieceHistory = value; }
+            set
+            {
+                lock (completedBasePieceHistory)
+                {
+                    serializableCompletedBasePieceHistory = completedBasePieceHistory = value;
+                }
+            }
         }
 
         private List<BasePiece> serializableCompletedBasePieceHistory = new List<BasePiece>();

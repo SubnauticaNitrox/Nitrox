@@ -24,7 +24,13 @@ namespace NitroxServer.GameLogic.Vehicles
                     return serializableVehiclesById;
                 }
             }
-            set { serializableVehiclesById = vehiclesById = value; }
+            set
+            {
+                lock (vehiclesById)
+                {
+                    serializableVehiclesById = vehiclesById = value;
+                }
+            }
         }
 
         private Dictionary<NitroxId, VehicleModel> serializableVehiclesById = new Dictionary<NitroxId, VehicleModel>();

@@ -20,7 +20,10 @@ namespace NitroxServer.GameLogic
             }
             set
             {
-                serializedEscapePods = EscapePods = value;
+                lock (EscapePods)
+                {
+                    serializedEscapePods = EscapePods = value;
+                }
             }
         }
 
@@ -39,7 +42,10 @@ namespace NitroxServer.GameLogic
             }
             set
             {
-                serializedEscapePodsByPlayerId = EscapePodsByPlayerId = value;
+                lock (EscapePodsByPlayerId)
+                {
+                    serializedEscapePodsByPlayerId = EscapePodsByPlayerId = value;
+                }
             }
         }
 
