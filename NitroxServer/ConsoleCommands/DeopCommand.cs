@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>")
+        public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>", "Remove admin rights from user")
         {
             this.playerManager = playerManager;
         }

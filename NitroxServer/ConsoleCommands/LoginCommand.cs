@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>")
+        public LoginCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>", "Log in to server as admin (requires password)")
         {
             this.playerManager = playerManager;
             this.serverConfig = serverConfig;

@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER)
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "", "shows a list of all current players in the server")
         {
             this.playerManager = playerManager;
         }
