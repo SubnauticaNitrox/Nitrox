@@ -22,21 +22,13 @@ namespace NitroxModel_Subnautica.Packets
         public Optional<Vector3> OpVector { get; }
         public Optional<Quaternion> OpRotation { get; }
 
-        public ExosuitArmActionPacket(TechType techType, NitroxId armId, ExosuitArmAction armAction, Optional<Vector3> opVector = null, Optional<Quaternion> opRotation = null)
+        public ExosuitArmActionPacket(TechType techType, NitroxId armId, ExosuitArmAction armAction, Optional<Vector3> opVector, Optional<Quaternion> opRotation)
         {
             TechType = techType;
             ArmId = armId;
             ArmAction = armAction;
             OpVector = opVector;
-            if(OpVector == null)
-            {
-                OpVector = Optional<Vector3>.Empty();
-            }
             OpRotation = opRotation;
-            if(OpRotation == null)
-            {
-                OpRotation = Optional<Quaternion>.Empty();
-            }
         }
 
         public override string ToString()

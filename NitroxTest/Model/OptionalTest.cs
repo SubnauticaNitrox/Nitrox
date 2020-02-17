@@ -82,8 +82,21 @@ namespace NitroxTest.Model
         public void OptionalSetValue()
         {
             Optional<int> op = Optional<int>.Of(0);
+            op = 1;
+            Assert.IsFalse(0 == (int)op);
+        }
+
+        [TestMethod]
+        public void OptionalSetValueNull()
+        {
+            Optional<Exosuit> op = Optional<Exosuit>.Of(new Exosuit());
             op = null;
-            Assert.IsTrue(op.IsEmpty());
+            try
+            {
+                Assert.Fail();
+            }
+            catch (OptionalNullException<Exosuit>)
+            {}
         }
 
         [TestMethod]
