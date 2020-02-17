@@ -11,11 +11,6 @@ namespace NitroxModel.DataStructures.Util
         { 
             get
             {
-                if (IsEmpty())
-                {
-                    throw new OptionalEmptyException<T>();
-                }
-
                 return value;
             }
         }
@@ -42,21 +37,11 @@ namespace NitroxModel.DataStructures.Util
 
         public bool IsPresent()
         {
-            if (Value == null)
-            {
-                throw new OptionalNullException<T>();
-            }
-
             return HasValue;
         }
 
         public bool IsEmpty()
         {
-            if (Value == null)
-            {
-                throw new OptionalNullException<T>();
-            }
-
             return !HasValue;
         }
 
