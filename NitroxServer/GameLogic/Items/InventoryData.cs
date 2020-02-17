@@ -9,7 +9,7 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryData
     {
         [ProtoMember(1)]
-        public Dictionary<NitroxId, ItemData> SerializableInsertedInventoryItemsById
+        private Dictionary<NitroxId, ItemData> SerializableInsertedInventoryItemsById
         {
             get
             {
@@ -19,13 +19,21 @@ namespace NitroxServer.GameLogic.Items
                     return serializableInsertedInventoryItemsById;
                 }
             }
-            set { insertedInventoryItemsById = value; }
+            set
+            {
+                lock (insertedInventoryItemsById)
+                {
+                    serializableInsertedInventoryItemsById = insertedInventoryItemsById = value;
+                }
+            }
         }
 
         private Dictionary<NitroxId, ItemData> serializableInsertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
 
+        private Dictionary<NitroxId, ItemData> insertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
+        
         [ProtoMember(2)]
-        public Dictionary<NitroxId, ItemData> SerializableStorageSlotItemsById
+        private Dictionary<NitroxId, ItemData> SerializableStorageSlotItemsById
         {
             get
             {
@@ -35,13 +43,16 @@ namespace NitroxServer.GameLogic.Items
                     return serializableStorageSlotItemsById;
                 }
             }
-            set { storageSlotItemsById = value; }
+            set
+            {
+                lock (storageSlotItemsById)
+                {
+                    serializableStorageSlotItemsById= storageSlotItemsById = value;
+                }
+            }
         }
 
         private Dictionary<NitroxId, ItemData> serializableStorageSlotItemsById = new Dictionary<NitroxId, ItemData>();
-
-        [ProtoIgnore]
-        private Dictionary<NitroxId, ItemData> insertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
 
         private Dictionary<NitroxId, ItemData> storageSlotItemsById = new Dictionary<NitroxId, ItemData>();
 
@@ -99,8 +110,15 @@ namespace NitroxServer.GameLogic.Items
         [ProtoAfterDeserialization]
         private void AfterDeserialization()
         {
-            insertedInventoryItemsById = serializableInsertedInventoryItemsById;
-            storageSlotItemsById = serializableStorageSlotItemsById;
+            lock (insertedInventoryItemsById)
+            {
+                insertedInventoryItemsById = serializableInsertedInventoryItemsById;
+            }
+
+            lock (storageSlotItemsById)
+            {
+                storageSlotItemsById = serializableStorageSlotItemsById;
+            }
         }
     }
 }

@@ -11,36 +11,52 @@ namespace NitroxServer.GameLogic.Bases
     public class BaseData
     {
         public const long VERSION = 1;
+
         [ProtoMember(1)]
-        public Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
+        private Dictionary<NitroxId, BasePiece> SerializableBasePiecesById
         {
             get
             {
                 lock (basePiecesById)
                 {
-                    return new Dictionary<NitroxId, BasePiece>(basePiecesById);
+                    serializableBasePiecesById = new Dictionary<NitroxId, BasePiece>(basePiecesById);
+                    return serializableBasePiecesById;
                 }
             }
-            set { basePiecesById = value; }
+            set
+            {
+                lock (basePiecesById)
+                {
+                    serializableBasePiecesById = basePiecesById = value;
+                }
+            }
         }
 
         [ProtoMember(2)]
-        public List<BasePiece> SerializableCompletedBasePieceHistory
+        private Dictionary<NitroxId, BasePiece> serializableBasePiecesById = new Dictionary<NitroxId, BasePiece>();
+        List<BasePiece> SerializableCompletedBasePieceHistory
         {
             get
             {
                 lock (completedBasePieceHistory)
                 {
-                    return new List<BasePiece>(completedBasePieceHistory);
+                    serializableCompletedBasePieceHistory = new List<BasePiece>(completedBasePieceHistory);
+                    return serializableCompletedBasePieceHistory;
                 }
             }
-            set { completedBasePieceHistory = value; }
+            set
+            {
+                lock (completedBasePieceHistory)
+                {
+                    serializableCompletedBasePieceHistory = completedBasePieceHistory = value;
+                }
+            }
         }
 
-        [ProtoIgnore]
+        private List<BasePiece> serializableCompletedBasePieceHistory = new List<BasePiece>();
+
         private Dictionary<NitroxId, BasePiece> basePiecesById = new Dictionary<NitroxId, BasePiece>();
 
-        [ProtoIgnore]
         private List<BasePiece> completedBasePieceHistory = new List<BasePiece>();
 
         public void AddBasePiece(BasePiece basePiece)
@@ -156,6 +172,20 @@ namespace NitroxServer.GameLogic.Bases
             }
 
             return basePieces;
+        }
+
+        [ProtoAfterSerialization]
+        private void ProtoAfterSerialization()
+        {
+            lock (completedBasePieceHistory)
+            {
+                completedBasePieceHistory = serializableCompletedBasePieceHistory;
+            }
+
+            lock (basePiecesById)
+            {
+                basePiecesById = serializableBasePiecesById;
+            }
         }
     }
 }

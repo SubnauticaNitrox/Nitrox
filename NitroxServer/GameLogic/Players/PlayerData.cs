@@ -15,7 +15,7 @@ namespace NitroxServer.GameLogic.Players
         public const long VERSION = 1;
 
         [ProtoMember(1)]
-        public Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
+        private Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
         {
             get
             {
@@ -25,13 +25,19 @@ namespace NitroxServer.GameLogic.Players
                     return serializablePlayersByPlayerName;
                 }
             }
-            set { playersByPlayerName = value; }
+            set
+            {
+                lock (playersByPlayerName)
+                {
+                    serializablePlayersByPlayerName = playersByPlayerName = value;
+                }
+            }
         }
 
         private Dictionary<string, PersistedPlayerData> serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>();
 
         [ProtoMember(2)]
-        public Dictionary<NitroxId, EquippedItemData> SerializableModules
+        private Dictionary<NitroxId, EquippedItemData> SerializableModules
         {
             get
             {
@@ -41,10 +47,16 @@ namespace NitroxServer.GameLogic.Players
                     return serializableModules;
                 }
             }
-            set { ModulesItemsById = value; }
+            set 
+            {
+                lock (ModulesItemsById)
+                {
+                    serializableModules = ModulesItemsById = value;
+                }
+            }
         }
 
-        Dictionary<NitroxId, EquippedItemData> serializableModules = new Dictionary<NitroxId, EquippedItemData>();
+        private Dictionary<NitroxId, EquippedItemData> serializableModules = new Dictionary<NitroxId, EquippedItemData>();
 
         [ProtoMember(3)]
         public ushort currentPlayerId = 0;
@@ -237,8 +249,15 @@ namespace NitroxServer.GameLogic.Players
         [ProtoAfterDeserialization]
         private void AfterDeserialization()
         {
-            playersByPlayerName = serializablePlayersByPlayerName;
-            ModulesItemsById = serializableModules;
+            lock (playersByPlayerName)
+            {
+                playersByPlayerName = serializablePlayersByPlayerName;
+            }
+
+            lock (ModulesItemsById)
+            {
+                ModulesItemsById = serializableModules;
+            }
         }
 
         [ProtoContract]

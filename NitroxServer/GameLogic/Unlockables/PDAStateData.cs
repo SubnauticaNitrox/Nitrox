@@ -54,19 +54,27 @@ namespace NitroxServer.GameLogic.Unlockables
             {
                 lock (partiallyUnlockedByTechType)
                 {
-                    return new List<PDAEntry>(partiallyUnlockedByTechType.Values);
+                    serializedPartiallyUnlockedByTechType = new List<PDAEntry>(partiallyUnlockedByTechType.Values);
+                    return serializedPartiallyUnlockedByTechType;
                 }
             }
             set
             {
-                partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
-
-                foreach (PDAEntry entry in value)
+                lock (partiallyUnlockedByTechType)
                 {
-                    partiallyUnlockedByTechType.Add(entry.TechType, entry);
+                    partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
+
+                    foreach (PDAEntry entry in value)
+                    {
+                        partiallyUnlockedByTechType.Add(entry.TechType, entry);
+                    }
                 }
+
+                serializedPartiallyUnlockedByTechType = value;
             }
         }
+
+        private List<PDAEntry> serializedPartiallyUnlockedByTechType = new List<PDAEntry>();
 
         [ProtoMember(5)]
         public List<PDALogEntry> SerializedPDALog
@@ -168,6 +176,19 @@ namespace NitroxServer.GameLogic.Unlockables
                             }
                         }
                     }
+                }
+            }
+        }
+
+        [ProtoAfterDeserialization]
+        private void AfterDeserialization()
+        {
+            lock (partiallyUnlockedByTechType)
+            {
+                partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
+                foreach (PDAEntry entry in serializedPartiallyUnlockedByTechType)
+                {
+                    partiallyUnlockedByTechType.Add(entry.TechType, entry);
                 }
             }
         }
