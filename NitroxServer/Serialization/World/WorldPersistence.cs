@@ -17,7 +17,6 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization.World
 {
@@ -43,7 +42,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.BaseData = world.BaseData;
                 persistedData.WorldData.VehicleData = world.VehicleData;
                 persistedData.WorldData.InventoryData = world.InventoryData;
-                persistedData.PlayerData = world.PlayerData;
+                persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
                 persistedData.WorldData.GameData = world.GameData;
                 persistedData.WorldData.EscapePodData = world.EscapePodData;
 
@@ -130,8 +129,8 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.EntityData,
                                           persistedData.BaseData,
                                           persistedData.WorldData.VehicleData,
+                                          persistedData.PlayerData.GetPlayers(),
                                           persistedData.WorldData.InventoryData,
-                                          persistedData.PlayerData,
                                           persistedData.WorldData.GameData,
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData,
@@ -165,7 +164,7 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new InventoryData(), new PlayerData(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
+            World world = CreateWorld(DateTime.Now, new EntityData(), new BaseData(), new VehicleData(), new List<Player>(), new InventoryData(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new EscapePodData(), config.GameMode);
             return world;
         }
 
@@ -173,8 +172,8 @@ namespace NitroxServer.Serialization.World
                                   EntityData entityData,
                                   BaseData baseData,
                                   VehicleData vehicleData,
+                                  List<Player> players,
                                   InventoryData inventoryData,
-                                  PlayerData playerData,
                                   GameData gameData,
                                   List<Int3> parsedBatchCells,
                                   EscapePodData escapePodData,
@@ -185,13 +184,12 @@ namespace NitroxServer.Serialization.World
             world.TimeKeeper.ServerStartTime = serverStartTime;
 
             world.SimulationOwnershipData = new SimulationOwnershipData();
-            world.PlayerManager = new PlayerManager(playerData, config);
+            world.PlayerManager = new PlayerManager(players, config);
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
             world.VehicleData = vehicleData;
             world.InventoryData = inventoryData;
-            world.PlayerData = playerData;
             world.GameData = gameData;
             world.EscapePodData = escapePodData;
             world.EscapePodManager = new EscapePodManager(escapePodData);

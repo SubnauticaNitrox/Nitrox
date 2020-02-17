@@ -31,7 +31,7 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Dictionary<Player, List<EntityTransformUpdate>> visibleUpdatesByPlayer = new Dictionary<Player, List<EntityTransformUpdate>>();
 
-            foreach (Player player in playerManager.GetPlayers())
+            foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 if (!player.Equals(simulatingPlayer))
                 {

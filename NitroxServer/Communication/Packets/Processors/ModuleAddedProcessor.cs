@@ -8,17 +8,15 @@ namespace NitroxServer.Communication.Packets.Processors
     class ModuleAddedProcessor : AuthenticatedPacketProcessor<ModuleAdded>
     {
         private readonly PlayerManager playerManager;
-        private readonly PlayerData playerData;
 
-        public ModuleAddedProcessor(PlayerManager playerManager, PlayerData playerData)
+        public ModuleAddedProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
-            this.playerData = playerData;
         }
 
         public override void Process(ModuleAdded packet, Player player)
         {
-            playerData.AddModule(packet.EquippedItemData);
+            player.AddModule(packet.EquippedItemData);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

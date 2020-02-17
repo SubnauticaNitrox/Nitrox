@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> player)
         {
-            List<Player> players = playerManager.GetPlayers();
+            List<Player> players = playerManager.GetConnectedPlayers();
 
             string playerList = "List Command Result: " + string.Join(", ", players);
 

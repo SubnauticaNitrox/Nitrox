@@ -2,19 +2,16 @@
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class PlayerEquipmentAddedProcessor : AuthenticatedPacketProcessor<PlayerEquipmentAdded>
     {
         private readonly PlayerManager playerManager;
-        private readonly PlayerData playerData;
 
-        public PlayerEquipmentAddedProcessor(PlayerManager playerManager, PlayerData playerData)
+        public PlayerEquipmentAddedProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
-            this.playerData = playerData;
         }
 
         public override void Process(PlayerEquipmentAdded packet, Player player)
@@ -22,7 +19,7 @@ namespace NitroxServer.Communication.Packets.Processors
             string playerName = player.Name;
             EquippedItemData equippedItem = packet.EquippedItem;
 
-            playerData.AddEquipment(playerName, equippedItem);
+            player.AddEquipment(equippedItem);
 
             ushort playerId = player.Id;
             RemotePlayerEquipmentAdded equipmentAdded = new RemotePlayerEquipmentAdded(playerId, packet.TechType);

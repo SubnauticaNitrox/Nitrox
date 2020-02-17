@@ -61,7 +61,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 AbsoluteEntityCell entityCell = entity.AbsoluteEntityCell;
 
-                foreach (Player player in playerManager.GetPlayers())
+                foreach (Player player in playerManager.GetConnectedPlayers())
                 {
                     bool isOtherPlayer = (player != oldPlayer);
 

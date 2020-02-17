@@ -12,24 +12,33 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        public NitroxConnection connection { get; private set; }
+        public NitroxConnection connection { get; set; }
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
+        private readonly List<EquippedItemData> equippedItems = new List<EquippedItemData>();
+        private readonly List<EquippedItemData> modules = new List<EquippedItemData>();
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-        public PlayerContext PlayerContext { get; }
-        public ushort Id => PlayerContext.PlayerId;
-        public string Name => PlayerContext.PlayerName;
+        public PlayerContext PlayerContext { get; set; }
+        public ushort Id { get; set; }
+        public string Name { get; set; }
         public Vector3 Position { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
-
-        public Player(PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId)
+        public Perms Permissions { get; set; }
+        public PlayerStatsData Stats { get; set; }
+        
+        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, List<EquippedItemData> equippedItems, List<EquippedItemData> modules)
         {
+            Id = id;
+            Name = name;
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;
             SubRootId = subRootId;
             GameObjectId = playerId;
+            Permissions = perms;
+            this.equippedItems = equippedItems;
+            this.modules = modules;
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -59,6 +68,54 @@ namespace NitroxServer
             lock (visibleCells)
             {
                 return visibleCells.Contains(cell);
+            }
+        }
+
+        public void AddModule(EquippedItemData module)
+        {
+            lock (modules)
+            {
+                modules.Add(module);
+            }
+        }
+
+        public void RemoveModule(NitroxId id)
+        {
+            lock (modules)
+            {
+                modules.RemoveAll(item => item.ItemId == id);
+            }
+        }
+
+        public List<EquippedItemData> getAllModules()
+        {
+            lock (modules)
+            {
+                return new List<EquippedItemData>(modules);
+            }
+        }
+
+        public void AddEquipment(EquippedItemData equipment)
+        {
+            lock (equippedItems)
+            {
+                equippedItems.Add(equipment);
+            }
+        }
+
+        public void RemoveEquipment(NitroxId id)
+        {
+            lock (equippedItems)
+            {
+                equippedItems.RemoveAll(item => item.ItemId == id);
+            }
+        }
+
+        public List<EquippedItemData> getAllEquipment()
+        {
+            lock (equippedItems)
+            {
+                return new List<EquippedItemData>(equippedItems);
             }
         }
 

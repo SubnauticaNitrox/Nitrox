@@ -33,7 +33,7 @@ namespace NitroxServer.Communication.Packets.Processors
             SimulationOwnershipChange ownershipChangePacket = new SimulationOwnershipChange(simulatedEntity);
             playerManager.SendPacketToAllPlayers(ownershipChangePacket);
 
-            foreach (Player player in playerManager.GetPlayers())
+            foreach (Player player in playerManager.GetConnectedPlayers())
             {
                 bool isOtherPlayer = (player != droppingPlayer);
 

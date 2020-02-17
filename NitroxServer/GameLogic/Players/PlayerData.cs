@@ -1,304 +1,98 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Packets;
 using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
-using System.Linq;
 
 namespace NitroxServer.GameLogic.Players
 {
     [ProtoContract]
     public class PlayerData
     {
-        public const long VERSION = 1;
-
+        public const long VERSION = 2;
+        
         [ProtoMember(1)]
-        private Dictionary<string, PersistedPlayerData> SerializablePlayersByPlayerName
-        {
-            get
-            {
-                lock (playersByPlayerName)
-                {
-                    serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>(playersByPlayerName);
-                    return serializablePlayersByPlayerName;
-                }
-            }
-            set
-            {
-                lock (playersByPlayerName)
-                {
-                    serializablePlayersByPlayerName = playersByPlayerName = value;
-                }
-            }
-        }
-
-        private Dictionary<string, PersistedPlayerData> serializablePlayersByPlayerName = new Dictionary<string, PersistedPlayerData>();
-
-        [ProtoMember(2)]
-        private Dictionary<NitroxId, EquippedItemData> SerializableModules
-        {
-            get
-            {
-                lock (ModulesItemsById)
-                {
-                    serializableModules = new Dictionary<NitroxId, EquippedItemData>(ModulesItemsById);
-                    return serializableModules;
-                }
-            }
-            set 
-            {
-                lock (ModulesItemsById)
-                {
-                    serializableModules = ModulesItemsById = value;
-                }
-            }
-        }
-
-        private Dictionary<NitroxId, EquippedItemData> serializableModules = new Dictionary<NitroxId, EquippedItemData>();
-
-        [ProtoMember(3)]
-        public ushort currentPlayerId = 0;
-
-        public Dictionary<NitroxId, EquippedItemData> ModulesItemsById = new Dictionary<NitroxId, EquippedItemData>();
-
-        private Dictionary<string, PersistedPlayerData> playersByPlayerName = new Dictionary<string, PersistedPlayerData>();
+        public List<PersistedPlayerData> Players;
         
-        public void AddEquipment(string playerName, EquippedItemData equippedItem)
+        public List<Player> GetPlayers()
         {
-            lock (playersByPlayerName)
+            List<Player> boPlayers = new List<Player>();
+
+            foreach (PersistedPlayerData playerData in Players)
             {
-                PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquippedItemsById.Add(equippedItem.ItemId, equippedItem);
-            }
-        }
-
-        public ushort GetPlayerId(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-
-                return playerPersistedData.PlayerId;
-            }
-        }
-
-        public Vector3 GetPlayerSpawn(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-
-                return playerPersistedData.PlayerSpawnData;
-            }
-        }
-
-        public bool hasSeenPlayerBefore(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                return playersByPlayerName.ContainsKey(playerName);
-            }
-        }
-
-        public Perms GetPermissions(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-
-                return playerPersistedData.Permissions;
-            }
-        }
-
-        public void UpdatePlayerSpawn(string playerName, Vector3 position)
-        {
-            lock (playersByPlayerName)
-            {
-                playersByPlayerName[playerName].PlayerSpawnData = position;
-            }
-        }
-
-        public bool SetPermissions(string playerName, Perms permissions)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData player;
-
-                if (playersByPlayerName.TryGetValue(playerName, out player)) {
-                    player.Permissions = permissions;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        
-        public void UpdatePlayerSubRootId(string playerName, NitroxId subrootId)
-        {
-            lock (playersByPlayerName)
-            {
-                playersByPlayerName[playerName].SubRootId = subrootId;
-            }
-        }
-
-        public void SetPlayerStats(string playerName, PlayerStats statsData)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-
-                playersByPlayerName[playerName].CurrentStats = new PlayerStatsData(statsData.Oxygen, statsData.MaxOxygen, statsData.Health, statsData.Food, statsData.Water);
-            }
-        }
-        public PlayerStatsData GetPlayerStats(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-
-                return playersByPlayerName[playerName].CurrentStats;
-            }
-        }
+                Player player = new Player(playerData.Id,
+                                           playerData.Name,
+                                           null, //no connection/context as this player is not connected.
+                                           null, 
+                                           playerData.SpawnPosition, 
+                                           playerData.NitroxId, 
+                                           NitroxModel.DataStructures.Util.Optional<NitroxId>.OfNullable(playerData.SubRootId), 
+                                           playerData.Permissions, 
+                                           playerData.EquippedItems, 
+                                           playerData.Modules);
                 
-        public void RemoveEquipment(string playerName, NitroxId id)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerData = playersByPlayerName[playerName];
-                playerData.EquippedItemsById.Remove(id);
+                boPlayers.Add(player);
             }
+
+            return boPlayers;
         }
 
-        public List<EquippedItemData> GetEquippedItemsForInitialSync(string playerName)
+        public static PlayerData From(List<Player> players)
         {
-            lock (playersByPlayerName)
+            List<PersistedPlayerData> persistedPlayers = new List<PersistedPlayerData>();
+
+            foreach (Player player in players)
             {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                List<EquippedItemData> ItemData = new List<EquippedItemData>(playerPersistedData.EquippedItemsById.Values);
-                ItemData.AddRange((new List<EquippedItemData>(ModulesItemsById.Values)));
-                return ItemData;
-            }
-        }
+                PersistedPlayerData persistedPlayer = new PersistedPlayerData();
+                persistedPlayer.Name = player.Name;
+                persistedPlayer.EquippedItems = player.getAllEquipment();
+                persistedPlayer.Modules = player.getAllModules();
+                persistedPlayer.Id = player.Id;
+                persistedPlayer.SpawnPosition = player.Position;
+                persistedPlayer.CurrentStats = player.Stats;
+                persistedPlayer.SubRootId = player.SubRootId.OrElse(null);
+                persistedPlayer.Permissions = player.Permissions;
+                persistedPlayer.NitroxId = player.GameObjectId;
 
-        public NitroxVector3 GetPosition(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                return playerPersistedData.PlayerSpawnData;
-            }
-        }
-
-        public Optional<NitroxId> GetSubRootId(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                return Optional<NitroxId>.OfNullable(playerPersistedData.SubRootId);
-            }
-        }
-
-        public NitroxId GetNitroxId(string playerName)
-        {
-            lock (playersByPlayerName)
-            {
-                PersistedPlayerData playerPersistedData = GetOrCreatePersistedPlayerData(playerName);
-                return playerPersistedData.PlayerNitroxId;
-            }
-        }
-
-
-        public void SetPlayerNitroxID(string playerName, NitroxId id)
-        {
-            lock (playersByPlayerName)
-            {
-                playersByPlayerName[playerName].PlayerNitroxId = id;
-            }
-        }
-
-        // Must be called when playersByPlayerName is locked.
-        private PersistedPlayerData GetOrCreatePersistedPlayerData(string playerName)
-        {
-            PersistedPlayerData playerPersistedData = null;
-
-            if (!playersByPlayerName.TryGetValue(playerName, out playerPersistedData))
-            {
-                playerPersistedData = playersByPlayerName[playerName] = new PersistedPlayerData(playerName, ++currentPlayerId, new NitroxId());
+                persistedPlayers.Add(persistedPlayer);
             }
 
-            return playerPersistedData;
-        }
+            PlayerData playerData = new PlayerData();
+            playerData.Players = persistedPlayers;
 
-        public void AddModule(EquippedItemData equippedmodule)
-        {
-            lock (ModulesItemsById)
-            {
-                ModulesItemsById.Add(equippedmodule.ItemId, equippedmodule);
-            }
-        }
-        public void RemoveModule(NitroxId id)
-        {
-            lock (ModulesItemsById)
-            {
-                ModulesItemsById.Remove(id);
-            }
-        }
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            lock (playersByPlayerName)
-            {
-                playersByPlayerName = serializablePlayersByPlayerName;
-            }
-
-            lock (ModulesItemsById)
-            {
-                ModulesItemsById = serializableModules;
-            }
+            return playerData;
         }
 
         [ProtoContract]
         public class PersistedPlayerData
         {
             [ProtoMember(1)]
-            public string PlayerName { get; set; }
+            public string Name { get; set; }
 
             [ProtoMember(2)]
-            public Dictionary<NitroxId, EquippedItemData> EquippedItemsById { get; set; } = new Dictionary<NitroxId, EquippedItemData>();
+            public List<EquippedItemData> EquippedItems { get; set; } = new List<EquippedItemData>();
 
             [ProtoMember(3)]
-            public ushort PlayerId { get; set; }
+            public List<EquippedItemData> Modules { get; set; } = new List<EquippedItemData>();
 
             [ProtoMember(4)]
-            public Vector3 PlayerSpawnData { get; set; }
+            public ushort Id { get; set; }
 
             [ProtoMember(5)]
-            public PlayerStatsData CurrentStats { get; set; }
+            public Vector3 SpawnPosition { get; set; }
 
             [ProtoMember(6)]
-            public NitroxId SubRootId { get; set; }
+            public PlayerStatsData CurrentStats { get; set; }
 
             [ProtoMember(7)]
-            public Perms Permissions { get; set; } = Perms.PLAYER;
+            public NitroxId SubRootId { get; set; }
 
             [ProtoMember(8)]
-            public NitroxId PlayerNitroxId { get; set; }
+            public Perms Permissions { get; set; } = Perms.PLAYER;
 
-
-            public PersistedPlayerData()
-            {
-                // Constructor for serialization purposes
-            }
-
-            public PersistedPlayerData(string playerName, ushort playerId, NitroxId nitroxId)
-            {
-                PlayerName = playerName;
-                PlayerId = playerId;
-                PlayerNitroxId = nitroxId;
-            }
+            [ProtoMember(9)]
+            public NitroxId NitroxId { get; set; }
+            
         }
     }
 }

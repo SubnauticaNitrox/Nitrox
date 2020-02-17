@@ -1,14 +1,6 @@
-﻿using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Bases;
-using NitroxServer.GameLogic.Entities;
-using NitroxServer.GameLogic.Items;
+﻿using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Players;
-using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
-using System;
-using System.Collections.Generic;
-using NitroxModel.Logger;
-using NitroxModel.DataStructures;
 
 namespace NitroxServer.Serialization.World
 {

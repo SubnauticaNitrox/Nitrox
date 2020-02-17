@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Players;
+﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -11,13 +9,11 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class LoginCommand : Command
     {
-        private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(PlayerData playerData, PlayerManager playerManager, ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>")
+        public LoginCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>")
         {
-            this.playerData = playerData;
             this.playerManager = playerManager;
             this.serverConfig = serverConfig;
         }
@@ -26,18 +22,11 @@ namespace NitroxServer.ConsoleCommands
         {
             string pass = args[0];
             string message;
-            string playerName = player.Get().Name;
 
             if (pass == serverConfig.AdminPassword)
             {
-                if (playerData.SetPermissions(playerName, Perms.ADMIN))
-                {
-                    message = "Updated permissions to admin for " + playerName;
-                }
-                else
-                {
-                    message = "Could not update permissions " + playerName;
-                }
+                player.Get().Permissions = Perms.ADMIN;
+                message = "Updated permissions to admin for " + player.Get().Name;
             }
             else
             {

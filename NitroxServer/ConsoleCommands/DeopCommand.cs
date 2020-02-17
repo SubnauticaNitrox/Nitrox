@@ -9,22 +9,23 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class DeopCommand : Command
     {
-        private readonly PlayerData playerData;
         private readonly PlayerManager playerManager;
 
-        public DeopCommand(PlayerData playerData, PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>")
+        public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>")
         {
-            this.playerData = playerData;
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> callingPlayer)
         {
             string playerName = args[0];
             string message;
 
-            if (playerData.SetPermissions(playerName, Perms.PLAYER))
+            Optional<Player> targetPlayer = playerManager.GetPlayer(playerName);
+
+            if (targetPlayer.IsPresent())
             {
+                targetPlayer.Get().Permissions = Perms.PLAYER;
                 message = "Updated " + playerName + " permissions to player";
             }
             else
@@ -33,7 +34,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Log.Info(message);
-            SendServerMessageIfPlayerIsPresent(player, message);
+            SendServerMessageIfPlayerIsPresent(callingPlayer, message);
         }
 
         public override bool VerifyArgs(string[] args)

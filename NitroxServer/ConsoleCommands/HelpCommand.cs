@@ -4,25 +4,21 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.ConsoleCommands.Processor;
-using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class HelpCommand : Command
     {
-        private readonly PlayerData playerData;
-        
-        public HelpCommand(PlayerData playerData) : base("help", Perms.PLAYER, "", "Display help about supported commands")
+        public HelpCommand() : base("help", Perms.PLAYER, "", "Display help about supported commands")
         {
-            this.playerData = playerData;
+
         }
 
         public override void RunCommand(string[] args, Optional<Player> player)
         {
             if (player.IsPresent())
             {
-                List<string> cmdsText = GetHelpText(playerData.GetPermissions(player.Get().Name));
+                List<string> cmdsText = GetHelpText(player.Get().Permissions);
                 cmdsText.ForEach(cmdText => SendServerMessageIfPlayerIsPresent(player, cmdText));
             }
             else

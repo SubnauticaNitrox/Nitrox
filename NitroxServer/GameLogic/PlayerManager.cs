@@ -9,8 +9,6 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.ConfigParser;
-using NitroxServer.GameLogic.Players;
-using NitroxServer.UnityStubs;
 
 namespace NitroxServer.GameLogic
 {
@@ -18,22 +16,33 @@ namespace NitroxServer.GameLogic
     public class PlayerManager
     {
         private readonly Dictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new Dictionary<NitroxConnection, ConnectionAssets>();
-        private readonly PlayerData playerData;
         private readonly ServerConfig serverConfig;
         private readonly Dictionary<string, PlayerContext> reservations = new Dictionary<string, PlayerContext>();
         private readonly HashSet<string> reservedPlayerNames = new HashSet<string>();
+        private readonly Dictionary<string, Player> allPlayersByName;
+        private ushort currentPlayerId = 0;
 
-        public PlayerManager(PlayerData playerData, ServerConfig serverConfig)
+        public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
-            this.playerData = playerData;
+            allPlayersByName = players.ToDictionary(x => x.Name);            
+            currentPlayerId = (players.Count == 0) ? (ushort) 0 : players.Max(x => x.Id);
+
             this.serverConfig = serverConfig;
         }
 
-        public List<Player> GetPlayers()
+        public List<Player> GetConnectedPlayers()
         {
             lock (assetsByConnection)
             {
                 return ConnectedPlayers();
+            }
+        }
+
+        public List<Player> GetAllPlayers()
+        {
+            lock(allPlayersByName)
+            {
+                return new List<Player>(allPlayersByName.Values);
             }
         }
 
@@ -75,9 +84,13 @@ namespace NitroxServer.GameLogic
                     reservedPlayerNames.Add(playerName);
                 }
 
-                bool hasSeenPlayerBefore = playerData.hasSeenPlayerBefore(playerName);
-                PlayerContext playerContext = new PlayerContext(playerName, playerData.GetPlayerId(playerName), !hasSeenPlayerBefore, playerSettings);
-                ushort playerId = playerContext.PlayerId;
+                Player player;
+                allPlayersByName.TryGetValue(playerName, out player);
+
+                bool hasSeenPlayerBefore = player != null;
+                ushort playerId = (hasSeenPlayerBefore) ? player.Id : ++currentPlayerId;
+
+                PlayerContext playerContext = new PlayerContext(playerName, playerId, !hasSeenPlayerBefore, playerSettings);
                 string reservationKey = Guid.NewGuid().ToString();
 
                 reservations.Add(reservationKey, playerContext);
@@ -87,7 +100,7 @@ namespace NitroxServer.GameLogic
             }
         }
 
-        public Player CreatePlayer(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
+        public Player PlayerConnected(NitroxConnection connection, string reservationKey, out bool wasBrandNewPlayer)
         {
             lock (assetsByConnection)
             {
@@ -96,15 +109,21 @@ namespace NitroxServer.GameLogic
                 Validate.NotNull(playerContext);
 
                 wasBrandNewPlayer = playerContext.WasBrandNewPlayer;
+                
+                Player player;
+                
+                lock (allPlayersByName)
+                {
+                    if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out player))
+                    {
+                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, new List<EquippedItemData>(), new List<EquippedItemData>());
+                        allPlayersByName[playerContext.PlayerName] = player;
+                    }
+                }
 
-                // Load previously persisted data for this player.
-                NitroxVector3 position = playerData.GetPosition(playerContext.PlayerName);
-                Optional<NitroxId> subRootId = playerData.GetSubRootId(playerContext.PlayerName);
-
-                // Load a NitroxID for the newly connected Player
-                NitroxId id = playerData.GetNitroxId(playerContext.PlayerName);
-
-                Player player = new Player(playerContext, connection, position, id, subRootId);
+                // TODO: make a ConnectedPlayer wrapper so this is not stateful
+                player.PlayerContext = playerContext;
+                player.connection = connection;
 
                 assetPackage.Player = player;
                 assetPackage.ReservationKey = null;
@@ -168,6 +187,17 @@ namespace NitroxServer.GameLogic
                 ConnectionAssets assetPackage = null;
                 assetsByConnection.TryGetValue(connection, out assetPackage);
                 return assetPackage?.Player;
+            }
+        }
+
+        public Optional<Player> GetPlayer(string playerName)
+        {
+            lock (allPlayersByName)
+            {
+                Player player;
+                allPlayersByName.TryGetValue(playerName, out player);
+
+                return Optional<Player>.OfNullable(player);
             }
         }
 

@@ -10,18 +10,15 @@ namespace NitroxServer.Communication.Packets.Processors
     class SubRootChangedPacketProcessor : AuthenticatedPacketProcessor<SubRootChanged>
     {
         private readonly PlayerManager playerManager;
-        private readonly World world;
 
-        public SubRootChangedPacketProcessor(PlayerManager playerManager, World world)
+        public SubRootChangedPacketProcessor(PlayerManager playerManager)
         {
             this.playerManager = playerManager;
-            this.world = world;
         }
 
         public override void Process(SubRootChanged packet, Player player)
         {
             Log.Info(packet);
-            world.PlayerData.UpdatePlayerSubRootId(player.Name, packet.SubRootId.OrElse(null));
             player.SubRootId = packet.SubRootId;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

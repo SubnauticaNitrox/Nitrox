@@ -3,7 +3,6 @@ using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Items;
-using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer.Serialization.World
@@ -23,7 +22,6 @@ namespace NitroxServer.Serialization.World
         public BaseData BaseData { get; set; }
         public VehicleData VehicleData { get; set; }
         public InventoryData InventoryData { get; set; }
-        public PlayerData PlayerData { get; set; }
         public GameData GameData { get; set; }
         public string GameMode { get; set; }
     }
