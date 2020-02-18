@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class DayCommand : Command
     {
-        public DayCommand() : base("day", Perms.ADMIN)
+        public DayCommand() : base("day", Perms.ADMIN, "", "Set map to Daytime")
         {
         }
 

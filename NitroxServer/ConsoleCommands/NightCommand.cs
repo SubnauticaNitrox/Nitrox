@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class NightCommand : Command
     {
-        public NightCommand() : base("night", Perms.ADMIN)
+        public NightCommand() : base("night", Perms.ADMIN, "", "Set map to Nighttime")
         {
         }
 
