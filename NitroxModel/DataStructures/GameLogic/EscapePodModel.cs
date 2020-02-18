@@ -9,6 +9,8 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class EscapePodModel
     {
+        public const int PLAYERS_PER_ESCAPEPOD = 50;
+
         [ProtoMember(1)]
         public NitroxId Id { get; set; }
 
@@ -46,6 +48,11 @@ namespace NitroxModel.DataStructures.GameLogic
             RadioId = radioId;
             Damaged = damaged;
             RadioDamaged = radioDamaged;
+        }
+
+        public bool IsFull()
+        {
+            return AssignedPlayers.Count >= PLAYERS_PER_ESCAPEPOD;
         }
 
         public override string ToString()

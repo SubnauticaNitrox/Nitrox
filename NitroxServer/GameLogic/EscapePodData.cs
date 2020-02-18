@@ -8,68 +8,14 @@ namespace NitroxServer.GameLogic
     public class EscapePodData
     {
         [ProtoMember(1)]
-        private List<EscapePodModel> SerializedEscapePods
+        public List<EscapePodModel> EscapePods;
+
+        public static EscapePodData from(List<EscapePodModel> escapePods)
         {
-            get
-            {
-                lock (EscapePods)
-                {
-                    serializedEscapePods = new List<EscapePodModel>(EscapePods);
-                    return EscapePods;
-                }
-            }
-            set
-            {
-                lock (EscapePods)
-                {
-                    serializedEscapePods = EscapePods = value;
-                }
-            }
-        }
+            EscapePodData escapePodData = new EscapePodData();
+            escapePodData.EscapePods = escapePods;
 
-        private List<EscapePodModel> serializedEscapePods = new List<EscapePodModel>();
-
-        [ProtoMember(2)]
-        private Dictionary<ushort, EscapePodModel> SerializedEscapePodsByPlayerId
-        {
-            get
-            {
-                lock (EscapePodsByPlayerId)
-                {
-                    serializedEscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>(EscapePodsByPlayerId);
-                    return serializedEscapePodsByPlayerId;
-                }
-            }
-            set
-            {
-                lock (EscapePodsByPlayerId)
-                {
-                    serializedEscapePodsByPlayerId = EscapePodsByPlayerId = value;
-                }
-            }
-        }
-
-        Dictionary<ushort, EscapePodModel> serializedEscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
-
-        [ProtoMember(3)]
-        public EscapePodModel PodNotFullYet;
-
-        public List<EscapePodModel> EscapePods = new List<EscapePodModel>();
-
-        public Dictionary<ushort, EscapePodModel> EscapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            lock (EscapePods)
-            {
-                EscapePods = serializedEscapePods;
-            }
-
-            lock (EscapePodsByPlayerId)
-            {
-                EscapePodsByPlayerId = serializedEscapePodsByPlayerId;
-            }
+            return escapePodData;
         }
     }
 }

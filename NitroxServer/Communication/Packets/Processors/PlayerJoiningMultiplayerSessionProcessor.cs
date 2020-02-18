@@ -54,7 +54,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             InitialPlayerSync initialPlayerSync = new InitialPlayerSync(player.GameObjectId,
                 wasBrandNewPlayer,
-                world.EscapePodData.EscapePods,
+                world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
                 equippedItems,
                 world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),

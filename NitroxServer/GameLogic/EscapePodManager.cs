@@ -2,56 +2,82 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
 {
     public class EscapePodManager
     {
-        public const int PLAYERS_PER_ESCAPEPOD = 50;
-
         public const int ESCAPE_POD_X_OFFSET = 40;
 
-        private readonly EscapePodData escapePodData;
+        private List<EscapePodModel> escapePods;
+        private Dictionary<ushort, EscapePodModel> escapePodsByPlayerId;
+        private EscapePodModel podForNextPlayer;
 
-        public EscapePodManager(EscapePodData escapePodData)
+        public EscapePodManager(List<EscapePodModel> escapePods)
         {
-            this.escapePodData = escapePodData;
+            this.escapePods = escapePods;
 
-
-            if (escapePodData.EscapePods.Count > 0)
-                escapePodData.PodNotFullYet = escapePodData.EscapePods[escapePodData.EscapePods.Count - 1];
-
-            if (escapePodData.PodNotFullYet == null)
-                escapePodData.PodNotFullYet = CreateNewEscapePod();
+            initializePodForNextPlayer();
+            initializeEscapePodsByPlayerId();
         }
 
         public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodModel> newlyCreatedPod)
         {
             newlyCreatedPod = Optional<EscapePodModel>.Empty();
-            lock (escapePodData.EscapePodsByPlayerId)
+
+            lock (escapePodsByPlayerId)
             {
-                if (escapePodData.EscapePodsByPlayerId.ContainsKey(playerId))
+                if (escapePodsByPlayerId.ContainsKey(playerId))
                 {
-                    return escapePodData.EscapePodsByPlayerId[playerId].Id;
+                    return escapePodsByPlayerId[playerId].Id;
                 }
 
-                if (escapePodData.PodNotFullYet.AssignedPlayers.Count == PLAYERS_PER_ESCAPEPOD)
+                if (podForNextPlayer.IsFull())
                 {
                     newlyCreatedPod = Optional<EscapePodModel>.Of(CreateNewEscapePod());
-                    escapePodData.PodNotFullYet = newlyCreatedPod.Get();
+                    podForNextPlayer = newlyCreatedPod.Get();
                 }
 
-                escapePodData.PodNotFullYet.AssignedPlayers.Add(playerId);
-                escapePodData.EscapePodsByPlayerId[playerId] = escapePodData.PodNotFullYet;
+                podForNextPlayer.AssignedPlayers.Add(playerId);
+                escapePodsByPlayerId[playerId] = podForNextPlayer;
             }
-            return escapePodData.PodNotFullYet.Id;
+
+            return podForNextPlayer.Id;
         }
 
+        public List<EscapePodModel> GetEscapePods()
+        {
+            lock(escapePods)
+            {
+                // coyp to prevent mutation at the caller
+                return new List<EscapePodModel>(escapePods);
+            }
+        }
+
+        public void RepairEscapePod(NitroxId id)
+        {
+            lock(escapePods)
+            {
+                EscapePodModel escapePod = escapePods.Find(ep => ep.Id == id);
+                escapePod.Damaged = false;
+            }
+        }
+
+        public void RepairEscapePodRadio(NitroxId id)
+        {
+            lock (escapePods)
+            {
+                EscapePodModel escapePod = escapePods.Find(ep => ep.RadioId == id);
+                escapePod.RadioDamaged = false;
+            }
+        }
+        
         private EscapePodModel CreateNewEscapePod()
         {
-            lock (escapePodData.EscapePods)
+            lock (escapePods)
             {
-                int totalEscapePods = escapePodData.EscapePods.Count;
+                int totalEscapePods = escapePods.Count;
 
                 EscapePodModel escapePod = new EscapePodModel();
                 escapePod.InitEscapePodModel(new NitroxId(),
@@ -63,27 +89,36 @@ namespace NitroxServer.GameLogic
                     true,
                     true);
 
-                escapePodData.EscapePods.Add(escapePod);
+                escapePods.Add(escapePod);
 
                 return escapePod;
             }
         }
 
-        public void RepairEscapePod(NitroxId id)
+        private void initializePodForNextPlayer()
         {
-            lock(escapePodData.EscapePods)
+            foreach (EscapePodModel pod in escapePods)
             {
-                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.Id == id);
-                escapePod.Damaged = false;
+                if (!pod.IsFull())
+                {
+                    podForNextPlayer = pod;
+                    return;
+                }
             }
+
+            podForNextPlayer = CreateNewEscapePod();
         }
 
-        public void RepairEscapePodRadio(NitroxId id)
+        private void initializeEscapePodsByPlayerId()
         {
-            lock (escapePodData.EscapePods)
+            escapePodsByPlayerId = new Dictionary<ushort, EscapePodModel>();
+
+            foreach (EscapePodModel pod in escapePods)
             {
-                EscapePodModel escapePod = escapePodData.EscapePods.Find(ep => ep.RadioId == id);
-                escapePod.RadioDamaged = false;
+                foreach (ushort playerId in pod.AssignedPlayers)
+                {
+                    escapePodsByPlayerId[playerId] = pod;
+                }
             }
         }
     }
