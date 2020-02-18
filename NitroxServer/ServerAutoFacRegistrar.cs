@@ -1,7 +1,6 @@
 ﻿using Autofac;
 using NitroxModel.Core;
 using System.Reflection;
-using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
@@ -54,7 +53,7 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<WorldPersistence>().Load()).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BaseManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().VehicleData).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().InventoryData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().InventoryManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();

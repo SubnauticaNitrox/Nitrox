@@ -20,7 +20,7 @@ namespace NitroxServer.Serialization.World
         public BaseManager BaseManager { get; set; }
         public EventTriggerer EventTriggerer { get; set; }
         public VehicleData VehicleData { get; set; }
-        public InventoryData InventoryData { get; set; }
+        public InventoryManager InventoryManager { get; set; }
         public GameData GameData { get; set; }
         public string GameMode { get; set; }
     }

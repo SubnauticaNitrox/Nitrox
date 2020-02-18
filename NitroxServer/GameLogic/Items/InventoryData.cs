@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Items
 {
@@ -9,116 +8,18 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryData
     {
         [ProtoMember(1)]
-        private Dictionary<NitroxId, ItemData> SerializableInsertedInventoryItemsById
-        {
-            get
-            {
-                lock (insertedInventoryItemsById)
-                {
-                    serializableInsertedInventoryItemsById = new Dictionary<NitroxId, ItemData>(insertedInventoryItemsById);
-                    return serializableInsertedInventoryItemsById;
-                }
-            }
-            set
-            {
-                lock (insertedInventoryItemsById)
-                {
-                    serializableInsertedInventoryItemsById = insertedInventoryItemsById = value;
-                }
-            }
-        }
+        public List<ItemData> InventoryItems;
 
-        private Dictionary<NitroxId, ItemData> serializableInsertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
-
-        private Dictionary<NitroxId, ItemData> insertedInventoryItemsById = new Dictionary<NitroxId, ItemData>();
-        
         [ProtoMember(2)]
-        private Dictionary<NitroxId, ItemData> SerializableStorageSlotItemsById
+        public List<ItemData> StorageSlotItems;
+
+        public static InventoryData From(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
         {
-            get
-            {
-                lock (storageSlotItemsById)
-                {
-                    serializableStorageSlotItemsById = new Dictionary<NitroxId, ItemData>(storageSlotItemsById);
-                    return serializableStorageSlotItemsById;
-                }
-            }
-            set
-            {
-                lock (storageSlotItemsById)
-                {
-                    serializableStorageSlotItemsById= storageSlotItemsById = value;
-                }
-            }
-        }
+            InventoryData inventoryData = new InventoryData();
+            inventoryData.InventoryItems = inventoryItems;
+            inventoryData.StorageSlotItems = storageSlotItems;
 
-        private Dictionary<NitroxId, ItemData> serializableStorageSlotItemsById = new Dictionary<NitroxId, ItemData>();
-
-        private Dictionary<NitroxId, ItemData> storageSlotItemsById = new Dictionary<NitroxId, ItemData>();
-
-        public void ItemAdded(ItemData itemData)
-        {
-            lock(insertedInventoryItemsById)
-            {
-                insertedInventoryItemsById[itemData.ItemId] = itemData;
-            }
-        }
-
-        public void ItemRemoved(NitroxId itemId)
-        {
-            lock (insertedInventoryItemsById)
-            {
-                insertedInventoryItemsById.Remove(itemId);
-            }
-        }
-        
-        public List<ItemData> GetAllItemsForInitialSync()
-        {
-            lock (insertedInventoryItemsById)
-            {
-                return new List<ItemData>(insertedInventoryItemsById.Values);
-            }
-        }
-
-        
-        public void StorageItemAdded(ItemData itemData)
-        {
-            lock (storageSlotItemsById)
-            {
-                storageSlotItemsById[itemData.ContainerId] = itemData;
-            }
-        }
-
-        public bool StorageItemRemoved(NitroxId ownerId)
-        {
-            bool success = false;
-            lock (storageSlotItemsById)
-            {
-                success = storageSlotItemsById.Remove(ownerId);
-            }
-            return success;
-        }
-
-        public List<ItemData> GetAllStorageItemsForInitialSync()
-        {
-            lock (storageSlotItemsById)
-            {
-                return new List<ItemData>(storageSlotItemsById.Values);
-            }
-        }
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            lock (insertedInventoryItemsById)
-            {
-                insertedInventoryItemsById = serializableInsertedInventoryItemsById;
-            }
-
-            lock (storageSlotItemsById)
-            {
-                storageSlotItemsById = serializableStorageSlotItemsById;
-            }
+            return inventoryData;
         }
     }
 }

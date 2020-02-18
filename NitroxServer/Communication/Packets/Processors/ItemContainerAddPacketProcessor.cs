@@ -8,17 +8,18 @@ namespace NitroxServer.Communication.Packets.Processors
     class ItemContainerAddPacketProcessor : AuthenticatedPacketProcessor<ItemContainerAdd>
     {
         private readonly PlayerManager playerManager;
-        private readonly InventoryData inventoryData;
+        private readonly InventoryManager inventoryManager;
 
-        public ItemContainerAddPacketProcessor(PlayerManager playerManager, InventoryData inventoryData)
+        public ItemContainerAddPacketProcessor(PlayerManager playerManager, InventoryManager inventoryManager)
         {
             this.playerManager = playerManager;
-            this.inventoryData = inventoryData;
+            this.inventoryManager = inventoryManager;
         }
 
         public override void Process(ItemContainerAdd packet, Player player)
         {
-            inventoryData.ItemAdded(packet.ItemData);
+            inventoryManager.ItemAdded(packet.ItemData);
+
             if (packet.ItemData.ContainerId != player.GameObjectId)
             {
                 playerManager.SendPacketToOtherPlayers(packet, player);

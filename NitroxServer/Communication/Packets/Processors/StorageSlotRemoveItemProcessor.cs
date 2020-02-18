@@ -8,18 +8,18 @@ namespace NitroxServer.Communication.Packets.Processors
     class StorageSlotRemoveItemProcessor : AuthenticatedPacketProcessor<StorageSlotItemRemove>
     {
         private readonly PlayerManager playerManager;
-        private readonly InventoryData inventoryData;
+        private readonly InventoryManager inventoryManager;
 
-        public StorageSlotRemoveItemProcessor(PlayerManager playerManager, InventoryData inventoryData)
+        public StorageSlotRemoveItemProcessor(PlayerManager playerManager, InventoryManager inventoryManager)
         {
             this.playerManager = playerManager;
-            this.inventoryData = inventoryData;
+            this.inventoryManager = inventoryManager;
         }
 
         public override void Process(StorageSlotItemRemove packet, Player player)
         {
-            // Only need to send to other players, if an synched item was really removed
-            if (inventoryData.StorageItemRemoved(packet.OwnerId)) 
+            // Only need to send to other players, if an synced item was really removed
+            if (inventoryManager.StorageItemRemoved(packet.OwnerId)) 
             {                
                 playerManager.SendPacketToOtherPlayers(packet, player);
             }

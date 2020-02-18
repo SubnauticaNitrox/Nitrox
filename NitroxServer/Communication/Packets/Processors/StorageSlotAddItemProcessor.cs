@@ -8,17 +8,17 @@ namespace NitroxServer.Communication.Packets.Processors
     class StorageSlotAddItemProcessor : AuthenticatedPacketProcessor<StorageSlotItemAdd>
     {
         private readonly PlayerManager playerManager;
-        private readonly InventoryData inventoryData;
+        private readonly InventoryManager inventoryManager;
 
-        public StorageSlotAddItemProcessor(PlayerManager playerManager, InventoryData inventoryData)
+        public StorageSlotAddItemProcessor(PlayerManager playerManager, InventoryManager inventoryManager)
         {
             this.playerManager = playerManager;
-            this.inventoryData = inventoryData;
+            this.inventoryManager = inventoryManager;
         }
 
         public override void Process(StorageSlotItemAdd packet, Player player)
         {
-            inventoryData.StorageItemAdded(packet.ItemData);
+            inventoryManager.StorageItemAdded(packet.ItemData);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

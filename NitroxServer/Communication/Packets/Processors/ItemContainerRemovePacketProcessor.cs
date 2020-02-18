@@ -8,17 +8,17 @@ namespace NitroxServer.Communication.Packets.Processors
     class ItemContainerRemovePacketProcessor : AuthenticatedPacketProcessor<ItemContainerRemove>
     {
         private readonly PlayerManager playerManager;
-        private readonly InventoryData inventoryData;
+        private readonly InventoryManager inventoryManager;
 
-        public ItemContainerRemovePacketProcessor(PlayerManager playerManager, InventoryData inventoryData)
+        public ItemContainerRemovePacketProcessor(PlayerManager playerManager, InventoryManager inventoryManager)
         {
             this.playerManager = playerManager;
-            this.inventoryData = inventoryData;
+            this.inventoryManager = inventoryManager;
         }
 
         public override void Process(ItemContainerRemove packet, Player player)
         {
-            inventoryData.ItemRemoved(packet.ItemId);
+            inventoryManager.ItemRemoved(packet.ItemId);
 
             if (packet.OwnerId != player.GameObjectId)
             {

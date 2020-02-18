@@ -108,13 +108,15 @@ namespace NitroxServer.GameLogic.Vehicles
         {
             // Remove items in vehicles (for now just batteries)
             VehicleModel vehicle = vehiclesById[id];
-            InventoryData data = NitroxServiceLocator.LocateService<InventoryData>();
-            data.StorageItemRemoved(vehicle.Id);
+
+            InventoryManager inventoryManager = NitroxServiceLocator.LocateService<InventoryManager>();
+            inventoryManager.StorageItemRemoved(vehicle.Id);
+
             if (vehicle.InteractiveChildIdentifiers.IsPresent())
             {
                 foreach (InteractiveChildObjectIdentifier child in vehicle.InteractiveChildIdentifiers.Get())
                 {
-                    data.StorageItemRemoved(child.Id);
+                    inventoryManager.StorageItemRemoved(child.Id);
                 }
             }
         }
