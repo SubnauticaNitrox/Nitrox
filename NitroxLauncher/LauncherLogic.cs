@@ -29,6 +29,7 @@ namespace NitroxLauncher
         private NitroxEntryPatch nitroxEntryPatch;
         private Process serverProcess;
         private string subnauticaPath;
+        private bool isEmbedded;
         public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
         public static LauncherLogic Instance { get; private set; }
 
@@ -116,7 +117,7 @@ namespace NitroxLauncher
             {
                 return;
             }
-            if (ServerRunning && page == typeof(ServerPage))
+            if (ServerRunning && isEmbedded && page == typeof(ServerPage))
             {
                 page = typeof(ServerConsolePage);
             }
@@ -236,6 +237,7 @@ namespace NitroxLauncher
         private void OnEndServer()
         {
             ServerExited?.Invoke(serverProcess, new EventArgs());
+            isEmbedded = false;
         }
 
         private void ServerProcessOnOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -266,6 +268,7 @@ namespace NitroxLauncher
 
         private void OnStartServer(bool embedded)
         {
+            isEmbedded = embedded;
             ServerStarted?.Invoke(serverProcess, new ServerStartEventArgs(embedded));
         }
 
