@@ -57,7 +57,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
                 equippedItems,
-                world.BaseData.GetBasePiecesForNewlyConnectedPlayer(),
+                world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 world.VehicleData.GetVehiclesForInitialSync(),
                 world.InventoryData.GetAllItemsForInitialSync(),
                 world.InventoryData.GetAllStorageItemsForInitialSync(),

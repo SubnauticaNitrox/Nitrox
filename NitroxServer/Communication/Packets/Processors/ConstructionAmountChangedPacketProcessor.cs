@@ -7,18 +7,18 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class ConstructionAmountChangedPacketProcessor : AuthenticatedPacketProcessor<ConstructionAmountChanged>
     {
-        private readonly BaseData baseData;
+        private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public ConstructionAmountChangedPacketProcessor(BaseData baseData, PlayerManager playerManager)
+        public ConstructionAmountChangedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
-            this.baseData = baseData;
+            this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
         public override void Process(ConstructionAmountChanged packet, Player player)
         {
-            baseData.BasePieceConstructionAmountChanged(packet.Id, packet.ConstructionAmount);
+            baseManager.BasePieceConstructionAmountChanged(packet.Id, packet.ConstructionAmount);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

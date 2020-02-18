@@ -8,19 +8,19 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class SignChangedPacketProcessor : AuthenticatedPacketProcessor<SignChanged>
     {
-        private readonly BaseData baseData;
+        private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public SignChangedPacketProcessor(BaseData baseData, PlayerManager playerManager)
+        public SignChangedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
-            this.baseData = baseData;
+            this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
         public override void Process(SignChanged packet, Player player)
         {
             SignMetadata signMetadata = packet.SignMetadata;
-            baseData.UpdateBasePieceMetadata(signMetadata.Id, signMetadata);
+            baseManager.UpdateBasePieceMetadata(signMetadata.Id, signMetadata);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

@@ -7,18 +7,18 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class PlaceBasePiecePacketProcessor : AuthenticatedPacketProcessor<PlaceBasePiece>
     {
-        private readonly BaseData baseData;
+        private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public PlaceBasePiecePacketProcessor(BaseData baseData, PlayerManager playerManager)
+        public PlaceBasePiecePacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
-            this.baseData = baseData;
+            this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
         public override void Process(PlaceBasePiece packet, Player player)
         {
-            baseData.AddBasePiece(packet.BasePiece);
+            baseManager.AddBasePiece(packet.BasePiece);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

@@ -7,18 +7,18 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class DeconstructionCompletedPacketProcessor : AuthenticatedPacketProcessor<DeconstructionCompleted>
     {
-        private readonly BaseData baseData;
+        private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public DeconstructionCompletedPacketProcessor(BaseData baseData, PlayerManager playerManager)
+        public DeconstructionCompletedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
-            this.baseData = baseData;
+            this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
         public override void Process(DeconstructionCompleted packet, Player player)
         {
-            baseData.BasePieceDeconstructionCompleted(packet.Id);
+            baseManager.BasePieceDeconstructionCompleted(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
