@@ -11,17 +11,18 @@ namespace NitroxServer.Communication.Packets.Processors
     class VehicleUndockingProcessor : AuthenticatedPacketProcessor<VehicleUndocking>
     {
         private readonly PlayerManager playerManager;
-        private readonly VehicleData vehicleData;
+        private readonly VehicleManager vehicleManager;
 
-        public VehicleUndockingProcessor(PlayerManager playerManager, VehicleData vehicleData)
+        public VehicleUndockingProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
         {
             this.playerManager = playerManager;
-            this.vehicleData = vehicleData;
+            this.vehicleManager = vehicleManager;
         }
 
         public override void Process(VehicleUndocking packet, Player player)
         {
-            Optional<VehicleModel> vehicle = vehicleData.GetVehicleModel(packet.VehicleId);
+            Optional<VehicleModel> vehicle = vehicleManager.GetVehicleModel(packet.VehicleId);
+
             if (!vehicle.IsPresent())
             {
                 return;

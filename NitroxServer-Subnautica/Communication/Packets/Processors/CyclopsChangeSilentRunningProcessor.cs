@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
@@ -13,23 +12,25 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 {
     class CyclopsChangeSilentRunningProcessor : AuthenticatedPacketProcessor<CyclopsChangeSilentRunning>
     {
-        public VehicleData Vehicles { get; }
-        public PlayerManager PlayerManager { get; }
+        private readonly VehicleManager vehicleManager;
+        private readonly PlayerManager playerManager;
 
-        public CyclopsChangeSilentRunningProcessor(VehicleData vehicleData, PlayerManager playerManager)
+        public CyclopsChangeSilentRunningProcessor(VehicleManager vehicleManager, PlayerManager playerManager)
         {
-            Vehicles = vehicleData;
-            PlayerManager = playerManager;
+            this.vehicleManager = vehicleManager;
+            this.playerManager = playerManager;
         }
 
         public override void Process(CyclopsChangeSilentRunning packet, NitroxServer.Player player)
         {
-            Optional<CyclopsModel> opCyclops = Vehicles.GetVehicleModel<CyclopsModel>(packet.Id);
+            Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
+
             if (opCyclops.IsPresent())
             {
                 opCyclops.Get().SilentRunningOn = packet.IsOn;
             }
-            PlayerManager.SendPacketToOtherPlayers(packet, player);
+
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

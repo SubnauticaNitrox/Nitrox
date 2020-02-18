@@ -8,17 +8,17 @@ namespace NitroxServer.Communication.Packets.Processors
     class VehicleRemovePacketProcessor : AuthenticatedPacketProcessor<VehicleDestroyed>
     {
         private readonly PlayerManager playerManager;
-        private readonly VehicleData vehicleData;
+        private readonly VehicleManager vehicleManager;
 
-        public VehicleRemovePacketProcessor(PlayerManager playerManager, VehicleData vehicleData)
+        public VehicleRemovePacketProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
         {
             this.playerManager = playerManager;
-            this.vehicleData = vehicleData;
+            this.vehicleManager = vehicleManager;
         }
 
         public override void Process(VehicleDestroyed packet, Player player)
         {
-            vehicleData.RemoveVehicle(packet.Id);
+            vehicleManager.RemoveVehicle(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

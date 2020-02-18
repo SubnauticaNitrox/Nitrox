@@ -9,18 +9,18 @@ namespace NitroxServer.Communication.Packets.Processors
     class VehicleAddPacketProcessor : AuthenticatedPacketProcessor<VehicleCreated>
     {
         private readonly PlayerManager playerManager;
-        private readonly VehicleData vehicleData;
+        private readonly VehicleManager vehicleManager;
 
-        public VehicleAddPacketProcessor(PlayerManager playerManager, VehicleData vehicleData)
+        public VehicleAddPacketProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
         {
             this.playerManager = playerManager;
-            this.vehicleData = vehicleData;
+            this.vehicleManager = vehicleManager;
         }
 
         public override void Process(VehicleCreated packet, Player player)
         {
             Log.Info(packet);
-            vehicleData.AddVehicle(packet.CreatedVehicle);
+            vehicleManager.AddVehicle(packet.CreatedVehicle);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

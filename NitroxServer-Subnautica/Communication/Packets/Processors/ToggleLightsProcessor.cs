@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
-using NitroxServer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Vehicles;
@@ -14,23 +8,25 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 {
     class ToggleLightsProcessor : AuthenticatedPacketProcessor<NitroxModel.Packets.ToggleLights>
     {
-        public VehicleData Vehicles { get; }
-        public PlayerManager PlayerManager { get; }
+        private readonly VehicleManager vehicleManager;
+        private readonly PlayerManager playerManager;
 
-        public ToggleLightsProcessor(VehicleData vehicleData, PlayerManager playerManager)
+        public ToggleLightsProcessor(VehicleManager vehicleManager, PlayerManager playerManager)
         {
-            Vehicles = vehicleData;
-            PlayerManager = playerManager;
+            this.vehicleManager = vehicleManager;
+            this.playerManager = playerManager;
         }        
 
         public override void Process(NitroxModel.Packets.ToggleLights packet, NitroxServer.Player player)
         {
-            Optional<SeamothModel> opSeamoth = Vehicles.GetVehicleModel<SeamothModel>(packet.Id);
+            Optional<SeamothModel> opSeamoth = vehicleManager.GetVehicleModel<SeamothModel>(packet.Id);
+
             if (opSeamoth.IsPresent() && opSeamoth.Get().GetType() == typeof(SeamothModel))
             {
                 opSeamoth.Get().LightOn = packet.IsOn;
             }
-            PlayerManager.SendPacketToOtherPlayers(packet, player);
+
+            playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }
 }

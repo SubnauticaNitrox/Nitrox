@@ -23,10 +23,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public Quaternion Rotation { get; set; }
 
         [ProtoMember(5)]
-        public Optional<List<InteractiveChildObjectIdentifier>> InteractiveChildIdentifiers { get; set; }
+        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; set; } = new List<InteractiveChildObjectIdentifier>();
 
         [ProtoMember(6)]
         public Optional<NitroxId> DockingBayId { get; set; }
+
         [ProtoMember(7)]
         public string Name { get; set; }
 
@@ -36,14 +37,13 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(9)]
         public Vector3[] Colours { get; set; }
 
-
         public VehicleModel()
         {
-            InteractiveChildIdentifiers = Optional<List<InteractiveChildObjectIdentifier>>.Empty();
+            InteractiveChildIdentifiers = new List<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional<NitroxId>.Empty();
         }
 
-        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
+        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
         {
             TechType = techType;
             Id = id;

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
@@ -44,7 +42,7 @@ namespace NitroxClient.GameLogic
             CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);            
         }
 
-        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
+        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
         {
             if (techType == TechType.Cyclops)
             {
@@ -131,7 +129,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, Optional<List<InteractiveChildObjectIdentifier>> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -192,11 +190,9 @@ namespace NitroxClient.GameLogic
                 // Set internal and external lights
                 SetCyclopsModes(id);
             }
-            if (interactiveChildIdentifiers.IsPresent())
-            {
-                VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers.Get()); //Copy From ConstructorBeginCraftingProcessor
-            }            
 
+            VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
+                  
             // Send event after everthing is created            
             if (VehicleCreated != null)
             {

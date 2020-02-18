@@ -9,17 +9,17 @@ namespace NitroxServer.Communication.Packets.Processors
     class VehicleColorChangeProcessor : AuthenticatedPacketProcessor<VehicleColorChange>
     {
         private readonly PlayerManager playerManager;
-        private readonly VehicleData vehicleData;
+        private readonly VehicleManager vehicleManager;
 
-        public VehicleColorChangeProcessor(PlayerManager playerManager, VehicleData vehicleData)
+        public VehicleColorChangeProcessor(PlayerManager playerManager, VehicleManager vehicleManager)
         {
             this.playerManager = playerManager;
-            this.vehicleData = vehicleData;
+            this.vehicleManager = vehicleManager;
         }
 
         public override void Process(VehicleColorChange packet, Player player)
         {
-            vehicleData.UpdateVehicleColours(packet.Index, packet.Id, packet.HSB, packet.Color);
+            vehicleManager.UpdateVehicleColours(packet.Index, packet.Id, packet.HSB, packet.Color);
             playerManager.SendPacketToOtherPlayers(packet, player);
 
             Log.Info(packet);
