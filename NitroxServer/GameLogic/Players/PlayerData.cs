@@ -10,9 +10,9 @@ namespace NitroxServer.GameLogic.Players
     public class PlayerData
     {
         public const long VERSION = 2;
-        
+
         [ProtoMember(1)]
-        public List<PersistedPlayerData> Players;
+        public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
         
         public List<Player> GetPlayers()
         {

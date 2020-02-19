@@ -44,7 +44,7 @@ namespace NitroxServer.Serialization.World
                    (InventoryData != null) &&
                    (GameData != null) &&
                    (EntityData != null) &&
-                   (EntityData.SerializableEntities.Count > 0) &&
+                   (EntityData.Entities.Count > 0) &&
                    (EscapePodData != null);
         }
     }

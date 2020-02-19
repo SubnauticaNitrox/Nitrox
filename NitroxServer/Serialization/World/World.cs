@@ -14,7 +14,6 @@ namespace NitroxServer.Serialization.World
         public SimulationOwnershipData SimulationOwnershipData { get; set; }
         public EscapePodManager EscapePodManager { get; set; }
         public BatchEntitySpawner BatchEntitySpawner { get; set; }
-        public EntityData EntityData { get; set; }
         public EntitySimulation EntitySimulation { get; set; }
         public EntityManager EntityManager { get; set; }
         public BaseManager BaseManager { get; set; }

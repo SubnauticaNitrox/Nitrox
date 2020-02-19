@@ -33,7 +33,6 @@ namespace NitroxServer
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketHandler>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<EntityManager>().SingleInstance();
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
@@ -58,7 +57,7 @@ namespace NitroxServer
             containerBuilder.Register(c => c.Resolve<World>().PlayerManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().TimeKeeper).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().SimulationOwnershipData).SingleInstance();
-            containerBuilder.Register(c => c.Resolve<World>().EntityData).SingleInstance();
+            containerBuilder.Register(c => c.Resolve<World>().EntityManager).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().BatchEntitySpawner).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.PDAState).SingleInstance();
             containerBuilder.Register(c => c.Resolve<World>().GameData.StoryGoals).SingleInstance();

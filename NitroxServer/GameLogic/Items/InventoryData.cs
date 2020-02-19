@@ -8,10 +8,10 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryData
     {
         [ProtoMember(1)]
-        public List<ItemData> InventoryItems;
+        public List<ItemData> InventoryItems = new List<ItemData>();
 
         [ProtoMember(2)]
-        public List<ItemData> StorageSlotItems;
+        public List<ItemData> StorageSlotItems = new List<ItemData>();
 
         public static InventoryData From(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
         {

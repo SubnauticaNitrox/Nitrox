@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
+using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.GameLogic.Spawning
 {
@@ -20,7 +21,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             if(reefback.IsPresent())
             {
-                ReefbackLife life = reefback.Get().GetComponent<ReefbackLife>();
+                ReefbackLife life = reefback.Get().RequireComponent<ReefbackLife>();
                 life.initialized = true;
                 life.ReflectionCall("SpawnPlants");
 
