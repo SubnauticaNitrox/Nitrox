@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
+using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
@@ -44,9 +46,22 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
                     GameObjectAsset prefabPlaceholder = GameObjectAssetParser.GameObjectsByAssetId[prefabPlaceholderAsset.GameObjectIdentifier];                    
                     TransformAsset localTransform = GetTransform(prefabPlaceholder);
 
-                    prefabs.Add(new PrefabAsset(prefabPlaceholderAsset.ClassId, localTransform));
+                    Optional<NitroxEntitySlot> entitySlot = GetEntitySlot(prefabPlaceholderAsset.ClassId);
+
+                    prefabs.Add(new PrefabAsset(prefabPlaceholderAsset.ClassId, localTransform, entitySlot));
                 }
             }
+        }
+
+        private Optional<NitroxEntitySlot> GetEntitySlot(string classId)
+        {
+            AssetIdentifier prefabId = PrefabIdentifierParser.GameObjectIdByClassId[classId];
+            GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[prefabId];
+            NitroxEntitySlot entitySlot;
+
+            EntitySlotParser.EntitySlotsByIdentifier.TryGetValue(gameObject.Identifier, out entitySlot);
+
+            return Optional<NitroxEntitySlot>.OfNullable(entitySlot);
         }
 
         private TransformAsset GetTransform(GameObjectAsset gameObjectAsset)

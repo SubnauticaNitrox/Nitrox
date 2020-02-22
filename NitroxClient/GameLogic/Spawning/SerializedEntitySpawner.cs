@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class SerializedEntitySpawner : IEntitySpawner
     {
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
+        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
             GameObject gameObject = SerializationHelper.GetGameObject(entity.SerializedGameObject);
             gameObject.transform.position = entity.Transform.Position;

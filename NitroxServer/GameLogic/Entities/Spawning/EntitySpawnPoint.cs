@@ -12,8 +12,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
         public Quaternion LocalRotation;
         public AbsoluteEntityCell AbsoluteEntityCell { get; }
-        public Vector3 Position => Parent != null ? Parent.Position + LocalPosition : LocalPosition;
-        public Quaternion Rotation => Parent != null ? Parent.Rotation * LocalRotation : LocalRotation;
         public Vector3 Scale { get; }
         public string ClassId { get; }
         public string BiomeType { get; }
@@ -43,6 +41,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             LocalRotation = localRotation;
         }
 
-        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, Scale: {Scale}, ClassId: {ClassId}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
+        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Local Position: {LocalPosition}, Local Rotation: {LocalRotation}, Scale: {Scale}, Class Id: {ClassId}, Biome Type: {BiomeType}, Density: {Density}, Can Spawn Creature: {CanSpawnCreature}]";
     }
 }

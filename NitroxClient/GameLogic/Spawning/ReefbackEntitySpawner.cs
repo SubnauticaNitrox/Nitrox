@@ -15,9 +15,9 @@ namespace NitroxClient.GameLogic.Spawning
             this.defaultSpawner = defaultSpawner;
         }
 
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
+        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
-            Optional<GameObject> reefback = defaultSpawner.Spawn(entity, parent);
+            Optional<GameObject> reefback = defaultSpawner.Spawn(entity, parent, cellRoot);
 
             if(reefback.IsPresent())
             {
@@ -27,7 +27,7 @@ namespace NitroxClient.GameLogic.Spawning
 
                 foreach (Entity childEntity in entity.ChildEntities)
                 {
-                    Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback);
+                    Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
 
                     if (child.IsPresent())
                     {

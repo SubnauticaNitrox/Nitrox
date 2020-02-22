@@ -66,19 +66,20 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private EntityCell EnsureCell(Entity entity, Optional<GameObject> liveRoot)
+        private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
 
-            if (!entityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell) && liveRoot.IsPresent() && liveRoot.Get().GetComponent<LargeWorldEntityCell>())
+            if (!entityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell))
             {
                 Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
                 Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
                 entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
-                entityCells.Add(entity.AbsoluteEntityCell, entityCell);
-                entityCell.liveRoot = liveRoot.Get();
+                entityCell.EnsureRoot();
                 entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}; Batch {3}, {4}, {5}", cellId.x, cellId.y, cellId.z, batchId.x, batchId.y, batchId.z);
                 entityCell.Initialize();
+
+                entityCells.Add(entity.AbsoluteEntityCell, entityCell);
             }
             return entityCell;
         }
@@ -92,12 +93,12 @@ namespace NitroxClient.GameLogic
         {
             alreadySpawnedIds.Add(entity.Id);
 
+            EntityCell cellRoot = EnsureCell(entity);
+
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
-            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
+            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
 
-            EntityCell cellRoot = EnsureCell(entity, gameObject);
-
-            if (cellRoot != null && gameObject.Get().GetComponent<LargeWorldEntityCell>() != null)
+            if (cellRoot != null && gameObject.IsPresent() && gameObject.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
                 LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
             }

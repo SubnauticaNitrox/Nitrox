@@ -89,6 +89,18 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 Log.Info("Spawning " + entities.Count + " entities from " + spawnPoints.Count + " spawn points in batch " + batchId);
             }
 
+
+            for (int x = 0; x < entities.Count; x++)
+            {
+                for (int y = 0; y < entities.Count; y++)
+                {
+                    if (entities[x] == entities[y] && x != y)
+                    {
+                        Log.Error("Duplicate Entity detected! " + entities[x]);
+                    }
+                }
+            }
+
             return entities;
         }
 
@@ -207,7 +219,8 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             spawnedEntity.ChildEntities = SpawnEntities(entitySpawnPoint.Children, deterministicBatchGenerator, spawnedEntity);
 
-            AssignPlaceholderEntitiesIfRequired(spawnedEntity, classId, deterministicBatchGenerator);
+
+            CreatePrefabPlaceholdersWithChildren(spawnedEntity, classId, deterministicBatchGenerator);
 
             IEntityBootstrapper bootstrapper;
 
@@ -248,7 +261,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             return entities;
         }
 
-        private void AssignPlaceholderEntitiesIfRequired(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
+        private void CreatePrefabPlaceholdersWithChildren(Entity entity, string classId, DeterministicBatchGenerator deterministicBatchGenerator)
         {
             List<PrefabAsset> prefabs;
 
@@ -270,6 +283,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                         continue;
                     }
 
+                    if (prefab.EntitySlot.IsPresent())
+                    {
+                        //SpawnEntitiesUsingRandomDistribution(new EntitySpawnPoint(entity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, )) // Unimplemented
+                    }
+
                     UweWorldEntity worldEntity = opWorldEntity.Get();
 
                     Entity prefabEntity = new Entity(transform.LocalPosition,
@@ -282,6 +300,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                             deterministicBatchGenerator.NextId(),
                                             entity);
 
+                    CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
                     entity.ChildEntities.Add(prefabEntity);
                 }
             }
