@@ -1,6 +1,7 @@
 ﻿using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -15,7 +16,8 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
-            EscapePodModel escapePod = packet.EscapePodsData.Find(x => x.Id.Equals(packet.AssignedEscapePodId));
+            Optional<EscapePodModel> escapePod = Optional<EscapePodModel>.Of(packet.EscapePodsData.Find(x => x.Id.Equals(packet.AssignedEscapePodId)));
+            
             escapePodManager.AssignPlayerToEscapePod(escapePod);
             escapePodManager.SyncEscapePodIds(packet.EscapePodsData);
         }

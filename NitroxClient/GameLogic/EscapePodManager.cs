@@ -28,27 +28,37 @@ namespace NitroxClient.GameLogic
             this.multiplayerSession = multiplayerSession;
         }
 
-        public void AssignPlayerToEscapePod(EscapePodModel escapePod)
+        public void AssignPlayerToEscapePod(Optional<EscapePodModel> escapePod)
         {
-            EscapePod.main.transform.position = escapePod.Location;
-            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition;
-
-            Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
-
-            if (rigidbody != null)
+            if (escapePod.IsPresent())
             {
-                Log.Debug("Freezing escape pod rigidbody");
-                rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                EscapePodModel model = escapePod.Get();
+                EscapePod.main.transform.position = model.Location;
+                EscapePod.main.playerSpawn.position = model.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
+
+                Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
+
+                if (rigidbody != null)
+                {
+                    Log.Debug("Freezing escape pod rigidbody");
+                    rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                }
+                else
+                {
+                    Log.Error("Escape pod did not have a rigid body!");
+                }
+
+                Player.main.transform.position = EscapePod.main.playerSpawn.position;
+                Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+                Player.main.escapePod.Update(true);
+
+                MyEscapePodId = model.Id;
             }
             else
             {
-                Log.Error("Escape pod did not have a rigid body!");
+                Log.Error("ESCAPE POD NOT FOUND!!!");
             }
-
-            Player.main.transform.position = EscapePod.main.playerSpawn.position;
-            Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
-
-            MyEscapePodId = escapePod.Id;
         }
 
         public void AddNewEscapePod(EscapePodModel escapePod)
