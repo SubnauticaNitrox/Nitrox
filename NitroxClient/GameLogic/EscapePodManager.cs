@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
 
             Player.main.escapePod.Update(true);
 
-            MyEscapePodId = model.Id;
+            MyEscapePodId = escapePod.Id;
         }
 
         public void AddNewEscapePod(EscapePodModel escapePod)
