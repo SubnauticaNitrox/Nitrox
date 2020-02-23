@@ -16,7 +16,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override void Process(InitialPlayerSync packet)
         {
-            Optional<EscapePodModel> escapePod = Optional<EscapePodModel>.Of(packet.EscapePodsData.Find(x => x.Id.Equals(packet.AssignedEscapePodId)));
+            EscapePodModel escapePod = packet.EscapePodsData.Find(x => x.Id.Equals(packet.AssignedEscapePodId));
             
             escapePodManager.AssignPlayerToEscapePod(escapePod);
             escapePodManager.SyncEscapePodIds(packet.EscapePodsData);
