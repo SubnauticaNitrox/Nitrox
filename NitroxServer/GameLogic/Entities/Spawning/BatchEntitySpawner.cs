@@ -231,7 +231,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             yield return spawnedEntity;
 
-            if (parentEntity == null)
+            if (parentEntity == null) // Ensures children are only returned at the top level
             {
                 // Children are yielded as well so they can be indexed at the top level (for use by simulation 
                 // ownership and various other consumers).  The parent should always be yielded before the children
