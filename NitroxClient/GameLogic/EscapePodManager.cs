@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
 using System;
+using NitroxModel.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -31,10 +32,7 @@ namespace NitroxClient.GameLogic
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
-            if (escapePod == null)
-            {
-                throw new NullReferenceException("ESCAPE POD NOT FOUND!!!");
-            }
+            Validate.NotNull(escapePod);
             
             EscapePod.main.transform.position = escapePod.Location;
             EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
@@ -54,7 +52,7 @@ namespace NitroxClient.GameLogic
             Player.main.transform.position = EscapePod.main.playerSpawn.position;
             Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
 
-            Player.main.escapePod.Update(true);
+            Player.main.escapePod.Update(true); // Tells the game to update various EscapePod features
 
             MyEscapePodId = escapePod.Id;
         }

@@ -90,7 +90,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
 
 
-            for (int x = 0; x < entities.Count; x++)
+            for (int x = 0; x < entities.Count; x++) // Throws on duplicate Entities already but nice to know which ones
             {
                 for (int y = 0; y < entities.Count; y++)
                 {
