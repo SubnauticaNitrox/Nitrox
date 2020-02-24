@@ -28,21 +28,22 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.rotation = entity.Transform.Rotation;
             gameObject.transform.localScale = entity.Transform.LocalScale;
 
+            NitroxEntity.SetNewId(gameObject, entity.Id);
+            CrafterLogic.NotifyCraftEnd(gameObject, techType);
+
             if (parent.IsPresent())
             {
                 gameObject.transform.SetParent(parent.Get().transform, true);
             }
 
-            NitroxEntity.SetNewId(gameObject, entity.Id);
-            CrafterLogic.NotifyCraftEnd(gameObject, techType);
-
             if (parent.IsPresent() && parent.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
-                LargeWorldEntity lwe = gameObject.GetComponent<LargeWorldEntity>();
-                cellRoot.AddEntity(lwe);
+                LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
-
-            gameObject.SetActive(true);
+            else
+            {
+                gameObject.SetActive(true);
+            }
 
             return Optional<GameObject>.Of(gameObject);
         }

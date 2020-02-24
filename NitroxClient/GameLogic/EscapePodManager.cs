@@ -8,6 +8,7 @@ using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
+using System;
 
 namespace NitroxClient.GameLogic
 {
@@ -30,7 +31,7 @@ namespace NitroxClient.GameLogic
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
-            if (escapePod != null)
+            if (escapePod == null)
             {
                 throw new NullReferenceException("ESCAPE POD NOT FOUND!!!");
             }
@@ -89,7 +90,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                escapePod = Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

@@ -231,11 +231,30 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             yield return spawnedEntity;
 
-            // Children are yielded as well so they can be indexed at the top level (for use by simulation 
-            // ownership and various other consumers).  The parent should always be yielded before the children
-            foreach (Entity childEntity in spawnedEntity.ChildEntities)
+            if (parentEntity == null)
             {
-                yield return childEntity;
+                // Children are yielded as well so they can be indexed at the top level (for use by simulation 
+                // ownership and various other consumers).  The parent should always be yielded before the children
+                foreach (Entity childEntity in AllChildren(spawnedEntity))
+                {
+                    yield return childEntity;
+                }
+            }
+        }
+
+        private IEnumerable<Entity> AllChildren(Entity entity)
+        {
+            foreach (Entity child in entity.ChildEntities)
+            {
+                yield return child;
+
+                if (child.ChildEntities.Count > 0)
+                {
+                    foreach (Entity childOfChild in AllChildren(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
             }
         }
 
@@ -283,11 +302,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                         continue;
                     }
 
-                    if (prefab.EntitySlot.IsPresent())
-                    {
-                        //SpawnEntitiesUsingRandomDistribution(new EntitySpawnPoint(entity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, )) // Unimplemented
-                    }
-
                     UweWorldEntity worldEntity = opWorldEntity.Get();
 
                     Entity prefabEntity = new Entity(transform.LocalPosition,
@@ -300,10 +314,28 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                                             deterministicBatchGenerator.NextId(),
                                             entity);
 
+                    if (prefab.EntitySlot.IsPresent())
+                    {
+                        SpawnEntitySlotEntities(prefab.EntitySlot.Get(), transform, deterministicBatchGenerator, entity);
+                    }
+
                     CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
                     entity.ChildEntities.Add(prefabEntity);
                 }
             }
+        }
+
+        private Entity SpawnEntitySlotEntities(NitroxEntitySlot entitySlot, TransformAsset transform, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity)
+        {
+            List<UwePrefab> prefabs = prefabFactory.GetPossiblePrefabs(entitySlot.BiomeType);
+            List<Entity> entities = new List<Entity>();
+
+            if (prefabs.Count > 0)
+            {
+                entities = SpawnEntitiesUsingRandomDistribution(new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType), prefabs, deterministicBatchGenerator, parentEntity).ToList();
+            }
+
+            return entities.FirstOrDefault(); 
         }
     }
 }
