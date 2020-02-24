@@ -9,7 +9,7 @@ namespace NitroxClient.GameLogic.Spawning
 {
     public class DefaultEntitySpawner : IEntitySpawner
     {
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
+        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
             TechType techType = entity.TechType.Enum();
             GameObject prefab;
@@ -28,19 +28,21 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.rotation = entity.Transform.Rotation;
             gameObject.transform.localScale = entity.Transform.LocalScale;
 
+            NitroxEntity.SetNewId(gameObject, entity.Id);
+            CrafterLogic.NotifyCraftEnd(gameObject, techType);
+
             if (parent.IsPresent())
             {
                 gameObject.transform.SetParent(parent.Get().transform, true);
             }
 
-            gameObject.SetActive(true);
-
-            NitroxEntity.SetNewId(gameObject, entity.Id);
-            CrafterLogic.NotifyCraftEnd(gameObject, techType);
-
-            if (parent.IsPresent() && parent.Get().GetComponent<LargeWorldEntityCell>())
+            if (parent.IsPresent() && parent.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
-                LargeWorldEntity.Register(gameObject);
+                LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
+            }
+            else
+            {
+                gameObject.SetActive(true);
             }
 
             return Optional<GameObject>.Of(gameObject);

@@ -8,6 +8,8 @@ using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
+using System;
+using NitroxModel.Helper;
 
 namespace NitroxClient.GameLogic
 {
@@ -30,8 +32,10 @@ namespace NitroxClient.GameLogic
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
+            Validate.NotNull(escapePod);
+            
             EscapePod.main.transform.position = escapePod.Location;
-            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition;
+            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
             Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
 
@@ -47,6 +51,8 @@ namespace NitroxClient.GameLogic
 
             Player.main.transform.position = EscapePod.main.playerSpawn.position;
             Player.main.transform.rotation = EscapePod.main.playerSpawn.rotation;
+
+            Player.main.escapePod.Update(true); // Tells the game to update various EscapePod features
 
             MyEscapePodId = escapePod.Id;
         }
@@ -82,7 +88,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                escapePod = Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

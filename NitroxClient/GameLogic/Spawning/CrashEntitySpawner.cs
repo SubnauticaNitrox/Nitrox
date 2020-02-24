@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.Spawning
         /**
          * Crash fish are spawned by the CrashHome in the Monobehaviours Start method
          */
-        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent)
+        public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
             if (parent.IsPresent())
             {

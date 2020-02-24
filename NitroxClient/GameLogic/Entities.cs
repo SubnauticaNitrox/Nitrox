@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<AbsoluteEntityCell, EntityCell> entityCells = new Dictionary<AbsoluteEntityCell, EntityCell>();
+        private readonly Dictionary<Int3, BatchCells> batchCellsById = new Dictionary<Int3, BatchCells>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -66,20 +66,31 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private EntityCell EnsureCell(Entity entity, Optional<GameObject> liveRoot)
+        private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
+            BatchCells batchCells;
 
-            if (!entityCells.TryGetValue(entity.AbsoluteEntityCell, out entityCell) && liveRoot.IsPresent() && liveRoot.Get().GetComponent<LargeWorldEntityCell>())
+            Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
+            Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
+
+            if (!batchCellsById.TryGetValue(batchId, out batchCells))
             {
-                Int3 batchId = ToInt3(entity.AbsoluteEntityCell.BatchId);
-                Int3 cellId = ToInt3(entity.AbsoluteEntityCell.CellId);
-                entityCell = new EntityCell(LargeWorldStreamer.main.cellManager, LargeWorldStreamer.main, batchId, cellId, entity.Level);
-                entityCells.Add(entity.AbsoluteEntityCell, entityCell);
-                entityCell.liveRoot = liveRoot.Get();
-                entityCell.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}; Batch {3}, {4}, {5}", cellId.x, cellId.y, cellId.z, batchId.x, batchId.y, batchId.z);
+                LargeWorldStreamer.main.cellManager.UnloadBatchCells(batchId); // Just in case
+                batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
+                batchCellsById.Add(batchId, batchCells);
+            }
+
+            entityCell = batchCells.Get(cellId, entity.AbsoluteEntityCell.Level);
+
+            if (entityCell == null)
+            {
+                entityCell = batchCells.Add(cellId, entity.AbsoluteEntityCell.Level);
                 entityCell.Initialize();
             }
+
+            entityCell.EnsureRoot();
+            
             return entityCell;
         }
 
@@ -92,15 +103,10 @@ namespace NitroxClient.GameLogic
         {
             alreadySpawnedIds.Add(entity.Id);
 
+            EntityCell cellRoot = EnsureCell(entity);
+
             IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
-            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent);
-
-            EntityCell cellRoot = EnsureCell(entity, gameObject);
-
-            if (cellRoot != null && gameObject.Get().GetComponent<LargeWorldEntityCell>() != null)
-            {
-                LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
-            }
+            Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
 
             foreach (Entity childEntity in entity.ChildEntities)
             {
@@ -121,6 +127,11 @@ namespace NitroxClient.GameLogic
             }
 
             TechType techType = entity.TechType.Enum();
+
+            if (entity.ClassId == "55d7ab35-de97-4d95-af6c-ac8d03bb54ca")
+            {
+                return new CellRootSpawner();
+            }
 
             if (customSpawnersByTechType.ContainsKey(techType))
             {
