@@ -316,7 +316,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
                     if (prefab.EntitySlot.IsPresent())
                     {
-                        SpawnEntitySlotEntities(prefab.EntitySlot.Get(), transform, deterministicBatchGenerator, entity);
+                        Entity possibleEntity = SpawnEntitySlotEntities(prefab.EntitySlot.Get(), transform, deterministicBatchGenerator, entity);
+                        if (possibleEntity != null)
+                        {
+                            entity.ChildEntities.Add(possibleEntity);
+                        }
                     }
 
                     CreatePrefabPlaceholdersWithChildren(prefabEntity, prefabEntity.ClassId, deterministicBatchGenerator);
@@ -332,10 +336,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (prefabs.Count > 0)
             {
-                entities = SpawnEntitiesUsingRandomDistribution(new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType), prefabs, deterministicBatchGenerator, parentEntity).ToList();
+                EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+                entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
             }
 
-            return entities.FirstOrDefault(); 
+            return entities.FirstOrDefault();
         }
     }
 }
