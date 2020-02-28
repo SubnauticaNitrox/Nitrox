@@ -71,8 +71,12 @@ namespace NitroxServer.Communication.Packets
                 Type packetType = packet.GetType();
                 Type packetProcessorType = serverPacketProcessorType.MakeGenericType(packetType);
 
-                PacketProcessor processor = (PacketProcessor)NitroxServiceLocator.LocateService(packetProcessorType);
-                processor.ProcessPacket(packet, connection);
+                Optional<object> processorOptional = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
+                if (processorOptional.IsPresent())
+                {
+                    PacketProcessor processor = (PacketProcessor)processorOptional;
+                    processor.ProcessPacket(packet, connection);
+                }
             }
             catch (Exception ex)
             {
