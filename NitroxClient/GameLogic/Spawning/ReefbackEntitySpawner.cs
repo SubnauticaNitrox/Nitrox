@@ -21,17 +21,20 @@ namespace NitroxClient.GameLogic.Spawning
 
             if(reefback.IsPresent())
             {
-                ReefbackLife life = reefback.Get().RequireComponent<ReefbackLife>();
-                life.initialized = true;
-                life.ReflectionCall("SpawnPlants");
-
-                foreach (Entity childEntity in entity.ChildEntities)
+                ReefbackLife life = reefback.Get().GetComponent<ReefbackLife>();
+                if (life != null) // Child Reefy...
                 {
-                    Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
+                    life.initialized = true;
+                    life.ReflectionCall("SpawnPlants");
 
-                    if (child.IsPresent())
+                    foreach (Entity childEntity in entity.ChildEntities)
                     {
-                        child.Get().AddComponent<ReefbackCreature>();
+                        Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
+
+                        if (child.IsPresent())
+                        {
+                            child.Get().AddComponent<ReefbackCreature>();
+                        }
                     }
                 }
             }
