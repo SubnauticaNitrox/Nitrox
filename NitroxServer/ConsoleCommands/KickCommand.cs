@@ -29,6 +29,10 @@ namespace NitroxServer.ConsoleCommands
             {
                 DisconnectPlayer(args);
             }
+            catch (InvalidOperationException)
+            {
+                Log.Error("Error attempting to kick: " + args[0] + ", Player is not found");
+            }
             catch (Exception ex)
             {
                 Log.Error("Error attempting to kick: " + args[0], ex);

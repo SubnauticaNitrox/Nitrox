@@ -263,6 +263,7 @@
     <Compile Include="GameLogic\Spawning\CellRootSpawner.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
+    <Compile Include="MonoBehaviours\Gui\InGame\PlayerKickedModal.cs" />
     <Compile Include="MonoBehaviours\NitroxEntity.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
