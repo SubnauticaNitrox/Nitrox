@@ -46,6 +46,6 @@ namespace NitroxTest.Client.Communication
 
             Assert.AreEqual(1, packets.Count);
             Assert.AreEqual(packet, packets.Dequeue());
-        }        
+        }
     }
 }
