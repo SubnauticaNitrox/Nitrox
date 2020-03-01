@@ -1,38 +1,24 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Util
 {
     [Serializable]
     [ProtoContract]
-    public struct Optional<T>
+    public struct Optional<T> : ISerializable
     {
-        public T Value
-        { 
-            get
-            {
-                return value;
-            }
-        }
-
-        public bool HasValue
-        {
-            get
-            {
-                return hasValue;
-            }
-        }
-
         [ProtoMember(1)]
-        private T value;
+        public T Value { get; private set; }
 
         [ProtoMember(2)]
-        private bool hasValue;
+        public bool HasValue { get; private set; }
 
         private Optional(T value)
         {
-            this.value = value;
-            hasValue = true;
+            Value = value;
+            HasValue = true;
         }
 
         public bool IsPresent()
@@ -85,6 +71,19 @@ namespace NitroxModel.DataStructures.Util
             return new Optional<T>(value);
         }
 
+        private Optional(SerializationInfo info, StreamingContext context)
+        {
+            Value = (T)info.GetValue("value", typeof(T));
+            HasValue = info.GetBoolean("hasValue");
+        }
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("value", Value);
+            info.AddValue("hasValue", HasValue);
+        }
+
         public static implicit operator Optional<T>(T obj)
         {
             if (obj == null) // null is passed when T is a reference type
@@ -98,12 +97,6 @@ namespace NitroxModel.DataStructures.Util
         {
             return value.Value;
         }
-    }
-
-    [Serializable]
-    public static class OptionalExtensions
-    {
-        
     }
 
     public sealed class OptionalNullException<T> : Exception
