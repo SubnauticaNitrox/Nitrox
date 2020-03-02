@@ -54,11 +54,22 @@ namespace NitroxClient.MonoBehaviours
 
         public static IEnumerator LoadAsync()
         {
+            WaitScreen.ManualWaitItem worldSettleItem = WaitScreen.Add("Awaiting World Settling");
+            WaitScreen.ShowImmediately();
+
+            yield return new WaitUntil(() => LargeWorldStreamer.main != null &&
+                                             LargeWorldStreamer.main.land != null &&
+                                             LargeWorldStreamer.main.IsReady() &&
+                                             LargeWorldStreamer.main.IsWorldSettled());
+
+            WaitScreen.Remove(worldSettleItem);
+
             WaitScreen.ManualWaitItem item = WaitScreen.Add("Loading Multiplayer");
             WaitScreen.ShowImmediately();
             yield return Main.StartCoroutine(Main.StartSession());
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
             WaitScreen.Remove(item);
+
             SetLoadingComplete();
         }
 
@@ -155,6 +166,7 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
+            
             DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
 
