@@ -8,17 +8,22 @@ using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
-using System;
 using NitroxModel.Helper;
 
 namespace NitroxClient.GameLogic
 {
     public class EscapePodManager
     {
+        /*
+         * When creating additional escape pods (multiple users with multiple pods)
+         * we want to supress the escape pod's awake method so it doesn't override
+         * EscapePod.main to the new escape pod.
+         */
+        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
+        
         private readonly IPacketSender packetSender;
         private readonly IMultiplayerSession multiplayerSession;
 
-        public static bool SURPRESS_ESCAPE_POD_AWAKE_METHOD;
         private readonly Vector3 playerSpawnRelativeToEscapePodPosition = new Vector3(0.9f, 2.1f, 0);
         private readonly Dictionary<NitroxId, GameObject> escapePodsById = new Dictionary<NitroxId, GameObject>();
 
@@ -32,8 +37,8 @@ namespace NitroxClient.GameLogic
 
         public void AssignPlayerToEscapePod(EscapePodModel escapePod)
         {
-            Validate.NotNull(escapePod);
-            
+            Validate.NotNull(escapePod, "Escape pod can not be null");
+
             EscapePod.main.transform.position = escapePod.Location;
             EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
@@ -113,6 +118,8 @@ namespace NitroxClient.GameLogic
             NitroxEntity.SetNewId(radio.gameObject, model.RadioId);
 
             DamageEscapePod(model.Damaged, model.RadioDamaged);
+
+            SURPRESS_ESCAPE_POD_AWAKE_METHOD = false;
 
             return escapePod;
         }
