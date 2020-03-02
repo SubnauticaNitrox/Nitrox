@@ -300,11 +300,9 @@
     <Compile Include="Patches\Dynamic\IngameMenu_QuitGameAsync_Patch.cs" />
     <Compile Include="Patches\Dynamic\IngameMenu_QuitGame_Patch.cs" />
     <Compile Include="Patches\Dynamic\IngameMenu_QuitSubscreen_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Inventory_OnApplicationQuit_Patch.cs" />
     <Compile Include="Patches\Dynamic\ItemsContainer_NotifyAddItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\ItemsContainer_NotifyRemoveItem_Patch.cs" />
     <Compile Include="Patches\Dynamic\KnownTech_NotifyAdd_Patch.cs" />
-    <Compile Include="Patches\Dynamic\LargeWorldStreamer_Deinitialize.cs" />
     <Compile Include="Patches\Dynamic\MedicalCabinet_OnHandClick_Patch.cs" />
     <Compile Include="Patches\Dynamic\Openable_PlayOpenAnimation_Patch.cs" />
     <Compile Include="Patches\Dynamic\PDAEncyclopedia_Add_Patch.cs" />
