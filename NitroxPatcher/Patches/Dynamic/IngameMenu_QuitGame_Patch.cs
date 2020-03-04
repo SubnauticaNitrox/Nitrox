@@ -3,6 +3,7 @@ using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
+using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -13,8 +14,9 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix()
         {
-            IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
+            IMultiplayerSession multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();            
             multiplayerSession.Disconnect();
+            Application.Quit();
         }
 
         public override void Patch(HarmonyInstance harmony)
