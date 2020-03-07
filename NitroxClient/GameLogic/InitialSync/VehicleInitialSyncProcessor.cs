@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using NitroxClient.GameLogic.InitialSync.Base;
+﻿using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;

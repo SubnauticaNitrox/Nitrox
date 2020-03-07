@@ -79,10 +79,6 @@ namespace NitroxClient.GameLogic
                     mixin.ReflectionSet("allowedToPlaySounds", allowedToPlaySounds);
                 }
             }
-            else
-            {
-                Log.Error("Add storage slot item: Could not find BatterySource field on object " + owner.name);
-            }
         }
 
         public void RemoveItem(NitroxId ownerId, bool silent = false)
