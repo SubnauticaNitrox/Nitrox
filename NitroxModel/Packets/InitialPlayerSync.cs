@@ -13,6 +13,7 @@ namespace NitroxModel.Packets
         public List<EscapePodModel> EscapePodsData { get; }
         public NitroxId AssignedEscapePodId;
         public List<EquippedItemData> EquippedItems { get; }
+        public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
@@ -29,13 +30,14 @@ namespace NitroxModel.Packets
         public string GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<EquippedItemData> modules, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
             EquippedItems = equipment;
+            Modules = modules;
             BasePieces = basePieces;
             Vehicles = vehicles;
             InventoryItems = inventoryItems;

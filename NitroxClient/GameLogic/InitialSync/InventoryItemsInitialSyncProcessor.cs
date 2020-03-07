@@ -4,7 +4,6 @@ using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxClient.GameLogic.Spawning;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -50,6 +49,8 @@ namespace NitroxClient.GameLogic.InitialSync
                         Log.Error("Error deserializing item data " + itemdata.ItemId + " " + ex.Message);
                         continue;
                     }
+
+                    Log.Info("Initial item data for " + item.name + " giving to container " + itemdata.ContainerId);
                     
                     Pickupable pickupable = item.GetComponent<Pickupable>();
 

@@ -3,6 +3,7 @@ using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -33,6 +34,9 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
+
+                    Log.Info("Initial StorageSlot item data for " + item.name + " giving to container " + itemData.ContainerId);
+
                     NitroxEntity.SetNewId(item, itemData.ItemId);
                     slots.AddItem(item, itemData.ContainerId, true);
                 }

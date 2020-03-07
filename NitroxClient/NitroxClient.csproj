@@ -237,6 +237,7 @@
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
+    <Compile Include="GameLogic\InitialSync\PlayerModulesInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StoryGoalInitialSyncProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsChangeSonarModeProcessor.cs" />
