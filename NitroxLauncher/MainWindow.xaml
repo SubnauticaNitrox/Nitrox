@@ -58,7 +58,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0" Margin="0,28,0,0" x:Name="SideBarPanel">
+                <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
+                <StackPanel Grid.Row="0" Margin="28,28,0,0" x:Name="SideBarPanel" HorizontalAlignment="Left">
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" Content="PLAY GAME" />
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure server options" Content="SERVER" />
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher settings" Content="OPTIONS" />
