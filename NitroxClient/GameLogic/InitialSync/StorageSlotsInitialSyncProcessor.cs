@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
                     NitroxEntity.SetNewId(item, itemData.ItemId);
-                    slots.AddItem(item, itemData.ContainerId,true);
+                    slots.AddItem(item, itemData.ContainerId, true);
                 }
             }
         }

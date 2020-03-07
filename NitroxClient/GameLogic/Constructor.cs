@@ -19,13 +19,11 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        private readonly StorageSlots storageSlots;
         
-        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles, StorageSlots storageSlots)
+        public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
-            this.storageSlots = storageSlots;
         }
 
         public void BeginCrafting(GameObject constructor, TechType techType, float duration)

@@ -23,7 +23,6 @@ namespace NitroxClient.GameLogic
             this.localPlayer = localPlayer;
         }
 
-
         public void BroadcastItemAdd(InventoryItem item, GameObject gameObject)
         {
             NitroxId id = NitroxEntity.GetId(gameObject);
@@ -46,10 +45,16 @@ namespace NitroxClient.GameLogic
 
         public void AddItem(GameObject item, NitroxId containerId, bool silent = false)
         {
-            GameObject owner = NitroxEntity.RequireObjectFrom(containerId);
+            Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
+
+            if(owner.IsEmpty())
+            {
+                Log.Error("Could not place " + item.name + " in storageSlot container with id " + containerId);
+                return;
+            }
 
             // only need to watch EnergyMixin slots for now (only other type will be propulsion cannon)
-            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
+            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(owner.Get().GetComponent<EnergyMixin>());
             if (opEnergy.IsPresent())
             {
                 EnergyMixin mixin = opEnergy.Get();
