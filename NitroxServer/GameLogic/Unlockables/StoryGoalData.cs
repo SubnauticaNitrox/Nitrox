@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using ProtoBufNet;
@@ -34,11 +34,27 @@ namespace NitroxServer.GameLogic.Unlockables
             set { radioQueue = value; }
         }
 
+        [ProtoMember(3)]
+        public List<string> SerializeGoalUnlocks
+        {
+            get
+            {
+                lock (goalUnlocks)
+                {
+                    return goalUnlocks;
+                }
+            }
+            set { goalUnlocks = value; }
+        }
+
         [ProtoIgnore]
         private List<string> completedGoals = new List<string>();
         
         [ProtoIgnore]
         private List<string> radioQueue = new List<string>();
+        
+        [ProtoIgnore]
+        private List<string> goalUnlocks = new List<string>();
 
         public void AddStoryGoal(string entry)
         {
@@ -56,6 +72,14 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
+        public void AddGoalUnlock(string entry)
+        {
+            lock (goalUnlocks)
+            {
+                goalUnlocks.Add(entry);
+            }
+        }
+
         public void RemovedLatestRadioMessage()
         {
             lock (radioQueue)
@@ -70,7 +94,7 @@ namespace NitroxServer.GameLogic.Unlockables
             {
                 lock (radioQueue)
                 {
-                    return new InitialStoryGoalData(new List<string>(completedGoals), new List<string>(radioQueue));
+                    return new InitialStoryGoalData(new List<string>(completedGoals), new List<string>(radioQueue), new List<string>(goalUnlocks));
                 }
             }
         }

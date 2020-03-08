@@ -26,6 +26,7 @@ namespace NitroxModel.Packets
         Radio,
         Encyclopedia,
         Story,
-        Extra
+        Extra,
+        GoalUnlock
     }
 }
