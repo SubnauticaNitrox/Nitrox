@@ -6,6 +6,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
@@ -154,14 +155,14 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            Log.Info("Construction Completed " + id);
+
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
         }
 
-        public void DeconstructionBegin(GameObject gameObject)
+        public void DeconstructionBegin(NitroxId id)
         {
-            NitroxId id = NitroxEntity.GetId(gameObject);
-
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
         }
