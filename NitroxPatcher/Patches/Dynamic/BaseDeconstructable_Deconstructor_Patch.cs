@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
@@ -23,6 +25,8 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
             Log.Info("Deconstructing " + id);
+            NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
+
             TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
         }
 

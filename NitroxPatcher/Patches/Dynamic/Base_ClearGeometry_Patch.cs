@@ -5,6 +5,7 @@ using Harmony;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -44,10 +45,10 @@ namespace NitroxPatcher.Patches.Dynamic
                     for(int i = 0; i < cellObject.childCount; i++)
                     {
                         Transform child = cellObject.GetChild(i);
-
+                        
                         if (child != null && child.gameObject != null)
                         {
-                            if(child.gameObject.GetComponent<UniqueIdentifier>() != null)
+                            if(child.gameObject.GetComponent<NitroxEntity>() != null)
                             {
                                 NitroxId id = NitroxEntity.GetId(child.gameObject);
                                 string key = getObjectKey(child.gameObject.name, child.position);
