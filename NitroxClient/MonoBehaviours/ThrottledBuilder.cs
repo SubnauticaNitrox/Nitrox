@@ -110,7 +110,7 @@ namespace NitroxClient.MonoBehaviours
 
         private void BuildBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
-            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " " + basePiecePlacedBuildEvent.BasePiece.TechType);
+            Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " type: " + basePiecePlacedBuildEvent.BasePiece.TechType + " parentId: " + basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null));
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
@@ -124,7 +124,7 @@ namespace NitroxClient.MonoBehaviours
             MultiplayerBuilder.Begin(buildPrefab);
 
             GameObject parentBase = null;
-            
+
             if(basePiece.ParentId.IsPresent())
             {
                 parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Get()).OrElse(null);
@@ -145,7 +145,7 @@ namespace NitroxClient.MonoBehaviours
                 constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
                 gameObject = constructable.gameObject;
             }
-            
+
             NitroxEntity.SetNewId(gameObject, basePiece.Id);
             
             /**

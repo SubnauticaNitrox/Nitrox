@@ -70,8 +70,16 @@ namespace NitroxServer.GameLogic.Bases
                 {
                     basePiece.ConstructionAmount = 1.0f;
                     basePiece.ConstructionCompleted = true;
-                    basePiece.BaseId = baseId;
-                    basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
+
+                    if(!basePiece.IsFurniture)
+                    {
+                        // For standard base pieces, the baseId is may not be finialized until construction 
+                        // completes because Subnautica uses a GhostBase in the world if there hasn't yet been
+                        // a fully constructed piece.  Therefor, we always update this attribute to make sure it
+                        // is the latest.
+                        basePiece.BaseId = baseId;
+                        basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
+                    }
 
                     partiallyConstructedPiecesById.Remove(id);
 

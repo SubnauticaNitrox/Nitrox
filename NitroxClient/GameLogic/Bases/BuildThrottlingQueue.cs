@@ -28,31 +28,31 @@ namespace NitroxClient.GameLogic.Bases
 
         public void EnqueueBasePiecePlaced(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed " + basePiece.Id + " " + basePiece.Id);
+            Log.Info("Enqueuing base piece to be placed id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null));
             Enqueue(new BasePiecePlacedEvent(basePiece));
         }
 
         public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
         {
-            Log.Info("Enqueuing item to have construction completed " + id);
+            Log.Info("Enqueuing item to have construction completed id: " + id);
             Enqueue(new ConstructionCompletedEvent(id, baseId));
         }
 
         public void EnqueueAmountChanged(NitroxId id, float amount)
         {
-            Log.Info("Enqueuing item to have construction amount changed " + id);
+            Log.Info("Enqueuing item to have construction amount changed id: " + id);
             Enqueue(new ConstructionAmountChangedEvent(id, amount));
         }
 
         public void EnqueueDeconstructionBegin(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction beginning " + id);
+            Log.Info("Enqueuing item to have deconstruction beginning id: " + id);
             Enqueue(new DeconstructionBeginEvent(id));
         }
 
         public void EnqueueDeconstructionCompleted(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction completed " + id);
+            Log.Info("Enqueuing item to have deconstruction completed id: " + id);
             Enqueue(new DeconstructionCompletedEvent(id));
         }
     }

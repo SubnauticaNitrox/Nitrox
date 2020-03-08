@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
@@ -20,7 +21,7 @@ namespace NitroxClient.GameLogic
         private readonly RotationMetadataFactory rotationMetadataFactory;
 
         private float timeSinceLastConstructionChangeEvent;
-
+        
         public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
@@ -35,7 +36,32 @@ namespace NitroxClient.GameLogic
             }
 
             NitroxId id = NitroxEntity.GetId(constructableBase.gameObject);
-            NitroxId parentBaseId = (targetBase == null) ? null : NitroxEntity.GetId(targetBase.gameObject);
+            NitroxId parentBaseId = null;
+
+            if (targetBase != null)
+            {
+                parentBaseId = NitroxEntity.GetId(targetBase.gameObject);
+            }
+            else if(constructableBase != null)
+            {
+                Base playerBase = constructableBase.gameObject.GetComponentInParent<Base>();
+
+                if(playerBase != null)
+                {
+                    parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
+                }
+            }
+
+            if(parentBaseId == null)
+            {
+                Base playerBase = baseGhost.gameObject.GetComponentInParent<Base>();
+
+                if (playerBase != null)
+                {
+                    parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
+                }
+            }
+            
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
@@ -53,18 +79,28 @@ namespace NitroxClient.GameLogic
             }
 
             NitroxId id = NitroxEntity.GetId(gameObject);
+            NitroxId parentId = null;
 
-            Optional<NitroxId> subId = Optional<NitroxId>.Empty();
             SubRoot sub = Player.main.currentSub;
+
             if (sub != null)
             {
-                subId = Optional<NitroxId>.Of(NitroxEntity.GetId(sub.gameObject));
+                parentId = NitroxEntity.GetId(sub.gameObject);
+            }
+            else
+            {
+                Base playerBase = gameObject.GetComponentInParent<Base>();
+
+                if(playerBase != null)
+                {
+                    parentId = NitroxEntity.GetId(playerBase.gameObject);
+                }
             }
 
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = Optional<RotationMetadata>.Empty();
 
-            BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), subId, true, rotationMetadata);
+            BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional<NitroxId>.OfNullable(parentId), true, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
