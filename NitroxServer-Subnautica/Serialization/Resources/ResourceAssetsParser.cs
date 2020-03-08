@@ -15,7 +15,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
     {
         private static Dictionary<AssetIdentifier, uint> assetIdentifierToClassId = new Dictionary<AssetIdentifier, uint>();
         
-        private static Dictionary<string, uint> fileIdByResourcePath = new Dictionary<string, uint>();
+        private static Dictionary<string, int> fileIdByResourcePath = new Dictionary<string, int>();
         private static HashSet<string> parsedManifests = new HashSet<string>();
 
         private static PrefabPlaceholderExtractor prefabPlaceholderExtractor = new PrefabPlaceholderExtractor();
@@ -38,7 +38,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
 
             CalculateDependencyFileIds(basePath, "resources.assets");
 
-            uint rootAssetId = 0; // resources.assets is always considered to be the top level '0'
+            int rootAssetId = 0; // resources.assets is always considered to be the top level '0'
             ParseAssetManifest(basePath, "resources.assets", rootAssetId, resourceAssets);
 
             prefabPlaceholderExtractor.LoadInto(resourceAssets);
@@ -48,7 +48,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             return resourceAssets;
         }
 
-        private static void ParseAssetManifest(string basePath, string fileName, uint fileId, ResourceAssets resourceAssets)
+        private static void ParseAssetManifest(string basePath, string fileName, int fileId, ResourceAssets resourceAssets)
         {
             if(parsedManifests.Contains(fileName))
             {
@@ -65,13 +65,13 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                 AssetsFile file = new AssetsFile(reader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
                 
-                foreach (AssetsFileDependency dependency in file.dependencies.pDependencies) 
+                foreach (AssetsFileDependency dependency in file.dependencies.dependencies) 
                 {
-                    uint dependencyFileId = fileIdByResourcePath[dependency.assetPath];
+                    int dependencyFileId = fileIdByResourcePath[dependency.assetPath];
                     ParseAssetManifest(basePath, dependency.assetPath, dependencyFileId, resourceAssets);
                 }
                 
-                foreach (AssetFileInfoEx assetFileInfo in resourcesFileTable.pAssetFileInfo)
+                foreach (AssetFileInfoEx assetFileInfo in resourcesFileTable.assetFileInfo)
                 {
                     reader.Position = assetFileInfo.absoluteFilePos;
 
@@ -102,9 +102,9 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                 AssetsFile file = new AssetsFile(reader);
                 AssetsFileTable resourcesFileTable = new AssetsFileTable(file);
                 
-                uint fileId = 1;
+                int fileId = 1;
 
-                foreach (AssetsFileDependency dependency in file.dependencies.pDependencies)
+                foreach (AssetsFileDependency dependency in file.dependencies.dependencies)
                 {
                     fileIdByResourcePath.Add(dependency.assetPath, fileId);
                     fileId++;

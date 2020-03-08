@@ -16,7 +16,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours
             
             for (int i = 0; i < placeholders; i++)
             {
-                AssetIdentifier prefabPlaceholderId = new AssetIdentifier((uint)reader.ReadInt32(), (ulong)reader.ReadInt64());
+                AssetIdentifier prefabPlaceholderId = new AssetIdentifier(reader.ReadInt32(), reader.ReadInt64());
                 prefabPlaceholderIds.Add(prefabPlaceholderId);
             }
 
