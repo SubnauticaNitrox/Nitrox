@@ -22,7 +22,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         }
 
         public ExosuitMovementData(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
-            Vector3 leftAimTarget, Vector3 rightAimTarget) : base(techType,id,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle)
+            Vector3 leftAimTarget, Vector3 rightAimTarget, float health) : base(techType,id,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle,health)
         {
             LeftAimTarget = leftAimTarget;
             RightAimTarget = rightAimTarget;

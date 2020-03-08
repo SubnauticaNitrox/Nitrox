@@ -33,8 +33,10 @@ namespace NitroxServer.GameLogic.Vehicles
             {
                 if (vehiclesById.ContainsKey(vehicleMovement.Id))
                 {
-                    vehiclesById[vehicleMovement.Id].Position = vehicleMovement.Position;
-                    vehiclesById[vehicleMovement.Id].Rotation = vehicleMovement.Rotation;
+                    VehicleModel vehicleModel = vehiclesById[vehicleMovement.Id];
+                    vehicleModel.Position = vehicleMovement.Position;
+                    vehicleModel.Rotation = vehicleMovement.Rotation;
+                    vehicleModel.Health = vehicleMovement.Health;
                 }
             }
         }

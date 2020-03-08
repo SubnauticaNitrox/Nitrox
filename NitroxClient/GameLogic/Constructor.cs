@@ -45,9 +45,10 @@ namespace NitroxClient.GameLogic
                 Vector3[] Colours = new Vector3[5];
                 Vector4 tmpColour = Color.white;
                 string name = "";
+                float health = 1;
                 
                 if (!vehicle)
-                { // Cylcops
+                { // Cyclops
                     GameObject target = NitroxEntity.RequireObjectFrom(constructedObjectId);
                     SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                     SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
@@ -55,15 +56,17 @@ namespace NitroxClient.GameLogic
                     Colours = subNameTarget.GetColors();
                     HSB = subNameTarget.GetColors();
                     name = subNameTarget.GetName();
+                    health = target.GetComponent<LiveMixin>().health;
                 }
                 else if(vehicle)
                 { // Seamoth & Prawn Suit
+                    health = vehicle.GetComponent<LiveMixin>().health;
                     name = (string)vehicle.ReflectionCall("GetName", true);
                     HSB = vehicle.subName.GetColors();
                     Colours = vehicle.subName.GetColors();
                 }
                 ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorId, constructedObjectId, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
-                    name, HSB, Colours);
+                    name, HSB, Colours, health);
                 vehicles.AddVehicle(VehicleModelFactory.BuildFrom(beginCrafting));
                 packetSender.Send(beginCrafting);
 

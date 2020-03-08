@@ -14,11 +14,11 @@ namespace NitroxModel_Subnautica.Helper
             switch (packet.TechType.Enum())
             {
                 case TechType.Seamoth:
-                    return new SeamothModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours);
+                    return new SeamothModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours, packet.Health);
                 case TechType.Exosuit:
-                    return new ExosuitModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours);
+                    return new ExosuitModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours, packet.Health);
                 case TechType.Cyclops:
-                    return new CyclopsModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours);
+                    return new CyclopsModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional<NitroxId>.Empty(), packet.Name, packet.HSB, packet.Colours, packet.Health);
                 case TechType.RocketBase:
                     return null;
                 default:

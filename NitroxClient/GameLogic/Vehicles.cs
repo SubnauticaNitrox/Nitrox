@@ -39,14 +39,14 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
-            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours);            
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, vehicleModel.Health);            
         }
 
-        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
+        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
         {
             if (techType == TechType.Cyclops)
             {
-                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours));
+                LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health));
             }
             else
             {
@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
 
                 if (techPrefab != null)
                 {
-                    OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours);
+                    OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health);
                 }
                 else
                 {
@@ -87,6 +87,7 @@ namespace NitroxClient.GameLogic
                 if (subRoot != null)
                 {
                     mvc = subRoot.gameObject.EnsureComponent<MultiplayerCyclops>();
+                    subRoot.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
                 else if (vehicle != null)
                 {
@@ -109,6 +110,8 @@ namespace NitroxClient.GameLogic
                             Log.Error("Got exosuit vehicle but no ExosuitMovementData");
                         }
                     }
+
+                    vehicle.GetComponent<LiveMixin>().health = vehicleModel.Health;
                 }
 
                 if (mvc != null)
@@ -129,7 +132,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -172,6 +175,8 @@ namespace NitroxClient.GameLogic
                     vehicle.vehicleColors = colour;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
+
+                vehicle.GetComponent<LiveMixin>().health = health;
             }
             else if(techType == TechType.Cyclops)
             {
@@ -186,6 +191,8 @@ namespace NitroxClient.GameLogic
                     subNameTarget.SetColor(i, hsb[i], tmpColour);
                     subNameTarget.DeserializeColors(hsb);
                 }
+
+                target.GetComponent<LiveMixin>().health = health;
 
                 // Set internal and external lights
                 SetCyclopsModes(id);

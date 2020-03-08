@@ -19,9 +19,10 @@ namespace NitroxModel.Packets
         public string Name { get; }
         public Vector3[] HSB { get; }
         public Vector3[] Colours { get; }
+        public float Health { get; }
 
         public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
-            string name, Vector3[] hsb, Vector3[] colours)
+            string name, Vector3[] hsb, Vector3[] colours, float health)
         {
             ConstructorId = constructorId;
             ConstructedItemId = constructeditemId;
@@ -33,11 +34,12 @@ namespace NitroxModel.Packets
             Name = name;
             HSB = hsb;
             Colours = colours;
+            Health = health;
         }
 
         public override string ToString()
         {
-            string s = "[ConstructorBeginCrafting - ConstructorId: " + ConstructorId + " ConstructedItemId: " + ConstructedItemId + " TechType: " + TechType + " Duration: " + Duration + " InteractiveChildIdentifiers: (";
+            string s = "[ConstructorBeginCrafting - ConstructorId: " + ConstructorId + " ConstructedItemId: " + ConstructedItemId + " TechType: " + TechType + " Duration: " + Duration + " Health: " + Health + " InteractiveChildIdentifiers: (";
 
             foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {
