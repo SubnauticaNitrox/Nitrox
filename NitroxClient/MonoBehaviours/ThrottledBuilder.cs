@@ -158,7 +158,6 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
-            Log.Info("Constructed completed " + constructionCompleted.PieceId);
             GameObject constructing = NitroxEntity.RequireObjectFrom(constructionCompleted.PieceId);
 
             ConstructableBase constructableBase = constructing.GetComponent<ConstructableBase>();
@@ -169,9 +168,28 @@ namespace NitroxClient.MonoBehaviours
             {
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
-                
-                Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
-                GameObject finishedPiece = (GameObject)opBasePiece.Get();
+
+                GameObject finishedPiece;
+
+                Optional<object> firstBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_FIRST_BASE_PIECE);
+
+                if (firstBasePiece.IsPresent())
+                {
+                    finishedPiece = (GameObject)firstBasePiece;
+                }
+                else
+                {
+                    Base latestBase = TransientLocalObjectManager.Require<Base>(TransientObjectType.LATEST_CONSTRUCTED_BASE);
+                    Int3 latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL);
+
+                    Transform cellTransform = latestBase.GetCellObject(latestCell);
+                    Transform child = cellTransform.GetChild(0);
+
+                    finishedPiece = child.gameObject;
+                }
+
+                Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
+
                 UnityEngine.Object.Destroy(constructableBase.gameObject);
                 NitroxEntity.SetNewId(finishedPiece, constructionCompleted.PieceId);
             }
@@ -180,6 +198,8 @@ namespace NitroxClient.MonoBehaviours
                 Constructable constructable = constructing.GetComponent<Constructable>();
                 constructable.constructedAmount = 1f;
                 constructable.SetState(true, true);
+
+                Log.Info("Construction completed on a piece of furniture: " + constructionCompleted.PieceId + " " + constructable.gameObject.name);
             }
             
             if (constructionCompleted.BaseId != null && NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())

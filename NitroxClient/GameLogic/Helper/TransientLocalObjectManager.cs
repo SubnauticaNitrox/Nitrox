@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxClient.GameLogic.Helper
@@ -17,8 +18,11 @@ namespace NitroxClient.GameLogic.Helper
             CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT,
             BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT,
 
-            // These two entries are for transfering ids between ghosts and finished base pieces when construction completes:
-            LATEST_CONSTRUCTED_BASE_PIECE,
+            // These entries are for transfering ids between ghosts and finished base pieces when construction completes:
+            LATEST_FIRST_BASE_PIECE,
+            LATEST_CONSTRUCTED_BASE_CELL,
+            LATEST_CONSTRUCTED_BASE,
+
             LATEST_DECONSTRUCTED_BASE_PIECE,
             LATEST_DECONSTRUCTED_BASE_PIECE_GUID
         }
@@ -30,6 +34,11 @@ namespace NitroxClient.GameLogic.Helper
             localObjectsById[key] = o;
         }
 
+        public static void Remove(TransientObjectType key)
+        {
+            localObjectsById.Remove(key);
+        }
+
         public static Optional<object> Get(TransientObjectType key)
         {
             object obj;
@@ -39,6 +48,18 @@ namespace NitroxClient.GameLogic.Helper
             }
 
             return Optional<object>.Empty();
+        }
+
+        public static T Require<T>(TransientObjectType key)
+        {
+            object obj;
+
+            if (localObjectsById.TryGetValue(key, out obj))
+            {
+                return (T)obj;
+            }
+
+            throw new Exception("Did not have an entry for key: " + key);
         }
     }
 }

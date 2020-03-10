@@ -21,16 +21,25 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(DeconstructionBegin packet)
         {
-            Log.Info("Received deconstruction packet for basePieceId: " + packet.Id);
+            Log.Info("Received deconstruction packet for id: " + packet.Id);
 
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(packet.Id);
-            BaseDeconstructable baseDeconstructable = deconstructing.RequireComponent<BaseDeconstructable>();
             
-            TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Id);
+            Constructable constructable = deconstructing.GetComponent<Constructable>();
+            BaseDeconstructable baseDeconstructable = deconstructing.GetComponent<BaseDeconstructable>();
 
             using (packetSender.Suppress<DeconstructionBegin>())
             {
-                baseDeconstructable.Deconstruct();
+                if (baseDeconstructable != null)
+                {
+                    TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, packet.Id);
+
+                    baseDeconstructable.Deconstruct();
+                }
+                else if (constructable != null)
+                {
+                    constructable.SetState(false, false);
+                }
             }
         }
     }

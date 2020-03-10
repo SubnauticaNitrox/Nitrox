@@ -75,13 +75,17 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         public void LateUpdate()
         {
-            UpdateSmoothValue(oxygenBar);
-            UpdateSmoothValue(healthBar);
-            UpdateSmoothValue(foodBar);
-            UpdateSmoothValue(waterBar);
+            try
+            {
+                UpdateSmoothValue(oxygenBar);
+                UpdateSmoothValue(healthBar);
+                UpdateSmoothValue(foodBar);
+                UpdateSmoothValue(waterBar);
 
-            // Make canvas face camera.
-            canvas.transform.forward = Camera.main.transform.forward;
+                // Make canvas face camera.
+                canvas.transform.forward = Camera.main.transform.forward;
+            }
+            catch { }
         }
 
         private Canvas CreateCanvas(Transform playerTransform)

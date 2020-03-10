@@ -24,9 +24,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(BaseDeconstructable __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            Log.Info("Deconstructing " + id);
-            NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
-
             TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, id);
         }
 

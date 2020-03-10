@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
+using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -14,6 +16,19 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
+
+        public static bool Prefix(Constructable __instance, bool value)
+        {
+            // check to see if they are trying to update constructed value from true to false.
+            if (__instance.constructed && value == false)
+            {
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                Log.Info("Deconstructing " + id);
+                NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
+            }
+
+            return true;
+        }
 
         public static void Postfix(Constructable __instance)
         {
@@ -37,7 +52,7 @@ namespace NitroxPatcher.Patches.Dynamic
         
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPostfix(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }

@@ -2,10 +2,12 @@
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
+using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -130,7 +132,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-
+            
             NitroxId id = NitroxEntity.GetId(ghost);
 
             if (opConstructedBase.IsPresent())
@@ -143,16 +145,28 @@ namespace NitroxClient.GameLogic
             // Furniture just uses the same game object as the ghost for the final product.
             if(ghost.GetComponent<ConstructableBase>() != null)
             {
-                Optional<object> opBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_CONSTRUCTED_BASE_PIECE);
-                GameObject finishedPiece = (GameObject)opBasePiece.Get();
+                GameObject finishedPiece;
+
+                Optional<object> firstBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_FIRST_BASE_PIECE);
                 
+                if (firstBasePiece.IsPresent())
+                {
+                    finishedPiece = (GameObject)firstBasePiece;
+                }
+                else
+                {
+                    Base latestBase = TransientLocalObjectManager.Require<Base>(TransientObjectType.LATEST_CONSTRUCTED_BASE);
+                    Int3 latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL);
+
+                    Transform cellTransform = latestBase.GetCellObject(latestCell);
+                    Transform child = cellTransform.GetChild(0);
+
+                    finishedPiece = child.gameObject;
+                }
+                
+                Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);
                 UnityEngine.Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
-
-                if(baseId == null)
-                {
-                    baseId = NitroxEntity.GetId(finishedPiece.GetComponentInParent<Base>().gameObject);
-                }
             }
 
             Log.Info("Construction Completed " + id);
