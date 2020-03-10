@@ -86,7 +86,7 @@ namespace NitroxServer
             using (WebClient client = new WebClient())
             {
                 client.DownloadStringCompleted += ExternalIpStringDownloadCompleted;
-                client.DownloadStringAsync(new Uri("http://ipv4bot.whatismyipaddress.com/")); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
+                client.DownloadStringAsync(new Uri("https://ipv4bot.whatismyipaddress.com/")); // from https://stackoverflow.com/questions/3253701/get-public-external-ip-address answer by user_v
             }
         }
 
