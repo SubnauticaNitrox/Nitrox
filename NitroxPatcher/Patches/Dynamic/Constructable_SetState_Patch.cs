@@ -19,11 +19,30 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix(Constructable __instance, bool value)
         {
-            // check to see if they are trying to update constructed value from true to false.
+            // check to see if they are trying to update constructed value from true to false.  This means that they
+            // are trying to deconstruct an object.
             if (__instance.constructed && value == false)
             {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                Log.Info("Deconstructing " + id);
+                Optional<object> opId = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
+
+                NitroxId id;
+
+                // Check to see if they are trying to deconstruct a base piece.  If so, we will need to use the 
+                // id in LATEST_DECONSTRUCTED_BASE_PIECE_GUID because base pieces get destroyed and recreated with
+                // a ghost (furniture just uses the same game object).
+                if (opId.IsPresent())
+                {
+                    // base piece, get id before ghost appeared
+                    id = (NitroxId)opId.Get();
+                    Log.Info("Deconstructing base piece with id: " + id);
+                }
+                else
+                {
+                    // furniture, just use the same object to get the id
+                    id = NitroxEntity.GetId(__instance.gameObject);
+                    Log.Info("Deconstructing furniture with id: " + id);
+                }
+
                 NitroxServiceLocator.LocateService<Building>().DeconstructionBegin(id);
             }
 
