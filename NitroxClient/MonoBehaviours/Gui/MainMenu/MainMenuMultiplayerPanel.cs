@@ -60,15 +60,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void CreateServerButton(string text, string joinIp)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
+            Color prevTextColor = txt.GetComponent<Text>().color;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
-            multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
+            multiplayerButtonButton.onClick.AddListener(() =>
+            {
+                txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
+                OpenJoinServerMenu(joinIp);
+            });
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
             Button deleteButtonButton = delete.GetComponent<Button>();
