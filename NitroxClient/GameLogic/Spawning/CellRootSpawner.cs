@@ -21,8 +21,6 @@ namespace NitroxClient.GameLogic.Spawning
 
             NitroxEntity.SetNewId(cellRoot.liveRoot, entity.Id);
 
-            LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
-
             return cellRoot.liveRoot;
         }
 

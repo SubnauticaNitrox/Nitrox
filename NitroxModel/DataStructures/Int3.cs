@@ -152,5 +152,10 @@ namespace NitroxModel.DataStructures
             return new Int3(u.X / s, u.Y / s, u.Z / s);
         }
 
+        public static Int3 operator %(Int3 u, int s)
+        {
+            return new Int3(u.X % s, u.Y % s, u.Z % s);
+        }
+
     }
 }

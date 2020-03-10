@@ -90,6 +90,8 @@ namespace NitroxClient.GameLogic
             }
 
             entityCell.EnsureRoot();
+
+            LargeWorldStreamer.main.cellManager.QueueForAwake(entityCell);
             
             return entityCell;
         }

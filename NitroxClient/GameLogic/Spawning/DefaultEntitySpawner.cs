@@ -1,6 +1,7 @@
 ﻿using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UWE;
@@ -35,10 +36,23 @@ namespace NitroxClient.GameLogic.Spawning
             {
                 gameObject.transform.SetParent(parent.Get().transform, true);
             }
+            else if (entity.ParentId != null)
+            {
+                NitroxEntity.AddToParent(entity.ParentId, gameObject);
+            }
 
             if (parent.IsPresent() && parent.Get().GetComponent<LargeWorldEntityCell>() != null)
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
+            }
+            else if (gameObject.GetComponent<LargeWorldEntity>() != null && gameObject.transform.parent == null)
+            {
+                gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
+                LargeWorldEntity.Register(gameObject);
+            }
+            else if (gameObject.transform.parent != null && parent.Get().GetComponent<LargeWorldEntityCell>() != null)
+            {
+                LargeWorldEntity.Register(gameObject);
             }
             else
             {

@@ -33,12 +33,10 @@ namespace NitroxModel.DataStructures.GameLogic
         public AbsoluteEntityCell(Vector3 worldSpace, int level)
         {
             Level = level;
+            Int3 block = Int3.Floor(worldSpace + Map.Main.BatchDimensionCenter.ToVector3());
+            BatchId = block / Map.Main.BatchSize;
 
-            Vector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter.ToVector3()) / Map.Main.BatchSize;
-            BatchId = Int3.Floor(localPosition);
-
-            Vector3 cell = (localPosition - BatchId.ToVector3()) * GetCellsPerBlock();            
-            CellId = Int3.Floor(new Vector3(cell.x + 0.0001f, cell.y + 0.0001f, cell.z + 0.0001f));
+            CellId = (block % Map.Main.BatchSize) / GetCellSize();
         }
 
         private Int3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
