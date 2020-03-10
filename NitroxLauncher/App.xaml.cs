@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -21,6 +24,14 @@ namespace NitroxLauncher
                 DefaultValue = FindResource(typeof(Page))
             });
             
+            // Error if running from a temporary directory because Nitrox Launcher won't be able to write files directly to zip/rar
+            // Tools like WinRAR do this to support running EXE files while it's still zipped.
+            if (Directory.GetCurrentDirectory().StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
+            {
+                MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting and moving it to a dedicated location on your PC.", "Invalid working directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
+
             base.OnStartup(e);
         }
 
