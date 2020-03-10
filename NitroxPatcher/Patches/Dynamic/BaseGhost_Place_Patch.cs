@@ -15,28 +15,22 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Prefix(BaseGhost __instance)
         {
             // Null out fields that will be used for storing state
-            TransientLocalObjectManager.Remove(TransientObjectType.LATEST_FIRST_BASE_PIECE);
-            TransientLocalObjectManager.Remove(TransientObjectType.LATEST_CONSTRUCTED_BASE);
-            TransientLocalObjectManager.Remove(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL);
-            
-            // This may be the first piece of a base.  In that case, we don't have an existing base piece and 
-            // should record this as the first piece of a base.
-            if (__instance.TargetBase == null)
+            TransientLocalObjectManager.Remove(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
+            TransientLocalObjectManager.Remove(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
+
+            // In this case, our piece is part of an existing, larger base.  We'll record the base and offset.  
+            // We don't directly record the piece as it will be re-built when the base rebuilds geometry (this
+            // happens each time a piece is built, subnautica destroys all others and replaces them).
+            if (__instance.TargetBase != null)
             {
-                Log.Debug("Base ghost is the first piece to a base");
-                TransientLocalObjectManager.Add(TransientObjectType.LATEST_FIRST_BASE_PIECE, __instance.gameObject);
+                Log.Debug("Placed BaseGhost is a new piece of an existing base");
+                TransientLocalObjectManager.Add(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION, __instance.TargetBase);
+                TransientLocalObjectManager.Add(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION, __instance.TargetOffset);
             }
             else
             {
-                Log.Debug("Base ghost is a new piece of an existing base");
-
-                // In this case, our piece is part of an existing, larger base.  We'll record the base and offset.  
-                // We don't directly record the piece as it will be re-built when the base rebuilds geometry (this
-                // happens each time a piece is built, subnautica destroys all others and replaces them).
-                TransientLocalObjectManager.Add(TransientObjectType.LATEST_CONSTRUCTED_BASE, __instance.TargetBase);
-                TransientLocalObjectManager.Add(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL, __instance.TargetOffset);
+                Log.Debug("Placed BaseGhost is the first piece of a new base.");
             }
-
         }
 
         public override void Patch(HarmonyInstance harmony)

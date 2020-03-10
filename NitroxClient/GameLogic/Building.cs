@@ -147,24 +147,32 @@ namespace NitroxClient.GameLogic
             {
                 GameObject finishedPiece;
 
-                Optional<object> firstBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_FIRST_BASE_PIECE);
-                
-                if (firstBasePiece.IsPresent())
+                Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
+
+                Int3 latestCell;
+                Base latestBase;
+
+                if (latestBaseOp.IsPresent())
                 {
-                    finishedPiece = (GameObject)firstBasePiece;
+                    latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
+                    latestBase = (Base)latestBaseOp.Get();
                 }
                 else
                 {
-                    Base latestBase = TransientLocalObjectManager.Require<Base>(TransientObjectType.LATEST_CONSTRUCTED_BASE);
-                    Int3 latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL);
+                    latestBase = ((GameObject)opConstructedBase.Get()).GetComponent<Base>();
+                    Vector3 worldPosition;
+                    float distance;
 
-                    Transform cellTransform = latestBase.GetCellObject(latestCell);
-                    Transform child = cellTransform.GetChild(0);
-
-                    finishedPiece = child.gameObject;
+                    latestBase.GetClosestCell(ghost.transform.position, out latestCell, out worldPosition, out distance);
                 }
-                
+
+                Transform cellTransform = latestBase.GetCellObject(latestCell);
+                Transform child = cellTransform.GetChild(0);
+
+                finishedPiece = child.gameObject;
+
                 Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);
+
                 UnityEngine.Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
             }

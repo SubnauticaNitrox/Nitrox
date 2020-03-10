@@ -171,22 +171,32 @@ namespace NitroxClient.MonoBehaviours
 
                 GameObject finishedPiece;
 
-                Optional<object> firstBasePiece = TransientLocalObjectManager.Get(TransientObjectType.LATEST_FIRST_BASE_PIECE);
+                Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
 
-                if (firstBasePiece.IsPresent())
+                Int3 latestCell;
+                Base latestBase;
+
+                if (latestBaseOp.IsPresent())
                 {
-                    finishedPiece = (GameObject)firstBasePiece;
+                    latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
+                    latestBase = (Base)latestBaseOp.Get();
                 }
                 else
                 {
-                    Base latestBase = TransientLocalObjectManager.Require<Base>(TransientObjectType.LATEST_CONSTRUCTED_BASE);
-                    Int3 latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_CONSTRUCTED_BASE_CELL);
+                    Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
+                    latestBase = ((GameObject)opConstructedBase.Get()).GetComponent<Base>();
+                    Validate.NotNull(latestBase, "latestBase can not be null");
 
-                    Transform cellTransform = latestBase.GetCellObject(latestCell);
-                    Transform child = cellTransform.GetChild(0);
+                    Vector3 worldPosition;
+                    float distance;
 
-                    finishedPiece = child.gameObject;
+                    latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out worldPosition, out distance);
                 }
+
+                Transform cellTransform = latestBase.GetCellObject(latestCell);
+                Transform child = cellTransform.GetChild(0);
+
+                finishedPiece = child.gameObject;
 
                 Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
 
