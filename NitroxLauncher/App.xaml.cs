@@ -28,7 +28,7 @@ namespace NitroxLauncher
             // Tools like WinRAR do this to support running EXE files while it's still zipped.
             if (Directory.GetCurrentDirectory().StartsWith(Path.GetTempPath(), StringComparison.OrdinalIgnoreCase))
             {
-                MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting and moving it to a dedicated location on your PC.", "Invalid working directory", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Nitrox launcher should not be executed from a temporary directory. Install Nitrox launcher properly by extracting ALL files and moving these to a dedicated location on your PC.", "Invalid working directory", MessageBoxButton.OK, MessageBoxImage.Error);
                 Environment.Exit(1);
             }
 
