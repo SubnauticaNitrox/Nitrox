@@ -145,8 +145,6 @@ namespace NitroxClient.GameLogic
             // Furniture just uses the same game object as the ghost for the final product.
             if(ghost.GetComponent<ConstructableBase>() != null)
             {
-                GameObject finishedPiece;
-
                 Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
 
                 Int3 latestCell;
@@ -165,11 +163,25 @@ namespace NitroxClient.GameLogic
 
                     latestBase.GetClosestCell(ghost.transform.position, out latestCell, out worldPosition, out distance);
                 }
-
+                
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
-                Transform child = cellTransform.GetChild(0);
+                GameObject finishedPiece = null;
 
-                finishedPiece = child.gameObject;
+                // There can be multiple objects in a cell (such as a corridor with hatces built into it)
+                // we look for a object that is able to be deconstucted that hasn't been tagged yet.
+                foreach (Transform child in cellTransform)
+                {
+                    bool isNewBasePiece = (child.GetComponent<NitroxEntity>() == null &&
+                                           child.GetComponent<BaseDeconstructable>() != null);
+
+                    if (isNewBasePiece)
+                    {
+                        finishedPiece = child.gameObject;
+                        break;
+                    }
+                }
+
+                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
 
                 Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);
 

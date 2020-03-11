@@ -168,9 +168,7 @@ namespace NitroxClient.MonoBehaviours
             {
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
-
-                GameObject finishedPiece;
-
+                
                 Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
 
                 Int3 latestCell;
@@ -194,9 +192,23 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 Transform cellTransform = latestBase.GetCellObject(latestCell);
-                Transform child = cellTransform.GetChild(0);
+                GameObject finishedPiece = null;
 
-                finishedPiece = child.gameObject;
+                // There can be multiple objects in a cell (such as a corridor with hatces built into it)
+                // we look for a object that is able to be deconstucted that hasn't been tagged yet.
+                foreach (Transform child in cellTransform)
+                {
+                    bool isNewBasePiece = (child.GetComponent<NitroxEntity>() == null &&
+                                           child.GetComponent<BaseDeconstructable>() != null);
+
+                    if (isNewBasePiece)
+                    {
+                        finishedPiece = child.gameObject;
+                        break;
+                    }
+                }
+
+                Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
 
                 Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
 
