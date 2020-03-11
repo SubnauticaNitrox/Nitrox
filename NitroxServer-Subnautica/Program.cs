@@ -16,12 +16,13 @@ namespace NitroxServer_Subnautica
     {
         private static void Main(string[] args)
         {
+            ConfigureConsoleWindow();
+            ConfigureCultureInfo();
+            
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
-
-            ConfigureCultureInfo();
 
             Server server;
 
@@ -44,6 +45,11 @@ namespace NitroxServer_Subnautica
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<NitroxServer.Player>.Empty(), Perms.CONSOLE);
             }
+        }
+
+        private static void ConfigureConsoleWindow()
+        {
+            ConsoleWindow.QuickEdit(false);
         }
 
         /**
