@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text.RegularExpressions;
@@ -15,7 +14,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
-        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
@@ -23,6 +21,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private GameObject multiplayerButton;
         private Transform savedGameAreaContent;
         public GameObject SavedGamesRef;
+        public string SERVER_LIST_PATH = Path.Combine(".", "servers");
         private string serverHostInput;
         private string serverNameInput;
 
@@ -61,15 +60,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void CreateServerButton(string text, string joinIp)
         {
-            GameObject multiplayerButtonInst = Instantiate(multiplayerButton);
+            GameObject multiplayerButtonInst = Instantiate(multiplayerButton, savedGameAreaContent, false);
             multiplayerButtonInst.name = (savedGameAreaContent.childCount - 1).ToString();
             Transform txt = multiplayerButtonInst.RequireTransform("NewGameButton/Text");
             txt.GetComponent<Text>().text = text;
+            Color prevTextColor = txt.GetComponent<Text>().color;
             Destroy(txt.GetComponent<TranslationLiveUpdate>());
             Button multiplayerButtonButton = multiplayerButtonInst.RequireTransform("NewGameButton").GetComponent<Button>();
             multiplayerButtonButton.onClick = new Button.ButtonClickedEvent();
-            multiplayerButtonButton.onClick.AddListener(() => OpenJoinServerMenu(joinIp));
-            multiplayerButtonInst.transform.SetParent(savedGameAreaContent, false);
+            multiplayerButtonButton.onClick.AddListener(() =>
+            {
+                txt.GetComponent<Text>().color = prevTextColor; // Visual fix for black text after click (hover state still active)
+                OpenJoinServerMenu(joinIp);
+            });
 
             GameObject delete = Instantiate(SavedGamesRef.GetComponent<MainMenuLoadPanel>().saveInstance.GetComponent<MainMenuLoadButton>().deleteButton);
             Button deleteButtonButton = delete.GetComponent<Button>();
@@ -99,6 +102,13 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void OpenJoinServerMenu(string serverIp)
         {
+            IPEndPoint endpoint = ResolveIpv4(serverIp) ?? ResolveHostName(serverIp);
+            if (endpoint == null)
+            {
+                Log.InGame($"Unable to resolve remote address: {serverIp}");
+                return;
+            }
+
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             if (joinServerGameObject != null)
@@ -108,15 +118,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             joinServerGameObject = new GameObject();
             JoinServer joinServerComponent = joinServerGameObject.AddComponent<JoinServer>();
-
-            if (Regex.IsMatch(serverIp, "^[0-9.:]+$"))
-            {
-                ResolveIpv4(joinServerComponent, serverIp);
-            }
-            else
-            {
-                ResolveHostName(joinServerComponent, serverIp);
-            }
+            joinServerComponent.ServerIp = endpoint.Address.ToString();
+            joinServerComponent.ServerPort = endpoint.Port;
         }
 
         public void ShowAddServerWindow()
@@ -158,34 +161,35 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private void ResolveHostName(JoinServer joinServerComponent, string serverIp)
+        private IPEndPoint ResolveIpv4(string serverIp)
         {
-            try
+            Match match = Regex.Match(serverIp, @"^((?:\d{1,3}\.){3}\d{1,3})\:?(\d{2,5})?$"); // Pattern test url: https://regex101.com/r/NZsD0l/1
+            if (!match.Success)
             {
-                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
-                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
-                joinServerComponent.ServerPort = 11000;
+                return null;
             }
-            catch (SocketException e)
-            {
-                Log.Error($"Unable to resolve the address: {serverIp}");
-                Log.Error(e.ToString());
-            }
+
+            IPAddress ip = IPAddress.Parse(match.Groups[1].Value);
+            int port = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000;
+            return new IPEndPoint(ip, port);
         }
 
-        private void ResolveIpv4(JoinServer joinServerComponent, string serverIp)
+        private IPEndPoint ResolveHostName(string hostname)
         {
-            char seperator = ':';
-            if (serverIp.Contains(seperator))
+            Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
+            if (!match.Success)
             {
-                string[] splitIP = serverIp.Split(seperator);
-                joinServerComponent.ServerIp = splitIP[0];
-                joinServerComponent.ServerPort = int.Parse(splitIP[1]);
+                return null;
             }
-            else
+
+            try
             {
-                joinServerComponent.ServerIp = serverIp;
-                joinServerComponent.ServerPort = 11000;
+                IPHostEntry hostEntry = Dns.GetHostEntry(match.Groups[1].Value);
+                return new IPEndPoint(hostEntry.AddressList[0], match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000);
+            }
+            catch (SocketException)
+            {
+                return null;
             }
         }
 
@@ -203,23 +207,24 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private GUISkin GetGUISkin()
         {
-            return GUISkinUtils.RegisterDerivedOnce("menus.server", s =>
-            {
-                s.textField.fontSize = 14;
-                s.textField.richText = false;
-                s.textField.alignment = TextAnchor.MiddleLeft;
-                s.textField.wordWrap = true;
-                s.textField.stretchHeight = true;
-                s.textField.padding = new RectOffset(10, 10, 5, 5);
+            return GUISkinUtils.RegisterDerivedOnce("menus.server",
+                s =>
+                {
+                    s.textField.fontSize = 14;
+                    s.textField.richText = false;
+                    s.textField.alignment = TextAnchor.MiddleLeft;
+                    s.textField.wordWrap = true;
+                    s.textField.stretchHeight = true;
+                    s.textField.padding = new RectOffset(10, 10, 5, 5);
 
-                s.label.fontSize = 14;
-                s.label.alignment = TextAnchor.MiddleRight;
-                s.label.stretchHeight = true;
-                s.label.fixedWidth = 80; //change this when adding new labels that need more space.
+                    s.label.fontSize = 14;
+                    s.label.alignment = TextAnchor.MiddleRight;
+                    s.label.stretchHeight = true;
+                    s.label.fixedWidth = 80; //change this when adding new labels that need more space.
 
-                s.button.fontSize = 14;
-                s.button.stretchHeight = true;
-            });
+                    s.button.fontSize = 14;
+                    s.button.stretchHeight = true;
+                });
         }
 
         private void DoAddServerWindow(int windowId)
@@ -238,37 +243,38 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 }
             }
 
-            GUISkinUtils.RenderWithSkin(GetGUISkin(), () =>
-            {
-                using (new GUILayout.VerticalScope("Box"))
+            GUISkinUtils.RenderWithSkin(GetGUISkin(),
+                () =>
                 {
-                    using (new GUILayout.HorizontalScope())
+                    using (new GUILayout.VerticalScope("Box"))
                     {
-                        GUILayout.Label("Name:");
-                        GUI.SetNextControlName("serverNameField");
-                        // 120 so users can't go too crazy.
-                        serverNameInput = GUILayout.TextField(serverNameInput, 120);
-                    }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Name:");
+                            GUI.SetNextControlName("serverNameField");
+                            // 120 so users can't go too crazy.
+                            serverNameInput = GUILayout.TextField(serverNameInput, 120);
+                        }
 
-                    using (new GUILayout.HorizontalScope())
-                    {
-                        GUILayout.Label("Host:");
-                        GUI.SetNextControlName("serverHostField");
-                        // 120 so users can't go too crazy.
-                        serverHostInput = GUILayout.TextField(serverHostInput, 120);
-                    }
+                        using (new GUILayout.HorizontalScope())
+                        {
+                            GUILayout.Label("Host:");
+                            GUI.SetNextControlName("serverHostField");
+                            // 120 so users can't go too crazy.
+                            serverHostInput = GUILayout.TextField(serverHostInput, 120);
+                        }
 
-                    if (GUILayout.Button("Add server"))
-                    {
-                        OnAddServerButtonClicked();
-                    }
+                        if (GUILayout.Button("Add server"))
+                        {
+                            OnAddServerButtonClicked();
+                        }
 
-                    if (GUILayout.Button("Cancel"))
-                    {
-                        OnCancelButtonClicked();
+                        if (GUILayout.Button("Cancel"))
+                        {
+                            OnCancelButtonClicked();
+                        }
                     }
-                }
-            });
+                });
 
             if (shouldFocus)
             {
