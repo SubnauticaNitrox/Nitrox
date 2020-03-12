@@ -15,6 +15,7 @@ using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 using NitroxModel_Subnautica.Helper;
 using NitroxModel.DataStructures;
+using NitroxClient.GameLogic.Bases.Spawning;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -207,13 +208,16 @@ namespace NitroxClient.MonoBehaviours
                         break;
                     }
                 }
-
+                
                 Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
 
                 Log.Info("Construction completed on a base piece: " + constructionCompleted.PieceId + " " + finishedPiece.name);
 
                 UnityEngine.Object.Destroy(constructableBase.gameObject);
                 NitroxEntity.SetNewId(finishedPiece, constructionCompleted.PieceId);
+                
+                BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
+                customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
             else
             {

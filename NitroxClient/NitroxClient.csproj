@@ -236,6 +236,9 @@
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
+    <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\PlayerModulesInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />

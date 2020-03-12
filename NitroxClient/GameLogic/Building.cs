@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Bases.Spawning;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -187,6 +188,9 @@ namespace NitroxClient.GameLogic
 
                 UnityEngine.Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
+
+                BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
+                customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
 
             Log.Info("Construction Completed " + id);
