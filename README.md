@@ -26,8 +26,7 @@ The following milestones have been completed:
 * Basic player animations
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 * Friendly Launcher
-* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
-* Nitrox Website <a href="https://nitrox.rux.gg">Nitrox website</a>
+* Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>) or on the <a href="https://nitrox.rux.gg">Nitrox website</a>
 
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. 
