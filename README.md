@@ -27,6 +27,7 @@ The following milestones have been completed:
 * Integration with <a href="https://github.com/pardeike/Harmony">Harmony</a>
 * Friendly Launcher
 * Published on <a href="https://www.nexusmods.com/">NexusMods</a> (on <a href="https://www.nexusmods.com/subnautica/mods/159">https://www.nexusmods.com/subnautica/mods/159</a>)
+* Nitrox Website <a href="https://nitrox.rux.gg">Nitrox website</a>
 
 ### How can I play this mod?
 Please do keep in mind that this mod is still in progressional development. 
@@ -35,7 +36,7 @@ We finally have reached a stage, where we feel comfortable enough to give the pu
 
 If you want to follow the development progress exactly on each pull request. Refer to the <a href="https://github.com/Sunrunner37/Nitrox/wiki">wiki tab</a> to set up a development environment where pushed updates will be synchronized automatically.
 
-You can find the mod here on <a href="https://www.nexusmods.com/subnautica/mods/159">NexusMods</a>.
+You can find the mod here on <a href="https://www.nexusmods.com/subnautica/mods/159">NexusMods</a> or the <a href="https://nitrox.rux.gg">Nitrox website</a>.
 
 ### Problems/bugs/issues
 Due to the huge influx of new players for Subnautica the Issue tracker turned into a forum instead of its actual purpose. Please join the <a href="https://discord.gg/E8B4X9s">Nitrox Discord</a> to discuss any and all issues you have with Nitrox. From there we'll pick up on new issues to track.
