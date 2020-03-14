@@ -33,7 +33,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
 
                 basePiecesChecked++;
-                yield return 0;
+                yield return null;
             }
 
             Log.Info("Received initial sync packet having " + basePiecesWithMetadata + " base pieces with meta data");

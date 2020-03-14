@@ -18,7 +18,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             Log.Info("Received initial sync packet with " + packet.GlobalRootEntities.Count + " global root entities");
             entities.Spawn(packet.GlobalRootEntities);
-            yield return 0;
+            yield return null;
         }
     }
 }

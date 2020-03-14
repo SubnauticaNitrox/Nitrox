@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
 
                 remotePlayersSynced++;
-                yield return 0;
+                yield return null;
             }
         }
     }

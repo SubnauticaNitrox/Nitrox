@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
                     vehicles.CreateVehicle(vehicle);
                     totalSyncedVehicles++;
-                    yield return 0;
+                    yield return null;
                 }
             }
 

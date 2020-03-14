@@ -25,23 +25,23 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             waitScreenItem.SetProgress(0.2f);
-            yield return 0;
+            yield return null;
 
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             waitScreenItem.SetProgress(0.4f);
-            yield return 0;
+            yield return null;
 
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             waitScreenItem.SetProgress(0.6f);
-            yield return 0;
+            yield return null;
 
             SetKnownTech(packet.PDAData.KnownTechTypes);
             waitScreenItem.SetProgress(0.8f);
-            yield return 0;
+            yield return null;
 
             SetPDALog(packet.PDAData.PDALogEntries);
             waitScreenItem.SetProgress(1f);
-            yield return 0;
+            yield return null;
         }
         
         private void SetEncyclopediaEntry(List<string> entries)
