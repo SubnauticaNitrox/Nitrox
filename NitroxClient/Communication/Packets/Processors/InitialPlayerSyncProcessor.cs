@@ -15,10 +15,11 @@ namespace NitroxClient.Communication.Packets.Processors
         private HashSet<Type> alreadyRan = new HashSet<Type>();
         private InitialPlayerSync packet;
 
-        private WaitScreen.ManualWaitItem initialSyncWaitItem;
+        private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
         private WaitScreen.ManualWaitItem subWaitScreenItem;
 
-        private int processorsRan;
+        private int cumulativeProcessorsRan;
+        private int processorsRanLastCycle;
 
         public InitialPlayerSyncProcessor(IEnumerable<InitialSyncProcessor> processors)
         {
@@ -28,7 +29,8 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             this.packet = packet;
-            initialSyncWaitItem = WaitScreen.Add("Processing Initial Sync");
+            loadingMultiplayerWaitItem = WaitScreen.Add("Syncing Multiplayer World");
+            cumulativeProcessorsRan = 0;
             Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }
         
@@ -42,29 +44,30 @@ namespace NitroxClient.Communication.Packets.Processors
                 
                 moreProcessorsToRun = (alreadyRan.Count < processors.Count);
 
-                if (moreProcessorsToRun && processorsRan == 0)
+                if (moreProcessorsToRun && processorsRanLastCycle == 0)
                 {
                     throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
                 }
             } while (moreProcessorsToRun);
 
-            WaitScreen.Remove(initialSyncWaitItem);
+            WaitScreen.Remove(loadingMultiplayerWaitItem);
             Multiplayer.Main.InitialSyncCompleted = true;
         }
 
         private IEnumerator RunPendingProcessors()
         {
-            processorsRan = 0;
+            processorsRanLastCycle = 0;
 
             foreach (InitialSyncProcessor processor in processors)
             {
                 if (IsWaitingToRun(processor.GetType()) && HasDependenciesSatisfied(processor))
                 {
-                    initialSyncWaitItem.SetProgress(processorsRan, processors.Count);
+                    loadingMultiplayerWaitItem.SetProgress(cumulativeProcessorsRan, processors.Count);
 
                     Log.Info("Running " + processor.GetType());
                     alreadyRan.Add(processor.GetType());
-                    processorsRan++;
+                    processorsRanLastCycle++;
+                    cumulativeProcessorsRan++;
 
                     subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
                     yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
