@@ -174,11 +174,12 @@ namespace NitroxLauncher
 
         internal async Task StartMultiplayerAsync()
         {
+#if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
                 throw new Exception("An instance of Subnautica is already running");
             }
-
+#endif
             SyncAssetBundles();
             SyncMonoAssemblies();
             SyncAssembliesBetweenSubnauticaManagedAndLib();
