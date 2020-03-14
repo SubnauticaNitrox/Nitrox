@@ -131,7 +131,13 @@ namespace NitroxClient.Debuggers
             {
                 WindowRect = GUILayout.Window(GUIUtility.GetControlID(FocusType.Keyboard), WindowRect, RenderInternal, $"[DEBUGGER] {DebuggerName}", GUILayout.ExpandHeight(true), GUILayout.ExpandWidth(true));
             });
+            OnGUIExtra();
         }
+
+        /// <summary>
+        /// A method to override that allows custom rendering on all tabs
+        /// </summary>
+        public virtual void OnGUIExtra() { }
 
         /// <summary>
         /// Optionally adjust the skin that is used during render.
