@@ -38,6 +38,7 @@
             <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock Text="NITROX" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
                 <TextBlock VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
+                <TextBlock Name="AdminMode" VerticalAlignment="Center" Foreground="#C03535" FontSize="16" Margin="9,0,0,0" Visibility="Hidden">(Running as ADMIN)</TextBlock>
             </StackPanel>
             <Button Grid.Column="1" Margin="0,6.25,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True">
                 <Image Height="16" Width="16" Source="{StaticResource MinimizeImage}" Stretch="None" Margin="5,5,5,5" />

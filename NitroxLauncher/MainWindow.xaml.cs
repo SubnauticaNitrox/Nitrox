@@ -70,6 +70,11 @@ namespace NitroxLauncher
                 };
             };
 
+            if (RoleDetection.isAppRunningInAdmin())
+            {
+                AdminMode.Visibility = Visibility.Visible;
+            }
+
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
 
