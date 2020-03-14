@@ -28,26 +28,10 @@
             <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
 
             <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
-            <pages:LaunchGamePage x:Key="LaunchGamePage">
-                <pages:LaunchGamePage.Background>
-                    <ImageBrush ImageSource="{StaticResource PlayGameImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
-                </pages:LaunchGamePage.Background>
-            </pages:LaunchGamePage>
-            <pages:OptionPage x:Key="OptionPage">
-                <pages:OptionPage.Background>
-                    <ImageBrush ImageSource="{StaticResource VinesImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
-                </pages:OptionPage.Background>
-            </pages:OptionPage>
-            <pages:ServerPage x:Key="ServerPage">
-                <pages:ServerPage.Background>
-                    <ImageBrush ImageSource="{StaticResource EscapePodImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
-                </pages:ServerPage.Background>
-            </pages:ServerPage>
-            <pages:ServerConsolePage x:Key="ServerConsolePage">
-                <pages:ServerConsolePage.Background>
-                    <ImageBrush ImageSource="{StaticResource EscapePodImage}" Stretch="Fill" Viewbox=".24,.14,.76,.86" />
-                </pages:ServerConsolePage.Background>
-            </pages:ServerConsolePage>
+            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#FF202225"/>
+            <pages:OptionPage x:Key="OptionPage" Background="#FF202225"/>
+            <pages:ServerPage x:Key="ServerPage" Background="#FF202225"/>
+            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF202225"/>
 
             <!-- Styles -->
             <Style TargetType="Window">
@@ -85,8 +69,9 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.7" />
+                                    <Setter Property="Opacity" Value="0.75" />
                                 </Trigger>
+                                
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -99,15 +84,18 @@
                 <Setter Property="FontSize" Value="16" />
                 <Style.Resources>
                     <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="4" />
+                        <Setter Property="CornerRadius" Value="0" />
                         <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Style.Resources>
             </Style>
 
             <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
-            <Style TargetType="Grid" x:Key="MainNavigationGrid">
+            <Style TargetType="Grid" x:Key="MainNavigationGrid" >
                 <Style.Resources>
+
+
+
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Margin" Value="0 10" />
                         <Setter Property="HorizontalAlignment" Value="Left"></Setter>

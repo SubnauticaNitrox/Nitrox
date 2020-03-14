@@ -7,43 +7,47 @@
                 mc:Ignorable="d"
                 d:DesignHeight="470" d:DesignWidth="719"
                 Title="Launch Game">
-    <Grid>
+    <Grid Height="470" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="22*"/>
+            <ColumnDefinition Width="675*"/>
+            <ColumnDefinition Width="22*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="0" />
+            <RowDefinition Height="296" />
+            <RowDefinition Height="174" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="1" Stretch="Uniform" Margin="100 0" Source="{StaticResource SubnauticaMainImage}" />
+        <Grid Grid.Row="2" HorizontalAlignment="Center" Width="719" VerticalAlignment="Top" Height="174" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="22*"/>
+                <ColumnDefinition Width="181*"/>
+                <ColumnDefinition Width="274*"/>
+                <ColumnDefinition Width="220*"/>
+                <ColumnDefinition Width="22*"/>
+            </Grid.ColumnDefinitions>
+            <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="25" VerticalAlignment="Top" Grid.Column="1" Margin="10,0,0,0" />
+            <StackPanel Margin="10,38,0,42" Grid.Column="1" HorizontalAlignment="Left" Width="171">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Game developer</TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Unknownworlds</TextBlock>
+            </StackPanel>
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="80 0">
-                Nitrox is an open-source, multiplayer modification for the game Subnautica
-                <LineBreak />
-                <LineBreak />
-                The mod is in the very early stages of development; however, a solid foundation
-                has been laid for the community to iterate on
-            </TextBlock>
+            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="2" Margin="16,0"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Height="231" Margin="0,0,12,-57">
+                <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
+                        <TextBlock HorizontalAlignment="Center" FontSize="14"><Run Text="MULTIPLAYER"/></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Margin="0,0,0,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
+                    <TextBlock Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0"><Run Text="SINGLEPLAYER"/></TextBlock>
+                </Button>
+            </StackPanel>
         </Grid>
+        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Grid.RowSpan="2" Grid.Column="1" Margin="0,0,0,22" />
 
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone">
-                <TextBlock Padding="0,4,0,0" Foreground="White">SINGLEPLAYER</TextBlock>
-            </Button>
 
-            <Button Margin="10,0,0,0" Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled.">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FF00B1E9" Offset="0" />
-                        <GradientStop Color="#FF006BE9" Offset="1" />
-                    </LinearGradientBrush>
-                </Button.Background>
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">PLAY</TextBlock>
-                    <TextBlock HorizontalAlignment="Center" FontSize="16">MULTIPLAYER</TextBlock>
-                </StackPanel>
-            </Button>
-        </StackPanel>
     </Grid>
 </local:PageBase>
