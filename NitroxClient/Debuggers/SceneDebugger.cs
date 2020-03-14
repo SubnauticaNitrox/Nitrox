@@ -538,6 +538,12 @@ namespace NitroxClient.Debuggers
                     {
                         GUILayout.Box(((NitroxId)field.GetValue(selectedMonoBehaviour)).ToString(), "options");
                     }
+                    else if (field.FieldType == typeof(Int3))
+                    {
+                        Int3 value = (Int3)field.GetValue(selectedMonoBehaviour);
+
+                        GUILayout.Box(value.x + ", " + value.y + ", " + value.z, "options");
+                    }
                     else if (field.FieldType.IsEnum)
                     {
                         GUILayout.Box(field.GetValue(selectedMonoBehaviour).ToString(), "options");

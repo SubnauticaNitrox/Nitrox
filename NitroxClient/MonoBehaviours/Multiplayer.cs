@@ -197,6 +197,7 @@ namespace NitroxClient.MonoBehaviours
                 // If we just disconnected from a multiplayer session, then we need to kill the connection here.
                 // Maybe a better place for this, but here works in a pinch.
                 StopCurrentSession();
+                SceneCleaner.Open();
             }
         }
     }

@@ -15,7 +15,6 @@ namespace NitroxPatcher.Patches.Dynamic
             if (!quitToDesktop)
             {
                 UWE.Utils.lockCursor = false;
-                SceneCleaner.Open();
             }
             else
             {
