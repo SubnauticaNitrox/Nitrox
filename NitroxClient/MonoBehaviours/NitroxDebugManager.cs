@@ -19,7 +19,8 @@ namespace NitroxClient.MonoBehaviours
             Debuggers = new List<BaseDebugger>
             {
                 new SceneDebugger(),
-                new NetworkDebugger()
+                new NetworkDebugger(),
+                new EntityDebugger()
             };
         }
 
