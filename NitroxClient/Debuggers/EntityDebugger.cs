@@ -16,7 +16,7 @@ namespace NitroxClient.Debuggers
         {
         }
 
-        public override void OnGUIExtra()
+        public override void OnGUI()
         {
             foreach (KeyValuePair<NitroxId, GameObject> gameObjectPairs in NitroxEntity.GetGameObjects())
             {

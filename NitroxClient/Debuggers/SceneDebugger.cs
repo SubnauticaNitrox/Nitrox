@@ -69,32 +69,38 @@ namespace NitroxClient.Debuggers
             circleTexture = Resources.Load<Material>("Materials/WorldCursor").GetTexture("_MainTex");
         }
 
-        public override void OnGUIExtra()
+        public override void OnGUI()
         {
+            base.OnGUI();
             if (selectedObject != null)
             {
                 Texture currentTexture;
                 float markerX, markerY, markerRot;
 
                 Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(selectedObject.transform.position);
+                //if object is on screen
                 if (screenPos.z > 0 &&
                     screenPos.x >= 0 && screenPos.x < Screen.width &&
                     screenPos.y >= 0 && screenPos.y < Screen.height)
                 {
                     currentTexture = circleTexture;
                     markerX = screenPos.x;
+                    //subtract from height to go from bottom up to top down
                     markerY = Screen.height - screenPos.y;
                     markerRot = 0;
                 }
+                //if object is not on screen
                 else
                 {
                     currentTexture = arrowTexture;
+                    //if the object is behind us, flip across the center
                     if (screenPos.z < 0)
                     {
                         screenPos.x = Screen.width - screenPos.x;
                         screenPos.y = Screen.height - screenPos.y;
                     }
 
+                    //calculate new position of arrow (somewhere on the edge)
                     Vector3 screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2f;
                     Vector3 originPos = screenPos - screenCenter;
 
