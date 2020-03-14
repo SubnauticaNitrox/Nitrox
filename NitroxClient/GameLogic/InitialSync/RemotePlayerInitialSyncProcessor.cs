@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -24,10 +25,14 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Remote players can be piloting vehicles.
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            int remotePlayersSynced = 0;
+
             foreach (InitialRemotePlayerData playerData in packet.RemotePlayerData)
             {
+                waitScreenItem.SetProgress(remotePlayersSynced, packet.RemotePlayerData.Count);
+
                 List<TechType> equippedTechTypes = playerData.EquippedTechTypes.Select(techType => techType.Enum()).ToList();
                 RemotePlayer player = remotePlayerManager.Create(playerData.PlayerContext, equippedTechTypes);
 
@@ -44,6 +49,9 @@ namespace NitroxClient.GameLogic.InitialSync
                         Log.Error("Could not spawn remote player into subroot with id: " + playerData.SubRootId.Get());
                     }
                 }
+
+                remotePlayersSynced++;
+                yield return 0;
             }
         }
     }

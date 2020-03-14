@@ -8,6 +8,7 @@ using NitroxModel.Packets;
 using NitroxModel.Helper;
 using TechTypeModel = NitroxModel.DataStructures.TechType;
 using NitroxModel_Subnautica.Helper;
+using System.Collections;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -20,13 +21,27 @@ namespace NitroxClient.GameLogic.InitialSync
             this.packetSender = packetSender;
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
+            waitScreenItem.SetProgress(0.2f);
+            yield return 0;
+
             SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
+            waitScreenItem.SetProgress(0.4f);
+            yield return 0;
+
             SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
+            waitScreenItem.SetProgress(0.6f);
+            yield return 0;
+
             SetKnownTech(packet.PDAData.KnownTechTypes);
+            waitScreenItem.SetProgress(0.8f);
+            yield return 0;
+
             SetPDALog(packet.PDAData.PDALogEntries);
+            waitScreenItem.SetProgress(1f);
+            yield return 0;
         }
         
         private void SetEncyclopediaEntry(List<string> entries)

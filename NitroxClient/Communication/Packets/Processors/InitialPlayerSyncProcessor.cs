@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.InitialSync.Base;
 using System;
 using NitroxModel.Logger;
 using NitroxClient.MonoBehaviours;
+using System.Collections;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -14,6 +15,11 @@ namespace NitroxClient.Communication.Packets.Processors
         private HashSet<Type> alreadyRan = new HashSet<Type>();
         private InitialPlayerSync packet;
 
+        private WaitScreen.ManualWaitItem initialSyncWaitItem;
+        private WaitScreen.ManualWaitItem subWaitScreenItem;
+
+        private int processorsRan;
+
         public InitialPlayerSyncProcessor(IEnumerable<InitialSyncProcessor> processors)
         {
             this.processors = processors.ToSet();
@@ -22,26 +28,18 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(InitialPlayerSync packet)
         {
             this.packet = packet;
-            ProcessInitialSyncPacket(this, null);
+            initialSyncWaitItem = WaitScreen.Add("Processing Initial Sync");
+            Multiplayer.Main.StartCoroutine(ProcessInitialSyncPacket(this, null));
         }
         
-        private void ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
+        private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
         {
             bool moreProcessorsToRun;
 
             do
             {
-                int processorsRan = 0;
-                bool ranAsyncProcessor = false;
-
-                RunPendingProcessors(ref processorsRan, ref ranAsyncProcessor);
-
-                if(ranAsyncProcessor)
-                {
-                    // If we ran an async process, we'll have to wait for it to finish before we continue
-                    return;
-                }
-
+                yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
+                
                 moreProcessorsToRun = (alreadyRan.Count < processors.Count);
 
                 if (moreProcessorsToRun && processorsRan == 0)
@@ -49,34 +47,28 @@ namespace NitroxClient.Communication.Packets.Processors
                     throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
                 }
             } while (moreProcessorsToRun);
-            
+
+            WaitScreen.Remove(initialSyncWaitItem);
             Multiplayer.Main.InitialSyncCompleted = true;
         }
 
-        private void RunPendingProcessors(ref int processorsRan, ref bool ranAsyncProcessor)
+        private IEnumerator RunPendingProcessors()
         {
             processorsRan = 0;
-            ranAsyncProcessor = false;
 
             foreach (InitialSyncProcessor processor in processors)
             {
                 if (IsWaitingToRun(processor.GetType()) && HasDependenciesSatisfied(processor))
                 {
+                    initialSyncWaitItem.SetProgress(processorsRan, processors.Count);
+
                     Log.Info("Running " + processor.GetType());
                     alreadyRan.Add(processor.GetType());
                     processorsRan++;
 
-                    if (processor is AsyncInitialSyncProcessor)
-                    {
-                        ((AsyncInitialSyncProcessor)processor).Completed += ProcessInitialSyncPacket;
-                        processor.Process(packet);
-                        ranAsyncProcessor = true;
-                        return;
-                    }
-                    else
-                    {
-                        processor.Process(packet);
-                    }
+                    subWaitScreenItem = WaitScreen.Add("Running " + processor.GetType().Name);
+                    yield return Multiplayer.Main.StartCoroutine(processor.Process(packet, subWaitScreenItem));
+                    WaitScreen.Remove(subWaitScreenItem);
                 }
             }
         }

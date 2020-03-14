@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.Packets;
 
@@ -20,11 +21,12 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor));
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {            
             using (packetSender.Suppress<ModuleAdded>())
             {
                 equipmentSlots.AddItems(packet.Modules);
+                yield return 0;
             }
         }
     }

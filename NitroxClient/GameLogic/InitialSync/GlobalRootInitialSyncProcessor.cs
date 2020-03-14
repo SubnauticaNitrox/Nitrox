@@ -1,4 +1,5 @@
-﻿using NitroxClient.GameLogic.InitialSync.Base;
+﻿using System.Collections;
+using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 
@@ -13,10 +14,11 @@ namespace NitroxClient.GameLogic.InitialSync
             this.entities = entities;
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             Log.Info("Received initial sync packet with " + packet.GlobalRootEntities.Count + " global root entities");
             entities.Spawn(packet.GlobalRootEntities);
+            yield return 0;
         }
     }
 }

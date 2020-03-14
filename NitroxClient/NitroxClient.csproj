@@ -252,7 +252,6 @@
     <Compile Include="GameLogic\ExosuitModuleEvent.cs" />
     <Compile Include="GameLogic\InitialSync\InventoryItemsInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EquippedItemInitialSyncProcessor.cs" />
-    <Compile Include="GameLogic\InitialSync\Base\AsyncInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\BuildingInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\Base\InitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\BasePieceMetadataInitialSyncProcessor.cs" />

@@ -144,7 +144,7 @@ namespace NitroxClient.GameLogic
             
             // For base pieces, we must switch the id from the ghost to the newly constructed piece.
             // Furniture just uses the same game object as the ghost for the final product.
-            if(ghost.GetComponent<ConstructableBase>() != null)
+            if (ghost.GetComponent<ConstructableBase>() != null)
             {
                 Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
 

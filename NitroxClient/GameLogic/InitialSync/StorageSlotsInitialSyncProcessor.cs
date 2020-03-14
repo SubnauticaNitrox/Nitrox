@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -15,7 +16,7 @@ namespace NitroxClient.GameLogic.InitialSync
         private readonly StorageSlots slots;
         private readonly Vehicles vehicles;
 
-        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender,StorageSlots slots, Vehicles vehicles)
+        public StorageSlotsInitialSyncProcessor(IPacketSender packetSender, StorageSlots slots, Vehicles vehicles)
         {
             this.packetSender = packetSender;
             this.slots = slots;
@@ -27,18 +28,25 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(EquippedItemInitialSyncProcessor)); // Just to be sure, for cyclops mode persistence. See "Cyclops.SetAdvancedModes"
         }
 
-        public override void Process(InitialPlayerSync packet)
-        {            
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
+        {
+            int storageSlotsSynced = 0;
+
             using (packetSender.Suppress<StorageSlotItemAdd>())
             {                
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
+                    waitScreenItem.SetProgress(storageSlotsSynced, packet.StorageSlots.Count);
+
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
                     Log.Info("Initial StorageSlot item data for " + item.name + " giving to container " + itemData.ContainerId);
 
                     NitroxEntity.SetNewId(item, itemData.ItemId);
                     slots.AddItem(item, itemData.ContainerId, true);
+
+                    storageSlotsSynced++;
+                    yield return 0;
                 }
             }
         }

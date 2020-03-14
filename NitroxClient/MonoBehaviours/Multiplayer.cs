@@ -65,7 +65,6 @@ namespace NitroxClient.MonoBehaviours
             WaitScreen.Remove(worldSettleItem);
 
             WaitScreen.ManualWaitItem item = WaitScreen.Add("Loading Multiplayer");
-            WaitScreen.ShowImmediately();
             yield return Main.StartCoroutine(Main.StartSession());
             yield return new WaitUntil(() => Main.InitialSyncCompleted);
             WaitScreen.Remove(item);

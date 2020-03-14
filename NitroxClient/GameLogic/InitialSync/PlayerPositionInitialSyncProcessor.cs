@@ -1,4 +1,5 @@
-﻿using NitroxClient.GameLogic.InitialSync.Base;
+﻿using System.Collections;
+using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -18,7 +19,7 @@ namespace NitroxClient.GameLogic.InitialSync
             DependentProcessors.Add(typeof(VehicleInitialSyncProcessor)); // Players can be spawned in vehicles
         }
 
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             Vector3 position = packet.PlayerSpawnData;
             Optional<NitroxId> subRootId = packet.PlayerSubRootId;
@@ -55,6 +56,8 @@ namespace NitroxClient.GameLogic.InitialSync
                     Log.Error("Could not spawn player into subroot with id: " + subRootId.Get());
                 }
             }
+
+            yield return 0;
         }
     }
 }

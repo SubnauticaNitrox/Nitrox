@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
 using NitroxClient.GameLogic.InitialSync.Base;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using Story;
@@ -11,11 +10,19 @@ namespace NitroxClient.GameLogic.InitialSync
     public class StoryGoalInitialSyncProcessor : InitialSyncProcessor
     {
         
-        public override void Process(InitialPlayerSync packet)
+        public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             SetCompletedStoryGoals(packet.StoryGoalData.CompletedGoals);
+            waitScreenItem.SetProgress(0.33f);
+            yield return 0;
+
             SetRadioQueue(packet.StoryGoalData.RadioQueue);
+            waitScreenItem.SetProgress(0.66f);
+            yield return 0;
+
             SetGoalUnlocks(packet.StoryGoalData.GoalUnlocks);
+            waitScreenItem.SetProgress(1f);
+            yield return 0;
         }
 
         private void SetRadioQueue(List<string> radioQueue)
@@ -27,10 +34,12 @@ namespace NitroxClient.GameLogic.InitialSync
         private void SetCompletedStoryGoals(List<string> storyGoalData)
         {
             StoryGoalManager.main.completedGoals.Clear();
+
             foreach (string completedGoal in storyGoalData)
             {
                 StoryGoalManager.main.completedGoals.Add(completedGoal);
             }
+
             Log.Info("Received initial sync packet with " + storyGoalData.Count + " completed story goals");
         }
         
