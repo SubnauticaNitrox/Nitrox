@@ -76,7 +76,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
 
                     totalItemDataSynced++;
-                    yield return 0;
+                    yield return null;
                 }
             }
             

@@ -10,15 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxPatcher;
 
 namespace NitroxLauncher
 {
@@ -176,11 +173,12 @@ namespace NitroxLauncher
 
         internal async Task StartMultiplayerAsync()
         {
+#if RELEASE
             if (Process.GetProcessesByName("Subnautica").Length > 0)
             {
                 throw new Exception("An instance of Subnautica is already running");
             }
-
+#endif
             SyncAssetBundles();
             SyncMonoAssemblies();
             SyncAssembliesBetweenSubnauticaManagedAndLib();

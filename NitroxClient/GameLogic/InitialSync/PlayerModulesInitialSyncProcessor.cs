@@ -26,7 +26,7 @@ namespace NitroxClient.GameLogic.InitialSync
             using (packetSender.Suppress<ModuleAdded>())
             {
                 equipmentSlots.AddItems(packet.Modules);
-                yield return 0;
+                yield return null;
             }
         }
     }

@@ -74,7 +74,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
 
                     totalEquippedItemsDone++;
-                    yield return 0;
+                    yield return null;
                 }
             }
 
