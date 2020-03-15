@@ -37,9 +37,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <BitmapImage x:Key="sideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\play.png"/>
-        <BitmapImage x:Key="sideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\server.png"/>
-        <BitmapImage x:Key="sideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\options.png"/>
+        <BitmapImage x:Key="sideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/play.png"/>
+        <BitmapImage x:Key="sideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/server.png"/>
+        <BitmapImage x:Key="sideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/options.png"/>
 
     </Window.Resources>
 

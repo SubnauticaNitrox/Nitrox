@@ -8,10 +8,10 @@
                 d:DesignHeight="470" d:DesignWidth="719"
                 Title="Launch Game">
     <local:PageBase.Resources>
-        <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\discord.png"/>
-        <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\twitter.png"/>
-        <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\reddit.png"/>
-        <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\website.png"/>
+        <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
+        <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
+        <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
+        <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
     </local:PageBase.Resources>
     <Grid Height="470" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
