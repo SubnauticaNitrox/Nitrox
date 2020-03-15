@@ -115,7 +115,7 @@
                     <TextBlock Margin="0,0,3,0" x:Name="NitroxVersionLabel" Foreground="White" Text="{Binding Version}" />
                 </StackPanel>
 
-                <Border BorderThickness="0 0 1 0" BorderBrush="#1EFFFFFF" />
+                <Border BorderThickness="0 0 1 0" BorderBrush="#1EFFFFFF" Margin="0,0,0,-8" />
 
             </Grid>
 
