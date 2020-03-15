@@ -24,14 +24,15 @@ namespace NitroxLauncher
 {
     public class LauncherLogic : IDisposable, INotifyPropertyChanged
     {
-        public const string ReleasePhase = "ALPHA";
-        private Process gameProcess;
-        private NitroxEntryPatch nitroxEntryPatch;
-        private Process serverProcess;
-        private string subnauticaPath;
-        private bool isEmbedded;
         public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
         public static LauncherLogic Instance { get; private set; }
+
+        public const string RELEASE_PHASE = "ALPHA";
+        private NitroxEntryPatch nitroxEntryPatch;
+        private string subnauticaPath;
+        private Process serverProcess;
+        private Process gameProcess;
+        private bool isEmbedded;
 
         public string SubnauticaPath
         {
@@ -102,6 +103,7 @@ namespace NitroxLauncher
                         nitroxEntryPatch.Remove();
                     }
                     nitroxEntryPatch = new NitroxEntryPatch(path);
+                    AppHelper.RestartAsAdmin(path); //If the change path to ProgramFiles, then we ask for admin perm
                     return path;
                 },
                 CancellationToken.None,

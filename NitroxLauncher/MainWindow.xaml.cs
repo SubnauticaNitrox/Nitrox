@@ -12,6 +12,8 @@ using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.Util;
+using System.Reflection;
+using System.Diagnostics;
 
 namespace NitroxLauncher
 {
@@ -21,7 +23,7 @@ namespace NitroxLauncher
         private object frameContent;
         private bool isServerEmbedded;
 
-        public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
+        public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
 
         public object FrameContent
         {
@@ -70,7 +72,7 @@ namespace NitroxLauncher
                 };
             };
 
-            if (RoleDetection.isAppRunningInAdmin())
+            if (AppHelper.IsAppRunningInAdmin())
             {
                 AdminMode.Visibility = Visibility.Visible;
             }
