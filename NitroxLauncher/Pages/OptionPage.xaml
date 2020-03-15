@@ -29,7 +29,6 @@
                 <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">GAME DIRECTORY</TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12">Set the Subnautica install directory</TextBlock>
                 <DockPanel Grid.Row="1" Margin="0" VerticalAlignment="Center">
-
                     <Border HorizontalAlignment="Left" Height="42" BorderBrush="#33FFFFFF" Background="#9928292C"
                         BorderThickness="1" CornerRadius="0" Margin="0,0,0,0">
                         <TextBox Width="427" Height="42" FontSize="16" MaxLines="1"
@@ -42,12 +41,8 @@
                         ToolTip="Point the launcher to your games install location" Margin="6,0,0,0">
                         <TextBlock Padding="0,1,0,0" FontSize="16" Foreground="White"><Run Text="Change"/></TextBlock>
                     </Button>
-
                 </DockPanel>
-
             </StackPanel>
-            
-
         </Grid>
     </Grid>
 </nitroxLauncher:PageBase>

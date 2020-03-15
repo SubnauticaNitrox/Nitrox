@@ -7,6 +7,12 @@
                 mc:Ignorable="d"
                 d:DesignHeight="470" d:DesignWidth="719"
                 Title="Launch Game">
+    <local:PageBase.Resources>
+        <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\discord.png"/>
+        <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\twitter.png"/>
+        <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\reddit.png"/>
+        <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="C:\dev\game-dev\Nitrox\NitroxLauncher\Images\social\website.png"/>
+    </local:PageBase.Resources>
     <Grid Height="470" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="22*"/>
@@ -28,12 +34,40 @@
                 <ColumnDefinition Width="22*"/>
             </Grid.ColumnDefinitions>
             <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="25" VerticalAlignment="Top" Grid.Column="1" Margin="10,0,0,0" />
-            <StackPanel Margin="10,38,0,42" Grid.Column="1" HorizontalAlignment="Left" Width="171">
+            <StackPanel Margin="10,38,0,93" Grid.Column="1" HorizontalAlignment="Left" Width="171">
                 <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Game developer</TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Unknownworlds</TextBlock>
             </StackPanel>
 
-            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="2" Margin="16,0"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
+            <StackPanel Margin="10,98,0,33" Grid.Column="1" HorizontalAlignment="Left" Width="171">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Mod developers</TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Team Nitrox</TextBlock>
+            </StackPanel>
+
+            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Grid.Column="2" Margin="16,0,16,62"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" Grid.Column="2" Margin="16,0,16,33">
+                <TextBlock Margin="0,0,8,0">
+                    <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="{x:Null}">
+                        <Image Source="{DynamicResource socialDiscord}" Width="24px" Height="24px" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="0,0,8,0">
+                    <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow the official Twitter" Foreground="{x:Null}">
+                        <Image Source="{DynamicResource socialTwitter}" Width="24px" Height="24px" />
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="0,0,8,0">
+                    <Hyperlink NavigateUri="https://www.reddit.com/r/SubnauticaNitrox/" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox subreddit" Foreground="{x:Null}">
+                        <Image Source="{DynamicResource socialReddit}" Width="20px" Height="20px" Margin="0,2,0,2"/>
+                    </Hyperlink>
+                </TextBlock>
+                <TextBlock Margin="0,0,8,0" >
+                    <Hyperlink NavigateUri="https://nitrox.rux.gg/" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox website" Foreground="{x:Null}" >
+                        <Image Source="{DynamicResource socialWebsite}" Width="24px" Height="24px" />
+                    </Hyperlink>
+                </TextBlock>
+            </StackPanel>
+
             <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Height="231" Margin="0,0,12,-57">
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,8">
                     <StackPanel>
@@ -47,7 +81,5 @@
             </StackPanel>
         </Grid>
         <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Grid.RowSpan="2" Grid.Column="1" Margin="0,0,0,22" />
-
-
     </Grid>
 </local:PageBase>

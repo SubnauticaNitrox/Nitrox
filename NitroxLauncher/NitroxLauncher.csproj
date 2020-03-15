@@ -241,6 +241,17 @@
   <ItemGroup>
     <Resource Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\options.png" />
+    <Resource Include="Images\play.png" />
+    <Resource Include="Images\server.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\social\discord.png" />
+    <Resource Include="Images\social\reddit.png" />
+    <Resource Include="Images\social\twitter.png" />
+    <Resource Include="Images\social\website.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

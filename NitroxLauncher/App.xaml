@@ -93,16 +93,14 @@
             <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
             <Style TargetType="Grid" x:Key="MainNavigationGrid" >
                 <Style.Resources>
-
-
-
                     <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Margin" Value="0 10" />
                         <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+                        <Setter Property="OpacityMask" Value="#7FFFFFFF" />
                         <Style.Triggers>
                             <Trigger Property="ap:ButtonProperties.Selected" Value="True">
                                 <Setter Property="Foreground" Value="White" />
-                                <Setter Property="FontWeight" Value="Bold" />
+                                <Setter Property="OpacityMask" Value="White" />
                             </Trigger>
                         </Style.Triggers>
                     </Style>

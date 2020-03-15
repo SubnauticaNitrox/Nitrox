@@ -19,7 +19,9 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="1">
                 <TextBlock FontSize="22" Foreground="White" Text="Nitrox server" />
-                <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="Here you can host your own Nitrox server. For more information please refer to the Wiki." Margin="0,41,0,0" />
+                <TextBlock FontSize="14" Foreground="#BFFFFFFF" Margin="0,41,0,0">
+                    Here you can host your own Nitrox server. For more information please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink> .
+                </TextBlock>
             </Grid>
             <Grid Grid.Row="4" Margin="0,0,22,0">
                 <Grid.RowDefinitions>

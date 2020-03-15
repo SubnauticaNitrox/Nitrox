@@ -85,17 +85,14 @@
             </Border>
 
             <DockPanel Grid.Row="1" >
-
                 <Button TabIndex="3" DockPanel.Dock="Right" Width="42" Height="42" Style="{DynamicResource buttonConsoleStop}" Foreground="White" x:Name="StopButton"
                         ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757">
                     <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
                 </Button>
-
                 <Button TabIndex="2" DockPanel.Dock="Right" Margin="0,0,0,0" Width="42" Height="42" Style="{StaticResource LargeButton}" Foreground="White" x:Name="CommandButton"
                         ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559" Background="#FF36383A">
                     <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
                 </Button>
-
                 <Border DockPanel.Dock="Left" BorderBrush="#36383A" Background="#36383A" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" Width="591">
                     <TextBox TabIndex="1" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left"
                              Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput"
