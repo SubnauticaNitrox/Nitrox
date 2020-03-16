@@ -41,7 +41,7 @@
             <Setter Property="Width" Value="6"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                    <ControlTemplate TargetType="{x:Type ScrollBar}"> 
                         <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
                             <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
                                 <Track.Thumb>
@@ -212,7 +212,7 @@
                     <TextBlock Margin="0,0,3,0" x:Name="NitroxVersionLabel" Foreground="White" Text="{Binding Version}" />
                 </StackPanel>
 
-                <Border BorderThickness="0 0 1 0" BorderBrush="#14FFFFFF" Margin="0,0,0,-82" HorizontalAlignment="Right" />
+                <Border BorderThickness="0 0 1 0" BorderBrush="#14FFFFFF" Margin="0,0,0,-86" HorizontalAlignment="Right" />
 
             </Grid>
             <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">

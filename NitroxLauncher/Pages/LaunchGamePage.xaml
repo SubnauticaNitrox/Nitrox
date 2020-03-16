@@ -81,7 +81,7 @@
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="67*"/>
                 </Grid.RowDefinitions>
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="8" Margin="0,0,12,0">
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Margin="0,0,12,0">
                     <TextBlock Foreground="White">
                     <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
                         <InlineUIContainer/><InlineUIContainer>
@@ -95,13 +95,13 @@
                                 </Grid.RowDefinitions>
                                 <Image Source="{DynamicResource socialDiscord}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
-                                <TextBlock VerticalAlignment="Center" Margin="29,3,0,5" Height="16" HorizontalAlignment="Left" Width="210"><Run Text="Discord"/></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="16" Text="General help and support from the nitrox team and other players." Foreground="#BFFFFFFF"/>
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="DISCORD"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="16" Text="Looking for group, discussion, general help and support from the Nitrox Team and players." Foreground="#BFFFFFFF"/>
                             </Grid>
                         </InlineUIContainer></Hyperlink></TextBlock>
                 </Border>
 
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="8" Grid.Column="1">
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Column="1">
                     <TextBlock Foreground="White">
                     <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
                         <InlineUIContainer/><InlineUIContainer>
@@ -115,13 +115,13 @@
                                 </Grid.RowDefinitions>
                                 <Image Source="{DynamicResource socialTwitter}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
-                                <TextBlock VerticalAlignment="Center" Margin="29,3,0,5" Height="16" HorizontalAlignment="Left" Width="210"><Run Text="Twitter"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="TWITTER"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="16" Text="Follow on Twitter for the latest tweets and updates about patches, releases and more." Foreground="#BFFFFFFF"/>
                             </Grid>
                         </InlineUIContainer></Hyperlink></TextBlock>
                 </Border>
 
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="8" Grid.Row="2" Margin="0,0,12,0">
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="2" Margin="0,0,12,0">
                     <TextBlock Foreground="White">
                     <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" ToolTip="Open Subreddit" Foreground="White" TextDecorations="{x:Null}">
                         <InlineUIContainer/><InlineUIContainer>
@@ -135,13 +135,13 @@
                                 </Grid.RowDefinitions>
                                 <Image Source="{DynamicResource socialReddit}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
-                                <TextBlock VerticalAlignment="Center" Margin="29,3,0,5" Height="16" HorizontalAlignment="Left" Width="210"><Run Text="Reddit"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="REDDIT"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="16" Text="Join the official Subreddit for the Nitrox mod. Updates and discussion." Foreground="#BFFFFFFF"/>
                             </Grid>
                         </InlineUIContainer></Hyperlink></TextBlock>
                 </Border>
 
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="8" Grid.Row="3" Margin="0,0,0,0" Grid.Column="1">
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="3" Margin="0,0,0,0" Grid.Column="1">
                     <TextBlock Foreground="White">
                     <Hyperlink NavigateUri="https://nitrox.rux.gg" RequestNavigate="OnRequestNavigate" ToolTip="Open Website" Foreground="White" TextDecorations="{x:Null}">
                         <InlineUIContainer/><InlineUIContainer>
@@ -155,7 +155,7 @@
                                 </Grid.RowDefinitions>
                                 <Image Source="{DynamicResource socialWebsite}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
-                                <TextBlock VerticalAlignment="Center" Margin="29,3,0,5" Height="16" HorizontalAlignment="Left" Width="210"><Run Text="Website"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="WEBSITE"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="16"  Text="Visit the official Nitrox Website. Check for the latest updates, changelogs and guides." Foreground="#BFFFFFFF"/>
                             </Grid>
                         </InlineUIContainer></Hyperlink></TextBlock>
