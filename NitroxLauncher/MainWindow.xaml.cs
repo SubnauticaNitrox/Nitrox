@@ -164,5 +164,10 @@ namespace NitroxLauncher
             }
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
         }
+
+        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
+        }
     }
 }

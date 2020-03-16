@@ -23,36 +23,39 @@
                     Here you can host your own Nitrox server. For more information please refer to the <Hyperlink NavigateUri="https://on.rux.gg/nitrox-wiki" RequestNavigate="OnRequestNavigate" ToolTip="Open Nitrox guide website">Wiki</Hyperlink> .
                 </TextBlock>
             </Grid>
-            <Grid Grid.Row="4" Margin="0,0,22,0">
+            <Grid Grid.Row="4" Margin="0,0,22,0" Height="207" VerticalAlignment="Bottom">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="29*"/>
                     <RowDefinition Height="178*"/>
                 </Grid.RowDefinitions>
-                <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,55,0,0" Grid.Row="1" />
-                <Grid Margin="0,55,0,0" Grid.Row="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="114*"/>
-                        <RowDefinition Height="22*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="264" />
-                    </Grid.ColumnDefinitions>
+                <Border BorderThickness="0 1 0 0" BorderBrush="#1EFFFFFF" Margin="0,44,0,0" Grid.Row="1" >
 
-                    <StackPanel Grid.Column="0" VerticalAlignment="Bottom" Height="84">
-                        <TextBlock Foreground="White" FontSize="16" Margin="0,0,0,8" Text="Server window type" />
-                        <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
-                        <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
-                    </StackPanel>
+                    <Grid Margin="0,0,0,0" Grid.Row="1" Height="124" VerticalAlignment="Bottom">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="97*"/>
+                            <RowDefinition Height="27*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="264" />
+                        </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right">
-                        <StackPanel>
-                            <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="START SERVER" />
-                            <TextBlock HorizontalAlignment="Center" FontSize="14" Text="{Binding StartButtonSubtitle}" />
+                        <StackPanel Grid.Column="0" VerticalAlignment="Bottom" Height="84">
+                            <TextBlock Foreground="White" FontSize="16" Margin="0,0,0,8" Text="Server window type" />
+                            <RadioButton Name="RBIsDocked" GroupName="ServerType" Content="Docked console" Margin="5" Click="RBServer_Clicked" />
+                            <RadioButton Name="RBIsExternal" GroupName="ServerType" Content="External console" Margin="5" Click="RBServer_Clicked" />
                         </StackPanel>
-                    </Button>
 
-                </Grid>
+                        <Button Grid.Column="1" Style="{StaticResource LargeButton}" Click="StartServer_Click" ToolTip="Start the server with chosen options" Background="#FF007BFF" VerticalAlignment="Bottom" HorizontalAlignment="Right">
+                            <StackPanel>
+                                <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Text="START SERVER" />
+                                <TextBlock HorizontalAlignment="Center" FontSize="14" Text="{Binding StartButtonSubtitle}" />
+                            </StackPanel>
+                        </Button>
+
+                    </Grid>
+
+                </Border>
             </Grid>
         </Grid>
     </Grid>
