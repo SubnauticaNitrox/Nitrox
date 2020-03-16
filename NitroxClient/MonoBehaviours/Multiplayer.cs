@@ -11,6 +11,7 @@ using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.DiscordRP;
 using NitroxClient.MonoBehaviours.Gui.InGame;
+using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -168,6 +169,7 @@ namespace NitroxClient.MonoBehaviours
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             
+            LoadingScreenExtras.Disable();
             DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
 
