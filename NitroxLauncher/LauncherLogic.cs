@@ -100,7 +100,12 @@ namespace NitroxLauncher
                         nitroxEntryPatch.Remove();
                     }
                     nitroxEntryPatch = new NitroxEntryPatch(path);
-                    AppHelper.RestartAsAdmin(path); //If the change path to ProgramFiles, then we ask for admin perm
+
+                    if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppHelper.RestartAsAdmin();
+                    }
+                    
                     return path;
                 },
                 CancellationToken.None,

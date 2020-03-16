@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
+using NitroxModel.Logger;
 
 namespace NitroxLauncher
 {
@@ -17,27 +17,22 @@ namespace NitroxLauncher
             return wp.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        public static void RestartAsAdmin(string path)
+        public static void RestartAsAdmin()
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                throw new ArgumentNullException(nameof(path));
-            }
-
             if (!IsAppRunningInAdmin())
             {
-                if (Path.GetFullPath(path).StartsWith(ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
-                {
-                    MessageBoxResult result = MessageBox.Show(
-                        "Nitrox launcher should be executed with administrator permissions in order to properly patch Subnautica while in Program Files directory, do you want to restart ?",
-                        "Program Files Path Detected",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question,
-                        MessageBoxResult.Yes,
-                        MessageBoxOptions.DefaultDesktopOnly
-                    );
+                MessageBoxResult result = MessageBox.Show(
+                    "Nitrox launcher should be executed with administrator permissions in order to properly patch Subnautica while in Program Files directory, do you want to restart ?",
+                    "Program Files Path Detected",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question,
+                    MessageBoxResult.Yes,
+                    MessageBoxOptions.DefaultDesktopOnly
+                );
 
-                    if (result == MessageBoxResult.Yes)
+                if (result == MessageBoxResult.Yes)
+                {
+                    try
                     {
                         // Setting up start info of the new process of the same application
                         ProcessStartInfo processStartInfo = new ProcessStartInfo(Assembly.GetEntryAssembly().CodeBase);
@@ -50,11 +45,18 @@ namespace NitroxLauncher
                         Process.Start(processStartInfo);
 
                         Environment.Exit(1);
+                    } catch (Exception)
+                    {
+                        Log.Error("Error while trying to instance an admin processus of the launcher, aborting");
                     }
-
                 }
+
+            }
+            else
+            {
+                Log.Info("Can't restart the launcher as admin, we already have the perms");
             }
         }
-
     }
+
 }
