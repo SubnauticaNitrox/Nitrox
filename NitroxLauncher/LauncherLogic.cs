@@ -10,15 +10,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxPatcher;
 
 namespace NitroxLauncher
 {

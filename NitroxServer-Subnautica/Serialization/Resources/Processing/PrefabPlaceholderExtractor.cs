@@ -5,8 +5,6 @@ using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers;
 using NitroxServer_Subnautica.Serialization.Resources.Parsers.Monobehaviours;
-using static NitroxServer_Subnautica.Serialization.Resources.Parsers.GameObjectAssetParser;
-using static NitroxServer_Subnautica.Serialization.Resources.Parsers.TransformAssetParser;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Processing
 {

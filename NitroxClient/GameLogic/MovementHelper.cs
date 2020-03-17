@@ -1,6 +1,4 @@
-﻿using System;
-using NitroxClient.Unity.Helper;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
