@@ -169,7 +169,7 @@ namespace NitroxClient.MonoBehaviours
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             
-            LoadingScreenExtras.Disable();
+            LoadingScreenVersionText.DisableWarningText();
             DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
 
