@@ -89,7 +89,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public void Disconnect()
         {
-            if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            if (CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 CurrentState.Disconnect(this);
             }

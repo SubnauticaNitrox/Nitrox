@@ -109,16 +109,16 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         private void CreateStats(RemotePlayer remotePlayer, Canvas canvas)
         {
             GameObject originalBar = FindObjectOfType<uGUI_HealthBar>().gameObject;
-            healthBar = CreateBar(originalBar, BarType.Health, canvas);
+            healthBar = CreateBar(originalBar, BarType.HEALTH, canvas);
 
             originalBar = FindObjectOfType<uGUI_OxygenBar>().gameObject;
-            oxygenBar = CreateBar(originalBar, BarType.Oxygen, canvas);
+            oxygenBar = CreateBar(originalBar, BarType.OXYGEN, canvas);
 
             originalBar = FindObjectOfType<uGUI_FoodBar>().gameObject;
-            foodBar = CreateBar(originalBar, BarType.Food, canvas);
+            foodBar = CreateBar(originalBar, BarType.FOOD, canvas);
 
             originalBar = FindObjectOfType<uGUI_WaterBar>().gameObject;
-            waterBar = CreateBar(originalBar, BarType.Water, canvas);
+            waterBar = CreateBar(originalBar, BarType.WATER, canvas);
         }
 
         private Bar CreateBar(GameObject originalBar, BarType type, Canvas canvas)
@@ -135,7 +135,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             string valueUnit = "%";
             switch (type)
             {
-                case BarType.Health:
+                case BarType.HEALTH:
                     newBar.color = HEALTH_BAR_COLOR;
                     newBar.borderColor = HEALTH_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.075f, 0.35f, 0f);
@@ -144,7 +144,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_HealthBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
-                case BarType.Oxygen:
+                case BarType.OXYGEN:
                     newBar.color = OXYGEN_BAR_COLOR;
                     newBar.borderColor = OXYGEN_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(-0.025f, 0.35f, 0f);
@@ -154,7 +154,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_OxygenBar>());
                     cloned.transform.localScale = new Vector3(0.0003f, 0.0003f, 0.0003f);
                     break;
-                case BarType.Food:
+                case BarType.FOOD:
                     newBar.color = FOOD_BAR_COLOR;
                     newBar.borderColor = FOOD_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.025f, 0.35f, 0f);
@@ -163,7 +163,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
                     Destroy(cloned.GetComponent<uGUI_FoodBar>());
                     cloned.transform.localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
                     break;
-                case BarType.Water:
+                case BarType.WATER:
                     newBar.color = WATER_BAR_COLOR;
                     newBar.borderColor = WATER_BAR_BORDER_COLOR;
                     cloned.transform.localPosition = new Vector3(0.075f, 0.35f, 0f);
@@ -246,10 +246,10 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
 
         private enum BarType
         {
-            Health,
-            Oxygen,
-            Food,
-            Water
+            HEALTH,
+            OXYGEN,
+            FOOD,
+            WATER
         }
     }
 }

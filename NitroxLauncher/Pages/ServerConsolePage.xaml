@@ -119,7 +119,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="buttonConsoleStop" TargetType="{x:Type Button}">
+        <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
             <Style.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="0 8 8 0" />
@@ -166,7 +166,7 @@
             </Border>
 
             <DockPanel Grid.Row="1" >
-                <Button TabIndex="3" DockPanel.Dock="Right" Width="42" Height="42" Style="{DynamicResource buttonConsoleStop}" Foreground="White" x:Name="StopButton"
+                <Button TabIndex="3" DockPanel.Dock="Right" Width="42" Height="42" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
                         ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757">
                     <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
                 </Button>
