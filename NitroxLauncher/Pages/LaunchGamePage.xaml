@@ -4,46 +4,180 @@
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
-                mc:Ignorable="d"
-                d:DesignHeight="470" d:DesignWidth="719"
-                Title="Launch Game">
-    <Grid>
+                mc:Ignorable="d" d:DesignWidth="766"
+                Title="Launch Game" Height="980">
+    <local:PageBase.Resources>
+        <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
+        <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
+        <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
+        <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
+    </local:PageBase.Resources>
+    <Grid Height="980" VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="22*"/>
+            <ColumnDefinition Width="675*"/>
+            <ColumnDefinition Width="22*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="100" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="0" />
+            <RowDefinition Height="342" />
+            <RowDefinition Height="477" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="1" Stretch="Uniform" Margin="100 0" Source="{StaticResource SubnauticaMainImage}" />
+        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Grid.RowSpan="2" Margin="0,0,0,22" Grid.ColumnSpan="3" />
 
-        <Grid Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <TextBlock FontSize="14" Foreground="White" TextWrapping="Wrap" Margin="80 0">
-                Nitrox is an open-source, multiplayer modification for the game Subnautica
-                <LineBreak />
-                <LineBreak />
-                The mod is in the very early stages of development; however, a solid foundation
-                has been laid for the community to iterate on
+        <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-166">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="158*"/>
+                <RowDefinition Height="323*"/>
+                <RowDefinition Height="163*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0*"/>
+                <ColumnDefinition Width="174*"/>
+                <ColumnDefinition Width="276*"/>
+                <ColumnDefinition Width="269*"/>
+                <ColumnDefinition Width="0*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="0,2,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Game developer</TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Unknownworlds</TextBlock>
+            </StackPanel>
+
+            <StackPanel Margin="0,55,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Mod developers</TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Team Nitrox</TextBlock>
+            </StackPanel>
+
+            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextWrapping="Wrap" Grid.Column="2" Margin="0,0,10,0" Height="114" VerticalAlignment="Top">
+                <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
             </TextBlock>
+
+            <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Height="138">
+                <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,8">
+                    <StackPanel>
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
+                        <TextBlock HorizontalAlignment="Center" FontSize="14"><Run Text="MULTIPLAYER"/></TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button Margin="0,0,0,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone" HorizontalAlignment="Stretch" Width="Auto" Height="48">
+                    <TextBlock Padding="0,4,0,0" Foreground="White" Margin="0,-4,0,0"><Run Text="SINGLEPLAYER"/></TextBlock>
+                </Button>
+            </StackPanel>
+
+            <Border BorderThickness="0 1 0 0" BorderBrush="#14FFFFFF" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" />
+
+            <StackPanel Margin="0,22,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="1">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Connect"/></TextBlock>
+                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Nitrox community"/></TextBlock>
+            </StackPanel>
+
+            <Grid Grid.Column="2" Margin="0,22,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="280" VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="262*"/>
+                    <ColumnDefinition Width="255*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="67*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="67*"/>
+                </Grid.RowDefinitions>
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Margin="0,0,12,0">
+                    <TextBlock Foreground="White">
+                    <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
+                        <InlineUIContainer/><InlineUIContainer>
+                            <Grid Height="auto" Width="auto" Margin="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="8*"/>
+                                    <RowDefinition Height="29*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{DynamicResource socialDiscord}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="DISCORD"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Looking for group, discussion, general help and support from the Nitrox Team and players." Foreground="#BFFFFFFF"/>
+                            </Grid>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                </Border>
+
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Column="1">
+                    <TextBlock Foreground="White">
+                    <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
+                        <InlineUIContainer/><InlineUIContainer>
+                            <Grid Height="auto" Width="auto" Margin="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="8*"/>
+                                    <RowDefinition Height="29*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{DynamicResource socialTwitter}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="TWITTER"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Follow on Twitter for the latest tweets and updates about patches, releases and more." Foreground="#BFFFFFFF"/>
+                            </Grid>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                </Border>
+
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="2" Margin="0,0,12,0">
+                    <TextBlock Foreground="White">
+                    <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" ToolTip="Open Subreddit" Foreground="White" TextDecorations="{x:Null}">
+                        <InlineUIContainer/><InlineUIContainer>
+                            <Grid Height="auto" Width="auto" Margin="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="8*"/>
+                                    <RowDefinition Height="29*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{DynamicResource socialReddit}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="REDDIT"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Join the official Subreddit for the Nitrox mod. Updates and discussion." Foreground="#BFFFFFFF"/>
+                            </Grid>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                </Border>
+
+                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="3" Margin="0,0,0,0" Grid.Column="1">
+                    <TextBlock Foreground="White">
+                    <Hyperlink NavigateUri="https://nitrox.rux.gg" RequestNavigate="OnRequestNavigate" ToolTip="Open Website" Foreground="White" TextDecorations="{x:Null}">
+                        <InlineUIContainer/><InlineUIContainer>
+                            <Grid Height="auto" Width="auto" Margin="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="8*"/>
+                                    <RowDefinition Height="29*"/>
+                                </Grid.RowDefinitions>
+                                <Image Source="{DynamicResource socialWebsite}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+
+                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="WEBSITE"/></TextBlock>
+                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14"  Text="Visit the official Nitrox Website. Check for the latest updates, changelogs and guides." Foreground="#BFFFFFFF"/>
+                            </Grid>
+                        </InlineUIContainer></Hyperlink></TextBlock>
+                </Border>
+
+            </Grid>
+
+            <Border BorderThickness="0 1 0 0" BorderBrush="#14FFFFFF" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" />
+
+            <StackPanel Margin="0,22,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Mod Info"/></TextBlock>
+                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="About Nitrox"/></TextBlock>
+            </StackPanel>
+            <StackPanel Margin="0,22,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Contributors"/></TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">                    <Run>Developers: Sunrunner, Killzoms, Jannify, Marjin, Measurity, MadMax, Nes,  _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok </Run>
+                    <LineBreak/><Run>Staff: Werewolfs, Shalix, CriticalCookie, InfamousJay, DekanCraft, Princess Salt, Soranotsky</Run>
+                    <LineBreak/><Run>Design: Rux</Run></TextBlock>
+            </StackPanel>
+
         </Grid>
-
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button Margin="0,0,10,0" Background="#19FFFFFF" BorderBrush="#66FFFFFF" Style="{StaticResource LargeButton}" Click="SinglePlayerButton_Click" ToolTip="Play alone">
-                <TextBlock Padding="0,4,0,0" Foreground="White">SINGLEPLAYER</TextBlock>
-            </Button>
-
-            <Button Margin="10,0,0,0" Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled.">
-                <Button.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#FF00B1E9" Offset="0" />
-                        <GradientStop Color="#FF006BE9" Offset="1" />
-                    </LinearGradientBrush>
-                </Button.Background>
-                <StackPanel>
-                    <TextBlock HorizontalAlignment="Center" FontSize="22" FontWeight="Bold">PLAY</TextBlock>
-                    <TextBlock HorizontalAlignment="Center" FontSize="16">MULTIPLAYER</TextBlock>
-                </StackPanel>
-            </Button>
-        </StackPanel>
+        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="0,245,385,0" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </local:PageBase>

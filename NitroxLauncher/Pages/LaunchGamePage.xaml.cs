@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace NitroxLauncher.Pages
 {
@@ -8,6 +9,12 @@ namespace NitroxLauncher.Pages
         public LaunchGamePage()
         {
             InitializeComponent();
+        }
+
+        private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
 
         private async void SinglePlayerButton_Click(object sender, RoutedEventArgs e)
