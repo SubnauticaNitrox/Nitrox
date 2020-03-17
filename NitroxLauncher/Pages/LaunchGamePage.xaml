@@ -5,14 +5,14 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="980">
+                Title="Launch Game" Height="1015">
     <local:PageBase.Resources>
         <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
         <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
         <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
         <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
     </local:PageBase.Resources>
-    <Grid Height="980" VerticalAlignment="Top">
+    <Grid Height="1015" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="22*"/>
             <ColumnDefinition Width="675*"/>
@@ -20,13 +20,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
-            <RowDefinition Height="342" />
-            <RowDefinition Height="477" />
+            <RowDefinition Height="364" />
+            <RowDefinition Height="505" />
         </Grid.RowDefinitions>
 
-        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Grid.RowSpan="2" Margin="0,0,0,22" Grid.ColumnSpan="3" />
+        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Margin="0,22" Grid.Row="1" Grid.Column="1" />
 
-        <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-166">
+        <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-138">
             <Grid.RowDefinitions>
                 <RowDefinition Height="158*"/>
                 <RowDefinition Height="323*"/>
@@ -69,7 +69,7 @@
 
             <StackPanel Margin="0,22,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="1">
                 <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Connect"/></TextBlock>
-                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Nitrox community"/></TextBlock>
+                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" Text="Follow Nitrox"/>
             </StackPanel>
 
             <Grid Grid.Column="2" Margin="0,22,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="280" VerticalAlignment="Top">
@@ -178,6 +178,6 @@
             </StackPanel>
 
         </Grid>
-        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="0,245,385,0" Grid.Row="1" Grid.Column="1" />
+        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="30,270,355,0" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </local:PageBase>
