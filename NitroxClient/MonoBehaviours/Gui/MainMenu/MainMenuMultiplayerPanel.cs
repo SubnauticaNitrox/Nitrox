@@ -14,6 +14,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class MainMenuMultiplayerPanel : MonoBehaviour
     {
+        public static MainMenuMultiplayerPanel Main;
         private Rect addServerWindowRect = new Rect(Screen.width / 2 - 250, 200, 500, 200);
         private GameObject joinServerGameObject;
         public GameObject LoadedMultiplayerRef;
@@ -30,6 +31,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public void Awake()
         {
+            Main = this;
             //This sucks, but the only way around it is to establish a Subnautica resources cache and reference it everywhere we need it.
             //Given recent push-back on elaborate designs, I've just crammed it here until we can all get on the same page as far as code-quality standars are concerned.
             JoinServer.SaveGameMenuPrototype = SavedGamesRef;

@@ -367,7 +367,7 @@
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
-    <Compile Include="MonoBehaviours\DiscordRP\DiscordController.cs" />
+    <Compile Include="MonoBehaviours\DiscordRP\DiscordRPController.cs" />
     <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Bases\Metadata\NoOpBasePieceMetadataProcessor.cs" />
