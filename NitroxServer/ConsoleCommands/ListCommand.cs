@@ -11,12 +11,12 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "", "shows a list of all current players in the server")
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "", "Shows who's online")
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             List<Player> players = playerManager.GetConnectedPlayers();
 
@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             Log.Info(playerList);
-            SendServerMessageIfPlayerIsPresent(player, playerList);
+            SendMessageToPlayer(sender, playerList);
         }
 
         public override bool VerifyArgs(string[] args)

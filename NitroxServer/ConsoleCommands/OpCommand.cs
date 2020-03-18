@@ -10,12 +10,12 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public OpCommand(PlayerManager playerManager) : base("op", Perms.ADMIN, "<name>", "Set an user as admin")
+        public OpCommand(PlayerManager playerManager) : base("op", Perms.ADMIN, "<name>", "Sets an user as admin")
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> runningPlayer)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             string playerName = args[0];
             string message;
@@ -25,15 +25,15 @@ namespace NitroxServer.ConsoleCommands
             if(receivingPlayer.IsPresent())
             {
                 receivingPlayer.Get().Permissions = Perms.ADMIN;
-                message = $"Updated '{playerName}' permissions to admin";
+                message = $"Updated '{playerName}'\'s permissions to admin";
             }
             else
             {
-                message = $"Could not update permissions on unknown player '{playerName}'";
+                message = $"Could not update permissions of unknown player '{playerName}'";
             }
             
-            Log.Info(message);
-            SendServerMessageIfPlayerIsPresent(runningPlayer, message);
+            Notify(sender, message);
+            SendMessageToPlayer(receivingPlayer, "You have been promoted to ADMIN");
         }
 
         public override bool VerifyArgs(string[] args)

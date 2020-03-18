@@ -9,31 +9,29 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class LoginCommand : Command
     {
-        private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>", "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "<password>", "Log in to server as admin (requires password)")
         {
-            this.playerManager = playerManager;
             this.serverConfig = serverConfig;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             string pass = args[0];
             string message;
 
             if (pass == serverConfig.AdminPassword)
             {
-                player.Get().Permissions = Perms.ADMIN;
-                message = "Updated permissions to admin for " + player.Get().Name;
+                sender.Get().Permissions = Perms.ADMIN;
+                message = $"Updated permissions to admin for {sender.Get().Name}";
             }
             else
             {
                 message = "Incorrect Password";
             }
             Log.Info(message);
-            SendServerMessageIfPlayerIsPresent(player, message);
+            SendMessageToPlayer(sender, message);
         }
 
         public override bool VerifyArgs(string[] args)

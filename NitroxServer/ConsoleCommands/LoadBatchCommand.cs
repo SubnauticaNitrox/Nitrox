@@ -5,6 +5,7 @@ using System.Text;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic.Entities.Spawning;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
@@ -14,16 +15,16 @@ namespace NitroxServer.ConsoleCommands
     /// </summary>
     class LoadBatchCommand : Command
     {
-        private BatchEntitySpawner batchEntitySpawner;
+        private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Load batch x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Loads batch x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            batchEntitySpawner.LoadUnspawnedEntities(new NitroxModel.DataStructures.Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2])));
+            batchEntitySpawner.LoadUnspawnedEntities(new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2])));
         }
 
         public override bool VerifyArgs(string[] args)

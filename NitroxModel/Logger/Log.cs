@@ -135,8 +135,35 @@ namespace NitroxModel.Logger
             fileAppender.ActivateOptions();
             fileAppender.AddFilter(filter);
 
-            ConsoleAppender consoleAppender = new ConsoleAppender();
+            ManagedColoredConsoleAppender consoleAppender = new ManagedColoredConsoleAppender();
             consoleAppender.Layout = patternLayout;
+            consoleAppender.AddMapping(new ManagedColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.All,
+                ForeColor = ConsoleColor.White,
+                BackColor = ConsoleColor.Red
+            });
+            consoleAppender.AddMapping(new ManagedColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Debug,
+                ForeColor = ConsoleColor.Magenta
+            });
+            consoleAppender.AddMapping(new ManagedColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Warn,
+                ForeColor = ConsoleColor.DarkYellow
+            });
+            consoleAppender.AddMapping(new ManagedColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Error,
+                ForeColor = ConsoleColor.Red
+            });
+            consoleAppender.AddMapping(new ManagedColoredConsoleAppender.LevelColors()
+            {
+                Level = Level.Fatal,
+                ForeColor = ConsoleColor.DarkRed
+            });
+
             consoleAppender.AddFilter(filter);
 
             hierarchy.Root.AddAppender(consoleAppender);

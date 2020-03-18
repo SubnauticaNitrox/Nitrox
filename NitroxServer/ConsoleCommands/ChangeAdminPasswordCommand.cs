@@ -10,37 +10,32 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ChangeAdminPasswordCommand : Command
     {
-        private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
 
-        public ChangeAdminPasswordCommand(PlayerManager playerManager, ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "<password>", "Change the admin password")
+        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "<password>", "Changes admin password")
         {
-            this.playerManager = playerManager;
             this.serverConfig = serverConfig;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             try
             {
-                string playerName = player.IsPresent() ? player.Get().Name : "SERVER";
-                ChangeAdminPassword(args[0], playerName);   
+                string playerName = sender.IsPresent() ? sender.Get().Name : "SERVER";
+                serverConfig.ChangeAdminPassword(args[0]);
+
+                Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");
+                SendMessageToPlayer(sender, "Admin password changed");
             }
             catch (Exception ex)
             {
-                Log.Error("Error attempting to change admin password: " + args[0], ex);
+                Log.Error($"Error attempting to change admin password to \"{args[0]}\"", ex);
             }
         }
 
         public override bool VerifyArgs(string[] args)
         {
             return args.Length >= 1;
-        }
-
-        private void ChangeAdminPassword(string password, string name)
-        {
-            serverConfig.ChangeAdminPassword(password);
-            Log.Info($"Admin password changed to \"{password}\" by {name}");
         }
     }
 }

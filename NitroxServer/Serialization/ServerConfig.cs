@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.Text;
 using System.ComponentModel;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConfigParser
 {
@@ -45,26 +46,49 @@ namespace NitroxServer.ConfigParser
             return builder.ToString();  
         }
 
-        public void ChangeAdminPassword(string pw)
+        private void RefreshAppSettingsValue(string key, string value)
         {
-            adminPasswordSetting.Value = pw;
+            try
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                config.AppSettings.Settings[key].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings[adminPasswordSetting.Name].Value = pw;
-            config.Save(ConfigurationSaveMode.Modified);
-
-            ConfigurationManager.RefreshSection("appSettings");
+                ConfigurationManager.RefreshSection("appSettings");
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Can't refresh server app settings", ex);
+            }
         }
 
-        public void ChangeServerPassword(string pw)
+        public void ChangeAdminPassword(string password)
         {
-            serverPasswordSetting.Value = pw;
+            adminPasswordSetting.Value = password;
+            RefreshAppSettingsValue(adminPasswordSetting.Name, password);
+        }
 
-            Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            config.AppSettings.Settings[serverPasswordSetting.Name].Value = pw;
-            config.Save(ConfigurationSaveMode.Modified);
+        public void ChangeServerPassword(string password)
+        {
+            serverPasswordSetting.Value = password;
+            RefreshAppSettingsValue(serverPasswordSetting.Name, password);
+        }
 
-            ConfigurationManager.RefreshSection("appSettings");
+        public void ChangeServerGameMode(string gamemode)
+        {
+            gameModeSetting.Value = gamemode;
+            RefreshAppSettingsValue(gameModeSetting.Name, gamemode);
+        }
+
+        public void ChangeServerSaveInterval(int intervalInMillis)
+        {
+            saveIntervalSetting.Value = intervalInMillis;
+            RefreshAppSettingsValue(saveIntervalSetting.Name, intervalInMillis.ToString());
+        }
+
+        public void ChangeServerPort(int pw)
+        {
+
         }
     }
     
