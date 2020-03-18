@@ -1,16 +1,16 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using NitroxModel.Core;
-using System.Reflection;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
 using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
-using NitroxServer.Serialization.World;
-using NitroxServer.GameLogic.Entities;
-using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets;
-using NitroxServer.ConfigParser;
-using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer.ConfigParser;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Entities;
+using NitroxServer.Serialization.World;
 
 namespace NitroxServer
 {
@@ -36,12 +36,9 @@ namespace NitroxServer
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
-            containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
-
-            containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
-            {
-                return ctx.Resolve<LiteNetLibServer>();
-            }).SingleInstance();
+            containerBuilder.RegisterType<LiteNetLibServer>()
+                            .As<Communication.NetworkingLayer.NitroxServer>()
+                            .SingleInstance();
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)
