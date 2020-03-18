@@ -252,6 +252,9 @@
     <Resource Include="Images\social\twitter.png" />
     <Resource Include="Images\social\website.png" />
   </ItemGroup>
+  <ItemGroup>
+    <SplashScreen Include="Images\loadingSmall.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

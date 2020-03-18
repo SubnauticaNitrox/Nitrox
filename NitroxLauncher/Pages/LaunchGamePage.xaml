@@ -24,7 +24,7 @@
             <RowDefinition Height="505" />
         </Grid.RowDefinitions>
 
-        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Margin="0,22" Grid.Row="1" Grid.Column="1" />
+        <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Margin="0,0,0,22" Grid.Row="1" Grid.Column="1" />
 
         <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-138">
             <Grid.RowDefinitions>
