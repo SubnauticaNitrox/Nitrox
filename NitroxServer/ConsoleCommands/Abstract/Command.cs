@@ -65,7 +65,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
             cmd.AppendFormat(" {0}", ArgsDescription);
 
-            return $"{cmd, -40}  -  {Description}";
+            return $"{cmd,-35}  -  {Description}";
         }
 
         public void SendMessageToPlayer(Optional<Player> player, string message)

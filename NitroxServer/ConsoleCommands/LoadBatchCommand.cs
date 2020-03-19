@@ -14,7 +14,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Pregens entities at x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "{x} {y} {z}", "Loads entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
         }

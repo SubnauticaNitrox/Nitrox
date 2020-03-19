@@ -36,7 +36,9 @@ namespace NitroxServer.ConsoleCommands
         {
             // runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            return new List<string>(commands.OrderByDescending(cmd => cmd.Name).Select(cmd => cmd.ToHelpText()));
+            return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= perm)
+                                            .OrderByDescending(cmd => cmd.Name)
+                                            .Select(cmd => cmd.ToHelpText()));
         }
     }
 }

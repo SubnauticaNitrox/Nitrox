@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly TimeKeeper timeKeeper;
 
-        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "<day/night>", "Changes the map time")
+        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "{day/night}", "Changes the map time")
         {
             this.timeKeeper = timeKeeper;
         }
