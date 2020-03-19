@@ -34,9 +34,9 @@ namespace NitroxClient.GameLogic
             BodyPrototype = CreateBodyPrototype();
         }
 
-        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {
-            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water);
+            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount);
             packetSender.Send(playerStats);
         }
 
