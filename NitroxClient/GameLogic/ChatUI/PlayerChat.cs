@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.ChatUI
         /// <summary>
         ///     A text box where the player can enter something to add to the chat log.
         /// </summary>
-        private static PlayerChatEntry chatEntry;
+        private static PlayerChatInputField inputField;
 
         public PlayerChat()
         {
@@ -22,15 +22,17 @@ namespace NitroxClient.GameLogic.ChatUI
                 chatLog = new GameObject().AddComponent<PlayerChatLog>();
             }
 
-            if (chatEntry == null)
+            if (inputField == null)
             {
-                chatEntry = new GameObject().AddComponent<PlayerChatEntry>();
+                inputField = new GameObject().AddComponent<PlayerChatInputField>();
+                inputField.Manager = this;
             }
         }
 
-        public void WriteChatLogEntry(ChatLogEntry chatLogEntry)
+        public void AddMessage(string playerName, string message, Color color)
         {
-            chatLog.WriteEntry(chatLogEntry);
+            ChatLogEntry entry = new ChatLogEntry(playerName, message, color);
+            chatLog.WriteEntry(entry);
         }
 
         public void ShowLog()
@@ -45,7 +47,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void ShowChat()
         {
-            chatEntry.Show(this);
+            inputField.ChatEnabled = true;
         }
     }
 }
