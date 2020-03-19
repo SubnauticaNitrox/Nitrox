@@ -27,7 +27,7 @@ namespace NitroxServer
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
         
-        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, List<EquippedItemData> equippedItems, List<EquippedItemData> modules)
+        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, List<EquippedItemData> equippedItems, List<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
@@ -37,6 +37,7 @@ namespace NitroxServer
             SubRootId = subRootId;
             GameObjectId = playerId;
             Permissions = perms;
+            Stats = stats;
             this.equippedItems = equippedItems;
             this.modules = modules;
         }
