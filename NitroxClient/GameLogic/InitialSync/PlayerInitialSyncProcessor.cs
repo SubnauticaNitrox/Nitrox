@@ -69,6 +69,11 @@ namespace NitroxClient.GameLogic.InitialSync
                 using (packetSender.Suppress<PlayerStats>())
                 {
                     Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
+                    Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
+                    if (statsData.InfectionAmount > 0f)
+                    {
+                        Player.main.infectionRevealed = true;
+                    }
                 }
             }
         }

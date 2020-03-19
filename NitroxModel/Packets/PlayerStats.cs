@@ -12,8 +12,9 @@ namespace NitroxModel.Packets
         public float Health { get; }
         public float Food { get; }
         public float Water { get; }
+        public float InfectionAmount { get; }
 
-        public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water)
+        public PlayerStats(ushort playerId, float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {
             PlayerId = playerId;
             Oxygen = oxygen;
@@ -21,13 +22,14 @@ namespace NitroxModel.Packets
             Health = health;
             Food = food;
             Water = water;
+            InfectionAmount = infectionAmount;
             DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
             UdpChannel = UdpChannelId.PLAYER_STATS;
         }
 
         public override string ToString()
         {
-            return "[PlayerStats - PlayerId: " + PlayerId + " Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + "]";
+            return "[PlayerStats - PlayerId: " + PlayerId + " Oxygen: " + Oxygen + " MaxOxygen:" + MaxOxygen + " Health: " + Health + " Food: " + Food + " Water: " + Water + " InfectionAmount: " + InfectionAmount + "]";
         }
     }
 }
