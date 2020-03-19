@@ -71,79 +71,81 @@ namespace NitroxClient.Debuggers
         public override void OnGUI()
         {
             base.OnGUI();
-            if (selectedObject != null)
+            if (selectedObject == null)
             {
-                Texture currentTexture;
-                float markerX, markerY, markerRot;
+                return;
+            }
 
-                Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(selectedObject.transform.position);
-                //if object is on screen
-                if (screenPos.z > 0 &&
-                    screenPos.x >= 0 && screenPos.x < Screen.width &&
-                    screenPos.y >= 0 && screenPos.y < Screen.height)
+            Texture currentTexture;
+            float markerX, markerY, markerRot;
+
+            Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(selectedObject.transform.position);
+            //if object is on screen
+            if (screenPos.z > 0 &&
+                screenPos.x >= 0 && screenPos.x < Screen.width &&
+                screenPos.y >= 0 && screenPos.y < Screen.height)
+            {
+                currentTexture = circleTexture;
+                markerX = screenPos.x;
+                //subtract from height to go from bottom up to top down
+                markerY = Screen.height - screenPos.y;
+                markerRot = 0;
+            }
+            //if object is not on screen
+            else
+            {
+                currentTexture = arrowTexture;
+                //if the object is behind us, flip across the center
+                if (screenPos.z < 0)
                 {
-                    currentTexture = circleTexture;
-                    markerX = screenPos.x;
-                    //subtract from height to go from bottom up to top down
-                    markerY = Screen.height - screenPos.y;
-                    markerRot = 0;
+                    screenPos.x = Screen.width - screenPos.x;
+                    screenPos.y = Screen.height - screenPos.y;
                 }
-                //if object is not on screen
+
+                //calculate new position of arrow (somewhere on the edge)
+                Vector3 screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2f;
+                Vector3 originPos = screenPos - screenCenter;
+
+                float angle = Mathf.Atan2(originPos.y, originPos.x) - (90 * Mathf.Deg2Rad);
+                float cos = Mathf.Cos(angle);
+                float sin = Mathf.Sin(angle);
+                float m = cos / -sin;
+
+                Vector3 screenBounds = screenCenter * 0.9f;
+
+                if (cos > 0)
+                {
+                    screenPos = new Vector3(screenBounds.y / m, screenBounds.y, 0);
+                }
                 else
                 {
-                    currentTexture = arrowTexture;
-                    //if the object is behind us, flip across the center
-                    if (screenPos.z < 0)
-                    {
-                        screenPos.x = Screen.width - screenPos.x;
-                        screenPos.y = Screen.height - screenPos.y;
-                    }
-
-                    //calculate new position of arrow (somewhere on the edge)
-                    Vector3 screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2f;
-                    Vector3 originPos = screenPos - screenCenter;
-
-                    float angle = Mathf.Atan2(originPos.y, originPos.x) - (90 * Mathf.Deg2Rad);
-                    float cos = Mathf.Cos(angle);
-                    float sin = Mathf.Sin(angle);
-                    float m = cos / -sin;
-
-                    Vector3 screenBounds = screenCenter * 0.9f;
-
-                    if (cos > 0)
-                    {
-                        screenPos = new Vector3(screenBounds.y / m, screenBounds.y, 0);
-                    }
-                    else
-                    {
-                        screenPos = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
-                    }
-                    if (screenPos.x > screenBounds.x)
-                    {
-                        screenPos = new Vector3(screenBounds.x, screenBounds.x * m, 0);
-                    }
-                    else if (screenPos.x < -screenBounds.x)
-                    {
-                        screenPos = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
-                    }
-
-                    screenPos += screenCenter;
-
-                    markerX = screenPos.x;
-                    markerY = Screen.height - screenPos.y;
-                    markerRot = -angle * Mathf.Rad2Deg;
+                    screenPos = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
+                }
+                if (screenPos.x > screenBounds.x)
+                {
+                    screenPos = new Vector3(screenBounds.x, screenBounds.x * m, 0);
+                }
+                else if (screenPos.x < -screenBounds.x)
+                {
+                    screenPos = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
                 }
 
-                float markerSizeX = currentTexture.width;
-                float markerSizeY = currentTexture.height;
-                GUI.matrix = Matrix4x4.Translate(new Vector3(markerX, markerY, 0)) *
-                             Matrix4x4.Rotate(Quaternion.Euler(0, 0, markerRot)) *
-                             Matrix4x4.Scale(new Vector3(0.5f, 0.5f, 0.5f)) *
-                             Matrix4x4.Translate(new Vector3(-markerSizeX / 2, -markerSizeY / 2, 0));
+                screenPos += screenCenter;
 
-                GUI.DrawTexture(new Rect(0, 0, markerSizeX, markerSizeY), currentTexture);
-                GUI.matrix = Matrix4x4.identity;
+                markerX = screenPos.x;
+                markerY = Screen.height - screenPos.y;
+                markerRot = -angle * Mathf.Rad2Deg;
             }
+
+            float markerSizeX = currentTexture.width;
+            float markerSizeY = currentTexture.height;
+            GUI.matrix = Matrix4x4.Translate(new Vector3(markerX, markerY, 0)) *
+                         Matrix4x4.Rotate(Quaternion.Euler(0, 0, markerRot)) *
+                         Matrix4x4.Scale(new Vector3(0.5f, 0.5f, 0.5f)) *
+                         Matrix4x4.Translate(new Vector3(-markerSizeX / 2, -markerSizeY / 2, 0));
+
+            GUI.DrawTexture(new Rect(0, 0, markerSizeX, markerSizeY), currentTexture);
+            GUI.matrix = Matrix4x4.identity;
         }
 
         public override void Update()
