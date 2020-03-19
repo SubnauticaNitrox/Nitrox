@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic;

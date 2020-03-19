@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Reflection;
 using NitroxClient.Communication.Packets.Processors;
 using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;

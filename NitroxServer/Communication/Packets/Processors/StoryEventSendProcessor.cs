@@ -18,11 +18,11 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(StoryEventSend packet, Player player)
         {
-            if (packet.StoryEventType == StoryEventType.Radio)
+            if (packet.StoryEventType == StoryEventType.RADIO)
             {
                 storyGoalData.AddRadioMessage(packet.Key);
             }
-            if (packet.StoryEventType == StoryEventType.GoalUnlock)
+            if (packet.StoryEventType == StoryEventType.GOAL_UNLOCK)
             {
                 storyGoalData.AddGoalUnlock(packet.Key);
             }

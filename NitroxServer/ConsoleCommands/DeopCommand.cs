@@ -1,5 +1,4 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Players;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.Util;

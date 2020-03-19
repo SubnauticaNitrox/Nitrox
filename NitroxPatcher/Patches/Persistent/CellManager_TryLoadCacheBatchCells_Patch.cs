@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.MonoBehaviours;
-using UnityEngine;
-using NitroxClient.GameLogic.Helper;
-using NitroxModel.Core;
-using NitroxClient.GameLogic;
-using NitroxModel.DataStructures;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;

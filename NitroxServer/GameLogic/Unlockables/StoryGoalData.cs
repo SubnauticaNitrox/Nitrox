@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Unlockables

@@ -2,7 +2,6 @@
 using AssetsTools.NET;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxServer.UnityStubs;
 
 namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 {

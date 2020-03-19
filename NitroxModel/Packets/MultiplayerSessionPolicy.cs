@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
         {
             // This is done intentionally. It is only a stub for future extension.
             RequiresServerPassword = false;
-            AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.Server;
+            AuthenticationAuthority = MultiplayerSessionAuthenticationAuthority.SERVER;
             DisableConsole = disableConsole;
             // get the full version name
             Version ver = typeof(MultiplayerSessionPolicy).Assembly.GetName().Version;

@@ -2,7 +2,6 @@
 using NitroxClient.GameLogic.HUD;
 using NitroxClient.MonoBehaviours.Gui.HUD;
 using NitroxModel.Packets;
-using NitroxClient.GameLogic;
 
 namespace NitroxClient.Communication.Packets.Processors
 {

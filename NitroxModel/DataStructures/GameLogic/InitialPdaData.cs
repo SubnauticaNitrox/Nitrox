@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    public class InitialPdaData
+    public class InitialPDAData
     {
         public List<TechType> UnlockedTechTypes { get; set; }
         public List<TechType> KnownTechTypes { get; set; }
@@ -12,12 +12,12 @@ namespace NitroxModel.DataStructures.GameLogic
         public List<PDAEntry> PartiallyUnlockedTechTypes { get; set; }
         public List<PDALogEntry> PDALogEntries { get; set; }
 
-        public InitialPdaData()
+        public InitialPDAData()
         {
             // Constructor for serialization
         }
 
-        public InitialPdaData(List<TechType> unlockedTechTypes, List<TechType> knownTechTypes, List<string> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries)
+        public InitialPDAData(List<TechType> unlockedTechTypes, List<TechType> knownTechTypes, List<string> encyclopediaEntries, List<PDAEntry> partiallyUnlockedTechTypes, List<PDALogEntry> pdaLogEntries)
         {
             UnlockedTechTypes = unlockedTechTypes;
             KnownTechTypes = knownTechTypes;

@@ -21,15 +21,15 @@ namespace NitroxClient.Communication.Packets.Processors
             switch (packet.StoryEventType)
             {
                 case StoryEventType.PDA:
-                case StoryEventType.Radio:
-                case StoryEventType.Encyclopedia:
-                case StoryEventType.Story:
+                case StoryEventType.RADIO:
+                case StoryEventType.ENCYCLOPEDIA:
+                case StoryEventType.STORY:
                     using (NitroxServiceLocator.LocateService<IPacketSender>().Suppress<StoryEventSend>())
                     {
                         StoryGoal.Execute(packet.Key, (Story.GoalType)packet.StoryEventType);
                     }
                     break;
-                case StoryEventType.Extra:
+                case StoryEventType.EXTRA:
                     ExecuteExtraEvent(packet.Key);
                     break;
             }

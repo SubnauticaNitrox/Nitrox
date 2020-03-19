@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Autofac;
-using Autofac.Builder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -13,7 +11,6 @@ using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.Serialization.World;
 using NitroxServer;
 using NitroxServer.Communication.Packets.Processors;

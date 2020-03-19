@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
             Velocity = velocity;
             BodyRotation = bodyRotation;
             AimingRotation = aimingRotation;
-            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
+            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.PLAYER_MOVEMENT;
         }
 
