@@ -156,7 +156,7 @@ namespace NitroxServer.GameLogic.Unlockables
             }
         }
 
-        public InitialPdaData GetInitialPdaData()
+        public InitialPDAData GetInitialPDAData()
         {
             lock (unlockedTechTypes)
             {
@@ -168,7 +168,7 @@ namespace NitroxServer.GameLogic.Unlockables
                         {
                             lock (pdaLogEntries)
                             {
-                                return new InitialPdaData(new List<TechTypeModel>(unlockedTechTypes),
+                                return new InitialPDAData(new List<TechTypeModel>(unlockedTechTypes),
                                                           new List<TechTypeModel>(knownTechTypes),
                                                           new List<string>(encyclopediaEntries),
                                                           new List<PDAEntry>(partiallyUnlockedByTechType.Values),

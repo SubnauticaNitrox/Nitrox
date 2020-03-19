@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.IO;
 using Harmony;
-using ProtoBuf;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 

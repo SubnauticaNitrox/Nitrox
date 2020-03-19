@@ -12,7 +12,7 @@ namespace NitroxModel.Packets
         public VehicleMovement(ushort playerId, VehicleMovementData vehicle) : base(playerId, vehicle.Position, vehicle.Velocity, vehicle.Rotation, vehicle.Rotation)
         {
             Vehicle = vehicle;
-            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
+            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.VEHICLE_MOVEMENT;
         }
 

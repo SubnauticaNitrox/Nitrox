@@ -20,7 +20,7 @@ namespace NitroxTest.Client.Communication.MultiplayerSessionTests
             IMultiplayerSession multiplayerSession = new MultiplayerSessionManager(client);
 
             // Assert
-            multiplayerSession.CurrentState.CurrentStage.ShouldBeEquivalentTo(MultiplayerSessionConnectionStage.Disconnected);
+            multiplayerSession.CurrentState.CurrentStage.ShouldBeEquivalentTo(MultiplayerSessionConnectionStage.DISCONNECTED);
         }
 
         [TestMethod]

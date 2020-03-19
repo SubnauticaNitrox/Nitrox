@@ -3,6 +3,7 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -28,6 +29,7 @@ namespace NitroxServer.GameLogic.Players
                                            playerData.NitroxId, 
                                            NitroxModel.DataStructures.Util.Optional<NitroxId>.OfNullable(playerData.SubRootId), 
                                            playerData.Permissions, 
+                                           playerData.CurrentStats,
                                            playerData.EquippedItems, 
                                            playerData.Modules);
                 

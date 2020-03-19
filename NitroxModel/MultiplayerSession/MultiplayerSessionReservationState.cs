@@ -7,18 +7,18 @@ namespace NitroxModel.MultiplayerSession
     [Flags]
     public enum MultiplayerSessionReservationState
     {
-        Reserved = 0,
-        Rejected = 1 << 0,
+        RESERVED = 0,
+        REJECTED = 1 << 0,
 
         [Description("The player name is already in use. Please try again with a different name.")]
-        UniquePlayerNameConstraintViolated = 1 << 1,
+        UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED = 1 << 1,
 
         // These are all intended for future use. Maybe YAGNI, but this is where we should look to expand upon server reservations
         [Description("The server is currently at capacity. Please try again later.")]
-        ServerPlayerCapacityReached = 1 << 2,
+        SERVER_PLAYER_CAPACITY_REACHED = 1 << 2,
 
         [Description("The password that you provided for the server is incorrect.")]
-        AuthenticationFailed = 1 << 3
+        AUTHENTICATION_FAILED = 1 << 3
     }
 
     public static class MultiplayerSessionReservationStateExtensions

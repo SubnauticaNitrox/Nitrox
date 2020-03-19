@@ -70,6 +70,11 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
                     Player.main.liveMixin.health = statsData.Health;
+                    Player.main.infectedMixin.SetInfectedAmount(statsData.InfectionAmount);
+                    if (statsData.InfectionAmount > 0f)
+                    {
+                        Player.main.infectionRevealed = true;
+                    }
                 }
             }
         }
