@@ -58,20 +58,20 @@ namespace NitroxServer.GameLogic
 
                 if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (authenticationContext.ServerPassword.IsEmpty() || (authenticationContext.ServerPassword.Get() != serverConfig.ServerPassword)))
                 {
-                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.AuthenticationFailed;
+                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
 
                 if (reservedPlayerNames.Count >= serverConfig.MaxConnections)
                 {
-                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.ServerPlayerCapacityReached;
+                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.SERVER_PLAYER_CAPACITY_REACHED;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
 
                 string playerName = authenticationContext.Username;
                 if (reservedPlayerNames.Contains(playerName))
                 {
-                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.Rejected | MultiplayerSessionReservationState.UniquePlayerNameConstraintViolated;
+                    MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);
                 }
 

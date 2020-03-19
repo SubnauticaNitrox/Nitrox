@@ -5,7 +5,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class SessionReservationRejected : ConnectionNegotiatedState
     {
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.SessionReservationRejected;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED;
 
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {

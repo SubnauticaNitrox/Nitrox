@@ -21,6 +21,11 @@ namespace NitroxClient.MonoBehaviours
         {
         }
 
+        public static IEnumerable<KeyValuePair<NitroxId, GameObject>> GetGameObjects()
+        {
+            return gameObjectsById;
+        }
+
         public static GameObject RequireObjectFrom(NitroxId id)
         {
             Optional<GameObject> gameObject = GetObjectFrom(id);

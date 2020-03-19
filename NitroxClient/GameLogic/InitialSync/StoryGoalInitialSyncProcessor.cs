@@ -14,15 +14,15 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             SetCompletedStoryGoals(packet.StoryGoalData.CompletedGoals);
             waitScreenItem.SetProgress(0.33f);
-            yield return 0;
+            yield return null;
 
             SetRadioQueue(packet.StoryGoalData.RadioQueue);
             waitScreenItem.SetProgress(0.66f);
-            yield return 0;
+            yield return null;
 
             SetGoalUnlocks(packet.StoryGoalData.GoalUnlocks);
             waitScreenItem.SetProgress(1f);
-            yield return 0;
+            yield return null;
         }
 
         private void SetRadioQueue(List<string> radioQueue)

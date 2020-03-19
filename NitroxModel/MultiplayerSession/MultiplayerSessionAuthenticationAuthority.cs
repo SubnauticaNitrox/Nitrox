@@ -2,7 +2,7 @@
 {
     public enum MultiplayerSessionAuthenticationAuthority
     {
-        Server,
-        Other //That which shall not be mentioned - yet...
+        SERVER,
+        OTHER //That which shall not be mentioned - yet...
     }
 }

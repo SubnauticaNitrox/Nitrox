@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     slots.AddItem(item, itemData.ContainerId, true);
 
                     storageSlotsSynced++;
-                    yield return 0;
+                    yield return null;
                 }
             }
         }

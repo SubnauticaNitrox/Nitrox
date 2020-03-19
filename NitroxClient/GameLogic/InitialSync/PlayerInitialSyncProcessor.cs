@@ -26,19 +26,19 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             SetPlayerGameObjectId(packet.PlayerGameObjectId);
             waitScreenItem.SetProgress(0.25f);
-            yield return 0;
+            yield return null;
 
             AddStartingItemsToPlayer(packet.FirstTimeConnecting);
             waitScreenItem.SetProgress(0.5f);
-            yield return 0;
+            yield return null;
 
             SetPlayerStats(packet.PlayerStatsData);
             waitScreenItem.SetProgress(0.75f);
-            yield return 0;
+            yield return null;
 
             SetPlayerGameMode((GameModeOption)Enum.Parse(typeof(GameModeOption), packet.GameMode));
             waitScreenItem.SetProgress(1f);
-            yield return 0;
+            yield return null;
         }
 
         private void SetPlayerGameObjectId(NitroxId id)

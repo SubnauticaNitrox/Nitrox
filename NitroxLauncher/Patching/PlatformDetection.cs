@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using dnlib.DotNet;
 
 namespace NitroxLauncher.Patching
 {

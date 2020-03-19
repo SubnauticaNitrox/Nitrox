@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;

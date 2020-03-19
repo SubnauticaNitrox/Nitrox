@@ -9,7 +9,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
     public class Disconnected : IMultiplayerSessionConnectionState
     {
         private object stateLock = new object();
-        public MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.Disconnected;
+        public MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.DISCONNECTED;
 
         public void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {

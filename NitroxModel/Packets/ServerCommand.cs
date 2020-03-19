@@ -1,5 +1,4 @@
 ﻿using System;
-using NitroxModel.Logger;
 
 namespace NitroxModel.Packets
 {

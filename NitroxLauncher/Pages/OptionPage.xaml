@@ -11,7 +11,7 @@
                          Loaded="OptionPage_OnLoaded"
                          Unloaded="OptionPage_OnUnloaded">
     <Grid>
-        <Grid Margin="30,0,0,0">
+        <Grid Margin="22,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32" />
                 <RowDefinition Height="Auto" />
@@ -21,25 +21,27 @@
             
             <Grid Grid.Row="1">
                 <TextBlock FontSize="22" Foreground="White">Options</TextBlock>
+                <TextBlock FontSize="14" Foreground="#BFFFFFFF" Text="Customise the options for your Nitrox installation." Margin="0,41,0,0" />
+                <Border BorderThickness="0 0 0 1" BorderBrush="#1EFFFFFF" Margin="0,84,0,0" />
             </Grid>
             
-            <StackPanel Grid.Row="2" Margin="0,17,0,0">
-                <TextBlock FontSize="12" Foreground="White">GAME DIRECTORY</TextBlock>
-                <Border HorizontalAlignment="Left" Height="43" BorderBrush="#33FFFFFF" Background="#9928292C"
-                        BorderThickness="1" CornerRadius="4,4,4,4" Margin="0,4,0,0">
-                    <TextBox Width="427" Height="43" FontSize="16" MaxLines="1"
+            <StackPanel Grid.Row="2" Margin="0,22,0,0" Grid.RowSpan="2">
+                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">GAME DIRECTORY</TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12">Set the Subnautica install directory</TextBlock>
+                <DockPanel Grid.Row="1" Margin="0" VerticalAlignment="Center">
+                    <Border HorizontalAlignment="Left" Height="42" BorderBrush="#33FFFFFF" Background="#9928292C"
+                        BorderThickness="1" CornerRadius="0" Margin="0,0,0,0">
+                        <TextBox Width="427" Height="42" FontSize="16" MaxLines="1"
                              Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}"
                              BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, Mode=OneWay}" IsReadOnly="True"
-                             SelectionOpacity="-1" ToolTip="Subnautica install location" />
-                </Border>
-            </StackPanel>
-            
-            <StackPanel Grid.Row="3" Margin="0,18,0,0">
-                <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="147" Height="36"
+                             ToolTip="Subnautica install location" SelectionBrush="#72FFFFFF" CaretBrush="#3FFFFFFF" />
+                    </Border>
+                    <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="147" Height="42"
                         HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ChangeOptions_Click"
-                        ToolTip="Point the launcher to your games install location">
-                    <TextBlock Padding="0,1,0,0" FontSize="16" Foreground="White">Change</TextBlock>
-                </Button>
+                        ToolTip="Point the launcher to your games install location" Margin="6,0,0,0">
+                        <TextBlock Padding="0,1,0,0" FontSize="16" Foreground="White"><Run Text="Change"/></TextBlock>
+                    </Button>
+                </DockPanel>
             </StackPanel>
         </Grid>
     </Grid>

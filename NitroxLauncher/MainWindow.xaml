@@ -6,10 +6,140 @@
         xmlns:local="clr-namespace:NitroxLauncher"
         mc:Ignorable="d"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="Nitrox Launcher" Height="542" MinHeight="542" MaxHeight="542" Width="946" MinWidth="946" MaxWidth="946"
+        Title="Nitrox Launcher" Height="623" MinHeight="642" MaxHeight="642" Width="1024" MinWidth="1024" MaxWidth="946"
         WindowStyle="None" WindowStartupLocation="CenterScreen" ResizeMode="CanResize" Icon="{StaticResource NitroxImage}"
-        Closing="OnClosing">
-    
+        Closing="OnClosing" Background="#FF202225">
+    <Window.Resources>
+
+        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" 
+                                           Height="Auto" Fill="Transparent" Panel.ZIndex="9999"/>
+                            <Border x:Name="Rectangle1" CornerRadius="3" HorizontalAlignment="Stretch" 
+                                        VerticalAlignment="Stretch" Width="Auto" Height="Auto" 
+                                        Background="{TemplateBinding Background}" Margin="0,6" Panel.ZIndex="9999"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Horizontal">
+                                <Setter TargetName="Rectangle1" Property="Width" Value="Auto"/>
+                                <Setter TargetName="Rectangle1" Property="Height" Value="7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--SCROLLBARS-->
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Foreground" Value="#26FFFFFF"/>
+            <Setter Property="Background" Value="{x:Null}"/>
+            <Setter Property="Width" Value="6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}"> 
+                        <Grid x:Name="GridRoot" Width="6" Background="{x:Null}">
+                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" 
+                                               Style="{DynamicResource ScrollThumbs}"/>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                <Setter Value="#3FFFFFFF" 
+                                            TargetName="Thumb" Property="Background"/>
+                            </Trigger>
+                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width" Value="Auto"/>
+                                <Setter Property="Height" Value="12"/>
+                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Foreground" Value="#BFFFFFFF" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#EB5757" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <BitmapImage x:Key="SideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/play.png"/>
+        <BitmapImage x:Key="SideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/server.png"/>
+        <BitmapImage x:Key="SideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/options.png"/>
+        <ControlTemplate x:Key="ScrollViewerMainframe" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle x:Name="Corner" Grid.Column="1" Fill="#3FFFFFFF" Grid.Row="1"/>
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" ValueChanged="PART_VerticalScrollBar_ValueChanged" Background="#14FFFFFF" BorderBrush="#00000000" Width="14"/>
+                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}"/>
+            </Grid>
+        </ControlTemplate>
+
+    </Window.Resources>
+
     <WindowChrome.WindowChrome>
         <WindowChrome
             ResizeBorderThickness="0"
@@ -20,57 +150,76 @@
 
     <Grid Margin="0">
         <Grid.RowDefinitions>
-            <RowDefinition Height="72" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="22" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <Image x:Name="BackgroundImage" Source="{Binding CurrentPageBackground}" Margin="0" Grid.Column="0" Stretch="Fill" Grid.RowSpan="2">
-            <Image.Effect>
-                <BlurEffect Radius="7" />
-            </Image.Effect>
-        </Image>
 
-        <Grid Grid.Row="0" Background="#B228292C">
+
+
+        <Grid Grid.Row="0" Background="#FF26282B" >
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition  />
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <TextBlock Text="NITROX" FontSize="22" FontWeight="Bold" VerticalAlignment="Center" Margin="28,0,8,0" Foreground="White" />
-                <TextBlock VerticalAlignment="Center" Foreground="#B2FFFFFF" FontSize="16" Margin="9,0,0,0">Launcher</TextBlock>
-            </StackPanel>
-            <Button Grid.Column="1" Margin="0,6.25,35,0" HorizontalAlignment="Right" VerticalAlignment="Top" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True">
-                <Image Height="16" Width="16" Source="{StaticResource MinimizeImage}" Stretch="None" Margin="5,5,5,5" />
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,437,0"/>
+            <Button Margin="0,0,29,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="26">
+                <Image Height="16" Width="16" Source="{StaticResource MinimizeImage}" Stretch="None" />
             </Button>
-            <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,6.25,5.76,0" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True">
-                <Image Source="{StaticResource ExitImage}" Stretch="None" Margin="5,5,5,5" />
+            <Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="26" Style="{DynamicResource CloseButton}">
+                <Image Source="{StaticResource ExitImage}" Stretch="None" />
             </Button>
         </Grid>
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="225" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#B2151414" Style="{StaticResource MainNavigationGrid}">
+            <Grid HorizontalAlignment="Stretch" Background="#202225" Style="{StaticResource MainNavigationGrid}"  >
+
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="533" />
                 </Grid.RowDefinitions>
                 <!-- Make sure the navigation items align vertically with the "NITROX" header. -->
-                <StackPanel Grid.Row="0" Margin="28,28,0,0" x:Name="SideBarPanel" HorizontalAlignment="Left">
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" Content="PLAY GAME" />
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure server options" Content="SERVER" />
-                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher settings" Content="OPTIONS" />
+
+                <Image Margin="32,32,131,483" Source="nitroxLogo.png" Stretch="Fill"/>
+
+                <StackPanel Margin="32,82,0,286" x:Name="SideBarPanel" HorizontalAlignment="Left" Width="196">
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" >
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{DynamicResource SideBarPlayIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Play game</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure server options">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{DynamicResource SideBarServerIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Server</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher settings">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{DynamicResource SideBarOptionsIcon}" Width="24px" Height="24px" />
+                            <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Options</TextBlock>
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
-                <StackPanel Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="30,0,0,24">
-                    <TextBlock Margin="0,0,0,3" FontSize="10" Foreground="White">NITROX RELEASE</TextBlock>
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="32,555,0,-60" Height="39" Width="196">
+                    <TextBlock Margin="0,0,0,8" FontSize="10" Foreground="#C03535" Name="AdminMode">(Running as ADMIN)</TextBlock>
+                    <TextBlock Margin="0,0,0,8" FontSize="10" Foreground="#7FFFFFFF">NITROX RELEASE</TextBlock>
                     <TextBlock Margin="0,0,3,0" x:Name="NitroxVersionLabel" Foreground="White" Text="{Binding Version}" />
                 </StackPanel>
+
+                <Border BorderThickness="0 0 1 0" BorderBrush="#14FFFFFF" Margin="0,0,0,-86" HorizontalAlignment="Right" />
+
             </Grid>
-            
-            <Frame Grid.Column="1" Background="Transparent" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" />
+            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Grid.Column="1" Template="{DynamicResource ScrollViewerMainframe}" x:Name="ScrollViewerMainframe">
+                <Frame Grid.Column="1" Background="#FF202225" x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding FrameContent}" Width="766" />
+            </ScrollViewer>
         </Grid>
     </Grid>
 </Window>

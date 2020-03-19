@@ -11,7 +11,6 @@ using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxLauncher
 {
@@ -21,7 +20,7 @@ namespace NitroxLauncher
         private object frameContent;
         private bool isServerEmbedded;
 
-        public string Version => $"{LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
+        public string Version => $"{LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
 
         public object FrameContent
         {
@@ -66,9 +65,13 @@ namespace NitroxLauncher
                                    "frameborder = \"0\" allow = \"autoplay; encrypted-media\" allowfullscreen></iframe>" +
                                    "</body></html>";
                     webBrowser.NavigateToString(string.Format(embed, "https://www.youtube.com/embed/i8ju_10NkGY?autoplay=1"));
-                    SideBarPanel.Visibility = BackgroundImage.Visibility = Visibility.Hidden;
                 };
             };
+
+            if (AppHelper.IsAppRunningInAdmin())
+            {
+                AdminMode.Visibility = Visibility.Visible;
+            }
 
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
@@ -164,6 +167,11 @@ namespace NitroxLauncher
                 return;
             }
             LauncherLogic.Instance.NavigateTo(elem.Tag?.GetType());
+        }
+
+        private void PART_VerticalScrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+
         }
     }
 }

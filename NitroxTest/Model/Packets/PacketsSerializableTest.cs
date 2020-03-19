@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Packets;
 
