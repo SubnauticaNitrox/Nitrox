@@ -1,4 +1,5 @@
 ﻿#pragma warning disable // Disable all warnings for copied file
+// ReSharper disable InconsistentNaming
 
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;

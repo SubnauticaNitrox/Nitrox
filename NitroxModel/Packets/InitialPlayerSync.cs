@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
         public List<ItemData> StorageSlots { get; }
         public NitroxId PlayerGameObjectId { get; }
         public bool FirstTimeConnecting { get; }
-        public InitialPdaData PDAData { get; }
+        public InitialPDAData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
         public Vector3 PlayerSpawnData { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
@@ -30,7 +30,7 @@ namespace NitroxModel.Packets
         public string GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<EquippedItemData> modules, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<EquippedItemData> modules, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPDAData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodId = assignedEscapePodId;

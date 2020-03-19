@@ -7,10 +7,10 @@
                 mc:Ignorable="d" d:DesignWidth="766"
                 Title="Launch Game" Height="980">
     <local:PageBase.Resources>
-        <BitmapImage x:Key="socialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
-        <BitmapImage x:Key="socialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
-        <BitmapImage x:Key="socialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
-        <BitmapImage x:Key="socialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
+        <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
+        <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
+        <BitmapImage x:Key="SocialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
+        <BitmapImage x:Key="SocialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
     </local:PageBase.Resources>
     <Grid Height="980" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
@@ -94,7 +94,7 @@
                                     <RowDefinition Height="8*"/>
                                     <RowDefinition Height="29*"/>
                                 </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource socialDiscord}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                                <Image Source="{DynamicResource SocialDiscord}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
                                 <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="DISCORD"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Looking for group, discussion, general help and support from the Nitrox Team and players." Foreground="#BFFFFFFF"/>
@@ -114,7 +114,7 @@
                                     <RowDefinition Height="8*"/>
                                     <RowDefinition Height="29*"/>
                                 </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource socialTwitter}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                                <Image Source="{DynamicResource SocialTwitter}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
                                 <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="TWITTER"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Follow on Twitter for the latest tweets and updates about patches, releases and more." Foreground="#BFFFFFFF"/>
@@ -134,7 +134,7 @@
                                     <RowDefinition Height="8*"/>
                                     <RowDefinition Height="29*"/>
                                 </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource socialReddit}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                                <Image Source="{DynamicResource SocialReddit}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
                                 <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="REDDIT"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Join the official Subreddit for the Nitrox mod. Updates and discussion." Foreground="#BFFFFFFF"/>
@@ -154,7 +154,7 @@
                                     <RowDefinition Height="8*"/>
                                     <RowDefinition Height="29*"/>
                                 </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource socialWebsite}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                                <Image Source="{DynamicResource SocialWebsite}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
 
                                 <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="WEBSITE"/></TextBlock>
                                 <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14"  Text="Visit the official Nitrox Website. Check for the latest updates, changelogs and guides." Foreground="#BFFFFFFF"/>

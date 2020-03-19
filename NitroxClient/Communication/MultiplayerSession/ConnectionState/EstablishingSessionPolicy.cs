@@ -14,7 +14,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             this.policyRequestCorrelationId = policyRequestCorrelationId;
         }
 
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.EstablishingServerPolicy;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY;
 
         public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {

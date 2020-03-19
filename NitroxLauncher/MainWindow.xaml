@@ -92,7 +92,7 @@
             </Setter>
         </Style>
 
-        <Style x:Key="closeButton" TargetType="{x:Type Button}">
+        <Style x:Key="CloseButton" TargetType="{x:Type Button}">
             <Setter Property="OverridesDefaultStyle" Value="True" />
             <Setter Property="FontWeight" Value="Normal" />
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -118,9 +118,9 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <BitmapImage x:Key="sideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/play.png"/>
-        <BitmapImage x:Key="sideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/server.png"/>
-        <BitmapImage x:Key="sideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/options.png"/>
+        <BitmapImage x:Key="SideBarPlayIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/play.png"/>
+        <BitmapImage x:Key="SideBarServerIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/server.png"/>
+        <BitmapImage x:Key="SideBarOptionsIcon" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/Images/options.png"/>
         <ControlTemplate x:Key="ScrollViewerMainframe" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                 <Grid.ColumnDefinitions>
@@ -168,7 +168,7 @@
             <Button Margin="0,0,29,0" HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Minimze_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="26">
                 <Image Height="16" Width="16" Source="{StaticResource MinimizeImage}" Stretch="None" />
             </Button>
-            <Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="26" Style="{DynamicResource closeButton}">
+            <Button HorizontalAlignment="Right" VerticalAlignment="Stretch" Click="Close_Click" WindowChrome.IsHitTestVisibleInChrome="True" Width="26" Style="{DynamicResource CloseButton}">
                 <Image Source="{StaticResource ExitImage}" Stretch="None" />
             </Button>
         </Grid>
@@ -191,19 +191,19 @@
                 <StackPanel Margin="32,82,0,286" x:Name="SideBarPanel" HorizontalAlignment="Left" Width="196">
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource LaunchGamePage}" ToolTip="Play the game" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource sideBarPlayIcon}" Width="24px" Height="24px" />
+                            <Image Source="{DynamicResource SideBarPlayIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Play game</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource ServerPage}" ToolTip="Configure server options">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource sideBarServerIcon}" Width="24px" Height="24px" />
+                            <Image Source="{DynamicResource SideBarServerIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Server</TextBlock>
                         </StackPanel>
                     </Button>
                     <Button Click="ButtonNavigation_Click" Tag="{StaticResource OptionPage}" ToolTip="Launcher settings">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Image Source="{DynamicResource sideBarOptionsIcon}" Width="24px" Height="24px" />
+                            <Image Source="{DynamicResource SideBarOptionsIcon}" Width="24px" Height="24px" />
                             <TextBlock FontSize="16" Margin="12,0,0,0" VerticalAlignment="Center">Options</TextBlock>
                         </StackPanel>
                     </Button>

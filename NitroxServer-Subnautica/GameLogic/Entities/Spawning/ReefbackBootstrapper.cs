@@ -3,7 +3,6 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.GameLogic.Entities.Spawning;
-using NitroxServer.UnityStubs;
 using static NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers.ReefbackSpawnData;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers

@@ -1,7 +1,5 @@
-﻿using NitroxClient.GameLogic.Helper;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using UnityEngine;
-using System;
 using NitroxClient.MonoBehaviours;
 
 namespace NitroxClient.Unity.Helper

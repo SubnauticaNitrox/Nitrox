@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using UnityEngine;
 
 namespace NitroxModel.Packets
 {

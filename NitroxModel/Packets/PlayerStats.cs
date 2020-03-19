@@ -21,7 +21,7 @@ namespace NitroxModel.Packets
             Health = health;
             Food = food;
             Water = water;
-            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UnreliableSequenced;
+            DeliveryMethod = NitroxDeliveryMethod.DeliveryMethod.UNRELIABLE_SEQUENCED;
             UdpChannel = UdpChannelId.PLAYER_STATS;
         }
 
