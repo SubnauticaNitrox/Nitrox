@@ -69,6 +69,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 using (packetSender.Suppress<PlayerStats>())
                 {
                     Player.main.oxygenMgr.AddOxygen(statsData.Oxygen);
+                    Player.main.liveMixin.health = statsData.Health;
                 }
             }
         }
