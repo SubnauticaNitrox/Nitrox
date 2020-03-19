@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "<name> <msg>", "Sends a private message to a player", new string[] { "m", "tell", "t" })
+        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "<name> <msg>", "Sends a private message to a player", new string[] { "m", "whisper", "w" })
         {
             this.playerManager = playerManager;
         }

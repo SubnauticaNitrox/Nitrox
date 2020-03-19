@@ -18,20 +18,22 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            string pass = args[0];
-            string message;
+            string message = "Can't update permissions";
 
-            if (pass == serverConfig.AdminPassword)
+            if (sender.IsPresent())
             {
-                sender.Get().Permissions = Perms.ADMIN;
-                message = $"Updated permissions to admin for {sender.Get().Name}";
+                if (args[0] == serverConfig.AdminPassword)
+                {
+                    sender.Get().Permissions = Perms.ADMIN;
+                    message = $"Updated permissions to admin for {sender.Get().Name}";
+                }
+                else
+                {
+                    message = "Incorrect Password";
+                }
             }
-            else
-            {
-                message = "Incorrect Password";
-            }
-            Log.Info(message);
-            SendMessageToPlayer(sender, message);
+
+            Notify(sender, message);
         }
 
         public override bool VerifyArgs(string[] args)

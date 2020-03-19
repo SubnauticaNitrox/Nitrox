@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly TimeKeeper timeKeeper;
 
-        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "<day/night>", "Changes map time")
+        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "<day/night>", "Changes the map time")
         {
             this.timeKeeper = timeKeeper;
         }
@@ -33,8 +33,7 @@ namespace NitroxServer.ConsoleCommands
                 default:
                     Notify(sender, "Cannot set time, invalid parameters (day/night)");
                     break;
-            } 
-            
+            }
         }
 
         public override bool VerifyArgs(string[] args)

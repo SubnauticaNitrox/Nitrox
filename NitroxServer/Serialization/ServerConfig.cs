@@ -8,15 +8,15 @@ namespace NitroxServer.ConfigParser
 {
     public class ServerConfig
     {
-        private readonly ServerConfigItem<int>    portSetting = new ServerConfigItem<int>("Port", 11000);
-        private readonly ServerConfigItem<int>    saveIntervalSetting   = new ServerConfigItem<int>("SaveInterval", 60000);
-        private readonly ServerConfigItem<int>    maxConnectionsSetting = new ServerConfigItem<int>("MaxConnections", 100);
-        private readonly ServerConfigItem<bool>   disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", true);
-        private readonly ServerConfigItem<string> saveNameSetting       = new ServerConfigItem<string>("SaveName", "save");
+        private readonly ServerConfigItem<int> portSetting = new ServerConfigItem<int>("Port", 11000);
+        private readonly ServerConfigItem<int> saveIntervalSetting = new ServerConfigItem<int>("SaveInterval", 60000);
+        private readonly ServerConfigItem<int> maxConnectionsSetting = new ServerConfigItem<int>("MaxConnections", 100);
+        private readonly ServerConfigItem<bool> disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", true);
+        private readonly ServerConfigItem<string> saveNameSetting = new ServerConfigItem<string>("SaveName", "save");
         private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
         private readonly ServerConfigItem<string> adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", GenerateRandomString(12, false));
-        private readonly ServerConfigItem<string> gameModeSetting    = new ServerConfigItem<string>("GameMode", "Survival");
-        
+        private readonly ServerConfigItem<string> gameModeSetting = new ServerConfigItem<string>("GameMode", "Survival");
+
         public int ServerPort { get { return portSetting.Value; } }
         public int SaveInterval { get { return saveIntervalSetting.Value; } }
         public int MaxConnections { get { return maxConnectionsSetting.Value; } }
@@ -25,14 +25,14 @@ namespace NitroxServer.ConfigParser
         public string ServerPassword { get { return serverPasswordSetting.Value; } }
         public string AdminPassword { get { return adminPasswordSetting.Value; } }
         public string GameMode { get { return gameModeSetting.Value; } }
-        
+
         // Generate a random string with a given size and case.   
         // If second parameter is true, the return string is lowercase  
         public static string GenerateRandomString(int size, bool lowerCase)
         {
             StringBuilder builder = new StringBuilder();
             Random random = new Random();
-            
+
             char ch;
             for (int i = 0; i < size; i++)
             {
@@ -43,7 +43,7 @@ namespace NitroxServer.ConfigParser
             {
                 return builder.ToString().ToLower();
             }
-            return builder.ToString();  
+            return builder.ToString();
         }
 
         private void RefreshAppSettingsValue(string key, string value)
@@ -85,13 +85,8 @@ namespace NitroxServer.ConfigParser
             saveIntervalSetting.Value = intervalInMillis;
             RefreshAppSettingsValue(saveIntervalSetting.Name, intervalInMillis.ToString());
         }
-
-        public void ChangeServerPort(int pw)
-        {
-
-        }
     }
-    
+
     internal class ServerConfigItem<T>
     {
         public T Value;

@@ -25,7 +25,7 @@ namespace NitroxServer.ConsoleCommands
             if(receivingPlayer.IsPresent())
             {
                 receivingPlayer.Get().Permissions = Perms.ADMIN;
-                message = $"Updated '{playerName}'\'s permissions to admin";
+                message = $"Updated {playerName}\'s permissions to admin";
             }
             else
             {
@@ -33,7 +33,6 @@ namespace NitroxServer.ConsoleCommands
             }
             
             Notify(sender, message);
-            SendMessageToPlayer(receivingPlayer, "You have been promoted to ADMIN");
         }
 
         public override bool VerifyArgs(string[] args)

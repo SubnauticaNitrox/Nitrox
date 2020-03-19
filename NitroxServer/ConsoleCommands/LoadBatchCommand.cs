@@ -3,24 +3,28 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using System.Collections.Generic;
 
 namespace NitroxServer.ConsoleCommands
 {
     /// <summary>
     /// Mainly used for testing but can be used to pregen the world
     /// </summary>
-    class LoadBatchCommand : Command
+    internal class LoadBatchCommand : Command
     {
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Loads batch x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "<x> <y> <z>", "Pregens entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
         }
 
         public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            batchEntitySpawner.LoadUnspawnedEntities(new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2])));
+            Int3 batchId = new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+            List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
+
+            Notify(sender, $"Loaded {entities.Count} entities from batch {batchId}");
         }
 
         public override bool VerifyArgs(string[] args)

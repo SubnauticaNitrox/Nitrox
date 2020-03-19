@@ -22,14 +22,15 @@ namespace NitroxServer.ConsoleCommands
             try
             {
                 string playerName = sender.IsPresent() ? sender.Get().Name : "SERVER";
-                serverConfig.ChangeServerPassword(args.Length == 0 ? string.Empty : args[0]);
+                string password = args.Length == 0 ? "" : args[0];
+                serverConfig.ChangeServerPassword(password);
 
-                Log.Info($"Server password changed to \"{args[0]}\" by {playerName}");
+                Log.Info($"Server password changed to \"{password}\" by {playerName}");
                 SendMessageToPlayer(sender, "Server password changed");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to change server password: {args[0]}", ex);
+                Log.Error($"Error attempting to change server password", ex);
             }
         }
 

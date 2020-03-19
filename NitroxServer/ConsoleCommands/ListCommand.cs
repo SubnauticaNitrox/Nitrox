@@ -20,14 +20,13 @@ namespace NitroxServer.ConsoleCommands
         {
             List<Player> players = playerManager.GetConnectedPlayers();
 
-            string playerList = "List Command Result: " + string.Join(", ", players);
+            string playerList = "List of players : " + string.Join(", ", players);
 
             if(players.Count == 0)
             {
-                playerList += "No Players Online";
+                playerList += "No players online";
             }
 
-            Log.Info(playerList);
             SendMessageToPlayer(sender, playerList);
         }
 

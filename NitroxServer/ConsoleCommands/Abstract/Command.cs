@@ -3,6 +3,7 @@ using NitroxModel.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.Logger;
+using System.Text;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -56,12 +57,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public string ToHelpText()
         {
-            string cmd = Name;
+            StringBuilder cmd = new StringBuilder(Name);
+
             if (Alias.Length > 0)
             {
-                cmd += "/" + string.Join("/", Alias);
+                cmd.AppendFormat("/{0}", string.Join("/", Alias));
             }
-            cmd += "  " + ArgsDescription;
+            cmd.AppendFormat(" {0}", ArgsDescription);
 
             return $"{cmd, -40}  -  {Description}";
         }
