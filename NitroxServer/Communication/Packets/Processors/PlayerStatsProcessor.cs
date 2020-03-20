@@ -15,7 +15,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerStats packet, Player player)
         {
-            player.Stats = new NitroxModel.DataStructures.GameLogic.PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water);
+            player.Stats = new NitroxModel.DataStructures.GameLogic.PlayerStatsData(packet.Oxygen, packet.MaxOxygen, packet.Health, packet.Food, packet.Water, packet.InfectionAmount);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

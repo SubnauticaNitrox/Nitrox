@@ -10,28 +10,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
-using System.Windows.Threading;
 using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
-using NitroxPatcher;
 
 namespace NitroxLauncher
 {
     public class LauncherLogic : IDisposable, INotifyPropertyChanged
     {
-        public const string ReleasePhase = "ALPHA";
-        private Process gameProcess;
-        private NitroxEntryPatch nitroxEntryPatch;
-        private Process serverProcess;
-        private string subnauticaPath;
-        private bool isEmbedded;
         public static string Version => Assembly.GetAssembly(typeof(Extensions)).GetName().Version.ToString();
         public static LauncherLogic Instance { get; private set; }
+
+        public const string RELEASE_PHASE = "ALPHA";
+        private NitroxEntryPatch nitroxEntryPatch;
+        private string subnauticaPath;
+        private Process serverProcess;
+        private Process gameProcess;
+        private bool isEmbedded;
 
         public string SubnauticaPath
         {
@@ -102,6 +100,12 @@ namespace NitroxLauncher
                         nitroxEntryPatch.Remove();
                     }
                     nitroxEntryPatch = new NitroxEntryPatch(path);
+
+                    if (Path.GetFullPath(path).StartsWith(AppHelper.ProgramFileDirectory, StringComparison.OrdinalIgnoreCase))
+                    {
+                        AppHelper.RestartAsAdmin();
+                    }
+                    
                     return path;
                 },
                 CancellationToken.None,

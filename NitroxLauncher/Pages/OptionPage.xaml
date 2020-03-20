@@ -34,7 +34,7 @@
                         <TextBox Width="427" Height="42" FontSize="16" MaxLines="1"
                              Foreground="White" TextAlignment="Left" Padding="9" Background="{x:Null}"
                              BorderBrush="{x:Null}" Text="{Binding PathToSubnautica, Mode=OneWay}" IsReadOnly="True"
-                             SelectionOpacity="-1" ToolTip="Subnautica install location" />
+                             ToolTip="Subnautica install location" SelectionBrush="#72FFFFFF" CaretBrush="#3FFFFFFF" />
                     </Border>
                     <Button Style="{StaticResource LargeButton}" Background="#19FFFFFF" Width="147" Height="42"
                         HorizontalAlignment="Left" BorderBrush="#66FFFFFF" Click="ChangeOptions_Click"

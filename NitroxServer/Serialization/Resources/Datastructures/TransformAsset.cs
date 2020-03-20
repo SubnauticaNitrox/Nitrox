@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization.Resources.Datastructures
 {

@@ -238,7 +238,7 @@
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\RotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UweWorldEntityFactory.cs" />
-    <Compile Include="DataStructures\GameLogic\InitialPdaData.cs" />
+    <Compile Include="DataStructures\GameLogic\InitialPDAData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxMatrix4x4.cs" />

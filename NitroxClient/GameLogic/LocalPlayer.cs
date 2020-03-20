@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -36,9 +34,9 @@ namespace NitroxClient.GameLogic
             BodyPrototype = CreateBodyPrototype();
         }
 
-        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water)
+        public void BroadcastStats(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)
         {
-            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water);
+            PlayerStats playerStats = new PlayerStats(multiplayerSession.Reservation.PlayerId, oxygen, maxOxygen, health, food, water, infectionAmount);
             packetSender.Send(playerStats);
         }
 

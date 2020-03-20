@@ -1,10 +1,7 @@
 ﻿using NitroxModel.Core;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.ConsoleCommands.Processor;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Players;
 
 namespace NitroxServer.Communication.Packets.Processors
 {

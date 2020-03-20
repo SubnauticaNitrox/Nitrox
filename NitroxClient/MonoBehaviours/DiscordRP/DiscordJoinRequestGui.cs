@@ -78,6 +78,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
         private IEnumerator LoadAvatar(string id, string avatarID)
         {
             UnityWebRequest avatarURL = UnityWebRequestTexture.GetTexture($"https://cdn.discordapp.com/avatars/{id}/{avatarID}.png");
+
             yield return avatarURL.SendWebRequest();
 
             avatar = ((DownloadHandlerTexture)avatarURL.downloadHandler).texture;
