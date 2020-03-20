@@ -49,7 +49,7 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Notify($"Error attempting to kick: {args[0]}", ex);
+                Log.Error($"Error attempting to kick: {args[0]}", ex);
             }
         }
 
