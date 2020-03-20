@@ -45,11 +45,11 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (InvalidOperationException)
             {
-                Log.Error($"Error attempting to kick: {args[0]}, Player is not found");
+                Notify(sender, $"Error attempting to kick: {args[0]}, Player is not found");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to kick: {args[0]}", ex);
+                Notify($"Error attempting to kick: {args[0]}", ex);
             }
         }
 
