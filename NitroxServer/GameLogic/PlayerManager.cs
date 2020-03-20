@@ -116,7 +116,7 @@ namespace NitroxServer.GameLogic
                 {
                     if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out player))
                     {
-                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, new PlayerStatsData(), new List<EquippedItemData>(), new List<EquippedItemData>());
+                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, null, new List<EquippedItemData>(), new List<EquippedItemData>());
                         allPlayersByName[playerContext.PlayerName] = player;
                     }
                 }
