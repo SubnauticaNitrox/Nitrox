@@ -39,14 +39,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         /// <param name="chatLogEntry"></param>
         public void WriteEntry(ChatLogEntry chatLogEntry)
         {
-            if (!isChatAvailable)
-            {
-                return;
-            }
-
+            // Always store chat messages received from other players even if this player can't chat yet.
             chatLogEntry.MessageText = SanitizeMessage(chatLogEntry.MessageText);
             AddChatMessage(chatLogEntry);
-            BuildChatText();
+            
+            if (isChatAvailable)
+            {
+                BuildChatText();
+            }
         }
 
         public void Show()
@@ -163,6 +163,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             mainChatLog = GameObject.Find("ChatLogScrollView");
             SetupChatMessagesComponent();
             assetsLoaded = true;
+
+            // Init build log text if other players have send messages before and this player joins after
+            if (entries.Count > 0)
+            {
+                BuildChatText();
+            }
         }
     }
 }

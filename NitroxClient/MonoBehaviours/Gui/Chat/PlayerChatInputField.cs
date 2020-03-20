@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -108,7 +109,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (chatMessage[0] == SERVER_COMMAND_PREFIX)
             {
-                session.Send(new ServerCommand(chatMessage.Remove(0, 1).Split(' '))); // Remove "/" and split message
+                // Remove "/" and split on arguments. TODO: Send as string and let server parse the command
+                session.Send(new ServerCommand(chatMessage.Remove(0, 1).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
             }
             else
             {
