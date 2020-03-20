@@ -7,10 +7,9 @@ using NitroxClient.GameLogic.ChatUI;
 using NitroxModel;
 using NitroxModel.Logger;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
@@ -22,15 +21,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int LINE_CHAR_LIMIT = 255;
         private const int MESSAGE_LIMIT = 255;
         private const float CHAT_VISIBILITY_TIME_LENGTH = 7f;
-
+        private AssetBundleCreateRequest asset;
+        private bool assetsLoaded;
+        private GameObject chatScrollRect;
         private Text chatText;
         private List<ChatLogEntry> entries;
-        private Coroutine timer;
-        private Coroutine chatScene;
-        private GameObject chatScrollRect;
         private GameObject mainChatLog;
-        AssetBundleCreateRequest asset;
- 
+        private float timeLeftUntilAutoClose;
+
+        public PlayerChat Manager { get; set; }
+        private bool isChatAvailable => Manager != null && assetsLoaded && mainChatLog && chatText;
+
         /// <summary>
         ///     Takes a new chat message and displays that message along with MESSAGE_LIMIT-1 previous entries for
         ///     CHAT_VISIBILITY_TIME_LENGTH seconds
@@ -38,31 +39,29 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         /// <param name="chatLogEntry"></param>
         public void WriteEntry(ChatLogEntry chatLogEntry)
         {
-            if (timer != null)
+            if (!isChatAvailable)
             {
-                // cancel hiding chat entries because a new one was recently posted
-                StopCoroutine(timer);
+                return;
             }
-            
+
             chatLogEntry.MessageText = SanitizeMessage(chatLogEntry.MessageText);
             AddChatMessage(chatLogEntry);
             BuildChatText();
-            timer = StartCoroutine(DeactivateChat());
-
         }
 
         public void Show()
         {
-            if(mainChatLog != null)
+            timeLeftUntilAutoClose = CHAT_VISIBILITY_TIME_LENGTH;
+            if (isChatAvailable)
             {
                 mainChatLog.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(chatScrollRect);
-            }  
+            }
         }
 
         public void Hide()
         {
-            if (mainChatLog != null)
+            if (isChatAvailable)
             {
                 mainChatLog.SetActive(false);
             }
@@ -70,12 +69,32 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         protected void Awake()
         {
-            chatScene = StartCoroutine(LoadChatLogAsset());
             entries = new List<ChatLogEntry>();
+            StartCoroutine(LoadChatLogAsset());
+        }
+
+        protected void LateUpdate()
+        {
+            if (!isChatAvailable || Manager.inputField.ChatEnabled)
+            {
+                timeLeftUntilAutoClose = CHAT_VISIBILITY_TIME_LENGTH;
+                return;
+            }
+
+            timeLeftUntilAutoClose -= Time.unscaledDeltaTime;
+            if (timeLeftUntilAutoClose <= 0)
+            {
+                Hide();
+            }
         }
 
         private void SetupChatMessagesComponent()
         {
+            if (isChatAvailable)
+            {
+                return;
+            }
+
             chatText = new GameObject("ChatText").AddComponent<Text>();
             chatText.transform.SetParent(chatScrollRect.transform);
             chatText.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
@@ -86,7 +105,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatText.fontSize = 17;
             chatText.fontStyle = FontStyle.Bold;
             chatText.lineSpacing = 0.8f;
-
         }
 
         private void AddChatMessage(ChatLogEntry chatLogEntry)
@@ -111,7 +129,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private string SanitizeMessage(string message)
         {
             message = message.Trim();
-
             if (message.Length < LINE_CHAR_LIMIT)
             {
                 return message;
@@ -120,18 +137,13 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             return message.Substring(0, LINE_CHAR_LIMIT);
         }
 
-        private IEnumerator DeactivateChat()
-        {
-            yield return new WaitForSeconds(CHAT_VISIBILITY_TIME_LENGTH);
-            if (mainChatLog != null)
-            {
-                mainChatLog.SetActive(false);
-            }
-            timer = null;
-        }
-
         private IEnumerator LoadChatLogAsset()
         {
+            if (isChatAvailable)
+            {
+                yield break;
+            }
+
             asset = AssetBundle.LoadFromFileAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles/chatlog"));
             if (asset == null)
             {
@@ -150,6 +162,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             chatScrollRect = GameObject.Find("ChatLogContent");
             mainChatLog = GameObject.Find("ChatLogScrollView");
             SetupChatMessagesComponent();
+            assetsLoaded = true;
         }
     }
 }
