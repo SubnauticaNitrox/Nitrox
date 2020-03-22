@@ -262,7 +262,7 @@ namespace NitroxLauncher
 
             if (PlatformDetection.IsEpic(subnauticaPath))
             {
-                startInfo.Arguments = "-EpicPortal";
+                startInfo.Arguments = "-EpicPortal -vrmode none";
             }
             else if (PlatformDetection.IsSteam(subnauticaPath))
             {
