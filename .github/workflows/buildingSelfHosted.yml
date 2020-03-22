@@ -4,14 +4,10 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: jannify-self-hosted
 
     steps:
     - uses: actions/checkout@v1
-    - name: Setup dockerize
-      uses: zcong1993/setup-dockerize@v1.2.0
-    - name: Setup steamCMD
-      run: docker run -it --name=steamcmd cm2network/steamcmd bash
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
