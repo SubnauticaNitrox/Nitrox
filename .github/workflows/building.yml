@@ -12,7 +12,7 @@ jobs:
       env:
         password: ${{ secrets.steam_pw }}
       run: |
-          dotnet ./.github/depotDownloader/depotDownloader.dll -app 264710 -depot 264712 -username Jannify -password $password -filelist file.txt -dir C:\PROGRA~2\Steam\steamapps\common\Subnautica
+          dotnet ./.github/depotDownloader/depotDownloader.dll -app 264710 -depot 264712 -username Jannify -password $password -filelist ./.github/depotDownloader/file.txt -dir C:\PROGRA~2\Steam\steamapps\common\Subnautica
     - name: Restore packages
       run: nuget restore Nitrox.sln
     - name: Setup MSBuild.exe

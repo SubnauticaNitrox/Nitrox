@@ -1,7 +1,5 @@
 name: Building Nitrox Self-Hosted
 
-on: [push, pull_request]
-
 jobs:
   build:
     runs-on: self-hosted
