@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using AOT;
 
+// ReSharper disable ClassNeverInstantiated.Global
 #pragma warning disable IDE0008 // Use explicit type
 #pragma warning disable IDE1006 // Naming Styles
 namespace NitroxClient.MonoBehaviours.DiscordRP
