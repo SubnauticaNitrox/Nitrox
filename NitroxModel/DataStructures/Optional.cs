@@ -73,7 +73,8 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            return "Optional Contains: " + Value.ToString();
+            string str = Value != null ? Value.ToString() : "Nothing";
+            return $"Optional Contains: {str}";
         }
 
         private Optional(SerializationInfo info, StreamingContext context)
