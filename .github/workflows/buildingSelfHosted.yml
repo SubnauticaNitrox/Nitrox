@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: jannify-self-hosted
+    runs-on: self-hosted
 
     steps:
     - uses: actions/checkout@v1
