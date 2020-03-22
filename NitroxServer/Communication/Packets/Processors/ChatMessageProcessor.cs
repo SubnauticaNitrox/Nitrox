@@ -16,8 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ChatMessage packet, Player player)
         {
-            Log.Info(string.Format("{0} said: {1}", player.Name, packet.Text));
-
+            Log.Info(string.Format("<{0}>: {1}", player.Name, packet.Text));
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

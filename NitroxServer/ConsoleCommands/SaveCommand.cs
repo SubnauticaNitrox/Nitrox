@@ -6,11 +6,11 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class SaveCommand : Command
     {
-        public SaveCommand() : base("save", Perms.ADMIN, "", "save server session")
+        public SaveCommand() : base("save", Perms.ADMIN, "", "Saves the map")
         {
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             Server.Instance.Save();
         }
