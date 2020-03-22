@@ -1,6 +1,5 @@
 name: 'Delete old artifacts'
 on:
-  push:
   schedule:
     - cron: '* 0 * * *' # every day
 
