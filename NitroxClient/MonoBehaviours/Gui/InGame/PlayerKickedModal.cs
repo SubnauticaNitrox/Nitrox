@@ -23,28 +23,6 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
             StartCoroutine(Show_Impl());
         }
 
-        private static void OnLanguageChanged()
-        {
-            if (!playerKickedSubWindow)
-            {
-                return;
-            }
-
-            GameObject header = playerKickedSubWindow.FindChild("Header"); //Message Object
-            Text messageText = header.GetComponent<Text>();
-
-            // TODO: Implement a NitroxLang wrapper on Subnautica Language.
-            switch (Language.main.GetCurrentLanguage())
-            {
-                case "Spanish":
-                    messageText.text = "Has sido expulsado del servidor";
-                    break;
-                default:
-                    messageText.text = "You have been kicked from the server";
-                    break;
-            }
-        }
-
         private static void InitSubWindow()
         {
             if (!IngameMenu.main)
@@ -66,6 +44,9 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
                 GameObject header = playerKickedSubWindow.FindChild("Header"); //Message Object
 
+                Text messageText = header.GetComponent<Text>();
+                messageText.text = "You have been kicked from the server";
+
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
 
@@ -74,9 +55,6 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
 
                 Text messageTextbutton = buttonYes.GetComponentInChildren<Text>(); //Get Button Text Component
                 messageTextbutton.text = "OK";
-
-                // Init to current language.
-                OnLanguageChanged();
             }
         }
 
@@ -88,16 +66,6 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
             }
 
             Instance = this;
-        }
-
-        private void OnEnable()
-        {
-            Language.main.OnLanguageChanged += OnLanguageChanged;
-        }
-
-        private void OnDisable()
-        {
-            Language.main.OnLanguageChanged -= OnLanguageChanged;
         }
 
         private void OnDestroy()
