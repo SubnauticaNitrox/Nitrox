@@ -8,11 +8,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-        - name: Download Subnautica
+    - name: Download Subnautica
       env:
         password: ${{ secrets.steam_pw }}
         folder: ${{ github.workspace }}
-        run: |
+      run: |
           cd $folder\.github\depotDownloader
           dotnet depotDownloader.dll -app 264710 -depot 264712 -username Jannify -password $password -filelist file.txt -dir C:\PROGRA~2\Steam\steamapps\common\Subnautica
     - name: Restore packages
