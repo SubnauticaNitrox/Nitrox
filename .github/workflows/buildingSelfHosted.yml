@@ -1,4 +1,4 @@
-name: Building Nitrox
+name: Building Nitrox Self-Hosted
 
 on: [push, pull_request]
 
