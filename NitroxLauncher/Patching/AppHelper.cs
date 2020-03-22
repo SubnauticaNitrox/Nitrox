@@ -23,7 +23,7 @@ namespace NitroxLauncher
             {
                 MessageBoxResult result = MessageBox.Show(
                     "Nitrox launcher should be executed with administrator permissions in order to properly patch Subnautica while in Program Files directory, do you want to restart ?",
-                    "Program Files Path Detected",
+                    "Nitrox needs permissions",
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Question,
                     MessageBoxResult.Yes,
@@ -43,14 +43,15 @@ namespace NitroxLauncher
 
                         // Start the application as new process
                         Process.Start(processStartInfo);
-
                         Environment.Exit(1);
-                    } catch (Exception)
+                    }
+                    catch (Exception)
                     {
                         Log.Error("Error while trying to instance an admin processus of the launcher, aborting");
                     }
                 }
 
+                //We might exit the application if the user says no ?
             }
             else
             {
