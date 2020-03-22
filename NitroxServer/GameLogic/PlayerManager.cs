@@ -22,10 +22,13 @@ namespace NitroxServer.GameLogic
         private readonly Dictionary<string, Player> allPlayersByName;
         private ushort currentPlayerId = 0;
 
+        private readonly PlayerStatsData defaultPlayerStats = new PlayerStatsData(45, 45, 80, 50.5f, 90.5f, 0);
+
         public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
             allPlayersByName = players.ToDictionary(x => x.Name);            
             currentPlayerId = (players.Count == 0) ? (ushort) 0 : players.Max(x => x.Id);
+            //defaultPlayerStats = serverConfig.DefaultPlayerStats; // TODO
 
             this.serverConfig = serverConfig;
         }
@@ -116,7 +119,7 @@ namespace NitroxServer.GameLogic
                 {
                     if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out player))
                     {
-                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, new PlayerStatsData(), new List<EquippedItemData>(), new List<EquippedItemData>());
+                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, defaultPlayerStats, new List<EquippedItemData>(), new List<EquippedItemData>());
                         allPlayersByName[playerContext.PlayerName] = player;
                     }
                 }
