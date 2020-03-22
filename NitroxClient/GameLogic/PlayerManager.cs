@@ -26,7 +26,6 @@ namespace NitroxClient.GameLogic
         public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
-
             if (playersById.TryGetValue(playerId, out player))
             {
                 return Optional<RemotePlayer>.Of(player);
@@ -46,6 +45,11 @@ namespace NitroxClient.GameLogic
             }
 
             return Optional<RemotePlayer>.Empty();
+        }
+
+        internal IEnumerable<RemotePlayer> GetAll()
+        {
+            return playersById.Values;
         }
 
         public RemotePlayer Create(PlayerContext playerContext, List<TechType> equippedTechTypes)
