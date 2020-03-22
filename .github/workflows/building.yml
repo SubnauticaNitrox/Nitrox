@@ -1,4 +1,4 @@
-name: Building Nitrox GitHub
+name: Building Nitrox
 
 on: [push, pull_request]
 
@@ -7,7 +7,8 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - name: Checking out repository
+      uses: actions/checkout@v1
     - name: Download Subnautica files
       run: |
           dotnet ./.github/depotDownloader/depotDownloader.dll -app 264710 -depot 264712 -username Jannify -password ${{ secrets.steamPW }} -filelist ./.github/depotDownloader/file.txt -dir C:\PROGRA~2\Steam\steamapps\common\Subnautica
