@@ -71,6 +71,11 @@ namespace NitroxModel.DataStructures.Util
             return new Optional<T>(value);
         }
 
+        public override string ToString()
+        {
+            return "Optional Contains: " + Value.ToString();
+        }
+
         private Optional(SerializationInfo info, StreamingContext context)
         {
             Value = (T)info.GetValue("value", typeof(T));
