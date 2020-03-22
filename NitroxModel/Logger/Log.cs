@@ -8,7 +8,6 @@ using log4net.Filter;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using NitroxModel.Discovery;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Logger
 {

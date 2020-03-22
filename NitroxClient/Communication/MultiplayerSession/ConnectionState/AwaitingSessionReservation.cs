@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
             this.reservationCorrelationId = reservationCorrelationId;
         }
 
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AwaitingSessionReservation;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.AWAITING_SESSION_RESERVATION;
 
         public override void NegotiateReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
@@ -33,7 +33,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 
         private static void HandleReservation(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {
-            IMultiplayerSessionConnectionState nextState = sessionConnectionContext.Reservation.ReservationState == MultiplayerSessionReservationState.Reserved
+            IMultiplayerSessionConnectionState nextState = sessionConnectionContext.Reservation.ReservationState == MultiplayerSessionReservationState.RESERVED
                 ? new SessionReserved()
                 : new SessionReservationRejected() as IMultiplayerSessionConnectionState;
 

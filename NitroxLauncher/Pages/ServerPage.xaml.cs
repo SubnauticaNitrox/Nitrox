@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Navigation;
 using NitroxLauncher.Properties;
 
 namespace NitroxLauncher.Pages
 {
     public partial class ServerPage : PageBase
     {
-        public string StartButtonSubtitle => $"NITROX {LauncherLogic.ReleasePhase} {LauncherLogic.Version}";
+        public string StartButtonSubtitle => $"NITROX {LauncherLogic.RELEASE_PHASE} {LauncherLogic.Version}";
 
         public ServerPage()
         {
@@ -14,6 +15,12 @@ namespace NitroxLauncher.Pages
 
             RBIsDocked.IsChecked = !Settings.Default.IsExternalServer;
             RBIsExternal.IsChecked = Settings.Default.IsExternalServer;
+        }
+
+        private void OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(e.Uri.AbsoluteUri);
+            e.Handled = true;
         }
 
         private void StartServer_Click(object sender, RoutedEventArgs e)

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.Logger;
+﻿using NitroxModel.Logger;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxModel.Packets;
 using NitroxServer.GameLogic;
@@ -20,8 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(ChatMessage packet, Player player)
         {
-            Log.Info(string.Format("{0} said: {1}", player.Name, packet.Text));
-
+            Log.Info(string.Format("<{0}>: {1}", player.Name, packet.Text));
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

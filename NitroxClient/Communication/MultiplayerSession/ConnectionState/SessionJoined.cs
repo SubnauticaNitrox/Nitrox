@@ -5,7 +5,7 @@ namespace NitroxClient.Communication.MultiplayerSession.ConnectionState
 {
     public class SessionJoined : ConnectionNegotiatedState
     {
-        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.SessionJoined;
+        public override MultiplayerSessionConnectionStage CurrentStage => MultiplayerSessionConnectionStage.SESSION_JOINED;
 
         public override void JoinSession(IMultiplayerSessionConnectionContext sessionConnectionContext)
         {

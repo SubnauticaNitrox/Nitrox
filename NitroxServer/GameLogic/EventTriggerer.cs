@@ -23,7 +23,7 @@ namespace NitroxServer.GameLogic
             CreateTimer(auroraTimer * 0.5d, StoryEventType.PDA, "Story_AuroraWarning2");
             CreateTimer(auroraTimer * 0.8d, StoryEventType.PDA, "Story_AuroraWarning3");
             CreateTimer(auroraTimer, StoryEventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(auroraTimer + 24000, StoryEventType.Extra, "Story_AuroraExplosion");
+            CreateTimer(auroraTimer + 24000, StoryEventType.EXTRA, "Story_AuroraExplosion");
         }
 
         public Timer CreateTimer(double time, StoryEventType eventType, string key)

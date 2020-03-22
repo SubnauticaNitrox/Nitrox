@@ -87,7 +87,7 @@ namespace NitroxClient.MonoBehaviours
 
         public void Update()
         {
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 ProcessPackets();
             }
@@ -145,7 +145,7 @@ namespace NitroxClient.MonoBehaviours
         {
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
 
-            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.Disconnected)
+            if (multiplayerSession.CurrentState.CurrentStage != MultiplayerSessionConnectionStage.DISCONNECTED)
             {
                 multiplayerSession.Disconnect();
             }
@@ -170,7 +170,7 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
             
             LoadingScreenVersionText.DisableWarningText();
-            DiscordController.Main.InitDRPDiving(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
         }
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)

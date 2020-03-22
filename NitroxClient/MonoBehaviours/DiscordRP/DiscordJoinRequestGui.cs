@@ -9,96 +9,88 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 {
     public class DiscordJoinRequestGui : MonoBehaviour
     {
-        public DiscordController DiscordRp;
         public DiscordRpc.DiscordUser Request;
 
-        Rect discordWindowRect = new Rect(Screen.width - 260, 10, 250, 125);
-        Texture2D avatar;
-
-        public void Awake()
-        {
-            DontDestroyOnLoad(gameObject);
-        }
+        private const int EXPIRE_TIME = 30;
+        private Rect windowRect = new Rect(Screen.width - 260, 10, 250, 125);
+        private Texture2D avatar;
+        private GUISkin guiSkin;
 
         public void Start()
         {
-            DiscordRp = gameObject.GetComponent<DiscordController>();
+            SetupGUISkin();
             StartCoroutine(LoadAvatar(Request.userId, Request.avatar));
             StartCoroutine(OnRequestExpired());
         }
 
         public void OnGUI()
         {
-            discordWindowRect = GUILayout.Window(0, discordWindowRect, DoDiscordWindow, "Server join request from Discord");
+            windowRect = GUILayout.Window(0, windowRect, DrawDiscordRequestWindow, "Server join request from Discord");
         }
 
-        private GUISkin SetGUIStyle()
+        private void SetupGUISkin()
         {
-            GUISkin skin = GUI.skin;
-            skin.label.fontSize = 14;
-            skin.label.alignment = TextAnchor.MiddleLeft;
-            skin.label.stretchHeight = true;
-            skin.label.fixedWidth = 100;
-            skin.label.fixedHeight = 70;
-            skin.label.margin = new RectOffset(7, 7, 2, 2);
-            skin.label.richText = true;
-
-            skin.button.fontSize = 14;
-            return skin;
+            guiSkin = GUI.skin;
+            guiSkin.label.fontSize = 14;
+            guiSkin.label.alignment = TextAnchor.MiddleLeft;
+            guiSkin.label.stretchHeight = true;
+            guiSkin.label.fixedWidth = 100;
+            guiSkin.label.fixedHeight = 70;
+            guiSkin.label.margin = new RectOffset(7, 7, 2, 2);
+            guiSkin.label.richText = true;
+            guiSkin.button.fontSize = 14;
         }
 
-        private void DoDiscordWindow(int windowId)
+        private void DrawDiscordRequestWindow(int windowID)
         {
-            GUISkinUtils.RenderWithSkin(SetGUIStyle(), () =>
+            GUISkinUtils.RenderWithSkin(guiSkin, () =>
             {
-                using (GUILayout.VerticalScope v = new GUILayout.VerticalScope("Box"))
+                using (new GUILayout.VerticalScope("Box"))
                 {
-                    using (GUILayout.HorizontalScope h = new GUILayout.HorizontalScope())
+                    using (new GUILayout.HorizontalScope())
                     {
                         GUILayout.Label(avatar);
                         GUILayout.Label("<b>" + Request.username + "</b> wants to join your server.");
                     }
-                    using (GUILayout.HorizontalScope b = new GUILayout.HorizontalScope())
+
+                    using (new GUILayout.HorizontalScope())
                     {
                         if (GUILayout.Button("Accept"))
                         {
-                            CloseWindow(1);
+                            CloseWindow(DiscordRpc.Reply.YES);
                         }
 
                         if (GUILayout.Button("Deny"))
                         {
-                            CloseWindow(0);
+                            CloseWindow(DiscordRpc.Reply.NO);
                         }
                     }
                 }
             });
         }
 
-        private void CloseWindow(int respond)
+        private void CloseWindow(DiscordRpc.Reply reply)
         {
-            DiscordRp.RespondLastJoinRequest(respond);
-            DiscordRp.ShowingWindow = false;
+            DiscordRPController.Main.RespondJoinRequest(Request.userId, reply);
             Destroy(this);
         }
 
-        private IEnumerator LoadAvatar(string id, string avatar_id)
+        private IEnumerator LoadAvatar(string id, string avatarID)
         {
-            UnityWebRequest avatarURL = UnityWebRequestTexture.GetTexture("https://cdn.discordapp.com/avatars/" + id + "/" + avatar_id + ".png");
+            UnityWebRequest avatarURL = UnityWebRequestTexture.GetTexture($"https://cdn.discordapp.com/avatars/{id}/{avatarID}.png");
+
             yield return avatarURL.SendWebRequest();
 
-            Texture2D avatarTexture = ((DownloadHandlerTexture)avatarURL.downloadHandler).texture;
+            avatar = ((DownloadHandlerTexture)avatarURL.downloadHandler).texture;
 
-            if (avatarTexture != null && avatarTexture.height >= 128)
-            {
-                avatar = avatarTexture;
-            }
-            else
+            if (avatar == null || avatar.height < 128)
             {
                 UnityWebRequest standardAvatarURL = UnityWebRequestTexture.GetTexture("https://discordapp.com/assets/6debd47ed13483642cf09e832ed0bc1b.png");
                 yield return standardAvatarURL.SendWebRequest();
 
                 avatar = ((DownloadHandlerTexture)standardAvatarURL.downloadHandler).texture;
             }
+
             TextureScaler.Scale(avatar, 64, 64);
 
             yield return null;
@@ -106,8 +98,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private IEnumerator OnRequestExpired()
         {
-            yield return new WaitForSeconds(30);
-            CloseWindow(2);
+            yield return new WaitForSeconds(EXPIRE_TIME);
+            CloseWindow(DiscordRpc.Reply.IGNORE);
         }
     }
 }

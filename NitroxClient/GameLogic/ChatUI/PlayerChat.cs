@@ -1,36 +1,41 @@
-﻿using NitroxClient.MonoBehaviours.Gui.Chat;
+﻿using System;
+using NitroxClient.MonoBehaviours.Gui.Chat;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.ChatUI
 {
-    public class PlayerChat
+    internal class PlayerChat
     {
+        private static PlayerChat instance;
+
         /// <summary>
         ///     The Unity object that holds a record of what was said in-game.
         /// </summary>
-        private static PlayerChatLog chatLog;
+        public readonly PlayerChatLog chatLog;
 
         /// <summary>
         ///     A text box where the player can enter something to add to the chat log.
         /// </summary>
-        private static PlayerChatEntry chatEntry;
+        public readonly PlayerChatInputField inputField;
 
         public PlayerChat()
         {
-            if (chatLog == null)
+            if (instance != null)
             {
-                chatLog = new GameObject().AddComponent<PlayerChatLog>();
+                throw new Exception($"There must only be one {nameof(PlayerChat)} instance.");
             }
+            instance = this;
 
-            if (chatEntry == null)
-            {
-                chatEntry = new GameObject().AddComponent<PlayerChatEntry>();
-            }
+            chatLog = new GameObject().AddComponent<PlayerChatLog>();
+            chatLog.Manager = this;
+            inputField = new GameObject().AddComponent<PlayerChatInputField>();
+            inputField.Manager = this;
         }
 
-        public void WriteChatLogEntry(ChatLogEntry chatLogEntry)
+        public void AddMessage(string playerName, string message, Color color)
         {
-            chatLog.WriteEntry(chatLogEntry);
+            ChatLogEntry entry = new ChatLogEntry(playerName, message, color);
+            chatLog.WriteEntry(entry);
         }
 
         public void ShowLog()
@@ -45,7 +50,8 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void ShowChat()
         {
-            chatEntry.Show(this);
+            ShowLog();
+            inputField.ChatEnabled = true;
         }
     }
 }

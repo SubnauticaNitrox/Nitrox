@@ -1,11 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
-using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
-using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization

@@ -2,6 +2,8 @@
 using NitroxModel.Helper;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel.Logger;
+using System.Text;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -44,7 +46,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Alias = alias ?? new string[0];
         }
 
-        public abstract void RunCommand(string[] args, Optional<Player> player);
+        public abstract void RunCommand(string[] args, Optional<Player> sender);
 
         public abstract bool VerifyArgs(string[] args);
 
@@ -55,22 +57,29 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public string ToHelpText()
         {
-            string cmd = Name;
+            StringBuilder cmd = new StringBuilder(Name);
+
             if (Alias.Length > 0)
             {
-                cmd += "/" + string.Join("/", Alias);
+                cmd.AppendFormat("/{0}", string.Join("/", Alias));
             }
-            cmd += "  " + ArgsDescription;
+            cmd.AppendFormat(" {0}", ArgsDescription);
 
-            return $"{cmd, -40}  -  {Description}";
+            return $"{cmd,-35}  -  {Description}";
         }
 
-        public void SendServerMessageIfPlayerIsPresent(Optional<Player> player, string message)
+        public void SendMessageToPlayer(Optional<Player> player, string message)
         {
             if (player.IsPresent())
             {
                 player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
             }
+        }
+
+        public void Notify(Optional<Player> player, string message)
+        {
+            Log.Info(message);
+            SendMessageToPlayer(player, message);
         }
     }
 }

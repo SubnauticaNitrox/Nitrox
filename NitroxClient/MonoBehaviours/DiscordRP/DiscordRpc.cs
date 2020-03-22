@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using AOT;
 
+// ReSharper disable ClassNeverInstantiated.Global
 #pragma warning disable IDE0008 // Use explicit type
 #pragma warning disable IDE1006 // Naming Styles
 namespace NitroxClient.MonoBehaviours.DiscordRP
@@ -75,9 +76,9 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public enum Reply
         {
-            No = 0,
-            Yes = 1,
-            Ignore = 2
+            NO = 0,
+            YES = 1,
+            IGNORE = 2
         }
 
         [DllImport("discord-rpc", EntryPoint = "Discord_Initialize", CallingConvention = CallingConvention.Cdecl)]
@@ -110,8 +111,8 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
         public class RichPresence
         {
-            private RichPresenceStruct _presence;
-            private readonly List<IntPtr> _buffers = new List<IntPtr>(10);
+            private RichPresenceStruct presence;
+            private readonly List<IntPtr> buffers = new List<IntPtr>(10);
 
             public string state; /* max 128 bytes */
             public string details; /* max 128 bytes */
@@ -135,28 +136,28 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             /// <returns><see cref="RichPresenceStruct"/> reprensentation of this instance</returns>
             internal RichPresenceStruct GetStruct()
             {
-                if (_buffers.Count > 0)
+                if (buffers.Count > 0)
                 {
                     FreeMem();
                 }
 
-                _presence.state = StrToPtr(state);
-                _presence.details = StrToPtr(details);
-                _presence.startTimestamp = startTimestamp;
-                _presence.endTimestamp = endTimestamp;
-                _presence.largeImageKey = StrToPtr(largeImageKey);
-                _presence.largeImageText = StrToPtr(largeImageText);
-                _presence.smallImageKey = StrToPtr(smallImageKey);
-                _presence.smallImageText = StrToPtr(smallImageText);
-                _presence.partyId = StrToPtr(partyId);
-                _presence.partySize = partySize;
-                _presence.partyMax = partyMax;
-                _presence.matchSecret = StrToPtr(matchSecret);
-                _presence.joinSecret = StrToPtr(joinSecret);
-                _presence.spectateSecret = StrToPtr(spectateSecret);
-                _presence.instance = instance;
+                presence.state = StrToPtr(state);
+                presence.details = StrToPtr(details);
+                presence.startTimestamp = startTimestamp;
+                presence.endTimestamp = endTimestamp;
+                presence.largeImageKey = StrToPtr(largeImageKey);
+                presence.largeImageText = StrToPtr(largeImageText);
+                presence.smallImageKey = StrToPtr(smallImageKey);
+                presence.smallImageText = StrToPtr(smallImageText);
+                presence.partyId = StrToPtr(partyId);
+                presence.partySize = partySize;
+                presence.partyMax = partyMax;
+                presence.matchSecret = StrToPtr(matchSecret);
+                presence.joinSecret = StrToPtr(joinSecret);
+                presence.spectateSecret = StrToPtr(spectateSecret);
+                presence.instance = instance;
 
-                return _presence;
+                return presence;
             }
 
             /// <summary>
@@ -177,7 +178,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
                 {
                     Marshal.WriteByte(buffer, i, 0);
                 }
-                _buffers.Add(buffer);
+                buffers.Add(buffer);
                 Marshal.Copy(Encoding.UTF8.GetBytes(input), 0, buffer, convbytecnt);
                 return buffer;
             }
@@ -203,10 +204,10 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             /// </summary>
             internal void FreeMem()
             {
-                for (var i = _buffers.Count - 1; i >= 0; i--)
+                for (var i = buffers.Count - 1; i >= 0; i--)
                 {
-                    Marshal.FreeHGlobal(_buffers[i]);
-                    _buffers.RemoveAt(i);
+                    Marshal.FreeHGlobal(buffers[i]);
+                    buffers.RemoveAt(i);
                 }
             }
         }

@@ -62,7 +62,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.VehicleManager.GetVehicles(),
                 world.InventoryManager.GetAllInventoryItems(),
                 world.InventoryManager.GetAllStorageSlotItems(),
-                world.GameData.PDAState.GetInitialPdaData(),
+                world.GameData.PDAState.GetInitialPDAData(),
                 world.GameData.StoryGoals.GetInitialStoryGoalData(),
                 player.Position,
                 player.SubRootId,

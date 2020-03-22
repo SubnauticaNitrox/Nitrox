@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -72,7 +71,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                cmd.SendServerMessageIfPlayerIsPresent(player, "You do not have the required permissions for this command!");
+                cmd.SendMessageToPlayer(player, "You do not have the required permissions for this command!");
             }
         }
 
@@ -87,8 +86,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             else
             {
                 string errorMessage = string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription);
-                Log.Info(errorMessage);
-                command.SendServerMessageIfPlayerIsPresent(player, errorMessage);
+                command.Notify(player, errorMessage);
             }
         }
     }

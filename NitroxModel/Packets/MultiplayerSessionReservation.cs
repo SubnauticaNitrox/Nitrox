@@ -17,7 +17,7 @@ namespace NitroxModel.Packets
         }
 
         public MultiplayerSessionReservation(string correlationId, ushort playerId, string reservationKey)
-            : this(correlationId, MultiplayerSessionReservationState.Reserved)
+            : this(correlationId, MultiplayerSessionReservationState.RESERVED)
         {
             PlayerId = playerId;
             ReservationKey = reservationKey;

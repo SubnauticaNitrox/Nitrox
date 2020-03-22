@@ -7,28 +7,29 @@ using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
-    internal class SayCommand : Command
+    internal class BroadcastCommand : Command
     {
         private readonly PlayerManager playerManager;
 
-        public SayCommand(PlayerManager playerManager) : base("say", Perms.ADMIN, "<message>", "say Even the lowliest of cogs needs to say something SO SAY SOMETHING!", new[] {"broadcast"})
+        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "{message}", "Broadcasts a message on the server", new[] {"say"})
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> player)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            string message = "Saying: " + string.Join(" ", args);
-            Log.Info(message);
+            string message = "BROADCAST: " + string.Join(" ", args);
 
-            if(player.IsPresent())
+            if(sender.IsPresent())
             {
-                playerManager.SendPacketToAllPlayers(new ChatMessage(player.Get().Id, string.Join(" ", args)));
+                playerManager.SendPacketToAllPlayers(new ChatMessage(sender.Get().Id, string.Join(" ", args)));
             }
             else
             {
                 playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, string.Join(" ", args)));
             }
+
+            Log.Info(message);
         }
 
         public override bool VerifyArgs(string[] args)

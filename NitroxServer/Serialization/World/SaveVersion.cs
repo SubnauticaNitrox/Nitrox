@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ProtoBufNet;
-using NitroxModel.Logger;
+﻿using ProtoBufNet;
 
 namespace NitroxServer.Serialization.World
 {

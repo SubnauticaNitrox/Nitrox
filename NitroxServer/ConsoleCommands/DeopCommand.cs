@@ -1,5 +1,4 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Players;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -11,12 +10,12 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "<name>", "Remove admin rights from user")
+        public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "{name}", "Removes admin rights from user")
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> callingPlayer)
+        public override void RunCommand(string[] args, Optional<Player> sender)
         {
             string playerName = args[0];
             string message;
@@ -26,15 +25,14 @@ namespace NitroxServer.ConsoleCommands
             if (targetPlayer.IsPresent())
             {
                 targetPlayer.Get().Permissions = Perms.PLAYER;
-                message = "Updated " + playerName + " permissions to player";
+                message = $"Updated {playerName}\'s permissions to PLAYER";
             }
             else
             {
-                message = "Could not update permissions on unknown player " + playerName;
+                message = $"Could not update permissions of unknown player {playerName}";
             }
 
-            Log.Info(message);
-            SendServerMessageIfPlayerIsPresent(callingPlayer, message);
+            Notify(sender, message);
         }
 
         public override bool VerifyArgs(string[] args)

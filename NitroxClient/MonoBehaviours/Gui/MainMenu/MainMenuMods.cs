@@ -23,7 +23,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             if (scene.name == "XMenu")
             {
                 MultiplayerMenuMods();
-                DiscordController.Main.InitDRPMenu();
+                DiscordRPController.Main.InitializeMenu();
             }
         }
 

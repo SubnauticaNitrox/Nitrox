@@ -46,7 +46,7 @@ namespace NitroxModel.Packets
             serializer = new BinaryFormatter(surrogateSelector, streamingContext);
         }
 
-        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.ReliableOrdered;
+        public NitroxDeliveryMethod.DeliveryMethod DeliveryMethod { get; protected set; } = NitroxDeliveryMethod.DeliveryMethod.RELIABLE_ORDERED;
         public UdpChannelId UdpChannel { get; protected set; } = UdpChannelId.DEFAULT;
 
         public enum UdpChannelId

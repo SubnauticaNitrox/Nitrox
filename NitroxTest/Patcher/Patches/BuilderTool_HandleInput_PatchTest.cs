@@ -3,7 +3,6 @@ using System.Linq;
 using System.Reflection.Emit;
 using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxPatcher.Patches;
 using NitroxPatcher.Patches.Dynamic;
 using NitroxTest.Patcher.Test;
 

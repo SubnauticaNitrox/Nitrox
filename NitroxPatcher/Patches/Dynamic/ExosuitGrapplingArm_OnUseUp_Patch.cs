@@ -15,7 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(ExosuitGrapplingArm __instance)
         {
-            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.endUseTool);
+            NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitGrapplingArmModule, __instance, ExosuitArmAction.END_USE_TOOL);
         }
 
         public override void Patch(HarmonyInstance harmony)

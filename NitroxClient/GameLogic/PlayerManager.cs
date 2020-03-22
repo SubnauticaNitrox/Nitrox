@@ -26,7 +26,6 @@ namespace NitroxClient.GameLogic
         public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
-
             if (playersById.TryGetValue(playerId, out player))
             {
                 return Optional<RemotePlayer>.Of(player);
@@ -48,6 +47,11 @@ namespace NitroxClient.GameLogic
             return Optional<RemotePlayer>.Empty();
         }
 
+        internal IEnumerable<RemotePlayer> GetAll()
+        {
+            return playersById.Values;
+        }
+
         public RemotePlayer Create(PlayerContext playerContext, List<TechType> equippedTechTypes)
         {
             Validate.NotNull(playerContext);
@@ -60,7 +64,7 @@ namespace NitroxClient.GameLogic
             GameObject remotePlayerBody = CloneLocalPlayerBodyPrototype();
             RemotePlayer remotePlayer = new RemotePlayer(remotePlayerBody, playerContext, equippedTechTypes, playerModelManager);
 
-            DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
+            DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
 
             playersById.Add(remotePlayer.PlayerId, remotePlayer);
 
@@ -74,7 +78,7 @@ namespace NitroxClient.GameLogic
             {
                 opPlayer.Get().Destroy();
                 playersById.Remove(playerId);
-                DiscordController.Main.UpdateDRPDiving(GetTotalPlayerCount());
+                DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
             }
         }
 

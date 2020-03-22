@@ -20,10 +20,10 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             if(torpedoType != null)
             {
-                ExosuitArmAction action = ExosuitArmAction.startUseTool;
+                ExosuitArmAction action = ExosuitArmAction.START_USE_TOOL;
                 if(siloTransform == __instance.siloSecond)
                 {
-                    action = ExosuitArmAction.altHit;
+                    action = ExosuitArmAction.ALT_HIT;
                 }
                 if(siloTransform != __instance.siloFirst && siloTransform != __instance.siloSecond)
                 {

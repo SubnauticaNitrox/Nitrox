@@ -2,7 +2,6 @@
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using UnityEngine;
-using NitroxClient.Unity.Helper;
 
 namespace NitroxClient.GameLogic.Spawning
 {

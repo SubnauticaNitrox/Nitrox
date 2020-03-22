@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery.InstallationFinders;
-using NitroxModel.Helper;
 
 namespace NitroxModel.Discovery
 {
@@ -14,8 +13,8 @@ namespace NitroxModel.Discovery
     {
         private readonly IFindGameInstallation[] finders = {
             new ConfigFileGameFinder(),
+            new EpicGamesInstallationFinder(),
             new SteamGameRegistryFinder(),
-            new EpicGamesInstallationFinder()
         };
         
         /// <summary>
