@@ -7,6 +7,7 @@ using NitroxServer.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using System;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
@@ -14,6 +15,7 @@ namespace NitroxServer.ConsoleCommands.Processor
     {
         private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
         private readonly PlayerManager playerManager;
+        private readonly char[] splitChar = new[] { ' ' };
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds, PlayerManager playerManager)
         {
@@ -45,10 +47,8 @@ namespace NitroxServer.ConsoleCommands.Processor
             {
                 return;
             }
-            
-            string[] parts = msg.Split()
-                                .Where(arg => !string.IsNullOrEmpty(arg))
-                                .ToArray();
+
+            string[] parts = msg.Split(splitChar, StringSplitOptions.RemoveEmptyEntries);
 
             Command cmd;
 
@@ -85,8 +85,7 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
             else
             {
-                string errorMessage = string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription);
-                command.Notify(player, errorMessage);
+                command.Notify(player, string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription));
             }
         }
     }

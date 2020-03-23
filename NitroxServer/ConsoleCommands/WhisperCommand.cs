@@ -4,7 +4,6 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
