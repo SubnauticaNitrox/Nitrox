@@ -420,6 +420,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                     IEnumerator startNewGame = (IEnumerator)uGUI_MainMenu.main.ReflectionCall("StartNewGame", false, false, GameMode.Survival);
 #pragma warning restore CS0618 // God damn it UWE...
                     StartCoroutine(startNewGame);
+                    LoadingScreenVersionText.Initialize();
 
                     break;
                 case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
