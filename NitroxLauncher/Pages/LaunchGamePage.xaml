@@ -172,7 +172,7 @@
             </StackPanel>
             <StackPanel Margin="0,22,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
                 <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Contributors"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Text="Developers:" FontWeight="Bold" /> <Run Foreground="#BFFFFFFF">Sunrunner, Killzoms, Jannify, Marjin, Measurity, MadMax, Nes,  _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Text="Developers:" FontWeight="Bold" /> <Run Foreground="#BFFFFFFF">Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes,  _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
                     <LineBreak/><Run Text="Staff: " FontWeight="Bold" /><Run Foreground="#BFFFFFFF">Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
                     <LineBreak/><Run Text="Design: " FontWeight="Bold" /><Run Foreground="#BFFFFFFF">Rux</Run></TextBlock>
             </StackPanel>
