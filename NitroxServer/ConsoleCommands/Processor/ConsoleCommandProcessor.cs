@@ -14,12 +14,10 @@ namespace NitroxServer.ConsoleCommands.Processor
     public class ConsoleCommandProcessor
     {
         private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
-        private readonly PlayerManager playerManager;
         private readonly char[] splitChar = new[] { ' ' };
 
-        public ConsoleCommandProcessor(IEnumerable<Command> cmds, PlayerManager playerManager)
+        public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
-            this.playerManager = playerManager;
             foreach (Command cmd in cmds)
             {
                 if (commands.ContainsKey(cmd.Name))
