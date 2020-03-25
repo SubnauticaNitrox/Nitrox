@@ -9,42 +9,42 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalGet()
         {
-            Optional<string> op = Optional<string>.Of("test");
+            Optional<string> op = Optional.Of("test");
             Assert.AreEqual("test", op.Get());
         }
 
         [TestMethod]
         public void OptionalIsPresent()
         {
-            Optional<string> op = Optional<string>.Of("test");
+            Optional<string> op = Optional.Of("test");
             Assert.AreEqual(true, op.IsPresent());
         }
 
         [TestMethod]
         public void OptionalIsNotPresent()
         {
-            Optional<string> op = Optional<string>.Empty();
+            Optional<string> op = Optional.Empty;
             Assert.AreEqual(false, op.IsPresent());
         }
 
         [TestMethod]
         public void OptionalOrElseValidValue()
         {
-            Optional<string> op = Optional<string>.Of("test");
+            Optional<string> op = Optional.Of("test");
             Assert.AreEqual("test", op.OrElse("test2"));
         }
 
         [TestMethod]
         public void OptionalOrElseNoValue()
         {
-            Optional<string> op = Optional<string>.Empty();
+            Optional<string> op = Optional.Empty;
             Assert.AreEqual("test", op.OrElse("test"));
         }
 
         [TestMethod]
         public void OptionalEmpty()
         {
-            Optional<string> op = Optional<string>.Empty();
+            Optional<string> op = Optional.Empty;
             Assert.AreEqual(true, op.IsEmpty());
         }
 
@@ -53,35 +53,35 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalValueTypeGet()
         {
-            Optional<int> op = Optional<int>.Of(1);
+            Optional<int> op = Optional.Of(1);
             Assert.AreEqual(1, op.Get());
         }
 
         [TestMethod]
         public void OptionalValueTypeIsPresent()
         {
-            Optional<int> op = Optional<int>.Of(0);
+            Optional<int> op = Optional.Of(0);
             Assert.AreEqual(true, op.IsPresent());
         }
 
         [TestMethod]
         public void OptionalValueTypeIsNotPresent()
         {
-            Optional<int> op = Optional<int>.Empty();
+            Optional<int> op = Optional.Empty;
             Assert.AreEqual(false, op.IsPresent());
         }
 
         [TestMethod]
         public void OptionalValueTypeOrElseValidValue()
         {
-            Optional<int> op = Optional<int>.Of(1);
+            Optional<int> op = Optional.Of(1);
             Assert.AreEqual(1, op.OrElse(2));
         }
 
         [TestMethod]
         public void OptionalSetValue()
         {
-            Optional<int> op = Optional<int>.Of(0);
+            Optional<int> op = Optional.Of(0);
             op = 1;
             Assert.IsFalse(0 == (int)op);
         }
@@ -89,7 +89,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalSetValueNull()
         {
-            Optional<Exosuit> op = Optional<Exosuit>.Of(new Exosuit());
+            Optional<Exosuit> op = Optional.Of(new Exosuit());
             op = null;
             try
             {
@@ -102,14 +102,14 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalValueTypeOrElseNoValue()
         {
-            Optional<int> op = Optional<int>.Empty();
+            Optional<int> op = Optional.Empty;
             Assert.AreEqual(1, op.OrElse(1));
         }
 
         [TestMethod]
         public void OptionalValueTypeEmpty()
         {
-            Optional<int> op = Optional<int>.Empty();
+            Optional<int> op = Optional.Empty;
             Assert.AreEqual(true, op.IsEmpty());
         }
     }

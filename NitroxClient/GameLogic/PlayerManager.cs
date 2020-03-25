@@ -26,12 +26,8 @@ namespace NitroxClient.GameLogic
         public Optional<RemotePlayer> Find(ushort playerId)
         {
             RemotePlayer player;
-            if (playersById.TryGetValue(playerId, out player))
-            {
-                return Optional<RemotePlayer>.Of(player);
-            }
-
-            return Optional<RemotePlayer>.Empty();
+            playersById.TryGetValue(playerId, out player);
+            return Optional.OfNullable(player);
         }
 
         internal Optional<RemotePlayer> FindByName(string playerName)
@@ -40,11 +36,11 @@ namespace NitroxClient.GameLogic
             {
                 if (player.PlayerName == playerName)
                 {
-                    return Optional<RemotePlayer>.Of(player);
+                    return Optional.Of(player);
                 }
             }
 
-            return Optional<RemotePlayer>.Empty();
+            return Optional.Empty;
         }
 
         internal IEnumerable<RemotePlayer> GetAll()

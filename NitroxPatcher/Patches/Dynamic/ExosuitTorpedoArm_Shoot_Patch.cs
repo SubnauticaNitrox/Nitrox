@@ -32,8 +32,8 @@ namespace NitroxPatcher.Patches.Dynamic
                 NitroxServiceLocator.LocateService<ExosuitModuleEvent>().BroadcastArmAction(TechType.ExosuitTorpedoArmModule,
                     __instance, 
                     action, 
-                    Optional<Vector3>.Of(Player.main.camRoot.GetAimingTransform().forward), 
-                    Optional<Quaternion>.Of(Player.main.camRoot.GetAimingTransform().rotation)
+                    Optional.Of(Player.main.camRoot.GetAimingTransform().forward), 
+                    Optional.Of(Player.main.camRoot.GetAimingTransform().rotation)
                     );
             }
         }

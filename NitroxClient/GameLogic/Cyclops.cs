@@ -349,7 +349,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreateDamagePoint(SubRoot subRoot)
         {
-            BroadcastDamageState(subRoot, Optional<DamageInfo>.Empty());
+            BroadcastDamageState(subRoot, Optional.Empty);
         }
 
         /// <summary>

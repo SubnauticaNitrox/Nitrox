@@ -23,7 +23,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 subId = NitroxEntity.GetId(sub.gameObject);
             }
 
-            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional<NitroxId>.OfNullable(subId));
+            NitroxServiceLocator.LocateService<LocalPlayer>().BroadcastSubrootChange(Optional.OfNullable(subId));
         }
 
         public override void Patch(HarmonyInstance harmony)

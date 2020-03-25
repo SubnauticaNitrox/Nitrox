@@ -38,7 +38,7 @@ namespace NitroxClient.GameLogic.Spawning
                 }
             }
             
-            return Optional<GameObject>.Empty();
+            return Optional.Empty;
         }
 
         public bool SpawnsOwnChildren()

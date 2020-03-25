@@ -137,7 +137,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else
             {
-                return Optional<VehicleMovementData>.Empty();
+                return Optional.Empty;
             }
 
             VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(techType,
@@ -152,7 +152,7 @@ namespace NitroxClient.MonoBehaviours
                                                                                         leftArmPosition,
                                                                                         rightArmPosition,
                                                                                         health);
-            return Optional<VehicleMovementData>.Of(model);
+            return Optional.Of(model);
         }
     }
 }

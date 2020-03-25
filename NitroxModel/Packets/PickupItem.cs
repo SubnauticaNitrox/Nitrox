@@ -27,11 +27,11 @@ namespace NitroxModel.Packets
             // of this is a player picking up a far away beacon.
             if (Map.Main.GlobalRootTechTypes.Contains(TechType))
             {
-                return Optional<AbsoluteEntityCell>.Empty();
+                return Optional.Empty();
             }
 
             // All other pickup events should only happen when the cell is loaded.  
-            return Optional<AbsoluteEntityCell>.Of(new AbsoluteEntityCell(ItemPosition, Map.Main.ItemLevelOfDetail));
+            return Optional.Of(new AbsoluteEntityCell(ItemPosition, Map.Main.ItemLevelOfDetail));
         }*/
 
         public override string ToString()

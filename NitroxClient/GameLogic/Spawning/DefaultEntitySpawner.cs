@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Spawning
                 prefab = CraftData.GetPrefabForTechType(techType, false);
                 if (prefab == null)
                 {
-                    return Optional<GameObject>.Of(Utils.CreateGenericLoot(techType));
+                    return Optional.Of(Utils.CreateGenericLoot(techType));
                 }
             }
 
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic.Spawning
                 gameObject.SetActive(true);
             }
 
-            return Optional<GameObject>.Of(gameObject);
+            return Optional.Of(gameObject);
         }
 
         public bool SpawnsOwnChildren()

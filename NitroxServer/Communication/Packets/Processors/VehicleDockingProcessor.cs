@@ -31,7 +31,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             VehicleModel vehicleModel = vehicle.Get();
-            vehicleModel.DockingBayId = Optional<NitroxId>.Of(packet.DockId);
+            vehicleModel.DockingBayId = Optional.Of(packet.DockId);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

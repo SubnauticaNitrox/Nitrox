@@ -47,7 +47,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     {
                         GameObject owner = opGameObject.Get();
 
-                        Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+                        Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
                         if (opEquipment.IsPresent())
                         {                            

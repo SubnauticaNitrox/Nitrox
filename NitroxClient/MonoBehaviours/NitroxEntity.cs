@@ -37,18 +37,14 @@ namespace NitroxClient.MonoBehaviours
         {
             if (id == null)
             {
-                return Optional<GameObject>.Empty();
+                return Optional.Empty;
             }
 
             GameObject gameObject;
-
-            if (!gameObjectsById.TryGetValue(id, out gameObject))
-            {
-                return Optional<GameObject>.Empty();
-            }
-
+            
             // Nullable incase game object is marked as destroyed
-            return Optional<GameObject>.OfNullable(gameObject);
+            gameObjectsById.TryGetValue(id, out gameObject);
+            return Optional.OfNullable(gameObject);
         }
 
         public static void SetNewId(GameObject gameObject, NitroxId id)

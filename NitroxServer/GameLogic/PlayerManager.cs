@@ -119,7 +119,7 @@ namespace NitroxServer.GameLogic
                 {
                     if (!allPlayersByName.TryGetValue(playerContext.PlayerName, out player))
                     {
-                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional<NitroxId>.Empty(), Perms.PLAYER, defaultPlayerStats, new List<EquippedItemData>(), new List<EquippedItemData>());
+                        player = new Player(playerContext.PlayerId, playerContext.PlayerName, playerContext, connection, NitroxVector3.Zero, new NitroxId(), Optional.Empty, Perms.PLAYER, defaultPlayerStats, new List<EquippedItemData>(), new List<EquippedItemData>());
                         allPlayersByName[playerContext.PlayerName] = player;
                     }
                 }
@@ -200,7 +200,7 @@ namespace NitroxServer.GameLogic
                 Player player;
                 allPlayersByName.TryGetValue(playerName, out player);
 
-                return Optional<Player>.OfNullable(player);
+                return Optional.OfNullable(player);
             }
         }
 

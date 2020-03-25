@@ -41,24 +41,19 @@ namespace NitroxClient.GameLogic.Helper
         public static Optional<object> Get(TransientObjectType key)
         {
             object obj;
-            if (localObjectsById.TryGetValue(key, out obj))
-            {
-                return Optional<object>.OfNullable(obj);
-            }
-
-            return Optional<object>.Empty();
+            localObjectsById.TryGetValue(key, out obj);
+            return Optional.OfNullable(obj);
         }
 
         public static T Require<T>(TransientObjectType key)
         {
             object obj;
-
-            if (localObjectsById.TryGetValue(key, out obj))
+            if (!localObjectsById.TryGetValue(key, out obj))
             {
-                return (T)obj;
+                throw new Exception("Did not have an entry for key: " + key);
             }
-
-            throw new Exception("Did not have an entry for key: " + key);
+            
+            return (T)obj;
         }
     }
 }

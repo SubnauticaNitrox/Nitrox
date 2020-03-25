@@ -52,9 +52,9 @@ namespace NitroxModel.DataStructures.GameLogic
                 
         public BasePiece()
         {
-            ParentId = Optional<NitroxId>.Empty();
-            RotationMetadata = Optional<RotationMetadata>.Empty();
-            Metadata = Optional<BasePieceMetadata>.Empty();
+            ParentId = Optional.Empty;
+            RotationMetadata = Optional.Empty;
+            Metadata = Optional.Empty;
         }
 
         public BasePiece(NitroxId id, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
@@ -70,7 +70,7 @@ namespace NitroxModel.DataStructures.GameLogic
             ConstructionAmount = 0.0f;
             ConstructionCompleted = false;
             RotationMetadata = rotationMetadata;
-            Metadata = Optional<BasePieceMetadata>.Empty();
+            Metadata = Optional.Empty;
         }
 
         public override string ToString()

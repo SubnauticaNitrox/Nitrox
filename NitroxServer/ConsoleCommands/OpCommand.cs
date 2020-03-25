@@ -21,7 +21,7 @@ namespace NitroxServer.ConsoleCommands
 
             Optional<Player> receivingPlayer = playerManager.GetPlayer(playerName);
 
-            if(receivingPlayer.IsPresent())
+            if (receivingPlayer.IsPresent())
             {
                 receivingPlayer.Get().Permissions = Perms.ADMIN;
                 message = $"Updated {playerName}\'s permissions to admin";
@@ -30,7 +30,7 @@ namespace NitroxServer.ConsoleCommands
             {
                 message = $"Could not update permissions of unknown player '{playerName}'";
             }
-            
+
             Notify(sender, message);
         }
 

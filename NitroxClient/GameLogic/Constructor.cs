@@ -82,7 +82,7 @@ namespace NitroxClient.GameLogic
         private void SpawnDefaultBatteries(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
         {
             
-            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(constructedObject.GetComponent<EnergyMixin>());
+            Optional<EnergyMixin> opEnergy = Optional.OfNullable(constructedObject.GetComponent<EnergyMixin>());
             if (opEnergy.IsPresent())
             {
                 EnergyMixin mixin = opEnergy.Get();                
@@ -97,7 +97,7 @@ namespace NitroxClient.GameLogic
 
                 if (opChildGameObject.IsPresent())
                 {
-                    Optional<EnergyMixin> opEnergyMixin = Optional<EnergyMixin>.OfNullable(opChildGameObject.Get().GetComponent<EnergyMixin>());
+                    Optional<EnergyMixin> opEnergyMixin = Optional.OfNullable(opChildGameObject.Get().GetComponent<EnergyMixin>());
 
                     if(opEnergyMixin.IsPresent())
                     {

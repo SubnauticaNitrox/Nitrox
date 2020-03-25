@@ -55,7 +55,7 @@ namespace NitroxClient.GameLogic
 
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
-                    Spawn(entity, Optional<GameObject>.Empty());
+                    Spawn(entity, Optional.Empty);
                 }
                 else
                 {

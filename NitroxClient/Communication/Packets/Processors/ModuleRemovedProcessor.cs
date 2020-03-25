@@ -20,7 +20,7 @@ namespace NitroxClient.Communication.Packets.Processors
             GameObject owner = NitroxEntity.RequireObjectFrom(packet.OwnerId);
             GameObject item = NitroxEntity.RequireObjectFrom(packet.ItemId);
             Pickupable pickupable = item.RequireComponent<Pickupable>();
-            Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+            Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
             if (opEquipment.IsPresent())
             {

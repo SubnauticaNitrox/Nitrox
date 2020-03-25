@@ -59,7 +59,7 @@ namespace NitroxServer.GameLogic.Entities
                 entitiesById.TryGetValue(id, out entity);
             }
 
-            return Optional<Entity>.OfNullable(entity);
+            return Optional.OfNullable(entity);
         }
 
         public List<Entity> GetAllEntities()
@@ -108,30 +108,26 @@ namespace NitroxServer.GameLogic.Entities
         public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
-
-            if(opEntity.IsPresent())
+            if (!opEntity.IsPresent())
             {
-                Entity entity = opEntity.Get();
-                AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
-
-                entity.Transform.Position = position;
-                entity.Transform.Rotation = rotation;
-
-                AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
-
-                if (oldCell != newCell)
-                {
-                    EntitySwitchedCells(entity, oldCell, newCell);
-                }
-
-                return Optional<AbsoluteEntityCell>.Of(newCell);
-            }
-            else
-            {
-                Log.Info("Could not update entity position because it was not found (maybe it was recently picked up)");
+                Log.Debug("Could not update entity position because it was not found (maybe it was recently picked up)");
+                return Optional.Empty;
             }
 
-            return Optional<AbsoluteEntityCell>.Empty();
+            Entity entity = opEntity.Get();
+            AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
+
+            entity.Transform.Position = position;
+            entity.Transform.Rotation = rotation;
+
+            AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
+
+            if (!Equals(oldCell, newCell))
+            {
+                EntitySwitchedCells(entity, oldCell, newCell);
+            }
+
+            return Optional.Of(newCell);
         }
 
         public void RegisterNewEntity(Entity entity)
@@ -173,8 +169,7 @@ namespace NitroxServer.GameLogic.Entities
 
         public void PickUpEntity(NitroxId id)
         {
-            Entity entity = null;
-
+            Entity entity;
             lock (entitiesById)
             {
                 entitiesById.TryGetValue(id, out entity);

@@ -54,7 +54,7 @@ namespace NitroxClient.GameLogic
             }
 
             // only need to watch EnergyMixin slots for now (only other type will be propulsion cannon)
-            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(owner.Get().GetComponent<EnergyMixin>());
+            Optional<EnergyMixin> opEnergy = Optional.OfNullable(owner.Get().GetComponent<EnergyMixin>());
             if (opEnergy.IsPresent())
             {
                 EnergyMixin mixin = opEnergy.Get();
@@ -84,7 +84,7 @@ namespace NitroxClient.GameLogic
         public void RemoveItem(NitroxId ownerId, bool silent = false)
         {
             GameObject owner = NitroxEntity.RequireObjectFrom(ownerId);            
-            Optional<EnergyMixin> opMixin = Optional<EnergyMixin>.OfNullable(owner.GetComponent<EnergyMixin>());
+            Optional<EnergyMixin> opMixin = Optional.OfNullable(owner.GetComponent<EnergyMixin>());
             
             if (opMixin.IsPresent())
             {

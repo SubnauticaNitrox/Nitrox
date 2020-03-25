@@ -41,7 +41,7 @@ namespace NitroxModel.Discovery
                 return path;
             }
 
-            return Optional<string>.Empty();
+            return Optional.Empty;
         }
     }
 }

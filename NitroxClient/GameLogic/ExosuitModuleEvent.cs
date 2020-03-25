@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
-            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
+            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional.Empty, Optional.Empty);
         }
 
         public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional.Empty, Optional.Empty);
             packetSender.Send(packet);
         }
 

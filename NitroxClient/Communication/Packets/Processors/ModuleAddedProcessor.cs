@@ -28,7 +28,7 @@ namespace NitroxClient.Communication.Packets.Processors
             if (opGameObject.IsPresent())
             {
                 GameObject owner = opGameObject.Get();
-                Optional<Equipment> opEquipment = EquipmentHelper.GetBasedOnOwnersType(owner);
+                Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
                 if (opEquipment.IsPresent())
                 {

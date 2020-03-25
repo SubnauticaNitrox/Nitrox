@@ -108,7 +108,7 @@ namespace NitroxClient.Debuggers
 
             DebuggerTab tab;
             tabs.TryGetValue(name, out tab);
-            return Optional<DebuggerTab>.OfNullable(tab);
+            return Optional.OfNullable(tab);
         }
 
         public virtual void Update()

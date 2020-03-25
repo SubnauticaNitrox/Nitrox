@@ -10,12 +10,10 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 {
     public abstract class BasePieceSpawnProcessor
     {
-        public abstract void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece);
+        private static readonly NoOpBasePieceSpawnProcessor noOpProcessor = new NoOpBasePieceSpawnProcessor();
+        private static readonly Dictionary<TechType, BasePieceSpawnProcessor> processorsByType = new Dictionary<TechType, BasePieceSpawnProcessor>();
 
-        public abstract List<TechType> GetApplicableTechTypes();
-
-        private static NoOpBasePieceSpawnProcessor noOpProcessor = new NoOpBasePieceSpawnProcessor();
-        private static Dictionary<TechType, BasePieceSpawnProcessor> processorsByType = new Dictionary<TechType, BasePieceSpawnProcessor>();
+        public abstract TechType[] ApplicableTechTypes { get; }
 
         static BasePieceSpawnProcessor()
         {
@@ -29,12 +27,14 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 
             foreach (BasePieceSpawnProcessor processor in processors)
             {
-                foreach (TechType techType in processor.GetApplicableTechTypes())
+                foreach (TechType techType in processor.ApplicableTechTypes)
                 {
                     processorsByType.Add(techType, processor);
                 }
             }
         }
+
+        public abstract void SpawnPostProcess(Base latestBase, Int3 latestCell, GameObject finishedPiece);
 
         public static BasePieceSpawnProcessor From(BaseDeconstructable baseDeconstructable)
         {

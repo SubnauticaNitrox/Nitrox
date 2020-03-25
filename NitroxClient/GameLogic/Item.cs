@@ -63,11 +63,11 @@ namespace NitroxClient.GameLogic
                 if (currentWaterPark != null)
                 {
                     NitroxId waterParkId = NitroxEntity.GetId(currentWaterPark.gameObject);
-                    return Optional<NitroxId>.Of(waterParkId);
+                    return Optional.Of(waterParkId);
                 }
             }
 
-            return Optional<NitroxId>.Empty();
+            return Optional.Empty;
         }
     }
 }

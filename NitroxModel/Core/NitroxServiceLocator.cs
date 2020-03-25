@@ -10,10 +10,13 @@ namespace NitroxModel.Core
         private static IContainer DependencyContainer { get; set; }
         private static ILifetimeScope CurrentLifetimeScope { get; set; }
 
-        public static void InitializeDependencyContainer(IAutoFacRegistrar dependencyRegistrar)
+        public static void InitializeDependencyContainer(params IAutoFacRegistrar[] registrars)
         {
             ContainerBuilder builder = new ContainerBuilder();
-            dependencyRegistrar.RegisterDependencies(builder);
+            foreach (IAutoFacRegistrar registrar in registrars)
+            {
+                registrar.RegisterDependencies(builder);
+            }
 
             // IgnoreStartableComponents - Prevents "phantom" executions of the Start() method 
             // on a MonoBehaviour because someone accidentally did something funky with a DI registration.
@@ -57,7 +60,7 @@ namespace NitroxModel.Core
         public static Optional<T> LocateOptionalService<T>() where T : class
         {
             CheckServiceResolutionViability();
-            return Optional<T>.OfNullable(CurrentLifetimeScope.ResolveOptional<T>());
+            return Optional.OfNullable(CurrentLifetimeScope.ResolveOptional<T>());
         }
 
         /// <summary>
@@ -68,7 +71,7 @@ namespace NitroxModel.Core
         public static Optional<object> LocateOptionalService(Type serviceType)
         {
             CheckServiceResolutionViability();
-            return Optional<object>.OfNullable(CurrentLifetimeScope.ResolveOptional(serviceType));
+            return Optional.OfNullable(CurrentLifetimeScope.ResolveOptional(serviceType));
         }
 
         private static void CheckServiceResolutionViability()
