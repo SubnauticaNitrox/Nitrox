@@ -1,7 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using Harmony;
-using System.IO;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
@@ -10,13 +10,13 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
-        static Type TARGET_TYPE = typeof(ProtobufSerializer);
-        static MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly Type TARGET_TYPE = typeof(ProtobufSerializer);
+        private static readonly MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly NitroxProtobufSerializer serializer = NitroxServiceLocator.LocateServicePreLifetime<NitroxProtobufSerializer>();
 
         public static bool Prefix(Stream stream, object source, Type type)
         {
             int key;
-            NitroxProtobufSerializer serializer = NitroxServiceLocator.LocateService<NitroxProtobufSerializer>();
             if (Multiplayer.Active && serializer.NitroxTypes.TryGetValue(type, out key))
             {
                 serializer.Serialize(stream, source);

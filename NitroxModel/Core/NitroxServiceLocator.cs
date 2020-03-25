@@ -39,6 +39,16 @@ namespace NitroxModel.Core
             CurrentLifetimeScope?.Dispose();
         }
 
+        /// <summary>
+        ///     Only locates the service in the container, pre-lifetime scope.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T LocateServicePreLifetime<T>()
+        {
+            return DependencyContainer.Resolve<T>();
+        }
+
         public static T LocateService<T>()
             where T : class
         {
