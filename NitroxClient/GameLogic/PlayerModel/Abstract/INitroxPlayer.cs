@@ -1,4 +1,5 @@
-﻿using NitroxModel.MultiplayerSession;
+﻿using System;
+using NitroxModel.MultiplayerSession;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerModel.Abstract

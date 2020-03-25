@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using Autofac;
+using Autofac.Builder;
+using Autofac.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -9,11 +12,11 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
-using NitroxServer.Communication.Packets;
-using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Serialization.World;
 using NitroxServer;
+using NitroxServer.Communication.Packets;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets.Processors.Abstract;
+using NitroxServer_Subnautica;
 
 namespace NitroxTest.Model
 {
@@ -37,36 +40,6 @@ namespace NitroxTest.Model
                     int numCtors = processor.GetConstructors().Length;
                     Assert.IsTrue(numCtors == 1, $"{processor} should have exactly 1 constructor! (has {numCtors})");
                 });
-        }
-
-        [TestMethod]
-        public void RuntimeDetectsAllClientPacketProcessors()
-        {
-            ContainerBuilder containerBuilder = new ContainerBuilder();
-            ClientAutoFacRegistrar clientDependencyRegistrar = new ClientAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(clientDependencyRegistrar);
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            // Check if every PacketProcessor has been detected:
-            typeof(Multiplayer).Assembly.GetTypes()
-                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList()
-                .ForEach(processor =>
-                {
-                    try
-                    {
-                        Assert.IsTrue(NitroxServiceLocator.LocateOptionalService(processor.BaseType).IsPresent(),
-                            $"{processor} has not been discovered by the runtime code!");
-                    }
-                    catch (Autofac.Core.DependencyResolutionException ex)
-                    {
-                        if (ex.InnerException.GetType() != typeof(System.Security.SecurityException))
-                        {
-                            throw ex;
-                        }
-                    }
-                }
-                );
         }
 
         [TestMethod]
@@ -96,8 +69,6 @@ namespace NitroxTest.Model
         {
             IEnumerable<Type> processors = typeof(PacketHandler).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract);
-            World world = new World();
-            ContainerBuilder serverContainerBuilder = new ContainerBuilder();
             ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
             NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
             NitroxServiceLocator.BeginNewLifetimeScope();
@@ -107,7 +78,8 @@ namespace NitroxTest.Model
                 .ToList();
 
             int both = packetTypes.Count;
-            Assert.AreEqual(processors.Count(), both,
+            Assert.AreEqual(processors.Count(),
+                both,
                 "Not all(Un) AuthenticatedPacketProcessors have been discovered by the runtime code " +
                 $"(auth + unauth: {both} out of {processors.Count()}). " + // this is a small patch to keep this alive a little longer until its put out of its misery
                 "Perhaps the runtime matching code is too strict, or a processor does not derive from ClientPacketProcessor " +
@@ -115,56 +87,34 @@ namespace NitroxTest.Model
         }
 
         [TestMethod]
-        public void RuntimeDetectsAllServerPacketProcessors()
-        {
-            World world = new World();
-
-            ContainerBuilder containerBuilder = new ContainerBuilder();
-            ServerAutoFacRegistrar serverDependencyRegistrar = new NitroxServer_Subnautica.SubnauticaServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
-            // Check if every PacketProcessor has been detected:
-            typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
-                .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList()
-                .ForEach(processor =>
-                    Assert.IsTrue(NitroxServiceLocator.LocateOptionalService(processor.BaseType).IsPresent(),
-                        $"{processor} has not been discovered by the runtime code!")
-                );
-        }
-
-        [TestMethod]
         public void AllPacketsAreHandled()
         {
-            World world = new World();
-            ContainerBuilder serverContainerBuilder = new ContainerBuilder();
-            ServerAutoFacRegistrar serverDependencyRegistrar = new ServerAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(serverDependencyRegistrar);
-            NitroxServiceLocator.BeginNewLifetimeScope();
-
             List<Type> packetTypes = typeof(DefaultServerPacketProcessor).Assembly.GetTypes()
                 .Where(p => typeof(PacketProcessor).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
                 .ToList();
-
-            ContainerBuilder containerBuilder = new ContainerBuilder();
-            ClientAutoFacRegistrar clientDependencyRegistrar = new ClientAutoFacRegistrar();
-            NitroxServiceLocator.InitializeDependencyContainer(clientDependencyRegistrar);
+            
+            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar(), new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            typeof(Packet).Assembly.GetTypes()
+            foreach (Type packet in typeof(Packet).Assembly.GetTypes()
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList()
-                .ForEach(packet =>
-                {
-                    Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
-                    Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
+                .ToList())
+            {
+                Type clientPacketProcessorType = typeof(ClientPacketProcessor<>);
+                Type authenticatedPacketProcessorType = typeof(AuthenticatedPacketProcessor<>);
+                Type unauthenticatedPacketProcessorType = typeof(UnauthenticatedPacketProcessor<>);
 
-                    Console.WriteLine("Checking handler for packet {0}...", packet);
-                    Assert.IsTrue(packetTypes.Contains(packet) || NitroxServiceLocator.LocateOptionalService(clientProcessorType).IsPresent(),
-                        $"Runtime has not detected a handler for {packet}!");
-                }
-                );
+                Type clientProcessorType = clientPacketProcessorType.MakeGenericType(packet);
+                Type authProcessorType = authenticatedPacketProcessorType.MakeGenericType(packet);
+                Type unauthProcessorType = unauthenticatedPacketProcessorType.MakeGenericType(packet);
+
+                Console.WriteLine($"Checking handler for packet {packet}...");
+                Assert.IsTrue(packetTypes.Contains(packet) ||
+                              NitroxServiceLocator.LocateOptionalService(clientProcessorType).IsPresent() ||
+                              NitroxServiceLocator.LocateOptionalService(authProcessorType).IsPresent() ||
+                              NitroxServiceLocator.LocateOptionalService(unauthProcessorType).IsPresent(),
+                    $"Runtime has not detected a handler {clientProcessorType}!");
+            }
         }
     }
 }

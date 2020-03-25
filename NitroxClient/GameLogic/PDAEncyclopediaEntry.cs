@@ -17,18 +17,6 @@ namespace NitroxClient.GameLogic
             PDAEncyclopediaEntryAdd EntryAdd = new PDAEncyclopediaEntryAdd(key);
             packetSender.Send(EntryAdd);
         }
-
-        public void Update(string key)
-        {
-            PDAEncyclopediaEntryUpdate EntryUpdate = new PDAEncyclopediaEntryUpdate(key);
-            packetSender.Send(EntryUpdate);
-        }
-
-        public void Remove(string key)
-        {
-            PDAEncyclopediaEntryRemove EntryRemoved = new PDAEncyclopediaEntryRemove(key);
-            packetSender.Send(EntryRemoved);
-        }
     }
 
 }

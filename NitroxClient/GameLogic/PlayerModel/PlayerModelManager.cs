@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
@@ -8,20 +9,27 @@ using NitroxClient.GameLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.GameLogic.PlayerModel
 {
     public class PlayerModelManager
     {
         private readonly IEnumerable<IColorSwapManager> colorSwapManagers;
-        private readonly GameObject signalBasePrototype;
+        private readonly Lazy<GameObject> signalBasePrototype;
+
+        private GameObject SignalBasePrototype => signalBasePrototype.Value;
 
         public PlayerModelManager(IEnumerable<IColorSwapManager> colorSwapManagers)
         {
             this.colorSwapManagers = colorSwapManagers;
-            signalBasePrototype = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"));
-            signalBasePrototype.transform.localScale = new Vector3(.5f, .5f, .5f);
-            signalBasePrototype.transform.localPosition += new Vector3(0, 0.8f, 0);
+            signalBasePrototype = new Lazy<GameObject>(() =>
+            {
+                GameObject go = (GameObject)Object.Instantiate(Resources.Load("VFX/xSignal"));
+                go.transform.localScale = new Vector3(.5f, .5f, .5f);
+                go.transform.localPosition += new Vector3(0, 0.8f, 0);
+                return go;
+            });
         }
 
         public void BeginApplyPlayerColor(INitroxPlayer player)
@@ -37,9 +45,8 @@ namespace NitroxClient.GameLogic.PlayerModel
 
         public void AttachPing(INitroxPlayer player)
         {
-            GameObject signalBase = Object.Instantiate(signalBasePrototype);
+            GameObject signalBase = Object.Instantiate(SignalBasePrototype, player.PlayerModel.transform, false);
             signalBase.name = "signal" + player.PlayerName;
-            signalBase.transform.SetParent(player.PlayerModel.transform, false);
 
             PingInstance ping = signalBase.GetComponent<PingInstance>();
             ping.SetLabel("Player " + player.PlayerName);
@@ -67,7 +74,10 @@ namespace NitroxClient.GameLogic.PlayerModel
             uGUI_PingTab pingTab = pingTabGameObject.GetComponent<uGUI_PingTab>();
 
             MethodInfo updateEntities = typeof(uGUI_PingTab).GetMethod("UpdateEntries", BindingFlags.NonPublic | BindingFlags.Instance);
-            updateEntities.Invoke(pingTab, new object[] { });
+            updateEntities.Invoke(pingTab,
+                new object[]
+                {
+                });
 
             FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
             Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>)pingTabEntriesField.GetValue(pingTab);
@@ -88,7 +98,11 @@ namespace NitroxClient.GameLogic.PlayerModel
             uGUI_Pings pings = Object.FindObjectOfType<uGUI_Pings>();
 
             MethodInfo setColor = typeof(uGUI_Pings).GetMethod("OnColor", BindingFlags.NonPublic | BindingFlags.Instance);
-            setColor.Invoke(pings, new object[] {ping.GetInstanceID(), player.PlayerSettings.PlayerColor});
+            setColor.Invoke(pings,
+                new object[]
+                {
+                    ping.GetInstanceID(), player.PlayerSettings.PlayerColor
+                });
         }
 
         private static IEnumerator ApplyPlayerColor(INitroxPlayer player, IEnumerable<IColorSwapManager> colorSwapManagers)

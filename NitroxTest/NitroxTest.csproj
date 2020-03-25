@@ -276,6 +276,7 @@
     <Compile Include="Patcher\Patches\Equipment_RemoveItem_PatchTest.cs" />
     <Compile Include="Patcher\Test\PatchTestHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetupAssemblyInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NitroxClient\NitroxClient.csproj">
@@ -302,9 +303,6 @@
       <Project>{0fc864b0-694e-4fca-b78c-8ef98bc6f262}</Project>
       <Name>NitroxServer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Server\" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

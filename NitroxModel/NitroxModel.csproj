@@ -227,6 +227,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Core\IAutoFacRegistrar.cs" />
+    <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefab.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefabFactory.cs" />
@@ -340,8 +341,6 @@
     <Compile Include="Packets\OpenableStateChanged.cs" />
     <Compile Include="Packets\Packet.cs" />
     <Compile Include="Packets\PDAEncyclopediaEntryAdd.cs" />
-    <Compile Include="Packets\PDAEncyclopediaEntryRemove.cs" />
-    <Compile Include="Packets\PDAEncyclopediaEntryUpdate.cs" />
     <Compile Include="Packets\PDAEntryAdd.cs" />
     <Compile Include="Packets\PDAEntryProgress.cs" />
     <Compile Include="Packets\PDAEntryRemove.cs" />

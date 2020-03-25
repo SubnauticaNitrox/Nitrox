@@ -25,7 +25,6 @@ namespace NitroxTest.Patcher.Patches
         public void InjectionSanity()
         {
             List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod((DynamicMethod)Equipment_RemoveItem_Patch.TARGET_METHOD);
-
             IEnumerable<CodeInstruction> result = Equipment_RemoveItem_Patch.Transpiler(Equipment_RemoveItem_Patch.TARGET_METHOD, beforeInstructions);
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());

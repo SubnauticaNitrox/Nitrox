@@ -4,6 +4,7 @@ using Harmony;
 using System.IO;
 using NitroxClient.Helpers;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches.Persistent
 {
@@ -15,9 +16,10 @@ namespace NitroxPatcher.Patches.Persistent
         public static bool Prefix(Stream stream, object source, Type type)
         {
             int key;
-            if (Multiplayer.Active && NitroxProtobufSerializer.Main.NitroxTypes.TryGetValue(type, out key))
+            NitroxProtobufSerializer serializer = NitroxServiceLocator.LocateService<NitroxProtobufSerializer>();
+            if (Multiplayer.Active && serializer.NitroxTypes.TryGetValue(type, out key))
             {
-                NitroxProtobufSerializer.Main.Serialize(stream, source);
+                serializer.Serialize(stream, source);
                 return false;
             }
 
