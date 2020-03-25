@@ -43,7 +43,7 @@ namespace NitroxClient.GameLogic.InitialSync
                         // If player is not swimming
                         Player.main.SetCurrentSub(root);
 
-                        if (!root.isBase) // Additionally, if player is not in base (has to ba a vehicle)
+                        if (!root.isBase) // Additionally, if player is not in base (has to be a vehicle)
                         {
                             Quaternion vehicleAngle = root.transform.rotation;
                             position = vehicleAngle * position;
