@@ -22,13 +22,13 @@ namespace NitroxServer.GameLogic
         private readonly Dictionary<string, Player> allPlayersByName;
         private ushort currentPlayerId = 0;
 
-        private readonly PlayerStatsData defaultPlayerStats = new PlayerStatsData(45, 45, 80, 50.5f, 90.5f, 0);
+        private readonly PlayerStatsData defaultPlayerStats;
 
         public PlayerManager(List<Player> players, ServerConfig serverConfig)
         {
             allPlayersByName = players.ToDictionary(x => x.Name);            
             currentPlayerId = (players.Count == 0) ? (ushort) 0 : players.Max(x => x.Id);
-            //defaultPlayerStats = serverConfig.DefaultPlayerStats; // TODO
+            defaultPlayerStats = serverConfig.DefaultPlayerStats;
 
             this.serverConfig = serverConfig;
         }

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Text;
 using System.ComponentModel;
 using NitroxModel.Logger;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConfigParser
 {
@@ -16,6 +17,12 @@ namespace NitroxServer.ConfigParser
         private readonly ServerConfigItem<string> serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", "");
         private readonly ServerConfigItem<string> adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", GenerateRandomString(12, false));
         private readonly ServerConfigItem<string> gameModeSetting = new ServerConfigItem<string>("GameMode", "Survival");
+        private readonly ServerConfigItem<float> oxygenSetting = new ServerConfigItem<float>("StartOxygen", 45);
+        private readonly ServerConfigItem<float> maxOxygenSetting = new ServerConfigItem<float>("StartMaxOxygen", 45);
+        private readonly ServerConfigItem<float> healthSetting = new ServerConfigItem<float>("StartHealth", 80);
+        private readonly ServerConfigItem<float> foodSetting = new ServerConfigItem<float>("StartFood", 50.5f);
+        private readonly ServerConfigItem<float> waterSetting = new ServerConfigItem<float>("StartWater", 90.5f);
+        private readonly ServerConfigItem<float> infectionSetting = new ServerConfigItem<float>("StartInfection", 0);
 
         public int ServerPort { get { return portSetting.Value; } }
         public int SaveInterval { get { return saveIntervalSetting.Value; } }
@@ -25,6 +32,7 @@ namespace NitroxServer.ConfigParser
         public string ServerPassword { get { return serverPasswordSetting.Value; } }
         public string AdminPassword { get { return adminPasswordSetting.Value; } }
         public string GameMode { get { return gameModeSetting.Value; } }
+        public PlayerStatsData DefaultPlayerStats { get { return new PlayerStatsData(oxygenSetting.Value, maxOxygenSetting.Value, healthSetting.Value, foodSetting.Value, waterSetting.Value, infectionSetting.Value); } }
 
         // Generate a random string with a given size and case.   
         // If second parameter is true, the return string is lowercase  
