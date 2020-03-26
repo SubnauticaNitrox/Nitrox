@@ -38,13 +38,18 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     SubRoot root = sub.Get().GetComponent<SubRoot>();
                     // Player position is relative to a subroot if in a subroot
-                    if (root != null && !root.isBase)
-                    {                        
+                    if (root != null)
+                    {
+                        // If player is not swimming
                         Player.main.SetCurrentSub(root);
-                        Quaternion vehicleAngle = root.transform.rotation;
-                        position = vehicleAngle * position;
-                        position = position + root.transform.position;
-                        Player.main.SetPosition(position);
+
+                        if (!root.isBase) // Additionally, if player is not in base (has to be a vehicle)
+                        {
+                            Quaternion vehicleAngle = root.transform.rotation;
+                            position = vehicleAngle * position;
+                            position = position + root.transform.position;
+                            Player.main.SetPosition(position);
+                        }
                     }
                     else
                     {
