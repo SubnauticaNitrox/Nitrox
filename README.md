@@ -5,6 +5,8 @@
 # Subnautica Nitrox
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>.
 
+![](https://github.com/SubnauticaNitrox/Nitrox/workflows/Building%20Nitrox/badge.svg)
+
 ## FAQ
 
 ### What is the current status?
