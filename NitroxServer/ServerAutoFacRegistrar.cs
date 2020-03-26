@@ -20,7 +20,7 @@ namespace NitroxServer
         {
             RegisterCoreDependencies(containerBuilder);
             RegisterWorld(containerBuilder);
-            
+
             RegisterGameSpecificServices(containerBuilder, Assembly.GetCallingAssembly());
             RegisterGameSpecificServices(containerBuilder, Assembly.GetExecutingAssembly());
         }
@@ -37,12 +37,11 @@ namespace NitroxServer
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
             containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
-            
+
             containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
             {
                 return ctx.Resolve<LiteNetLibServer>();
             }).SingleInstance();
-
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)
@@ -64,7 +63,7 @@ namespace NitroxServer
         }
 
         private void RegisterGameSpecificServices(ContainerBuilder containerBuilder, Assembly assembly)
-        {           
+        {
             containerBuilder
                 .RegisterAssemblyTypes(assembly)
                 .AssignableTo<Command>()

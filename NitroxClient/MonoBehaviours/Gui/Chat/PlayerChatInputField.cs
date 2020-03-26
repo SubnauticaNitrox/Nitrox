@@ -109,8 +109,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (chatMessage[0] == SERVER_COMMAND_PREFIX)
             {
-                // Remove "/" and split on arguments. TODO: Send as string and let server parse the command
-                session.Send(new ServerCommand(chatMessage.Remove(0, 1).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)));
+                session.Send(new ServerCommand(chatMessage.Remove(0, 1)));
             }
             else
             {

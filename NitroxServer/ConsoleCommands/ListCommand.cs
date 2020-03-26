@@ -1,9 +1,9 @@
-﻿using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
+﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -22,12 +22,19 @@ namespace NitroxServer.ConsoleCommands
 
             string playerList = "List of players : " + string.Join(", ", players);
 
-            if(players.Count == 0)
+            if (players.Count == 0)
             {
                 playerList += "No players online";
             }
 
-            SendMessageToPlayer(sender, playerList);
+            if (sender.IsPresent())
+            {
+                SendMessageToPlayer(sender, playerList);
+            }
+            else
+            {
+                Log.Info(playerList);
+            }
         }
 
         public override bool VerifyArgs(string[] args)
