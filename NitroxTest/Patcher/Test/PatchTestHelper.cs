@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
 using Harmony.ILCopying;
@@ -11,27 +14,44 @@ namespace NitroxTest.Patcher.Test
         public static List<CodeInstruction> GenerateDummyInstructions(int count)
         {
             List<CodeInstruction> instructions = new List<CodeInstruction>();
-
             for (int i = 0; i < count; i++)
             {
                 instructions.Add(new CodeInstruction(OpCodes.Nop));
             }
-
             return instructions;
         }
 
-        public static List<CodeInstruction> GetInstructionsFromMethod(DynamicMethod targetMethod)
+        public static ReadOnlyCollection<CodeInstruction> GetInstructionsFromMethod(DynamicMethod targetMethod)
         {
             Validate.NotNull(targetMethod);
+            return GetInstructionsFromIL(GetILInstructions(targetMethod));
+        }
+        
+        public static ReadOnlyCollection<CodeInstruction> GetInstructionsFromMethod(MethodInfo targetMethod)
+        {
+            Validate.NotNull(targetMethod);
+            return GetInstructionsFromIL(GetILInstructions(targetMethod));
+        }
 
-            List<CodeInstruction> instructions = new List<CodeInstruction>();
-
-            foreach (ILInstruction instruction in MethodBodyReader.GetInstructions(targetMethod.GetILGenerator(), targetMethod))
+        private static ReadOnlyCollection<CodeInstruction> GetInstructionsFromIL(IEnumerable<ILInstruction> il)
+        {
+            List<CodeInstruction> result = new List<CodeInstruction>();
+            foreach (ILInstruction instruction in il)
             {
-                instructions.Add(instruction.GetCodeInstruction());
+                result.Add(instruction.GetCodeInstruction());
             }
+            return result.AsReadOnly();
+        }
 
-            return instructions;
+        public static IEnumerable<ILInstruction> GetILInstructions(MethodInfo method)
+        {
+            DynamicMethod dynMethod = new DynamicMethod(method.Name, method.ReturnType, method.GetParameters().Select(p => p.ParameterType).ToArray(), false);
+            return MethodBodyReader.GetInstructions(dynMethod.GetILGenerator(), method);
+        }
+
+        public static IEnumerable<ILInstruction> GetILInstructions(DynamicMethod method)
+        {
+            return MethodBodyReader.GetInstructions(method.GetILGenerator(), method);
         }
     }
 }

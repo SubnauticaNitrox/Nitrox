@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security;
-using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxClient;
 using NitroxClient.Communication.Packets.Processors.Abstract;
@@ -108,12 +105,12 @@ namespace NitroxTest.Model
                 Type authProcessorType = authenticatedPacketProcessorType.MakeGenericType(packet);
                 Type unauthProcessorType = unauthenticatedPacketProcessorType.MakeGenericType(packet);
 
-                Console.WriteLine($"Checking handler for packet {packet}...");
-                Assert.IsTrue(packetTypes.Contains(packet) ||
-                              NitroxServiceLocator.LocateOptionalService(clientProcessorType).IsPresent() ||
-                              NitroxServiceLocator.LocateOptionalService(authProcessorType).IsPresent() ||
-                              NitroxServiceLocator.LocateOptionalService(unauthProcessorType).IsPresent(),
-                    $"Runtime has not detected a handler {clientProcessorType}!");
+                Console.WriteLine($@"Checking handler for packet {packet}...");
+                (packetTypes.Contains(packet) ||
+                 NitroxServiceLocator.LocateOptionalService(clientProcessorType).IsPresent() ||
+                 NitroxServiceLocator.LocateOptionalService(authProcessorType).IsPresent() ||
+                 NitroxServiceLocator.LocateOptionalService(unauthProcessorType).IsPresent()).Should()
+                    .BeTrue($"Packet of type '{packet}' should have at least one processor.");
             }
         }
     }

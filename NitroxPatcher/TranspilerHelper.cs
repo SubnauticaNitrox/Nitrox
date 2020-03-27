@@ -20,7 +20,7 @@ namespace NitroxPatcher
 
         private static IEnumerable<LocalVariableInfo> GetMatchingLocalVariables<T>(MethodBase method)
         {
-            return method.GetMethodBody().LocalVariables.Where(v => v.LocalType == typeof(T));
+            return method.GetMethodBody()?.LocalVariables.Where(v => v.LocalType == typeof(T)) ?? new LocalVariableInfo[0];
         }
 
         /// <summary>
@@ -86,6 +86,10 @@ namespace NitroxPatcher
         /// <param name="i">Index of the local variable to load, in a list of only variables of type <typeparamref name="T"/></param>
         public static CodeInstruction Ldloc<T>(this MethodBase method, int i)
         {
+            if (method == null)
+            {
+                return new CodeInstruction(OpCodes.Nop);
+            }
             return Ldloc(method.GetLocalVariableIndex<T>(i));
         }
     }

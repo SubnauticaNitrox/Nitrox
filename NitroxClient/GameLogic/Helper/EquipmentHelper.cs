@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic.Helper
                 Equipment equipment = equipmentFinder(owner);
                 if (equipment != null)
                 {
-                    return equipment;
+                    return Optional.Of(equipment);
                 }
             }
             return Optional.Empty;

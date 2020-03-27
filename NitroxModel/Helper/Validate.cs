@@ -15,35 +15,33 @@ namespace NitroxModel.Helper
             // In other words: Error when trying to assert non-null on something that can't be null in the first place.
             where T : class
         {
-            if (o == null)
+            if (o != null)
             {
-                Optional<string> paramName = GetParameterName<T>();
-                if (paramName.IsPresent())
-                {
-                    throw new ArgumentNullException(paramName.Get());
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
+                return;
             }
+            
+            Optional<string> paramName = GetParameterName<T>();
+            if (paramName.IsPresent())
+            {
+                throw new ArgumentNullException(paramName.Get());
+            }
+            throw new ArgumentNullException();
         }
 
         public static void NotNull<T>(T o, string message)
             where T : class
         {
-            if (o == null)
+            if (o != null)
             {
-                Optional<string> paramName = GetParameterName<T>();
-                if (paramName.IsPresent())
-                {
-                    throw new ArgumentNullException(paramName.Get(), message);
-                }
-                else
-                {
-                    throw new ArgumentNullException(message);
-                }
+                return;
             }
+            
+            Optional<string> paramName = GetParameterName<T>();
+            if (paramName.IsPresent())
+            {
+                throw new ArgumentNullException(paramName.Get(), message);
+            }
+            throw new ArgumentNullException(message);
         }
 
         public static void IsTrue(bool b)

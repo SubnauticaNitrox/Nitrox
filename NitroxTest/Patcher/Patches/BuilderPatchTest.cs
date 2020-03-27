@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using Harmony;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxTest.Patcher.Test;
@@ -25,8 +27,8 @@ namespace NitroxTest.Patcher.Patches
         [TestMethod]
         public void InjectionSanity()
         {
-            DynamicMethod targetMethod = (DynamicMethod)AccessTools.Method(typeof(Builder), "TryPlace");
-            List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
+            MethodInfo targetMethod = AccessTools.Method(typeof(Builder), "TryPlace");
+            ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod(targetMethod);
 
             IEnumerable<CodeInstruction> result = Builder_TryPlace_Patch.Transpiler(targetMethod, beforeInstructions);
             Assert.IsTrue(beforeInstructions.Count < result.Count());

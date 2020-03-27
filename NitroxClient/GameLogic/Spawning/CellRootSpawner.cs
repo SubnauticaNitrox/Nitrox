@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             LargeWorldStreamer.main.cellManager.QueueForAwake(cellRoot);
 
-            return cellRoot.liveRoot;
+            return Optional.OfNullable(cellRoot.liveRoot);
         }
 
         public bool SpawnsOwnChildren()
