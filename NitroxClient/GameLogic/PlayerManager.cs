@@ -70,9 +70,9 @@ namespace NitroxClient.GameLogic
         public void RemovePlayer(ushort playerId)
         {
             Optional<RemotePlayer> opPlayer = Find(playerId);
-            if (opPlayer.IsPresent())
+            if (opPlayer.HasValue)
             {
-                opPlayer.Get().Destroy();
+                opPlayer.Value.Destroy();
                 playersById.Remove(playerId);
                 DiscordRPController.Main.UpdatePlayerCount(GetTotalPlayerCount());
             }

@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -141,13 +143,22 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(Entity entity)
         {
+#if DEBUG
+            Validate.NotNull(entity);
+#endif
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
-
-            if (opGameObject.IsPresent())
+            if (opGameObject.HasValue)
             {
-                opGameObject.Get().transform.position = entity.Transform.Position;
-                opGameObject.Get().transform.rotation = entity.Transform.Rotation;
-                opGameObject.Get().transform.localScale = entity.Transform.LocalScale;
+                try
+                {
+                    opGameObject.Value.transform.position = entity.Transform.Position;
+                    opGameObject.Value.transform.rotation = entity.Transform.Rotation;
+                    opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
+                }
+                catch (NullReferenceException ex)
+                {
+                    Log.Error($"Gameobject is invalid: '{opGameObject.Value}'. Is it null? {opGameObject.Value == null} Is present? {opGameObject.HasValue} Has value? {opGameObject.HasValue}", ex);
+                }
             }
             else
             {

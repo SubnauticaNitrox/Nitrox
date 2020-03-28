@@ -36,7 +36,7 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
         public static RemotePlayerVitals CreateForPlayer(ushort playerId)
         {
             RemotePlayerVitals vitals = new GameObject().AddComponent<RemotePlayerVitals>();
-            RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Get();
+            RemotePlayer remotePlayer = NitroxServiceLocator.LocateService<PlayerManager>().Find(playerId).Value;
 
             vitals.canvas = vitals.CreateCanvas(remotePlayer.Body.transform);
 

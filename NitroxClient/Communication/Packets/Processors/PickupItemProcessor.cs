@@ -19,10 +19,9 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(PickupItem pickup)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(pickup.Id);
-
-            if (opGameObject.IsPresent())
+            if (opGameObject.HasValue)
             {
-                UnityEngine.Object.Destroy(opGameObject.Get());
+                Object.Destroy(opGameObject.Value);
                 entities.RemoveEntity(pickup.Id);
             }
         }

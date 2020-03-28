@@ -20,17 +20,17 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(packet.PlayerId);
 
-            if (remotePlayer.IsPresent())
+            if (remotePlayer.HasValue)
             {
                 SubRoot subRoot = null;
 
-                if (packet.SubRootId.IsPresent())
+                if (packet.SubRootId.HasValue)
                 {
-                    GameObject sub = NitroxEntity.RequireObjectFrom(packet.SubRootId.Get());
+                    GameObject sub = NitroxEntity.RequireObjectFrom(packet.SubRootId.Value);
                     subRoot = sub.GetComponent<SubRoot>();
                 }
 
-                remotePlayer.Get().SetSubRoot(subRoot);
+                remotePlayer.Value.SetSubRoot(subRoot);
             }
         }
     }

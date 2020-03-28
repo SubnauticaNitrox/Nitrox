@@ -126,9 +126,9 @@ namespace NitroxClient.MonoBehaviours
 
             GameObject parentBase = null;
 
-            if(basePiece.ParentId.IsPresent())
+            if (basePiece.ParentId.HasValue)
             {
-                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Get()).OrElse(null);
+                parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrElse(null);
             }
             
             Constructable constructable;
@@ -165,7 +165,7 @@ namespace NitroxClient.MonoBehaviours
 
             // For bases, we need to transfer the GUID off of the ghost and onto the finished piece.
             // Furniture just re-uses the same piece.
-            if(constructableBase)
+            if (constructableBase)
             {
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
@@ -175,15 +175,15 @@ namespace NitroxClient.MonoBehaviours
                 Int3 latestCell;
                 Base latestBase;
 
-                if (latestBaseOp.IsPresent())
+                if (latestBaseOp.HasValue)
                 {
                     latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
-                    latestBase = (Base)latestBaseOp.Get();
+                    latestBase = (Base)latestBaseOp.Value;
                 }
                 else
                 {
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
-                    latestBase = ((GameObject)opConstructedBase.Get()).GetComponent<Base>();
+                    latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                     Validate.NotNull(latestBase, "latestBase can not be null");
 
                     Vector3 worldPosition;
@@ -228,7 +228,7 @@ namespace NitroxClient.MonoBehaviours
                 Log.Info("Construction completed on a piece of furniture: " + constructionCompleted.PieceId + " " + constructable.gameObject.name);
             }
             
-            if (constructionCompleted.BaseId != null && NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).IsEmpty())
+            if (constructionCompleted.BaseId != null && !NitroxEntity.GetObjectFrom(constructionCompleted.BaseId).HasValue)
             {
                 Log.Info("Creating base: " + constructionCompleted.BaseId);
                 ConfigureNewlyConstructedBase(constructionCompleted.BaseId);
@@ -239,9 +239,9 @@ namespace NitroxClient.MonoBehaviours
         {
             Optional<object> opNewlyCreatedBase = TransientLocalObjectManager.Get(TransientLocalObjectManager.TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
 
-            if (opNewlyCreatedBase.IsPresent())
+            if (opNewlyCreatedBase.HasValue)
             {
-                GameObject newlyCreatedBase = (GameObject)opNewlyCreatedBase.Get();
+                GameObject newlyCreatedBase = (GameObject)opNewlyCreatedBase.Value;
                 NitroxEntity.SetNewId(newlyCreatedBase, newBaseId);
             }
             else
@@ -267,10 +267,10 @@ namespace NitroxClient.MonoBehaviours
                 // After we have begun the deconstructing for a base piece, we need to transfer the id
                 Optional<object> opGhost = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE);
 
-                if(opGhost.IsPresent())
+                if (opGhost.HasValue)
                 {
-                    GameObject ghost = (GameObject)opGhost.Get();
-                    UnityEngine.Object.Destroy(constructing);
+                    GameObject ghost = (GameObject)opGhost.Value;
+                    Destroy(constructing);
                     NitroxEntity.SetNewId(ghost, amountChanged.Id);
                 }
                 else

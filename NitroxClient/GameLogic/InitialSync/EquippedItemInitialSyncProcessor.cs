@@ -43,15 +43,15 @@ namespace NitroxClient.GameLogic.InitialSync
                     Pickupable pickupable = gameObject.RequireComponent<Pickupable>();
                     Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(equippedItem.ContainerId);
 
-                    if (opGameObject.IsPresent())
+                    if (opGameObject.HasValue)
                     {
-                        GameObject owner = opGameObject.Get();
+                        GameObject owner = opGameObject.Value;
 
                         Optional<Equipment> opEquipment = EquipmentHelper.FindEquipmentComponent(owner);
 
-                        if (opEquipment.IsPresent())
+                        if (opEquipment.HasValue)
                         {                            
-                            Equipment equipment = opEquipment.Get();
+                            Equipment equipment = opEquipment.Value;
                             InventoryItem inventoryItem = new InventoryItem(pickupable);
                             inventoryItem.container = equipment;
                             inventoryItem.item.Reparent(equipment.tr);

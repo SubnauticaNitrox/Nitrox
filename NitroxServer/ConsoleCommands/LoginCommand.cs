@@ -18,12 +18,12 @@ namespace NitroxServer.ConsoleCommands
         {
             string message = "Can't update permissions";
 
-            if (sender.IsPresent())
+            if (sender.HasValue)
             {
                 if (args[0] == serverConfig.AdminPassword)
                 {
-                    sender.Get().Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {sender.Get().Name}";
+                    sender.Value.Permissions = Perms.ADMIN;
+                    message = $"Updated permissions to admin for {sender.Value.Name}";
                 }
                 else
                 {

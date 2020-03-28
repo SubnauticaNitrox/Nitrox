@@ -21,12 +21,12 @@ namespace NitroxClient.GameLogic.Bases.Spawning
 
             Optional<GameObject> otherLadderPiece = FindSecondLadderPiece(latestBase, cellToSearch);
 
-            if (otherLadderPiece.IsPresent())
+            if (otherLadderPiece.HasValue)
             {
                 // Ladders are one of the rare instances where we want to assign the same id to two different objects.
                 // This happens because the ladder can be deconstructed from two locations (the top and bottom).
                 NitroxId id = NitroxEntity.GetId(finishedPiece);
-                NitroxEntity.SetNewId(otherLadderPiece.Get(), id);
+                NitroxEntity.SetNewId(otherLadderPiece.Value, id);
             }
             else
             {

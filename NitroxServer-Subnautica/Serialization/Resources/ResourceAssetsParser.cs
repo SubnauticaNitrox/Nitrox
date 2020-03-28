@@ -116,32 +116,28 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         {
             List<string> errors = new List<string>();
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
-
-            if (subnauticaPath.IsEmpty())
+            if (!subnauticaPath.HasValue)
             {
-                Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+                throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
             }
             
-            if (File.Exists(Path.Combine(subnauticaPath.Get(), "Subnautica_Data", "resources.assets")))
+            if (File.Exists(Path.Combine(subnauticaPath.Value, "Subnautica_Data", "resources.assets")))
             {
-                return Path.Combine(subnauticaPath.Get(), "Subnautica_Data");
+                return Path.Combine(subnauticaPath.Value, "Subnautica_Data");
             }
-            else if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => Subnautica/Subnautica_Data/SubServer
+            if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => Subnautica/Subnautica_Data/SubServer
             {
                 return Path.GetFullPath(Path.Combine(".."));
             }
-            else if (File.Exists(Path.Combine("..", "Subnautica_Data", "resources.assets")))   //  SubServer => Subnautica/SubServer
+            if (File.Exists(Path.Combine("..", "Subnautica_Data", "resources.assets")))   //  SubServer => Subnautica/SubServer
             {
                 return Path.GetFullPath(Path.Combine("..", "Subnautica_Data"));
             }
-            else if (File.Exists("resources.assets"))   //  SubServer/* => Subnautica/Subnautica_Data/
+            if (File.Exists("resources.assets"))   //  SubServer/* => Subnautica/Subnautica_Data/
             {
                 return Directory.GetCurrentDirectory();
             }
-            else
-            {
-                throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
-            }
+            throw new FileNotFoundException("Make sure resources.assets is in current or parent directory and readable.");
         }
     }
 }

@@ -35,9 +35,9 @@ namespace NitroxClient.Communication.Packets.Processors
 
             Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
-            if (opConstructedObject.IsPresent())
+            if (opConstructedObject.HasValue)
             {
-                GameObject constructedObject = (GameObject)opConstructedObject.Get();
+                GameObject constructedObject = (GameObject)opConstructedObject.Value;
                 NitroxEntity.SetNewId(constructedObject, packet.ConstructedItemId);
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(constructedObject, packet.InteractiveChildIdentifiers);
             }

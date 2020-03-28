@@ -59,7 +59,7 @@ namespace NitroxServer.GameLogic
             {
                 // TODO: ServerPassword in NitroxClient
 
-                if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (authenticationContext.ServerPassword.IsEmpty() || (authenticationContext.ServerPassword.Get() != serverConfig.ServerPassword)))
+                if (!string.IsNullOrEmpty(serverConfig.ServerPassword) && (!authenticationContext.ServerPassword.HasValue || (authenticationContext.ServerPassword.Value != serverConfig.ServerPassword)))
                 {
                     MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.AUTHENTICATION_FAILED;
                     return new MultiplayerSessionReservation(correlationId, rejectedState);

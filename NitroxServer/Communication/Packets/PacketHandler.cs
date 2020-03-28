@@ -44,9 +44,9 @@ namespace NitroxServer.Communication.Packets
 
             Optional<object> opProcessor = NitroxServiceLocator.LocateOptionalService(packetProcessorType);
 
-            if (opProcessor.IsPresent())
+            if (opProcessor.HasValue)
             {
-                PacketProcessor processor = (PacketProcessor)opProcessor.Get();
+                PacketProcessor processor = (PacketProcessor)opProcessor.Value;
                 processor.ProcessPacket(packet, player);
             }
             else

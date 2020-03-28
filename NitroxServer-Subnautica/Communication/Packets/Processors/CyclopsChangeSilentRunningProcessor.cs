@@ -21,10 +21,9 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         public override void Process(CyclopsChangeSilentRunning packet, NitroxServer.Player player)
         {
             Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
-
-            if (opCyclops.IsPresent())
+            if (opCyclops.HasValue)
             {
-                opCyclops.Get().SilentRunningOn = packet.IsOn;
+                opCyclops.Value.SilentRunningOn = packet.IsOn;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

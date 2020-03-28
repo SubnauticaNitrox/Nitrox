@@ -108,13 +108,13 @@ namespace NitroxServer.GameLogic.Entities
         public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
-            if (!opEntity.IsPresent())
+            if (!opEntity.HasValue)
             {
                 Log.Debug("Could not update entity position because it was not found (maybe it was recently picked up)");
                 return Optional.Empty;
             }
 
-            Entity entity = opEntity.Get();
+            Entity entity = opEntity.Value;
             AbsoluteEntityCell oldCell = entity.AbsoluteEntityCell;
 
             entity.Transform.Position = position;
@@ -218,9 +218,9 @@ namespace NitroxServer.GameLogic.Entities
                             {
                                 Optional<Entity> opEnt = GetEntityById(entity.ParentId);
 
-                                if (opEnt.IsPresent())
+                                if (opEnt.HasValue)
                                 {
-                                    entity.Transform.SetParent(opEnt.Get().Transform);
+                                    entity.Transform.SetParent(opEnt.Value.Transform);
                                 }
                                 else
                                 {

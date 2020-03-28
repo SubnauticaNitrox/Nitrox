@@ -18,10 +18,10 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(movement.PlayerId);
 
-            if (remotePlayer.IsPresent())
+            if (remotePlayer.HasValue)
             {
                 remotePlayer
-                    .Get()
+                    .Value
                     .UpdatePosition(movement.Position,
                         movement.Velocity,
                         movement.BodyRotation,

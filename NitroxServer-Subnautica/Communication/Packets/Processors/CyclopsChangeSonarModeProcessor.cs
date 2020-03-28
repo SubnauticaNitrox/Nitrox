@@ -21,10 +21,9 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         public override void Process(CyclopsChangeSonarMode packet, NitroxServer.Player player)
         {
             Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
-
-            if (opCyclops.IsPresent())
+            if (opCyclops.HasValue)
             {
-                opCyclops.Get().SonarOn = packet.IsOn;
+                opCyclops.Value.SonarOn = packet.IsOn;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

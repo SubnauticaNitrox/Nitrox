@@ -188,9 +188,9 @@ namespace NitroxClient.GameLogic
         public void OnRadioRepair(NitroxId id)
         {
             Optional<GameObject> radObj = NitroxEntity.GetObjectFrom(id);
-            if (radObj.IsPresent())
+            if (radObj.HasValue)
             {
-                Radio radio = radObj.Get().GetComponent<Radio>();
+                Radio radio = radObj.Value.GetComponent<Radio>();
 
                 // StoryGoalManager.main.PulsePendingMessages();
                 radio.liveMixin.health = radio.liveMixin.maxHealth;

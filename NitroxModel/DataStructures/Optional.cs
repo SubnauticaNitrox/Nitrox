@@ -2,6 +2,8 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -21,38 +23,35 @@ namespace NitroxModel.DataStructures.Util
         [ProtoMember(1)]
         public T Value { get; private set; }
 
+        private bool hasValue;
+        
         [ProtoMember(2)]
-        public bool HasValue { get; private set; }
+        public bool HasValue
+        {
+            get
+            {
+                // If Unity object is destroyed then this optional also has no value (because a dead object is useless, same as null).
+                if (Value is Object)
+                {
+                    return Value?.ToString() != "null";
+                }
+                return hasValue;
+            }
+            set
+            {
+                hasValue = value;
+            }
+        }
 
         private Optional(T value)
         {
             Value = value;
-            HasValue = true;
-        }
-
-        public bool IsPresent()
-        {
-            return HasValue;
-        }
-
-        public bool IsEmpty()
-        {
-            return !HasValue;
-        }
-
-        public T Get()
-        {
-            return Value;
+            hasValue = true;
         }
 
         public T OrElse(T elseValue)
         {
-            if (IsEmpty())
-            {
-                return elseValue;
-            }
-
-            return Value;
+            return HasValue ? Value : elseValue;
         }
 
         internal static Optional<T> Of(T value)
@@ -73,7 +72,7 @@ namespace NitroxModel.DataStructures.Util
         private Optional(SerializationInfo info, StreamingContext context)
         {
             Value = (T)info.GetValue("value", typeof(T));
-            HasValue = info.GetBoolean("hasValue");
+            hasValue = info.GetBoolean("hasValue");
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]

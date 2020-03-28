@@ -107,9 +107,9 @@ namespace NitroxTest.Model
 
                 Console.WriteLine($@"Checking handler for packet {packet}...");
                 (packetTypes.Contains(packet) ||
-                 NitroxServiceLocator.LocateOptionalService(clientProcessorType).IsPresent() ||
-                 NitroxServiceLocator.LocateOptionalService(authProcessorType).IsPresent() ||
-                 NitroxServiceLocator.LocateOptionalService(unauthProcessorType).IsPresent()).Should()
+                 NitroxServiceLocator.LocateOptionalService(clientProcessorType).HasValue ||
+                 NitroxServiceLocator.LocateOptionalService(authProcessorType).HasValue ||
+                 NitroxServiceLocator.LocateOptionalService(unauthProcessorType).HasValue).Should()
                     .BeTrue($"Packet of type '{packet}' should have at least one processor.");
             }
         }

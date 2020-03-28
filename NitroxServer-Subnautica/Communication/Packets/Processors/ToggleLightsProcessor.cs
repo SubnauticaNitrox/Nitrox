@@ -21,9 +21,9 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         {
             Optional<SeamothModel> opSeamoth = vehicleManager.GetVehicleModel<SeamothModel>(packet.Id);
 
-            if (opSeamoth.IsPresent() && opSeamoth.Get().GetType() == typeof(SeamothModel))
+            if (opSeamoth.HasValue && opSeamoth.Value.GetType() == typeof(SeamothModel))
             {
-                opSeamoth.Get().LightOn = packet.IsOn;
+                opSeamoth.Value.LightOn = packet.IsOn;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

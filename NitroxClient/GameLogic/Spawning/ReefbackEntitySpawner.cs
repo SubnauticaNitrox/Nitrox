@@ -17,27 +17,27 @@ namespace NitroxClient.GameLogic.Spawning
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
             Optional<GameObject> reefback = defaultSpawner.Spawn(entity, parent, cellRoot);
-
-            if(reefback.IsPresent())
+            if (!reefback.HasValue)
             {
-                ReefbackLife life = reefback.Get().GetComponent<ReefbackLife>();
-                if (life != null) // Child Reefy...
-                {
-                    life.initialized = true;
-                    life.ReflectionCall("SpawnPlants");
-
-                    foreach (Entity childEntity in entity.ChildEntities)
-                    {
-                        Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
-
-                        if (child.IsPresent())
-                        {
-                            child.Get().AddComponent<ReefbackCreature>();
-                        }
-                    }
-                }
+                return Optional.Empty;
+            }
+            ReefbackLife life = reefback.Value.GetComponent<ReefbackLife>();
+            if (life == null)
+            {
+                return Optional.Empty;
             }
             
+            life.initialized = true;
+            life.ReflectionCall("SpawnPlants");
+            foreach (Entity childEntity in entity.ChildEntities)
+            {
+                Optional<GameObject> child = defaultSpawner.Spawn(childEntity, reefback, cellRoot);
+                if (child.HasValue)
+                {
+                    child.Value.AddComponent<ReefbackCreature>();
+                }
+            }
+
             return Optional.Empty;
         }
 

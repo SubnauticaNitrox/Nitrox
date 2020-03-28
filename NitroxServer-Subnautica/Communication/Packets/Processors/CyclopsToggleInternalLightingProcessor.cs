@@ -21,10 +21,9 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         public override void Process(CyclopsToggleInternalLighting packet, NitroxServer.Player player)
         {
             Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
-
-            if (opCyclops.IsPresent() && opCyclops.Get().GetType() == typeof(CyclopsModel))
+            if (opCyclops.HasValue && opCyclops.Value.GetType() == typeof(CyclopsModel))
             {
-                opCyclops.Get().InternalLightsOn = packet.IsOn;
+                opCyclops.Value.InternalLightsOn = packet.IsOn;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

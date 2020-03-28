@@ -24,9 +24,9 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 waitScreenItem.SetProgress(basePiecesChecked, packet.BasePieces.Count);
 
-                if (basePiece.Metadata.IsPresent())
+                if (basePiece.Metadata.HasValue)
                 {
-                    BasePieceMetadata metadata = basePiece.Metadata.Get();
+                    BasePieceMetadata metadata = basePiece.Metadata.Value;
                     BasePieceMetadataProcessor metadataProcessor = BasePieceMetadataProcessor.FromMetaData(metadata);
                     metadataProcessor.UpdateMetadata(basePiece.Id, metadata);
                     basePiecesWithMetadata++;

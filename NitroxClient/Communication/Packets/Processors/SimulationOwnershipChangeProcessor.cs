@@ -57,9 +57,9 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(id);
 
-            if (gameObject.IsPresent())
+            if (gameObject.HasValue)
             {
-                EntityPositionBroadcaster.WatchEntity(id, gameObject.Get());
+                EntityPositionBroadcaster.WatchEntity(id, gameObject.Value);
             }
             else
             {

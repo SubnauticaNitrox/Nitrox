@@ -26,9 +26,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 string otherPlayerName = (string)n.data[0];
                 PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
                 Optional<RemotePlayer> opPlayer = remotePlayerManager.FindByName(otherPlayerName);
-                if (opPlayer.IsPresent())
+                if (opPlayer.HasValue)
                 {
-                    Player.main.SetPosition(opPlayer.Get().Body.transform.position);
+                    Player.main.SetPosition(opPlayer.Value.Body.transform.position);
                     Player.main.OnPlayerPositionCheat();
                 }
             }

@@ -132,9 +132,9 @@ namespace NitroxClient.GameLogic
             
             NitroxId id = NitroxEntity.GetId(ghost);
 
-            if (opConstructedBase.IsPresent())
+            if (opConstructedBase.HasValue)
             {
-                GameObject constructedBase = (GameObject)opConstructedBase.Get();
+                GameObject constructedBase = (GameObject)opConstructedBase.Value;
                 baseId = NitroxEntity.GetId(constructedBase);
             }
             
@@ -147,14 +147,14 @@ namespace NitroxClient.GameLogic
                 Int3 latestCell;
                 Base latestBase;
 
-                if (latestBaseOp.IsPresent())
+                if (latestBaseOp.HasValue)
                 {
                     latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
-                    latestBase = (Base)latestBaseOp.Get();
+                    latestBase = (Base)latestBaseOp.Value;
                 }
                 else
                 {
-                    latestBase = ((GameObject)opConstructedBase.Get()).GetComponent<Base>();
+                    latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                     Vector3 worldPosition;
                     float distance;
 

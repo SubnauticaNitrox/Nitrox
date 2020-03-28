@@ -21,9 +21,9 @@ namespace NitroxServer.ConsoleCommands
 
             Optional<Player> receivingPlayer = playerManager.GetPlayer(playerName);
 
-            if (receivingPlayer.IsPresent())
+            if (receivingPlayer.HasValue)
             {
-                receivingPlayer.Get().Permissions = Perms.ADMIN;
+                receivingPlayer.Value.Permissions = Perms.ADMIN;
                 message = $"Updated {playerName}\'s permissions to admin";
             }
             else

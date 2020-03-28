@@ -1,7 +1,11 @@
 ﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxTest.Model
 {
@@ -12,21 +16,21 @@ namespace NitroxTest.Model
         public void OptionalGet()
         {
             Optional<string> op = Optional.Of("test");
-            op.Get().ShouldBeEquivalentTo("test");
+            op.Value.ShouldBeEquivalentTo("test");
         }
 
         [TestMethod]
         public void OptionalIsPresent()
         {
             Optional<string> op = Optional.Of("test");
-            op.IsPresent().Should().BeTrue();
+            op.HasValue.Should().BeTrue();
         }
 
         [TestMethod]
         public void OptionalIsNotPresent()
         {
             Optional<string> op = Optional.Empty;
-            op.IsPresent().Should().BeFalse();
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
@@ -47,28 +51,28 @@ namespace NitroxTest.Model
         public void OptionalEmpty()
         {
             Optional<string> op = Optional.Empty;
-            op.IsEmpty().Should().BeTrue();
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
         public void OptionalValueTypeGet()
         {
             Optional<int> op = Optional.Of(1);
-            op.Get().ShouldBeEquivalentTo(1);
+            op.Value.ShouldBeEquivalentTo(1);
         }
 
         [TestMethod]
         public void OptionalValueTypeIsPresent()
         {
             Optional<int> op = Optional.Of(0);
-            op.IsPresent().Should().BeTrue();
+            op.HasValue.Should().BeTrue();
         }
 
         [TestMethod]
         public void OptionalValueTypeIsNotPresent()
         {
             Optional<int> op = Optional.Empty;
-            op.IsPresent().Should().BeFalse();
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
@@ -107,7 +111,7 @@ namespace NitroxTest.Model
         public void OptionalValueTypeEmpty()
         {
             Optional<int> op = Optional.Empty;
-            op.IsEmpty().Should().BeTrue();
+            op.HasValue.Should().BeFalse();
         }
     }
 }

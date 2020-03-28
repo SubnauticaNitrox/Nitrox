@@ -36,7 +36,7 @@ namespace NitroxServer.GameLogic
                 if (podForNextPlayer.IsFull())
                 {
                     newlyCreatedPod = Optional.Of(CreateNewEscapePod());
-                    podForNextPlayer = newlyCreatedPod.Get();
+                    podForNextPlayer = newlyCreatedPod.Value;
                 }
 
                 podForNextPlayer.AssignedPlayers.Add(playerId);
