@@ -143,27 +143,16 @@ namespace NitroxClient.GameLogic
 
         private void UpdatePosition(Entity entity)
         {
-#if DEBUG
-            Validate.NotNull(entity);
-#endif
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
-            if (opGameObject.HasValue)
-            {
-                try
-                {
-                    opGameObject.Value.transform.position = entity.Transform.Position;
-                    opGameObject.Value.transform.rotation = entity.Transform.Rotation;
-                    opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
-                }
-                catch (NullReferenceException ex)
-                {
-                    Log.Error($"Gameobject is invalid: '{opGameObject.Value}'. Is it null? {opGameObject.Value == null} Is present? {opGameObject.HasValue} Has value? {opGameObject.HasValue}", ex);
-                }
-            }
-            else
+            if (!opGameObject.HasValue)
             {
                 Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Transform: " + entity.Transform);
+                return;
             }
+            
+            opGameObject.Value.transform.position = entity.Transform.Position;
+            opGameObject.Value.transform.rotation = entity.Transform.Rotation;
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
         }
         
         public bool WasSpawnedByServer(NitroxId id)
