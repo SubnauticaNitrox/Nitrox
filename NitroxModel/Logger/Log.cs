@@ -8,6 +8,7 @@ using log4net.Filter;
 using log4net.Layout;
 using log4net.Repository.Hierarchy;
 using NitroxModel.Discovery;
+using UnityEngine;
 
 namespace NitroxModel.Logger
 {
@@ -16,6 +17,7 @@ namespace NitroxModel.Logger
         private static bool inGameMessages;
 
         private static readonly ILog log = LogManager.GetLogger(GetLoggerName());
+        private static readonly ILog unityLog = LogManager.GetLogger("Unity");
         public static InGameLogger InGameLogger { get; set; }
 
         static Log()
@@ -142,6 +144,35 @@ namespace NitroxModel.Logger
             hierarchy.Root.AddAppender(fileAppender);
 
             hierarchy.Configured = true;
+
+        }
+
+        public static void RegisterUnityHandler()
+        {
+            Application.logMessageReceived += (condition, stacktrace, type) =>
+            {
+                switch (type)
+                {
+                    case LogType.Error:
+                        unityLog.Error(condition);
+                        break;
+                    case LogType.Assert:
+                        unityLog.Error($"Assertion failed: {condition}");
+                        break;
+                    case LogType.Warning:
+                        unityLog.Warn(condition);
+                        break;
+                    case LogType.Log:
+                        unityLog.Debug(condition);
+                        break;
+                    case LogType.Exception:
+                        unityLog.Error($"{condition}\n{stacktrace}");
+                        break;
+                    default:
+                        unityLog.Error($"Unknown type {type}: {condition}\n{stacktrace}");
+                        break;
+                }
+            };
         }
     }
 }

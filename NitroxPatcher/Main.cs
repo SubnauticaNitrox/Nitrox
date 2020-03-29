@@ -27,10 +27,11 @@ namespace NitroxPatcher
         {
             "NitroxModel.dll",
         };
-        
+
         public static void Execute()
         {
             Log.EnableInGameMessages();
+            Log.RegisterUnityHandler();
 
             if (container != null)
             {
