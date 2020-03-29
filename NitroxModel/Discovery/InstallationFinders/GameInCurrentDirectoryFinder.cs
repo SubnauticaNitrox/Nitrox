@@ -14,7 +14,7 @@ namespace NitroxModel.Discovery.InstallationFinders
                 return Optional<string>.Of(currentDirectory);
             }
 
-            return Optional<string>.Empty();
+            return Optional.Empty;
         }
     }
 }
