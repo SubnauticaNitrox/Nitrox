@@ -78,7 +78,7 @@ namespace NitroxServer.GameLogic.Bases
                         // a fully constructed piece.  Therefor, we always update this attribute to make sure it
                         // is the latest.
                         basePiece.BaseId = baseId;
-                        basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
+                        basePiece.ParentId = Optional.OfNullable(baseId);
                     }
 
                     partiallyConstructedPiecesById.Remove(id);
@@ -131,7 +131,7 @@ namespace NitroxServer.GameLogic.Bases
 
                 if (basePiece != null)
                 {
-                    basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
+                    basePiece.Metadata = Optional.OfNullable(metadata);
                 }
             }
         }

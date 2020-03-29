@@ -70,9 +70,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public void SendMessageToPlayer(Optional<Player> player, string message)
         {
-            if (player.IsPresent())
+            if (player.HasValue)
             {
-                player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
             }
         }
 

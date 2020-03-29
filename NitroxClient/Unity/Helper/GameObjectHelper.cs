@@ -9,7 +9,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponent<T>(this GameObject o) where T : class
         {
             T component = o.GetComponent<T>();
-            Validate.NotNull(component, o.name + " did not have a component of type " + typeof(T));
+            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)}");
 
             return component;
         }
@@ -17,7 +17,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponentInChildren<T>(this GameObject o, bool includeInactive = false) where T : class
         {
             T component = o.GetComponentInChildren<T>(includeInactive);
-            Validate.NotNull(component, o.name + " did not have a component of type " + typeof(T) + " in its children");
+            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its children");
 
             return component;
         }
@@ -25,7 +25,7 @@ namespace NitroxClient.Unity.Helper
         public static T RequireComponentInParent<T>(this GameObject o) where T : class
         {
             T component = o.GetComponentInParent<T>();
-            Validate.NotNull(component, o.name + " did not have a component of type " + typeof(T) + " in its parent");
+            Validate.NotNull(component, $"{o.name} did not have a component of type {typeof(T)} in its parent");
 
             return component;
         }

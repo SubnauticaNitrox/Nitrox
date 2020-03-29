@@ -24,7 +24,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
                 rotationMetadata = new MapRoomRotationMetadata((byte)cellType, connectionMask);
             }
 
-            return Optional<RotationMetadata>.OfNullable(rotationMetadata);
+            return Optional.OfNullable(rotationMetadata);
         }
     }
 }

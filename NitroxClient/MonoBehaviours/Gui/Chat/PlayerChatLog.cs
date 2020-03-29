@@ -75,7 +75,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         protected void LateUpdate()
         {
-            if (!isChatAvailable || Manager.inputField.ChatEnabled)
+            if (!isChatAvailable || Manager.InputField.ChatEnabled)
             {
                 timeLeftUntilAutoClose = CHAT_VISIBILITY_TIME_LENGTH;
                 return;

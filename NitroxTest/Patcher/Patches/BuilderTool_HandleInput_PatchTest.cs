@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Emit;
 using Harmony;
@@ -24,7 +25,7 @@ namespace NitroxTest.Patcher.Patches
         [TestMethod]
         public void InjectionSanity()
         {
-            List<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod((DynamicMethod)BuilderTool_HandleInput_Patch.TARGET_METHOD);
+            ReadOnlyCollection<CodeInstruction> beforeInstructions = PatchTestHelper.GetInstructionsFromMethod((DynamicMethod)BuilderTool_HandleInput_Patch.TARGET_METHOD);
             IEnumerable<CodeInstruction> result = BuilderTool_HandleInput_Patch.Transpiler(BuilderTool_HandleInput_Patch.TARGET_METHOD, beforeInstructions);
 
             Assert.IsTrue(beforeInstructions.Count < result.Count());

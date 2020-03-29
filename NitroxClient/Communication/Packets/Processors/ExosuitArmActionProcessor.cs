@@ -23,12 +23,12 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(ExosuitArmActionPacket packet)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.ArmId);
-            if(opGameObject.IsEmpty())
+            if (!opGameObject.HasValue)
             {
                 Log.Error("Could not find exosuit arm");
                 return;
             }
-            GameObject gameObject = opGameObject.Get();
+            GameObject gameObject = opGameObject.Value;
             switch (packet.TechType)
             {
 

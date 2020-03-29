@@ -27,7 +27,7 @@ namespace NitroxServer.GameLogic.Players
                                            null, 
                                            playerData.SpawnPosition, 
                                            playerData.NitroxId, 
-                                           NitroxModel.DataStructures.Util.Optional<NitroxId>.OfNullable(playerData.SubRootId), 
+                                           NitroxModel.DataStructures.Util.Optional.OfNullable(playerData.SubRootId), 
                                            playerData.Permissions, 
                                            playerData.CurrentStats,
                                            playerData.EquippedItems, 

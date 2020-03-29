@@ -18,14 +18,14 @@ namespace NitroxClient.Communication.Packets.Processors
             // Despite me telling it to kill itself when I call LiveMixin.TakeDamage with massive damage, it doesn't seem to trigger like it should. 
             // To get around this problem, I manually set the health to 0, then call for Kill(). Since Kill() does not trigger the necessary events, I do
             // it all manually below. At least this way I can make the screen shake hard enough to cause motion sickness, or disable it if I wanted to.
-            if (cyclops.IsPresent())
+            if (cyclops.HasValue)
             {
                 Log.Debug("[CyclopsDestroyedProcessor Id: " + packet.Id + "]");
 
-                SubRoot subRoot = cyclops.Get().RequireComponent<SubRoot>();
+                SubRoot subRoot = cyclops.Value.RequireComponent<SubRoot>();
 
-                cyclops.Get().RequireComponent<LiveMixin>().ReflectionSet("health", 0f, true, false);
-                cyclops.Get().RequireComponent<LiveMixin>().Kill();
+                cyclops.Value.RequireComponent<LiveMixin>().ReflectionSet("health", 0f, true, false);
+                cyclops.Value.RequireComponent<LiveMixin>().Kill();
 
                 // Copied from SubRoot.OnTakeDamage(DamageInfo info)
                 subRoot.voiceNotificationManager.ClearQueue();

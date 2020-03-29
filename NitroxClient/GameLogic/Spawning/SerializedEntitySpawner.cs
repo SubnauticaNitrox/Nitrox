@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic.Spawning
 
             NitroxEntity.SetNewId(gameObject, entity.Id);
 
-            return Optional<GameObject>.Of(gameObject);
+            return Optional.Of(gameObject);
         }
 
         public bool SpawnsOwnChildren()

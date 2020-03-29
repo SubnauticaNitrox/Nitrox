@@ -18,7 +18,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(ServerCommand packet, Player player)
         {
             Log.Info($"{player.Name} issued server command: /{packet.Cmd}");
-            cmdProcessor.ProcessCommand(packet.Cmd, Optional<Player>.Of(player), player.Permissions);
+            cmdProcessor.ProcessCommand(packet.Cmd, Optional.Of(player), player.Permissions);
         }
     }
 }

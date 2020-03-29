@@ -1,5 +1,11 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxTest.Model
 {
@@ -9,108 +15,103 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalGet()
         {
-            Optional<string> op = Optional<string>.Of("test");
-            Assert.AreEqual("test", op.Get());
+            Optional<string> op = Optional.Of("test");
+            op.Value.ShouldBeEquivalentTo("test");
         }
 
         [TestMethod]
         public void OptionalIsPresent()
         {
-            Optional<string> op = Optional<string>.Of("test");
-            Assert.AreEqual(true, op.IsPresent());
+            Optional<string> op = Optional.Of("test");
+            op.HasValue.Should().BeTrue();
         }
 
         [TestMethod]
         public void OptionalIsNotPresent()
         {
-            Optional<string> op = Optional<string>.Empty();
-            Assert.AreEqual(false, op.IsPresent());
+            Optional<string> op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
         public void OptionalOrElseValidValue()
         {
-            Optional<string> op = Optional<string>.Of("test");
-            Assert.AreEqual("test", op.OrElse("test2"));
+            Optional<string> op = Optional.Of("test");
+            op.OrElse("test2").ShouldBeEquivalentTo("test");
         }
 
         [TestMethod]
         public void OptionalOrElseNoValue()
         {
-            Optional<string> op = Optional<string>.Empty();
-            Assert.AreEqual("test", op.OrElse("test"));
+            Optional<string> op = Optional.Empty;
+            op.OrElse("test").ShouldBeEquivalentTo("test");
         }
 
         [TestMethod]
         public void OptionalEmpty()
         {
-            Optional<string> op = Optional<string>.Empty();
-            Assert.AreEqual(true, op.IsEmpty());
+            Optional<string> op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
         }
-
-        // Test functionality with value (non-nullable) types.
 
         [TestMethod]
         public void OptionalValueTypeGet()
         {
-            Optional<int> op = Optional<int>.Of(1);
-            Assert.AreEqual(1, op.Get());
+            Optional<int> op = Optional.Of(1);
+            op.Value.ShouldBeEquivalentTo(1);
         }
 
         [TestMethod]
         public void OptionalValueTypeIsPresent()
         {
-            Optional<int> op = Optional<int>.Of(0);
-            Assert.AreEqual(true, op.IsPresent());
+            Optional<int> op = Optional.Of(0);
+            op.HasValue.Should().BeTrue();
         }
 
         [TestMethod]
         public void OptionalValueTypeIsNotPresent()
         {
-            Optional<int> op = Optional<int>.Empty();
-            Assert.AreEqual(false, op.IsPresent());
+            Optional<int> op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
         public void OptionalValueTypeOrElseValidValue()
         {
-            Optional<int> op = Optional<int>.Of(1);
-            Assert.AreEqual(1, op.OrElse(2));
+            Optional.Of(1).OrElse(2).ShouldBeEquivalentTo(1);
         }
 
         [TestMethod]
         public void OptionalSetValue()
         {
-            Optional<int> op = Optional<int>.Of(0);
+            Optional<int> op;
             op = 1;
-            Assert.IsFalse(0 == (int)op);
+            ((int)op).Should().NotBe(0);
         }
 
         [TestMethod]
         public void OptionalSetValueNull()
         {
-            Optional<Exosuit> op = Optional<Exosuit>.Of(new Exosuit());
-            op = null;
-            try
-            {
-                Assert.Fail();
-            }
-            catch (OptionalNullException<Exosuit>)
-            {}
+            Optional<Exosuit> op = Optional.Of(new Exosuit());
+            op.HasValue.Should().BeTrue();
+            Action setNull = () => { op = null; };
+            setNull.ShouldThrow<ArgumentNullException>("Setting optional to null should not be allowed.");
+            op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
         }
 
         [TestMethod]
         public void OptionalValueTypeOrElseNoValue()
         {
-            Optional<int> op = Optional<int>.Empty();
-            Assert.AreEqual(1, op.OrElse(1));
+            Optional<int> op = Optional.Empty;
+            op.OrElse(1).ShouldBeEquivalentTo(1);
         }
 
         [TestMethod]
         public void OptionalValueTypeEmpty()
         {
-            Optional<int> op = Optional<int>.Empty();
-            Assert.AreEqual(true, op.IsEmpty());
+            Optional<int> op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
         }
     }
 }

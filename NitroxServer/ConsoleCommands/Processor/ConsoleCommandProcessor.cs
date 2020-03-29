@@ -55,9 +55,9 @@ namespace NitroxServer.ConsoleCommands.Processor
                 string errorMessage = "Command Not Found: " + parts[0];
                 Log.Info(errorMessage);
 
-                if (player.IsPresent())
+                if (player.HasValue)
                 {
-                    player.Get().SendPacket(new ChatMessage(ChatMessage.SERVER_ID, errorMessage));
+                    player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, errorMessage));
                 }
 
                 return;

@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
         {
             try
             {
-                string playerName = sender.IsPresent() ? sender.Get().Name : "SERVER";
+                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
                 serverConfig.ChangeAdminPassword(args[0]);
 
                 Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");

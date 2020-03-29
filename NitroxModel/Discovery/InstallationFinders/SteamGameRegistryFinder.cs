@@ -17,13 +17,13 @@ namespace NitroxModel.Discovery.InstallationFinders
             if (string.IsNullOrEmpty(steamPath))
             {
                 errors?.Add("It appears you don't have Steam installed.");
-                return Optional<string>.Empty();
+                return Optional.Empty;
             }
 
             string appsPath = Path.Combine(steamPath, "steamapps");
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
-                return Optional<string>.Of(Path.Combine(appsPath, "common", SUBNAUTICA_GAME_NAME));
+                return Optional.Of(Path.Combine(appsPath, "common", SUBNAUTICA_GAME_NAME));
             }
 
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
@@ -33,10 +33,10 @@ namespace NitroxModel.Discovery.InstallationFinders
             }
             else
             {
-                return Optional<string>.Of(path);
+                return Optional.Of(path);
             }
 
-            return Optional<string>.Empty();
+            return Optional.Empty;
         }
 
         /// <summary>

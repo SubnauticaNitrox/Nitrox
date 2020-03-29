@@ -21,11 +21,10 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         public override void Process(CyclopsToggleEngineState packet, NitroxServer.Player player)
         {
             Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
-
-            if (opCyclops.IsPresent())
+            if (opCyclops.HasValue)
             {
                 // If someone starts the engine, IsOn will be false, so only isStarting contains the info we need
-                opCyclops.Get().EngineState = packet.IsStarting;
+                opCyclops.Value.EngineState = packet.IsStarting;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

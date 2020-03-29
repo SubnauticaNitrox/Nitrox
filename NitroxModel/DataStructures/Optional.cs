@@ -2,9 +2,20 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxModel.DataStructures.Util
 {
+    /// <summary>
+    ///     Used to give context on whether the wrapped value is nullable and to improve error logging.
+    /// </summary>
+    /// <remarks>
+    ///     Used some hacks to circumvent C#' lack of reverse type inference (usually need to specify the type when returning a
+    ///     value using a generic method).
+    ///     Code from https://tyrrrz.me/blog/return-type-inference
+    /// </remarks>
+    /// <typeparam name="T"></typeparam>
     [Serializable]
     [ProtoContract]
     public struct Optional<T> : ISerializable
@@ -12,63 +23,50 @@ namespace NitroxModel.DataStructures.Util
         [ProtoMember(1)]
         public T Value { get; private set; }
 
+        private bool hasValue;
+        
         [ProtoMember(2)]
-        public bool HasValue { get; private set; }
+        public bool HasValue
+        {
+            get
+            {
+                // If Unity object is destroyed then this optional also has no value (because a dead object is useless, same as null).
+                if (Value is Object)
+                {
+                    return Value?.ToString() != "null";
+                }
+                return hasValue;
+            }
+            set
+            {
+                hasValue = value;
+            }
+        }
 
         private Optional(T value)
         {
             Value = value;
-            HasValue = true;
-        }
-
-        public bool IsPresent()
-        {
-            return HasValue;
-        }
-
-        public bool IsEmpty()
-        {
-            return !HasValue;
-        }
-
-        public T Get()
-        {
-            return Value;
+            hasValue = true;
         }
 
         public T OrElse(T elseValue)
         {
-            if (IsEmpty())
-            {
-                return elseValue;
-            }
-
-            return Value;
+            return HasValue ? Value : elseValue;
         }
 
-        public static Optional<T> Empty()
-        {
-            return new Optional<T>();
-        }
-
-        public static Optional<T> Of(T value)
+        internal static Optional<T> Of(T value)
         {
             if (value == null)
             {
-                throw new ArgumentNullException(nameof(value), "Value cannot be null");
+                throw new ArgumentNullException(nameof(value), $"Tried to set null on {typeof(Optional<T>)}");
             }
 
             return new Optional<T>(value);
         }
 
-        public static Optional<T> OfNullable(T value)
+        internal static Optional<T> OfNullable(T value)
         {
-            if (value == null || value.Equals(default(T)))
-            {
-                return new Optional<T>();
-            }
-
-            return new Optional<T>(value);
+            return Equals(default(T), value) ? Optional.Empty : new Optional<T>(value);
         }
 
         public override string ToString()
@@ -80,7 +78,7 @@ namespace NitroxModel.DataStructures.Util
         private Optional(SerializationInfo info, StreamingContext context)
         {
             Value = (T)info.GetValue("value", typeof(T));
-            HasValue = info.GetBoolean("hasValue");
+            hasValue = info.GetBoolean("hasValue");
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
@@ -90,13 +88,20 @@ namespace NitroxModel.DataStructures.Util
             info.AddValue("hasValue", HasValue);
         }
 
-        public static implicit operator Optional<T>(T obj)
+        public static implicit operator Optional<T>(OptionalEmpty none) => new Optional<T>();
+
+        public static implicit operator Optional<T>?(T obj)
         {
-            if (obj == null) // null is passed when T is a reference type
+            if (obj == null)
             {
-                return new Optional<T>();
+                return null;
             }
             return new Optional<T>(obj);
+        }
+
+        public static implicit operator Optional<T>(T obj)
+        {
+            return Optional.Of(obj);
         }
 
         public static explicit operator T(Optional<T> value)
@@ -105,13 +110,27 @@ namespace NitroxModel.DataStructures.Util
         }
     }
 
+    public struct OptionalEmpty
+    {
+    }
+
+    public static class Optional
+    {
+        public static OptionalEmpty Empty { get; } = new OptionalEmpty();
+
+        public static Optional<T> Of<T>(T value) => Optional<T>.Of(value);
+        public static Optional<T> OfNullable<T>(T value) => Optional<T>.OfNullable(value);
+    }
+
     public sealed class OptionalNullException<T> : Exception
     {
         public OptionalNullException() : base($"Optional <{nameof(T)}> is null!")
-        {}
+        {
+        }
 
         public OptionalNullException(string message) : base($"Optional <{nameof(T)}> is null:\n\t{message}")
-        {}
+        {
+        }
     }
 
     [Serializable]

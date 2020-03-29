@@ -18,18 +18,12 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            string message = "BROADCAST: " + string.Join(" ", args);
+            string joinedArgs = string.Join(" ", args);
 
-            if(sender.IsPresent())
-            {
-                playerManager.SendPacketToAllPlayers(new ChatMessage(sender.Get().Id, string.Join(" ", args)));
-            }
-            else
-            {
-                playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, string.Join(" ", args)));
-            }
+            ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
+            playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));
 
-            Log.Info(message);
+            Log.Info("BROADCAST: " + joinedArgs);
         }
 
         public override bool VerifyArgs(string[] args)

@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Spawning
                 prefab = CraftData.GetPrefabForTechType(techType, false);
                 if (prefab == null)
                 {
-                    return Optional<GameObject>.Of(Utils.CreateGenericLoot(techType));
+                    return Optional.Of(Utils.CreateGenericLoot(techType));
                 }
             }
 
@@ -31,12 +31,12 @@ namespace NitroxClient.GameLogic.Spawning
             NitroxEntity.SetNewId(gameObject, entity.Id);
             CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
-            if (parent.IsPresent())
+            if (parent.HasValue)
             {
-                gameObject.transform.SetParent(parent.Get().transform, true);
+                gameObject.transform.SetParent(parent.Value.transform, true);
             }
 
-            if (parent.IsPresent() && parent.Get().GetComponent<LargeWorldEntityCell>() != null)
+            if (parent.HasValue && parent.Value.GetComponent<LargeWorldEntityCell>() != null)
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic.Spawning
                 gameObject.SetActive(true);
             }
 
-            return Optional<GameObject>.Of(gameObject);
+            return Optional.Of(gameObject);
         }
 
         public bool SpawnsOwnChildren()

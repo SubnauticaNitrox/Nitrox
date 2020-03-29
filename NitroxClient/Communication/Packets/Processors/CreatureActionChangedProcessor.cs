@@ -15,10 +15,9 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CreatureActionChanged packet)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(packet.Id);
-
-            if (opGameObject.IsPresent())
+            if (opGameObject.HasValue)
             {
-                CreatureAction action = packet.NewAction.GetCreatureAction(opGameObject.Get());
+                CreatureAction action = packet.NewAction.GetCreatureAction(opGameObject.Value);
                 ActionByCreatureId[packet.Id] = action;
             }
         }

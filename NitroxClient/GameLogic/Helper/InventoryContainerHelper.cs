@@ -8,25 +8,23 @@ namespace NitroxClient.GameLogic.Helper
         public static Optional<ItemsContainer> GetBasedOnOwnersType(GameObject owner)
         {
             SeamothStorageContainer seamothStorageContainer = owner.GetComponent<SeamothStorageContainer>();
-
             if (seamothStorageContainer != null)
             {
-                return Optional<ItemsContainer>.Of(seamothStorageContainer.container);
+                return Optional.Of(seamothStorageContainer.container);
             }
 
             StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>();
-
             if (storageContainer != null)
             {
-                return Optional<ItemsContainer>.Of(storageContainer.container);
+                return Optional.Of(storageContainer.container);
             }
 
             if (owner.name == "Player")
             {
-                return Optional<ItemsContainer>.Of(Inventory.Get().container);
+                return Optional.Of(Inventory.Get().container);
             }
 
-            return Optional<ItemsContainer>.Empty();
+            return Optional.Empty;
         }
     }
 }

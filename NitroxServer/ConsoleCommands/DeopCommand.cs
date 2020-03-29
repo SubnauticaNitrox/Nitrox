@@ -20,10 +20,9 @@ namespace NitroxServer.ConsoleCommands
             string message;
 
             Optional<Player> targetPlayer = playerManager.GetPlayer(playerName);
-
-            if (targetPlayer.IsPresent())
+            if (targetPlayer.HasValue)
             {
-                targetPlayer.Get().Permissions = Perms.PLAYER;
+                targetPlayer.Value.Permissions = Perms.PLAYER;
                 message = $"Updated {playerName}\'s permissions to PLAYER";
             }
             else

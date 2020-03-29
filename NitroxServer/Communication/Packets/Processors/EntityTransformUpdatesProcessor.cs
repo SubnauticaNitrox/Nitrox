@@ -48,7 +48,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 Optional<AbsoluteEntityCell> currentCell = entityManager.UpdateEntityPosition(update.Id, update.Position, update.Rotation);
 
-                if(currentCell.IsEmpty())
+                if(!currentCell.HasValue)
                 {
                     // Normal behaviour if the entity was removed at the same time as someone trying to simulate a postion update.
                     // we log an info inside entityManager.UpdateEntityPosition just in case.
@@ -60,7 +60,7 @@ namespace NitroxServer.Communication.Packets.Processors
                     Player player = playerUpdates.Key;
                     List<EntityTransformUpdate> visibleUpdates = playerUpdates.Value;
 
-                    if (player.HasCellLoaded(currentCell.Get()))
+                    if (player.HasCellLoaded(currentCell.Value))
                     {
                         visibleUpdates.Add(update);
                     }

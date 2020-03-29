@@ -52,13 +52,13 @@ namespace NitroxServer.Serialization
             List<string> errors = new List<string>();
             Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
 
-            if (subnauticaPath.IsEmpty())
+            if (!subnauticaPath.HasValue)
             {
                 Log.Info($"Could not locate Subnautica installation directory: {Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
                 return;
             }
 
-            string path = Path.Combine(subnauticaPath.Get(), "SNUnmanagedData", "Build18");
+            string path = Path.Combine(subnauticaPath.Value, "SNUnmanagedData", "Build18");
             string fileName = Path.Combine(path, pathPrefix, prefix + "batch-cells-" + batchId.X + "-" + batchId.Y + "-" + batchId.Z + suffix + ".bin");
 
             if (!File.Exists(fileName))

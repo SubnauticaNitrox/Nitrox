@@ -24,14 +24,14 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Optional<VehicleModel> vehicle = vehicleManager.GetVehicleModel(packet.VehicleId);
 
-            if (!vehicle.IsPresent())
+            if (!vehicle.HasValue)
             {
                 Log.Error("VehicleDocking received for vehicle id {0} that does not exist!", packet.VehicleId);
                 return;
             }
 
-            VehicleModel vehicleModel = vehicle.Get();
-            vehicleModel.DockingBayId = Optional<NitroxId>.Of(packet.DockId);
+            VehicleModel vehicleModel = vehicle.Value;
+            vehicleModel.DockingBayId = Optional.Of(packet.DockId);
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

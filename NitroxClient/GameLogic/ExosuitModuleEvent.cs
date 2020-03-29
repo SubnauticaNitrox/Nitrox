@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
-            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
+            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional.Empty, Optional.Empty);
         }
 
         public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
@@ -111,7 +111,7 @@ namespace NitroxClient.GameLogic
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional<Vector3>.Empty(), Optional<Quaternion>.Empty());
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional.Empty, Optional.Empty);
             packetSender.Send(packet);
         }
 
@@ -138,13 +138,13 @@ namespace NitroxClient.GameLogic
                 Exosuit componentInParent = grapplingArm.GetComponentInParent<Exosuit>();
 
                 
-                if(opHitVector.IsEmpty())
+                if (!opHitVector.HasValue)
                 {
                     Log.Error("No vector given that contains the hook direction");
                     return;
                 }
                 
-                hook.rb.velocity = opHitVector.Get();
+                hook.rb.velocity = opHitVector.Value;
                 global::Utils.PlayFMODAsset(grapplingArm.shootSound, grapplingArm.front, 15f);
                 grapplingArm.ReflectionSet("grapplingStartPos", componentInParent.transform.position);
             }
@@ -158,13 +158,13 @@ namespace NitroxClient.GameLogic
         {            
             if (armAction == ExosuitArmAction.START_USE_TOOL || armAction == ExosuitArmAction.ALT_HIT)
             {
-                if(opVector.IsEmpty() || opRotation.IsEmpty())
+                if(!opVector.HasValue || !opRotation.HasValue)
                 {
                     Log.Error("Torpedo arm action shoot: no vector or rotation present");
                     return;
                 }
-                Vector3 forward = opVector.Get();
-                Quaternion rotation = opRotation.Get();
+                Vector3 forward = opVector.Value;
+                Quaternion rotation = opRotation.Value;
                 Transform silo = default(Transform);
                 if(armAction == ExosuitArmAction.START_USE_TOOL)
                 {

@@ -43,7 +43,7 @@ namespace NitroxServer_Subnautica
 
             while (server.IsRunning)
             {
-                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional<NitroxServer.Player>.Empty(), Perms.CONSOLE);
+                cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
         }
 

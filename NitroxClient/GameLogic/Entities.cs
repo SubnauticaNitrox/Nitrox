@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -55,7 +57,7 @@ namespace NitroxClient.GameLogic
 
                 if (!alreadySpawnedIds.Contains(entity.Id))
                 {
-                    Spawn(entity, Optional<GameObject>.Empty());
+                    Spawn(entity, Optional.Empty);
                 }
                 else
                 {
@@ -142,17 +144,15 @@ namespace NitroxClient.GameLogic
         private void UpdatePosition(Entity entity)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
-
-            if (opGameObject.IsPresent())
-            {
-                opGameObject.Get().transform.position = entity.Transform.Position;
-                opGameObject.Get().transform.rotation = entity.Transform.Rotation;
-                opGameObject.Get().transform.localScale = entity.Transform.LocalScale;
-            }
-            else
+            if (!opGameObject.HasValue)
             {
                 Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Transform: " + entity.Transform);
+                return;
             }
+            
+            opGameObject.Value.transform.position = entity.Transform.Position;
+            opGameObject.Value.transform.rotation = entity.Transform.Rotation;
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
         }
         
         public bool WasSpawnedByServer(NitroxId id)

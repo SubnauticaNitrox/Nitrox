@@ -185,9 +185,9 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 transform.rotation = MultiplayerBuilder.placeRotation;
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
-                if(rotationMetadata.IsPresent())
+                if (rotationMetadata.HasValue)
                 {
-                    ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Get());
+                    ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
                 }
                 
                 if (flag)
@@ -201,7 +201,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 List<GameObject> list = new List<GameObject>();
                 MultiplayerBuilder.GetObstacles(MultiplayerBuilder.placePosition, MultiplayerBuilder.placeRotation, MultiplayerBuilder.bounds, list);
-                flag2 = (list.Count == 0);
+                flag2 = list.Count == 0;
                 list.Clear();
             }
 

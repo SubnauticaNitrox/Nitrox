@@ -30,10 +30,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 // Check to see if they are trying to deconstruct a base piece.  If so, we will need to use the 
                 // id in LATEST_DECONSTRUCTED_BASE_PIECE_GUID because base pieces get destroyed and recreated with
                 // a ghost (furniture just uses the same game object).
-                if (opId.IsPresent())
+                if (opId.HasValue)
                 {
                     // base piece, get id before ghost appeared
-                    id = (NitroxId)opId.Get();
+                    id = (NitroxId)opId.Value;
                     Log.Info("Deconstructing base piece with id: " + id);
                 }
                 else
@@ -59,11 +59,11 @@ namespace NitroxPatcher.Patches.Dynamic
              */
             Optional<object> opId = TransientLocalObjectManager.Get(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID);
 
-            if (opId.IsPresent())
+            if (opId.HasValue)
             {
                 TransientLocalObjectManager.Add(TransientObjectType.LATEST_DECONSTRUCTED_BASE_PIECE_GUID, null);
 
-                NitroxId id = (NitroxId)opId.Get();
+                NitroxId id = (NitroxId)opId.Value;
                 Log.Info("Setting ghost id via Constructable_SetState_Patch " + id);
                 NitroxEntity.SetNewId(__instance.gameObject, id);
             }

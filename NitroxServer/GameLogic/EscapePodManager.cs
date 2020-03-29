@@ -24,7 +24,7 @@ namespace NitroxServer.GameLogic
 
         public NitroxId AssignPlayerToEscapePod(ushort playerId, out Optional<EscapePodModel> newlyCreatedPod)
         {
-            newlyCreatedPod = Optional<EscapePodModel>.Empty();
+            newlyCreatedPod = Optional.Empty;
 
             lock (escapePodsByPlayerId)
             {
@@ -35,8 +35,8 @@ namespace NitroxServer.GameLogic
 
                 if (podForNextPlayer.IsFull())
                 {
-                    newlyCreatedPod = Optional<EscapePodModel>.Of(CreateNewEscapePod());
-                    podForNextPlayer = newlyCreatedPod.Get();
+                    newlyCreatedPod = Optional.Of(CreateNewEscapePod());
+                    podForNextPlayer = newlyCreatedPod.Value;
                 }
 
                 podForNextPlayer.AssignedPlayers.Add(playerId);

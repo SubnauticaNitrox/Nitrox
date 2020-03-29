@@ -34,9 +34,9 @@ namespace NitroxClient.GameLogic
 
             Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
-            if (opConstructedObject.IsPresent())
+            if (opConstructedObject.HasValue)
             {
-                GameObject constructedObject = (GameObject)opConstructedObject.Get();
+                GameObject constructedObject = (GameObject)opConstructedObject.Value;
 
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
                 Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
@@ -82,10 +82,10 @@ namespace NitroxClient.GameLogic
         private void SpawnDefaultBatteries(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
         {
             
-            Optional<EnergyMixin> opEnergy = Optional<EnergyMixin>.OfNullable(constructedObject.GetComponent<EnergyMixin>());
-            if (opEnergy.IsPresent())
+            Optional<EnergyMixin> opEnergy = Optional.OfNullable(constructedObject.GetComponent<EnergyMixin>());
+            if (opEnergy.HasValue)
             {
-                EnergyMixin mixin = opEnergy.Get();                
+                EnergyMixin mixin = opEnergy.Value;                
                 mixin.ReflectionSet("allowedToPlaySounds", false);
                 mixin.SetBattery(mixin.defaultBattery, 1);
                 mixin.ReflectionSet("allowedToPlaySounds", true);
@@ -95,14 +95,14 @@ namespace NitroxClient.GameLogic
             {
                 Optional<GameObject> opChildGameObject = NitroxEntity.GetObjectFrom(identifier.Id);
 
-                if (opChildGameObject.IsPresent())
+                if (opChildGameObject.HasValue)
                 {
-                    Optional<EnergyMixin> opEnergyMixin = Optional<EnergyMixin>.OfNullable(opChildGameObject.Get().GetComponent<EnergyMixin>());
+                    Optional<EnergyMixin> opEnergyMixin = Optional.OfNullable(opChildGameObject.Value.GetComponent<EnergyMixin>());
 
-                    if(opEnergyMixin.IsPresent())
+                    if(opEnergyMixin.HasValue)
                     {
                         
-                        EnergyMixin mixin = opEnergyMixin.Get();
+                        EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
                         mixin.SetBattery(mixin.defaultBattery, 1);
                         mixin.ReflectionSet("allowedToPlaySounds", true);

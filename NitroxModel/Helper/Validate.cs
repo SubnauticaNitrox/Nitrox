@@ -15,35 +15,33 @@ namespace NitroxModel.Helper
             // In other words: Error when trying to assert non-null on something that can't be null in the first place.
             where T : class
         {
-            if (o == null)
+            if (o != null)
             {
-                Optional<string> paramName = GetParameterName<T>();
-                if (paramName.IsPresent())
-                {
-                    throw new ArgumentNullException(paramName.Get());
-                }
-                else
-                {
-                    throw new ArgumentNullException();
-                }
+                return;
             }
+            
+            Optional<string> paramName = GetParameterName<T>();
+            if (paramName.HasValue)
+            {
+                throw new ArgumentNullException(paramName.Value);
+            }
+            throw new ArgumentNullException();
         }
 
         public static void NotNull<T>(T o, string message)
             where T : class
         {
-            if (o == null)
+            if (o != null)
             {
-                Optional<string> paramName = GetParameterName<T>();
-                if (paramName.IsPresent())
-                {
-                    throw new ArgumentNullException(paramName.Get(), message);
-                }
-                else
-                {
-                    throw new ArgumentNullException(message);
-                }
+                return;
             }
+            
+            Optional<string> paramName = GetParameterName<T>();
+            if (paramName.HasValue)
+            {
+                throw new ArgumentNullException(paramName.Value, message);
+            }
+            throw new ArgumentNullException(message);
         }
 
         public static void IsTrue(bool b)
@@ -80,7 +78,7 @@ namespace NitroxModel.Helper
 
         public static void IsPresent<T>(Optional<T> opt)
         {
-            if (opt.IsEmpty())
+            if (!opt.HasValue)
             {
                 throw new OptionalEmptyException<T>();
             }
@@ -88,7 +86,7 @@ namespace NitroxModel.Helper
 
         public static void IsPresent<T>(Optional<T> opt, string message)
         {
-            if (opt.IsEmpty())
+            if (!opt.HasValue)
             {
                 throw new OptionalEmptyException<T>(message);
             }
@@ -106,7 +104,7 @@ namespace NitroxModel.Helper
         private static Optional<string> GetParameterName<TParam>()
         {
             ParameterInfo[] parametersOfMethodBeforeValidate = new StackFrame(2).GetMethod().GetParameters();
-            return Optional<string>.OfNullable(parametersOfMethodBeforeValidate.SingleOrDefault(pi => pi.ParameterType == typeof(TParam))?.Name);
+            return Optional.OfNullable(parametersOfMethodBeforeValidate.SingleOrDefault(pi => pi.ParameterType == typeof(TParam))?.Name);
         }
     }
 }

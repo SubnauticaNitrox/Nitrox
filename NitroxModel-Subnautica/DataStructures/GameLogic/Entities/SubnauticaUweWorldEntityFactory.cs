@@ -27,10 +27,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
                                                                    worldEntityInfo.slotType.ToString(),
                                                                    (int)worldEntityInfo.cellLevel);
 
-                return Optional<UweWorldEntity>.Of(uweWorldEntity);
+                return Optional.Of(uweWorldEntity);
             }
 
-            return Optional<UweWorldEntity>.Empty();
+            return Optional.Empty;
         }
     }
 }

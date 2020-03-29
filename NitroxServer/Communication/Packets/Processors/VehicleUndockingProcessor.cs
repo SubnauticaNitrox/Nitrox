@@ -23,13 +23,13 @@ namespace NitroxServer.Communication.Packets.Processors
         {
             Optional<VehicleModel> vehicle = vehicleManager.GetVehicleModel(packet.VehicleId);
 
-            if (!vehicle.IsPresent())
+            if (!vehicle.HasValue)
             {
                 return;
             }
 
-            VehicleModel vehicleModel = vehicle.Get();
-            vehicleModel.DockingBayId = Optional<NitroxId>.Empty();
+            VehicleModel vehicleModel = vehicle.Value;
+            vehicleModel.DockingBayId = Optional.Empty;
 
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

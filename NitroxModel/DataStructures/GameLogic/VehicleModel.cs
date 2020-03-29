@@ -43,7 +43,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public VehicleModel()
         {
             InteractiveChildIdentifiers = new List<InteractiveChildObjectIdentifier>();
-            DockingBayId = Optional<NitroxId>.Empty();
+            DockingBayId = Optional.Empty;
         }
 
         public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)

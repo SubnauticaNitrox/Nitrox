@@ -59,7 +59,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
 
             EntitySlotParser.EntitySlotsByIdentifier.TryGetValue(gameObject.Identifier, out entitySlot);
 
-            return Optional<NitroxEntitySlot>.OfNullable(entitySlot);
+            return Optional.OfNullable(entitySlot);
         }
 
         private TransformAsset GetTransform(GameObjectAsset gameObjectAsset)

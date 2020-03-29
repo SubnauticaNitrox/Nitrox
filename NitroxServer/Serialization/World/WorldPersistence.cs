@@ -139,7 +139,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.EscapePodData.EscapePods,
                                           config.GameMode);
 
-                return Optional<World>.Of(world);
+                return Optional.Of(world);
             }
             catch (DirectoryNotFoundException)
             {
@@ -147,19 +147,19 @@ namespace NitroxServer.Serialization.World
             }
             catch (Exception ex)
             {
-                Log.Info("Could not load world: " + ex.ToString() + " creating a new one.");
+                Log.Info("Could not load world: " + ex + " creating a new one.");
             }
 
-            return Optional<World>.Empty();
+            return Optional.Empty;
         }
 
         public World Load()
         {
             Optional<World> fileLoadedWorld = LoadFromFile();
 
-            if (fileLoadedWorld.IsPresent())
+            if (fileLoadedWorld.HasValue)
             {
-                return fileLoadedWorld.Get();
+                return fileLoadedWorld.Value;
             }
 
             return CreateFreshWorld();

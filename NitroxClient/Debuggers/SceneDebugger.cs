@@ -169,7 +169,7 @@ namespace NitroxClient.Debuggers
                     {
                         gameObjectSearchResult.Add(hit.transform.gameObject);
                     }
-                    ActiveTab = GetTab("Hierarchy").Get();
+                    ActiveTab = GetTab("Hierarchy").Value;
                 }
             }
         }
@@ -249,7 +249,7 @@ namespace NitroxClient.Debuggers
                         if (GUILayout.Button($"{(isSelected ? ">> " : "")}{i}: {path.TruncateLeft(35)}", isLoaded ? "sceneLoaded" : "label"))
                         {
                             selectedScene = currentScene;
-                            ActiveTab = GetTab("Hierarchy").Get();
+                            ActiveTab = GetTab("Hierarchy").Value;
                         }
 
                         if (isLoaded)
@@ -349,7 +349,7 @@ namespace NitroxClient.Debuggers
                     }
                     else
                     {
-                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Value.Name}'", "fillMessage");
                     }
                 }
             }
@@ -388,7 +388,7 @@ namespace NitroxClient.Debuggers
                     }
                     else
                     {
-                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                        GUILayout.Label($"No selected scene\nClick on a Scene in '{GetTab("Hierarchy").Value.Name}'", "fillMessage");
                     }
                 }
             }
@@ -515,7 +515,7 @@ namespace NitroxClient.Debuggers
                                 if (GUILayout.Button(behaviour.GetType().Name))
                                 {
                                     selectedMonoBehaviour = behaviour;
-                                    ActiveTab = GetTab("MonoBehaviour").Get();
+                                    ActiveTab = GetTab("MonoBehaviour").Value;
                                 }
                             }
                         }
@@ -523,7 +523,7 @@ namespace NitroxClient.Debuggers
                 }
                 else
                 {
-                    GUILayout.Label($"No selected GameObject\nClick on an object in '{GetTab("Hierarchy").Get().Name}'", "fillMessage");
+                    GUILayout.Label($"No selected GameObject\nClick on an object in '{GetTab("Hierarchy").Value.Name}'", "fillMessage");
                 }
             }
         }
@@ -550,7 +550,7 @@ namespace NitroxClient.Debuggers
                 }
                 else
                 {
-                    GUILayout.Label($"No selected MonoBehaviour\nClick on an object in '{GetTab("MonoBehaviour").Get().Name}'", "fillMessage");
+                    GUILayout.Label($"No selected MonoBehaviour\nClick on an object in '{GetTab("MonoBehaviour").Value.Name}'", "fillMessage");
                 }
             }
         }
@@ -589,7 +589,7 @@ namespace NitroxClient.Debuggers
                         if (GUILayout.Button(field.Name))
                         {
                             selectedObject = (GameObject)field.GetValue(selectedMonoBehaviour);
-                            ActiveTab = GetTab("GameObject").Get();
+                            ActiveTab = GetTab("GameObject").Value;
                         }
                     }
                     else if (field.FieldType == typeof(Text))

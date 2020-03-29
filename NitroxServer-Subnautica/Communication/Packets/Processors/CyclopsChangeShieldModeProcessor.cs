@@ -22,9 +22,9 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         {
             Optional<CyclopsModel> opCyclops = vehicleManager.GetVehicleModel<CyclopsModel>(packet.Id);
 
-            if (opCyclops.IsPresent())
+            if (opCyclops.HasValue)
             {
-                opCyclops.Get().ShieldOn = packet.IsOn;
+                opCyclops.Value.ShieldOn = packet.IsOn;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

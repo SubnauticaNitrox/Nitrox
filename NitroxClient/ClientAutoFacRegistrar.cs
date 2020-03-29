@@ -14,6 +14,7 @@ using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.GameLogic.PlayerModel;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerPreferences;
+using NitroxClient.Helpers;
 using NitroxClient.Map;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
@@ -45,6 +46,8 @@ namespace NitroxClient
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
+            containerBuilder.Register(c => new NitroxProtobufSerializer("NitroxModel.dll"));
+            
             containerBuilder.RegisterType<UnityPreferenceStateProvider>()
                 .As<IPreferenceStateProvider>()
                 .SingleInstance();

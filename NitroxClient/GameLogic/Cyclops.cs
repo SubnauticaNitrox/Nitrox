@@ -323,7 +323,7 @@ namespace NitroxClient.GameLogic
         {
             // We need to wait till the cyclops is powered up to start all advanced modes
             // At this time all Equipment will be loaded into the cyclops, so we do not need other structures
-            SubRoot root = NitroxEntity.GetObjectFrom(cyclopsModel.Id).Get().GetComponent<SubRoot>();
+            SubRoot root = NitroxEntity.GetObjectFrom(cyclopsModel.Id).Value.GetComponent<SubRoot>();
             UWE.Event<PowerRelay>.HandleFunction handleFunction = null;
             handleFunction = new UWE.Event<PowerRelay>.HandleFunction((relay) =>
             {
@@ -349,7 +349,7 @@ namespace NitroxClient.GameLogic
         /// </summary>
         public void OnCreateDamagePoint(SubRoot subRoot)
         {
-            BroadcastDamageState(subRoot, Optional<DamageInfo>.Empty());
+            BroadcastDamageState(subRoot, Optional.Empty);
         }
 
         /// <summary>
@@ -387,9 +387,9 @@ namespace NitroxClient.GameLogic
             {
                 CyclopsDamageInfoData damageInfo = null;
 
-                if (info.IsPresent())
+                if (info.HasValue)
                 {
-                    DamageInfo damage = info.Get();
+                    DamageInfo damage = info.Value;
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
                     CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subId,

@@ -15,9 +15,9 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             Optional<GameObject> opItem = NitroxEntity.GetObjectFrom(drop.Id);
 
-            if (opItem.IsPresent())
+            if (opItem.HasValue)
             {
-                MovementHelper.MoveRotateGameObject(opItem.Get(), drop.Position, drop.Rotation, ITEM_TRANSFORM_SMOOTH_PERIOD);
+                MovementHelper.MoveRotateGameObject(opItem.Value, drop.Position, drop.Rotation, ITEM_TRANSFORM_SMOOTH_PERIOD);
             }
         }
     }
