@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxEntity entity = sourceBase.GetComponent<NitroxEntity>();
 
-            if (sourceBase.GetComponent<BaseRoot>() == null)
+            if (!sourceBase.GetComponent<BaseRoot>())
             {
                 entity = sourceBase.transform.parent.GetComponent<NitroxEntity>();
             }
