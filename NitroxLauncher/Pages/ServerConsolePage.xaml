@@ -177,7 +177,7 @@
                 <Border DockPanel.Dock="Left" BorderBrush ="#36383A" Background="#36383A" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
                     <TextBox TabIndex="1" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left"
                              Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput"
-                             PreviewKeyDown="CommandLine_PreviewKeyDown" Margin="13,7,14,7" SelectionBrush="#FF36383A" VerticalAlignment="Center" BorderThickness="0" CaretBrush="#FF007BFF" />
+                             PreviewKeyDown="CommandLine_PreviewKeyDown" Margin="13,7,14,7" SelectionBrush="#FF36383A" VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
                 </Border>
             </DockPanel>
         </Grid>
