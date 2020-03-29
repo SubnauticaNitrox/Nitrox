@@ -24,7 +24,7 @@ namespace NitroxPatcher.Patches.Dynamic
             SeamothModel model = NitroxServiceLocator.LocateService<Vehicles>().GetVehicles<SeamothModel>(id);
             
             // Set lights of seamoth            
-            ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();            
+            ToggleLights toggleLights = gameObject.RequireComponentInChildren<ToggleLights>();
             toggleLights.lightsActive = model.LightOn;
             return model.LightOn;
         }
