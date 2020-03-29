@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -17,13 +18,15 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         private readonly BatchCellsParser batchCellsParser;
 
         private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType;
+        private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
         private readonly Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId;
         private readonly UwePrefabFactory prefabFactory;
 
         private readonly UweWorldEntityFactory worldEntityFactory;
-        private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
 
-        private HashSet<Int3> parsedBatches = new HashSet<Int3>();
+        private readonly object parsedBatchesLock = new object();
+        private readonly object emptyBatchesLock = new object();
+        private HashSet<Int3> parsedBatches;
 
         public List<Int3> SerializableParsedBatches
         {
@@ -32,19 +35,25 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 List<Int3> parsed;
                 List<Int3> empty;
 
-                lock (parsedBatches)
+                lock (parsedBatchesLock)
                 {
                     parsed = new List<Int3>(parsedBatches);
                 }
 
-                lock (emptyBatches)
+                lock (emptyBatchesLock)
                 {
                     empty = new List<Int3>(emptyBatches);
                 }
 
                 return parsed.Except(empty).ToList();
             }
-            set { parsedBatches = new HashSet<Int3>(value); }
+            set
+            {
+                lock (parsedBatchesLock)
+                {
+                    parsedBatches = new HashSet<Int3>(value);
+                }
+            }
         }
 
         public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer,
@@ -77,7 +86,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (entities.Count == 0)
             {
-                lock (emptyBatches)
+                lock (emptyBatchesLock)
                 {
                     emptyBatches.Add(batchId);
                 }
@@ -122,7 +131,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             UwePrefab selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
             {
-                if (prefab.Probability == 0)
+                if (Math.Abs(prefab.Probability) < 0.0001)
                 {
                     return false;
                 }
@@ -140,7 +149,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
 
             Optional<UweWorldEntity> opWorldEntity = worldEntityFactory.From(selectedPrefab.ClassId);
-            
+
             if (opWorldEntity.HasValue)
             {
                 UweWorldEntity uweWorldEntity = opWorldEntity.Value;
@@ -191,7 +200,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 IEnumerable<Entity> entities = CreateEntityWithChildren(entitySpawnPoint,
                                                                         entitySpawnPoint.Scale,
                                                                         uweWorldEntity.Value.TechType,
-                                                                        uweWorldEntity.Value.CellLevel, 
+                                                                        uweWorldEntity.Value.CellLevel,
                                                                         entitySpawnPoint.ClassId,
                                                                         deterministicBatchGenerator,
                                                                         parentEntity);
