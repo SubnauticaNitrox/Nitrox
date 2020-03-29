@@ -17,7 +17,7 @@ namespace NitroxServer.ConsoleCommands
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "{name}", "Kicks a player from the server")
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "{name} [{Reason}]", "Kicks a player from the server")
         {
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
@@ -29,7 +29,7 @@ namespace NitroxServer.ConsoleCommands
             {
                 Player playerToKick = playerManager.GetConnectedPlayers().Single(t => t.Name == args[0]);
 
-                playerToKick.SendPacket(new PlayerKicked("You were kicked from the server!"));
+                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {string.Join(" ", args.Skip(1))}"));
                 playerManager.PlayerDisconnected(playerToKick.connection);
                 List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
 
