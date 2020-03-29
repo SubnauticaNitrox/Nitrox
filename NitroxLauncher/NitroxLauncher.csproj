@@ -172,6 +172,16 @@
     <Resource Include="Fonts\RobotoMono-Regular.ttf" />
     <Resource Include="Fonts\RobotoMono-Thin.ttf" />
     <Resource Include="Fonts\RobotoMono-ThinItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-Bold.ttf" />
+    <Resource Include="Fonts\OpenSans-BoldItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-ExtraBold.ttf" />
+    <Resource Include="Fonts\OpenSans-ExtraBoldItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-Italic.ttf" />
+    <Resource Include="Fonts\OpenSans-Light.ttf" />
+    <Resource Include="Fonts\OpenSans-LightItalic.ttf" />
+    <Resource Include="Fonts\OpenSans-Regular.ttf" />
+    <Resource Include="Fonts\OpenSans-Semibold.ttf" />
+    <Resource Include="Fonts\OpenSans-SemiboldItalic.ttf" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -258,6 +268,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\social\github.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Fonts\Apache License.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\subnauticaIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
