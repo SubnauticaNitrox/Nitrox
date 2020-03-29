@@ -34,6 +34,23 @@
             <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF202225"/>
 
             <!-- Styles -->
+            <Style x:Key="SocialButton" TargetType="TextBlock">
+                <Setter Property="OpacityMask">
+                    <Setter.Value>
+                        <SolidColorBrush Color="#7F000000" />
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="OpacityMask">
+                            <Setter.Value>
+                                <SolidColorBrush Color="#FF000000" />
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <Style TargetType="Window">
                 <Setter Property="FontFamily" Value="{StaticResource DefaultFont}" />
             </Style>

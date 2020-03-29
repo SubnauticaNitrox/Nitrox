@@ -5,12 +5,13 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="1032">
+                Title="Launch Game" Height="946">
     <local:PageBase.Resources>
         <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
         <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
         <BitmapImage x:Key="SocialReddit" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/reddit.png"/>
         <BitmapImage x:Key="SocialWebsite" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/website.png"/>
+        <BitmapImage x:Key="SocialGithub" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/github.png"/>
     </local:PageBase.Resources>
     <Grid Height="1015" VerticalAlignment="Top">
         <Grid.ColumnDefinitions>
@@ -29,8 +30,8 @@
         <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-138">
             <Grid.RowDefinitions>
                 <RowDefinition Height="158*"/>
-                <RowDefinition Height="323*"/>
-                <RowDefinition Height="163*"/>
+                <RowDefinition Height="175*"/>
+                <RowDefinition Height="311*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0*"/>
@@ -72,109 +73,57 @@
                 <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" Text="Follow Nitrox"/>
             </StackPanel>
 
-            <Grid Grid.Column="2" Margin="0,22,0,0" Grid.Row="1" Grid.ColumnSpan="2" Height="280" VerticalAlignment="Top">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="262*"/>
-                    <ColumnDefinition Width="255*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="67*"/>
-                    <RowDefinition Height="6*"/>
-                    <RowDefinition Height="67*"/>
-                </Grid.RowDefinitions>
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Margin="0,0,12,0">
-                    <TextBlock Foreground="White">
+            <Grid Grid.Column="2" Margin="0,22,0,21" Grid.Row="1" Grid.ColumnSpan="2" Background="#0CFFFFFF">
+                <TextBlock Foreground="White" Margin="120,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}" >
                     <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
-                        <InlineUIContainer/><InlineUIContainer>
-                            <Grid Height="auto" Width="auto" Margin="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="8*"/>
-                                    <RowDefinition Height="29*"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource SocialDiscord}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                        <Image Source="{DynamicResource SocialDiscord}" Width="24" HorizontalAlignment="Left" />
+                    </Hyperlink>
+                </TextBlock>
 
-                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="DISCORD"/></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Looking for group, discussion, general help and support from the Nitrox Team and players." Foreground="#BFFFFFFF"/>
-                            </Grid>
-                        </InlineUIContainer></Hyperlink></TextBlock>
-                </Border>
-
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Column="1">
-                    <TextBlock Foreground="White">
+                <TextBlock Foreground="White" Margin="190,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}">
                     <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
-                        <InlineUIContainer/><InlineUIContainer>
-                            <Grid Height="auto" Width="auto" Margin="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="8*"/>
-                                    <RowDefinition Height="29*"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource SocialTwitter}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                        <Image Source="{DynamicResource SocialTwitter}" Width="24" HorizontalAlignment="Left" />
+                    </Hyperlink>
+                </TextBlock>
 
-                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="TWITTER"/></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Follow on Twitter for the latest tweets and updates about patches, releases and more." Foreground="#BFFFFFFF"/>
-                            </Grid>
-                        </InlineUIContainer></Hyperlink></TextBlock>
-                </Border>
+                <TextBlock Foreground="White" Margin="260,54,261,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}">
+                    <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" ToolTip="Nitrox Subreddit" Foreground="White" TextDecorations="{x:Null}">
+                        <Image Source="{DynamicResource SocialReddit}" Width="24" HorizontalAlignment="Left" />
+                    </Hyperlink>
+                </TextBlock>
 
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="2" Margin="0,0,12,0">
-                    <TextBlock Foreground="White">
-                    <Hyperlink NavigateUri="https://reddit.com/r/SubnauticaNitrox" RequestNavigate="OnRequestNavigate" ToolTip="Open Subreddit" Foreground="White" TextDecorations="{x:Null}">
-                        <InlineUIContainer/><InlineUIContainer>
-                            <Grid Height="auto" Width="auto" Margin="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="8*"/>
-                                    <RowDefinition Height="29*"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource SocialReddit}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
+                <TextBlock Foreground="White" Margin="330,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}">
+                    <Hyperlink NavigateUri="https://github.com/SubnauticaNitrox/Nitrox" RequestNavigate="OnRequestNavigate" ToolTip="Contribute on GitHub" Foreground="White" TextDecorations="{x:Null}">
+                        <Image Source="{DynamicResource SocialGithub}" Width="24" HorizontalAlignment="Left" />
+                    </Hyperlink>
+                </TextBlock>
 
-                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="REDDIT"/></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14" Text="Join the official Subreddit for the Nitrox mod. Updates and discussion." Foreground="#BFFFFFFF"/>
-                            </Grid>
-                        </InlineUIContainer></Hyperlink></TextBlock>
-                </Border>
+                <TextBlock Foreground="White" Margin="400,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}">
+                    <Hyperlink NavigateUri="https://nitrox.rux.gg" RequestNavigate="OnRequestNavigate" ToolTip="Nitrox Website" Foreground="White" TextDecorations="{x:Null}">
+                        <Image Source="{DynamicResource SocialWebsite}" Width="24" HorizontalAlignment="Left" />
+                    </Hyperlink>
+                </TextBlock>
 
-                <Border BorderThickness="0" Background="#0AFFFFFF" CornerRadius="6" Grid.Row="3" Margin="0,0,0,0" Grid.Column="1">
-                    <TextBlock Foreground="White">
-                    <Hyperlink NavigateUri="https://nitrox.rux.gg" RequestNavigate="OnRequestNavigate" ToolTip="Open Website" Foreground="White" TextDecorations="{x:Null}">
-                        <InlineUIContainer/><InlineUIContainer>
-                            <Grid Height="auto" Width="auto" Margin="12">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="8*"/>
-                                    <RowDefinition Height="29*"/>
-                                </Grid.RowDefinitions>
-                                <Image Source="{DynamicResource SocialWebsite}" Height="24" Width="24" VerticalAlignment="Top" HorizontalAlignment="Left"  />
-
-                                <TextBlock VerticalAlignment="Center" Margin="32,3,0,5" Height="16" HorizontalAlignment="Left" Width="210" FontSize="12" Foreground="#7FFFFFFF"><Run Text="WEBSITE"/></TextBlock>
-                                <TextBlock VerticalAlignment="Center" Margin="0,9,0,-4" Grid.Row="1" Height="82" TextWrapping="Wrap" FontSize="14"  Text="Visit the official Nitrox Website. Check for the latest updates, changelogs and guides." Foreground="#BFFFFFFF"/>
-                            </Grid>
-                        </InlineUIContainer></Hyperlink></TextBlock>
-                </Border>
 
             </Grid>
 
-            <Border BorderThickness="0 1 0 0" BorderBrush="#14FFFFFF" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" />
 
-            <StackPanel Margin="0,22,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
-                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Mod Info"/></TextBlock>
-                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="About Nitrox"/></TextBlock>
+            <StackPanel Margin="0,11,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="2">
+                <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Contributors"/></TextBlock>
             </StackPanel>
-            <StackPanel Margin="0,22,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
-                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Contributors"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Text="Developers:" FontWeight="Bold" /> <Run Foreground="#BFFFFFFF">Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
-                    <LineBreak/><Run Text="Staff: " FontWeight="Bold" /><Run Foreground="#BFFFFFFF">Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
-                    <LineBreak/><Run Text="Design: " FontWeight="Bold" /><Run Foreground="#BFFFFFFF">Rux</Run></TextBlock>
+            <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
+                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="DEVELOPERS"/></TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
+                </TextBlock>
+
+                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="STAFF"/></TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
+                </TextBlock>
+
+                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="DESIGN"/></TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Rux</Run>
+                </TextBlock>
+
             </StackPanel>
 
         </Grid>
