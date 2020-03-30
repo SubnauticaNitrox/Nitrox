@@ -23,6 +23,15 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
                 int connectionMask = (int)mapRoomGhost.ReflectionGet("connectionMask");
                 rotationMetadata = new MapRoomRotationMetadata((byte)cellType, connectionMask);
             }
+            else if (baseGhost is BaseAddModuleGhost)
+            {
+                BaseAddModuleGhost module = baseGhost as BaseAddModuleGhost;
+
+                Int3 cell = module.anchoredFace.Value.cell;
+                int direction = (int)module.anchoredFace.Value.direction;
+
+                rotationMetadata = new BaseModuleRotationMetadata(cell, direction);
+            }
 
             return Optional.OfNullable(rotationMetadata);
         }

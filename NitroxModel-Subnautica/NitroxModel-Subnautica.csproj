@@ -223,6 +223,7 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\CorridorRotationMetadata.cs" />
+    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseModuleRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\MapRoomRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\SubnauticaRotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />

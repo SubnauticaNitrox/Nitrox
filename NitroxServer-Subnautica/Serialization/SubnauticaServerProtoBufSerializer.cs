@@ -28,6 +28,7 @@ namespace NitroxServer_Subnautica.Serialization
             MetaType rotationData = Model.Add(typeof(RotationMetadata), false);
             rotationData.AddSubType(50, typeof(CorridorRotationMetadata));
             rotationData.AddSubType(60, typeof(MapRoomRotationMetadata));
+            rotationData.AddSubType(70, typeof(BaseModuleRotationMetadata));
         }
     }
 }
