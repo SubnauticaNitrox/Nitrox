@@ -6,13 +6,15 @@ using System;
 using NitroxModel.Logger;
 using NitroxClient.MonoBehaviours;
 using System.Collections;
+using NitroxClient.Communication.Abstract;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
     public class InitialPlayerSyncProcessor : ClientPacketProcessor<InitialPlayerSync>
     {
-        private HashSet<InitialSyncProcessor> processors;
-        private HashSet<Type> alreadyRan = new HashSet<Type>();
+        private readonly IPacketSender packetSender;
+        private readonly HashSet<InitialSyncProcessor> processors;
+        private readonly HashSet<Type> alreadyRan = new HashSet<Type>();
         private InitialPlayerSync packet;
 
         private WaitScreen.ManualWaitItem loadingMultiplayerWaitItem;
@@ -21,8 +23,9 @@ namespace NitroxClient.Communication.Packets.Processors
         private int cumulativeProcessorsRan;
         private int processorsRanLastCycle;
 
-        public InitialPlayerSyncProcessor(IEnumerable<InitialSyncProcessor> processors)
+        public InitialPlayerSyncProcessor(IPacketSender packetSender, IEnumerable<InitialSyncProcessor> processors)
         {
+            this.packetSender = packetSender;
             this.processors = processors.ToSet();
         }
 
@@ -36,19 +39,21 @@ namespace NitroxClient.Communication.Packets.Processors
         
         private IEnumerator ProcessInitialSyncPacket(object sender, EventArgs eventArgs)
         {
-            bool moreProcessorsToRun;
-
-            do
+            // Some packets should not fire during game session join but only afterwards so that initialized/spawned game objects don't trigger packet sending again. 
+            using (packetSender.Suppress<PingRenamed>())
             {
-                yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
-                
-                moreProcessorsToRun = (alreadyRan.Count < processors.Count);
-
-                if (moreProcessorsToRun && processorsRanLastCycle == 0)
+                bool moreProcessorsToRun;
+                do
                 {
-                    throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
-                }
-            } while (moreProcessorsToRun);
+                    yield return Multiplayer.Main.StartCoroutine(RunPendingProcessors());
+                
+                    moreProcessorsToRun = alreadyRan.Count < processors.Count;
+                    if (moreProcessorsToRun && processorsRanLastCycle == 0)
+                    {
+                        throw new Exception("Detected circular dependencies in initial packet sync between: " + GetRemainingProcessorsText());
+                    }
+                } while (moreProcessorsToRun);
+            }
 
             WaitScreen.Remove(loadingMultiplayerWaitItem);
             Multiplayer.Main.InitialSyncCompleted = true;

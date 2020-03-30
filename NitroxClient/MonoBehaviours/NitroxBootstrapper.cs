@@ -1,8 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours.Gui.MainMenu;
-using NitroxModel.Core;
+﻿using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Logger;
-using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -21,9 +18,6 @@ namespace NitroxClient.MonoBehaviours
 #endif
 
             CreateDebugger();
-
-            // TODO: Find better spot
-            PingManager.onRename += (id, instance) => NitroxServiceLocator.LocateService<IPacketSender>().Send(new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel()));
         }
 
         private void EnableDeveloperFeatures()

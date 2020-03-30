@@ -13,6 +13,9 @@ namespace NitroxModel.Packets
 
         [ProtoMember(2)]
         public string Name { get; }
+        
+        [ProtoMember(3)]
+        public byte[] BeaconGameObjectSerialized { get; }
 
         /// <summary>
         ///     Constructor for serialization
@@ -21,15 +24,16 @@ namespace NitroxModel.Packets
         {
         }
 
-        public PingRenamed(NitroxId id, string name)
+        public PingRenamed(NitroxId id, string name, byte[] beaconGameObjectSerialized)
         {
             Id = id;
             Name = name;
+            BeaconGameObjectSerialized = beaconGameObjectSerialized;
         }
 
         public override string ToString()
         {
-            return $"[{nameof(PingRenamed)} {{{nameof(Id)}: {Id}}}, {{{nameof(Name)}: {Name}}}]";
+            return $"[{nameof(PingRenamed)} {{{nameof(Id)}: {Id}}}, {{{nameof(Name)}: {Name}}}, {{{BeaconGameObjectSerialized}.Length: {BeaconGameObjectSerialized?.Length}}}]";
         }
     }
 }

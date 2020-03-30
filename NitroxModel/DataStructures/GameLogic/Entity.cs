@@ -37,9 +37,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId WaterParkId { get; set; }
 
         /// <summary>
-        ///     Some entities (such as dropped items) have already been serialized and include
-        ///     special game object meta data (like battery charge)
+        ///     Gets or sets the the serialized GameObject for this entity which is used on the client-side to spawn it.
         /// </summary>
+        /// <remarks>
+        ///     Used for player droppable items including items that hold metadata/state that a player can change and should be persisted on the server.
+        /// </remarks>
         [ProtoMember(8)]
         public byte[] SerializedGameObject { get; set; }
 

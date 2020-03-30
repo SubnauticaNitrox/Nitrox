@@ -331,6 +331,7 @@
     <Compile Include="Patches\Dynamic\SubNameInput_OnNameChange_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubRoot_OnPlayerEntered_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubRoot_OnTakeDamage_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PingManager_NotifyRename_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_OnPoweredChanged_Patch.cs" />
     <Compile Include="Patches\Dynamic\ToggleLights_SetLightsActive_Patch.cs" />
     <Compile Include="Patches\Dynamic\uGUI_OptionsPanel_AddBindings_Patch.cs" />

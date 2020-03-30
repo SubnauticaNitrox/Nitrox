@@ -23,7 +23,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
             using (packetSender.Suppress<VehicleNameChange>())
             {
-                    subNameInput.OnNameChange(namePacket.Name);
+                subNameInput.OnNameChange(namePacket.Name);
             }
         }
     }

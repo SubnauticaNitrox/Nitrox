@@ -10,7 +10,7 @@ using UnityEngine;
 namespace NitroxClient.Communication.Packets.Processors
 {
     /// <summary>
-    ///     Only synces pings from beacons for now.
+    ///     Only syncs pings from beacons for now.
     /// </summary>
     public class PingRenamedProcessor : ClientPacketProcessor<PingRenamed>
     {

@@ -1,6 +1,7 @@
 ﻿using System;
 using NitroxModel.Helper;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace NitroxClient.Unity.Helper
 {
@@ -41,6 +42,7 @@ namespace NitroxClient.Unity.Helper
 
             return child;
         }
+
         public static Transform RequireTransform(this GameObject go, string name) => go.transform.RequireTransform(name);
         public static Transform RequireTransform(this MonoBehaviour mb, string name) => mb.transform.RequireTransform(name);
 
@@ -54,6 +56,46 @@ namespace NitroxClient.Unity.Helper
             Validate.NotNull(go, "No global GameObject found with " + name + "!");
 
             return go;
+        }
+
+        /// <summary>
+        ///     Calls the selector if the Unity object is alive. Returns null without call if not alive.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="selector"></param>
+        /// <typeparam name="TIn"></typeparam>
+        /// <typeparam name="TOut"></typeparam>
+        /// <returns></returns>
+        public static TOut IfAlive<TIn, TOut>(this TIn obj, Func<TIn, TOut> selector)
+            where TOut : class
+            where TIn : Object
+        {
+            // Unity checks if the object is alive like this. Do NOT use == null check.
+            if (obj)
+            {
+                return selector(obj);
+            }
+            return null;
+        }
+
+        /// <summary>
+        ///     Calls the selector if the Unity object is alive. Returns null without call if not alive.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="selector"></param>
+        /// <typeparam name="TIn"></typeparam>
+        /// <typeparam name="TOut"></typeparam>
+        /// <returns></returns>
+        public static TOut IfAlive<TIn, TOut>(this TIn obj, Func<TOut> selector)
+            where TOut : class
+            where TIn : Object
+        {
+            // Unity checks if the object is alive like this. Do NOT use == null check.
+            if (obj)
+            {
+                return selector();
+            }
+            return null;
         }
     }
 }
