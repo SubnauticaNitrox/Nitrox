@@ -89,7 +89,7 @@ namespace NitroxClient.MonoBehaviours
         {
             if (buildEvent is BasePiecePlacedEvent)
             {
-                BuildBasePiece((BasePiecePlacedEvent)buildEvent);
+                PlaceBasePiece((BasePiecePlacedEvent)buildEvent);
             }
             else if (buildEvent is ConstructionCompletedEvent)
             {
@@ -109,7 +109,7 @@ namespace NitroxClient.MonoBehaviours
             }
         }
 
-        private void BuildBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
+        private void PlaceBasePiece(BasePiecePlacedEvent basePiecePlacedBuildEvent)
         {
             Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " type: " + basePiecePlacedBuildEvent.BasePiece.TechType + " parentId: " + basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null));
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
@@ -167,20 +167,22 @@ namespace NitroxClient.MonoBehaviours
             // Furniture just re-uses the same piece.
             if (constructableBase)
             {
+                Int3 latestCell = default(Int3);
+                Base latestBase = null;
+
+                // must fetch BEFORE setState or else the BaseGhost gets destroyed
+                BaseGhost baseGhost = constructing.GetComponentInChildren<BaseGhost>();
+
+                if(baseGhost)
+                {
+                    latestCell = baseGhost.TargetOffset;
+                    latestBase = baseGhost.TargetBase;
+                }
+
                 constructableBase.constructedAmount = 1f;
                 constructableBase.SetState(true, true);
                 
-                Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
-
-                Int3 latestCell;
-                Base latestBase;
-
-                if (latestBaseOp.HasValue)
-                {
-                    latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
-                    latestBase = (Base)latestBaseOp.Value;
-                }
-                else
+                if(latestBase == null)
                 {
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
                     latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();

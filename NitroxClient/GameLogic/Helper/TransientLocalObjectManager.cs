@@ -17,11 +17,7 @@ namespace NitroxClient.GameLogic.Helper
         {
             CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT,
             BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT,
-
-            // These entries are for transfering ids between ghosts and finished base pieces when construction completes:
-            LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION,
-            LATEST_BASE_WITH_NEW_CONSTRUCTION,
-
+            
             LATEST_DECONSTRUCTED_BASE_PIECE,
             LATEST_DECONSTRUCTED_BASE_PIECE_GUID
         }

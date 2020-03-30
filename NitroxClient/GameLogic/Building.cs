@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections.Generic;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -125,7 +126,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void ConstructionComplete(GameObject ghost)
+        public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset)
         {
             NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
@@ -142,15 +143,13 @@ namespace NitroxClient.GameLogic
             // Furniture just uses the same game object as the ghost for the final product.
             if (ghost.GetComponent<ConstructableBase>() != null)
             {
-                Optional<object> latestBaseOp = TransientLocalObjectManager.Get(TransientObjectType.LATEST_BASE_WITH_NEW_CONSTRUCTION);
-
                 Int3 latestCell;
                 Base latestBase;
 
-                if (latestBaseOp.HasValue)
+                if (lastTargetBase.HasValue)
                 {
-                    latestCell = TransientLocalObjectManager.Require<Int3>(TransientObjectType.LATEST_BASE_CELL_WITH_NEW_CONSTRUCTION);
-                    latestBase = (Base)latestBaseOp.Value;
+                    latestCell = lastTargetBaseOffset;
+                    latestBase = lastTargetBase.Value;
                 }
                 else
                 {
