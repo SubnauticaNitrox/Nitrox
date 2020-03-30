@@ -26,13 +26,18 @@ namespace NitroxClient.Communication.Packets.Processors
             Optional<GameObject> obj = NitroxEntity.GetObjectFrom(packet.Id);
             if (!obj.HasValue)
             {
-                throw new Exception($"Failed to find entity with Nitrox id '{packet.Id}'. It should also have a ping instance component.");
+                // Not the object we're looking for.
+                return;
             }
             Beacon beacon = obj.Value.GetComponent<Beacon>();
             if (!beacon)
             {
                 // This can be ok if origin of ping instance component was not from a beacon (but from signal or other).
-                Log.Debug($"Skipped ping rename for non-beacon object with Nitrox id: '{packet.Id}', object name: '{obj.Value.GetFullName()}'");
+                return;
+            }
+            if (beacon.GetComponent<Player>())
+            {
+                // Skip over beacon component on player GameObjects
                 return;
             }
 

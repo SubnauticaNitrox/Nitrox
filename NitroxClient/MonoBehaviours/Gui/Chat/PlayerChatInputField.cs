@@ -39,8 +39,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
             set
             {
-                // If another input has focus then do not enable chat
-                if (FPSInputModule.current.lastGroup != null)
+                if (!CanEnable())
                 {
                     return;
                 }
@@ -56,6 +55,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 
                 chatEnabled = value;
             }
+        }
+
+        public bool CanEnable()
+        {
+            // If another input has focus then do not enable chat
+            return FPSInputModule.current.lastGroup == null;
         }
 
         public PlayerChat Manager { get; set; }

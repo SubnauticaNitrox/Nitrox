@@ -60,11 +60,12 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void ShowChat()
         {
-            InputField.ChatEnabled = true;
-            if (InputField.ChatEnabled)
+            if (!InputField.CanEnable())
             {
-                ShowLog();            
+                return;
             }
+            InputField.ChatEnabled = true;
+            ShowLog();
         }
     }
 }

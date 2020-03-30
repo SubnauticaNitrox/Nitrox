@@ -454,7 +454,7 @@
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\DefaultEntitySpawner.cs" />
-    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
+    <Compile Include="GameLogic\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\StillSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="GameLogic\Vehicles.cs" />

@@ -1,7 +1,7 @@
 ﻿using System;
-using UnityEngine;
 using System.Collections.Generic;
 using ProtoBufNet;
+using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -9,6 +9,13 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class Entity
     {
+        /// <summary>
+        ///     Keeps track if an entity was spawned by the server or a player
+        ///     Server-spawned entities need to be techType white-listed to be simulated
+        /// </summary>
+        [ProtoMember(6)]
+        public bool SpawnedByServer;
+
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
         [ProtoMember(1)]
@@ -26,16 +33,16 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(5)]
         public string ClassId { get; set; }
 
-        [ProtoMember(6)]
-        public bool SpawnedByServer; // Keeps track if an entity was spawned by the server or a player
-                                     // Server-spawned entities need to be techType white-listed to be simulated
-
         [ProtoMember(7)]
         public NitroxId WaterParkId { get; set; }
 
+        /// <summary>
+        ///     Some entities (such as dropped items) have already been serialized and include
+        ///     special game object meta data (like battery charge)
+        /// </summary>
         [ProtoMember(8)]
-        public byte[] SerializedGameObject { get; set; } // Some entities (such as dropped items) have already been serialized and include 
-                                                         // special game object meta data (like battery charge)
+        public byte[] SerializedGameObject { get; set; }
+
         [ProtoMember(9)]
         public bool ExistsInGlobalRoot { get; set; }
 
@@ -81,15 +88,15 @@ namespace NitroxModel.DataStructures.GameLogic
             ExistsInGlobalRoot = existsInGlobalRoot;
         }
 
+        public override string ToString()
+        {
+            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + "]";
+        }
+
         [ProtoAfterDeserialization]
         private void ProtoAfterDeserialization()
         {
             Transform.Entity = this;
-        }
-
-        public override string ToString()
-        {
-            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + "]";
         }
     }
 }

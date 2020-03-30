@@ -1,25 +1,31 @@
-﻿using NitroxModel.Logger;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.GameLogic.Bases;
+using NitroxServer.GameLogic.Entities;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
     public class PingRenamedPacketProcessor : AuthenticatedPacketProcessor<PingRenamed>
     {
-        private readonly BaseManager baseManager;
+        private readonly EntityManager entities;
         private readonly PlayerManager playerManager;
 
-        public PingRenamedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
+        public PingRenamedPacketProcessor(PlayerManager playerManager, EntityManager entities)
         {
-            this.baseManager = baseManager;
             this.playerManager = playerManager;
+            this.entities = entities;
         }
 
         public override void Process(PingRenamed packet, Player player)
         {
-            // TODO: Fix persist
+            Optional<Entity> beaconEntity = entities.GetEntityById(packet.Id);
+            if (!beaconEntity.HasValue)
+            {
+                return;
+            }
 
             Log.Info($"Received ping rename: {packet} by player: {player}");
             playerManager.SendPacketToOtherPlayers(packet, player);
