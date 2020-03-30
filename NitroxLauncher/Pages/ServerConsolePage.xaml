@@ -122,7 +122,7 @@
         <Style x:Key="ButtonConsoleStop" TargetType="{x:Type Button}">
             <Style.Resources>
                 <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="0 8 8 0" />
+                    <Setter Property="CornerRadius" Value="6" />
                     <Setter Property="BorderThickness" Value="1" />
                 </Style>
             </Style.Resources>
@@ -132,6 +132,35 @@
             <Style.BasedOn>
                 <StaticResource ResourceKey="{x:Type Button}"/>
             </Style.BasedOn>
+        </Style>
+        <Style x:Key="ButtonConsoleMsg" TargetType="{x:Type Button}">
+            <Style.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="6" />
+                    <Setter Property="BorderThickness" Value="1" />
+                </Style>
+            </Style.Resources>
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Width" Value="240" />
+            <Setter Property="Height" Value="80" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#19FFFFFF" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Background" Value="Transparent"/>
         </Style>
         <ControlTemplate x:Key="ScrollViewerControlConsole" TargetType="{x:Type ScrollViewer}">
             <Grid x:Name="Grid" Background="{TemplateBinding Background}">
@@ -164,22 +193,25 @@
                              TextWrapping="Wrap" Background="Transparent" BorderBrush="#00000000" BorderThickness="0" SelectionBrush="#000078D7" Width="722" />
                 </ScrollViewer>
             </Border>
+            <Border Background="#333437" Grid.Row="1" CornerRadius="8">
+                <DockPanel>
 
-            <DockPanel Grid.Row="1" >
-                <Button TabIndex="3" DockPanel.Dock="Right" Width="42" Height="42" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
-                        ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757">
-                    <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
-                </Button>
-                <Button TabIndex="2" DockPanel.Dock="Right" Margin="0,0,0,0" Width="42" Height="42" Style="{StaticResource LargeButton}" Foreground="White" x:Name="CommandButton"
-                        ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559" Background="#FF36383A">
-                    <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
-                </Button>
-                <Border DockPanel.Dock="Left" BorderBrush ="#36383A" Background="#36383A" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
-                    <TextBox TabIndex="1" Padding="0,5" FontSize="12" MaxLines="1" Foreground="White" TextAlignment="Left"
+                    <Button TabIndex="3" DockPanel.Dock="Right" Width="34" Height="34" Style="{DynamicResource ButtonConsoleStop}" Foreground="White" x:Name="StopButton"
+                        ToolTip="Stop (exit) server" Click="StopButton_Click" Background="#FFEB5757" Margin="0,6,8,6">
+                        <Image  Stretch="Uniform"  Source="{StaticResource StopWhiteIcon}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="24" Height="24" />
+                    </Button>
+                    <Button TabIndex="2" DockPanel.Dock="Right" Width="34" Height="Auto" Style="{DynamicResource ButtonConsoleMsg}" Foreground="White" x:Name="CommandButton"
+                        ToolTip="Send command" Click="CommandButton_OnClick" RenderTransformOrigin="0.852,0.559" Margin="0,6,6,6">
+                        <Image  Stretch="Uniform"  Source="{StaticResource SendWhiteIcon}" Width="24" Height="24" />
+                    </Button>
+                    <Border DockPanel.Dock="Left" BorderBrush ="#333437" Background="#333437" BorderThickness="1" CornerRadius="8,0,0,8" Margin="0,0,0,0" >
+                        <TextBox TabIndex="1" Padding="0,5" FontSize="15" MaxLines="1" Foreground="White" TextAlignment="Left"
                              Background="{x:Null}" BorderBrush="{x:Null}" Text="{Binding CommandInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="CommandInput"
                              PreviewKeyDown="CommandLine_PreviewKeyDown" Margin="13,7,14,7" SelectionBrush="#FF36383A" VerticalAlignment="Center" BorderThickness="0" CaretBrush="White" />
-                </Border>
-            </DockPanel>
+                    </Border>
+                </DockPanel>
+            </Border>
+
         </Grid>
     </Grid>
 </nitroxLauncher:PageBase>

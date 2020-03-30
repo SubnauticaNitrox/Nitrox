@@ -8,9 +8,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <!-- Fonts -->
-            <FontFamily x:Key="Roboto">pack://application:,,,/Fonts/#Roboto</FontFamily>
+            <FontFamily x:Key="OpenSans">pack://application:,,,/Fonts/#OpenSans</FontFamily>
             <FontFamily x:Key="RobotoMono">pack://application:,,,/Fonts/#Roboto Mono</FontFamily>
-            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#Roboto</FontFamily>
+            <FontFamily x:Key="DefaultFont">pack://application:,,,/Fonts/#OpenSans</FontFamily>
 
             <!-- Background images -->
             <BitmapImage x:Key="VinesImage" UriSource="pack://application:,,,/Images/Vines.png" />
@@ -28,16 +28,16 @@
             <BitmapImage x:Key="SendWhiteIcon" UriSource="pack://application:,,,/Images/material-design-icons/baseline_send_white_24dp.png" />
 
             <!-- Pages TODO: Find another solution for the hard-coded viewbox values so that page background image aligns with sidebar and header -->
-            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#FF202225"/>
-            <pages:OptionPage x:Key="OptionPage" Background="#FF202225"/>
-            <pages:ServerPage x:Key="ServerPage" Background="#FF202225"/>
-            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF202225"/>
+            <pages:LaunchGamePage x:Key="LaunchGamePage" Background="#FF28292C"/>
+            <pages:OptionPage x:Key="OptionPage" Background="#FF28292C"/>
+            <pages:ServerPage x:Key="ServerPage" Background="#FF28292C"/>
+            <pages:ServerConsolePage x:Key="ServerConsolePage" Background="#FF28292C"/>
 
             <!-- Styles -->
             <Style x:Key="SocialButton" TargetType="TextBlock">
                 <Setter Property="OpacityMask">
                     <Setter.Value>
-                        <SolidColorBrush Color="#7F000000" />
+                        <SolidColorBrush Color="#BF000000" />
                     </Setter.Value>
                 </Setter>
                 <Style.Triggers>
@@ -101,7 +101,7 @@
                 <Setter Property="FontSize" Value="16" />
                 <Style.Resources>
                     <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="0" />
+                        <Setter Property="CornerRadius" Value="3" />
                         <Setter Property="BorderThickness" Value="1" />
                     </Style>
                 </Style.Resources>

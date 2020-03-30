@@ -5,7 +5,7 @@
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:local="clr-namespace:NitroxLauncher"
                 mc:Ignorable="d" d:DesignWidth="766"
-                Title="Launch Game" Height="946">
+                Title="Launch Game" Height="984">
     <local:PageBase.Resources>
         <BitmapImage x:Key="SocialDiscord" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/discord.png"/>
         <BitmapImage x:Key="SocialTwitter" CreateOptions="IgnoreImageCache" CacheOption="OnLoad" UriSource="pack://application:,,,/images/social/twitter.png"/>
@@ -21,13 +21,13 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="0" />
-            <RowDefinition Height="364" />
-            <RowDefinition Height="505" />
+            <RowDefinition Height="394" />
+            <RowDefinition Height="529" />
         </Grid.RowDefinitions>
 
         <Image Stretch="UniformToFill" Source="{StaticResource PlayGameImage}" Margin="0,0,0,22" Grid.Row="1" Grid.Column="1" />
 
-        <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-138">
+        <Grid Grid.Row="2" VerticalAlignment="Top" Height="644" Grid.Column="1" RenderTransformOrigin="0.503,0.447" Margin="0,0,0,-114">
             <Grid.RowDefinitions>
                 <RowDefinition Height="158*"/>
                 <RowDefinition Height="175*"/>
@@ -41,23 +41,23 @@
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Margin="0,2,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
-                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Game developer</TextBlock>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold">GAME DEVELOPER</TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Unknownworlds</TextBlock>
             </StackPanel>
 
             <StackPanel Margin="0,55,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
-                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6">Mod developers</TextBlock>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold">MOD DEVELOPERS</TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Team Nitrox</TextBlock>
             </StackPanel>
 
-            <TextBlock FontSize="14" Foreground="#BFFFFFFF" TextWrapping="Wrap" Grid.Column="2" Margin="0,0,10,0" Height="114" VerticalAlignment="Top">
+            <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Grid.Column="2" Margin="0,0,10,0" Height="148" VerticalAlignment="Top">
                 <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
             </TextBlock>
 
             <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Height="138">
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,8">
                     <StackPanel>
-                        <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"><Run Text="PLAY"/></TextBlock>
+                        <TextBlock HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Foreground="White"><Run Text="PLAY"/></TextBlock>
                         <TextBlock HorizontalAlignment="Center" FontSize="14"><Run Text="MULTIPLAYER"/></TextBlock>
                     </StackPanel>
                 </Button>
@@ -69,16 +69,18 @@
             <Border BorderThickness="0 1 0 0" BorderBrush="#14FFFFFF" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Grid.RowSpan="2" />
 
             <StackPanel Margin="0,22,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top" Grid.Row="1">
-                <TextBlock FontSize="12" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="Connect"/></TextBlock>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="CONNECT"/></TextBlock>
                 <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" Text="Follow Nitrox"/>
             </StackPanel>
 
-            <Grid Grid.Column="2" Margin="0,22,0,21" Grid.Row="1" Grid.ColumnSpan="2" Background="#0CFFFFFF">
-                <TextBlock Foreground="White" Margin="120,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}" >
+            <Grid Grid.Column="2" Margin="0,22,0,21" Grid.Row="1" Grid.ColumnSpan="2">
+                <Border CornerRadius="6" Background="#0CFFFFFF">
+                    <TextBlock Foreground="White" Margin="120,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}" >
                     <Hyperlink NavigateUri="https://discord.gg/E8B4X9s" RequestNavigate="OnRequestNavigate" ToolTip="Join the Discord Server" Foreground="White" TextDecorations="{x:Null}">
                         <Image Source="{DynamicResource SocialDiscord}" Width="24" HorizontalAlignment="Left" />
                     </Hyperlink>
-                </TextBlock>
+                    </TextBlock>
+                </Border>
 
                 <TextBlock Foreground="White" Margin="190,54,0,54" Width="24" HorizontalAlignment="Left" Style="{DynamicResource SocialButton}">
                     <Hyperlink NavigateUri="https://twitter.com/modnitrox" RequestNavigate="OnRequestNavigate" ToolTip="Follow on Twitter" Foreground="White" TextDecorations="{x:Null}">
@@ -112,21 +114,21 @@
                 <TextBlock FontSize="18" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Contributors"/></TextBlock>
             </StackPanel>
             <StackPanel Margin="0,11,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="545" Grid.Row="2" Grid.ColumnSpan="2">
-                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="DEVELOPERS"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DEVELOPERS"/></TextBlock>
+                <TextBlock FontSize="16" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Sunrunner, Killzoms, Jannify, Marijn, Measurity, MadMax, Nes, _HeN_, CatSZekely, Garsia, RabidCrab, AquariusSidhe, Amarok, iCleeem</Run>
                 </TextBlock>
 
-                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="STAFF"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="STAFF"/></TextBlock>
+                <TextBlock FontSize="16" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Werewolfs, Shalix, CriticalCookie, InfamousJay, and a big thanks to the discord support team (Artic-Peepers, Peepers)</Run>
                 </TextBlock>
 
-                <TextBlock FontSize="11" Foreground="#BFFFFFFF" Margin="0,0,0,6"><Run Text="DESIGN"/></TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run Foreground="#BFFFFFFF">Rux</Run>
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="DESIGN"/></TextBlock>
+                <TextBlock FontSize="16" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap" LineHeight="24">                    <Run>Rux</Run>
                 </TextBlock>
 
             </StackPanel>
 
         </Grid>
-        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="30,270,355,0" Grid.Row="1" Grid.Column="1" />
+        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="30,295,355,0" Grid.Row="1" Grid.Column="1" />
     </Grid>
 </local:PageBase>
