@@ -17,13 +17,13 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
         private static GameObject playerKickedSubWindow;
         public static PlayerKickedModal Instance { get; private set; }
 
-        public void Show()
+        public void Show(string reason)
         {
             FreezeTime.Begin("NitroxDisconnected");
-            StartCoroutine(Show_Impl());
+            StartCoroutine(Show_Impl(reason));
         }
 
-        private static void InitSubWindow()
+        private static void InitSubWindow(string reason)
         {
             if (!IngameMenu.main)
             {
@@ -45,7 +45,7 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
                 GameObject header = playerKickedSubWindow.FindChild("Header"); //Message Object
 
                 Text messageText = header.GetComponent<Text>();
-                messageText.text = "You have been kicked from the server";
+                messageText.text = string.IsNullOrWhiteSpace(reason) ? "You've been kicked from the server" : reason;
 
                 RectTransform messageTransform = header.GetComponent<RectTransform>();
                 messageTransform.sizeDelta = new Vector2(700, 195);
@@ -73,10 +73,10 @@ namespace NitroxClient.MonoBehaviours.Gui.InGame
             Instance = null;
         }
 
-        private IEnumerator Show_Impl()
+        private IEnumerator Show_Impl(string reason)
         {
             // Execute frame-by-frame to allow UI scripts to initialize.
-            InitSubWindow();
+            InitSubWindow(reason);
             yield return null;
             IngameMenu.main.Open();
             yield return null;

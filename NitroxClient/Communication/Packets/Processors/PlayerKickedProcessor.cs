@@ -17,7 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(PlayerKicked packet)
         {
             session.Disconnect();
-            PlayerKickedModal.Instance.Show();
+            PlayerKickedModal.Instance.Show(packet.Reason);
         }
     }
 }

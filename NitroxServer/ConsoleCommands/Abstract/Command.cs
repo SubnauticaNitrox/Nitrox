@@ -13,19 +13,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string[] Alias { get; protected set; }
         public string Description { get; protected set; }
         public string ArgsDescription { get; protected set; }
-        public Perms RequiredPermLevel { get; protected set; } = Perms.ADMIN;
-
-        protected Command(string name, Perms requiredPermLevel) : this(name, requiredPermLevel, "", "", null)
-        {
-            RequiredPermLevel = requiredPermLevel;
-            Name = name;
-        }
-
-        protected Command(string name, Perms requiredPermLevel, string argsDescription) : this(name, requiredPermLevel, argsDescription, "", null)
-        {
-            ArgsDescription = argsDescription;
-            Name = name;
-        }
+        public Perms RequiredPermLevel { get; protected set; }
 
         protected Command(string name, Perms requiredPermLevel, string argsDescription, string description) : this(name, requiredPermLevel, argsDescription, "", null)
         {
@@ -38,6 +26,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             Validate.NotNull(name);
             Validate.NotNull(argsDescription);
+            Validate.NotNull(description);
 
             Name = name;
             Description = string.IsNullOrEmpty(description) ? "No description" : description;
