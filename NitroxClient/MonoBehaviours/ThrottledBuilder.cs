@@ -136,7 +136,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (basePiece.IsFurniture)
             {
-                SubRoot subRoot = (parentBase != null) ? parentBase.RequireComponent<SubRoot>() : null;
+                SubRoot subRoot = (parentBase != null) ? parentBase.GetComponent<SubRoot>() : null;
                                 
                 gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
                 constructable = gameObject.RequireComponentInParent<Constructable>();
