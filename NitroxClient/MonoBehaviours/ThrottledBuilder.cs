@@ -187,7 +187,10 @@ namespace NitroxClient.MonoBehaviours
                     Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
                     latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                     Validate.NotNull(latestBase, "latestBase can not be null");
+                }
 
+                if (latestCell == default(Int3))
+                {
                     Vector3 worldPosition;
                     float distance;
 

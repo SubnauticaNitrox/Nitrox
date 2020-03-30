@@ -133,6 +133,8 @@ namespace NitroxClient.GameLogic
             
             NitroxId id = NitroxEntity.GetId(ghost);
 
+            Log.Info("Construction complete on " + id + " " + ghost.name);
+
             if (opConstructedBase.HasValue)
             {
                 GameObject constructedBase = (GameObject)opConstructedBase.Value;
@@ -143,17 +145,11 @@ namespace NitroxClient.GameLogic
             // Furniture just uses the same game object as the ghost for the final product.
             if (ghost.GetComponent<ConstructableBase>() != null)
             {
-                Int3 latestCell;
-                Base latestBase;
+                Int3 latestCell = lastTargetBaseOffset;
+                Base latestBase = (lastTargetBase.HasValue) ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
 
-                if (lastTargetBase.HasValue)
+                if (latestCell == default(Int3))
                 {
-                    latestCell = lastTargetBaseOffset;
-                    latestBase = lastTargetBase.Value;
-                }
-                else
-                {
-                    latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                     Vector3 worldPosition;
                     float distance;
 
