@@ -3,7 +3,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.ConfigParser;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -22,7 +21,7 @@ namespace NitroxServer.ConsoleCommands
             {
                 string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
                 string password = args.Length == 0 ? "" : args[0];
-                serverConfig.ChangeServerPassword(password);
+                serverConfig.ServerPassword = password;
 
                 Log.Info($"Server password changed to \"{password}\" by {playerName}");
                 SendMessageToPlayer(sender, "Server password changed");

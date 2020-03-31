@@ -1,16 +1,15 @@
 ﻿using Autofac;
 using NitroxModel.Core;
 using System.Reflection;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
-using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Communication.Packets;
-using NitroxServer.ConfigParser;
+using NitroxServer.Serialization.World;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
+using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets;
 
 namespace NitroxServer
 {

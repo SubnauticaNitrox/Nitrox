@@ -3,7 +3,6 @@ using LiteNetLib.Utils;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets;
-using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 
@@ -11,7 +10,6 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
 {
     public class LiteNetLibServer : NitroxServer
     {
-        private const string CONNECTION_KEY = "nitrox";
         private readonly NetManager server;
         private readonly EventBasedNetListener listener;
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
