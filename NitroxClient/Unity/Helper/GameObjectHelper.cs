@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using NitroxModel.Helper;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -72,6 +73,44 @@ namespace NitroxClient.Unity.Helper
                 return obj;
             }
             return null;
+        }
+
+        public static string GetHierarchyPath(this GameObject obj)
+        {
+            if (!obj)
+            {
+                return "";
+            }
+
+            return GetHierarchyPathBuilder(obj, new StringBuilder());
+        }
+
+        public static string GetHierarchyPath(this Component component)
+        {
+            if (!component)
+            {
+                return "";
+            }
+
+            // Append component name
+            StringBuilder builder = new StringBuilder();
+            builder.Insert(0, component.name);
+            builder.Insert(0, ".");
+
+            // Append path of GameObject hierarchy
+            return GetHierarchyPathBuilder(component.gameObject, builder);
+        }
+
+        private static string GetHierarchyPathBuilder(this GameObject obj, StringBuilder builder)
+        {
+            Transform parent = obj.transform;
+            while (parent)
+            {
+                builder.Insert(0, parent.name);
+                builder.Insert(0, "/");
+                parent = parent.transform.parent;
+            }
+            return builder.ToString();
         }
     }
 }

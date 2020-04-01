@@ -94,12 +94,20 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        public void Send(Packet packet)
+        /// <summary>
+        /// Sends the packet to the server.
+        /// </summary>
+        /// <param name="packet">Packet to send</param>
+        /// <returns>True if packet was send successfully. False if suppressed.</returns>
+        public bool Send(Packet packet)
         {
-            if (!suppressedPacketsTypes.Contains(packet.GetType()))
+            Type packetType = packet.GetType();
+            if (!suppressedPacketsTypes.Contains(packetType))
             {
                 Client.Send(packet);
+                return true;
             }
+            return false;
         }
 
         public PacketSuppressor<T> Suppress<T>()

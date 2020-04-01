@@ -13,8 +13,11 @@ namespace NitroxServer
     public class Player : IProcessorContext
     {
         private readonly List<EquippedItemData> equippedItems;
+        private readonly object equippedItemsLock = new object();
         private readonly List<EquippedItemData> modules;
+        private readonly object modulesLock = new object();
         private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
+        private readonly object visibleCellsLock = new object();
         public NitroxConnection connection { get; set; }
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -77,7 +80,7 @@ namespace NitroxServer
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleCells)
+            lock (visibleCellsLock)
             {
                 foreach (AbsoluteEntityCell cell in cells)
                 {
@@ -88,7 +91,7 @@ namespace NitroxServer
 
         public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleCells)
+            lock (visibleCellsLock)
             {
                 foreach (AbsoluteEntityCell cell in cells)
                 {
@@ -99,7 +102,7 @@ namespace NitroxServer
 
         public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
-            lock (visibleCells)
+            lock (visibleCellsLock)
             {
                 return visibleCells.Contains(cell);
             }
@@ -107,7 +110,7 @@ namespace NitroxServer
 
         public void AddModule(EquippedItemData module)
         {
-            lock (modules)
+            lock (modulesLock)
             {
                 modules.Add(module);
             }
@@ -115,7 +118,7 @@ namespace NitroxServer
 
         public void RemoveModule(NitroxId id)
         {
-            lock (modules)
+            lock (modulesLock)
             {
                 modules.RemoveAll(item => item.ItemId == id);
             }
@@ -123,7 +126,7 @@ namespace NitroxServer
 
         public List<EquippedItemData> getAllModules()
         {
-            lock (modules)
+            lock (modulesLock)
             {
                 return new List<EquippedItemData>(modules);
             }
@@ -131,7 +134,7 @@ namespace NitroxServer
 
         public void AddEquipment(EquippedItemData equipment)
         {
-            lock (equippedItems)
+            lock (equippedItemsLock)
             {
                 equippedItems.Add(equipment);
             }
@@ -139,7 +142,7 @@ namespace NitroxServer
 
         public void RemoveEquipment(NitroxId id)
         {
-            lock (equippedItems)
+            lock (equippedItemsLock)
             {
                 equippedItems.RemoveAll(item => item.ItemId == id);
             }
@@ -147,7 +150,7 @@ namespace NitroxServer
 
         public List<EquippedItemData> getAllEquipment()
         {
-            lock (equippedItems)
+            lock (equippedItemsLock)
             {
                 return new List<EquippedItemData>(equippedItems);
             }

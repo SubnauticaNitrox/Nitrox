@@ -1,69 +1,54 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System.Collections.Generic;
-using NitroxModel.DataStructures;
+﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Items
 {
     public class InventoryManager
     {
-        private Dictionary<NitroxId, ItemData> inventoryItemsById;
-        private Dictionary<NitroxId, ItemData> storageSlotItemsById;
+        private readonly ThreadSafeDictionary<NitroxId, ItemData> inventoryItemsById;
+        private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsById;
 
         public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
         {
-            inventoryItemsById = inventoryItems.ToDictionary(item => item.ItemId);
-            storageSlotItemsById = storageSlotItems.ToDictionary(item => item.ItemId);
+            inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
+            storageSlotItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ItemId), false);
         }
 
         public void ItemAdded(ItemData itemData)
         {
-            lock (inventoryItemsById)
-            {
-                inventoryItemsById[itemData.ItemId] = itemData;
-            }
+            inventoryItemsById[itemData.ItemId] = itemData;
+
+#if DEBUG
+            Log.Debug($"Received inventory item '{itemData.ItemId}' to container '{itemData.ContainerId}'. Total items: {inventoryItemsById.Count}");
+#endif
         }
 
         public void ItemRemoved(NitroxId itemId)
         {
-            lock (inventoryItemsById)
-            {
-                inventoryItemsById.Remove(itemId);
-            }
+            inventoryItemsById.Remove(itemId);
         }
 
-        public List<ItemData> GetAllInventoryItems()
+        public ICollection<ItemData> GetAllInventoryItems()
         {
-            lock (inventoryItemsById)
-            {
-                return new List<ItemData>(inventoryItemsById.Values);
-            }
+            return inventoryItemsById.Values;
         }
-        
+
         public void StorageItemAdded(ItemData itemData)
         {
-            lock (storageSlotItemsById)
-            {
-                storageSlotItemsById[itemData.ContainerId] = itemData;
-            }
+            storageSlotItemsById[itemData.ContainerId] = itemData;
         }
 
         public bool StorageItemRemoved(NitroxId ownerId)
         {
-            bool success = false;
-            lock (storageSlotItemsById)
-            {
-                success = storageSlotItemsById.Remove(ownerId);
-            }
-            return success;
+            return storageSlotItemsById.Remove(ownerId);
         }
 
-        public List<ItemData> GetAllStorageSlotItems()
+        public ICollection<ItemData> GetAllStorageSlotItems()
         {
-            lock (storageSlotItemsById)
-            {
-                return new List<ItemData>(storageSlotItemsById.Values);
-            }
+            return storageSlotItemsById.Values;
         }
     }
 }

@@ -261,6 +261,8 @@
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\TechType.cs" />
+    <Compile Include="DataStructures\ThreadSafeCollection.cs" />
+    <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />

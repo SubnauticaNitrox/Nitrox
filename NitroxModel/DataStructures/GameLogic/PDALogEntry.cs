@@ -23,5 +23,10 @@ namespace NitroxModel.DataStructures.GameLogic
             Key = key;
             Timestamp = timestamp;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(Key)}: {Key}, {nameof(Timestamp)}: {Timestamp}";
+        }
     }
 }

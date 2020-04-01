@@ -9,14 +9,11 @@ namespace NitroxServer.Serialization
 {
     public class ServerProtobufSerializer
     {
-        private readonly RuntimeTypeModel model;
 
-        protected RuntimeTypeModel Model { get { return model; } }
+        protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
         public ServerProtobufSerializer(params string[] assemblies)
         {
-            model = TypeModel.Create();
-
             foreach(string assembly in assemblies)
             {
                 RegisterAssemblyClasses(assembly);
@@ -27,31 +24,31 @@ namespace NitroxServer.Serialization
 
         public void Serialize(Stream stream, object o)
         {
-            model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
+            Model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
         }
 
         public T Deserialize<T>(Stream stream)
         {
             T t = (T)Activator.CreateInstance(typeof(T));
-            model.DeserializeWithLengthPrefix(stream, t, typeof(T), PrefixStyle.Base128, 0);
+            Model.DeserializeWithLengthPrefix(stream, t, typeof(T), PrefixStyle.Base128, 0);
             return t;
         }
 
         public void Deserialize(Stream stream, object o, Type t)
         {
-            model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
+            Model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
         }
 
         private void RegisterHardCodedTypes()
         {
-            model.Add(typeof(UnityEngine.Light), true);
-            model.Add(typeof(UnityEngine.BoxCollider), true);
-            model.Add(typeof(UnityEngine.SphereCollider), true);
-            model.Add(typeof(UnityEngine.MeshCollider), true);
-            model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(NitroxVector3));
-            model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(NitroxQuaternion));
-            model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
-            model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
+            Model.Add(typeof(UnityEngine.Light), true);
+            Model.Add(typeof(UnityEngine.BoxCollider), true);
+            Model.Add(typeof(UnityEngine.SphereCollider), true);
+            Model.Add(typeof(UnityEngine.MeshCollider), true);
+            Model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(NitroxVector3));
+            Model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(NitroxQuaternion));
+            Model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
+            Model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
         }
         
         private void RegisterAssemblyClasses(string assemblyName)
@@ -63,11 +60,11 @@ namespace NitroxServer.Serialization
                 if (hasNitroxProtobuf)
                 {
                     // As of the latest protobuf update they will automatically register detected attributes.
-                    model.Add(type, true);
+                    Model.Add(type, true);
                 }
                 else if(HasUweProtoContract(type))
                 {
-                    model.Add(type, true);
+                    Model.Add(type, true);
 
                     ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
                 }
@@ -100,8 +97,7 @@ namespace NitroxServer.Serialization
                         if (attributeType.ToString().Contains("ProtoMemberAttribute"))
                         {
                             int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
-
-                            model[type].Add(tag, property.Name);
+                            Model[type].Add(tag, property.Name);
                         }
                     }
                 }

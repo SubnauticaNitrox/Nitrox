@@ -10,12 +10,18 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(ItemsContainer);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("NotifyAddItem", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static ItemContainers itemContainers;
 
         public static void Postfix(ItemsContainer __instance, InventoryItem item)
         {
+            if (itemContainers == null)
+            {
+                itemContainers = NitroxServiceLocator.LocateService<ItemContainers>();
+            }
+            
             if (item != null)
             {
-                NitroxServiceLocator.LocateService<ItemContainers>().BroadcastItemAdd(item.item, __instance.tr);
+                itemContainers.BroadcastItemAdd(item.item, __instance.tr);
             }
         }
 

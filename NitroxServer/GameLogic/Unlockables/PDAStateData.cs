@@ -1,6 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
-using System.Collections.Generic;
 using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxServer.GameLogic.Unlockables
@@ -9,188 +10,60 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         [ProtoMember(1)]
-        public List<TechTypeModel> SerializedUnlockedTechTypes
-        {
-            get
-            {
-                lock (unlockedTechTypes)
-                {
-                    return unlockedTechTypes;
-                }
-            }
-            set { unlockedTechTypes = value; }
-        }
+        public ThreadSafeCollection<TechTypeModel> UnlockedTechTypes { get; } = new ThreadSafeCollection<TechType>();
 
         [ProtoMember(2)]
-        public List<TechTypeModel> SerializedKnownTechTypes
-        {
-            get
-            {
-                lock (knownTechTypes)
-                {
-                    return knownTechTypes;
-                }
-            }
-            set { knownTechTypes = value; }
-        }
+        public ThreadSafeCollection<TechTypeModel> KnownTechTypes { get; } = new ThreadSafeCollection<TechType>();
 
         [ProtoMember(3)]
-        public List<string> SerializedEncyclopediaEntries
-        {
-            get
-            {
-                lock (encyclopediaEntries)
-                {
-                    return encyclopediaEntries;
-                }
-            }
-            set { encyclopediaEntries = value; }
-        }
+        public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();
 
         [ProtoMember(4)]
-        public List<PDAEntry> SerializedPartiallyUnlockedByTechType
-        {
-            get
-            {
-                lock (partiallyUnlockedByTechType)
-                {
-                    serializedPartiallyUnlockedByTechType = new List<PDAEntry>(partiallyUnlockedByTechType.Values);
-                    return serializedPartiallyUnlockedByTechType;
-                }
-            }
-            set
-            {
-                lock (partiallyUnlockedByTechType)
-                {
-                    partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
-
-                    foreach (PDAEntry entry in value)
-                    {
-                        partiallyUnlockedByTechType.Add(entry.TechType, entry);
-                    }
-                }
-
-                serializedPartiallyUnlockedByTechType = value;
-            }
-        }
-
-        private List<PDAEntry> serializedPartiallyUnlockedByTechType = new List<PDAEntry>();
+        public ThreadSafeDictionary<TechTypeModel, PDAEntry> PartiallyUnlockedByTechType { get; } = new ThreadSafeDictionary<TechTypeModel, PDAEntry>();
 
         [ProtoMember(5)]
-        public List<PDALogEntry> SerializedPDALog
-        {
-            get
-            {
-                lock (pdaLogEntries)
-                {
-                    return pdaLogEntries;
-                }
-            }
-            set { pdaLogEntries = value; }
-        }
-
-        [ProtoIgnore]
-        private List<TechTypeModel> unlockedTechTypes = new List<TechTypeModel>();
-
-        [ProtoIgnore]
-        private List<TechTypeModel> knownTechTypes = new List<TechTypeModel>();
-
-        [ProtoIgnore]
-        private List<string> encyclopediaEntries = new List<string>();
-
-        [ProtoIgnore]
-        private Dictionary<TechTypeModel, PDAEntry> partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
-
-        [ProtoIgnore]
-        private List<PDALogEntry> pdaLogEntries = new List<PDALogEntry>();
+        public ThreadSafeCollection<PDALogEntry> PdaLog { get; } = new ThreadSafeCollection<PDALogEntry>();
 
         public void UnlockedTechType(TechTypeModel techType)
         {
-            lock(unlockedTechTypes)
-            {
-                lock (partiallyUnlockedByTechType)
-                {
-                    partiallyUnlockedByTechType.Remove(techType);
-                    unlockedTechTypes.Add(techType);
-                }
-            }
+            PartiallyUnlockedByTechType.Remove(techType);
+            UnlockedTechTypes.Add(techType);
         }
 
         public void AddKnownTechType(TechTypeModel techType)
         {
-            lock (knownTechTypes)
-            {
-                knownTechTypes.Add(techType);
-            }
+            KnownTechTypes.Add(techType);
         }
 
         public void AddEncyclopediaEntry(string entry)
         {
-            lock (encyclopediaEntries)
-            {
-                encyclopediaEntries.Add(entry);
-            }
+            EncyclopediaEntries.Add(entry);
         }
 
         public void AddPDALogEntry(PDALogEntry entry)
         {
-            lock (pdaLogEntries)
-            {
-                pdaLogEntries.Add(entry);
-            }
+            PdaLog.Add(entry);
         }
 
         public void EntryProgressChanged(TechTypeModel techType, float progress, int unlocked)
         {
-            lock (partiallyUnlockedByTechType)
+            PDAEntry pdaEntry;
+            if (!PartiallyUnlockedByTechType.TryGetValue(techType, out pdaEntry))
             {
-                PDAEntry pdaEntry = null;
-
-                if(!partiallyUnlockedByTechType.TryGetValue(techType, out pdaEntry))
-                {
-                    partiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
-                }
-
-                pdaEntry.Progress = progress;
-                pdaEntry.Unlocked = unlocked;
+                PartiallyUnlockedByTechType[techType] = pdaEntry = new PDAEntry(techType, progress, unlocked);
             }
+
+            pdaEntry.Progress = progress;
+            pdaEntry.Unlocked = unlocked;
         }
 
         public InitialPDAData GetInitialPDAData()
         {
-            lock (unlockedTechTypes)
-            {
-                lock (partiallyUnlockedByTechType)
-                {
-                    lock (knownTechTypes)
-                    {
-                        lock (encyclopediaEntries)
-                        {
-                            lock (pdaLogEntries)
-                            {
-                                return new InitialPDAData(new List<TechTypeModel>(unlockedTechTypes),
-                                                          new List<TechTypeModel>(knownTechTypes),
-                                                          new List<string>(encyclopediaEntries),
-                                                          new List<PDAEntry>(partiallyUnlockedByTechType.Values),
-                                                          new List<PDALogEntry>(pdaLogEntries));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        [ProtoAfterDeserialization]
-        private void AfterDeserialization()
-        {
-            lock (partiallyUnlockedByTechType)
-            {
-                partiallyUnlockedByTechType = new Dictionary<TechTypeModel, PDAEntry>();
-                foreach (PDAEntry entry in serializedPartiallyUnlockedByTechType)
-                {
-                    partiallyUnlockedByTechType.Add(entry.TechType, entry);
-                }
-            }
+            return new InitialPDAData(new List<TechTypeModel>(UnlockedTechTypes),
+                new List<TechTypeModel>(KnownTechTypes),
+                new List<string>(EncyclopediaEntries),
+                new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
+                new List<PDALogEntry>(PdaLog));
         }
     }
 }

@@ -39,7 +39,7 @@ namespace NitroxServer.GameLogic.Players
             return boPlayers;
         }
 
-        public static PlayerData From(List<Player> players)
+        public static PlayerData From(IEnumerable<Player> players)
         {
             List<PersistedPlayerData> persistedPlayers = new List<PersistedPlayerData>();
 

@@ -15,7 +15,6 @@ using NitroxServer.ConfigParser;
 using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
 
@@ -156,7 +155,6 @@ namespace NitroxServer.Serialization.World
         public World Load()
         {
             Optional<World> fileLoadedWorld = LoadFromFile();
-
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;
