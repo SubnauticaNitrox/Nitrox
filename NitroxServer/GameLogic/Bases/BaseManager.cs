@@ -5,8 +5,10 @@ using NitroxModel.DataStructures;
 using System.Linq;
 using NitroxModel.DataStructures.Util;
 
+
 namespace NitroxServer.GameLogic.Bases
 {
+    [System.Runtime.InteropServices.ComVisible(true)]
     public class BaseManager
     {
         private Dictionary<NitroxId, BasePiece> partiallyConstructedPiecesById = new Dictionary<NitroxId, BasePiece>();
@@ -33,13 +35,44 @@ namespace NitroxServer.GameLogic.Bases
                 return new List<BasePiece>(partiallyConstructedPiecesById.Values);
             }
         }
-
-        public void AddBasePiece(BasePiece basePiece)
+        public void AddBasePiece(BasePiece basePiece) 
         {
-            lock (partiallyConstructedPiecesById)
+
+            if (basePiece.TechType.Name != "BaseReinforcement" | basePiece.TechType.Name != "BaseHatch" | basePiece.TechType.Name != "BaseWindow")
             {
-                partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                lock (partiallyConstructedPiecesById)
+                {
+                    partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                }
             }
+
+            if (basePiece.TechType.Name == "BaseWindow")
+            {
+                basePiece.ConstructionCompleted = false;
+                partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+            }
+            if (basePiece.TechType.Name == "BaseHatch")
+            {
+                basePiece.ConstructionCompleted = false;
+                partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+            }
+            if (basePiece.TechType.Name == "BaseReinforcement")
+            {
+                basePiece.ConstructionCompleted = false;
+                partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+            }
+            if (basePiece.ConstructionAmount > 0.4f)
+            {
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+            }
+
         }
 
         public void BasePieceConstructionAmountChanged(NitroxId id, float constructionAmount)
@@ -56,6 +89,13 @@ namespace NitroxServer.GameLogic.Bases
                     {
                         basePiece.ConstructionCompleted = false;
                     }
+                    
+                    if (basePiece.ConstructionAmount > 0.4f)
+                    {
+                        basePiece.ConstructionAmount = 1.0f;
+                        basePiece.ConstructionCompleted = true;
+                    }
+                    
                 }
             }
         }
@@ -68,8 +108,16 @@ namespace NitroxServer.GameLogic.Bases
             {
                 if (partiallyConstructedPiecesById.TryGetValue(id, out basePiece))
                 {
-                    basePiece.ConstructionAmount = 1.0f;
-                    basePiece.ConstructionCompleted = true;
+                    if (basePiece.ConstructionAmount > 0.4f)
+                    {
+                        basePiece.ConstructionAmount = 1.0f;
+                        basePiece.ConstructionCompleted = true;
+                    }
+                    else
+                    {
+                        basePiece.ConstructionAmount = 1.0f;
+                        basePiece.ConstructionCompleted = true;  
+                    }
 
                     if(!basePiece.IsFurniture)
                     {
@@ -78,7 +126,7 @@ namespace NitroxServer.GameLogic.Bases
                         // a fully constructed piece.  Therefor, we always update this attribute to make sure it
                         // is the latest.
                         basePiece.BaseId = baseId;
-                        basePiece.ParentId = Optional.OfNullable(baseId);
+                        basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
                     }
 
                     partiallyConstructedPiecesById.Remove(id);
@@ -105,7 +153,7 @@ namespace NitroxServer.GameLogic.Bases
                     basePiece.ConstructionCompleted = false;
                     completedBasePieceHistory.Remove(basePiece);
 
-                    lock(partiallyConstructedPiecesById)
+                    lock (partiallyConstructedPiecesById)
                     {
                         partiallyConstructedPiecesById[basePiece.Id] = basePiece;
                     }
@@ -131,7 +179,7 @@ namespace NitroxServer.GameLogic.Bases
 
                 if (basePiece != null)
                 {
-                    basePiece.Metadata = Optional.OfNullable(metadata);
+                    basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
                 }
             }
         }
@@ -157,7 +205,6 @@ namespace NitroxServer.GameLogic.Bases
                     }
                 }
             }
-
             return basePieces;
         }
     }
