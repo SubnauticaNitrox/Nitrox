@@ -22,7 +22,7 @@ namespace NitroxServer.GameLogic.Bases
 
         public List<BasePiece> GetCompletedBasePieceHistory()
         {
-            lock(completedBasePieceHistory)
+            lock (completedBasePieceHistory)
             {
                 return new List<BasePiece>(completedBasePieceHistory);
             }
@@ -35,40 +35,54 @@ namespace NitroxServer.GameLogic.Bases
                 return new List<BasePiece>(partiallyConstructedPiecesById.Values);
             }
         }
-        public void AddBasePiece(BasePiece basePiece) 
+        public void AddBasePiece(BasePiece basePiece)
         {
-
+            //anything that is not a window, hatch, or reinforcement get run normally
             if (basePiece.TechType.Name != "BaseReinforcement" | basePiece.TechType.Name != "BaseHatch" | basePiece.TechType.Name != "BaseWindow")
             {
-                lock (partiallyConstructedPiecesById)
+                //just in case some how a base piece is spawned at max completion
+                //the base piece will get added to at least one directory
+                if(basePiece.ConstructionAmount < 1.0f)
                 {
-                    partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                    lock (partiallyConstructedPiecesById)
+                    {
+                        partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
+                    }
+                }
+                else
+                {
+                    lock (partiallyConstructedPiecesById)
+                    {
+                        completedBasePieceHistory.Add(basePiece);
+                    }
                 }
             }
-
-            if (basePiece.TechType.Name == "BaseWindow")
+            //when adding base peices this tries to eliminate partially constructed parts that were once fully constructed
+            if (basePiece.ConstructionAmount > 0.4f && basePiece.ConstructionAmount != 1.0f)
+            {
+                basePiece.ConstructionAmount = 1.0f;
+                basePiece.ConstructionCompleted = true;
+            }
+            //I am not sure if this helps at all, but it is supposed to ensure that the windows, hatches, and reinforcements don't go missing
+            //and that they they are built to 100%
+            if (basePiece.TechType.Name == "BaseWindow" && completedBasePieceHistory.Contains(basePiece))
             {
                 basePiece.ConstructionCompleted = false;
                 partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
                 basePiece.ConstructionAmount = 1.0f;
                 basePiece.ConstructionCompleted = true;
             }
-            if (basePiece.TechType.Name == "BaseHatch")
+            if (basePiece.TechType.Name == "BaseHatch" && completedBasePieceHistory.Contains(basePiece))
             {
                 basePiece.ConstructionCompleted = false;
                 partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
                 basePiece.ConstructionAmount = 1.0f;
                 basePiece.ConstructionCompleted = true;
             }
-            if (basePiece.TechType.Name == "BaseReinforcement")
+            if (basePiece.TechType.Name == "BaseReinforcement" && completedBasePieceHistory.Contains(basePiece))
             {
                 basePiece.ConstructionCompleted = false;
                 partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
-                basePiece.ConstructionAmount = 1.0f;
-                basePiece.ConstructionCompleted = true;
-            }
-            if (basePiece.ConstructionAmount > 0.4f)
-            {
                 basePiece.ConstructionAmount = 1.0f;
                 basePiece.ConstructionCompleted = true;
             }
@@ -78,24 +92,26 @@ namespace NitroxServer.GameLogic.Bases
         public void BasePieceConstructionAmountChanged(NitroxId id, float constructionAmount)
         {
             BasePiece basePiece;
-
             lock (partiallyConstructedPiecesById)
             {
                 if (partiallyConstructedPiecesById.TryGetValue(id, out basePiece))
                 {
                     basePiece.ConstructionAmount = constructionAmount;
-
+                    /*
+                     // this if defaults to true, so if construction is completed, it gets set to flase so its not completed
+                     // I could be wrong but this might cause issues
                     if (basePiece.ConstructionCompleted)
                     {
                         basePiece.ConstructionCompleted = false;
                     }
-                    
-                    if (basePiece.ConstructionAmount > 0.4f)
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;
-                    }
-                    
+                    */
+                }
+                //This ensures that any pecice over 95% is completed and added to the completed base piece history
+                if (basePiece.ConstructionAmount >= 0.95f && completedBasePieceHistory.Contains(basePiece) == false)
+                {
+                    basePiece.ConstructionAmount = 1.0f;
+                    basePiece.ConstructionCompleted = true;
+                    completedBasePieceHistory.Add(basePiece);
                 }
             }
         }
@@ -108,33 +124,27 @@ namespace NitroxServer.GameLogic.Bases
             {
                 if (partiallyConstructedPiecesById.TryGetValue(id, out basePiece))
                 {
-                    if (basePiece.ConstructionAmount > 0.4f)
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;
-                    }
-                    else
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;  
-                    }
-
-                    if(!basePiece.IsFurniture)
+                    basePiece.ConstructionAmount = 1.0f;
+                    basePiece.ConstructionCompleted = true;
+                    if (!basePiece.IsFurniture)
                     {
                         // For standard base pieces, the baseId is may not be finialized until construction 
                         // completes because Subnautica uses a GhostBase in the world if there hasn't yet been
                         // a fully constructed piece.  Therefor, we always update this attribute to make sure it
                         // is the latest.
                         basePiece.BaseId = baseId;
-                        basePiece.ParentId = Optional<NitroxId>.OfNullable(baseId);
+                        basePiece.ParentId = Optional.OfNullable(baseId);
                     }
 
                     partiallyConstructedPiecesById.Remove(id);
 
+                    //this task is now completed by BasePieceConstructionAmountChanged()
+                    /*
                     lock (completedBasePieceHistory)
                     {
                         completedBasePieceHistory.Add(basePiece);
                     }
+                    */
                 }
             }
         }
@@ -146,7 +156,18 @@ namespace NitroxServer.GameLogic.Bases
             lock (completedBasePieceHistory)
             {
                 basePiece = completedBasePieceHistory.Find(piece => piece.Id == id);
-
+                if (basePiece.ConstructionAmount < 1f && partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
+                {
+                    completedBasePieceHistory.Remove(basePiece);
+                    basePiece.ConstructionAmount = 0.95f;
+                    basePiece.ConstructionCompleted = false;
+                    // I am assuming this adds the base piece to the partially contructed list
+                    lock (partiallyConstructedPiecesById)
+                    {
+                        partiallyConstructedPiecesById[basePiece.Id] = basePiece;
+                    }
+                }
+                /*
                 if (basePiece != null)
                 {
                     basePiece.ConstructionAmount = 0.95f;
@@ -158,7 +179,8 @@ namespace NitroxServer.GameLogic.Bases
                         partiallyConstructedPiecesById[basePiece.Id] = basePiece;
                     }
                 }
-            }        
+                */
+            }
         }
 
         public void BasePieceDeconstructionCompleted(NitroxId id)
@@ -179,7 +201,7 @@ namespace NitroxServer.GameLogic.Bases
 
                 if (basePiece != null)
                 {
-                    basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
+                    basePiece.Metadata = Optional.OfNullable(metadata);
                 }
             }
         }
@@ -192,6 +214,7 @@ namespace NitroxServer.GameLogic.Bases
             {
                 // Play back all completed base pieces first (other pieces have a dependency on these being done)
                 basePieces = new List<BasePiece>(completedBasePieceHistory);
+                
             }
 
             lock (partiallyConstructedPiecesById)
@@ -209,3 +232,11 @@ namespace NitroxServer.GameLogic.Bases
         }
     }
 }
+/*
+                    if (basePiece.ConstructionAmount< 0.4f)
+                    {
+                        basePiece.ConstructionCompleted = false;
+                        partiallyConstructedPiecesById.Remove(basePiece.Id);
+                        completedBasePieceHistory.Remove(basePiece);
+                    }
+*/
