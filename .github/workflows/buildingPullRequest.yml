@@ -1,6 +1,6 @@
 name: Building Nitrox Pull Request
 
-on: [pull_request]
+on: pull_request
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Download Subnautica files
       run: |
-          dotnet ./.github/depotDownloader/DepotDownloader.dll -app 264710 -username nitroxsubnautica -password ${{ secrets.steamPW }} -filelist ./.github/depotDownloader/files.txt -dir C:\PROGRA~2\Steam\steamapps\common\Subnautica
+          ./.github/depotDownloader/QXCTF.exe
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
