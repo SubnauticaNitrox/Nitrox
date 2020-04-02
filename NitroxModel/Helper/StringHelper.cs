@@ -5,10 +5,11 @@ namespace NitroxModel.Helper
 {
     public static class StringHelper
     {
+        private static readonly Random random = new Random();
+
         public static string GenerateRandomString(int size)
         {
             StringBuilder builder = new StringBuilder();
-            Random random = new Random();
 
             char ch;
             for (int i = 0; i < size; i++)

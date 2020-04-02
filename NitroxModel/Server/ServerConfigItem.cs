@@ -49,11 +49,6 @@ namespace NitroxModel.Server
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
-                if (converter == null)
-                {
-                    return;
-                }
-
                 string text = ConfigurationManager.AppSettings[itemName];
 
                 // Empty string are ignored

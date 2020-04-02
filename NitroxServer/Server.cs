@@ -17,7 +17,7 @@ namespace NitroxServer
         private readonly ServerConfig serverConfig;
 
         public bool IsRunning { get; private set; }
-        public bool isSaving { get; private set; }
+        public bool IsSaving { get; private set; }
 
         public static Server Instance { get; private set; }
 
@@ -43,19 +43,18 @@ namespace NitroxServer
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate
-            { Save(); };
+            saveTimer.Elapsed += delegate { Save(); };
         }
 
         public void Save()
         {
-            if (isSaving)
+            if (IsSaving)
             {
                 return;
             }
-            isSaving = true;
+            IsSaving = true;
             worldPersistence.Save(world);
-            isSaving = false;
+            IsSaving = false;
         }
 
         public void Start()
