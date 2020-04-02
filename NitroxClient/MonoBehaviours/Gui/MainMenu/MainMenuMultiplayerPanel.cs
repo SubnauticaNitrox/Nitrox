@@ -41,7 +41,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             if (!File.Exists(SERVER_LIST_PATH))
             {
-                AddServer("local", "127.0.0.1");
+                AddServer("local server", "127.0.0.1");
             }
 
             CreateButton("Add server IP", ShowAddServerWindow);
