@@ -17,6 +17,7 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World
 {

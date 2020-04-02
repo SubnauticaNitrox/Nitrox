@@ -7,6 +7,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
 
 namespace NitroxServer.GameLogic

@@ -1,7 +1,10 @@
 ﻿using System.Timers;
 using NitroxModel.Logger;
-using NitroxServer.Serialization.World;
+using NitroxModel.Server;
 using System.Configuration;
+using NitroxServer.Serialization.World;
+using System;
+using System.Linq;
 
 namespace NitroxServer
 {
@@ -11,8 +14,11 @@ namespace NitroxServer
         private Communication.NetworkingLayer.NitroxServer server;
         private readonly World world;
         private readonly WorldPersistence worldPersistence;
+        private readonly ServerConfig serverConfig;
+
         public bool IsRunning { get; private set; }
-        private bool isSaving;
+        public bool isSaving { get; private set; }
+
         public static Server Instance { get; private set; }
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
@@ -21,16 +27,24 @@ namespace NitroxServer
             {
                 Log.Warn("Nitrox Server Cant Read Config File.");
             }
-            Instance = this;
+
+            if (Instance != null)
+            {
+                throw new Exception("An instance of Server has already been defined");
+            }
+
             this.worldPersistence = worldPersistence;
-            this.world = world;
+            this.serverConfig = serverConfig;
             this.server = server;
-            
+            this.world = world;
+            Instance = this;
+
             // TODO: Save once after last player leaves then stop saving.
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
             saveTimer.AutoReset = true;
-            saveTimer.Elapsed += delegate { Save(); };
+            saveTimer.Elapsed += delegate
+            { Save(); };
         }
 
         public void Save()

@@ -1,7 +1,5 @@
 ﻿using System;
 
-// ReSharper disable InconsistentNaming
-
 namespace NitroxModel.Helper
 {
     public class Mathf

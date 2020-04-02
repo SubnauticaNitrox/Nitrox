@@ -3,6 +3,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
 
 namespace NitroxServer.ConsoleCommands
 {

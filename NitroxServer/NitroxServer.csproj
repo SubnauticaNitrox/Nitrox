@@ -334,7 +334,6 @@
     <Compile Include="Serialization\Resources\Datastructures\PrefabAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
-    <Compile Include="ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
     <Compile Include="ConsoleCommands\SaveCommand.cs" />

@@ -24,8 +24,6 @@ namespace NitroxServer_Subnautica
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            ServerConfig serverConfig = NitroxServiceLocator.LocateService<ServerConfig>();
-
             Server server;
 
             try
