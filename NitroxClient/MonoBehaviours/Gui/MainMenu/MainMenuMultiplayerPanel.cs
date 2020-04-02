@@ -197,6 +197,8 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void OnAddServerButtonClicked()
         {
+            serverNameInput = serverNameInput.Trim();
+            serverHostInput = serverHostInput.Trim();
             AddServer(serverNameInput, serverHostInput);
             CreateServerButton($"Connect to <b>{serverNameInput}</b>\n{serverHostInput}", serverHostInput);
             HideAddServerWindow();

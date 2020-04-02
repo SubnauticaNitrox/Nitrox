@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
@@ -352,7 +353,14 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
-                    Log.InGame("Start your server first to join your self-hosted world");
+                    if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                    {
+                        Log.InGame("Start your server first to join your self-hosted world");
+                    }
+                    else
+                    {
+                        Log.InGame("Seems like your firewall settings are interfering");
+                    } 
                 }
 
                 OnCancelClick();
