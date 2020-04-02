@@ -268,6 +268,9 @@
     <Compile Include="GameLogic\Spawning\CellRootSpawner.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLogItem.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatInputField.cs" />
+    <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatPinButton.cs" />
     <Compile Include="MonoBehaviours\Gui\InGame\PlayerKickedModal.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\LoadingScreenVersionText.cs" />
     <Compile Include="MonoBehaviours\NitroxEntity.cs" />
