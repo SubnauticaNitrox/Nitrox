@@ -39,6 +39,7 @@ namespace NitroxServer.GameLogic.Bases
         {
             //just in case somehow a base piece is spawned at max completion
             //the base piece will get added to at least one directory
+            /*
             if (basePiece.ConstructionAmount < 1.0f)
             {
                 lock (partiallyConstructedPiecesById)
@@ -48,10 +49,12 @@ namespace NitroxServer.GameLogic.Bases
             }
             else
             {
-                lock (completedBasePieceHistory)
-                {
-                    completedBasePieceHistory.Add(basePiece);
-                }
+                
+            }
+            */
+            lock (completedBasePieceHistory)
+            {
+                completedBasePieceHistory.Add(basePiece);
             }
         }
 
