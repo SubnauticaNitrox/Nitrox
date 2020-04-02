@@ -5,9 +5,10 @@ namespace NitroxModel.Server
 {
     public class ServerConfig
     {
-        private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
         private readonly ServerConfigItem<bool> disableConsoleSetting;
-        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting, gameModeSetting;
+        private readonly ServerConfigItem<ServerGameMode> gameModeSetting;
+        private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
+        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
 
         public ServerConfig(): this(
@@ -18,10 +19,10 @@ namespace NitroxModel.Server
                savename: "world",
                serverpassword: string.Empty,
                adminpassword: StringHelper.GenerateRandomString(12),
-               gamemodeSetting: "Survival"
+               gamemodeSetting: ServerGameMode.SURVIVAL
         ) { }
 
-        public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, string savename, string serverpassword, string adminpassword, string gamemodeSetting)
+        public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, string savename, string serverpassword, string adminpassword, ServerGameMode gamemodeSetting)
         {
             portSetting = new ServerConfigItem<int>("Port", port);
             saveIntervalSetting = new ServerConfigItem<int>("SaveInterval", saveinterval);
@@ -30,7 +31,7 @@ namespace NitroxModel.Server
             saveNameSetting = new ServerConfigItem<string>("SaveName", savename);
             serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", serverpassword);
             adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", adminpassword);
-            gameModeSetting = new ServerConfigItem<string>("GameMode", gamemodeSetting);
+            gameModeSetting = new ServerConfigItem<ServerGameMode>("GameMode", gamemodeSetting);
 
             //We don't to custom those values for now
             oxygenSetting = new ServerConfigItem<float>("StartOxygen", 45);
@@ -133,7 +134,7 @@ namespace NitroxModel.Server
             }
         }
 
-        public string GameMode
+        public ServerGameMode GameMode
         {
             get
             {

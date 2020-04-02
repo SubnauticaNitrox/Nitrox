@@ -137,7 +137,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.GameData,
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
-                                          config.GameMode);
+                                          config.GameMode.ToString());
 
                 return Optional.Of(world);
             }
@@ -167,8 +167,13 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(), new List<VehicleModel>(), new List<Player>(), new List<ItemData>(), new List<ItemData>(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new List<EscapePodModel>(), config.GameMode);
-            return world;
+            return CreateWorld(
+                DateTime.Now, 
+                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
+                new List<ItemData>(),
+                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                new List<Int3>(), new List<EscapePodModel>(), config.GameMode.ToString());
         }
 
         private World CreateWorld(DateTime serverStartTime,

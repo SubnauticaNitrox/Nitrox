@@ -43,8 +43,8 @@ namespace NitroxModel.Server
             Validate.NotNull(itemName);
 
             Name = itemName;
-            value = defaultValue;
-
+            value = defaultValue; //not Value, we don't want to rewrite the config to default value again and again
+        
             try
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
@@ -73,7 +73,8 @@ namespace NitroxModel.Server
             }
             catch (Exception)
             {
-                Log.Error($"Error while creating ServerConfigItem {itemName}");
+                Log.Error($"Error while creating ServerConfigItem {itemName}, Restoring to default value");
+                Value = defaultValue;
             }
         }
     }
