@@ -69,7 +69,7 @@ namespace NitroxModel.Server
                     text = char.ToUpper(text[0]) + text.Substring(1);
                 }
 
-                Value = (T)converter.ConvertFromString(text);
+                value = (T)converter.ConvertFromString(text);
             }
             catch (Exception)
             {

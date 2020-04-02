@@ -33,7 +33,7 @@ namespace NitroxModel.Server
             adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", adminpassword);
             gameModeSetting = new ServerConfigItem<ServerGameMode>("GameMode", gamemodeSetting);
 
-            //We don't to custom those values for now
+            //We don't want to custom those values for now
             oxygenSetting = new ServerConfigItem<float>("StartOxygen", 45);
             maxOxygenSetting = new ServerConfigItem<float>("StartMaxOxygen", 45);
             healthSetting = new ServerConfigItem<float>("StartHealth", 80);
