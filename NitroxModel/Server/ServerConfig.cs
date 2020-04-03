@@ -1,4 +1,5 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.ComponentModel;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 
 namespace NitroxModel.Server
@@ -6,7 +7,7 @@ namespace NitroxModel.Server
     public class ServerConfig
     {
         private readonly ServerConfigItem<bool> disableConsoleSetting;
-        private readonly ServerConfigItem<ServerGameMode> gameModeSetting;
+        private readonly ServerConfigItem<string> gameModeSetting;
         private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
         private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
@@ -31,7 +32,7 @@ namespace NitroxModel.Server
             saveNameSetting = new ServerConfigItem<string>("SaveName", savename);
             serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", serverpassword);
             adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", adminpassword);
-            gameModeSetting = new ServerConfigItem<ServerGameMode>("GameMode", gamemodeSetting);
+            gameModeSetting = new ServerConfigItem<string>("GameMode", gamemodeSetting.GetAttribute<DescriptionAttribute>().Description.ToString());
 
             //We don't want to custom those values for now
             oxygenSetting = new ServerConfigItem<float>("StartOxygen", 45);
@@ -134,7 +135,7 @@ namespace NitroxModel.Server
             }
         }
 
-        public ServerGameMode GameMode
+        public string GameMode
         {
             get
             {
@@ -146,6 +147,7 @@ namespace NitroxModel.Server
                 gameModeSetting.Value = value;
             }
         }
+
 
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(oxygenSetting.Value, maxOxygenSetting.Value, healthSetting.Value, foodSetting.Value, waterSetting.Value, infectionSetting.Value);
         #endregion
