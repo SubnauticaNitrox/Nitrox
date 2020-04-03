@@ -38,6 +38,10 @@ namespace NitroxServer.GameLogic.Bases
         {
             //just in case somehow a base piece is spawned at max completion
             //the base piece will get added to at least one directory
+
+            //playing with speed above 1 or fastbuild enabled can yeild 0% completion to 100% completion with no intermediate
+            //not sure if necessary
+            //UNSURE IF SAFE TO REVERT TO ORIGINAL
             if (basePiece.ConstructionAmount < 1.0f)
             {
                 lock (partiallyConstructedPiecesById)
@@ -78,6 +82,8 @@ namespace NitroxServer.GameLogic.Bases
                         if (basePiece.ConstructionAmount != 1.0f && completedBasePieceHistory.Contains(basePiece) && !partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
                         {
                             completedBasePieceHistory.Remove(basePiece);
+                            //ONLY ADDS TO PARTIALLY CONSTRUCTED IF ITS NOT ALREADY IN PARTIALLY CONSTRUCTED
+                            //UNSURE IF SAFE TO REMOVE
                             if (!partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
                             {
                                 partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
@@ -107,6 +113,8 @@ namespace NitroxServer.GameLogic.Bases
                         basePiece.BaseId = baseId;
                         basePiece.ParentId = Optional.OfNullable(baseId);
                     }
+                    //NOT SURE IF THIS CAUSES ISSUES OR IS UNNECESSARY
+                    //UNSURE IF SAFE TO REMOVE
                     if (basePiece != null)
                     {
                         basePiece.BaseId = baseId;
@@ -138,8 +146,11 @@ namespace NitroxServer.GameLogic.Bases
                     {
                         partiallyConstructedPiecesById[basePiece.Id] = basePiece;
                     }
+                    //MAYBE UNNECESSARY
+                    //UNSURE IF SAFE TO REMOVE
                     if (!partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
                     {
+                        //MUST KEEP
                         partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
                     }
                 }
@@ -157,7 +168,7 @@ namespace NitroxServer.GameLogic.Bases
         public void UpdateBasePieceMetadata(NitroxId id, BasePieceMetadata metadata)
         {
             BasePiece basePiece;
-
+            //ADDING CODE HERE COULD HELP SOLVE CURRENT BASE PIECE ISSUE
             lock (completedBasePieceHistory)
             {
                 basePiece = completedBasePieceHistory.Find(piece => piece.Id == id);
@@ -179,11 +190,16 @@ namespace NitroxServer.GameLogic.Bases
                 // even if they were not completed before but only if they are above a certain %%
                 // sometimes even base pieces were completed but dont get saved as completed so any piece over 40% will get added
                 // at 100%   "BaseFoundation", "BaseRoom", "BaseMoonpool", "BaseObservatory", "BaseMapRoom", "BaseWindow", "BaseHatch", "BaseReinforcement"
+
                 lock (completedBasePieceHistory)
                 {
                     // Play back all completed base pieces first (other pieces have a dependency on these being done)
                     basePieces = new List<BasePiece>(completedBasePieceHistory);
                 }
+
+                //NOT SURE IF ADDING COMPLETEDBASEPIECEHISTORY IS NECESSARY AT ALL 
+                //JUST TRYING TO MAKE SURE NOTHING SLIDES
+                //PROBABLY SAFE TO REMOVE
                 
                 //builds completed base foundation first
                 foreach (BasePiece basePiece in completedBasePieceHistory)
@@ -199,11 +215,16 @@ namespace NitroxServer.GameLogic.Bases
                 {
                     if (partialBasePiece.TechType.Name == "BaseFoundation" && partialBasePiece.ConstructionAmount > 0.4f)
                     {
+                        // when these pieces are built I would like to remove them from partiallyConstructedPiecesById and add them to completedBasePieceHistory
+                        // but threading issues pulls up an error, it seems to work without this but it could also create some other problems
                         partialBasePiece.ConstructionAmount = 1.0f;
                         partialBasePiece.ConstructionCompleted = true;
+                        // not sure if this is necessary but it seems to help
+                        // this adds the partial piece to the list just like the other partial pieces
                         basePieces.Add(partialBasePiece);
                     }
                 }
+                //PROBABLY SAFE TO REMOVE
                 //builds the completed base rooms third
                 foreach (BasePiece basePiece in completedBasePieceHistory)
                 {
@@ -223,6 +244,7 @@ namespace NitroxServer.GameLogic.Bases
                         basePieces.Add(partialBasePiece);
                     }
                 }
+                //PROBABLY SAFE TO REMOVE
                 //builds completed hatches/reinforcements/windows third
                 foreach (BasePiece basePiece in completedBasePieceHistory)
                 {
@@ -246,11 +268,13 @@ namespace NitroxServer.GameLogic.Bases
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
                     //security measure to make sure nothing is loaded at less than 100% 
+                    // this does mean anything over 40% will be loaded to 100%
                     if (partialBasePiece.ConstructionAmount > 0.4f && partialBasePiece.ConstructionAmount != 1.0f)
                     {
                         partialBasePiece.ConstructionAmount = 1.0f;
                         partialBasePiece.ConstructionCompleted = true;
                     }
+                    //adds partial pieces as normal but prevents duplicates from the previous code
                     if (!basePieces.Contains(partialBasePiece))
                     {
                         if (partialBasePiece.TechType.Name != "BaseWindow" && partialBasePiece.TechType.Name != "BaseHatch" && partialBasePiece.TechType.Name != "BaseReinforcement" && partialBasePiece.TechType.Name != "BaseRoom" && partialBasePiece.TechType.Name != "BaseMoonpool" && partialBasePiece.TechType.Name != "BaseObservatory" && partialBasePiece.TechType.Name != "BaseMapRoom" && partialBasePiece.TechType.Name != "BaseFoundation")
@@ -258,13 +282,17 @@ namespace NitroxServer.GameLogic.Bases
                             basePieces.Add(partialBasePiece);
                         }
                     }
+                    //removes any peice that is under 40% completion
+                    //PROBABLY SAFE TO REMOVE
                     if (partialBasePiece.ConstructionAmount < 0.4f && !completedBasePieceHistory.Contains(partialBasePiece))
                     {
                         partialBasePiece.ConstructionAmount = 0f;
                         partialBasePiece.ConstructionCompleted = false;
                     }
                 }
+                
                 //clears partially constructed peieces bc there should be no uncompleted peices left because they have been destroyed or fully built
+                //not sure if this is benificial yet...
                 //partiallyConstructedPiecesById.Clear();
             }
             return basePieces;
