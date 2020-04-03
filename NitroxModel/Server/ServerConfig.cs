@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
 
@@ -53,6 +54,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsTrue(value > 1024, "Server Port must be greater than 1024");
                 portSetting.Value = value;
             }
         }
@@ -66,6 +68,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsTrue(value > 1000, "SaveInterval must be greater than 1000");
                 saveIntervalSetting.Value = value;
             }
         }
@@ -79,6 +82,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsTrue(value > 0, "MaxConnections must be greater than 0");
                 maxConnectionsSetting.Value = value;
             }
         }
@@ -105,6 +109,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsFalse(string.IsNullOrWhiteSpace(value), "SaveName can't be an empty string");
                 saveNameSetting.Value = value;
             }
         }
@@ -118,6 +123,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.NotNull(value);
                 serverPasswordSetting.Value = value;
             }
         }
@@ -131,6 +137,7 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsFalse(string.IsNullOrWhiteSpace(value), "AdminPassword can't be an empty string");
                 adminPasswordSetting.Value = value;
             }
         }
@@ -144,6 +151,8 @@ namespace NitroxModel.Server
 
             set
             {
+                Validate.IsFalse(string.IsNullOrWhiteSpace(value), "Gamemode can't be an empty string");
+                Validate.IsTrue(Enum.IsDefined(typeof(ServerGameMode), value.ToUpper()), "Gamemode doesn't exists");
                 gameModeSetting.Value = value;
             }
         }
