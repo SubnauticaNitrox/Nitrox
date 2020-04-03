@@ -148,17 +148,23 @@ namespace NitroxClient.GameLogic
                 Int3 latestCell = lastTargetBaseOffset;
                 Base latestBase = (lastTargetBase.HasValue) ? lastTargetBase.Value : ((GameObject)opConstructedBase.Value).GetComponent<Base>();
 
-                if (latestCell == default(Int3))
+                Transform cellTransform = latestBase.GetCellObject(latestCell);
+
+                // This check ensures that the latestCell actually leads us to the correct entity.  The lastTargetBaseOffset is unreliable as the base shape
+                // can change which makes the target offset change. It may be possible to fully deprecate lastTargetBaseOffset and only rely on GetClosestCell; 
+                // however, there may still be pieces were the ghost base's target offset is authoratitive due to incorrect game object positioning.
+                if (latestCell == default(Int3) || cellTransform == null)
                 {
                     Vector3 worldPosition;
                     float distance;
 
                     latestBase.GetClosestCell(ghost.transform.position, out latestCell, out worldPosition, out distance);
+                    cellTransform = latestBase.GetCellObject(latestCell);
+                    Validate.NotNull(cellTransform, "Unable to find cell transform at " + latestCell);
                 }
-                
-                Transform cellTransform = latestBase.GetCellObject(latestCell);
-                GameObject finishedPiece = null;
 
+                GameObject finishedPiece = null;
+                
                 // There can be multiple objects in a cell (such as a corridor with hatces built into it)
                 // we look for a object that is able to be deconstucted that hasn't been tagged yet.
                 foreach (Transform child in cellTransform)
@@ -172,7 +178,7 @@ namespace NitroxClient.GameLogic
                         break;
                     }
                 }
-
+                
                 Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
 
                 Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);

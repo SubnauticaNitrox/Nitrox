@@ -188,16 +188,18 @@ namespace NitroxClient.MonoBehaviours
                     latestBase = ((GameObject)opConstructedBase.Value).GetComponent<Base>();
                     Validate.NotNull(latestBase, "latestBase can not be null");
                 }
+                
+                Transform cellTransform = latestBase.GetCellObject(latestCell);
 
-                if (latestCell == default(Int3))
+                if (latestCell == default(Int3) || cellTransform == null)
                 {
                     Vector3 worldPosition;
                     float distance;
 
                     latestBase.GetClosestCell(constructing.gameObject.transform.position, out latestCell, out worldPosition, out distance);
+                    cellTransform = latestBase.GetCellObject(latestCell);
                 }
 
-                Transform cellTransform = latestBase.GetCellObject(latestCell);
                 GameObject finishedPiece = null;
 
                 // There can be multiple objects in a cell (such as a corridor with hatces built into it)
