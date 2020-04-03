@@ -110,11 +110,13 @@ namespace NitroxServer.GameLogic.Bases
                     }
                     //NOT SURE IF THIS CAUSES ISSUES OR IS UNNECESSARY
                     //UNSURE IF SAFE TO REMOVE
+                    /*
                     if (basePiece != null)
                     {
                         basePiece.BaseId = baseId;
                         basePiece.ParentId = Optional.OfNullable(baseId);
                     }
+                    */
                     partiallyConstructedPiecesById.Remove(id);
                     lock (completedBasePieceHistory)
                     {
@@ -191,22 +193,6 @@ namespace NitroxServer.GameLogic.Bases
                     // I removed adding the base pieces until after the base piece "reboot"
                     basePieces = new List<BasePiece>();
                 }
-
-                //NOT SURE IF ADDING COMPLETEDBASEPIECEHISTORY IS NECESSARY AT ALL 
-                //JUST TRYING TO MAKE SURE NOTHING SLIDES
-                //PROBABLY SAFE TO REMOVE
-                
-                //builds completed base foundation first
-                /*
-                foreach (BasePiece basePiece in completedBasePieceHistory)
-                {
-                    if (basePiece.TechType.Name == "BaseFoundation")
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;
-                    }
-                }
-                */
                 //completes the uncompleted foundations
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
@@ -221,18 +207,6 @@ namespace NitroxServer.GameLogic.Bases
                         basePieces.Add(partialBasePiece);
                     }
                 }
-                //PROBABLY SAFE TO REMOVE
-                //builds the completed base rooms third
-                /*
-                foreach (BasePiece basePiece in completedBasePieceHistory)
-                {
-                    if (basePiece.TechType.Name == "BaseRoom" | basePiece.TechType.Name == "BaseMoonpool" | basePiece.TechType.Name == "BaseObservatory" | basePiece.TechType.Name == "BaseMapRoom")
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;
-                    }
-                }
-                */
                 //completes the uncompleted base rooms
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
@@ -243,18 +217,6 @@ namespace NitroxServer.GameLogic.Bases
                         basePieces.Add(partialBasePiece);
                     }
                 }
-                //PROBABLY SAFE TO REMOVE
-                //builds completed hatches/reinforcements/windows third
-                /*
-                foreach (BasePiece basePiece in completedBasePieceHistory)
-                {
-                    if (basePiece.TechType.Name == "BaseWindow" | basePiece.TechType.Name == "BaseHatch" | basePiece.TechType.Name == "BaseReinforcement")
-                    {
-                        basePiece.ConstructionAmount = 1.0f;
-                        basePiece.ConstructionCompleted = true;
-                    }
-                }
-                */
                 //completes uncompleted hatches/reinforcements/windows third
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
