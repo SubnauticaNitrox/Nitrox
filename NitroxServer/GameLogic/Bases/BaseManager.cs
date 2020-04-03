@@ -163,7 +163,6 @@ namespace NitroxServer.GameLogic.Bases
         public void UpdateBasePieceMetadata(NitroxId id, BasePieceMetadata metadata)
         {
             BasePiece basePiece;
-            //ADDING CODE HERE COULD HELP SOLVE CURRENT BASE PIECE ISSUE
             lock (completedBasePieceHistory)
             {
                 basePiece = completedBasePieceHistory.Find(piece => piece.Id == id);
@@ -198,6 +197,7 @@ namespace NitroxServer.GameLogic.Bases
                 //PROBABLY SAFE TO REMOVE
                 
                 //builds completed base foundation first
+                /*
                 foreach (BasePiece basePiece in completedBasePieceHistory)
                 {
                     if (basePiece.TechType.Name == "BaseFoundation")
@@ -206,7 +206,8 @@ namespace NitroxServer.GameLogic.Bases
                         basePiece.ConstructionCompleted = true;
                     }
                 }
-                //builds the foundations second
+                */
+                //completes the uncompleted foundations
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
                     if (partialBasePiece.TechType.Name == "BaseFoundation" && partialBasePiece.ConstructionAmount > 0.4f)
@@ -222,6 +223,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 //PROBABLY SAFE TO REMOVE
                 //builds the completed base rooms third
+                /*
                 foreach (BasePiece basePiece in completedBasePieceHistory)
                 {
                     if (basePiece.TechType.Name == "BaseRoom" | basePiece.TechType.Name == "BaseMoonpool" | basePiece.TechType.Name == "BaseObservatory" | basePiece.TechType.Name == "BaseMapRoom")
@@ -230,10 +232,11 @@ namespace NitroxServer.GameLogic.Bases
                         basePiece.ConstructionCompleted = true;
                     }
                 }
-                //builds the base rooms fourth
+                */
+                //completes the uncompleted base rooms
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
-                    if ((partialBasePiece.TechType.Name == "BaseRoom" | partialBasePiece.TechType.Name == "BaseMoonpool" | partialBasePiece.TechType.Name == "BaseObservatory" | partialBasePiece.TechType.Name == "BaseMapRoom") && partialBasePiece.ConstructionAmount > 0.4f)
+                    if ((partialBasePiece.TechType.Name == "BaseRoom" | partialBasePiece.TechType.Name == "BaseMoonpool" | partialBasePiece.TechType.Name == "BaseMapRoom") && partialBasePiece.ConstructionAmount > 0.4f)
                     {
                         partialBasePiece.ConstructionAmount = 1.0f;
                         partialBasePiece.ConstructionCompleted = true;
@@ -242,6 +245,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 //PROBABLY SAFE TO REMOVE
                 //builds completed hatches/reinforcements/windows third
+                /*
                 foreach (BasePiece basePiece in completedBasePieceHistory)
                 {
                     if (basePiece.TechType.Name == "BaseWindow" | basePiece.TechType.Name == "BaseHatch" | basePiece.TechType.Name == "BaseReinforcement")
@@ -250,7 +254,8 @@ namespace NitroxServer.GameLogic.Bases
                         basePiece.ConstructionCompleted = true;
                     }
                 }
-                //builds uncompleted hatches/reinforcements/windows third
+                */
+                //completes uncompleted hatches/reinforcements/windows third
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
                     if ((partialBasePiece.TechType.Name == "BaseWindow" | partialBasePiece.TechType.Name == "BaseHatch" | partialBasePiece.TechType.Name == "BaseReinforcement") && partialBasePiece.ConstructionAmount > 0.4f)
@@ -289,25 +294,9 @@ namespace NitroxServer.GameLogic.Bases
                         partialBasePiece.ConstructionCompleted = false;
                     }
                     */
-                }
-                
-                //clears partially constructed peieces bc there should be no uncompleted peices left because they have been destroyed or fully built
-                //not sure if this is benificial yet...
-                //partiallyConstructedPiecesById.Clear();
             }
+        }
             return basePieces;
         }
     }
 }
-
-
-/*
-                        lock (completedBasePieceHistory)
-                        {
-                            completedBasePieceHistory.Add(partialBasePiece);
-                        }
-                        lock (partiallyConstructedPiecesById)
-                        {
-                            partiallyConstructedPiecesById.Remove(partialBasePiece.Id);
-                        }
-*/
