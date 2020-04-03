@@ -249,7 +249,7 @@ namespace NitroxServer.GameLogic.Bases
                     }
                     //removes any peice that is under 40% completion
                     //PROBABLY SAFE TO REMOVE
-                    if (partialBasePiece.ConstructionAmount < 0.4f && !completedBasePieceHistory.Contains(partialBasePiece))
+                    if (partialBasePiece.ConstructionAmount < 0.4f && )
                     {
                         partialBasePiece.ConstructionAmount = 0f;
                         partialBasePiece.ConstructionCompleted = false;
