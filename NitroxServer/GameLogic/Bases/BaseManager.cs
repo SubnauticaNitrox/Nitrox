@@ -287,14 +287,17 @@ namespace NitroxServer.GameLogic.Bases
                     }
                     //removes any peice that is under 40% completion
                     //PROBABLY SAFE TO REMOVE
-                    /*
                     if (partialBasePiece.ConstructionAmount < 0.4f && !completedBasePieceHistory.Contains(partialBasePiece))
                     {
                         partialBasePiece.ConstructionAmount = 0f;
                         partialBasePiece.ConstructionCompleted = false;
+                        basePieces.Remove(partialBasePiece);
                     }
-                    */
             }
+
+            //clears partially constructed peieces bc there should be no uncompleted peices left because they have been destroyed or fully built
+            //not sure if this is benificial yet...
+            partiallyConstructedPiecesById.Clear();
         }
             return basePieces;
         }
