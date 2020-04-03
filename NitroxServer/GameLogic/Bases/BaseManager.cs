@@ -78,18 +78,13 @@ namespace NitroxServer.GameLogic.Bases
                     if (basePiece.ConstructionCompleted)
                     {
                         basePiece.ConstructionCompleted = false;
-                        
+                        //ONLY ADDS TO PARTIALLY CONSTRUCTED IF ITS NOT ALREADY IN PARTIALLY CONSTRUCTED
+                        //UNSURE IF SAFE TO REMOVE
                         if (basePiece.ConstructionAmount != 1.0f && completedBasePieceHistory.Contains(basePiece) && !partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
                         {
                             completedBasePieceHistory.Remove(basePiece);
-                            //ONLY ADDS TO PARTIALLY CONSTRUCTED IF ITS NOT ALREADY IN PARTIALLY CONSTRUCTED
-                            //UNSURE IF SAFE TO REMOVE
-                            if (!partiallyConstructedPiecesById.ContainsKey(basePiece.Id))
-                            {
-                                partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
-                            }
+                            partiallyConstructedPiecesById.Add(basePiece.Id, basePiece);
                         }
-                        
                     }
                 }
             }
@@ -194,7 +189,8 @@ namespace NitroxServer.GameLogic.Bases
                 lock (completedBasePieceHistory)
                 {
                     // Play back all completed base pieces first (other pieces have a dependency on these being done)
-                    basePieces = new List<BasePiece>(completedBasePieceHistory);
+                    // I removed adding the base pieces until after the base piece "reboot"
+                    basePieces = new List<BasePiece>();
                 }
 
                 //NOT SURE IF ADDING COMPLETEDBASEPIECEHISTORY IS NECESSARY AT ALL 
@@ -264,6 +260,8 @@ namespace NitroxServer.GameLogic.Bases
                         basePieces.Add(partialBasePiece);
                     }
                 }
+                // adds in completed base pieces after the other base peices have been fixed
+                basePieces.AddRange(completedBasePieceHistory);
 
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
@@ -284,11 +282,13 @@ namespace NitroxServer.GameLogic.Bases
                     }
                     //removes any peice that is under 40% completion
                     //PROBABLY SAFE TO REMOVE
+                    /*
                     if (partialBasePiece.ConstructionAmount < 0.4f && !completedBasePieceHistory.Contains(partialBasePiece))
                     {
                         partialBasePiece.ConstructionAmount = 0f;
                         partialBasePiece.ConstructionCompleted = false;
                     }
+                    */
                 }
                 
                 //clears partially constructed peieces bc there should be no uncompleted peices left because they have been destroyed or fully built
