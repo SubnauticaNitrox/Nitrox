@@ -27,6 +27,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         public IEnumerator SetupChatComponents()
         {
             canvasGroup = GetComponent<CanvasGroup>();
+            canvasGroup.alpha = 0;
 
             layoutGroups = GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
 
@@ -45,7 +46,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             {
                 transform.GetChild(0).GetComponent<Image>(), transform.GetChild(1).GetComponent<Image>(), transform.GetChild(3).GetComponent<Image>()
             };
-            yield return null;
+            yield return new WaitForEndOfFrame();
         }
 
         public void WriteLogEntry(ChatLogEntry chatLogEntry)
@@ -105,12 +106,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public void Show()
         {
-            canvasGroup.alpha = 1;
+            StartCoroutine(ToggleTransparencyCanvasGroup(1f));
         }
 
         public void Hide()
         {
-            canvasGroup.alpha = 0;
+            StartCoroutine(ToggleTransparencyCanvasGroup(0f));
         }
 
         private static string SanitizeMessage(string message)
@@ -127,6 +128,17 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             foreach (Image backgroundImage in backgroundImages)
             {
                 backgroundImage.CrossFadeAlpha(alpha, 0.5f, false);
+            }
+        }
+
+        private IEnumerator ToggleTransparencyCanvasGroup(float finalAlpha)
+        {
+            float step = finalAlpha == 1f ? 0.01f : -0.01f;
+
+            while (canvasGroup.alpha != finalAlpha)
+            {
+                canvasGroup.alpha += step;
+                yield return new WaitForSeconds(0.004f);
             }
         }
     }

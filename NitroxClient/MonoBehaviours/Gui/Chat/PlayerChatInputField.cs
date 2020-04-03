@@ -1,19 +1,21 @@
 using NitroxClient.GameLogic.ChatUI;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UWE;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
     public class PlayerChatInputField : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
         private bool selected;
-        private float timeLeftUntilAutoClose;
+        private static float timeLeftUntilAutoClose;
+        public static bool FreezeTime;
 
         public void OnSelect(BaseEventData eventData)
         {
             PlayerChatManager.Main.PlayerChat.Select(true);
             selected = true;
-            timeLeftUntilAutoClose = PlayerChat.CHAT_VISIBILITY_TIME_LENGTH;
+            ResetTimer();
         }
 
         public void OnDeselect(BaseEventData eventData)
@@ -21,8 +23,15 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             selected = false;
         }
 
+        public static void ResetTimer() => timeLeftUntilAutoClose = PlayerChat.CHAT_VISIBILITY_TIME_LENGTH;
+
         private void LateUpdate()
         {
+            if (FreezeTime)
+            {
+                return;
+            }
+
             if (selected)
             {
                 if (UnityEngine.Input.GetKey(KeyCode.Return))

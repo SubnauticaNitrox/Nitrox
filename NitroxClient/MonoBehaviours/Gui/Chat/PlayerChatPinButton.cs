@@ -1,5 +1,4 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
-using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -8,41 +7,34 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
     public class PlayerChatPinButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         private static Transform chatTransform => PlayerChatManager.Main.PlayerChat.transform;
+        private readonly Vector2 screenRes = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
         private bool drag;
-        private Vector3 offset;
-        private Vector3 offset2;
-        private Vector3 startPos;
+
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            startPos = chatTransform.position;
-            offset = chatTransform.localPosition - UnityEngine.Input.mousePosition;
-            offset2 = chatTransform.localPosition - Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition);
             drag = true;
+            PlayerChatInputField.FreezeTime = true;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             drag = false;
+            PlayerChatInputField.FreezeTime = false;
+            PlayerChatInputField.ResetTimer();
+
+            if (Mathf.Abs(chatTransform.localPosition.x * 2) >= screenRes.x || Mathf.Abs(chatTransform.localPosition.y * 2) >= screenRes.y)
+            {
+                chatTransform.localPosition = new Vector3(-500,125,0);
+            }
         }
 
         private void Update()
         {
             if (drag)
             {
-                Log.Debug(chatTransform.position);
-                Log.Debug(UnityEngine.Input.mousePosition);
-                Log.Debug(offset);
-                Log.Debug(offset2);
-                Log.Debug(Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition));
-                if (chatTransform.position == startPos)
-                {
-                    chatTransform.position += new Vector3(100,100,0);
-                }
-                //chatTransform.position = (Vector2)(Camera.main.ScreenToWorldPoint(UnityEngine.Input.mousePosition) + offset);
-                Log.Debug("=>" +chatTransform.position);
-                Log.Debug("      ");
-                //chatTransform.localPosition += new Vector3(1,1,0);
+                Vector3 viewport = Camera.main.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
+                chatTransform.localPosition = new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
             }
         }
     }
