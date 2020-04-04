@@ -179,6 +179,8 @@ namespace NitroxServer.GameLogic.Bases
         public List<BasePiece> GetBasePiecesForNewlyConnectedPlayer()
         {
             List<BasePiece> basePieces;
+            List<BasePiece> CompletedPiecesHistoryOrder;
+            
 
             lock (partiallyConstructedPiecesById)
             {
@@ -193,10 +195,29 @@ namespace NitroxServer.GameLogic.Bases
                     // I removed adding the base pieces until after the base piece "reboot"
                     basePieces = new List<BasePiece>();
                 }
+
+                CompletedPiecesHistoryOrder = new List<BasePiece>();
+                //orders the base pieces correctly in basePieces
+                List<string> completedBasePiecesOrder = completedBasePiecesOrder = new List<string>();
+                completedBasePiecesOrder.Add("BaseFoundation");
+                completedBasePiecesOrder.Add("BaseRoom");
+                completedBasePiecesOrder.Add("BaseMoonpool");
+                completedBasePiecesOrder.Add("BaseMapRoom");
+                foreach (BasePiece completedBasePiece in completedBasePieceHistory)
+                {
+                    if (completedBasePiecesOrder.Contains(completedBasePiece.TechType.Name))
+                    {
+                        completedBasePiece.ConstructionAmount = 1.0f;
+                        completedBasePiece.ConstructionCompleted = true;
+                        basePieces.Add(completedBasePiece);
+                        CompletedPiecesHistoryOrder.Add(completedBasePiece);
+                    }
+                }
+
                 //completes the uncompleted foundations
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
-                    if (partialBasePiece.TechType.Name == "BaseFoundation" && partialBasePiece.ConstructionAmount > 0.4f)
+                    if (partialBasePiece.TechType.Name == "BaseFoundation"/* && partialBasePiece.ConstructionAmount > 0.4f*/)
                     {
                         // when these pieces are built I would like to remove them from partiallyConstructedPiecesById and add them to completedBasePieceHistory
                         // but threading issues pulls up an error, it seems to work without this but it could also create some other problems
@@ -205,62 +226,61 @@ namespace NitroxServer.GameLogic.Bases
                         // not sure if this is necessary but it seems to help
                         // this adds the partial piece to the list just like the other partial pieces
                         basePieces.Add(partialBasePiece);
+                        CompletedPiecesHistoryOrder.Add(partialBasePiece);
                     }
                 }
                 //completes the uncompleted base rooms
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
-                    if ((partialBasePiece.TechType.Name == "BaseRoom" | partialBasePiece.TechType.Name == "BaseMoonpool" | partialBasePiece.TechType.Name == "BaseMapRoom") && partialBasePiece.ConstructionAmount > 0.4f)
+                    if ((partialBasePiece.TechType.Name == "BaseRoom" | partialBasePiece.TechType.Name == "BaseMoonpool" | partialBasePiece.TechType.Name == "BaseMapRoom")/* && partialBasePiece.ConstructionAmount > 0f*/)
                     {
                         partialBasePiece.ConstructionAmount = 1.0f;
                         partialBasePiece.ConstructionCompleted = true;
                         basePieces.Add(partialBasePiece);
+                        CompletedPiecesHistoryOrder.Add(partialBasePiece);
                     }
                 }
-                //completes uncompleted hatches/reinforcements/windows third
+                //completes uncompleted hatches/reinforcements/windows
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
-                    if ((partialBasePiece.TechType.Name == "BaseWindow" | partialBasePiece.TechType.Name == "BaseHatch" | partialBasePiece.TechType.Name == "BaseReinforcement") && partialBasePiece.ConstructionAmount > 0.4f)
+                    if ((partialBasePiece.TechType.Name == "BaseWindow" | partialBasePiece.TechType.Name == "BaseHatch" | partialBasePiece.TechType.Name == "BaseReinforcement")/* && partialBasePiece.ConstructionAmount > 0f*/)
                     {
                         partialBasePiece.ConstructionAmount = 1.0f;
                         partialBasePiece.ConstructionCompleted = true;
                         basePieces.Add(partialBasePiece);
+                        CompletedPiecesHistoryOrder.Add(partialBasePiece);
                     }
                 }
-                // adds in completed base pieces after the other base peices have been fixed
-                basePieces.AddRange(completedBasePieceHistory);
+                // adds in completed base pieces after the other base peices have been fixed but avoids dupes
+                foreach (BasePiece CompletedBasePiecesRemovedEdit in completedBasePieceHistory)
+                {
+                    if (!completedBasePiecesOrder.Contains(CompletedBasePiecesRemovedEdit.TechType.Name))
+                    {
+                        CompletedBasePiecesRemovedEdit.ConstructionAmount = 1.0f;
+                        CompletedBasePiecesRemovedEdit.ConstructionCompleted = true;
+                        basePieces.Add(CompletedBasePiecesRemovedEdit);
+                        CompletedPiecesHistoryOrder.Add(CompletedBasePiecesRemovedEdit);
+                    }
+                }
 
                 foreach (BasePiece partialBasePiece in partiallyConstructedPiecesById.Values)
                 {
-                    //security measure to make sure nothing is loaded at less than 100% 
-                    // this does mean anything over 40% will be loaded to 100%
-                    if (partialBasePiece.ConstructionAmount > 0.4f && partialBasePiece.ConstructionAmount != 1.0f)
-                    {
-                        partialBasePiece.ConstructionAmount = 1.0f;
-                        partialBasePiece.ConstructionCompleted = true;
-                    }
+                    // security measure to make sure nothing is loaded at less than 100% 
+                    // this does mean anything over 0% will be loaded to 100%
+                    partialBasePiece.ConstructionAmount = 1.0f;
+                    partialBasePiece.ConstructionCompleted = true;
                     //adds partial pieces as normal but prevents duplicates from the previous code
-                    if (!basePieces.Contains(partialBasePiece))
+                    if (basePieces.Contains(partialBasePiece) == false)
                     {
-                        if (partialBasePiece.TechType.Name != "BaseWindow" && partialBasePiece.TechType.Name != "BaseHatch" && partialBasePiece.TechType.Name != "BaseReinforcement" && partialBasePiece.TechType.Name != "BaseRoom" && partialBasePiece.TechType.Name != "BaseMoonpool" && partialBasePiece.TechType.Name != "BaseObservatory" && partialBasePiece.TechType.Name != "BaseMapRoom" && partialBasePiece.TechType.Name != "BaseFoundation")
-                        {
-                            basePieces.Add(partialBasePiece);
-                        }
+                        basePieces.Add(partialBasePiece);
                     }
-                    //removes any peice that is under 40% completion
-                    //PROBABLY SAFE TO REMOVE
-                    if (partialBasePiece.ConstructionAmount < 0.4f && )
-                    {
-                        partialBasePiece.ConstructionAmount = 0f;
-                        partialBasePiece.ConstructionCompleted = false;
-                        basePieces.Remove(partialBasePiece);
-                    }
-            }
-
+                }
             //clears partially constructed peieces bc there should be no uncompleted peices left because they have been destroyed or fully built
             //not sure if this is benificial yet...
             partiallyConstructedPiecesById.Clear();
-        }
+            completedBasePieceHistory.Clear();
+            completedBasePieceHistory.AddRange(CompletedPiecesHistoryOrder);
+            }
             return basePieces;
         }
     }
