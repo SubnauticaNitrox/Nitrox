@@ -27,7 +27,8 @@ namespace NitroxServer
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
 
-        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, List<EquippedItemData> equippedItems, List<EquippedItemData> modules)
+        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, List<EquippedItemData> equippedItems,
+                      List<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
@@ -40,6 +41,38 @@ namespace NitroxServer
             Stats = stats;
             this.equippedItems = equippedItems;
             this.modules = modules;
+        }
+
+        public static bool operator ==(Player left, Player right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Player left, Player right)
+        {
+            return !Equals(left, right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+            return Equals((Player)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
         }
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
@@ -135,25 +168,9 @@ namespace NitroxServer
             connection.SendPacket(packet);
         }
 
-        public override bool Equals(object obj)
+        protected bool Equals(Player other)
         {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            Player player = obj as Player;
-            return player != null && player.Id == Id;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 269;
-                hash = hash * 23 + Id.GetHashCode();
-                return hash;
-            }
+            return Id == other.Id;
         }
     }
 }
