@@ -60,6 +60,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void ShowChat()
         {
+            // Skip enabling chat log too if chat input field cannot have focus right now.
             if (!InputField.CanEnable())
             {
                 return;

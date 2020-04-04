@@ -52,18 +52,21 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 {
                     inputGroup.OnDeselect();
                 }
-                
+
                 chatEnabled = value;
             }
         }
 
+        public PlayerChat Manager { get; set; }
+
+        /// <summary>
+        ///     Gets true if no other (UWE) input field has focus right now.`
+        /// </summary>
+        /// <returns>True if the chat input field can be enabled without interfering with another input field in-game.</returns>
         public bool CanEnable()
         {
-            // If another input has focus then do not enable chat
             return FPSInputModule.current.lastGroup == null;
         }
-
-        public PlayerChat Manager { get; set; }
 
         public void Awake()
         {
