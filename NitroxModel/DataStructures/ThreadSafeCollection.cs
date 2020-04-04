@@ -211,5 +211,24 @@ namespace NitroxModel.DataStructures
         {
             return GetEnumerator();
         }
+
+        public void RemoveAll(Func<T, bool> predicate)
+        {
+            try
+            {
+                locker.EnterWriteLock();
+                foreach (T item in collection)
+                {
+                    if (predicate(item))
+                    {
+                        collection.Remove(item);
+                    }
+                }
+            }
+            finally
+            {
+                locker.ExitWriteLock();
+            }
+        }
     }
 }

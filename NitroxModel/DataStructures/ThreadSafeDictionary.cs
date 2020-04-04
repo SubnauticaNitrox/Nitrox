@@ -14,8 +14,7 @@ namespace NitroxModel.DataStructures
 
         [ProtoIgnore]
         private readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
-
-        // [ProtoMember(1)]
+        
         public ICollection<TKey> Keys
         {
             get
@@ -32,7 +31,6 @@ namespace NitroxModel.DataStructures
             }
         }
 
-        // [ProtoMember(2)]
         public ICollection<TValue> Values
         {
             get

@@ -12,12 +12,9 @@ namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly List<EquippedItemData> equippedItems;
-        private readonly object equippedItemsLock = new object();
-        private readonly List<EquippedItemData> modules;
-        private readonly object modulesLock = new object();
-        private readonly HashSet<AbsoluteEntityCell> visibleCells = new HashSet<AbsoluteEntityCell>();
-        private readonly object visibleCellsLock = new object();
+        private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
+        private readonly ThreadSafeCollection<EquippedItemData> modules;
+        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
         public NitroxConnection connection { get; set; }
 
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
@@ -30,8 +27,8 @@ namespace NitroxServer
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
 
-        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, List<EquippedItemData> equippedItems,
-                      List<EquippedItemData> modules)
+        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+                      IEnumerable<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
@@ -42,8 +39,8 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
-            this.equippedItems = equippedItems;
-            this.modules = modules;
+            this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
+            this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
         }
 
         public static bool operator ==(Player left, Player right)
@@ -80,80 +77,53 @@ namespace NitroxServer
 
         public void AddCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleCellsLock)
+            foreach (AbsoluteEntityCell cell in cells)
             {
-                foreach (AbsoluteEntityCell cell in cells)
-                {
-                    visibleCells.Add(cell);
-                }
+                visibleCells.Add(cell);
             }
         }
 
         public void RemoveCells(IEnumerable<AbsoluteEntityCell> cells)
         {
-            lock (visibleCellsLock)
+            foreach (AbsoluteEntityCell cell in cells)
             {
-                foreach (AbsoluteEntityCell cell in cells)
-                {
-                    visibleCells.Remove(cell);
-                }
+                visibleCells.Remove(cell);
             }
         }
 
         public bool HasCellLoaded(AbsoluteEntityCell cell)
         {
-            lock (visibleCellsLock)
-            {
-                return visibleCells.Contains(cell);
-            }
+            return visibleCells.Contains(cell);
         }
 
         public void AddModule(EquippedItemData module)
         {
-            lock (modulesLock)
-            {
-                modules.Add(module);
-            }
+            modules.Add(module);
         }
 
         public void RemoveModule(NitroxId id)
         {
-            lock (modulesLock)
-            {
-                modules.RemoveAll(item => item.ItemId == id);
-            }
+            modules.RemoveAll(item => item.ItemId == id);
         }
 
         public List<EquippedItemData> getAllModules()
         {
-            lock (modulesLock)
-            {
-                return new List<EquippedItemData>(modules);
-            }
+            return new List<EquippedItemData>(modules);
         }
 
         public void AddEquipment(EquippedItemData equipment)
         {
-            lock (equippedItemsLock)
-            {
-                equippedItems.Add(equipment);
-            }
+            equippedItems.Add(equipment);
         }
 
         public void RemoveEquipment(NitroxId id)
         {
-            lock (equippedItemsLock)
-            {
-                equippedItems.RemoveAll(item => item.ItemId == id);
-            }
+            equippedItems.RemoveAll(item => item.ItemId == id);
         }
 
         public List<EquippedItemData> getAllEquipment()
         {
-            lock (equippedItemsLock)
-            {
-                return new List<EquippedItemData>(equippedItems);
-            }
+            return new List<EquippedItemData>(equippedItems);
         }
 
         public override string ToString()
