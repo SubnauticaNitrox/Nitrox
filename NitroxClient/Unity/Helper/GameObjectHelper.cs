@@ -59,41 +59,17 @@ namespace NitroxClient.Unity.Helper
         }
 
         /// <summary>
-        ///     Calls the selector if the Unity object is alive. Returns null without call if not alive.
+        ///     Returns null if Unity has marked this object as dead.
         /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="selector"></param>
-        /// <typeparam name="TIn"></typeparam>
-        /// <typeparam name="TOut"></typeparam>
-        /// <returns></returns>
-        public static TOut IfAlive<TIn, TOut>(this TIn obj, Func<TIn, TOut> selector)
-            where TOut : class
-            where TIn : Object
+        /// <param name="obj">Unity <see cref="UnityEngine.Object" /> to check if alive.</param>
+        /// <typeparam name="TObject">Type of Unity object that can be marked as either alive or dead.</typeparam>
+        /// <returns>The <see cref="UnityEngine.Object" /> if alive or null if dead.</returns>
+        public static TObject AliveOrNull<TObject>(this TObject obj) where TObject : Object
         {
             // Unity checks if the object is alive like this. Do NOT use == null check.
             if (obj)
             {
-                return selector(obj);
-            }
-            return null;
-        }
-
-        /// <summary>
-        ///     Calls the selector if the Unity object is alive. Returns null without call if not alive.
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <param name="selector"></param>
-        /// <typeparam name="TIn"></typeparam>
-        /// <typeparam name="TOut"></typeparam>
-        /// <returns></returns>
-        public static TOut IfAlive<TIn, TOut>(this TIn obj, Func<TOut> selector)
-            where TOut : class
-            where TIn : Object
-        {
-            // Unity checks if the object is alive like this. Do NOT use == null check.
-            if (obj)
-            {
-                return selector();
+                return obj;
             }
             return null;
         }
