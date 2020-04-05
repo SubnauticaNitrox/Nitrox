@@ -74,12 +74,9 @@ namespace NitroxServer.GameLogic.Vehicles
 
         public Optional<VehicleModel> GetVehicleModel(NitroxId id)
         {
-            lock (vehiclesById)
-            {
-                VehicleModel vehicleModel;
-                vehiclesById.TryGetValue(id, out vehicleModel);
-                return Optional.OfNullable(vehicleModel);
-            }
+            VehicleModel vehicleModel;
+            vehiclesById.TryGetValue(id, out vehicleModel);
+            return Optional.OfNullable(vehicleModel);
         }
 
         public Optional<T> GetVehicleModel<T>(NitroxId id) where T : VehicleModel
