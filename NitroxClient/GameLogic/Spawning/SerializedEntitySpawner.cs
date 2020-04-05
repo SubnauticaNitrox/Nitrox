@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic.Spawning
             gameObject.transform.position = entity.Transform.Position;
             gameObject.transform.rotation = entity.Transform.Rotation;
             gameObject.transform.localScale = entity.Transform.LocalScale;
-            
+
             if (entity.WaterParkId != null)
             {
                 AssignToWaterPark(gameObject, entity.WaterParkId);

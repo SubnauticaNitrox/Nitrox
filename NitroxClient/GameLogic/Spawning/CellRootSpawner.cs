@@ -13,7 +13,7 @@ namespace NitroxClient.GameLogic.Spawning
             NitroxInt3 cellId = entity.AbsoluteEntityCell.CellId;
             NitroxInt3 batchId = entity.AbsoluteEntityCell.BatchId;
 
-            cellRoot.liveRoot.name = string.Format("CellRoot {0}, {1}, {2}; Batch {3}, {4}, {5}", cellId.X, cellId.Y, cellId.Z, batchId.X, batchId.Y, batchId.Z);
+            cellRoot.liveRoot.name = $"CellRoot {cellId.X}, {cellId.Y}, {cellId.Z}; Batch {batchId.X}, {batchId.Y}, {batchId.Z}";
 
             NitroxEntity.SetNewId(cellRoot.liveRoot, entity.Id);
 

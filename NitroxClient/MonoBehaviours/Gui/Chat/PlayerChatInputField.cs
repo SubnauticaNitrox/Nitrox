@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using NitroxModel.Packets;
@@ -29,6 +28,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private IMultiplayerSession session;
 
+        /// <summary>
+        ///     Gets or sets the chat enabled. Can fail to enable chat if another input field in-game already has focus.
+        /// </summary>
         public bool ChatEnabled
         {
             get
@@ -37,8 +39,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
             set
             {
-                // If another input has focus then do not enable chat
-                if (FPSInputModule.current.lastGroup != null)
+                if (!CanEnable())
                 {
                     return;
                 }
@@ -51,12 +52,21 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 {
                     inputGroup.OnDeselect();
                 }
-                
+
                 chatEnabled = value;
             }
         }
 
         public PlayerChat Manager { get; set; }
+
+        /// <summary>
+        ///     Gets true if no other (UWE) input field has focus right now.`
+        /// </summary>
+        /// <returns>True if the chat input field can be enabled without interfering with another input field in-game.</returns>
+        public bool CanEnable()
+        {
+            return FPSInputModule.current.lastGroup == null;
+        }
 
         public void Awake()
         {
