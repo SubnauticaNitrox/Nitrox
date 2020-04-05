@@ -69,5 +69,17 @@ namespace NitroxTest.DataStructures
             set.Remove("test 0");
             set[0].ShouldBeEquivalentTo("test 1");
         }
+
+        [TestMethod]
+        public void Find()
+        {
+            list.Find(s => s == "test 1").ShouldBeEquivalentTo("test 1");
+            list.Find(s => s == "tesT 1").Should().BeNull();
+            list.Find(s => s == "test 1361").Should().BeNull();
+            
+            set.Find(s => s == "test 7").ShouldBeEquivalentTo("test 7");
+            set.Find(s => s == "tesT 7").Should().BeNull();
+            set.Find(s => s == "test 1361").Should().BeNull();
+        }
     }
 }
