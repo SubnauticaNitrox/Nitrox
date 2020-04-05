@@ -6,6 +6,7 @@
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>.
 
 ![Build](https://github.com/SubnauticaNitrox/Nitrox/workflows/Building%20Nitrox%20Pull%20Request/badge.svg)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 ## FAQ
 
