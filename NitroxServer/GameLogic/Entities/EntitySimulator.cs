@@ -92,9 +92,12 @@ namespace NitroxServer.GameLogic.Entities
             {
                 List<Entity> entities = entityManager.GetEntities(cell);
                 assignedEntities.AddRange(
-                    entities.Where(entity => cell.Level <= entity.Level &&
-                                             (entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType) || !entity.SpawnedByServer) &&
-                                             simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE)));
+                    entities.Where(entity =>
+                    {
+                        bool shouldBeOwnershipSimulated = entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType) || !entity.SpawnedByServer;
+                        bool canAquireLockForPlayer = simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+                        return cell.Level <= entity.Level && shouldBeOwnershipSimulated && canAquireLockForPlayer;
+                    }));
             }
 
             return assignedEntities;
