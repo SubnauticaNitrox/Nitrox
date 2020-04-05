@@ -199,7 +199,7 @@ namespace NitroxServer.GameLogic
         {
             foreach (Player player in ConnectedPlayers())
             {
-                if (!Equals(player, sendingPlayer))
+                if (player != sendingPlayer)
                 {
                     player.SendPacket(packet);
                 }

@@ -35,7 +35,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
             foreach (Player player in playerManager.GetConnectedPlayers())
             {
-                bool isOtherPlayer = !Equals(player, droppingPlayer);
+                bool isOtherPlayer = player != droppingPlayer;
                 if (isOtherPlayer && player.CanSee(entity))
                 {
                     CellEntities cellEntities = new CellEntities(entity);
