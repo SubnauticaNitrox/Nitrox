@@ -95,9 +95,8 @@ namespace NitroxServer.GameLogic.Entities
                     entities.Where(entity =>
                     {
                         bool isSpawnedByServerAndWhitelisted = entity.SpawnedByServer && serverSpawnedSimulationWhiteList.Contains(entity.TechType);
-                        bool shouldBeOwnershipSimulated = isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer;
-                        bool canAquireLockForPlayer = simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
-                        return cell.Level <= entity.Level && shouldBeOwnershipSimulated && canAquireLockForPlayer;
+                        bool isEligibleForSimulation = isSpawnedByServerAndWhitelisted || !entity.SpawnedByServer;
+                        return cell.Level <= entity.Level && isEligibleForSimulation && simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
                     }));
             }
 
