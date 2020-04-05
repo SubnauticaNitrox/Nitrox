@@ -48,13 +48,13 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                Log.Warn("Unable to find inventory container with id: " + containerId);
+                Log.Error("Unable to find inventory container with id: " + containerId);
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);
             if (!opContainer.HasValue)
             {
-                Log.Warn("Could not find container field on object " + owner.Value.name);
+                Log.Error("Could not find container field on object " + owner.Value.name);
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
             if (!opContainer.HasValue)
             {
-                Log.Warn($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
+                Log.Error($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
                 return;
             }
 
