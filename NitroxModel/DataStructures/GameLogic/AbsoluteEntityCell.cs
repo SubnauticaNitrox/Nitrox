@@ -80,7 +80,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 case 3:
                     return 5;
                 default:
-                    throw new Exception();
+                    throw new Exception($"Given level '{level}' does not have any defined cells.");
             }
         }
 
