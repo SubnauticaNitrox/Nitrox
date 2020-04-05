@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using NitroxModel.Helper;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
@@ -274,6 +275,8 @@ namespace NitroxModel.DataStructures
 
         public T Find(Func<T, bool> predicate)
         {
+            Validate.NotNull(predicate);
+            
             lock (locker)
             {
                 foreach (T item in collection)
@@ -283,8 +286,8 @@ namespace NitroxModel.DataStructures
                         return item;
                     }
                 }
+                return default(T);
             }
-            throw new ArgumentNullException(nameof(predicate), "No item in collection matches select predicate.");
         }
 
         void IList<T>.RemoveAt(int index)
