@@ -25,18 +25,17 @@ namespace NitroxServer_Subnautica
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();
 
-            Server server = null;
+            Server server;
             try
             {
                 server = NitroxServiceLocator.LocateService<Server>();
                 Log.Info($"Loaded save\n{server.SaveSummary}");
-                server.Start();
-            }
-            catch (SocketException e)
-            {
-                Log.Error("Unable to start server", e);
-                server?.Stop();
-                return;
+                if (!server.Start())
+                {
+                    Log.Error("Unable to start server.");
+                    Console.WriteLine("\nPress any key to continue..");
+                    Console.ReadKey(true);
+                }
             }
             catch (Exception e)
             {

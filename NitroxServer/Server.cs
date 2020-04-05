@@ -65,16 +65,22 @@ namespace NitroxServer
             isSaving = false;
         }
 
-        public void Start()
+        public bool Start()
         {
+            if (!server.Start())
+            {
+                return false;
+            }
+            Log.Info("Nitrox Server Started");
             IsRunning = true;
+            EnablePeriodicSaving();
+            
 #if RELEASE
             // Help new players on which IP they should give to their friends
             IpLogger.PrintServerIps();
 #endif
-            server.Start();
-            Log.Info("Nitrox Server Started");
-            EnablePeriodicSaving();
+            
+            return true;
         }
 
         public void Stop()
