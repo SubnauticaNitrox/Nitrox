@@ -94,11 +94,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             }
         }
 
-        /// <summary>
-        /// Sends the packet to the server.
-        /// </summary>
-        /// <param name="packet">Packet to send</param>
-        /// <returns>True if packet was send successfully. False if suppressed.</returns>
         public bool Send(Packet packet)
         {
             Type packetType = packet.GetType();
