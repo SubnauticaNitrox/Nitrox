@@ -75,6 +75,17 @@ namespace NitroxModel.DataStructures
             collection = new List<T>(initialCapacity);
         }
 
+        public bool IsSet
+        {
+            get
+            {
+                lock (locker)
+                {
+                    return collection is ISet<T>;
+                }
+            }
+        }
+
         public ThreadSafeCollection(IEnumerable<T> collection, bool createCopy = true)
         {
             ICollection<T> coll = collection as ICollection<T>;
@@ -175,7 +186,7 @@ namespace NitroxModel.DataStructures
                 IList<T> list = collection as IList<T>;
                 if (list != null)
                 {
-                    list.RemoveAt(0);
+                    list.RemoveAt(index);
                     return true;
                 }
                 ISet<T> set = collection as ISet<T>;

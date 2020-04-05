@@ -18,7 +18,7 @@ namespace NitroxServer.GameLogic
         private readonly ThreadSafeDictionary<string, Player> allPlayersByName;
         private readonly ThreadSafeDictionary<NitroxConnection, ConnectionAssets> assetsByConnection = new ThreadSafeDictionary<NitroxConnection, ConnectionAssets>();
         private readonly ThreadSafeDictionary<string, PlayerContext> reservations = new ThreadSafeDictionary<string, PlayerContext>();
-        private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>();
+        private readonly ThreadSafeCollection<string> reservedPlayerNames = new ThreadSafeCollection<string>(new HashSet<string>());
 
         private readonly PlayerStatsData defaultPlayerStats;
         private readonly ServerConfig serverConfig;

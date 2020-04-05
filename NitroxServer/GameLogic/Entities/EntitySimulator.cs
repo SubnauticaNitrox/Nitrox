@@ -106,9 +106,7 @@ namespace NitroxServer.GameLogic.Entities
             foreach (AbsoluteEntityCell cell in removed)
             {
                 List<Entity> entities = entityManager.GetEntities(cell);
-
-                revokedEntities.AddRange(
-                    entities.Where(entity => entity.Level <= cell.Level && simulationOwnershipData.RevokeIfOwner(entity.Id, player)));
+                revokedEntities.AddRange(entities.Where(entity => entity.Level <= cell.Level && simulationOwnershipData.RevokeIfOwner(entity.Id, player)));
             }
 
             return revokedEntities;

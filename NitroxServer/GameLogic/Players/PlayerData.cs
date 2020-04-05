@@ -3,7 +3,6 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Players
 {
