@@ -104,16 +104,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             EventSystem.current.SetSelectedGameObject(null);
         }
 
-        public void Show()
-        {
-            StartCoroutine(ToggleTransparencyCanvasGroup(1f));
-        }
-
-        public void Hide()
-        {
-            StartCoroutine(ToggleTransparencyCanvasGroup(0f));
-        }
-
         private static string SanitizeMessage(string message)
         {
             message = message.Trim();
@@ -131,7 +121,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
         }
 
-        private IEnumerator ToggleTransparencyCanvasGroup(float finalAlpha)
+        public IEnumerator ToggleTransparencyCanvasGroup(float finalAlpha)
         {
             float step = finalAlpha == 1f ? 0.01f : -0.01f;
 

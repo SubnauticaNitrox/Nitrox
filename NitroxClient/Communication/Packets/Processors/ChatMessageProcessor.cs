@@ -11,12 +11,12 @@ namespace NitroxClient.Communication.Packets.Processors
     class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
     {
         private readonly PlayerManager remotePlayerManager;
-        private readonly PlayerChat playerChat;
 
-        public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChat playerChat)
+        private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
+
+        public ChatMessageProcessor(PlayerManager remotePlayerManager)
         {
             this.remotePlayerManager = remotePlayerManager;
-            this.playerChat = playerChat;
         }
 
         public override void Process(ChatMessage message)
@@ -41,14 +41,14 @@ namespace NitroxClient.Communication.Packets.Processors
             }
             
             RemotePlayer remotePlayerInstance = remotePlayer.Value;
-            playerChat.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
-            playerChat.ShowLog();
+            PlayerChatManager.Main.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
+            PlayerChatManager.Main.ShowChat();
         }
 
         private void LogServerMessage(ChatMessage message)
         {
-            playerChat.AddMessage("Server", message.Text, new UnityEngine.Color32(0x8c, 0x00, 0xFF, 0xFF));
-            playerChat.ShowLog();
+            PlayerChatManager.Main.AddMessage("Server", message.Text, serverMessageColor);
+            PlayerChatManager.Main.ShowChat();
         }
     }
 }

@@ -5,6 +5,3 @@
 *.unity -merge=unityamlmerge -text
 *.asset -merge=unityamlmerge -text
 *.prefab -merge=unityamlmerge -text
-
-# Font formats
-*.ttf filter=lfs diff=lfs merge=lfs -text

@@ -46,7 +46,7 @@ namespace NitroxClient.GameLogic.ChatUI
             if (finishedLoading)
             {
                 PlayerChat.SelectChat();
-                PlayerChat.Show();
+                PlayerChat.StartCoroutine(PlayerChat.ToggleTransparencyCanvasGroup(1f));
             }
             else
             {
@@ -59,7 +59,7 @@ namespace NitroxClient.GameLogic.ChatUI
             if (finishedLoading)
             {
                 PlayerChat.DeselectChat();
-                PlayerChat.Hide();
+                PlayerChat.StartCoroutine(PlayerChat.ToggleTransparencyCanvasGroup(0f));
             }
         }
 
@@ -138,6 +138,33 @@ namespace NitroxClient.GameLogic.ChatUI
             {
                 ShowChat();
             }
+        }
+
+
+        public static void LoadChatKeyHint() => Player.main.StartCoroutine(LoadChatKeyHintAsset());
+
+        private static IEnumerator LoadChatKeyHintAsset()
+        {
+            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles/chatkeyhint"));
+            if (assetRequest == null)
+            {
+                Log.Error("Failed to load AssetBundle!");
+                yield break;
+            }
+
+            while (!assetRequest.isDone)
+            {
+                yield return null;
+            }
+
+            string sceneName = assetRequest.assetBundle.GetAllScenePaths().First();
+            Log.Debug($"Trying to load scene: {sceneName}");
+            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+
+            GameObject oldPlayerChatCanvas = GameObject.Find("ChatKeyCanvas");
+            Transform playerChatRoot = oldPlayerChatCanvas.transform.GetChild(0);
+            playerChatRoot.SetParent(uGUI.main.screenCanvas.transform, false);
+            Object.Destroy(oldPlayerChatCanvas);
         }
     }
 }
