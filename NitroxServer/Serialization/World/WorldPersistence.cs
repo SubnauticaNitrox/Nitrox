@@ -44,7 +44,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.WorldData.InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems());
                 persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
                 persistedData.WorldData.GameData = world.GameData;
-                persistedData.WorldData.EscapePodData = EscapePodData.from(world.EscapePodManager.GetEscapePods());
+                persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
 
                 if (!Directory.Exists(config.SaveName))
                 {

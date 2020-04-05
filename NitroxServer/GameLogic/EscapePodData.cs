@@ -10,11 +10,9 @@ namespace NitroxServer.GameLogic
         [ProtoMember(1)]
         public List<EscapePodModel> EscapePods;
 
-        public static EscapePodData from(List<EscapePodModel> escapePods)
+        public static EscapePodData From(List<EscapePodModel> escapePods)
         {
-            EscapePodData escapePodData = new EscapePodData();
-            escapePodData.EscapePods = escapePods;
-
+            EscapePodData escapePodData = new EscapePodData { EscapePods = escapePods };
             return escapePodData;
         }
     }

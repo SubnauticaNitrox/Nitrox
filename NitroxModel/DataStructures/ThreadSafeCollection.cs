@@ -261,6 +261,21 @@ namespace NitroxModel.DataStructures
             }
         }
 
+        public T Find(Func<T, bool> predicate)
+        {
+            lock (locker)
+            {
+                foreach (T item in collection)
+                {
+                    if (predicate(item))
+                    {
+                        return item;
+                    }
+                }
+            }
+            throw new ArgumentNullException(nameof(predicate), "No item in collection matches select predicate.");
+        }
+
         void IList<T>.RemoveAt(int index)
         {
             lock (locker)
