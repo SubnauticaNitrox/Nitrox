@@ -47,8 +47,8 @@ namespace NitroxServer.GameLogic.Players
             {
                 PersistedPlayerData persistedPlayer = new PersistedPlayerData();
                 persistedPlayer.Name = player.Name;
-                persistedPlayer.EquippedItems = player.getAllEquipment();
-                persistedPlayer.Modules = player.getAllModules();
+                persistedPlayer.EquippedItems = player.GetEquipment();
+                persistedPlayer.Modules = player.GetModules();
                 persistedPlayer.Id = player.Id;
                 persistedPlayer.SpawnPosition = player.Position;
                 persistedPlayer.CurrentStats = player.Stats;

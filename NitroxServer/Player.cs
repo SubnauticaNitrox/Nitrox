@@ -106,9 +106,9 @@ namespace NitroxServer
             modules.RemoveAll(item => item.ItemId == id);
         }
 
-        public List<EquippedItemData> getAllModules()
+        public List<EquippedItemData> GetModules()
         {
-            return new List<EquippedItemData>(modules);
+            return modules.ToList();
         }
 
         public void AddEquipment(EquippedItemData equipment)
@@ -121,9 +121,9 @@ namespace NitroxServer
             equippedItems.RemoveAll(item => item.ItemId == id);
         }
 
-        public List<EquippedItemData> getAllEquipment()
+        public List<EquippedItemData> GetEquipment()
         {
-            return new List<EquippedItemData>(equippedItems);
+            return equippedItems.ToList();
         }
 
         public override string ToString()

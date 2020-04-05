@@ -13,37 +13,12 @@ namespace NitroxModel.DataStructures
     public class ThreadSafeCollection<T> : IList<T>
     {
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        [ProtoMember(1)]
-        private ICollection<T> collection;
-
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [ProtoIgnore]
         private readonly object locker = new object();
 
-        void IList<T>.RemoveAt(int index)
-        {
-            lock (locker)
-            {
-                IList<T> asList = collection as IList<T>;
-                if (asList != null)
-                {
-                    asList.RemoveAt(index);
-                    return;
-                }
-
-                ICollection<T> set = CreateCopy(collection);
-                int currentIndex = 0;
-                foreach (T item in collection)
-                {
-                    if (index != currentIndex)
-                    {
-                        set.Add(item);
-                    }
-                    currentIndex++;
-                }
-                collection = set;
-            }
-        }
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [ProtoMember(1)]
+        private ICollection<T> collection;
 
         public T this[int i]
         {
@@ -64,7 +39,7 @@ namespace NitroxModel.DataStructures
                         asList[i] = value;
                         return;
                     }
-                    
+
                     ICollection<T> set = CreateCopy(collection);
                     int currentIndex = 0;
                     foreach (T item in collection)
@@ -275,6 +250,39 @@ namespace NitroxModel.DataStructures
                         collection.Remove(item);
                     }
                 }
+            }
+        }
+
+        public IEnumerable<T> Clone()
+        {
+            lock (locker)
+            {
+                return CreateCopy(collection);
+            }
+        }
+
+        void IList<T>.RemoveAt(int index)
+        {
+            lock (locker)
+            {
+                IList<T> asList = collection as IList<T>;
+                if (asList != null)
+                {
+                    asList.RemoveAt(index);
+                    return;
+                }
+
+                ICollection<T> set = CreateCopy(collection);
+                int currentIndex = 0;
+                foreach (T item in collection)
+                {
+                    if (index != currentIndex)
+                    {
+                        set.Add(item);
+                    }
+                    currentIndex++;
+                }
+                collection = set;
             }
         }
 

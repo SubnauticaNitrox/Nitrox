@@ -40,7 +40,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 playerManager.SendPacketToOtherPlayers(addEscapePod, player);
             }
 
-            List<EquippedItemData> equippedItems = player.getAllEquipment();
+            List<EquippedItemData> equippedItems = player.GetEquipment();
             List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
@@ -57,7 +57,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 world.EscapePodManager.GetEscapePods(),
                 assignedEscapePodId,
                 equippedItems,
-                player.getAllModules(),
+                player.GetModules(),
                 world.BaseManager.GetBasePiecesForNewlyConnectedPlayer(),
                 world.VehicleManager.GetVehicles(),
                 world.InventoryManager.GetAllInventoryItems(),
@@ -83,7 +83,7 @@ namespace NitroxServer.Communication.Packets.Processors
             {
                 if (!player.Equals(otherPlayer))
                 {
-                    List<EquippedItemData> equippedItems = otherPlayer.getAllEquipment();
+                    List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
                     List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
                     InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
