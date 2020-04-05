@@ -1,48 +1,56 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
+using System.Diagnostics;
+using System.Linq;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
+    [DebuggerDisplay("Items = {" + nameof(Entries) + "}")]
     [ProtoContract]
-    public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>, IDisposable
+    public class ThreadSafeDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [ProtoIgnore]
         private readonly IDictionary<TKey, TValue> dictionary;
 
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [ProtoIgnore]
-        private readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
-        
+        private readonly object locker = new object();
+
+        [ProtoIgnore]
         public ICollection<TKey> Keys
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return new List<TKey>(dictionary.Keys);
-                }
-                finally
-                {
-                    locker.ExitReadLock();
                 }
             }
         }
 
+        [ProtoIgnore]
         public ICollection<TValue> Values
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return new List<TValue>(dictionary.Values);
                 }
-                finally
+            }
+        }
+
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [ProtoIgnore]
+        public ICollection<KeyValuePair<TKey, TValue>> Entries
+        {
+            get
+            {
+                lock (locker)
                 {
-                    locker.ExitReadLock();
+                    return dictionary.ToList();
                 }
             }
         }
@@ -51,26 +59,16 @@ namespace NitroxModel.DataStructures
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return dictionary[key];
-                }
-                finally
-                {
-                    locker.ExitReadLock();
                 }
             }
             set
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterWriteLock();
                     dictionary[key] = value;
-                }
-                finally
-                {
-                    locker.ExitWriteLock();
                 }
             }
         }
@@ -79,14 +77,9 @@ namespace NitroxModel.DataStructures
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return dictionary.Count;
-                }
-                finally
-                {
-                    locker.ExitReadLock();
                 }
             }
         }
@@ -105,136 +98,81 @@ namespace NitroxModel.DataStructures
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 dictionary.Add(item);
-            }
-            finally
-            {
-                locker.ExitWriteLock();
             }
         }
 
         public void Clear()
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 dictionary.Clear();
-            }
-            finally
-            {
-                locker.ExitWriteLock();
             }
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return dictionary.Contains(item);
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 dictionary.CopyTo(array, arrayIndex);
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 return dictionary.Remove(item);
-            }
-            finally
-            {
-                locker.ExitWriteLock();
             }
         }
 
         public bool ContainsKey(TKey key)
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return dictionary.ContainsKey(key);
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
         public void Add(TKey key, TValue value)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 dictionary.Add(key, value);
-            }
-            finally
-            {
-                locker.ExitWriteLock();
             }
         }
 
         public bool Remove(TKey key)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 return dictionary.Remove(key);
-            }
-            finally
-            {
-                locker.ExitWriteLock();
             }
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return dictionary.TryGetValue(key, out value);
             }
-            finally
-            {
-                locker.ExitReadLock();
-            }
-        }
-
-        public void Dispose()
-        {
-            locker?.Dispose();
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return new Dictionary<TKey, TValue>(dictionary).GetEnumerator();
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
@@ -11,25 +10,69 @@ namespace NitroxModel.DataStructures
     [DebuggerDisplay("Items = {" + nameof(collection) + "}")]
     [ProtoContract]
     [Serializable]
-    public class ThreadSafeCollection<T> : IDisposable, IEnumerable<T>
+    public class ThreadSafeCollection<T> : IList<T>
     {
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         [ProtoMember(1)]
-        private readonly ICollection<T> collection;
+        private ICollection<T> collection;
 
-        private readonly ReaderWriterLockSlim locker = new ReaderWriterLockSlim();
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+        [ProtoIgnore]
+        private readonly object locker = new object();
+
+        void IList<T>.RemoveAt(int index)
+        {
+            lock (locker)
+            {
+                IList<T> asList = collection as IList<T>;
+                if (asList != null)
+                {
+                    asList.RemoveAt(index);
+                    return;
+                }
+
+                ICollection<T> set = CreateCopy(collection);
+                int currentIndex = 0;
+                foreach (T item in collection)
+                {
+                    if (index != currentIndex)
+                    {
+                        set.Add(item);
+                    }
+                    currentIndex++;
+                }
+                collection = set;
+            }
+        }
 
         public T this[int i]
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return collection.ElementAt(i);
                 }
-                finally
+            }
+            set
+            {
+                lock (locker)
                 {
-                    locker.ExitReadLock();
+                    IList<T> asList = collection as IList<T>;
+                    if (asList != null)
+                    {
+                        asList[i] = value;
+                        return;
+                    }
+                    
+                    ICollection<T> set = CreateCopy(collection);
+                    int currentIndex = 0;
+                    foreach (T item in collection)
+                    {
+                        set.Add(i == currentIndex ? value : item);
+                        currentIndex++;
+                    }
+                    collection = set;
                 }
             }
         }
@@ -38,21 +81,23 @@ namespace NitroxModel.DataStructures
         {
             get
             {
-                try
+                lock (locker)
                 {
-                    locker.EnterReadLock();
                     return collection.Count;
-                }
-                finally
-                {
-                    locker.ExitReadLock();
                 }
             }
         }
 
+        public bool IsReadOnly { get; } = false;
+
         public ThreadSafeCollection()
         {
             collection = new List<T>();
+        }
+
+        public ThreadSafeCollection(int initialCapacity)
+        {
+            collection = new List<T>(initialCapacity);
         }
 
         public ThreadSafeCollection(IEnumerable<T> collection, bool createCopy = true)
@@ -68,35 +113,90 @@ namespace NitroxModel.DataStructures
 
         public void Add(T item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 collection.Add(item);
             }
-            finally
+        }
+
+        public void Clear()
+        {
+            lock (locker)
             {
-                locker.ExitWriteLock();
+                collection.Clear();
+            }
+        }
+
+        public void CopyTo(T[] array, int arrayIndex)
+        {
+            lock (locker)
+            {
+                collection.CopyTo(array, arrayIndex);
             }
         }
 
         public bool Remove(T item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 return collection.Remove(item);
             }
-            finally
+        }
+
+        public int IndexOf(T item)
+        {
+            lock (locker)
             {
-                locker.ExitWriteLock();
+                IList<T> list = collection as IList<T>;
+                if (list != null)
+                {
+                    return list.IndexOf(item);
+                }
+
+                int index = 0;
+                foreach (T itemIn in collection)
+                {
+                    if (Equals(itemIn, item))
+                    {
+                        return index;
+                    }
+                    index++;
+                }
+                return -1;
+            }
+        }
+
+        public void Insert(int index, T item)
+        {
+            lock (locker)
+            {
+                IList<T> list = collection as IList<T>;
+                if (list != null)
+                {
+                    list.Insert(index, item);
+                    return;
+                }
+
+                ICollection<T> newSet = new HashSet<T>();
+                int currentIndex = 0;
+                foreach (T currentItem in collection)
+                {
+                    // Add before if at insert index.
+                    if (currentIndex == index)
+                    {
+                        newSet.Add(item);
+                    }
+                    newSet.Add(currentItem);
+                    currentIndex++;
+                }
+                collection = newSet;
             }
         }
 
         public bool RemoveAt(int index)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 IList<T> list = collection as IList<T>;
                 if (list != null)
                 {
@@ -111,69 +211,40 @@ namespace NitroxModel.DataStructures
                 }
                 return false;
             }
-            finally
-            {
-                locker.ExitWriteLock();
-            }
         }
 
         public bool Contains(T item)
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return collection.Contains(item);
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
         public T TryGetValue(int index, out bool succeeded)
         {
-            try
+            lock (locker)
             {
                 succeeded = false;
-                locker.EnterReadLock();
                 T result = collection.ElementAtOrDefault(index);
                 succeeded = !Equals(result, default(T));
                 return result;
             }
-            finally
-            {
-                locker.ExitReadLock();
-            }
-        }
-
-        public void Dispose()
-        {
-            locker?.Dispose();
         }
 
         public List<T> ToList()
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return new List<T>(collection);
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            try
+            lock (locker)
             {
-                locker.EnterReadLock();
                 return CreateCopy(collection).GetEnumerator();
-            }
-            finally
-            {
-                locker.ExitReadLock();
             }
         }
 
@@ -183,18 +254,27 @@ namespace NitroxModel.DataStructures
         /// <param name="items">Items to add onto the empty collection.</param>
         public void Set(IEnumerable<T> items)
         {
-            try
+            lock (locker)
             {
-                locker.EnterWriteLock();
                 collection.Clear();
                 foreach (T item in items)
                 {
                     collection.Add(item);
                 }
             }
-            finally
+        }
+
+        public void RemoveAll(Func<T, bool> predicate)
+        {
+            lock (locker)
             {
-                locker.ExitWriteLock();
+                foreach (T item in collection)
+                {
+                    if (predicate(item))
+                    {
+                        collection.Remove(item);
+                    }
+                }
             }
         }
 
@@ -210,25 +290,6 @@ namespace NitroxModel.DataStructures
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public void RemoveAll(Func<T, bool> predicate)
-        {
-            try
-            {
-                locker.EnterWriteLock();
-                foreach (T item in collection)
-                {
-                    if (predicate(item))
-                    {
-                        collection.Remove(item);
-                    }
-                }
-            }
-            finally
-            {
-                locker.ExitWriteLock();
-            }
         }
     }
 }

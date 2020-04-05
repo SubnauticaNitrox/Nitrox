@@ -40,7 +40,6 @@ namespace NitroxClient.GameLogic
             if (packetSender.Send(new ItemContainerRemove(GetOwner(containerTransform), itemId)))
             {
                 Log.Debug($"Sent: removed item '{pickupable.GetTechType()}' from container '{containerTransform.gameObject.GetHierarchyPath()}'");
-                Log.Debug(Environment.StackTrace);
             }
         }
 

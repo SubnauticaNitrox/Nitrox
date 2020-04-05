@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Packets;
@@ -37,10 +38,12 @@ namespace NitroxTest.Model.Packets
         [TestMethod]
         public void AllPacketsAreSerializable()
         {
-            typeof(Packet).Assembly.GetTypes()
+            foreach (Type packetType in typeof(Packet).Assembly.GetTypes()
                 .Where(p => typeof(Packet).IsAssignableFrom(p) && p.IsClass && !p.IsAbstract)
-                .ToList()
-                .ForEach(IsSerializable);
+                .ToList())
+            {
+                IsSerializable(packetType);
+            }
         }
 
         [TestMethod]
@@ -61,7 +64,8 @@ namespace NitroxTest.Model.Packets
             foreach (Type type in surrogates)
             {
                 ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
-                Type surrogatedType = type.BaseType.GetGenericArguments()[0];
+                Type surrogatedType = type.BaseType?.GetGenericArguments()[0];
+                surrogatedType.Should().NotBeNull();
                 surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
             }
 
