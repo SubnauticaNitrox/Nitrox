@@ -37,8 +37,7 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             {
                 return false;
             }
-
-            Log.Info("Using LiteNetLib as networking library");
+            
             isStopped = false;
             return true;
         }
