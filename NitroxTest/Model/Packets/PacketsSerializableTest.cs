@@ -14,7 +14,7 @@ namespace NitroxTest.Model.Packets
     [TestClass]
     public class PacketsSerializableTest
     {
-        private HashSet<Type> visitedTypes = new HashSet<Type>();
+        private readonly HashSet<Type> visitedTypes = new HashSet<Type>();
 
         public void IsSerializable(Type t)
         {
