@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
+                Log.Warn($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
                 return;
             }
 
