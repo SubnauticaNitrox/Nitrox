@@ -269,8 +269,15 @@ namespace NitroxServer.GameLogic.Bases
                     // this does mean anything over 0% will be loaded to 100%
                     partialBasePiece.ConstructionAmount = 1.0f;
                     partialBasePiece.ConstructionCompleted = true;
+                    if (partialBasePiece.ConstructionAmount < 0.5)
+                    {
+                        partialBasePiece.ConstructionAmount = 0f;
+                        partialBasePiece.ConstructionCompleted = false;
+                    }
                     //adds partial pieces as normal but prevents duplicates from the previous code
-                    if (basePieces.Contains(partialBasePiece) == false)
+                    //and prevents anything less than 50% from being added
+                    //that part AND partiallyConstructedPiecesById.Clear(); may or may not be able to be removed
+                    if (basePieces.Contains(partialBasePiece) == false && partialBasePiece.ConstructionAmount > 0.5f)
                     {
                         basePieces.Add(partialBasePiece);
                     }
