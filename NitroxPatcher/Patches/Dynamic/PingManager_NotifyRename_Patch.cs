@@ -13,7 +13,6 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(PingManager);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod(nameof(PingManager.NotifyRename), BindingFlags.Public | BindingFlags.Static);
-        private static IPacketSender packetSender;
 
         public static void Postfix(PingInstance instance)
         {
@@ -21,12 +20,7 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return;
             }
-
-            if (packetSender == null)
-            {
-                packetSender = NitroxServiceLocator.LocateService<IPacketSender>();
-            }
-            packetSender.Send(new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject)));
+            NitroxServiceLocator.LocateService<IPacketSender>().Send(new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject)));
         }
 
         public override void Patch(HarmonyInstance harmony)
