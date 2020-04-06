@@ -8,9 +8,8 @@ namespace NitroxModel.Server
     public class ServerConfig
     {
         private readonly ServerConfigItem<bool> disableConsoleSetting;
-        private readonly ServerConfigItem<string> gameModeSetting;
         private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
-        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting;
+        private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting, gameModeSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
 
         public ServerConfig(): this(
