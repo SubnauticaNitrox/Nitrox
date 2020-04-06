@@ -9,7 +9,7 @@ namespace NitroxServer.Communication.Packets.Processors
 {
     public class MultiplayerSessionReservationRequestProcessor : UnauthenticatedPacketProcessor<MultiplayerSessionReservationRequest>
     {
-        private PlayerManager playerManager;
+        private readonly PlayerManager playerManager;
 
         public MultiplayerSessionReservationRequestProcessor(PlayerManager playerManager)
         {

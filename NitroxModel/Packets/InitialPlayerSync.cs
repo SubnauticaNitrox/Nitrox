@@ -1,17 +1,18 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-using NitroxModel.DataStructures.Util;
+using System.Linq;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class InitialPlayerSync : Packet
     {
-        public List<EscapePodModel> EscapePodsData { get; }
         public NitroxId AssignedEscapePodId;
+        public List<EscapePodModel> EscapePodsData { get; }
         public List<EquippedItemData> EquippedItems { get; }
         public List<EquippedItemData> Modules { get; }
         public List<BasePiece> BasePieces { get; }
@@ -30,25 +31,43 @@ namespace NitroxModel.Packets
         public string GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(NitroxId playerGameObjectId, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, NitroxId assignedEscapePodId, List<EquippedItemData> equipment, List<EquippedItemData> modules, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPDAData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<NitroxId> playerSubRootId, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(NitroxId playerGameObjectId,
+            bool firstTimeConnecting,
+            IEnumerable<EscapePodModel> escapePodsData,
+            NitroxId assignedEscapePodId,
+            IEnumerable<EquippedItemData> equipment,
+            IEnumerable<EquippedItemData> modules,
+            IEnumerable<BasePiece> basePieces,
+            IEnumerable<VehicleModel> vehicles,
+            IEnumerable<ItemData> inventoryItems,
+            IEnumerable<ItemData> storageSlots,
+            InitialPDAData pdaData,
+            InitialStoryGoalData storyGoalData,
+            Vector3 playerSpawnData,
+            Optional<NitroxId> playerSubRootId,
+            PlayerStatsData playerStatsData,
+            IEnumerable<InitialRemotePlayerData> remotePlayerData,
+            IEnumerable<Entity> globalRootEntities,
+            string gameMode,
+            Perms perms)
         {
-            EscapePodsData = escapePodsData;
+            EscapePodsData = escapePodsData.ToList();
             AssignedEscapePodId = assignedEscapePodId;
             PlayerGameObjectId = playerGameObjectId;
             FirstTimeConnecting = firstTimeConnecting;
-            EquippedItems = equipment;
-            Modules = modules;
-            BasePieces = basePieces;
-            Vehicles = vehicles;
-            InventoryItems = inventoryItems;
-            StorageSlots = storageSlots;
+            EquippedItems = equipment.ToList();
+            Modules = modules.ToList();
+            BasePieces = basePieces.ToList();
+            Vehicles = vehicles.ToList();
+            InventoryItems = inventoryItems.ToList();
+            StorageSlots = storageSlots.ToList();
             PDAData = pdaData;
             StoryGoalData = storyGoalData;
             PlayerSpawnData = playerSpawnData;
             PlayerSubRootId = playerSubRootId;
             PlayerStatsData = playerStatsData;
-            RemotePlayerData = remotePlayerData;
-            GlobalRootEntities = globalRootEntities;
+            RemotePlayerData = remotePlayerData.ToList();
+            GlobalRootEntities = globalRootEntities.ToList();
             GameMode = gameMode;
             Permissions = perms;
         }

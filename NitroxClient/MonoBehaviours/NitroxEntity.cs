@@ -72,7 +72,7 @@ namespace NitroxClient.MonoBehaviours
         public static NitroxId GetId(GameObject gameObject)
         {
             NitroxEntity entity = gameObject.GetComponent<NitroxEntity>();
-            if (entity != null)
+            if (entity)
             {
                 return entity.Id;
             }

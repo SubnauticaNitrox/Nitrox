@@ -22,10 +22,8 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             listener = new EventBasedNetListener();
             server = new NetManager(listener);
         }
-        public override void Start()
+        public override bool Start()
         {
-            Log.Info("Using LiteNetLib as networking library");
-
             listener.PeerConnectedEvent += PeerConnected;
             listener.PeerDisconnectedEvent += PeerDisconnected;
             listener.NetworkReceiveEvent += NetworkDataReceived;
@@ -35,9 +33,13 @@ namespace NitroxServer.Communication.NetworkingLayer.LiteNetLib
             server.UnconnectedMessagesEnabled = true;
             server.UpdateTime = 15;
             server.UnsyncedEvents = true;
-            server.Start(portNumber);
-
+            if (!server.Start(portNumber))
+            {
+                return false;
+            }
+            
             isStopped = false;
+            return true;
         }
 
         public override void Stop()

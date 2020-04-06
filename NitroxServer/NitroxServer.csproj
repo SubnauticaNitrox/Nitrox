@@ -319,6 +319,7 @@
     <Compile Include="ConsoleCommands\LoginCommand.cs" />
     <Compile Include="ConsoleCommands\OpCommand.cs" />
     <Compile Include="ConsoleCommands\BroadcastCommand.cs" />
+    <Compile Include="ConsoleCommands\SummaryCommand.cs" />
     <Compile Include="ConsoleCommands\TimeCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />

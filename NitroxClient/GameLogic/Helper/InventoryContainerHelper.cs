@@ -12,13 +12,11 @@ namespace NitroxClient.GameLogic.Helper
             {
                 return Optional.Of(seamothStorageContainer.container);
             }
-
             StorageContainer storageContainer = owner.GetComponentInChildren<StorageContainer>();
             if (storageContainer != null)
             {
                 return Optional.Of(storageContainer.container);
             }
-
             if (owner.name == "Player")
             {
                 return Optional.Of(Inventory.Get().container);

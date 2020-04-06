@@ -15,7 +15,6 @@ using NitroxServer.ConfigParser;
 using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
 
@@ -45,7 +44,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.WorldData.InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems());
                 persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
                 persistedData.WorldData.GameData = world.GameData;
-                persistedData.WorldData.EscapePodData = EscapePodData.from(world.EscapePodManager.GetEscapePods());
+                persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
 
                 if (!Directory.Exists(config.SaveName))
                 {
@@ -156,7 +155,6 @@ namespace NitroxServer.Serialization.World
         public World Load()
         {
             Optional<World> fileLoadedWorld = LoadFromFile();
-
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

@@ -1,7 +1,7 @@
-﻿using NitroxModel.DataStructures.Util;
-using ProtoBufNet;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.Util;
+using ProtoBufNet;
 using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -23,7 +23,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public Quaternion Rotation { get; set; }
 
         [ProtoMember(5)]
-        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; set; } = new List<InteractiveChildObjectIdentifier>();
+        public ThreadSafeCollection<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
 
         [ProtoMember(6)]
         public Optional<NitroxId> DockingBayId { get; set; }
@@ -42,17 +42,19 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public VehicleModel()
         {
-            InteractiveChildIdentifiers = new List<InteractiveChildObjectIdentifier>();
+            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional.Empty;
         }
 
-        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
+        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,
+            Vector3[] colours,
+            float health)
         {
             TechType = techType;
             Id = id;
             Position = position;
             Rotation = rotation;
-            InteractiveChildIdentifiers = interactiveChildIdentifiers;
+            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>(interactiveChildIdentifiers);
             DockingBayId = dockingBayId;
             Name = name;
             HSB = hsb;

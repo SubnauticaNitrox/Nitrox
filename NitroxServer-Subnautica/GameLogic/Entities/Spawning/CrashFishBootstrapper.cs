@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
-using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers

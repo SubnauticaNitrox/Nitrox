@@ -121,8 +121,7 @@ namespace NitroxServer.GameLogic.Entities
             entity.Transform.Rotation = rotation;
 
             AbsoluteEntityCell newCell = entity.AbsoluteEntityCell;
-
-            if (!Equals(oldCell, newCell))
+            if (oldCell != newCell)
             {
                 EntitySwitchedCells(entity, oldCell, newCell);
             }
