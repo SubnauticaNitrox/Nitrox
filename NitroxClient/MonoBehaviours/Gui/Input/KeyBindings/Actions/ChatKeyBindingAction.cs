@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
 {
@@ -6,7 +7,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
     {
         public override void Execute()
         {
-            PlayerChatManager.Main.SelectChat();
+            // If no other UWE input field is currently active then allow chat to open.
+            if (FPSInputModule.current.lastGroup == null)
+            {
+                NitroxServiceLocator.LocateService<PlayerChatManager>().SelectChat();
+            }
         }
     }
 }

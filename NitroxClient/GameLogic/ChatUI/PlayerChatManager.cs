@@ -1,170 +1,87 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Chat;
-using NitroxModel.Core;
-using NitroxModel.Logger;
+using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace NitroxClient.GameLogic.ChatUI
 {
     public class PlayerChatManager
     {
-        private static PlayerChatManager main;
-        public static PlayerChatManager Main
+        public PlayerChatManager(IMultiplayerSession multiplayerSession)
         {
-            get
-            {
-                if (main == null)
-                {
-                    main = new PlayerChatManager
-                    {
-                        session = NitroxServiceLocator.LocateService<IMultiplayerSession>()
-                    };
-                    Player.main.StartCoroutine(main.LoadChatLogAsset());
-                }
-
-                return main;
-            }
+            this.multiplayerSession = multiplayerSession;
+            Player.main.StartCoroutine(LoadChatLogAsset());
         }
 
-        public PlayerChat PlayerChat;
-        private IMultiplayerSession session;
-        private static readonly string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private PlayerChat playerChat;
+        public Transform PlayerChaTransform => playerChat.transform;
+        private readonly IMultiplayerSession multiplayerSession;
 
-        private bool finishedLoading;
-        private bool showChatAfterLoading;
-        private bool selectChatAfterLoading;
-        private List<ChatLogEntry> entriesBeforeFinishedLoading = new List<ChatLogEntry>();
-
-        public void ShowChat()
+        public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
+        private IEnumerator ShowChatAsync()
         {
-            if (finishedLoading)
+            while (PlayerChat.IsLoading)
             {
-                PlayerChat.Show();
+                yield return null;
             }
-            else
-            {
-                showChatAfterLoading = true;
-            }
+            playerChat.Show();
         }
 
-        public void HideChat()
+        public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
+        private IEnumerator HideChatAsync()
         {
-            if (finishedLoading)
+            while (PlayerChat.IsLoading)
             {
-                PlayerChat.Deselect();
-                PlayerChat.Hide();
+                yield return null;
             }
+            playerChat.Deselect();
+            playerChat.Hide();
         }
 
-        public void SelectChat()
+        public void SelectChat() => Player.main.StartCoroutine(SelectChatAsync());
+        private IEnumerator SelectChatAsync()
         {
-            if (finishedLoading)
+            while (PlayerChat.IsLoading)
             {
-                PlayerChat.Show();
-                PlayerChat.Select();
+                yield return null;
             }
-            else
-            {
-                selectChatAfterLoading = true;
-            }
+            playerChat.Show();
+            playerChat.Select();
         }
 
-        public void AddMessage(string playerName, string message, Color color)
+        public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
+        private IEnumerator AddMessageAsync(string playerName, string message, Color color)
         {
-            ChatLogEntry entry = new ChatLogEntry(playerName, message, color);
+            while (PlayerChat.IsLoading)
+            {
+                yield return null;
+            }
 
-            if (finishedLoading)
-            {
-                PlayerChat.WriteLogEntry(entry);
-            }
-            else
-            {
-                entriesBeforeFinishedLoading.Add(entry);
-            }
+            playerChat.WriteLogEntry(playerName, message, color);
         }
 
-        public void SendMessage(string message)
+        public void SendMessage()
         {
-            session.Send(new ChatMessage(session.Reservation.PlayerId, message));
-            PlayerChat.WriteLogEntry(new ChatLogEntry(session.AuthenticationContext.Username, message, session.PlayerSettings.PlayerColor));
+            if (playerChat.inputText.Trim() != "")
+            {
+                multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, playerChat.inputText));
+                playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.inputText, multiplayerSession.PlayerSettings.PlayerColor);
+                playerChat.inputText = "";
+            }
+            playerChat.Select();
         }
 
         private IEnumerator LoadChatLogAsset()
         {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assemblyPath, "../../AssetBundles/chatlog"));
-            if (assetRequest == null)
-            {
-                Log.Error("Failed to load AssetBundle!");
-                yield break;
-            }
+            CoroutineWithData coroutineWD = new CoroutineWithData(Player.main, AssetBundleLoader.LoadUIAsset("chatlog", "PlayerChatCanvas"));
+            yield return coroutineWD.Coroutine;
 
-            while (!assetRequest.isDone)
-            {
-                yield return null;
-            }
-
-            string sceneName = assetRequest.assetBundle.GetAllScenePaths().First();
-            Log.Debug($"Trying to load scene: {sceneName}");
-            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-
-            GameObject oldPlayerChatCanvas = GameObject.Find("PlayerChatCanvas");
-            Transform playerChatRoot = oldPlayerChatCanvas.transform.GetChild(0);
-            playerChatRoot.SetParent(uGUI.main.screenCanvas.transform, false);
-            Object.Destroy(oldPlayerChatCanvas);
-
-            PlayerChat = playerChatRoot.gameObject.AddComponent<PlayerChat>();
-            yield return PlayerChat.SetupChatComponents();
-
-            foreach (ChatLogEntry entry in entriesBeforeFinishedLoading)
-            {
-                PlayerChat.WriteLogEntry(entry);
-            }
-            entriesBeforeFinishedLoading.Clear();
-            finishedLoading = true;
-            yield return new WaitForEndOfFrame();
-
-            if (selectChatAfterLoading)
-            {
-                SelectChat();
-            }
-            else if (showChatAfterLoading)
-            {
-                ShowChat();
-            }
+            playerChat = ((GameObject)coroutineWD.Result).gameObject.AddComponent<PlayerChat>();
+            yield return playerChat.SetupChatComponents();
         }
 
-
-        public static void LoadChatKeyHint() => Player.main.StartCoroutine(LoadChatKeyHintAsset());
-
-        private static IEnumerator LoadChatKeyHintAsset()
-        {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assemblyPath, "../../AssetBundles/chatkeyhint"));
-            if (assetRequest == null)
-            {
-                Log.Error("Failed to load AssetBundle!");
-                yield break;
-            }
-
-            while (!assetRequest.isDone)
-            {
-                yield return null;
-            }
-
-            string sceneName = assetRequest.assetBundle.GetAllScenePaths().First();
-            Log.Debug($"Trying to load scene: {sceneName}");
-            yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-
-            GameObject oldPlayerChatCanvas = GameObject.Find("ChatKeyCanvas");
-            Transform playerChatRoot = oldPlayerChatCanvas.transform.GetChild(0);
-            playerChatRoot.SetParent(uGUI.main.screenCanvas.transform, false);
-            Object.Destroy(oldPlayerChatCanvas);
-        }
+        public static void LoadChatKeyHint() => Player.main.StartCoroutine(AssetBundleLoader.LoadUIAsset("chatkeyhint", "ChatKeyCanvas"));
     }
 }

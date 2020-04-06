@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,13 +7,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
     public class PlayerChatInputField : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
+        private PlayerChatManager playerChatManager;
         private bool selected;
         private static float timeLeftUntilAutoClose;
         public static bool FreezeTime;
 
+        private void Awake()
+        {
+            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+        }
+
         public void OnSelect(BaseEventData eventData)
         {
-            PlayerChatManager.Main.SelectChat();
+            playerChatManager.SelectChat();
             selected = true;
             ResetTimer();
         }
@@ -28,7 +35,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             FreezeTime = false;
         }
 
-        private void LateUpdate()
+        private void Update()
         {
             if (FreezeTime)
             {
@@ -39,7 +46,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             {
                 if (UnityEngine.Input.GetKey(KeyCode.Return))
                 {
-                    PlayerChatManager.Main.PlayerChat.SendChatMessage();
+                    playerChatManager.SendMessage();
                 }
             }
             else
@@ -47,7 +54,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 timeLeftUntilAutoClose -= Time.unscaledDeltaTime;
                 if (timeLeftUntilAutoClose <= 0)
                 {
-                    PlayerChatManager.Main.HideChat();
+                    playerChatManager.HideChat();
                     FreezeTime = true;
                 }
             }

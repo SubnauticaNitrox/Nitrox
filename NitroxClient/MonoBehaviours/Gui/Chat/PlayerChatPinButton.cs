@@ -1,4 +1,5 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,14 +7,20 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
     public class PlayerChatPinButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
-        private static Transform chatTransform => PlayerChatManager.Main.PlayerChat.transform;
-        private readonly Vector2 screenRes = new Vector2(Screen.currentResolution.width, Screen.currentResolution.height);
+        private static PlayerChatManager playerChatManager;
+
+        private Vector2 screenRes = new Vector2(1920, 1200);
         private bool drag;
 
+        private void Awake()
+        {
+            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+        }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             drag = true;
+            screenRes.y = (screenRes.x / Screen.width) * Screen.height;
             PlayerChatInputField.FreezeTime = true;
         }
 
@@ -23,18 +30,18 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             PlayerChatInputField.FreezeTime = false;
             PlayerChatInputField.ResetTimer();
 
-            if (Mathf.Abs(chatTransform.localPosition.x * 2) >= screenRes.x || Mathf.Abs(chatTransform.localPosition.y * 2) >= screenRes.y)
+            if (Mathf.Abs(playerChatManager.PlayerChaTransform.localPosition.x * 2) >= screenRes.x || Mathf.Abs(playerChatManager.PlayerChaTransform.localPosition.y * 2) >= screenRes.y)
             {
-                chatTransform.localPosition = new Vector3(-500, 125, 0);
+                playerChatManager.PlayerChaTransform.localPosition = new Vector3(-500, 125, 0);
             }
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (drag)
             {
                 Vector3 viewport = Camera.main.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
-                chatTransform.localPosition = new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
+                playerChatManager.PlayerChaTransform.localPosition = new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
             }
         }
     }

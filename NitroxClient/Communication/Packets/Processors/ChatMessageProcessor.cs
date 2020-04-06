@@ -3,6 +3,7 @@ using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.ChatUI;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
@@ -13,12 +14,14 @@ namespace NitroxClient.Communication.Packets.Processors
     class ChatMessageProcessor : ClientPacketProcessor<ChatMessage>
     {
         private readonly PlayerManager remotePlayerManager;
+        private readonly PlayerChatManager playerChatManager;
 
         private readonly Color32 serverMessageColor = new Color32(0x8c, 0x00, 0xFF, 0xFF);
 
-        public ChatMessageProcessor(PlayerManager remotePlayerManager)
+        public ChatMessageProcessor(PlayerManager remotePlayerManager, PlayerChatManager playerChatManager)
         {
             this.remotePlayerManager = remotePlayerManager;
+            this.playerChatManager = playerChatManager;
         }
 
         public override void Process(ChatMessage message)
@@ -44,14 +47,14 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             RemotePlayer remotePlayerInstance = remotePlayer.Value;
-            PlayerChatManager.Main.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
-            PlayerChatManager.Main.ShowChat();
+            playerChatManager.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
+            playerChatManager.ShowChat();
         }
 
         private void LogServerMessage(ChatMessage message)
         {
-            PlayerChatManager.Main.AddMessage("Server", message.Text, serverMessageColor);
-            PlayerChatManager.Main.ShowChat();
+            playerChatManager.AddMessage("Server", message.Text, serverMessageColor);
+            playerChatManager.ShowChat();
         }
     }
 }
