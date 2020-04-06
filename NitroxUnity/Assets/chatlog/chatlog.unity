@@ -925,7 +925,7 @@ CanvasGroup:
   m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  m_IgnoreParentGroups: 1
 --- !u!1 &814528548
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,7 +1660,7 @@ MonoBehaviour:
     m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 21300000, guid: 2dcdb99b83d876d4fb92df8da3ed1197, type: 3}
+    m_PressedSprite: {fileID: 21300000, guid: 5c90817e38d7e4d45ba4cd57e0e14aa8, type: 3}
     m_SelectedSprite: {fileID: 0}
     m_DisabledSprite: {fileID: 0}
   m_AnimationTriggers:
@@ -1692,7 +1692,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 731c61a519ae534498df6ef36b15cd31, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1f937adb8b859b24bb63cbbf98adf373, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

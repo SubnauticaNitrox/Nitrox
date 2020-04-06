@@ -26,7 +26,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
 
             playerName.text = chatLogEntry.PlayerName;
-            playerName.color = chatLogEntry.Color;
+            playerName.color = chatLogEntry.PlayerColor;
             time.text = chatLogEntry.Time;
             message.text = chatLogEntry.MessageText;
             gameObject.SetActive(true);

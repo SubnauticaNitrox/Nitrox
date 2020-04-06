@@ -1,5 +1,4 @@
 ﻿using NitroxClient.GameLogic.ChatUI;
-using NitroxModel.Core;
 
 namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
 {
@@ -7,8 +6,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
     {
         public override void Execute()
         {
-            PlayerChat chatManager = NitroxServiceLocator.LocateService<PlayerChat>();
-            chatManager.ShowChat();
+            PlayerChatManager.Main.SelectChat();
         }
     }
 }

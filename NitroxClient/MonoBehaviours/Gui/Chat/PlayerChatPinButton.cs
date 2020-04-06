@@ -25,7 +25,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
             if (Mathf.Abs(chatTransform.localPosition.x * 2) >= screenRes.x || Mathf.Abs(chatTransform.localPosition.y * 2) >= screenRes.y)
             {
-                chatTransform.localPosition = new Vector3(-500,125,0);
+                chatTransform.localPosition = new Vector3(-500, 125, 0);
             }
         }
 

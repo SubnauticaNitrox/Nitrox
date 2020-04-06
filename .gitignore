@@ -309,6 +309,6 @@ NitroxUnity/*.svd
 NitroxUnity/*.pdb
 NitroxUnity/*.opendb
 
-# NitroxUnity: Builded Files
-Assets/AssetBundles/
-Assets/AssetBundles.meta
+# NitroxUnity: Built Files
+NitroxUnity/AssetBundles/
+NitroxUnity/ProjectSettings/*.asset

@@ -27,7 +27,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         public IEnumerator SetupChatComponents()
         {
             canvasGroup = GetComponent<CanvasGroup>();
-            canvasGroup.alpha = 0;
+            canvasGroup.alpha = 0f;
 
             layoutGroups = GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
 
@@ -66,8 +66,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             StartCoroutine(UpdateChatEntrySpacing());
         }
 
-        // ReSharper disable once Unity.InefficientPropertyAccess
-        // Updates the layout sorting algorithm from Unity to prevent "loss" of text messages.
+        /// Updates the layout sorting algorithm from Unity to prevent "loss" of text messages.
         private IEnumerator UpdateChatEntrySpacing()
         {
             yield return new WaitForEndOfFrame();
@@ -90,17 +89,26 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 inputField.text = "";
             }
         }
-
-        public void SelectChat()
+        public void Show()
         {
-            Select(true);
+            PlayerChatInputField.ResetTimer();
+            StartCoroutine(ToggleTransparencyCanvasGroup(true));
+        }
+        public void Hide()
+        {
+            StartCoroutine(ToggleTransparencyCanvasGroup(false));
+        }
+
+        public void Select()
+        {
+            base.Select(true);
             inputField.Select();
             inputField.ActivateInputField();
         }
 
-        public void DeselectChat()
+        public void Deselect()
         {
-            Deselect();
+            base.Deselect();
             EventSystem.current.SetSelectedGameObject(null);
         }
 
@@ -121,14 +129,23 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
         }
 
-        public IEnumerator ToggleTransparencyCanvasGroup(float finalAlpha)
+        private IEnumerator ToggleTransparencyCanvasGroup(bool fadeIn)
         {
-            float step = finalAlpha == 1f ? 0.01f : -0.01f;
-
-            while (canvasGroup.alpha != finalAlpha)
+            if (fadeIn)
             {
-                canvasGroup.alpha += step;
-                yield return new WaitForSeconds(0.004f);
+                while (canvasGroup.alpha < 1f)
+                {
+                    canvasGroup.alpha += 0.01f;
+                    yield return new WaitForSeconds(0.0005f);
+                }
+            }
+            else
+            {
+                while (canvasGroup.alpha > 0f)
+                {
+                    canvasGroup.alpha -= 0.01f;
+                    yield return new WaitForSeconds(0.005f);
+                }
             }
         }
     }

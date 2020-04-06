@@ -35,6 +35,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public PlayerChat PlayerChat;
         private IMultiplayerSession session;
+        private static readonly string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         private bool finishedLoading;
         private bool showChatAfterLoading;
@@ -45,8 +46,7 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (finishedLoading)
             {
-                PlayerChat.SelectChat();
-                PlayerChat.StartCoroutine(PlayerChat.ToggleTransparencyCanvasGroup(1f));
+                PlayerChat.Show();
             }
             else
             {
@@ -58,8 +58,8 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (finishedLoading)
             {
-                PlayerChat.DeselectChat();
-                PlayerChat.StartCoroutine(PlayerChat.ToggleTransparencyCanvasGroup(0f));
+                PlayerChat.Deselect();
+                PlayerChat.Hide();
             }
         }
 
@@ -67,8 +67,8 @@ namespace NitroxClient.GameLogic.ChatUI
         {
             if (finishedLoading)
             {
-                ShowChat();
-                PlayerChat.SelectChat();
+                PlayerChat.Show();
+                PlayerChat.Select();
             }
             else
             {
@@ -98,7 +98,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles/chatlog"));
+            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assemblyPath, "../../AssetBundles/chatlog"));
             if (assetRequest == null)
             {
                 Log.Error("Failed to load AssetBundle!");
@@ -145,7 +145,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private static IEnumerator LoadChatKeyHintAsset()
         {
-            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles/chatkeyhint"));
+            AssetBundleCreateRequest assetRequest = AssetBundle.LoadFromFileAsync(Path.Combine(assemblyPath, "../../AssetBundles/chatkeyhint"));
             if (assetRequest == null)
             {
                 Log.Error("Failed to load AssetBundle!");
