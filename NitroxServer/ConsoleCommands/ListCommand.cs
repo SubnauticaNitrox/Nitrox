@@ -1,6 +1,7 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
@@ -18,11 +19,10 @@ namespace NitroxServer.ConsoleCommands
 
         public override void RunCommand(string[] args, Optional<Player> sender)
         {
-            List<Player> players = playerManager.GetConnectedPlayers();
-
+            IEnumerable<Player> players = playerManager.GetConnectedPlayers();
             string playerList = "List of players : " + string.Join(", ", players);
 
-            if (players.Count == 0)
+            if (!players.Any())
             {
                 playerList += "No players online";
             }

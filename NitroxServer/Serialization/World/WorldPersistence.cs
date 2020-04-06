@@ -14,7 +14,6 @@ using NitroxServer.GameLogic.Unlockables;
 using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
-using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
@@ -40,12 +39,12 @@ namespace NitroxServer.Serialization.World
                 persistedData.WorldData.ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches;
                 persistedData.WorldData.ServerStartTime = world.TimeKeeper.ServerStartTime;
                 persistedData.WorldData.EntityData = EntityData.From(world.EntityManager.GetAllEntities());
-                persistedData.BaseData = BaseData.from(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory());
+                persistedData.BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory());
                 persistedData.WorldData.VehicleData = VehicleData.From(world.VehicleManager.GetVehicles());
                 persistedData.WorldData.InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems());
                 persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
                 persistedData.WorldData.GameData = world.GameData;
-                persistedData.WorldData.EscapePodData = EscapePodData.from(world.EscapePodManager.GetEscapePods());
+                persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
 
                 if (!Directory.Exists(config.SaveName))
                 {
@@ -156,7 +155,6 @@ namespace NitroxServer.Serialization.World
         public World Load()
         {
             Optional<World> fileLoadedWorld = LoadFromFile();
-
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

@@ -262,6 +262,8 @@
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
     <Compile Include="DataStructures\TechType.cs" />
+    <Compile Include="DataStructures\ThreadSafeCollection.cs" />
+    <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />
     <Compile Include="Discovery\IFindGameInstallation.cs" />
     <Compile Include="Discovery\InstallationFinders\GameInCurrentDirectoryFinder.cs" />
@@ -277,6 +279,7 @@
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
+    <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />

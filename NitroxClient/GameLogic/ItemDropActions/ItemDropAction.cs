@@ -7,7 +7,7 @@ namespace NitroxClient.GameLogic.ItemDropActions
     {
         public abstract void ProcessDroppedItem(GameObject gameObject);
 
-        private static Dictionary<TechType, ItemDropAction> dropActionsByTechType = new Dictionary<TechType, ItemDropAction>()
+        private static readonly Dictionary<TechType, ItemDropAction> dropActionsByTechType = new Dictionary<TechType, ItemDropAction>()
         {
             { TechType.Constructor, new ConstructorDropAction() }
         };

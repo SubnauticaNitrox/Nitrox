@@ -30,7 +30,7 @@ namespace NitroxServer.Communication.NetworkingLayer
             maxConn = serverConfig.MaxConnections;
         }
 
-        public abstract void Start();
+        public abstract bool Start();
 
         public abstract void Stop();
         

@@ -1,6 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
-using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic.Items
 {
@@ -13,13 +14,22 @@ namespace NitroxServer.GameLogic.Items
         [ProtoMember(2)]
         public List<ItemData> StorageSlotItems = new List<ItemData>();
 
-        public static InventoryData From(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
+        private InventoryData()
         {
-            InventoryData inventoryData = new InventoryData();
-            inventoryData.InventoryItems = inventoryItems;
-            inventoryData.StorageSlotItems = storageSlotItems;
+        }
 
-            return inventoryData;
+        public static InventoryData From(IEnumerable<ItemData> inventoryItems, IEnumerable<ItemData> storageSlotItems)
+        {
+            return new InventoryData
+            {
+                InventoryItems = inventoryItems.ToList(),
+                StorageSlotItems = storageSlotItems.ToList()
+            };
+        }
+
+        public override string ToString()
+        {
+            return $"[{nameof(InventoryData)} - {nameof(InventoryItems)}: {InventoryItems.Count}, {nameof(StorageSlotItems)}: {StorageSlotItems.Count}]";
         }
     }
 }

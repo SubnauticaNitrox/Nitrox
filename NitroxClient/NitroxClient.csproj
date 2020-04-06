@@ -234,6 +234,7 @@
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
@@ -453,7 +454,7 @@
     <Compile Include="GameLogic\Spawning\ReefbackEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\CrashEntitySpawner.cs" />
     <Compile Include="GameLogic\Spawning\DefaultEntitySpawner.cs" />
-    <Compile Include="GameLogic\Spawning\EntitySpawner.cs" />
+    <Compile Include="GameLogic\Spawning\IEntitySpawner.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\StillSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\Terrain.cs" />
     <Compile Include="GameLogic\Vehicles.cs" />

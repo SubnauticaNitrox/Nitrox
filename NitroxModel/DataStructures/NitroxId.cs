@@ -6,6 +6,9 @@ using ProtoBufNet;
 
 namespace NitroxModel.DataStructures
 {
+    /// <summary>
+    ///     Used to reference a Unity GameObject and makes it possible to synchronize a GameObject between connected players.
+    /// </summary>
     [ProtoContract]
     [Serializable]
     public class NitroxId : ISerializable
@@ -19,7 +22,7 @@ namespace NitroxModel.DataStructures
         }
 
         /// <summary>
-        /// Create a NitroxId from a string
+        ///     Create a NitroxId from a string
         /// </summary>
         /// <param name="str">a NitroxID as string</param>
         public NitroxId(string str)
@@ -38,6 +41,24 @@ namespace NitroxModel.DataStructures
             guid = new Guid(bytes);
         }
 
+        public static bool operator ==(NitroxId id1, NitroxId id2)
+        {
+            if (ReferenceEquals(id1, null))
+            {
+                if (ReferenceEquals(id2, null))
+                {
+                    return true;
+                }
+                return false;
+            }
+            return id1.Equals(id2);
+        }
+
+        public static bool operator !=(NitroxId id1, NitroxId id2)
+        {
+            return !(id1 == id2);
+        }
+
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -50,24 +71,6 @@ namespace NitroxModel.DataStructures
 
             return id != null &&
                    guid.Equals(id.guid);
-        }
-
-        public static bool operator ==(NitroxId id1, NitroxId id2)
-        {
-            if (Object.ReferenceEquals(id1, null))
-            {
-                if (Object.ReferenceEquals(id2, null))
-                {
-                    return true;
-                }
-                return false;
-            }
-            return id1.Equals(id2);
-        }
-
-        public static bool operator !=(NitroxId id1, NitroxId id2)
-        {
-            return !(id1 == id2);
         }
 
         public override int GetHashCode()

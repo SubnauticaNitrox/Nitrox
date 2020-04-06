@@ -43,7 +43,6 @@ namespace NitroxClient.GameLogic
             EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
             Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
-
             if (rigidbody != null)
             {
                 Log.Debug("Freezing escape pod rigidbody");
@@ -93,7 +92,7 @@ namespace NitroxClient.GameLogic
             }
             else
             {
-                escapePod = UnityEngine.Object.Instantiate(EscapePod.main.gameObject);
+                escapePod = Object.Instantiate(EscapePod.main.gameObject);
             }
 
             escapePod.transform.position = model.Location;

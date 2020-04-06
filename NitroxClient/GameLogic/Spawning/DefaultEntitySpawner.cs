@@ -36,7 +36,7 @@ namespace NitroxClient.GameLogic.Spawning
                 gameObject.transform.SetParent(parent.Value.transform, true);
             }
 
-            if (parent.HasValue && parent.Value.GetComponent<LargeWorldEntityCell>() != null)
+            if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }

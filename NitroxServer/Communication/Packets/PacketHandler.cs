@@ -13,8 +13,8 @@ namespace NitroxServer.Communication.Packets
 {
     public class PacketHandler
     {
-        private PlayerManager playerManager;
-        private DefaultServerPacketProcessor defaultServerPacketProcessor;
+        private readonly PlayerManager playerManager;
+        private readonly DefaultServerPacketProcessor defaultServerPacketProcessor;
 
         public PacketHandler(PlayerManager playerManager, DefaultServerPacketProcessor packetProcessor)
         {
@@ -25,7 +25,6 @@ namespace NitroxServer.Communication.Packets
         public void Process(Packet packet, NitroxConnection connection)
         {
             Player player = playerManager.GetPlayer(connection);
-
             if (player == null)
             {
                 ProcessUnauthenticated(packet, connection);

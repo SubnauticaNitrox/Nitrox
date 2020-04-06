@@ -23,6 +23,7 @@ namespace NitroxClient.GameLogic
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
         private readonly Dictionary<Int3, BatchCells> batchCellsById = new Dictionary<Int3, BatchCells>();
+        private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
 
         public Entities(IPacketSender packetSender)
         {
@@ -125,14 +126,11 @@ namespace NitroxClient.GameLogic
             {
                 return serializedEntitySpawner;
             }
-
-            TechType techType = entity.TechType.Enum();
-
             if (entity.ClassId == "55d7ab35-de97-4d95-af6c-ac8d03bb54ca")
             {
-                return new CellRootSpawner();
+                return cellRootSpawner;
             }
-
+            TechType techType = entity.TechType.Enum();
             if (customSpawnersByTechType.ContainsKey(techType))
             {
                 return customSpawnersByTechType[techType];

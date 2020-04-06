@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using NitroxModel.Core;
 using System.Reflection;
 using NitroxServer.GameLogic;
@@ -34,8 +35,6 @@ namespace NitroxServer
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
-
-            containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
 
             containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
             {

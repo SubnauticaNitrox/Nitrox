@@ -9,31 +9,32 @@ namespace NitroxServer.GameLogic
         // Values taken directly from hardcoded subnautica values
         private static readonly DateTime SUBNAUTICA_FUTURE_START_DATE = new DateTime(2287, 5, 7, 9, 36, 0);
 
-        private static readonly float SUBNAUTICA_BEGIN_TIME_OFFSET = 1200f / 86400f *
-                                                            (3600f * (float)SUBNAUTICA_FUTURE_START_DATE.Hour +
-                                                             60f * (float)SUBNAUTICA_FUTURE_START_DATE.Minute +
-                                                             (float)SUBNAUTICA_FUTURE_START_DATE.Second);
-
-        public DateTime ServerStartTime { get; set; } = DateTime.Now;
+        private static readonly float SUBNAUTICA_BEGIN_TIME_OFFSET = 1200f /
+                                                                     86400f *
+                                                                     (3600f * SUBNAUTICA_FUTURE_START_DATE.Hour +
+                                                                      60f * SUBNAUTICA_FUTURE_START_DATE.Minute +
+                                                                      SUBNAUTICA_FUTURE_START_DATE.Second);
 
         // Discrepancy value for player based time modifications
         private float correctionValue;
 
+        public DateTime ServerStartTime { get; set; } = DateTime.Now;
+
         public void SetDay()
         {
-            correctionValue += 1200.0f - GetCurrentTime() % 1200.0f + 600.0f;
+            correctionValue += 1200.0f - CurrentTime % 1200.0f + 600.0f;
             SendCurrentTimePacket();
         }
 
         public void SetNight()
         {
-            correctionValue += 1200.0f - GetCurrentTime() % 1200.0f;
+            correctionValue += 1200.0f - CurrentTime % 1200.0f;
             SendCurrentTimePacket();
         }
 
         public void SkipTime()
         {
-            correctionValue += 600.0f - GetCurrentTime() % 600.0f;
+            correctionValue += 600.0f - CurrentTime % 600.0f;
             SendCurrentTimePacket();
         }
 
@@ -42,19 +43,22 @@ namespace NitroxServer.GameLogic
         {
             if (player != null)
             {
-                player.SendPacket(new TimeChange(GetCurrentTime()));
+                player.SendPacket(new TimeChange(CurrentTime));
             }
             else
             {
                 PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-                playerManager.SendPacketToAllPlayers(new TimeChange(GetCurrentTime()));
+                playerManager.SendPacketToAllPlayers(new TimeChange(CurrentTime));
             }
         }
 
-        private float GetCurrentTime()
+        private float CurrentTime
         {
-            TimeSpan interval = DateTime.Now - ServerStartTime;
-            return Convert.ToSingle(interval.TotalSeconds) + SUBNAUTICA_BEGIN_TIME_OFFSET + correctionValue;
+            get
+            {
+                TimeSpan interval = DateTime.Now - ServerStartTime;
+                return SUBNAUTICA_BEGIN_TIME_OFFSET + Convert.ToSingle(interval.TotalSeconds) + correctionValue;
+            }
         }
     }
 }

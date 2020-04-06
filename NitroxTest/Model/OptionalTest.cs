@@ -1,11 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using UnityEngine;
 
 namespace NitroxTest.Model
 {
@@ -92,7 +88,7 @@ namespace NitroxTest.Model
         [TestMethod]
         public void OptionalSetValueNull()
         {
-            Optional<Exosuit> op = Optional.Of(new Exosuit());
+            Optional<Random> op = Optional.Of(new Random());
             op.HasValue.Should().BeTrue();
             Action setNull = () => { op = null; };
             setNull.ShouldThrow<ArgumentNullException>("Setting optional to null should not be allowed.");
