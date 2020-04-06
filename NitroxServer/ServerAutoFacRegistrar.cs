@@ -36,10 +36,9 @@ namespace NitroxServer
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
-            containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
-            {
-                return ctx.Resolve<LiteNetLibServer>();
-            }).SingleInstance();
+            containerBuilder.RegisterType<LiteNetLibServer>()
+                            .As<Communication.NetworkingLayer.NitroxServer>()
+                            .SingleInstance();
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)
