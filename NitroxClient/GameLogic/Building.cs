@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Bases.Spawning;
 using NitroxClient.GameLogic.Helper;
@@ -16,15 +18,21 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.GameLogic
 {
-    public class Building
+    public class Building 
     {
+        public string Basepiecedata = "";
+        public string BasePieceData = "";
+        public string CurrentBaseData = "";
+        public float BasePieceProgress = 0f;
         private const float CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS = 0.10f;
+        public List<BasePiece> CompletedBasePieceHistroy = new List<BasePiece>();
+        public List<BasePiece> CompletedBasePieceHistroyIds = new List<BasePiece>();
 
         private readonly IPacketSender packetSender;
         private readonly RotationMetadataFactory rotationMetadataFactory;
 
         private float timeSinceLastConstructionChangeEvent;
-        
+
         public Building(IPacketSender packetSender, RotationMetadataFactory rotationMetadataFactory)
         {
             this.packetSender = packetSender;
@@ -37,7 +45,6 @@ namespace NitroxClient.GameLogic
             {
                 return;
             }
-
             NitroxId id = NitroxEntity.GetId(constructableBase.gameObject);
             NitroxId parentBaseId = null;
 
@@ -45,17 +52,17 @@ namespace NitroxClient.GameLogic
             {
                 parentBaseId = NitroxEntity.GetId(targetBase.gameObject);
             }
-            else if(constructableBase != null)
+            else if (constructableBase != null)
             {
                 Base playerBase = constructableBase.gameObject.GetComponentInParent<Base>();
 
-                if(playerBase != null)
+                if (playerBase != null)
                 {
                     parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
                 }
             }
 
-            if(parentBaseId == null)
+            if (parentBaseId == null)
             {
                 Base playerBase = baseGhost.gameObject.GetComponentInParent<Base>();
 
@@ -64,7 +71,7 @@ namespace NitroxClient.GameLogic
                     parentBaseId = NitroxEntity.GetId(playerBase.gameObject);
                 }
             }
-            
+
             Vector3 placedPosition = constructableBase.gameObject.transform.position;
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
@@ -72,15 +79,16 @@ namespace NitroxClient.GameLogic
             BasePiece basePiece = new BasePiece(id, placedPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
+            Basepiecedata = basePiece.ToString();
+            CompletedBasePieceHistroyIds.Add(basePiece);
+            LogClientData();
         }
-
         public void PlaceFurniture(GameObject gameObject, TechType techType, Vector3 itemPosition, Quaternion quaternion)
         {
             if (!Builder.isPlacing) //prevent possible echoing
             {
                 return;
             }
-
             NitroxId id = NitroxEntity.GetId(gameObject);
             NitroxId parentId = null;
 
@@ -104,6 +112,9 @@ namespace NitroxClient.GameLogic
             BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentId), true, Optional.Empty);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
+            Basepiecedata = placedBasePiece.ToString();
+            CompletedBasePieceHistroyIds.Add(basePiece);
+            LogClientData();
         }
 
         public void ChangeConstructionAmount(GameObject gameObject, float amount)
@@ -114,9 +125,7 @@ namespace NitroxClient.GameLogic
             {
                 return;
             }
-
             timeSinceLastConstructionChangeEvent = 0.0f;
-            
             NitroxId id = NitroxEntity.GetId(gameObject);
 
             if (amount < 0.95f) // Construction complete event handled by function below
@@ -124,10 +133,14 @@ namespace NitroxClient.GameLogic
                 ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
                 packetSender.Send(amountChanged);
             }
+            BasePieceData = "Construction Amount Changing...";
+            BasePieceProgress = amount;
+            LogClientData();
         }
 
         public void ConstructionComplete(GameObject ghost, Optional<Base> lastTargetBase, Int3 lastTargetBaseOffset)
         {
+
             NitroxId baseId = null;
             Optional<object> opConstructedBase = TransientLocalObjectManager.Get(TransientObjectType.BASE_GHOST_NEWLY_CONSTRUCTED_BASE_GAMEOBJECT);
             
@@ -180,34 +193,139 @@ namespace NitroxClient.GameLogic
                 }
                 
                 Validate.NotNull(finishedPiece, "Could not find finished piece in cell " + latestCell);
-
                 Log.Info("Setting id to finished piece: " + finishedPiece.name + " " + id);
-
                 UnityEngine.Object.Destroy(ghost);
                 NitroxEntity.SetNewId(finishedPiece, id);
-
                 BasePieceSpawnProcessor customSpawnProcessor = BasePieceSpawnProcessor.From(finishedPiece.GetComponent<BaseDeconstructable>());
                 customSpawnProcessor.SpawnPostProcess(latestBase, latestCell, finishedPiece);
             }
 
+            string basestring = baseId.ToString();
+            int loopnum = basestring.Length;
+            List<string> BaseIdList = new List<string>();
+            for (int i=0; i<loopnum; i++)
+            {
+                char basenum = (basestring[i]);
+                BaseIdList.Add(basenum.ToString());
+            }
+            string CurrentBasePart = string.Join("", BaseIdList.ToArray());
+            Basepiecedata = ("Construction Completed " + id);
             Log.Info("Construction Completed " + id);
-
             ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
+            Basepiecedata = constructionCompleted.ToString();
+            CurrentBaseData = CurrentBasePart;
+            try
+            {
+                NitroxId parentId = null;
+                Transform camera = Camera.main.transform;
+                Vector3 itemPosition = new Vector3(0f, 0f, 0f);
+                Vector3 position = new Vector3(0f, 0f, 0f);
+                Quaternion rotation = new Quaternion(0f, 0f, 0f, 0f);
+                Quaternion quaternion = new Quaternion(0f, 0f, 0f, 0f);
+                TechType techType = new TechType();
+                techType = 0;
+                BasePiece UncompletedBasePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentId), false, Optional.Empty);
+                foreach (BasePiece uncompletebasepieceid in CompletedBasePieceHistroyIds)
+                {
+                    if (uncompletebasepieceid.Id == UncompletedBasePiece.Id)
+                    {
+                        BasePieceData = "We Gotta Match for completed!!!";
+                        CurrentBaseData = uncompletebasepieceid.ToString();
+                        //BasePiece removedpiece 
+                        CompletedBasePieceHistroyIds.Remove(uncompletebasepieceid);
+                        CompletedBasePieceHistroy.Add(uncompletebasepieceid);
+                    }
+                    else
+                    {
+                        BasePieceData = "Error No Match";
+                    }
+                }
+
+            }
+            catch { }
+            LogClientData();
         }
 
         public void DeconstructionBegin(NitroxId id)
         {
+            BasePiece removedpiece = new BasePiece();
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
+            Basepiecedata = deconstructionBegin.ToString();
+            BasePieceData = "Before Loop";
+
+            try
+            {
+                NitroxId parentId = null;
+                Transform camera = Camera.main.transform;
+                Vector3 itemPosition = new Vector3(0f, 0f, 0f);
+                Vector3 position = new Vector3(0f, 0f, 0f);
+                Quaternion rotation = new Quaternion(0f, 0f, 0f, 0f);
+                Quaternion quaternion = new Quaternion(0f, 0f, 0f, 0f);
+                TechType techType = new TechType();
+                techType = 0;
+                BasePiece UncompletedBasePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentId), false, Optional.Empty);
+                foreach (BasePiece uncompletebasepieceid in CompletedBasePieceHistroy)
+                {
+                    if (uncompletebasepieceid.Id == UncompletedBasePiece.Id)
+                    {
+                        BasePieceData = "We Gotta Match for uncompleted!!!";
+                        CurrentBaseData = uncompletebasepieceid.ToString();
+                        removedpiece = uncompletebasepieceid;
+                        CompletedBasePieceHistroyIds.Add(uncompletebasepieceid);
+                    }
+                    else
+                    {
+                        BasePieceData = "Error No Match";
+                    }
+                }
+                
+            } catch { }
+            CompletedBasePieceHistroy.Remove(removedpiece);
+            LogClientData();
         }
 
         public void DeconstructionComplete(GameObject gameObject)
-        {
-            NitroxId id = NitroxEntity.GetId(gameObject);
+            {
+                NitroxId id = NitroxEntity.GetId(gameObject);
 
-            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
-            packetSender.Send(deconstructionCompleted);
+                DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
+                packetSender.Send(deconstructionCompleted);
+                Basepiecedata = deconstructionCompleted.ToString();
+                LogClientData();
+            }
+
+        public void LogClientData()
+        {
+            using (StreamWriter w = File.AppendText("ClientLog.txt"))
+            {
+                Logfile("Basepiecedata: " + Basepiecedata + "\n  :BasePieceData: " + BasePieceData + "\n  :BasePieceProgress: " + BasePieceProgress + "\n-------------------------------" + "\n :ClientBasePieceHistory: " + string.Join(", ", CompletedBasePieceHistroy) + "\n :ClientBasePieceHistory-Removed-Ids: " + string.Join(", ", CompletedBasePieceHistroyIds) + "\n :Current Base Data:  " + CurrentBaseData, w);
+            }
+
+            using (StreamReader r = File.OpenText("ClientLog.txt"))
+            {
+                DumpLog(r);
+            }
+        }
+
+        public static void Logfile(string logMessage, TextWriter w)
+        {
+            w.WriteLine("\n-------------------------------");
+            w.Write("\r\nLog Entry : ");
+            w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
+            w.WriteLine($"  :{logMessage}");
+            w.WriteLine("-------------------------------\n");
+        }
+
+        public static void DumpLog(StreamReader r)
+        {
+            string line;
+            while ((line = r.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+            }
         }
     }
 }
+

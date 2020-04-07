@@ -11,6 +11,8 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class BasePiece
     {
+        private BasePiece uncompletedBasePiece;
+
         [ProtoMember(1)]
         public NitroxId Id { get; set; }
 

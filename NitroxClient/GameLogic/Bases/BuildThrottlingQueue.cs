@@ -60,7 +60,6 @@ namespace NitroxClient.GameLogic.Bases
     public class BasePiecePlacedEvent : BuildEvent
     {
         public BasePiece BasePiece { get; }
-
         public BasePiecePlacedEvent(BasePiece basePiece)
         {
             BasePiece = basePiece;
@@ -78,6 +77,7 @@ namespace NitroxClient.GameLogic.Bases
     {
         public NitroxId Id { get; }
         public float Amount { get; }
+
 
         public ConstructionAmountChangedEvent(NitroxId id, float amount)
         {
