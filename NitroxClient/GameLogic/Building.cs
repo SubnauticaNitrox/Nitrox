@@ -230,8 +230,8 @@ namespace NitroxClient.GameLogic
                 {
                     if (uncompletebasepieceid.Id == UncompletedBasePiece.Id)
                     {
-                        BasePieceData = "We Gotta Match for completed!!!";
-                        CurrentBaseData = uncompletebasepieceid.ToString();
+                        BasePieceData = "Base Piece Successfully Completed!";
+                        CurrentBaseData = uncompletebasepieceid.Id.ToString();
                         //BasePiece removedpiece 
                         CompletedBasePieceHistroyIds.Remove(uncompletebasepieceid);
                         CompletedBasePieceHistroy.Add(uncompletebasepieceid);
@@ -244,6 +244,7 @@ namespace NitroxClient.GameLogic
 
             }
             catch { }
+            BasePieceProgress = 1f;
             LogClientData();
         }
 
@@ -253,7 +254,8 @@ namespace NitroxClient.GameLogic
             DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
             Basepiecedata = deconstructionBegin.ToString();
-            BasePieceData = "Before Loop";
+            CurrentBaseData = deconstructionBegin.Id.ToString();
+            BasePieceData = "Waiting...";
 
             try
             {
@@ -270,8 +272,8 @@ namespace NitroxClient.GameLogic
                 {
                     if (uncompletebasepieceid.Id == UncompletedBasePiece.Id)
                     {
-                        BasePieceData = "We Gotta Match for uncompleted!!!";
-                        CurrentBaseData = uncompletebasepieceid.ToString();
+                        BasePieceData = "Base Piece Successfully removed";
+                        CurrentBaseData = uncompletebasepieceid.Id.ToString();
                         removedpiece = uncompletebasepieceid;
                         CompletedBasePieceHistroyIds.Add(uncompletebasepieceid);
                     }
@@ -287,20 +289,21 @@ namespace NitroxClient.GameLogic
         }
 
         public void DeconstructionComplete(GameObject gameObject)
-            {
-                NitroxId id = NitroxEntity.GetId(gameObject);
-
-                DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
-                packetSender.Send(deconstructionCompleted);
-                Basepiecedata = deconstructionCompleted.ToString();
-                LogClientData();
-            }
+        {
+            NitroxId id = NitroxEntity.GetId(gameObject);
+            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
+            packetSender.Send(deconstructionCompleted);
+            Basepiecedata = deconstructionCompleted.ToString();
+            BasePieceData = "Deconstruction Complete";
+            BasePieceProgress = 0f;
+            LogClientData();
+        }
 
         public void LogClientData()
         {
             using (StreamWriter w = File.AppendText("ClientLog.txt"))
             {
-                Logfile("Basepiecedata: " + Basepiecedata + "\n  :BasePieceData: " + BasePieceData + "\n  :BasePieceProgress: " + BasePieceProgress + "\n-------------------------------" + "\n :ClientBasePieceHistory: " + string.Join(", ", CompletedBasePieceHistroy) + "\n :ClientBasePieceHistory-Removed-Ids: " + string.Join(", ", CompletedBasePieceHistroyIds) + "\n :Current Base Data:  " + CurrentBaseData, w);
+                Logfile("BasePieceData: " + Basepiecedata + "\n  :Current State: " + BasePieceData + "\n  :BasePieceProgress: " + BasePieceProgress*100 + "%\n-------------------------------" + "\n :ClientBasePieceHistory: " + string.Join(", ", CompletedBasePieceHistroy) + "\n :ClientBasePieceHistory-Removed-Ids: " + string.Join(", ", CompletedBasePieceHistroyIds) + "\n-------------------------------\n :Current Base Data:  " + CurrentBaseData, w);
             }
 
             using (StreamReader r = File.OpenText("ClientLog.txt"))
@@ -311,8 +314,9 @@ namespace NitroxClient.GameLogic
 
         public static void Logfile(string logMessage, TextWriter w)
         {
-            w.WriteLine("\n-------------------------------");
+            w.WriteLine("\n\n-------------------------------");
             w.Write("\r\nLog Entry : ");
+            w.WriteLine("\n-------------------------------");
             w.WriteLine($"{DateTime.Now.ToLongTimeString()} {DateTime.Now.ToLongDateString()}");
             w.WriteLine($"  :{logMessage}");
             w.WriteLine("-------------------------------\n");
