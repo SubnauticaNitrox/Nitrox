@@ -12,8 +12,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         public static void Initialize()
         {
-            AddTextToLoadingScreen("\nNitrox Alpha V" + assemblyVersion);
-            loadingScreenWarning = AddTextToLoadingScreen("\n\nExpect game breaking bugs");
+            loadingScreenWarning = AddTextToLoadingScreen("\n\nNitrox Alpha V" + assemblyVersion + "\nExpect game breaking bugs");
         }
 
         private static uGUI_TextFade AddTextToLoadingScreen(string text)
