@@ -32,12 +32,16 @@ namespace NitroxClient.Unity.Helper
 
         }
 
-        public static IEnumerator LoadUIAsset(string name, string canvasObjectName)
+        public static IEnumerator LoadUIAsset(string name, string canvasObjectName, bool hideUI = false)
         {
             yield return LoadAsset(name);
 
             GameObject assetCanvas = GameObject.Find(canvasObjectName);
             Transform assetRoot = assetCanvas.transform.GetChild(0);
+            if (hideUI)
+            {
+                assetRoot.GetComponent<CanvasGroup>().alpha = 0;
+            }
             assetRoot.SetParent(uGUI.main.screenCanvas.transform, false);
             Object.Destroy(assetCanvas);
 

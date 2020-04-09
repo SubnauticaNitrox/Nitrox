@@ -75,7 +75,7 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            CoroutineWithData coroutineWD = new CoroutineWithData(Player.main, AssetBundleLoader.LoadUIAsset("chatlog", "PlayerChatCanvas"));
+            CoroutineWithData coroutineWD = new CoroutineWithData(Player.main, AssetBundleLoader.LoadUIAsset("chatlog", "PlayerChatCanvas", true));
             yield return coroutineWD.Coroutine;
 
             playerChat = ((GameObject)coroutineWD.Result).gameObject.AddComponent<PlayerChat>();
