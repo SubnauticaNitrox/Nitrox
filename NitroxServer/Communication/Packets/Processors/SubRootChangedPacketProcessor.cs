@@ -16,7 +16,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(SubRootChanged packet, Player player)
         {
-            Log.Info(packet);
+            Log.Info($"{packet}");
             player.SubRootId = packet.SubRootId;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }

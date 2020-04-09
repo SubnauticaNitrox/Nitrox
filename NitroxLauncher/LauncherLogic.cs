@@ -391,12 +391,12 @@ namespace NitroxLauncher
             string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
 
             string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
-            Log.Info($"Copying asset files from Launcher directory '{currentDirectoryAssetsPath}' to Subnautica '{subnauticaAssetsPath}'");
+            Log.DebugSensitive("Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
             foreach (string assetBundle in assetBundles)
             {
                 string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
                 string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
-                Log.Debug($"Copying asset file '{from}' to '{to}'");
+                Log.DebugSensitive("Copying asset file {0} to {1}", from, to);
                 File.Copy(from, to, true);
             }
         }
@@ -439,7 +439,7 @@ namespace NitroxLauncher
                     }
                     catch (Exception e)
                     {
-                        Log.Error($"There was error during copying the assembly: {fileName}", e);
+                        Log.Exception($"There was error during copying the assembly: {fileName}", e);
                     }
                 }
                 else if (!File.Exists(destinationFilePath))

@@ -40,16 +40,20 @@
       <HintPath>..\packages\LiteNetLib.0.8.2-beta\lib\net35\LiteNetLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
-      <HintPath>..\packages\log4net.2.0.8\lib\net35-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="LZ4">
       <HintPath>..\lib\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.6.8\lib\net40-client\NLog.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\lib\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="UnityEngine">
       <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
     </Reference>
@@ -273,6 +277,7 @@
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
+    <Compile Include="Logger\Log.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\BedEnter.cs" />
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
@@ -303,7 +308,6 @@
     <Compile Include="Helper\ReflectionHelper.cs" />
     <Compile Include="Discovery\GameInstallationFinder.cs" />
     <Compile Include="Helper\Validate.cs" />
-    <Compile Include="Logger\Log.cs" />
     <Compile Include="MultiplayerSession\AuthenticationContext.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionAuthenticationAuthority.cs" />
     <Compile Include="MultiplayerSession\MultiplayerSessionReservationState.cs" />
@@ -379,6 +383,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

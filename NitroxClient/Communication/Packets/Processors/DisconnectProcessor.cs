@@ -25,10 +25,10 @@ namespace NitroxClient.Communication.Packets.Processors
             vitalsManager.RemoveForPlayer(disconnect.PlayerId);
 
             Optional<RemotePlayer> remotePlayer = remotePlayerManager.Find(disconnect.PlayerId);
-            if (remotePlayer.HasValue)
+            if (remotePlayer.IsPresent())
             {
                 remotePlayerManager.RemovePlayer(disconnect.PlayerId);
-                Log.InGame(remotePlayer.Value.PlayerName + " disconnected");
+                Log.ShowInGameMessage(remotePlayer.Get().PlayerName + " disconnected");
             }
         }
     }

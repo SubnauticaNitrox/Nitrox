@@ -28,13 +28,19 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to change admin password to \"{args[0]}\"", ex);
+                Log.Exception($"Error attempting to change admin password to \"{args[0]}\"", ex);
             }
         }
 
         public override bool VerifyArgs(string[] args)
         {
             return args.Length >= 1;
+        }
+
+        private void ChangeAdminPassword(string password, string name)
+        {
+            serverConfig.ChangeAdminPassword(password);
+            Log.DebugSensitive("Admin password changed to {0} by {1}", password, name);
         }
     }
 }

@@ -680,11 +680,11 @@ namespace NitroxClient.Debuggers
                                     object result = method.Invoke(method.IsStatic ? null : mono, new object[0]);
                                     if (result != null)
                                     {
-                                        Log.InGame($"Invoked method {method.Name} which returned result: '{result}'.");
+                                        Log.ShowInGameMessage($"Invoked method {method.Name} which returned result: '{result}'.");
                                     }
                                     else
                                     {
-                                        Log.InGame($"Invoked method {method.Name}. Return value was NULL.");
+                                        Log.ShowInGameMessage($"Invoked method {method.Name}. Return value was NULL.");
                                     }
                                 }
                             }

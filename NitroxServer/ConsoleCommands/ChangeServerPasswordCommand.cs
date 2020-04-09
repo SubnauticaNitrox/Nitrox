@@ -29,13 +29,19 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to change server password", ex);
+                Log.Exception("Error attempting to change server password", ex);
             }
         }
 
         public override bool VerifyArgs(string[] args)
         {
             return args.Length >= 0;
+        }
+
+        private void ChangeServerPassword(string password, string name)
+        {
+            serverConfig.ChangeServerPassword(password);
+            Log.DebugSensitive("Server password changed to \"{0}\" by \"{1}\"", password, name);
         }
     }
 }

@@ -163,35 +163,34 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
         }
 
-        private IPEndPoint ResolveIpv4(string serverIp)
+        private void ResolveHostName(JoinServer joinServerComponent, string serverIp)
         {
-            Match match = Regex.Match(serverIp, @"^((?:\d{1,3}\.){3}\d{1,3})\:?(\d{2,5})?$"); // Pattern test url: https://regex101.com/r/NZsD0l/1
-            if (!match.Success)
-            {
-                return null;
-            }
-
-            IPAddress ip = IPAddress.Parse(match.Groups[1].Value);
-            int port = match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000;
-            return new IPEndPoint(ip, port);
-        }
-
-        private IPEndPoint ResolveHostName(string hostname)
-        {
-            Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
-            if (!match.Success)
-            {
-                return null;
-            }
-
             try
             {
-                IPHostEntry hostEntry = Dns.GetHostEntry(match.Groups[1].Value);
-                return new IPEndPoint(hostEntry.AddressList[0], match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000);
+                IPHostEntry hostEntry = Dns.GetHostEntry(serverIp);
+                joinServerComponent.ServerIp = hostEntry.AddressList[0].ToString();
+                joinServerComponent.ServerPort = 11000;
             }
-            catch (SocketException)
+            catch (SocketException e)
             {
-                return null;
+                Log.ErrorSensitive("Unable to resolve the address: {0}", serverIp);
+                Log.Exception(e.Message, e);
+            }
+        }
+
+        private void ResolveIpv4(JoinServer joinServerComponent, string serverIp)
+        {
+            char seperator = ':';
+            if (serverIp.Contains(seperator))
+            {
+                string[] splitIP = serverIp.Split(seperator);
+                joinServerComponent.ServerIp = splitIP[0];
+                joinServerComponent.ServerPort = int.Parse(splitIP[1]);
+            }
+            else
+            {
+                joinServerComponent.ServerIp = serverIp;
+                joinServerComponent.ServerPort = 11000;
             }
         }
 

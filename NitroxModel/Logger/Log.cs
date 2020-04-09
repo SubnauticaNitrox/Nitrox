@@ -1,147 +1,115 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using log4net;
-using log4net.Appender;
-using log4net.Core;
-using log4net.Filter;
-using log4net.Layout;
-using log4net.Repository.Hierarchy;
-using NitroxModel.Discovery;
+using System.Diagnostics;
+using NLog;
 
 namespace NitroxModel.Logger
 {
-    public class Log
+    public static class Log
     {
-        private static bool inGameMessages;
+        // Private variables
+        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
+        private static InGameLogger inGameLogger;
+        private static bool inGameMessagesEnabled = false;
 
-        private static readonly ILog log = LogManager.GetLogger(GetLoggerName());
-        public static InGameLogger InGameLogger { get; set; }
-
-        static Log()
+        // Public API
+        [Conditional("DEBUG")]
+        public static void Trace(string message)
         {
-            Setup();
+            logger.Trace(message);
         }
 
-        // Enable the in-game notifications
-        public static void EnableInGameMessages()
+        [Conditional("DEBUG")]
+        public static void Debug(string message)
         {
-            inGameMessages = true;
+            logger.Debug(message);
         }
 
-        // For in-game notifications
-        public static void InGame(string msg)
+        public static void Info(string message)
         {
-            if (inGameMessages)
+            logger.Info(message);
+        }
+
+        public static void Warn(string message)
+        {
+            logger.Warn(message);
+        }
+
+        public static void Error(string message)
+        {
+            logger.Error(message);
+        }
+
+        public static void Fatal(string message)
+        {
+            logger.Fatal(message);
+        }
+
+        // Sensitive
+        [Conditional("DEBUG")]
+        public static void DebugSensitive(string message, params object[] args)
+        {
+            LogFullSensitiveInfo(message, args);
+            Debug(message);
+        }
+
+        public static void InfoSensitive(string message, params object[] args)
+        {
+            LogFullSensitiveInfo(message, args);
+            Info(message);
+        }
+
+        public static void ErrorSensitive(string message, params object[] args)
+        {
+            LogFullSensitiveInfo(message, args);
+            Error(message);
+        } 
+
+        public static void Exception(string message, Exception ex)
+        {
+            logger.Error(ex, message);
+        }
+
+        // In game messages
+        public static void ShowInGameMessage(string message, bool containsPersonalInfo = false)
+        {
+            if (inGameLogger == null)
             {
-                InGameLogger?.Log(msg);
-                Info(msg);
+                logger.Warn("InGameLogger has not been registered");
+                return;
             }
+
+            if (!inGameMessagesEnabled)
+            {
+                logger.Warn("InGameMessages have not been enabled");
+            }
+            inGameLogger.Log(message);
+            
+            // Only log locally if it contains no personal information
+            if (!containsPersonalInfo)
+            {
+                logger.Debug(message);
+            }
+            
         }
 
-        public static void Error(string msg)
+        public static void RegisterInGameLogger(InGameLogger gameLogger)
         {
-            log.Error(msg);
+            logger.Info("Registered InGameLogger");
+            inGameLogger = gameLogger;
         }
 
-        public static void Error(string fmt, params object[] arg)
+        public static void SetInGameMessagesEnabled(bool enabled)
         {
-            log.Error(Format(fmt, arg));
+            inGameMessagesEnabled = enabled;
         }
 
-        public static void Error(string msg, Exception ex)
-        {
-            log.Error(msg, ex);
-        }
-
-        public static void Warn(string msg)
-        {
-            log.Warn(msg);
-        }
-
-        public static void Warn(string fmt, params object[] arg)
-        {
-            log.Warn(Format(fmt, arg));
-        }
-
-        public static void Info(string msg)
-        {
-            log.Info(msg);
-        }
-
-        public static void Info(string fmt, params object[] arg)
-        {
-            log.Info(Format(fmt, arg));
-        }
-
-        public static void Info(object o)
-        {
-            string msg = o == null ? "null" : o.ToString();
-            Info(msg);
-        }
-
-        // Only for debug prints. Should not be displayed to general user.
-        // Should we print the calling method for this for more debug context?
-        public static void Debug(string fmt, params object[] arg)
-        {
-            log.Debug(Format(fmt, arg));
-        }
-
-        public static void Debug(object o)
-        {
-            string msg = o == null ? "null" : o.ToString();
-            Debug(msg);
-        }
-
+        // Private methods
         /// <summary>
-        ///     Get log file friendly name of the application that is currently logging.
+        /// When we log with sensitive info we still want to see the info in the console log.
         /// </summary>
-        /// <returns>Friendly display name of the current application.</returns>
-        private static string GetLoggerName()
+        private static void LogFullSensitiveInfo(string message, params object[] args)
         {
-            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
-            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
-        }
-
-        // Helping method for formatting string correctly with arguments
-        private static string Format(string fmt, params object[] arg)
-        {
-            return string.Format(fmt, arg);
-        }
-
-        private static void Setup()
-        {
-            Hierarchy hierarchy = (Hierarchy)LogManager.GetRepository();
-
-            PatternLayout patternLayout = new PatternLayout();
-            patternLayout.ConversionPattern = "[%d{HH:mm:ss} %logger %level]: %m%n";
-            patternLayout.ActivateOptions();
-
-            LevelRangeFilter filter = new LevelRangeFilter();
-            filter.LevelMin = Level.Debug;
-            filter.LevelMax = Level.Fatal;
-
-            RollingFileAppender fileAppender = new RollingFileAppender();
-            fileAppender.File = Path.Combine(GameInstallationFinder.Instance.FindGame().OrElse(""), "Nitrox Logs", "nitrox-.log"); // Attempt to create 'Nitrox Logs' dir where the game is.
-            fileAppender.AppendToFile = true;
-            fileAppender.RollingStyle = RollingFileAppender.RollingMode.Date;
-            fileAppender.MaxSizeRollBackups = 10;
-            fileAppender.DatePattern = "yyyy-MM-dd";
-            fileAppender.StaticLogFileName = false;
-            fileAppender.PreserveLogFileNameExtension = true;
-            fileAppender.LockingModel = new FileAppender.MinimalLock();
-            fileAppender.Layout = patternLayout;
-            fileAppender.ActivateOptions();
-            fileAppender.AddFilter(filter);
-
-            ConsoleAppender consoleAppender = new ConsoleAppender();
-            consoleAppender.Layout = patternLayout;
-            consoleAppender.AddFilter(filter);
-
-            hierarchy.Root.AddAppender(consoleAppender);
-            hierarchy.Root.AddAppender(fileAppender);
-
-            hierarchy.Configured = true;
+            logger.Trace(message, args);
         }
     }
 }

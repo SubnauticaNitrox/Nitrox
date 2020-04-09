@@ -25,7 +25,7 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.EnableInGameMessages();
+            Log.SetInGameMessagesEnabled(true);
 
             if (container != null)
             {
@@ -94,7 +94,7 @@ namespace NitroxPatcher
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Info("Completed patching using " + Assembly.GetExecutingAssembly().FullName);
+            Log.Debug($"Completed patching using {Assembly.GetExecutingAssembly().FullName}");
         }
 
         private static IContainer CreatePatchingContainer()
