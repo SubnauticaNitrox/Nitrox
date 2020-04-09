@@ -98,9 +98,9 @@ namespace NitroxModel.Logger
             inGameLogger = gameLogger;
         }
 
-        public static void SetInGameMessagesEnabled(bool enabled)
+        public static void EnableInGameMessages()
         {
-            inGameMessagesEnabled = enabled;
+            inGameMessagesEnabled = true;
         }
 
         // Private methods

@@ -42,7 +42,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
             }
             else
             {
-                Log.InGame("Please enter the multiplayer-main-menu if you want to join a session.");
+                Log.ShowInGameMessage("Please enter the multiplayer-main-menu if you want to join a session.");
                 Log.Warn("[Discord] Warn: Can't join a server outside of the main-menu.");
             }
         }

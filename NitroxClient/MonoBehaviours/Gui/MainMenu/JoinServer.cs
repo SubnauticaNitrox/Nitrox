@@ -349,17 +349,17 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+                Log.ShowInGameMessage($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
                     if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                     {
-                        Log.InGame("Start your server first to join your self-hosted world");
+                        Log.ShowInGameMessage("Start your server first to join your self-hosted world");
                     }
                     else
                     {
-                        Log.InGame("Seems like your firewall settings are interfering");
+                        Log.ShowInGameMessage("Seems like your firewall settings are interfering");
                     } 
                 }
 
