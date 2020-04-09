@@ -48,7 +48,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             GetComponentsInChildren<Button>()[1].gameObject.AddComponent<PlayerChatPinButton>();
 
             inputField = GetComponentInChildren<InputField>();
-            inputField.gameObject.AddComponent<PlayerChatInputField>();
+            inputField.gameObject.AddComponent<PlayerChatInputField>().InputField = inputField;
             inputField.GetComponentInChildren<Button>().onClick.AddListener(playerChatManager.SendMessage);
 
             backgroundImages = new[]
@@ -85,23 +85,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             }
 
             chatLogEntryObject.GetComponent<PlayerChatLogItem>().ApplyOnPrefab(chatLogEntry);
-            StartCoroutine(UpdateChatEntrySpacing());
-        }
-
-
-        /// Updates the layout sorting algorithm from Unity to prevent "loss" of text messages.
-        private IEnumerator UpdateChatEntrySpacing()
-        {
-            yield return null;
-            foreach (HorizontalOrVerticalLayoutGroup layoutGroup in layoutGroups)
-            {
-                layoutGroup.enabled = false;
-            }
-            yield return null;
-            foreach (HorizontalOrVerticalLayoutGroup layoutGroup in layoutGroups)
-            {
-                layoutGroup.enabled = true;
-            }
         }
 
         public void Show()
@@ -123,7 +106,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         private static string SanitizeMessage(string message)
         {
-            message = message.Trim();
+            message = message.Trim().TrimEnd('\n').Trim();
             return message.Length < LINE_CHAR_LIMIT ? message : message.Substring(0, LINE_CHAR_LIMIT);
         }
 

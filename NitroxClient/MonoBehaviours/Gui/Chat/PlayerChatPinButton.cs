@@ -10,6 +10,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private static PlayerChatManager playerChatManager;
 
         private Vector2 screenRes = new Vector2(1920, 1200);
+        private Vector2 offset;
         private bool drag;
 
         private void Awake()
@@ -19,8 +20,10 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            drag = true;
             screenRes.y = (screenRes.x / Screen.width) * Screen.height;
+            offset = GetMouseWorldPostion() - (Vector2)playerChatManager.PlayerChaTransform.localPosition;
+
+            drag = true;
             PlayerChatInputField.FreezeTime = true;
         }
 
@@ -40,9 +43,14 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         {
             if (drag)
             {
-                Vector3 viewport = Camera.main.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
-                playerChatManager.PlayerChaTransform.localPosition = new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
+                playerChatManager.PlayerChaTransform.localPosition = GetMouseWorldPostion() - offset;
             }
+        }
+
+        private Vector2 GetMouseWorldPostion()
+        {
+            Vector3 viewport = Camera.main.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
+            return new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
         }
     }
 }

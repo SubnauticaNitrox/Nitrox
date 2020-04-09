@@ -1,7 +1,9 @@
-﻿using NitroxClient.GameLogic.ChatUI;
+﻿using System.Collections;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
@@ -11,6 +13,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private bool selected;
         private static float timeLeftUntilAutoClose;
         public static bool FreezeTime;
+        public InputField InputField;
 
         private void Awake()
         {
@@ -46,7 +49,19 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             {
                 if (UnityEngine.Input.GetKey(KeyCode.Return))
                 {
-                    playerChatManager.SendMessage();
+                    if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (!InputField.text.EndsWith("\n"))
+                        {
+                            InputField.ActivateInputField();
+                            InputField.text += "\n";
+                            StartCoroutine(MoveToEndOfText());
+                        }
+                    }
+                    else
+                    {
+                        playerChatManager.SendMessage();
+                    }
                 }
             }
             else
@@ -58,6 +73,12 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                     FreezeTime = true;
                 }
             }
+        }
+
+        private IEnumerator MoveToEndOfText()
+        {
+            yield return null;
+            InputField.MoveTextEnd(false);
         }
     }
 }
