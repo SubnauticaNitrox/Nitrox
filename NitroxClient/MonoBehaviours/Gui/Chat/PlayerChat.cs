@@ -16,7 +16,8 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const float TOGGLED_TRANSPARENCY = 0.4f;
         public const float CHAT_VISIBILITY_TIME_LENGTH = 10f;
 
-        public static bool IsLoading = true;
+        public static bool IsLoading { get; private set; } = true;
+
         private PlayerChatManager playerChatManager;
         private CanvasGroup canvasGroup;
         private HorizontalOrVerticalLayoutGroup[] layoutGroups;
@@ -118,12 +119,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             base.Select(true);
             inputField.Select();
             inputField.ActivateInputField();
-        }
-
-        public void Deselect()
-        {
-            base.Deselect();
-            EventSystem.current.SetSelectedGameObject(null);
         }
 
         private static string SanitizeMessage(string message)
