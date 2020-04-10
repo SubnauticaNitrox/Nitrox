@@ -235,6 +235,7 @@
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PrecursorDoorToggleProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
@@ -270,6 +271,7 @@
     <Compile Include="GameLogic\InitialSync\PlayerInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\EscapePodInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ScubaSuitVisibiliyHandler.cs" />
+    <Compile Include="GameLogic\PrecursorManager.cs" />
     <Compile Include="GameLogic\Spawning\CellRootSpawner.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
