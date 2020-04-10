@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NLog;
+using NLog.Targets;
 
 namespace NitroxModel.Logger
 {
@@ -10,6 +11,33 @@ namespace NitroxModel.Logger
         private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
         private static InGameLogger inGameLogger;
         private static bool inGameMessagesEnabled = false;
+
+        static Log()
+        {
+            NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
+
+            // Targets where to log to: File and Console
+            FileTarget logfile = new FileTarget("logfile")
+            {
+                FileName = "${basedir}/Nitrox Logs/nitrox.log",
+                ArchiveFileName = "${basedir}/archives/nitrox.{#}.log",
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveNumbering = ArchiveNumberingMode.Date,
+                MaxArchiveFiles = 7,
+                Layout = "${longdate}|${message}${exception}"
+            };
+            ColoredConsoleTarget logconsole = new ColoredConsoleTarget("logconsole")
+            {
+                Layout = "${longdate}|${level:uppercase=true}|${message}${exception}"
+            };
+
+            // Rules for mapping loggers to targets
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+
+            // Apply config
+            NLog.LogManager.Configuration = config;
+        }
 
         // Public API
         [Conditional("DEBUG")]

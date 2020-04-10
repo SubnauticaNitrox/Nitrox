@@ -358,16 +358,6 @@ namespace NitroxLauncher
 
             List<string> ignoreNoBinaries = new List<string>();
             CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
-
-            CopyLogConfig(libDirectory);
-        }
-
-        private void CopyLogConfig(string libDirectory)
-        {
-            string logConfig = "NLog.config";
-            string sourceFilePath = Path.Combine(libDirectory, logConfig);
-            string destinationFilePath = Path.Combine(subnauticaPath, logConfig);
-            File.Copy(sourceFilePath, destinationFilePath, true);
         }
 
         private void SyncMonoAssemblies()
