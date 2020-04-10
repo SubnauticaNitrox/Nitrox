@@ -2,6 +2,6 @@
 {
     public interface InGameLogger
     {
-        void Log(string text);
+        void Log(object message);
     }
 }

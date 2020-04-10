@@ -19,7 +19,7 @@ namespace NitroxClient.GameLogic
         {
             PowerLevelChanged powerChanged = new PowerLevelChanged(id, amount, powerType);
             packetSender.Send(powerChanged);
-            Log.Debug($"{powerChanged}");
+            Log.Debug(powerChanged);
         }
     }
 }

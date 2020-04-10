@@ -4,9 +4,13 @@ namespace NitroxModel_Subnautica.Logger
 {
     public class SubnauticaInGameLogger : InGameLogger
     {
-        public void Log(string text)
+        public void Log(object message)
         {
-            ErrorMessage.AddMessage(text);
+            if (message == null)
+            {
+                return;
+            }
+            ErrorMessage.AddMessage(message.ToString());
         }
     }
 }

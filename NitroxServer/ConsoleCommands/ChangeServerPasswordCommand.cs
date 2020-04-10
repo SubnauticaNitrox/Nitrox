@@ -24,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
                 string password = args.Length == 0 ? "" : args[0];
                 serverConfig.ChangeServerPassword(password);
 
-                Log.Info($"Server password changed to \"{password}\" by {playerName}");
+                Log.Info("Server password changed to {password} by {playername}", password, playerName);
                 SendMessageToPlayer(sender, "Server password changed");
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace NitroxServer.ConsoleCommands
         private void ChangeServerPassword(string password, string name)
         {
             serverConfig.ChangeServerPassword(password);
-            Log.InfoSensitive("Server password changed to \"{0}\" by \"{1}\"", password, name);
+            Log.InfoSensitive("Server password changed to {password} by {playername}", password, name);
         }
     }
 }

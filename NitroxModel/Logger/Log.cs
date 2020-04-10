@@ -1,143 +1,191 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 using NLog;
+using NLog.Config;
+using NLog.Filters;
+using NLog.Fluent;
+using NLog.MessageTemplates;
 using NLog.Targets;
+using NLog.Time;
 
 namespace NitroxModel.Logger
 {
     public static class Log
     {
-        // Private variables
+        /// <summary>
+        ///     Parameters that are being logged with these names should be excluded when a log was made through the sensitive
+        ///     method calls.
+        /// </summary>
+        private static readonly HashSet<string> sensitiveLogParameters = new HashSet<string>
+        {
+            "username",
+            "password",
+            "ip"
+        };
+
         private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
         private static InGameLogger inGameLogger;
-        private static bool inGameMessagesEnabled = false;
+
+        public static InGameLogger InGameLogger
+        {
+            set { inGameLogger = value; }
+        }
 
         static Log()
         {
-            NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
+            LoggingConfiguration config = new LoggingConfiguration();
+            string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${message} ${exception}";
 
             // Targets where to log to: File and Console
-            FileTarget logfile = new FileTarget("logfile")
+            ColoredConsoleTarget logconsole = new ColoredConsoleTarget(nameof(logconsole)) { Layout = layout };
+            FileTarget logfile = new FileTarget(nameof(logfile))
             {
-                FileName = "${basedir}/Nitrox Logs/nitrox.log",
-                ArchiveFileName = "${basedir}/archives/nitrox.{#}.log",
+                FileName = "Nitrox Logs/nitrox.log",
+                ArchiveFileName = "Nitrox Logs/archives/nitrox.{#}.log",
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveNumbering = ArchiveNumberingMode.Date,
                 MaxArchiveFiles = 7,
-                Layout = "${longdate}|${message}${exception}"
-            };
-            ColoredConsoleTarget logconsole = new ColoredConsoleTarget("logconsole")
-            {
-                Layout = "${longdate}|${level:uppercase=true}|${message}${exception}"
+                Layout = layout,
+                EnableArchiveFileCompression = true
             };
 
             // Rules for mapping loggers to targets
-            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logconsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
 
+            // Exclude sensitive logs from being logged into files
+            WhenMethodFilter sensistiveLogFilter = new WhenMethodFilter(context =>
+            {
+                object isSensitive;
+                context.Properties.TryGetValue("sensitive", out isSensitive);
+                if (isSensitive != null && (bool)isSensitive)
+                {
+                    for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
+                    {
+                        MessageTemplateParameter template = context.MessageTemplateParameters[i];
+                        if (sensitiveLogParameters.Contains(template.Name))
+                        {
+                            context.Parameters.SetValue(new string('*', template.Value?.ToString().Length ?? 0), i);
+                        }
+                    }
+                    context.Parameters = context.Parameters; // Triggers NLog to format the message again
+                }
+                return FilterResult.Log;
+            });
+            foreach (LoggingRule rule in config.LoggingRules)
+            {
+                foreach (Target target in rule.Targets)
+                {
+                    if (!(target is FileTarget))
+                    {
+                        continue;
+                    }
+                    rule.Filters.Add(sensistiveLogFilter);
+                    break;
+                }
+            }
+
             // Apply config
-            NLog.LogManager.Configuration = config;
-        }
-
-        // Public API
-        [Conditional("DEBUG")]
-        public static void Trace(string message)
-        {
-            logger.Trace(message);
+            LogManager.Configuration = config;
+            TimeSource.Current = new AccurateLocalTimeSource();
         }
 
         [Conditional("DEBUG")]
-        public static void Debug(string message)
+        public static void Trace(object message, params object[] args)
         {
-            logger.Debug(message);
+            logger.Trace(message?.ToString(), args);
         }
 
-        public static void Info(string message)
-        {
-            logger.Info(message);
-        }
-
-        public static void Warn(string message)
-        {
-            logger.Warn(message);
-        }
-
-        public static void Error(string message)
-        {
-            logger.Error(message);
-        }
-
-        public static void Error(Exception ex, string message)
-        {
-            logger.Error(ex, message);
-        }
-
-        public static void Fatal(string message)
-        {
-            logger.Fatal(message);
-        }
-
-        // Sensitive
         [Conditional("DEBUG")]
-        public static void DebugSensitive(string message, params object[] args)
+        public static void Debug(object message, params object[] args)
         {
-            LogFullSensitiveInfo(message, args);
-            Debug(message);
+            logger.Debug(message?.ToString(), args);
         }
 
-        public static void InfoSensitive(string message, params object[] args)
+        public static void Info(object message, params object[] args)
         {
-            LogFullSensitiveInfo(message, args);
-            Info(message);
+            logger.Info(message?.ToString(), args);
         }
 
-        public static void ErrorSensitive(string message, params object[] args)
+        public static void Warn(object message, params object[] args)
         {
-            LogFullSensitiveInfo(message, args);
-            Error(message);
+            logger.Warn(message?.ToString(), args);
         }
 
-        // In game messages
-        public static void InGame(string message, bool containsPersonalInfo = false)
+        public static void Error(object message, params object[] args)
+        {
+            logger.Error(message?.ToString(), args);
+        }
+
+        public static void Error(Exception ex)
+        {
+            logger.Error(ex);
+        }
+
+        public static void Error(Exception ex, string message, params object[] args)
+        {
+            logger.Error(ex, message, args);
+        }
+
+        public static void Fatal(object message, params object[] args)
+        {
+            logger.Fatal().Message(message?.ToString(), args).Write();
+        }
+
+        [Conditional("DEBUG")]
+        public static void DebugSensitive(object message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Debug()
+                .Message(message?.ToString(), args)
+                .Write();
+        }
+
+        public static void InfoSensitive(object message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Info()
+                .Message(message?.ToString(), args)
+                .Write();
+        }
+
+        public static void ErrorSensitive(Exception ex, string message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Error()
+                .Exception(ex)
+                .Message(message, args)
+                .Write();
+        }
+        
+        public static void ErrorSensitive(object message, params object[] args)
+        {
+            logger
+                .WithProperty("sensitive", true)
+                .Error()
+                .Message(message?.ToString(), args)
+                .Write();
+        }
+
+        public static void InGame(object message, bool containsPersonalInfo = false, params object[] args)
         {
             if (inGameLogger == null)
             {
-                logger.Warn("InGameLogger has not been registered");
+                logger.Warn($"{nameof(InGameLogger)} has not been set.");
                 return;
             }
-
-            if (!inGameMessagesEnabled)
-            {
-                logger.Warn("InGameMessages have not been enabled");
-            }
-            inGameLogger.Log(message);
-            
-            // Only log locally if it contains no personal information
-            if (!containsPersonalInfo)
-            {
-                logger.Debug(message);
-            }
-            
-        }
-
-        public static void RegisterInGameLogger(InGameLogger gameLogger)
-        {
-            logger.Info("Registered InGameLogger");
-            inGameLogger = gameLogger;
-        }
-
-        public static void EnableInGameMessages()
-        {
-            inGameMessagesEnabled = true;
-        }
-
-        // Private methods
-        /// <summary>
-        /// When we log with sensitive info we still want to see the info in the console log.
-        /// </summary>
-        private static void LogFullSensitiveInfo(string message, params object[] args)
-        {
-            logger.Trace(message, args);
+            logger
+                .WithProperty("sensitive", containsPersonalInfo)
+                .WithProperty("game", true)
+                .Info()
+                .Message(message?.ToString(), args)
+                .Write();
         }
     }
 }

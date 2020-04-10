@@ -193,7 +193,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             catch (SocketException e)
             {
                 Log.ErrorSensitive("Unable to resolve the address: {0}", hostname);
-                Log.Error(e, e.Message);
+                Log.Error(e);
                 return null;
             }
         }

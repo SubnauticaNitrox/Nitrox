@@ -23,12 +23,12 @@ namespace NitroxServer.ConsoleCommands
                 string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
                 serverConfig.ChangeAdminPassword(args[0]);
 
-                Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");
+                Log.InfoSensitive("Admin password changed to {password} by {playername}", args[0], playerName);
                 SendMessageToPlayer(sender, "Admin password changed");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"Error attempting to change admin password to \"{args[0]}\"");
+                Log.ErrorSensitive(ex, "Error attempting to change admin password to {password}", args[0]);
             }
         }
 
@@ -40,7 +40,7 @@ namespace NitroxServer.ConsoleCommands
         private void ChangeAdminPassword(string password, string name)
         {
             serverConfig.ChangeAdminPassword(password);
-            Log.InfoSensitive("Admin password changed to {0} by {1}", password, name);
+            Log.InfoSensitive("Admin password changed to {password} by {playername}", password, name);
         }
     }
 }

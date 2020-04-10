@@ -1,29 +1,29 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
-using NitroxServer.GameLogic.Vehicles;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.ConfigParser;
-using NitroxModel.DataStructures;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxServer.GameLogic.Vehicles;
 using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        private readonly ServerProtobufSerializer serializer;
         private readonly ServerConfig config;
+        private readonly ServerProtobufSerializer serializer;
 
         public WorldPersistence(ServerProtobufSerializer serializer, ServerConfig config)
         {
@@ -77,6 +77,17 @@ namespace NitroxServer.Serialization.World
             }
         }
 
+        public World Load()
+        {
+            Optional<World> fileLoadedWorld = LoadFromFile();
+            if (fileLoadedWorld.HasValue)
+            {
+                return fileLoadedWorld.Value;
+            }
+
+            return CreateFreshWorld();
+        }
+
         private Optional<World> LoadFromFile()
         {
             try
@@ -123,7 +134,6 @@ namespace NitroxServer.Serialization.World
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
-                
 
                 World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData.Entities,
@@ -152,20 +162,20 @@ namespace NitroxServer.Serialization.World
             return Optional.Empty;
         }
 
-        public World Load()
-        {
-            Optional<World> fileLoadedWorld = LoadFromFile();
-            if (fileLoadedWorld.HasValue)
-            {
-                return fileLoadedWorld.Value;
-            }
-
-            return CreateFreshWorld();
-        }
-
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(), new List<VehicleModel>(), new List<Player>(), new List<ItemData>(), new List<ItemData>(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new List<EscapePodModel>(), config.GameMode);
+            World world = CreateWorld(DateTime.Now,
+                                      new List<Entity>(),
+                                      new List<BasePiece>(),
+                                      new List<BasePiece>(),
+                                      new List<VehicleModel>(),
+                                      new List<Player>(),
+                                      new List<ItemData>(),
+                                      new List<ItemData>(),
+                                      new GameData { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                                      new List<Int3>(),
+                                      new List<EscapePodModel>(),
+                                      config.GameMode);
             return world;
         }
 
@@ -195,7 +205,7 @@ namespace NitroxServer.Serialization.World
             world.GameData = gameData;
             world.EscapePodManager = new EscapePodManager(escapePods);
             world.GameMode = gameMode;
-            
+
             world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
                                                               NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
@@ -209,12 +219,15 @@ namespace NitroxServer.Serialization.World
             HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
-
-            Log.Info("World GameMode: " + gameMode);
-            var serverPass = (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
-            Log.InfoSensitive("Server Password: {0} ", serverPass);
-            Log.InfoSensitive("Admin Password: {0}", config.AdminPassword);
-            
+            if (!string.IsNullOrWhiteSpace(config.ServerPassword))
+            {
+                Log.InfoSensitive("Server Password: {password} ", config.ServerPassword);
+            }
+            else
+            {
+                Log.Info("Server has no password set.");
+            }
+            Log.InfoSensitive("Admin Password: {password}", config.AdminPassword);
             Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;

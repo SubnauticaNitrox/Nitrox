@@ -349,7 +349,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
@@ -362,8 +362,6 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                         Log.InGame("Seems like your firewall settings are interfering");
                     } 
                 }
-
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
                 OnCancelClick();
             }
         }

@@ -25,8 +25,6 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
-            Log.EnableInGameMessages();
-
             if (container != null)
             {
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
