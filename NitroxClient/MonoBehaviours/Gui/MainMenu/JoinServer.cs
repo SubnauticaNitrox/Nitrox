@@ -349,21 +349,21 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.ShowInGameMessage($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {
                     if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
                     {
-                        Log.ShowInGameMessage("Start your server first to join your self-hosted world");
+                        Log.InGame("Start your server first to join your self-hosted world");
                     }
                     else
                     {
-                        Log.ShowInGameMessage("Seems like your firewall settings are interfering");
+                        Log.InGame("Seems like your firewall settings are interfering");
                     } 
                 }
 
-                Log.ShowInGameMessage($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
+                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
                 OnCancelClick();
             }
         }
@@ -416,16 +416,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             switch (state.CurrentStage)
             {
                 case MultiplayerSessionConnectionStage.ESTABLISHING_SERVER_POLICY:
-                    Log.ShowInGameMessage("Requesting session policy information...");
+                    Log.InGame("Requesting session policy information...");
                     break;
                 case MultiplayerSessionConnectionStage.AWAITING_RESERVATION_CREDENTIALS:
-                    Log.ShowInGameMessage("Waiting for User Input...");
+                    Log.InGame("Waiting for User Input...");
                     RightSideMainMenu.OpenGroup("Join Server");
                     FocusPlayerNameTextbox();
                     break;
 
                 case MultiplayerSessionConnectionStage.SESSION_RESERVED:
-                    Log.ShowInGameMessage("Launching game...");
+                    Log.InGame("Launching game...");
                     multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
                     preferencesManager.Save();
 
@@ -437,7 +437,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
                     break;
                 case MultiplayerSessionConnectionStage.SESSION_RESERVATION_REJECTED:
-                    Log.ShowInGameMessage("Reservation rejected...");
+                    Log.InGame("Reservation rejected...");
 
                     MultiplayerSessionReservationState reservationState = multiplayerSession.Reservation.ReservationState;
 

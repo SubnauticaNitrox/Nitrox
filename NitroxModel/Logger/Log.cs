@@ -39,6 +39,11 @@ namespace NitroxModel.Logger
             logger.Error(message);
         }
 
+        public static void Error(Exception ex, string message)
+        {
+            logger.Error(ex, message);
+        }
+
         public static void Fatal(string message)
         {
             logger.Fatal(message);
@@ -62,15 +67,10 @@ namespace NitroxModel.Logger
         {
             LogFullSensitiveInfo(message, args);
             Error(message);
-        } 
-
-        public static void Exception(string message, Exception ex)
-        {
-            logger.Error(ex, message);
         }
 
         // In game messages
-        public static void ShowInGameMessage(string message, bool containsPersonalInfo = false)
+        public static void InGame(string message, bool containsPersonalInfo = false)
         {
             if (inGameLogger == null)
             {

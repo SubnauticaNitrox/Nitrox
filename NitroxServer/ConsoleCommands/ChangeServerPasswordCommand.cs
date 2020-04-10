@@ -29,7 +29,7 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log.Exception("Error attempting to change server password", ex);
+                Log.Error(ex, "Error attempting to change server password");
             }
         }
 

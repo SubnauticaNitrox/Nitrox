@@ -90,7 +90,7 @@ namespace NitroxServer.ConfigParser
             }
             catch (Exception ex)
             {
-                Log.Exception("Can't refresh server app settings", ex);
+                Log.Error(ex, "Can't refresh server app settings");
             }
         }
     }

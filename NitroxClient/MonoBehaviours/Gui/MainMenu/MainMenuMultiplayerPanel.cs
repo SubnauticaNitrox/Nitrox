@@ -107,7 +107,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             IPEndPoint endpoint = ResolveIpv4(serverIp) ?? ResolveHostName(serverIp);
             if (endpoint == null)
             {
-                Log.ShowInGameMessage($"Unable to resolve remote address: {serverIp}");
+                Log.InGame($"Unable to resolve remote address: {serverIp}");
                 return;
             }
 
@@ -193,7 +193,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             catch (SocketException e)
             {
                 Log.ErrorSensitive("Unable to resolve the address: {0}", hostname);
-                Log.Exception(e.Message, e);
+                Log.Error(e, e.Message);
                 return null;
             }
         }

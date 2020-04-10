@@ -449,7 +449,7 @@ namespace NitroxLauncher
                     }
                     catch (Exception e)
                     {
-                        Log.Exception($"There was error during copying the assembly: {fileName}", e);
+                        Log.Error(e, $"There was error during copying the assembly: {fileName}");
                     }
                 }
                 else if (!File.Exists(destinationFilePath))
