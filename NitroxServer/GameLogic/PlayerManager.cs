@@ -161,8 +161,8 @@ namespace NitroxServer.GameLogic
 
                 if (ConnectedPlayers().Count() == 0)
                 {
-                    Server.Instance.Save();
                     Server.Instance.DisablePeriodicSaving();
+                    Server.Instance.Save();
                 }
             }
 
