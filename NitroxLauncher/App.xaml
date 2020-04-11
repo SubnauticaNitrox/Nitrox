@@ -124,6 +124,18 @@
                 </Style.Resources>
             </Style>
 
+            <Style TargetType="{x:Type Hyperlink}">
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="Foreground" Value="#007BFF" />
+                <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="Foreground" Value="#3999FF" />
+                        <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
             <Style TargetType="Image" x:Key="PageImage">
                 <Setter Property="Width" Value="1125.43" />
                 <Setter Property="Height" Value="553" />
