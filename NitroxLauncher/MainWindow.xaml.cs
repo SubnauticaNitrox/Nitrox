@@ -9,7 +9,9 @@ using System.Windows.Media;
 using NitroxLauncher.AttachedProperties;
 using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
+using NitroxLauncher.Properties;
 using NitroxModel.Discovery;
+using NitroxModel.Discovery.InstallationFinders;
 using NitroxModel.Helper;
 
 namespace NitroxLauncher
@@ -70,6 +72,8 @@ namespace NitroxLauncher
 
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
+
+            ConfigFileGameFinder.AddResolver(() => Settings.Default.SubnauticaPath);
 
             logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame().OrElse(null))
                 .ContinueWith(task =>

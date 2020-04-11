@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using NitroxLauncher.Events;
 using NitroxLauncher.Pages;
 using NitroxLauncher.Patching;
+using NitroxLauncher.Properties;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -94,7 +95,8 @@ namespace NitroxLauncher
             return await Task.Factory.StartNew(() =>
                 {
                     PirateDetection.TriggerOnDirectory(path);
-                    File.WriteAllText("path.txt", path);
+                    Settings.Default.SubnauticaPath = path;
+                    Settings.Default.Save();
                     if (nitroxEntryPatch?.IsApplied == true)
                     {
                         nitroxEntryPatch.Remove();
