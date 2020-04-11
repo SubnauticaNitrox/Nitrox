@@ -274,6 +274,7 @@
     <Compile Include="GameLogic\PrecursorManager.cs" />
     <Compile Include="GameLogic\Spawning\CellRootSpawner.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
+    <Compile Include="GameLogic\WreckManager.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLogItem.cs" />

@@ -12,9 +12,9 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
         }
 
-        public void TogglePrecursorDoor(NitroxId id, bool toggle)
+        public void TogglePrecursorDoor(NitroxId id, bool isOpen)
         {
-            PrecursorDoorwayToggle doorway = new PrecursorDoorwayToggle(id, toggle);
+            PrecursorDoorwayAction doorway = new PrecursorDoorwayAction(id, isOpen);
             packetSender.Send(doorway);
         }
     }
