@@ -38,7 +38,7 @@ namespace NitroxModel.Logger
             logger = LogManager.GetCurrentClassLogger();
 
             LoggingConfiguration config = new LoggingConfiguration();
-            string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${event-properties:item=PlayerName} ${message} ${exception}";
+            string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${event-properties:item=PlayerName}${message} ${exception}";
 
             // Targets where to log to: File and Console
             ColoredConsoleTarget logconsole = new ColoredConsoleTarget(nameof(logconsole)) { Layout = layout };
@@ -87,7 +87,7 @@ namespace NitroxModel.Logger
             logger.Info("Setting player name");
             if (playerName != null)
             {
-                logger.SetProperty("PlayerName", playerName);
+                logger.SetProperty("PlayerName", string.Format($"{playerName} "));
             }
         }
 
