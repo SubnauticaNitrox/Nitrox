@@ -7,8 +7,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
-using NitroxServer.ConfigParser;
 
 namespace NitroxServer.GameLogic
 {
