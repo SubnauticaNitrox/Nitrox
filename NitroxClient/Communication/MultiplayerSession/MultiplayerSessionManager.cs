@@ -117,11 +117,16 @@ namespace NitroxClient.Communication.MultiplayerSession
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
             Log.Debug("Updating session stage from {sessionStageFrom} to {$sessionStageTo} for {playerName}", fromStage, sessionConnectionState.CurrentStage, username);
-
+            
             CurrentState = sessionConnectionState;
 
             // Last connection state changed will not have any handlers
             ConnectionStateChanged?.Invoke(CurrentState);
+
+            if (sessionConnectionState.CurrentStage == MultiplayerSessionConnectionStage.SESSION_JOINED)
+            {
+                Log.SetPlayerName(username);
+            }
         }
 
         public void ClearSessionState()
