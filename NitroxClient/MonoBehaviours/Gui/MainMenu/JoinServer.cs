@@ -349,7 +349,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (ClientConnectionFailedException)
             {
-                Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}", true);
+                Log.InGame("Unable to contact the remote server at: {ip}:{port}", true, ServerIp, ServerPort);
 
                 if (ServerIp.Equals("127.0.0.1"))
                 {

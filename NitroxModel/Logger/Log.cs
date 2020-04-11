@@ -21,7 +21,8 @@ namespace NitroxModel.Logger
         {
             "username",
             "password",
-            "ip"
+            "ip",
+            "hostname"
         };
 
         private static NLog.Logger logger;

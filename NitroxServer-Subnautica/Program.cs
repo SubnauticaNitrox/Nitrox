@@ -40,7 +40,7 @@ namespace NitroxServer_Subnautica
             }
             catch (Exception e)
             {
-                Log.Error(e, e.Message);
+                Log.Error(e);
                 return;
             }
 

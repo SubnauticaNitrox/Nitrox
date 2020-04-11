@@ -48,7 +48,7 @@ namespace NitroxServer.ConsoleCommands
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error attempting to kick: " + args[0]);
+                Log.Error(ex, "Error attempting to kick {playername}", args[0]);
             }
         }
 

@@ -76,9 +76,9 @@ namespace NitroxClient.MonoBehaviours
 
         public void Awake()
         {
-            Log.InGame("Multiplayer Client Loaded...");
             Log.InGameLogger = new SubnauticaInGameLogger();
-            
+            Log.InGame("Multiplayer Client Loaded...");
+
             multiplayerSession = NitroxServiceLocator.LocateService<IMultiplayerSession>();
             packetReceiver = NitroxServiceLocator.LocateService<PacketReceiver>();
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
@@ -111,7 +111,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, $"Error processing packet: {packet}");
+                    Log.Error(ex, "Error processing packet {$packet}", packet);
                 }
             }
         }

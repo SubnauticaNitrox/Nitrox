@@ -181,7 +181,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             Match match = Regex.Match(hostname, @"^\s*([a-zA-Z\.]*)\:?(\d{2,5})?\s*$");
             if (!match.Success)
             {
-                Log.Error($"Hostname {hostname} has an invalid format");
+                Log.ErrorSensitive("Hostname {hostname} has an invalid format", hostname);
                 return null;
             }
 
@@ -192,7 +192,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             }
             catch (SocketException e)
             {
-                Log.ErrorSensitive("Unable to resolve the address: {0}", hostname);
+                Log.ErrorSensitive("Unable to resolve the address {hostname}", hostname);
                 Log.Error(e);
                 return null;
             }
