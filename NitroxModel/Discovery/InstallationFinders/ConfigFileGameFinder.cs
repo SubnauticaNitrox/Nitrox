@@ -9,26 +9,36 @@ namespace NitroxModel.Discovery.InstallationFinders
     /// </summary>
     public class ConfigFileGameFinder : IFindGameInstallation
     {
-        private const string FILENAME = "path.txt";
+        public delegate string ConfigResolver();
+
+        private static event ConfigResolver getConfig;
+
+        public static void AddResolver(ConfigResolver resolver)
+        {
+            getConfig += resolver;
+        }
 
         public Optional<string> FindGame(List<string> errors = null)
         {
-            if (!File.Exists(FILENAME))
+            if(getConfig == null)
             {
-                errors?.Add($@"Game installation directory config file is not set. Create a '{FILENAME}' in directory: '{Directory.GetCurrentDirectory()}' with the path to the Subnautica installation directory.");
+                // should only happen outside of the launcher
+                errors?.Add("Game installation config resolver is not set.");
+                return Optional.Empty;
+            }
+            string config = getConfig.Invoke();
+
+            if (config == "" || config == "False")
+            {
+                errors?.Add($@"Game installation not set in the launcher settings. Please set it using the launcher.");
                 return Optional.Empty;
             }
 
-            string path = File.ReadAllText(FILENAME).Trim();
-            if (string.IsNullOrEmpty(path))
-            {
-                errors?.Add($@"Config file {Path.GetFullPath(FILENAME)} was found empty. Please enter the path to the Subnautica installation.");
-                return Optional.Empty;
-            }
+            string path = config.Trim();
 
             if (!Directory.Exists(Path.Combine(path, "Subnautica_Data", "Managed")))
             {
-                errors?.Add($@"Game installation directory config file {path} is invalid. Please enter the path to the Subnautica installation.");
+                errors?.Add($@"Game installation directory specified in the launcher config is invalid. Please enter the path to the Subnautica installation.");
                 return Optional.Empty;
             }
 
