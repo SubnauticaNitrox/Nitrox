@@ -8,11 +8,9 @@ namespace NitroxClient.GameLogic
     public class PrecursorManager
     {
         private readonly IPacketSender packetSender;
-        private readonly IMultiplayerSession multiplayerSession;
-        public PrecursorManager(IPacketSender packetSender, IMultiplayerSession multiplayerSession)
+        public PrecursorManager(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
-            this.multiplayerSession = multiplayerSession;
         }
 
         public void TogglePrecursorDoor(NitroxId id, bool toggle)
