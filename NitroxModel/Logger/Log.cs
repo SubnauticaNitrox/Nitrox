@@ -55,7 +55,7 @@ namespace NitroxModel.Logger
 
             // Rules for mapping loggers to targets
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, new NLog.Targets.Wrappers.AsyncTargetWrapper(logfile, 1000, NLog.Targets.Wrappers.AsyncTargetWrapperOverflowAction.Grow));
             config.AddRuleForOneLevel(LogLevel.Info,
                                       new MethodCallTarget("ingame",
                                                            (evt, obj) =>
