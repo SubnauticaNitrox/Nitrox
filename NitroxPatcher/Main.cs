@@ -25,13 +25,15 @@ namespace NitroxPatcher
 
         public static void Execute()
         {
+            Log.Setup(true);
+            
             if (container != null)
             {
-                Log.Warn("Patches have already been detected! Call Apply or Restore instead.");
+                Log.Warn($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
                 return;
             }
 
-            Log.Info("Registering Dependencies");
+            Log.Info("Registering dependencies");
             container = CreatePatchingContainer();
             NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
 
@@ -49,7 +51,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Info("Applying dynamic patch " + patch.GetType().Name);
+                Log.Debug("Applying dynamic patch {patchName}", patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
@@ -70,7 +72,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Info("Restoring dynamic patch " + patch.GetType().Name);
+                Log.Debug("Restoring dynamic patch {patchName}", patch.GetType().Name);
                 patch.Restore(harmony);
             }
 
@@ -86,13 +88,13 @@ namespace NitroxPatcher
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
-                Log.Info("Applying persistent patch " + patch.GetType().Name);
+                Log.Debug("Applying persistent patch {patchName}", patch.GetType().Name);
                 patch.Patch(harmony);
             }
 
             Multiplayer.OnBeforeMultiplayerStart += Apply;
             Multiplayer.OnAfterMultiplayerEnd += Restore;
-            Log.Debug($"Completed patching using {Assembly.GetExecutingAssembly().FullName}");
+            Log.Info($"Completed patching using {Assembly.GetExecutingAssembly().FullName}");
         }
 
         private static IContainer CreatePatchingContainer()

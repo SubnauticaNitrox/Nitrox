@@ -58,7 +58,7 @@ namespace NitroxClient.GameLogic.Spawning
 
         private void ExecuteDropItemAction(TechType techType, GameObject gameObject)
         {
-            Log.Debug("Performing drop action for tech type: " + techType);
+            Log.Debug("Performing drop action for tech type {$techType}", techType);
 
             ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
             itemDropAction.ProcessDroppedItem(gameObject);

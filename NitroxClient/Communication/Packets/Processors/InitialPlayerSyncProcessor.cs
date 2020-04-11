@@ -69,7 +69,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 {
                     loadingMultiplayerWaitItem.SetProgress(cumulativeProcessorsRan, processors.Count);
 
-                    Log.Info("Running " + processor.GetType());
+                    Log.Info("Running {syncProcessorType}", processor.GetType().FullName);
                     alreadyRan.Add(processor.GetType());
                     processorsRanLastCycle++;
                     cumulativeProcessorsRan++;

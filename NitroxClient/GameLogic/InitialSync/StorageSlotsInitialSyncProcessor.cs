@@ -40,7 +40,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
-                    Log.Info("Initial StorageSlot item data for " + item.name + " giving to container " + itemData.ContainerId);
+                    Log.Debug("Initial StorageSlot item data for {itemName} giving to container {itemContainerId}", item.name, itemData.ContainerId);
 
                     NitroxEntity.SetNewId(item, itemData.ItemId);
                     slots.AddItem(item, itemData.ContainerId, true);

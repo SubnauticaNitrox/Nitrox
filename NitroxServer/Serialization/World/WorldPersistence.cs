@@ -130,12 +130,12 @@ namespace NitroxServer.Serialization.World
                     persistedData.WorldData = serializer.Deserialize<WorldData>(stream);
                 }
 
-                if (persistedData == null || !persistedData.IsValid())
+                if (!persistedData.IsValid())
                 {
-                    throw new InvalidDataException("Persisted state is not valid");
+                    throw new InvalidDataException("Save data is empty or not valid");
                 }
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
+                World world = CreateWorld(persistedData.WorldData.ServerStartTime ?? DateTime.UtcNow,
                                           persistedData.WorldData.EntityData.Entities,
                                           persistedData.BaseData.PartiallyConstructedPieces,
                                           persistedData.BaseData.CompletedBasePieceHistory,
@@ -154,9 +154,13 @@ namespace NitroxServer.Serialization.World
             {
                 Log.Info("No previous save file found - creating a new one.");
             }
+            catch (InvalidDataException ex)
+            {
+                Log.Warn($"{ex.Message} - creating a new one.");
+            }
             catch (Exception ex)
             {
-                Log.Info("Could not load world: " + ex + " creating a new one.");
+                Log.Error("Could not load world: " + ex + " creating a new one.");
             }
 
             return Optional.Empty;
@@ -228,7 +232,7 @@ namespace NitroxServer.Serialization.World
                 Log.Info("Server has no password set.");
             }
             Log.InfoSensitive("Admin Password: {password}", config.AdminPassword);
-            Log.Info("To get help for commands, run help in console or /help in chatbox");
+            Log.Info("To get help for commands, run {commandName} in console or {chatCommandName} in chatbox", "help", "/help");
 
             return world;
         }

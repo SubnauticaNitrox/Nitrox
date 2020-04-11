@@ -26,7 +26,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public MultiplayerSessionManager(IClient client)
         {
-            Log.Info("Initializing MultiplayerSessionManager...");
+            Log.Info("Initializing {type}...", typeof(MultiplayerSessionManager));
             Client = client;
             CurrentState = new Disconnected();
         }
@@ -56,11 +56,11 @@ namespace NitroxClient.Communication.MultiplayerSession
             switch (localVersion.CompareTo(SessionPolicy.NitroxVersionAllowed))
             {
                 case -1:
-                    Log.InGame($"Your Nitrox installation is out of date. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.InGame("Your Nitrox installation is out of date. Server: {serverVersion}, Yours: {localVersion}.", false, SessionPolicy.NitroxVersionAllowed, localVersion);
                     CurrentState.Disconnect(this);
                     return;
                 case 1:
-                    Log.InGame($"The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {SessionPolicy.NitroxVersionAllowed}, Yours: {localVersion}.");
+                    Log.InGame("The server runs an older version of Nitrox. Ask the server admin to upgrade or downgrade your Nitrox installation. Server: {serverVersion}, Yours: {localVersion}.", false, SessionPolicy.NitroxVersionAllowed, localVersion);
                     CurrentState.Disconnect(this);
                     return;
             }
@@ -116,7 +116,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
             string fromStage = CurrentState == null ? "null" : CurrentState.CurrentStage.ToString();
             string username = AuthenticationContext == null ? "" : AuthenticationContext.Username;
-            Log.DebugSensitive("Updating session stage from {0} to {1} for {2}", fromStage, sessionConnectionState.CurrentStage, username);
+            Log.Debug("Updating session stage from {sessionStageFrom} to {$sessionStageTo} for {playerName}", fromStage, sessionConnectionState.CurrentStage, username);
 
             CurrentState = sessionConnectionState;
 

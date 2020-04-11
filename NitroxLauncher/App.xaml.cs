@@ -11,6 +11,8 @@ namespace NitroxLauncher
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            Log.Setup();
+            
             // Set default style for all windows to the style with the target type 'Window' (in App.xaml).
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
                 new FrameworkPropertyMetadata

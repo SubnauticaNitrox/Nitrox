@@ -19,6 +19,8 @@ namespace NitroxServer_Subnautica
             ConfigureConsoleWindow();
             ConfigureCultureInfo();
             
+            Log.Setup();
+            
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());

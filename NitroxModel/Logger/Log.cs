@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using NLog;
 using NLog.Config;
 using NLog.Filters;
@@ -26,16 +24,18 @@ namespace NitroxModel.Logger
             "ip"
         };
 
-        private static readonly NLog.Logger logger = LogManager.GetCurrentClassLogger();
-        private static InGameLogger inGameLogger;
+        private static NLog.Logger logger;
 
-        public static InGameLogger InGameLogger
-        {
-            set { inGameLogger = value; }
-        }
+        public static InGameLogger InGameLogger { private get; set; }
 
-        static Log()
+        public static void Setup(bool performanceCritical = false)
         {
+            if (logger != null)
+            {
+                throw new Exception($"{nameof(Log)} setup should only be executed once.");
+            }
+            logger = LogManager.GetCurrentClassLogger();
+
             LoggingConfiguration config = new LoggingConfiguration();
             string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${message} ${exception}";
 
@@ -55,42 +55,30 @@ namespace NitroxModel.Logger
             // Rules for mapping loggers to targets
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+            config.AddRuleForOneLevel(LogLevel.Info,
+                                      new MethodCallTarget("ingame",
+                                                           (evt, obj) =>
+                                                           {
+                                                               if (InGameLogger == null)
+                                                               {
+                                                                   return;
+                                                               }
+                                                               object isGameLog;
+                                                               evt.Properties.TryGetValue("game", out isGameLog);
+                                                               if (isGameLog != null && (bool)isGameLog)
+                                                               {
+                                                                   InGameLogger.Log(evt.FormattedMessage);
+                                                               }
+                                                           }));
 
-            // Exclude sensitive logs from being logged into files
-            WhenMethodFilter sensistiveLogFilter = new WhenMethodFilter(context =>
-            {
-                object isSensitive;
-                context.Properties.TryGetValue("sensitive", out isSensitive);
-                if (isSensitive != null && (bool)isSensitive)
-                {
-                    for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
-                    {
-                        MessageTemplateParameter template = context.MessageTemplateParameters[i];
-                        if (sensitiveLogParameters.Contains(template.Name))
-                        {
-                            context.Parameters.SetValue(new string('*', template.Value?.ToString().Length ?? 0), i);
-                        }
-                    }
-                    context.Parameters = context.Parameters; // Triggers NLog to format the message again
-                }
-                return FilterResult.Log;
-            });
-            foreach (LoggingRule rule in config.LoggingRules)
-            {
-                foreach (Target target in rule.Targets)
-                {
-                    if (!(target is FileTarget))
-                    {
-                        continue;
-                    }
-                    rule.Filters.Add(sensistiveLogFilter);
-                    break;
-                }
-            }
+            AddSensitiveFilter(config);
 
             // Apply config
             LogManager.Configuration = config;
-            TimeSource.Current = new AccurateLocalTimeSource();
+            if (!performanceCritical)
+            {
+                TimeSource.Current = new AccurateLocalTimeSource();
+            }
         }
 
         [Conditional("DEBUG")]
@@ -163,7 +151,7 @@ namespace NitroxModel.Logger
                 .Message(message, args)
                 .Write();
         }
-        
+
         public static void ErrorSensitive(object message, params object[] args)
         {
             logger
@@ -175,7 +163,7 @@ namespace NitroxModel.Logger
 
         public static void InGame(object message, bool containsPersonalInfo = false, params object[] args)
         {
-            if (inGameLogger == null)
+            if (InGameLogger == null)
             {
                 logger.Warn($"{nameof(InGameLogger)} has not been set.");
                 return;
@@ -186,6 +174,44 @@ namespace NitroxModel.Logger
                 .Info()
                 .Message(message?.ToString(), args)
                 .Write();
+        }
+
+        /// <summary>
+        ///     Exclude sensitive logs parameters from being logged into (long-term) files
+        /// </summary>
+        /// <param name="config">The logger config to apply the filter to.</param>
+        private static void AddSensitiveFilter(LoggingConfiguration config)
+        {
+            WhenMethodFilter sensistiveLogFilter = new WhenMethodFilter(context =>
+            {
+                object isSensitive;
+                context.Properties.TryGetValue("sensitive", out isSensitive);
+                if (isSensitive != null && (bool)isSensitive)
+                {
+                    for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
+                    {
+                        MessageTemplateParameter template = context.MessageTemplateParameters[i];
+                        if (sensitiveLogParameters.Contains(template.Name))
+                        {
+                            context.Parameters.SetValue(new string('*', template.Value?.ToString().Length ?? 0), i);
+                        }
+                    }
+                    context.Parameters = context.Parameters; // Triggers NLog to format the message again
+                }
+                return FilterResult.Log;
+            });
+            foreach (LoggingRule rule in config.LoggingRules)
+            {
+                foreach (Target target in rule.Targets)
+                {
+                    if (!(target is FileTarget))
+                    {
+                        continue;
+                    }
+                    rule.Filters.Add(sensistiveLogFilter);
+                    break;
+                }
+            }
         }
     }
 }
