@@ -35,6 +35,11 @@ namespace NitroxLauncher.Pages
             {
                 await LauncherLogic.Instance.StartMultiplayerAsync();
             }
+            catch(BadImageFormatException ex)
+            {
+                //This exception is throw with "Invalid DOS Signature" which is a clue that some
+                MessageBox.Show($"Try to check your subnautica files throught Steam/EpicGames in order to fix the game: {ex.Message}", "Error, Seems like your game is corrupted :(", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), "Error while starting in multiplayer mode", MessageBoxButton.OK, MessageBoxImage.Error);
