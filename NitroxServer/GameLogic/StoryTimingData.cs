@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NitroxModel.Logger;
 using ProtoBufNet;
 
 namespace NitroxServer.GameLogic
@@ -17,20 +13,12 @@ namespace NitroxServer.GameLogic
         [ProtoMember(2)]
         public double? AuroraExplosionTime { get; set; }
 
-        [ProtoIgnore]
-        public EventTriggerer EventTriggerer;
-
-        [ProtoBeforeSerialization]
-        public void ProtoBeforeSerialization()
+        public static StoryTimingData From(EventTriggerer eventTriggerer)
         {
-            if (EventTriggerer != null)
-            {
-                EventTriggerer.Serialize();
-            }
-            else
-            {
-                Log.Warn("Event Triggerer failed to serialize (null)");
-            }
+            StoryTimingData inst = new StoryTimingData();
+            inst.ElapsedTime = eventTriggerer.GetRealElapsedTime();
+            inst.AuroraExplosionTime = eventTriggerer.AuroraExplosionTime;
+            return inst;
         }
     }
 }

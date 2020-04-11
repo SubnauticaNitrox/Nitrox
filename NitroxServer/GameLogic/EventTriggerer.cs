@@ -10,45 +10,41 @@ namespace NitroxServer.GameLogic
     public class EventTriggerer
     {
         private PlayerManager playerManager;
-        private GameData gameData;
         private Stopwatch stopWatch;
-        private double elapsedTime;
-        private double auroraExplosionTime;
-        public EventTriggerer(PlayerManager playerManager, GameData gameData)
+        public double ElapsedTime;
+        public double AuroraExplosionTime;
+        public EventTriggerer(PlayerManager playerManager, double elapsedTime, double? auroraExplosionTime)
         {
             this.playerManager = playerManager;
-            this.gameData = gameData;
-            gameData.StoryTiming.EventTriggerer = this; //bad hack, we should probably just serialize this class
-            SetupEventTimers();
+            SetupEventTimers(elapsedTime, auroraExplosionTime);
         }
 
-        public void SetupEventTimers()
+        private void SetupEventTimers(double elapsedTime, double? auroraExplosionTime)
         {
             // eventually this should be on a better timer so it can be saved, paused, etc
             Log.Debug("Event Triggerer started!");
 
-            StoryTimingData storyTiming = gameData.StoryTiming;
-            elapsedTime = storyTiming.ElapsedTime;
-            if (storyTiming.AuroraExplosionTime.HasValue)
+            ElapsedTime = elapsedTime;
+            if (auroraExplosionTime.HasValue)
             {
-                auroraExplosionTime = storyTiming.AuroraExplosionTime.Value;
+                AuroraExplosionTime = auroraExplosionTime.Value;
             }
             else
             {
-                auroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
+                AuroraExplosionTime = RandomNumber(2.3d, 4d) * 1200d * 1000d; //Time.deltaTime returns seconds so we need to multiply 1000
             }
 
-            CreateTimer(auroraExplosionTime * 0.2d - elapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
-            CreateTimer(auroraExplosionTime * 0.5d - elapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
-            CreateTimer(auroraExplosionTime * 0.8d - elapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
-            CreateTimer(auroraExplosionTime - elapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
-            CreateTimer(auroraExplosionTime + 24000 - elapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
+            CreateTimer(AuroraExplosionTime * 0.2d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning1");
+            CreateTimer(AuroraExplosionTime * 0.5d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning2");
+            CreateTimer(AuroraExplosionTime * 0.8d - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning3");
+            CreateTimer(AuroraExplosionTime - ElapsedTime, StoryEventType.PDA, "Story_AuroraWarning4");
+            CreateTimer(AuroraExplosionTime + 24000 - ElapsedTime, StoryEventType.EXTRA, "Story_AuroraExplosion");
             //like the timers, except we can see how much time has passed
             stopWatch = new Stopwatch();
             stopWatch.Start();
         }
 
-        public Timer CreateTimer(double time, StoryEventType eventType, string key)
+        private Timer CreateTimer(double time, StoryEventType eventType, string key)
         {
             //if timeOffset goes past the time
             if (time <= 0)
@@ -68,19 +64,19 @@ namespace NitroxServer.GameLogic
             return timer;
         }
 
-        public double RandomNumber(double min, double max)
+        private double RandomNumber(double min, double max)
         {
             Random random = new Random();
             return random.NextDouble() * (max - min) + min;
         }
 
-        public void Serialize()
+        public double GetRealElapsedTime()
         {
-            gameData.StoryTiming.ElapsedTime = elapsedTime + stopWatch.ElapsedMilliseconds;
-            gameData.StoryTiming.AuroraExplosionTime = auroraExplosionTime;
-            Log.Debug("Event Triggerer details:");
-            Log.Debug($"  Time: {gameData.StoryTiming.ElapsedTime}");
-            Log.Debug($"  Explode: {gameData.StoryTiming.AuroraExplosionTime}");
+            if (stopWatch == null)
+            {
+                return ElapsedTime;
+            }
+            return stopWatch.ElapsedMilliseconds + ElapsedTime;
         }
     }
 }
