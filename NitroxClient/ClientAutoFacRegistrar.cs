@@ -111,7 +111,6 @@ namespace NitroxClient
             containerBuilder.RegisterType<SeamothModulesEvent>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<EscapePodManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PrecursorManager>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<WreckManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Debugger>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Fires>().InstancePerLifetimeScope();
         }
