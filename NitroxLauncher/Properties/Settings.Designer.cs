@@ -34,33 +34,27 @@ namespace NitroxLauncher.Properties {
                 this["IsExternalServer"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public string SubnauticaPath
-        {
-            get
-            {
+        public string SubnauticaPath {
+            get {
                 return ((string)(this["SubnauticaPath"]));
             }
-            set
-            {
+            set {
                 this["SubnauticaPath"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string AssemblyCSharpModifiedHash
-        {
-            get
-            {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public string AssemblyCSharpModifiedHash {
+            get {
                 return ((string)(this["AssemblyCSharpModifiedHash"]));
             }
-            set
-            {
+            set {
                 this["AssemblyCSharpModifiedHash"] = value;
             }
         }
