@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NitroxClient.Debuggers;
 using NitroxModel.Packets;
 
 namespace NitroxClient.Communication
@@ -15,6 +16,7 @@ namespace NitroxClient.Communication
 
         public void PacketReceived(Packet packet)
         {
+            NetworkDebugger.Instance.PacketReceived(packet);
             lock (receivedPackets)
             {
                 receivedPackets.Enqueue(packet);

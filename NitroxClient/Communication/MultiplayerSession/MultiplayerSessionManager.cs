@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
+using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
@@ -100,6 +101,7 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (!suppressedPacketsTypes.Contains(packetType))
             {
                 Client.Send(packet);
+                NetworkDebugger.Instance.PacketSent(packet);
                 return true;
             }
             return false;
