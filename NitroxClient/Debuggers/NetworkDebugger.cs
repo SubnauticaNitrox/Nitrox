@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NitroxModel.Packets;
 using UnityEngine;
 
@@ -75,7 +76,7 @@ namespace NitroxClient.Debuggers
             {
                 GUILayout.Label($"Sent: {sentCount} - Received: {receivedCount}");
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, GUILayout.Height(300));
-                foreach (KeyValuePair<Type, int> kv in countByType)
+                foreach (KeyValuePair<Type, int> kv in countByType.OrderBy(e => -e.Value))// descending
                 {
                     GUILayout.Label($"{kv.Key.Name}: {kv.Value}");
                 }
