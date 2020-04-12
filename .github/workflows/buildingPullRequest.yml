@@ -22,7 +22,7 @@ jobs:
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
     - name: Delete unneeded files for zipped launcher
-      run: del /q /f ./NitroxLauncher/bin/Release/*.dll ./NitroxLauncher/bin/Release/*.pdb ./NitroxLauncher/bin/Release/*.xml
+      run: del /q /f ".\NitroxLauncher\bin\Release\*.dll" ".\NitroxLauncher\bin\Release\*.pdb" ".\NitroxLauncher\bin\Release\*.xml"
     - name: Uploading zipped launcher
       uses: actions/upload-artifact@v1
       with:
