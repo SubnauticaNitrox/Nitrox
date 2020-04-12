@@ -2,8 +2,6 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -30,12 +28,14 @@ namespace NitroxModel.DataStructures.Util
         {
             get
             {
-                // If Unity object is destroyed then this optional also has no value (because a dead object is useless, same as null).
-                if (Value is Object)
+                if (ReferenceEquals(Value, null))
                 {
-                    return Value?.ToString() != "null";
+                    return false;
                 }
-                return hasValue;
+
+                // Check to satisfy unity objects.  Sometimes they are internally destroyed but are not considered null.
+                // For the purpose of optional, we consider a dead object to be the same as null.
+                return Value.ToString() != "null";
             }
             set
             {

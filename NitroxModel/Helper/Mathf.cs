@@ -1,7 +1,5 @@
 ﻿using System;
 
-// ReSharper disable InconsistentNaming
-
 namespace NitroxModel.Helper
 {
     public class Mathf
@@ -10,22 +8,17 @@ namespace NitroxModel.Helper
         public const float PI = 3.14159274f;
         public const float DEG2RAD = 0.0174532924f;
 
-        public float Abs(float val)
-        {
-            return Math.Abs(val);
-        }
-
-        internal static float Sqrt(float ls)
+        public static float Sqrt(float ls)
         {
             return (float)Math.Sqrt(ls);
         }
 
-        internal static float Atan2(float p1, float p2)
+        public static float Atan2(float p1, float p2)
         {
             return (float)Math.Atan2(p1, p2);
         }
 
-        internal static float Asin(float p)
+        public static float Asin(float p)
         {
             return (float)Math.Asin(p);
         }
