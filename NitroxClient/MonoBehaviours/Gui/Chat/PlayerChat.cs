@@ -16,7 +16,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const float TOGGLED_TRANSPARENCY = 0.4f;
         public const float CHAT_VISIBILITY_TIME_LENGTH = 10f;
 
-        public static bool IsLoading { get; private set; } = true;
+        public static bool IsReady { get; private set; }
 
         private PlayerChatManager playerChatManager;
         private CanvasGroup canvasGroup;
@@ -57,7 +57,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             };
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
-            IsLoading = false;
+            IsReady = true;
         }
 
         public void WriteLogEntry(string playerName, string message, Color color)

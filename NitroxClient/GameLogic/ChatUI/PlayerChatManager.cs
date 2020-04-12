@@ -22,20 +22,14 @@ namespace NitroxClient.GameLogic.ChatUI
         public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
         private IEnumerator ShowChatAsync()
         {
-            while (PlayerChat.IsLoading)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => PlayerChat.IsReady);
             playerChat.Show();
         }
 
         public void HideChat() => Player.main.StartCoroutine(HideChatAsync());
         private IEnumerator HideChatAsync()
         {
-            while (PlayerChat.IsLoading)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => PlayerChat.IsReady);
             playerChat.Deselect();
             playerChat.Hide();
         }
@@ -43,10 +37,7 @@ namespace NitroxClient.GameLogic.ChatUI
         public void SelectChat() => Player.main.StartCoroutine(SelectChatAsync());
         private IEnumerator SelectChatAsync()
         {
-            while (PlayerChat.IsLoading)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => PlayerChat.IsReady);
             playerChat.Show();
             playerChat.Select();
         }
@@ -54,11 +45,7 @@ namespace NitroxClient.GameLogic.ChatUI
         public void AddMessage(string playerName, string message, Color color) => Player.main.StartCoroutine(AddMessageAsync(playerName, message, color));
         private IEnumerator AddMessageAsync(string playerName, string message, Color color)
         {
-            while (PlayerChat.IsLoading)
-            {
-                yield return null;
-            }
-
+            yield return new WaitUntil(() => PlayerChat.IsReady);
             playerChat.WriteLogEntry(playerName, message, color);
         }
 
@@ -75,10 +62,11 @@ namespace NitroxClient.GameLogic.ChatUI
 
         private IEnumerator LoadChatLogAsset()
         {
-            CoroutineWithData coroutineWD = new CoroutineWithData(Player.main, AssetBundleLoader.LoadUIAsset("chatlog", "PlayerChatCanvas", true));
-            yield return coroutineWD.Coroutine;
+            yield return AssetBundleLoader.LoadUIAsset("chatlog", "PlayerChatCanvas", true, playerChatGameObject =>
+            {
+                playerChat = playerChatGameObject.AddComponent<PlayerChat>();
+            });
 
-            playerChat = ((GameObject)coroutineWD.Result).gameObject.AddComponent<PlayerChat>();
             yield return playerChat.SetupChatComponents();
         }
 

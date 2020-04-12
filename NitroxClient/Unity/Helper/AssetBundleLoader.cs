@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,11 +21,7 @@ namespace NitroxClient.Unity.Helper
                 Log.Error("Failed to load AssetBundle!");
                 yield break;
             }
-
-            while (!assetRequest.isDone)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => assetRequest.isDone);
 
             string sceneName = assetRequest.assetBundle.GetAllScenePaths().First();
             Log.Debug($"Trying to load scene: {sceneName}");
@@ -32,7 +29,7 @@ namespace NitroxClient.Unity.Helper
 
         }
 
-        public static IEnumerator LoadUIAsset(string name, string canvasObjectName, bool hideUI = false)
+        public static IEnumerator LoadUIAsset(string name, string canvasObjectName, bool hideUI = false, Action<GameObject> callback = null)
         {
             yield return LoadAsset(name);
 
@@ -43,9 +40,12 @@ namespace NitroxClient.Unity.Helper
                 assetRoot.GetComponent<CanvasGroup>().alpha = 0;
             }
             assetRoot.SetParent(uGUI.main.screenCanvas.transform, false);
-            Object.Destroy(assetCanvas);
+            UnityEngine.Object.Destroy(assetCanvas);
 
-            yield return assetRoot.gameObject;
+            if (callback != null)
+            {
+                callback.Invoke(assetRoot.gameObject);
+            }
         }
     }
 }

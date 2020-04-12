@@ -276,7 +276,6 @@
     <Compile Include="MonoBehaviours\Gui\MainMenu\LoadingScreenVersionText.cs" />
     <Compile Include="MonoBehaviours\NitroxEntity.cs" />
     <Compile Include="Unity\Helper\AssetBundleLoader.cs" />
-    <Compile Include="Unity\Helper\CoroutineWithData .cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsDestroyedProcessor.cs" />
