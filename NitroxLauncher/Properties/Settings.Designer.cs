@@ -49,5 +49,20 @@ namespace NitroxLauncher.Properties {
                 this["SubnauticaPath"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string AssemblyCSharpModifiedHash
+        {
+            get
+            {
+                return ((string)(this["AssemblyCSharpModifiedHash"]));
+            }
+            set
+            {
+                this["AssemblyCSharpModifiedHash"] = value;
+            }
+        }
     }
 }
