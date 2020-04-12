@@ -41,7 +41,11 @@ namespace NitroxModel.Logger
             string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${event-properties:item=PlayerName}${message} ${exception}";
 
             // Targets where to log to: File and Console
-            ColoredConsoleTarget logconsole = new ColoredConsoleTarget(nameof(logconsole)) { Layout = layout };
+            ColoredConsoleTarget logconsole = new ColoredConsoleTarget(nameof(logconsole))
+            {
+                Layout = layout,
+                DetectConsoleAvailable = true
+            };
             FileTarget logfile = new FileTarget(nameof(logfile))
             {
                 FileName = "Nitrox Logs/nitrox.log",
@@ -50,7 +54,7 @@ namespace NitroxModel.Logger
                 ArchiveNumbering = ArchiveNumberingMode.Date,
                 MaxArchiveFiles = 7,
                 Layout = layout,
-                EnableArchiveFileCompression = true
+                EnableArchiveFileCompression = true,
             };
 
             // Rules for mapping loggers to targets
