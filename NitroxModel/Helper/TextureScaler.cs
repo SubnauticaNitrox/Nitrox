@@ -14,7 +14,7 @@ namespace NitroxModel.Helper
             tex.Apply(true);
         }
 
-        static void GpuScale(Texture2D src, int width, int height, FilterMode fmode)
+        internal static void GpuScale(Texture2D src, int width, int height, FilterMode fmode)
         {
             src.filterMode = fmode;
             src.Apply(true);

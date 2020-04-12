@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.Communication.Packets;
-using NitroxServer.ConfigParser;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 

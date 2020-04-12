@@ -16,7 +16,7 @@ namespace NitroxLauncher.Pages
         private readonly List<string> commandLinesHistory = new List<string>();
         private int commandHistoryIndex;
         private string commandInputText;
-        private string serverOutput = "";
+        private string serverOutput = string.Empty;
 
         public string ServerOutput
         {

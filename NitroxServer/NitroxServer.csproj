@@ -336,7 +336,6 @@
     <Compile Include="Serialization\Resources\Datastructures\PrefabAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\PrefabPlaceholderAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\TransformAsset.cs" />
-    <Compile Include="Serialization\ServerConfig.cs" />
     <Compile Include="ConsoleCommands\ExitCommand.cs" />
     <Compile Include="ConsoleCommands\Processor\ConsoleCommandProcessor.cs" />
     <Compile Include="ConsoleCommands\SaveCommand.cs" />
@@ -380,17 +379,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
-      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
-      <Name>NitroxModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NitroxModel\NitroxModel.csproj">
+      <Project>{b16f4de7-21ad-4fef-955b-0a5a365fa4e3}</Project>
+      <Name>NitroxModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

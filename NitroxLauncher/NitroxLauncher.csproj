@@ -275,6 +275,9 @@
   <ItemGroup>
     <Resource Include="Images\subnauticaIcon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\serverIllustration.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
     <ItemGroup>

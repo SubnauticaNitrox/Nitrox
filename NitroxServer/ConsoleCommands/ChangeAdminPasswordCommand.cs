@@ -3,7 +3,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.ConfigParser;
+using NitroxModel.Server;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -21,7 +21,7 @@ namespace NitroxServer.ConsoleCommands
             try
             {
                 string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                serverConfig.ChangeAdminPassword(args[0]);
+                serverConfig.AdminPassword = args[0];
 
                 Log.InfoSensitive("Admin password changed to {password} by {playername}", args[0], playerName);
                 SendMessageToPlayer(sender, "Admin password changed");
@@ -35,12 +35,6 @@ namespace NitroxServer.ConsoleCommands
         public override bool VerifyArgs(string[] args)
         {
             return args.Length >= 1;
-        }
-
-        private void ChangeAdminPassword(string password, string name)
-        {
-            serverConfig.ChangeAdminPassword(password);
-            Log.InfoSensitive("Admin password changed to {password} by {playername}", password, name);
         }
     }
 }
