@@ -21,20 +21,23 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
-    - name: Uploading zipped launcher
+    - name: Uploading "NitroxLauncher.exe" to zip
       uses: actions/upload-artifact@v2-preview
       with:
         name: release
         path: ./NitroxLauncher/bin/Release/NitroxLauncher.exe
-    - uses: actions/upload-artifact@v2-preview
+    - name: Uploading "NitroxLauncher.exe.config" to zip
+      uses: actions/upload-artifact@v2-preview
       with:
         name: release
         path: ./NitroxLauncher/bin/Release/NitroxLauncher.exe.config
-    - uses: actions/upload-artifact@v2-preview
+    - name: Uploading "AssetBundles" to zip
+      uses: actions/upload-artifact@v2-preview
       with:
         name: release
-        path: ./NitroxLauncher/bin/Release/AssetBundles/
-    - uses: actions/upload-artifact@v2-preview
+        path: ./NitroxLauncher/bin/Release/AssetBundles
+    - name: Uploading "lib" to zip
+      uses: actions/upload-artifact@v2-preview
       with:
         name: release
-        path: ./NitroxLauncher/bin/Release/lib/
+        path: ./NitroxLauncher/bin/Release/lib
