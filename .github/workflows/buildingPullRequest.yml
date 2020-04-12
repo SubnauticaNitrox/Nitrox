@@ -21,8 +21,13 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
+    - name: Extracting release files
+      uses: canastro/copy-file-action@master
+      with:
+        source: "./NitroxLauncher/bin/Release/NitroxLauncher.exe,./NitroxLauncher/bin/Release/NitroxLauncher.exe.config,./NitroxLauncher/bin/Release/AssetBundles/,./NitroxLauncher/bin/Release/lib/"
+        target: "/NitroxLauncher/bin/ReleasePacked"
     - name: Uploading zipped launcher
       uses: actions/upload-artifact@v2-preview
       with:
         name: release
-        path: ./NitroxLauncher/bin/Release/{NitroxLauncher.exe*,AssetBundles/,lib/}
+        path: ./NitroxLauncher/bin/ReleasePacked
