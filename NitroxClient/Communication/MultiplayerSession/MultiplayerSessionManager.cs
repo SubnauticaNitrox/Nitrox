@@ -101,7 +101,6 @@ namespace NitroxClient.Communication.MultiplayerSession
             if (!suppressedPacketsTypes.Contains(packetType))
             {
                 Client.Send(packet);
-                NetworkDebugger.Instance.PacketSent(packet);
                 return true;
             }
             return false;

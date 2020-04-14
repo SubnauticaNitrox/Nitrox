@@ -49,7 +49,6 @@ namespace NitroxClient.GameLogic
         public void UpdateLocation(Vector3 location, Vector3 velocity, Quaternion bodyRotation, Quaternion aimingRotation, Optional<VehicleMovementData> vehicle)
         {
             Movement movement;
-
             if (vehicle.HasValue)
             {
                 movement = new VehicleMovement(multiplayerSession.Reservation.PlayerId, vehicle.Value);
