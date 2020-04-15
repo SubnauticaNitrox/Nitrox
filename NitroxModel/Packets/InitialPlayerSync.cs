@@ -9,7 +9,7 @@ using UnityEngine;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class InitialPlayerSync : Packet, IDebugPacket
+    public class InitialPlayerSync : Packet, IShortString
     {
         public NitroxId AssignedEscapePodId;
         public List<EscapePodModel> EscapePodsData { get; }
@@ -77,7 +77,7 @@ namespace NitroxModel.Packets
             return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + " PDAData: " + PDAData + " StoryGoalData: " + StoryGoalData + "]";
         }
 
-        public string GetSDebugString()
+        public string ToShortString()
         {
             return $"Equipped items count: {EquippedItems.Count}\n" +
                 $"Base pieces count: {BasePieces.Count}\n" +

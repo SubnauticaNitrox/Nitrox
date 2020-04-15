@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Autofac;
 using NitroxModel.Core;
-using System.Reflection;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.Serialization.World;
