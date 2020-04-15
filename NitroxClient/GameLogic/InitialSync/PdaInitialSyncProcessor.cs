@@ -52,7 +52,10 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (string entry in entries)
                 {
-                    PDAEncyclopedia.Add(entry, false);
+                    if( null != entry)
+                    {
+                        PDAEncyclopedia.Add(entry, false);
+                    }
                 }
             }
         }
@@ -63,7 +66,10 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (TechTypeModel item in pdaEntryComplete)
             {
-                complete.Add(item.Enum());
+                if (null != item)
+                {
+                    complete.Add(item.Enum());
+                }
             }
 
             Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
@@ -76,7 +82,11 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
+                if( null != entry)
+                {
+                    partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
+                }
+                
             }
 
             Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
@@ -90,8 +100,11 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (TechTypeModel techType in techTypes)
                 {
-                    HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                    KnownTech.Add(techType.Enum(), false);
+                    if (null != techType)
+                    {
+                        HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
+                        KnownTech.Add(techType.Enum(), false);
+                    }
                 }
             }
         }
@@ -106,7 +119,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
                 foreach (PDALogEntry logEntry in logEntries)
                 {
-                    if (!entries.ContainsKey(logEntry.Key))
+                    if (null != logEntry && !entries.ContainsKey(logEntry.Key))
                     {
                         PDALog.EntryData entryData;
                         PDALog.GetEntryData(logEntry.Key, out entryData);
