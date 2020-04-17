@@ -1,6 +1,7 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -17,13 +18,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(NitroxModel.Packets.PrecursorDoorwayAction packet)
         {
-            GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            if (!gameObject)
+            Optional<GameObject> gameObject = NitroxEntity.GetObjectFrom(packet.Id);
+            if (!gameObject.HasValue)
             {
                 Log.Error($"Precursor door not found by nitrox id {packet.Id}");
                 return;
             }
-            PrecursorDoorway precursorDoorway = gameObject.GetComponent<PrecursorDoorway>();
+            PrecursorDoorway precursorDoorway = gameObject.Value.GetComponent<PrecursorDoorway>();
             if (!precursorDoorway)
             {
                 Log.Error($"Precursor door component not found by nitrox id {packet.Id}");
