@@ -18,6 +18,7 @@ namespace NitroxClient.GameLogic.ChatUI
         private PlayerChat playerChat;
         public Transform PlayerChaTransform => playerChat.transform;
         private readonly IMultiplayerSession multiplayerSession;
+        private const char SERVER_COMMAND_PREFIX = '/';
 
         public void ShowChat() => Player.main.StartCoroutine(ShowChatAsync());
         private IEnumerator ShowChatAsync()
@@ -51,12 +52,26 @@ namespace NitroxClient.GameLogic.ChatUI
 
         public void SendMessage()
         {
-            if (playerChat.inputText.Trim() != "")
+            if (string.IsNullOrWhiteSpace(playerChat.InputText))
             {
-                multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, playerChat.inputText));
-                playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.inputText, multiplayerSession.PlayerSettings.PlayerColor);
-                playerChat.inputText = "";
+                playerChat.Select();
+                return;
             }
+            
+            string trimmedInput = playerChat.InputText.Trim();
+            if (trimmedInput[0] == SERVER_COMMAND_PREFIX)
+            {
+                // Server command
+                multiplayerSession.Send(new ServerCommand(trimmedInput.Substring(1)));
+                playerChat.InputText = "";
+                playerChat.Select();
+                return;
+            }
+            
+            // Chat message
+            multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
+            playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.InputText, multiplayerSession.PlayerSettings.PlayerColor);
+            playerChat.InputText = "";
             playerChat.Select();
         }
 
