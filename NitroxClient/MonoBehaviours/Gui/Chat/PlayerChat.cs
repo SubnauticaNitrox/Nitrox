@@ -4,7 +4,6 @@ using System.Linq;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
@@ -16,29 +15,29 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const float TOGGLED_TRANSPARENCY = 0.4f;
         public const float CHAT_VISIBILITY_TIME_LENGTH = 10f;
 
-        public static bool IsReady { get; private set; }
+        private static readonly Queue<ChatLogEntry> entries = new Queue<ChatLogEntry>();
+        private Image[] backgroundImages;
+        private CanvasGroup canvasGroup;
+        private InputField inputField;
+        private GameObject logEntryPrefab;
 
         private PlayerChatManager playerChatManager;
-        private CanvasGroup canvasGroup;
-        private HorizontalOrVerticalLayoutGroup[] layoutGroups;
-        private GameObject logEntryPrefab;
-        private Image[] backgroundImages;
         private bool transparent;
-        private InputField inputField;
-        public string inputText
+
+        public static bool IsReady { get; private set; }
+
+        public string InputText
         {
             get { return inputField.text; }
             set { inputField.text = value; }
         }
-
-        private static readonly Queue<ChatLogEntry> entries = new Queue<ChatLogEntry>();
 
         public IEnumerator SetupChatComponents()
         {
             playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
 
             canvasGroup = GetComponent<CanvasGroup>();
-            layoutGroups = GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
+            GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
 
             logEntryPrefab = GameObject.Find("ChatLogEntryPrefab");
             logEntryPrefab.AddComponent<PlayerChatLogItem>();
@@ -51,10 +50,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             inputField.gameObject.AddComponent<PlayerChatInputField>().InputField = inputField;
             inputField.GetComponentInChildren<Button>().onClick.AddListener(playerChatManager.SendMessage);
 
-            backgroundImages = new[]
-            {
-                transform.GetChild(0).GetComponent<Image>(), transform.GetChild(1).GetComponent<Image>(), transform.GetChild(3).GetComponent<Image>()
-            };
+            backgroundImages = new[] { transform.GetChild(0).GetComponent<Image>(), transform.GetChild(1).GetComponent<Image>(), transform.GetChild(3).GetComponent<Image>() };
 
             yield return new WaitForEndOfFrame(); //Needed so Select() works on initialization
             IsReady = true;
@@ -92,6 +88,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             PlayerChatInputField.ResetTimer();
             StartCoroutine(ToggleChatFade(true));
         }
+
         public void Hide()
         {
             StartCoroutine(ToggleChatFade(false));
