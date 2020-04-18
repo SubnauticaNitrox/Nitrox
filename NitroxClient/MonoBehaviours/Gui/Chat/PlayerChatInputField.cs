@@ -1,132 +1,84 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System.Collections;
 using NitroxClient.GameLogic.ChatUI;
 using NitroxModel.Core;
-using NitroxModel.Packets;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace NitroxClient.MonoBehaviours.Gui.Chat
 {
-    /// <summary>
-    ///     A text box for the player to enter and say something in-game.
-    /// </summary>
-    internal class PlayerChatInputField : MonoBehaviour
+    public class PlayerChatInputField : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
-        private const int CHAR_LIMIT = 80;
-        private const int INPUT_WIDTH = 300;
-        private const int INPUT_HEIGHT = 35;
-        private const int INPUT_MARGIN = 15;
-        private const string GUI_CHAT_NAME = "ChatInput";
-        private const char SERVER_COMMAND_PREFIX = '/';
-        private bool chatEnabled;
+        private PlayerChatManager playerChatManager;
+        private bool selected;
+        private static float timeLeftUntilAutoClose;
+        public static bool FreezeTime;
+        public InputField InputField;
 
-        private string chatMessage = "";
-
-        /// <summary>
-        ///     Uses UWE input field logic to prevent player from moving while typing.
-        /// </summary>
-        private uGUI_InputGroup inputGroup;
-
-        private IMultiplayerSession session;
-
-        /// <summary>
-        ///     Gets or sets the chat enabled. Can fail to enable chat if another input field in-game already has focus.
-        /// </summary>
-        public bool ChatEnabled
+        private void Awake()
         {
-            get
-            {
-                return chatEnabled;
-            }
-            set
-            {
-                if (!CanEnable())
-                {
-                    return;
-                }
-                // Reuse UWE logic to lock player in-place.
-                if (value)
-                {
-                    inputGroup.OnSelect(true);
-                }
-                else
-                {
-                    inputGroup.OnDeselect();
-                }
-
-                chatEnabled = value;
-            }
+            playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
         }
 
-        public PlayerChat Manager { get; set; }
-
-        /// <summary>
-        ///     Gets true if no other (UWE) input field has focus right now.`
-        /// </summary>
-        /// <returns>True if the chat input field can be enabled without interfering with another input field in-game.</returns>
-        public bool CanEnable()
+        public void OnSelect(BaseEventData eventData)
         {
-            return FPSInputModule.current.lastGroup == null;
+            playerChatManager.SelectChat();
+            selected = true;
+            ResetTimer();
         }
 
-        public void Awake()
+        public void OnDeselect(BaseEventData eventData)
         {
-            session = NitroxServiceLocator.LocateService<IMultiplayerSession>();
-            inputGroup = gameObject.AddComponent<uGUI_InputGroup>();
+            selected = false;
         }
 
-        public void OnGUI()
+        public static void ResetTimer()
         {
-            if (!ChatEnabled || Manager == null)
+            timeLeftUntilAutoClose = PlayerChat.CHAT_VISIBILITY_TIME_LENGTH;
+            FreezeTime = false;
+        }
+
+        private void Update()
+        {
+            if (FreezeTime)
             {
                 return;
             }
 
-            SetGUIStyle();
-            GUI.SetNextControlName(GUI_CHAT_NAME);
-            chatMessage = GUI.TextField(new Rect(INPUT_MARGIN, Screen.height - INPUT_HEIGHT - INPUT_MARGIN, INPUT_WIDTH, INPUT_HEIGHT), chatMessage, CHAR_LIMIT);
-            GUI.FocusControl(GUI_CHAT_NAME);
-
-            if (Event.current.isKey)
+            if (selected)
             {
-                switch (Event.current.keyCode)
+                if (UnityEngine.Input.GetKey(KeyCode.Return))
                 {
-                    case KeyCode.Return:
-                        SendMessage();
-                        ChatEnabled = false;
-                        break;
-                    case KeyCode.Escape:
-                        Manager.HideLog();
-                        ChatEnabled = false;
-                        break;
+                    if (UnityEngine.Input.GetKey(KeyCode.LeftShift))
+                    {
+                        if (!InputField.text.EndsWith("\n"))
+                        {
+                            InputField.ActivateInputField();
+                            InputField.text += "\n";
+                            StartCoroutine(MoveToEndOfText());
+                        }
+                    }
+                    else
+                    {
+                        playerChatManager.SendMessage();
+                    }
                 }
-            }
-        }
-
-        private void SetGUIStyle()
-        {
-            GUI.skin.textField.fontSize = 16;
-            GUI.skin.textField.richText = false;
-            GUI.skin.textField.alignment = TextAnchor.MiddleLeft;
-        }
-
-        private void SendMessage()
-        {
-            if (Manager == null || string.IsNullOrWhiteSpace(chatMessage))
-            {
-                chatMessage = "";
-                return;
-            }
-
-            if (chatMessage[0] == SERVER_COMMAND_PREFIX)
-            {
-                session.Send(new ServerCommand(chatMessage.Remove(0, 1)));
             }
             else
             {
-                session.Send(new ChatMessage(session.Reservation.PlayerId, chatMessage));
-                Manager.AddMessage("Me", chatMessage, session.PlayerSettings.PlayerColor);
+                timeLeftUntilAutoClose -= Time.unscaledDeltaTime;
+                if (timeLeftUntilAutoClose <= 0)
+                {
+                    playerChatManager.HideChat();
+                    FreezeTime = true;
+                }
             }
-            chatMessage = "";
+        }
+
+        private IEnumerator MoveToEndOfText()
+        {
+            yield return null;
+            InputField.MoveTextEnd(false);
         }
     }
 }

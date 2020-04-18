@@ -11,12 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.ConfigParser;
 using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World
 {
@@ -167,8 +167,13 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(), new List<VehicleModel>(), new List<Player>(), new List<ItemData>(), new List<ItemData>(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
-            return world;
+            return CreateWorld(
+                DateTime.Now, 
+                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
+                new List<ItemData>(),
+                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
         }
 
         private World CreateWorld(DateTime serverStartTime,

@@ -7,6 +7,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.ChatUI;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.MonoBehaviours.DiscordRP;
@@ -171,6 +172,7 @@ namespace NitroxClient.MonoBehaviours
             
             LoadingScreenVersionText.DisableWarningText();
             DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
+            PlayerChatManager.LoadChatKeyHint();
         }
 
         private void OnConsoleCommand_execute(NotificationCenter.Notification n)

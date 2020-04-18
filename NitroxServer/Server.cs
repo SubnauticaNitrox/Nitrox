@@ -1,8 +1,7 @@
-﻿using System;
-using System.Timers;
+﻿using System.Timers;
 using NitroxModel.Logger;
+using NitroxModel.Server;
 using NitroxServer.Serialization.World;
-using NitroxServer.ConfigParser;
 using System.Configuration;
 using System.Text;
 
@@ -10,13 +9,15 @@ namespace NitroxServer
 {
     public class Server
     {
-        private readonly Timer saveTimer;
         private readonly Communication.NetworkingLayer.NitroxServer server;
-        private readonly World world;
         private readonly WorldPersistence worldPersistence;
-        public bool IsRunning { get; private set; }
-        private bool isSaving;
+        private readonly Timer saveTimer;
+        private readonly World world;
+
         public static Server Instance { get; private set; }
+
+        public bool IsRunning { get; private set; }
+        public bool IsSaving { get; private set; }
 
         public Server(WorldPersistence worldPersistence, World world, ServerConfig serverConfig, Communication.NetworkingLayer.NitroxServer server)
         {
@@ -24,11 +25,13 @@ namespace NitroxServer
             {
                 Log.Warn("Nitrox Server Cant Read Config File.");
             }
-            Instance = this;
+
             this.worldPersistence = worldPersistence;
-            this.world = world;
             this.server = server;
-            
+            this.world = world;
+
+            Instance = this;
+
             // TODO: Save once after last player leaves then stop saving.
             saveTimer = new Timer();
             saveTimer.Interval = serverConfig.SaveInterval;
@@ -42,27 +45,28 @@ namespace NitroxServer
             {
                 // TODO: Extend summary with more useful save file data
                 StringBuilder builder = new StringBuilder();
-                builder.AppendLine($" - Game mode: {world.GameMode}");
-                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
-                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
-                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
                 builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
-                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
+                builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
                 builder.AppendLine($" - Encyclopedia entries: {world.GameData.PDAState.EncyclopediaEntries.Count}");
+                builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
+                builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
+                builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+
                 return builder.ToString();
             }
         }
 
         public void Save()
         {
-            if (isSaving)
+            if (IsSaving)
             {
                 return;
             }
-            isSaving = true;
+
+            IsSaving = true;
             worldPersistence.Save(world);
-            isSaving = false;
+            IsSaving = false;
         }
 
         public bool Start()
@@ -71,15 +75,13 @@ namespace NitroxServer
             {
                 return false;
             }
+
             Log.Info("Nitrox Server Started");
             IsRunning = true;
             EnablePeriodicSaving();
-            
 #if RELEASE
-            // Help new players on which IP they should give to their friends
             IpLogger.PrintServerIps();
 #endif
-            
             return true;
         }
 

@@ -1,8 +1,8 @@
 ﻿using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel.Server;
 using NitroxServer.Communication.NetworkingLayer;
 using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.ConfigParser;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
