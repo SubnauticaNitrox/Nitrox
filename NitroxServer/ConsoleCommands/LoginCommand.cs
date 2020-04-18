@@ -9,12 +9,13 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "{password}", "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
+            addParameter(string.Empty, TypeString.Get, "password", true);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             string message = "Can't update permissions";
 
@@ -31,12 +32,7 @@ namespace NitroxServer.ConsoleCommands
                 }
             }
 
-            Notify(sender, message);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 1;
+            SendMessageToBoth(sender, message);
         }
     }
 }

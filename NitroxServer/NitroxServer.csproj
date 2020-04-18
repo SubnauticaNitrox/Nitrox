@@ -309,6 +309,13 @@
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Parameter.cs" />
+    <Compile Include="ConsoleCommands\Abstract\TypeAbstract.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Type\TypeBoolean.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Type\TypeEnum.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Type\TypeInt.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Type\TypePlayer.cs" />
+    <Compile Include="ConsoleCommands\Abstract\Type\TypeString.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
@@ -323,6 +330,7 @@
     <Compile Include="ConsoleCommands\TimeCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
+    <Compile Include="Exceptions\IllegalArgumentException.cs" />
     <Compile Include="GameLogic\Bases\BaseManager.cs" />
     <Compile Include="GameLogic\Entities\NitroxEntitySlot.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />

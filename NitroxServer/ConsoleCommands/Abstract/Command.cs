@@ -1,62 +1,102 @@
-﻿using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
+﻿using NitroxModel.Helper;
 using NitroxModel.DataStructures.GameLogic;
+using System.Collections.Generic;
+using System.Text;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel.Logger;
-using System.Text;
+using NitroxModel.Core;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
-        public string Name { get; protected set; }
-        public string[] Alias { get; protected set; }
-        public string Description { get; protected set; }
-        public string ArgsDescription { get; protected set; }
-        public Perms RequiredPermLevel { get; protected set; }
+        public string Name { get; }
+        public string Description { get; }
+        public List<string> Alias { get; }
+        public List<IParameter> Parameters { get; }
+        public Perms RequiredPermLevel { get; }
+        public bool AllowedArgOverflow { get; }
 
-        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description) : this(name, requiredPermLevel, argsDescription, "", null)
-        {
-            ArgsDescription = argsDescription;
-            Name = name;
-            Description = description;
-        }
+        private int required = 0;
+        private int optional = 0;
 
-        protected Command(string name, Perms requiredPermLevel, string argsDescription, string description, string[] alias)
+        public Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
             Validate.NotNull(name);
-            Validate.NotNull(argsDescription);
-            Validate.NotNull(description);
 
             Name = name;
-            Description = string.IsNullOrEmpty(description) ? "No description" : description;
-            ArgsDescription = argsDescription;
-            RequiredPermLevel = requiredPermLevel;
-            Alias = alias ?? new string[0];
+            RequiredPermLevel = perm;
+            Alias = new List<string>();
+            Parameters = new List<IParameter>();
+            AllowedArgOverflow = allowedArgOveflow;
+            Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
-        public abstract void RunCommand(string[] args, Optional<Player> sender);
+        public abstract void Perform(string[] args, Optional<Player> sender);
 
-        public abstract bool VerifyArgs(string[] args);
-
-        public override string ToString()
+        public void TryPerform(string[] args, Optional<Player> sender)
         {
-            return $"{nameof(Name)}: {Name}, {nameof(Description)}: {Description}, {nameof(ArgsDescription)}: {ArgsDescription}, {nameof(Alias)}: [{string.Join(", ", Alias)}]";
+            if (args.Length < required)
+            {
+                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText()}");
+                return;
+            }
+
+            if (!AllowedArgOverflow && args.Length > optional + required)
+            {
+                SendMessage(sender, $"Error: Too much Parameters\nUsage: {ToHelpText()}");
+            }
+
+            Perform(args, sender);
+        }
+
+        protected void addParameter<T>(T defaultValue, TypeAbstract<T> type, string name, bool isRequired)
+        {
+            addParameter<T>(new Parameter<T>(defaultValue, type, name, isRequired));
+        }
+
+        protected void addParameter<T>(IParameter param)
+        {
+            Validate.NotNull(param);
+            Parameters.Add(param);
+            
+            if (param.IsRequired)
+            {
+                required++;
+            } else
+            {
+                optional++;
+            }
+        }
+
+        protected void addAlias(params string[] alias)
+        {
+            Alias.AddRange(alias);
+        }
+
+        protected void addAlias(string alias)
+        {
+            Alias.Add(alias);
         }
 
         public string ToHelpText()
         {
             StringBuilder cmd = new StringBuilder(Name);
 
-            if (Alias.Length > 0)
+            if (Alias?.Count > 0)
             {
                 cmd.AppendFormat("/{0}", string.Join("/", Alias));
             }
-            cmd.AppendFormat(" {0}", ArgsDescription);
 
-            return $"{cmd,-35}  -  {Description}";
+            cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
+
+            return $"{cmd,-32} - {Description}";
         }
 
+        /// <summary>
+        /// Send a message to an existing player
+        /// </summary>
         public void SendMessageToPlayer(Optional<Player> player, string message)
         {
             if (player.HasValue)
@@ -65,7 +105,24 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
-        public void Notify(Optional<Player> player, string message)
+        /// <summary>
+        /// Send a message to an existing player, otherwise logs it in the console
+        /// </summary>
+        public void SendMessage(Optional<Player> player, string message)
+        {
+            if (player.HasValue)
+            {
+                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
+            } else
+            {
+                Log.Info(message);
+            }
+        }
+
+        /// <summary>
+        /// Send a message to both console and an existing player
+        /// </summary>
+        public void SendMessageToBoth(Optional<Player> player, string message)
         {
             Log.Info(message);
             SendMessageToPlayer(player, message);

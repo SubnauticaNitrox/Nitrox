@@ -17,13 +17,16 @@ namespace NitroxServer.ConsoleCommands
         private readonly EntitySimulation entitySimulation;
         private readonly PlayerManager playerManager;
 
-        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "{name} [{Reason}]", "Kicks a player from the server")
+        public KickCommand(PlayerManager playerManager, EntitySimulation entitySimulation) : base("kick", Perms.ADMIN, "Kicks a player from the server")
         {
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
+
+            addParameter(null, TypePlayer.Get, "name", true);
+            addParameter(string.Empty, TypeString.Get, "reason", false);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             try
             {
@@ -40,21 +43,16 @@ namespace NitroxServer.ConsoleCommands
                 }
 
                 playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-                Notify(sender, $"The player {args[0]} has been disconnected");
+                SendMessageToBoth(sender, $"The player {args[0]} has been disconnected");
             }
             catch (InvalidOperationException)
             {
-                Notify(sender, $"Error attempting to kick: {args[0]}, Player is not found");
+                SendMessageToBoth(sender, $"Error attempting to kick: {args[0]}, Player is not found");
             }
             catch (Exception ex)
             {
                 Log.Error($"Error attempting to kick: {args[0]}", ex);
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 1;
         }
     }
 }

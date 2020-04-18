@@ -14,7 +14,7 @@ namespace NitroxModel.Server
 
         public ServerConfig(): this(
                port: 1100,
-               saveinterval: 60000,
+               saveinterval: 120000,
                maxconnection: 100,
                disableconsole: false,
                savename: "world",

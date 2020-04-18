@@ -9,11 +9,12 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class HelpCommand : Command
     {
-        public HelpCommand() : base("help", Perms.PLAYER, "", "Displays this", new[] { "?" })
+        public HelpCommand() : base("help", Perms.PLAYER, "Displays this")
         {
+            addAlias("?");
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             if (sender.HasValue)
             {
@@ -25,11 +26,6 @@ namespace NitroxServer.ConsoleCommands
                 List<string> cmdsText = GetHelpText(Perms.CONSOLE);
                 cmdsText.ForEach(cmdText => Log.Info(cmdText));
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 0;
         }
 
         private List<string> GetHelpText(Perms perm)

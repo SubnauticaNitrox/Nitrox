@@ -14,23 +14,20 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "{x} {y} {z}", "Loads entities at x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "Loads entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
+            addParameter(0, TypeInt.Get, "x", true);
+            addParameter(0, TypeInt.Get, "y", true);
+            addParameter(0, TypeInt.Get, "z", true);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             Int3 batchId = new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
-            Notify(sender, $"Loaded {entities.Count} entities from batch {batchId}");
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            int _;
-            return args.Length == 3 && int.TryParse(args[0], out _) && int.TryParse(args[1], out _) && int.TryParse(args[2], out _);
+            SendMessageToBoth(sender, $"Loaded {entities.Count} entities from batch {batchId}");
         }
     }
 }

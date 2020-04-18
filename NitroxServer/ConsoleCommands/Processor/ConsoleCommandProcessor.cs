@@ -3,7 +3,6 @@ using System.Linq;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.Exceptions;
-using NitroxServer.GameLogic;
 using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -74,16 +73,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
         private void RunCommand(Command command, string[] parts, Optional<Player> player)
         {
-            string[] args = parts.Skip(1).ToArray();
-
-            if (command.VerifyArgs(args))
-            {
-                command.RunCommand(args, player);
-            }
-            else
-            {
-                command.Notify(player, string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription));
-            }
+            command.TryPerform(parts.Skip(1).ToArray(), player);
         }
     }
 }

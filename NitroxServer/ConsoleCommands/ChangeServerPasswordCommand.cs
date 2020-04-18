@@ -11,12 +11,13 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "[{password}]", "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             this.serverConfig = serverConfig;
+            addParameter(string.Empty, TypeString.Get, "password", false);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             try
             {
@@ -31,11 +32,6 @@ namespace NitroxServer.ConsoleCommands
             {
                 Log.Error($"Error attempting to change server password", ex);
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 0;
         }
     }
 }

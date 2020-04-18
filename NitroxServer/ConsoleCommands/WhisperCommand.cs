@@ -11,12 +11,15 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "{name} {msg}", "Sends a private message to a player", new string[] { "m", "whisper", "w" })
+        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
             this.playerManager = playerManager;
+            addAlias("m", "whisper", "w");
+            addParameter(null, TypePlayer.Get, "name", true);
+            addParameter(string.Empty, TypeString.Get, "msg", true);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             Player foundPlayer;
 
@@ -35,13 +38,8 @@ namespace NitroxServer.ConsoleCommands
             }
             else
             {
-                Notify(sender, $"Unable to whisper {args[0]}, player not found.");
+                SendMessageToBoth(sender, $"Unable to whisper {args[0]}, player not found.");
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 2;
         }
     }
 }

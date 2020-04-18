@@ -12,12 +12,12 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "", "Shows who's online")
+        public ListCommand(PlayerManager playerManager) : base("list", Perms.PLAYER, "Shows who's online")
         {
             this.playerManager = playerManager;
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             IEnumerable<Player> players = playerManager.GetConnectedPlayers();
             string playerList = "List of players : " + string.Join(", ", players);
@@ -35,11 +35,6 @@ namespace NitroxServer.ConsoleCommands
             {
                 Log.Info(playerList);
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 0;
         }
     }
 }

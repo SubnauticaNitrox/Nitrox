@@ -6,18 +6,14 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class ExitCommand : Command
     {
-        public ExitCommand() : base("stop", Perms.ADMIN, "", "Stops the server", new[] { "exit", "halt", "quit" })
+        public ExitCommand() : base("stop", Perms.ADMIN, "Stops the server")
         {
+            addAlias("exit", "halt", "quit");
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             Server.Instance.Stop();
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 0;
         }
     }
 }

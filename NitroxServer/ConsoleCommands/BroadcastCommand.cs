@@ -11,12 +11,14 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "{message}", "Broadcasts a message on the server", new[] {"say"})
+        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "Broadcasts a message on the server")
         {
             this.playerManager = playerManager;
+            addAlias("say");
+            addParameter(string.Empty, TypeString.Get, "message", true);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             string joinedArgs = string.Join(" ", args);
 
@@ -24,11 +26,6 @@ namespace NitroxServer.ConsoleCommands
             playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));
 
             Log.Info("BROADCAST: " + joinedArgs);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length > 0;
         }
     }
 }

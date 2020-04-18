@@ -9,12 +9,13 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public OpCommand(PlayerManager playerManager) : base("op", Perms.ADMIN, "{name}", "Sets an user as admin")
+        public OpCommand(PlayerManager playerManager) : base("op", Perms.ADMIN, "Sets an user as admin")
         {
             this.playerManager = playerManager;
+            addParameter(null, TypePlayer.Get, "name", true);
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        public override void Perform(string[] args, Optional<Player> sender)
         {
             string playerName = args[0];
             string message;
@@ -31,12 +32,7 @@ namespace NitroxServer.ConsoleCommands
                 message = $"Could not update permissions of unknown player '{playerName}'";
             }
 
-            Notify(sender, message);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 1;
+            SendMessageToBoth(sender, message);
         }
     }
 }
