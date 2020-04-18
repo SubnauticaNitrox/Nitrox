@@ -57,14 +57,8 @@ namespace NitroxClient.GameLogic.ChatUI
                 playerChat.Select();
                 return;
             }
-            string trimmedInput = playerChat.InputText.Trim();
-            if (trimmedInput.Length < 1)
-            {
-                playerChat.InputText = "";
-                playerChat.Select();
-                return;
-            }
             
+            string trimmedInput = playerChat.InputText.Trim();
             if (trimmedInput[0] == SERVER_COMMAND_PREFIX)
             {
                 // Server command
