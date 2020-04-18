@@ -328,6 +328,7 @@
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />
     <Compile Include="GameLogic\EscapePodData.cs" />
     <Compile Include="GameLogic\Items\InventoryManager.cs" />
+    <Compile Include="GameLogic\StoryTimingData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="GameLogic\Vehicles\VehicleManager.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
