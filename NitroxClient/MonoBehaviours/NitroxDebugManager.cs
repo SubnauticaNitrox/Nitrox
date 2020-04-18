@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.Debuggers;
+using NitroxModel.Core;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,12 +18,7 @@ namespace NitroxClient.MonoBehaviours
 
         private NitroxDebugManager()
         {
-            Debuggers = new List<BaseDebugger>
-            {
-                new SceneDebugger(),
-                new NetworkDebugger(),
-                new EntityDebugger()
-            };
+            Debuggers = NitroxServiceLocator.LocateServicePreLifetime<IEnumerable<BaseDebugger>>().ToList();
         }
 
         public static void ToggleCursor()
