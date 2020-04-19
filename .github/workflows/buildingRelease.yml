@@ -1,6 +1,6 @@
 name: Building Nitrox Release
 
-on: release
+on: [release, push]
 
 jobs:
   build:

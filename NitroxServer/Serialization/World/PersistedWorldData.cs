@@ -1,4 +1,5 @@
-﻿using NitroxServer.GameLogic.Bases;
+﻿using NitroxServer.GameLogic;
+using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Players;
 using ProtoBufNet;
 
@@ -15,7 +16,7 @@ namespace NitroxServer.Serialization.World
 
         [ProtoMember(3)]
         public PlayerData PlayerData { get; set; }
-
+        
         public bool IsValid()
         {
             return (WorldData.IsValid()) &&
