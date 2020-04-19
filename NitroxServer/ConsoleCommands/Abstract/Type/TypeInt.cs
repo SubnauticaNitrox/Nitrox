@@ -16,13 +16,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
         #endregion
 
-        public override bool isValid(string arg)
+        public override bool IsValid(string arg)
         {
             int _;
             return int.TryParse(arg, out _);
         }
 
-        public override int read(string arg)
+        public override int Read(string arg)
         {
             int _;
 

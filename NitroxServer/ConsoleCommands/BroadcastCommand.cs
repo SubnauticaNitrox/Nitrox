@@ -14,13 +14,13 @@ namespace NitroxServer.ConsoleCommands
         public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "Broadcasts a message on the server", true)
         {
             this.playerManager = playerManager;
-            addAlias("say");
-            addParameter(TypeString.Get, "message", true);
+            AddAlias("say");
+            AddParameter(TypeString.Get, "message", true);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            string joinedArgs = getArgOverflow(-1);
+            string joinedArgs = GetArgOverflow(-1);
 
             ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
             playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));

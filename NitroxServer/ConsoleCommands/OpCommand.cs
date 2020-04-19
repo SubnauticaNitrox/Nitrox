@@ -8,13 +8,13 @@ namespace NitroxServer.ConsoleCommands
     {
         public OpCommand() : base("op", Perms.ADMIN, "Sets an user as admin")
         {
-            addParameter(TypePlayer.Get, "name", true);
+            AddParameter(TypePlayer.Get, "name", true);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Player receivingPlayer = readArgAt(0);
-            string playerName = getArgAt(0);
+            Player receivingPlayer = ReadArgAt(0);
+            string playerName = GetArgAt(0);
             string message;
 
             if (receivingPlayer != null)

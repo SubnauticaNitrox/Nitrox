@@ -29,14 +29,14 @@ namespace NitroxServer.ConsoleCommands.Abstract
             bool.FalseString, "no", "off",
         };
 
-        public override bool isValid(string arg)
+        public override bool IsValid(string arg)
         {
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override bool? read(string arg)
+        public override bool? Read(string arg)
         {
-            if (!isValid(arg))
+            if (!IsValid(arg))
             {
                 throw new IllegalArgumentException("Invalid boolean value received");
             }

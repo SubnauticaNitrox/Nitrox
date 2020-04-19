@@ -22,19 +22,19 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
 
-            addParameter(TypePlayer.Get, "name", true);
-            addParameter(TypeString.Get, "reason", false);
+            AddParameter(TypePlayer.Get, "name", true);
+            AddParameter(TypeString.Get, "reason", false);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            string playername = getArgAt(0);
+            string playername = GetArgAt(0);
 
             try
             {
-                Player playerToKick = readArgAt(0);
+                Player playerToKick = ReadArgAt(0);
 
-                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {getArgOverflow()}"));
+                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {GetArgOverflow()}"));
                 playerManager.PlayerDisconnected(playerToKick.connection);
                 List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
 

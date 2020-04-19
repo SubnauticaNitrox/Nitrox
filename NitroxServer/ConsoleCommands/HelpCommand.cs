@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public HelpCommand() : base("help", Perms.PLAYER, "Displays this", true)
         {
-            addAlias("?");
+            AddAlias("?");
         }
 
         protected override void Perform(Optional<Player> sender)

@@ -12,12 +12,12 @@ namespace NitroxServer.ConsoleCommands
         public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "Changes the map time")
         {
             this.timeKeeper = timeKeeper;
-            addParameter(TypeString.Get, "day/night", false);
+            AddParameter(TypeString.Get, "day/night", false);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            string time = getArgAt(0);
+            string time = GetArgAt(0);
 
             switch (time?.ToLower())
             {

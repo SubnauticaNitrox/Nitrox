@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public ExitCommand() : base("stop", Perms.ADMIN, "Stops the server")
         {
-            addAlias("exit", "halt", "quit");
+            AddAlias("exit", "halt", "quit");
         }
 
         protected override void Perform(Optional<Player> sender)

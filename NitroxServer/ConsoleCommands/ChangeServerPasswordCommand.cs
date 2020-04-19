@@ -14,13 +14,13 @@ namespace NitroxServer.ConsoleCommands
         public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             this.serverConfig = serverConfig;
-            addParameter(TypeString.Get, "password", false);
+            AddParameter(TypeString.Get, "password", false);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
             string playerName = GetSenderName(sender);
-            string password = getArgAt(0) ?? string.Empty;
+            string password = GetArgAt(0) ?? string.Empty;
             serverConfig.ServerPassword = password;
 
             Log.Info($"Server password changed to \"{password}\" by {playerName}");

@@ -6,7 +6,7 @@
         protected System.Type Type => typeof(T);
         protected T DefaultValue { get; set; } = default(T);
 
-        public abstract bool isValid(string arg);
-        public abstract T read(string arg);
+        public abstract bool IsValid(string arg);
+        public abstract T Read(string arg);
     }
 }

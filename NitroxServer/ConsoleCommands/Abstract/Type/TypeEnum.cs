@@ -5,7 +5,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public class TypeEnum<T> : TypeAbstract<T> where T : struct
     {
-
         public TypeEnum()
         {
             if (!typeof(T).IsEnum)
@@ -14,13 +13,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
-        public override bool isValid(string arg)
+        public override bool IsValid(string arg)
         {
             //Let's suppose enum are in UPPERCASE
             return Enum.IsDefined(typeof(T), arg.ToUpper());
         }
 
-        public override T read(string arg)
+        public override T Read(string arg)
         {
             T _;
 

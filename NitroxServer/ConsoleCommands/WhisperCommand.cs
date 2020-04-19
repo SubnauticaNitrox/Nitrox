@@ -9,18 +9,18 @@ namespace NitroxServer.ConsoleCommands
     {
         public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
-            addAlias("m", "whisper", "w");
-            addParameter(TypePlayer.Get, "name", true);
-            addParameter(TypeString.Get, "msg", true);
+            AddAlias("m", "whisper", "w");
+            AddParameter(TypePlayer.Get, "name", true);
+            AddParameter(TypeString.Get, "msg", true);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Player foundPlayer = readArgAt(0);
+            Player foundPlayer = ReadArgAt(0);
 
             if (foundPlayer != null)
             {
-                string message = $"[{GetSenderName(sender)} -> YOU]: {getArgOverflow(-1)}";
+                string message = $"[{GetSenderName(sender)} -> YOU]: {GetArgOverflow(-1)}";
                 SendMessage(foundPlayer, message);
             }
             else

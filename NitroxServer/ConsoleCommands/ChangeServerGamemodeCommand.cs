@@ -14,12 +14,12 @@ namespace NitroxServer.ConsoleCommands
         public ChangeServerGamemodeCommand(ServerConfig serverConfig) : base("changeservergamemode", Perms.CONSOLE, "Changes server gamemode")
         {
             this.serverConfig = serverConfig;
-            addParameter(new TypeEnum<ServerGameMode>(), "gamemode", true);
+            AddParameter(new TypeEnum<ServerGameMode>(), "gamemode", true);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            ServerGameMode? sgm = readArgAt(0);
+            ServerGameMode? sgm = ReadArgAt(0);
             string name = GetSenderName(sender);
 
             if (sgm.HasValue)

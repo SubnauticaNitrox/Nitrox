@@ -8,14 +8,14 @@ namespace NitroxServer.ConsoleCommands
     {
         public SaveCommand() : base("save", Perms.ADMIN, "Saves the map")
         {
-            addParameter(TypeBoolean.Get, "on/off", false);
+            AddParameter(TypeBoolean.Get, "on/off", false);
         }
 
         protected override void Perform(Optional<Player> sender)
         {
             if (IsValidArgAt(0))
             {
-                bool? toggle = readArgAt(0);
+                bool? toggle = ReadArgAt(0);
 
                 if (toggle.HasValue)
                 {

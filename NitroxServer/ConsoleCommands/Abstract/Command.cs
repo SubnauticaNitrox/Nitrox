@@ -73,9 +73,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public bool IsValidArgAt(int index) => index < Args.Length && index >= 0 && Args.Length != 0;
 
-        public string getArgAt(int index) => !IsValidArgAt(index) ? null : Args[index];
+        public string GetArgAt(int index) => !IsValidArgAt(index) ? null : Args[index];
 
-        public string getArgOverflow(int offset = 0)
+        public string GetArgOverflow(int offset = 0)
         {
             if (Args?.Length != 0)
             {
@@ -85,12 +85,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return string.Empty;
         }
 
-        public dynamic readArgAt(int index)
+        public dynamic ReadArgAt(int index)
         {
             try
             {
                 dynamic param = Parameters[index];
-                string arg = getArgAt(index);
+                string arg = GetArgAt(index);
 
                 if (arg == null || param == null)
                 {
@@ -110,12 +110,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return null;
         }
 
-        protected void addParameter<T>(TypeAbstract<T> type, string name, bool isRequired)
+        protected void AddParameter<T>(TypeAbstract<T> type, string name, bool isRequired)
         {
-            addParameter<T>(new Parameter<T>(type, name, isRequired));
+            AddParameter<T>(new Parameter<T>(type, name, isRequired));
         }
 
-        protected void addParameter<T>(IParameter param)
+        protected void AddParameter<T>(IParameter param)
         {
             Validate.NotNull(param);
             Parameters.Add(param);
@@ -130,12 +130,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
-        protected void addAlias(params string[] alias)
+        protected void AddAlias(params string[] alias)
         {
             Alias.AddRange(alias);
         }
 
-        protected void addAlias(string alias)
+        protected void AddAlias(string alias)
         {
             Alias.Add(alias);
         }

@@ -26,13 +26,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Validate.NotNull(pm = NitroxServiceLocator.LocateService<PlayerManager>(), "PlayerManager can't be null to resolve the command");
         }
 
-        public override bool isValid(string arg)
+        public override bool IsValid(string arg)
         {
             Player _;
             return pm.TryGetPlayerByName(arg, out _);
         }
 
-        public override Player read(string arg)
+        public override Player Read(string arg)
         {
             Player _;
 
