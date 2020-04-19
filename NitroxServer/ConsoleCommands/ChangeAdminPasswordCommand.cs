@@ -14,22 +14,22 @@ namespace NitroxServer.ConsoleCommands
         public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
-            addParameter(string.Empty, TypeString.Get, "password", true);
+            addParameter(TypeString.Get, "password", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
             try
             {
-                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                serverConfig.AdminPassword = args[0];
+                string playerName = GetSenderName(sender);
+                serverConfig.AdminPassword = getArgAt(0);
 
-                Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");
+                Log.Info($"Admin password changed to \"{getArgAt(0)}\" by {playerName}");
                 SendMessageToPlayer(sender, "Admin password changed");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to change admin password to \"{args[0]}\"", ex);
+                Log.Error($"Error while attempting to change admin password", ex);
             }
         }
     }

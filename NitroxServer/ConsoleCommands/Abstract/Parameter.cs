@@ -5,34 +5,26 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
     public interface IParameter
     {
-        object Value { get; }
         string Name { get; }
         bool IsRequired { get; }
-        bool IsOptional { get; }
 
         string ToString();
     }
 
     public class Parameter<T> : IParameter
     {
-        public T DEFAULT_VALUE { get; set; }
+        public TypeAbstract<T> Type { get; }
 
-        public TypeAbstract<T> Type { get; set; }
+        public string Name { get; }
 
-        public object Value => Type;
+        public bool IsRequired { get; }
 
-        public string Name { get; set; }
 
-        public bool IsRequired { get; set; }
-
-        public bool IsOptional => !IsRequired;
-
-        public Parameter(T defaultValue, TypeAbstract<T> type, string name, bool isRequired)
+        public Parameter(TypeAbstract<T> type, string name, bool isRequired)
         {
             Validate.NotNull(type);
             Validate.IsFalse(string.IsNullOrEmpty(name));
 
-            DEFAULT_VALUE = defaultValue;
             Type = type;
             Name = name;
             IsRequired = isRequired;

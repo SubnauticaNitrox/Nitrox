@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public override bool isValid(string arg)
         {
-            return string.IsNullOrEmpty(arg);
+            return !string.IsNullOrEmpty(arg);
         }
 
         public override string read(string arg)

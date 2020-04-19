@@ -1,11 +1,12 @@
-﻿using NitroxModel.Helper;
-using NitroxModel.DataStructures.GameLogic;
-using System.Collections.Generic;
-using System.Text;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using System.Collections.Generic;
 using NitroxModel.Packets;
 using NitroxModel.Logger;
-using NitroxModel.Core;
+using NitroxModel.Helper;
+using System.Text;
+using System;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -21,6 +22,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
         private int required = 0;
         private int optional = 0;
 
+        public string[] Args { get; private set; }
+
         public Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
             Validate.NotNull(name);
@@ -33,7 +36,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
-        public abstract void Perform(string[] args, Optional<Player> sender);
+        public abstract void Perform(Optional<Player> sender);
 
         public void TryPerform(string[] args, Optional<Player> sender)
         {
@@ -46,25 +49,68 @@ namespace NitroxServer.ConsoleCommands.Abstract
             if (!AllowedArgOverflow && args.Length > optional + required)
             {
                 SendMessage(sender, $"Error: Too much Parameters\nUsage: {ToHelpText()}");
+                return;
             }
 
-            Perform(args, sender);
+            Args = args;
+            Perform(sender);
+            Args = null;
         }
 
-        protected void addParameter<T>(T defaultValue, TypeAbstract<T> type, string name, bool isRequired)
+        public string getArgAt(int index)
         {
-            addParameter<T>(new Parameter<T>(defaultValue, type, name, isRequired));
+            if (index > Args.Length || index < 0)
+            {
+                return null;
+            }
+
+            return Args[index];
+        }
+
+        public dynamic readArgAt(int index)
+        {
+            try
+            {
+                dynamic param = Parameters[index];
+                string arg = getArgAt(index);
+
+                if (arg == null)
+                {
+                    Log.Error($"Argument at index {index} doesn't exist");
+                    return null;
+                }
+
+                dynamic typeabstract = param.Type;
+
+                return typeabstract?.read(arg);
+            }
+            catch (IllegalArgumentException ex)
+            {
+                Log.Error(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Dynamic reading arg can't resolve the correct type, you are on your own", ex);
+            }
+
+            return null;
+        }
+
+        protected void addParameter<T>(TypeAbstract<T> type, string name, bool isRequired)
+        {
+            addParameter<T>(new Parameter<T>(type, name, isRequired));
         }
 
         protected void addParameter<T>(IParameter param)
         {
             Validate.NotNull(param);
             Parameters.Add(param);
-            
+
             if (param.IsRequired)
             {
                 required++;
-            } else
+            }
+            else
             {
                 optional++;
             }
@@ -94,6 +140,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return $"{cmd,-32} - {Description}";
         }
 
+        public string GetSenderName(Optional<Player> player)
+        {
+            return player.HasValue ? player.Value.Name : "SERVER";
+        }
+
         /// <summary>
         /// Send a message to an existing player
         /// </summary>
@@ -113,7 +164,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
             if (player.HasValue)
             {
                 player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-            } else
+            }
+            else
             {
                 Log.Info(message);
             }

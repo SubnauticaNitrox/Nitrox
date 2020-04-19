@@ -15,12 +15,12 @@ namespace NitroxServer.ConsoleCommands
         {
             this.playerManager = playerManager;
             addAlias("say");
-            addParameter(string.Empty, TypeString.Get, "message", true);
+            addParameter(TypeString.Get, "message", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
-            string joinedArgs = string.Join(" ", args);
+            string joinedArgs = string.Join(" ", Args);
 
             ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
             playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));

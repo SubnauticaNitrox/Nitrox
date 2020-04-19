@@ -12,16 +12,16 @@ namespace NitroxServer.ConsoleCommands
         public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
-            addParameter(string.Empty, TypeString.Get, "password", true);
+            addParameter(TypeString.Get, "password", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
             string message = "Can't update permissions";
 
             if (sender.HasValue)
             {
-                if (args[0] == serverConfig.AdminPassword)
+                if (getArgAt(0) == serverConfig.AdminPassword)
                 {
                     sender.Value.Permissions = Perms.ADMIN;
                     message = $"Updated permissions to admin for {sender.Value.Name}";

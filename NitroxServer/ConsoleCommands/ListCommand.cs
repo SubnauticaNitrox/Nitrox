@@ -17,24 +17,17 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
-            IEnumerable<Player> players = playerManager.GetConnectedPlayers();
+            List<Player> players = playerManager.GetConnectedPlayers();
             string playerList = "List of players : " + string.Join(", ", players);
 
-            if (!players.Any())
+            if (players.Count == 0)
             {
                 playerList += "No players online";
             }
 
-            if (sender.HasValue)
-            {
-                SendMessageToPlayer(sender, playerList);
-            }
-            else
-            {
-                Log.Info(playerList);
-            }
+            SendMessage(sender, playerList);
         }
     }
 }

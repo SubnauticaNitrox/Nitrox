@@ -1,44 +1,35 @@
 ﻿using System.Linq;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
-        private readonly PlayerManager playerManager;
-
-        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
+        public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
-            this.playerManager = playerManager;
             addAlias("m", "whisper", "w");
-            addParameter(null, TypePlayer.Get, "name", true);
-            addParameter(string.Empty, TypeString.Get, "msg", true);
+            addParameter(TypePlayer.Get, "name", true);
+            addParameter(TypeString.Get, "msg", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
-            Player foundPlayer;
+            Player foundPlayer = readArgAt(0);
 
-            if (playerManager.TryGetPlayerByName(args[0], out foundPlayer))
+            if (foundPlayer != null)
             {
-                string message = string.Join(" ", args.Skip(1).ToArray());
+                string message = string.Format("[{0} -> YOU]: {1}",
+                    GetSenderName(sender),
+                    string.Join(" ", Args.Skip(1).ToArray())
+                    );
 
-                if (sender.HasValue)
-                {
-                    foundPlayer.SendPacket(new ChatMessage(sender.Value.Id, message));
-                }
-                else
-                {
-                    foundPlayer.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-                }
+                SendMessage(foundPlayer, message);
             }
             else
             {
-                SendMessageToBoth(sender, $"Unable to whisper {args[0]}, player not found.");
+                SendMessage(sender, $"Unable to whisper, player not found.");
             }
         }
     }

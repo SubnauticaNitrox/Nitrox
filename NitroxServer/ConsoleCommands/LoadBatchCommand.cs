@@ -17,14 +17,14 @@ namespace NitroxServer.ConsoleCommands
         public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "Loads entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
-            addParameter(0, TypeInt.Get, "x", true);
-            addParameter(0, TypeInt.Get, "y", true);
-            addParameter(0, TypeInt.Get, "z", true);
+            addParameter(TypeInt.Get, "x", true);
+            addParameter(TypeInt.Get, "y", true);
+            addParameter(TypeInt.Get, "z", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
-            Int3 batchId = new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+            Int3 batchId = new Int3(readArgAt(0), readArgAt(1), readArgAt(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
             SendMessageToBoth(sender, $"Loaded {entities.Count} entities from batch {batchId}");

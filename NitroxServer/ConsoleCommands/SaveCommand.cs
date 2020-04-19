@@ -10,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
         {
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
             Server.Instance.Save();
         }

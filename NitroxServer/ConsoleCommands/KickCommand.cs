@@ -22,17 +22,19 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
 
-            addParameter(null, TypePlayer.Get, "name", true);
-            addParameter(string.Empty, TypeString.Get, "reason", false);
+            addParameter(TypePlayer.Get, "name", true);
+            addParameter(TypeString.Get, "reason", false);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
+            string playername = getArgAt(0);
+
             try
             {
-                Player playerToKick = playerManager.GetConnectedPlayers().Single(t => t.Name == args[0]);
+                Player playerToKick = readArgAt(0);
 
-                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {string.Join(" ", args.Skip(1))}"));
+                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {string.Join(" ", Args.Skip(1))}"));
                 playerManager.PlayerDisconnected(playerToKick.connection);
                 List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
 
@@ -43,15 +45,15 @@ namespace NitroxServer.ConsoleCommands
                 }
 
                 playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-                SendMessageToBoth(sender, $"The player {args[0]} has been disconnected");
+                SendMessageToBoth(sender, $"The player {playername} has been disconnected");
             }
             catch (InvalidOperationException)
             {
-                SendMessageToBoth(sender, $"Error attempting to kick: {args[0]}, Player is not found");
+                SendMessageToBoth(sender, $"Error attempting to kick: {playername}, Player is not found");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to kick: {args[0]}", ex);
+                Log.Error($"Error attempting to kick: {playername}", ex);
             }
         }
     }

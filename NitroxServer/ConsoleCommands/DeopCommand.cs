@@ -12,18 +12,18 @@ namespace NitroxServer.ConsoleCommands
         public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "Removes admin rights from user")
         {
             this.playerManager = playerManager;
-            addParameter(null, TypePlayer.Get, "name", true);
+            addParameter(TypePlayer.Get, "name", true);
         }
 
-        public override void Perform(string[] args, Optional<Player> sender)
+        public override void Perform(Optional<Player> sender)
         {
-            string playerName = args[0];
+            Player targetPlayer = readArgAt(0);
+            string playerName = getArgAt(0);
             string message;
 
-            Optional<Player> targetPlayer = playerManager.GetPlayer(playerName);
-            if (targetPlayer.HasValue)
+            if (targetPlayer != null)
             {
-                targetPlayer.Value.Permissions = Perms.PLAYER;
+                targetPlayer.Permissions = Perms.PLAYER;
                 message = $"Updated {playerName}\'s permissions to PLAYER";
             }
             else
