@@ -9,12 +9,12 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class HelpCommand : Command
     {
-        public HelpCommand() : base("help", Perms.PLAYER, "Displays this")
+        public HelpCommand() : base("help", Perms.PLAYER, "Displays this", true)
         {
             addAlias("?");
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             if (sender.HasValue)
             {

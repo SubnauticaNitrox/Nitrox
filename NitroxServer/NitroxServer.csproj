@@ -316,6 +316,7 @@
     <Compile Include="ConsoleCommands\Abstract\Type\TypeInt.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypePlayer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeString.cs" />
+    <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />

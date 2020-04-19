@@ -8,11 +8,34 @@ namespace NitroxServer.ConsoleCommands
     {
         public SaveCommand() : base("save", Perms.ADMIN, "Saves the map")
         {
+            addParameter(TypeBoolean.Get, "on/off", false);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
-            Server.Instance.Save();
+            if (IsValidArgAt(0))
+            {
+                bool? toggle = readArgAt(0);
+
+                if (toggle.HasValue)
+                {
+                    if (toggle.Value)
+                    {
+                        Server.Instance.EnablePeriodicSaving();
+                        SendMessage(sender, "Enabled periodical saving");
+                    }
+                    else
+                    {
+                        Server.Instance.DisablePeriodicSaving();
+                        SendMessage(sender, "Disabled periodical saving");
+                    }
+                }
+            }
+            else
+            {
+                Server.Instance.Save();
+                SendMessageToPlayer(sender, "World saved");
+            }
         }
     }
 }

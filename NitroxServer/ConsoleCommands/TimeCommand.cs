@@ -15,11 +15,11 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeString.Get, "day/night", false);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             string time = getArgAt(0);
 
-            switch (time.ToLower())
+            switch (time?.ToLower())
             {
                 case "day":
                     timeKeeper.SetDay();

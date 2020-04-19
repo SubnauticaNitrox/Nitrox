@@ -1,12 +1,15 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using Microsoft.CSharp.RuntimeBinder;
 using System.Collections.Generic;
+using NitroxServer.Exceptions;
 using NitroxModel.Packets;
 using NitroxModel.Logger;
 using NitroxModel.Helper;
+using System.Linq;
 using System.Text;
 using System;
-using NitroxServer.Exceptions;
+
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -15,14 +18,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string Name { get; }
         public string Description { get; }
         public List<string> Alias { get; }
-        public List<IParameter> Parameters { get; }
+        private string[] Args { get; set; }
         public Perms RequiredPermLevel { get; }
         public bool AllowedArgOverflow { get; }
+        public List<IParameter> Parameters { get; }
 
         private int required = 0;
         private int optional = 0;
-
-        public string[] Args { get; private set; }
 
         public Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
@@ -36,35 +38,51 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
-        public abstract void Perform(Optional<Player> sender);
+        protected abstract void Perform(Optional<Player> sender);
 
         public void TryPerform(string[] args, Optional<Player> sender)
         {
             if (args.Length < required)
             {
-                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText()}");
+                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText().Trim()}");
                 return;
             }
 
             if (!AllowedArgOverflow && args.Length > optional + required)
             {
-                SendMessage(sender, $"Error: Too much Parameters\nUsage: {ToHelpText()}");
+                SendMessage(sender, $"Error: Too much Parameters\nUsage: {ToHelpText().Trim()}");
                 return;
             }
 
-            Args = args;
-            Perform(sender);
+            try
+            {
+                Args = args;
+                Perform(sender);
+            }
+            catch (IllegalArgumentException e)
+            {
+                SendMessage(sender, $"Error: {e.Message}");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Fatal error while trying to execute the command", e);
+            }
+
             Args = null;
         }
 
-        public string getArgAt(int index)
+        public bool IsValidArgAt(int index) => index < Args.Length && index >= 0 && Args.Length != 0;
+
+        public string getArgAt(int index) => !IsValidArgAt(index) ? null : Args[index];
+
+        public string getArgOverflow(int offset = 0)
         {
-            if (index > Args.Length || index < 0)
+            if (Args?.Length != 0)
             {
-                return null;
+                return string.Join(" ", Args.Skip(required + offset));
             }
 
-            return Args[index];
+            return string.Empty;
         }
 
         public dynamic readArgAt(int index)
@@ -74,9 +92,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 dynamic param = Parameters[index];
                 string arg = getArgAt(index);
 
-                if (arg == null)
+                if (arg == null || param == null)
                 {
-                    Log.Error($"Argument at index {index} doesn't exist");
+                    Log.Error($"Index {index} doesn't exist for this command");
                     return null;
                 }
 
@@ -84,13 +102,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
                 return typeabstract?.read(arg);
             }
-            catch (IllegalArgumentException ex)
+            catch (RuntimeBinderException ex)
             {
-                Log.Error(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                Log.Error("Dynamic reading arg can't resolve the correct type, you are on your own", ex);
+                Log.Error("Dynamic argument reading can't resolve the correct type, you are on your own", ex);
             }
 
             return null;

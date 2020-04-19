@@ -12,7 +12,7 @@ namespace NitroxModel.Server
         private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting, gameModeSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
 
-        public ServerConfig(): this(
+        public ServerConfig() : this(
                port: 1100,
                saveinterval: 120000,
                maxconnection: 100,
@@ -21,7 +21,8 @@ namespace NitroxModel.Server
                serverpassword: string.Empty,
                adminpassword: StringHelper.GenerateRandomString(12),
                gamemodeSetting: ServerGameMode.SURVIVAL
-        ) { }
+        )
+        { }
 
         public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, string savename, string serverpassword, string adminpassword, ServerGameMode gamemodeSetting)
         {
@@ -156,6 +157,13 @@ namespace NitroxModel.Server
             }
         }
 
+        public ServerGameMode GameModeEnum
+        {
+            set
+            {
+                GameMode = value.GetAttribute<DescriptionAttribute>().Description.ToString();
+            }
+        }
 
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(oxygenSetting.Value, maxOxygenSetting.Value, healthSetting.Value, foodSetting.Value, waterSetting.Value, infectionSetting.Value);
         #endregion

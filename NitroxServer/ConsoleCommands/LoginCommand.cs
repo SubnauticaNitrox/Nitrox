@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeString.Get, "password", true);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             string message = "Can't update permissions";
 

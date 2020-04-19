@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeInt.Get, "z", true);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             Int3 batchId = new Int3(readArgAt(0), readArgAt(1), readArgAt(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);

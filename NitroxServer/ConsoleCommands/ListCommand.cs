@@ -17,7 +17,7 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             List<Player> players = playerManager.GetConnectedPlayers();
             string playerList = "List of players : " + string.Join(", ", players);

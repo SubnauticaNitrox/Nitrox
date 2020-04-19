@@ -95,12 +95,12 @@ namespace NitroxServer
             IsRunning = false;
         }
 
-        private void EnablePeriodicSaving()
+        public void EnablePeriodicSaving()
         {
             saveTimer.Start();
         }
 
-        private void DisablePeriodicSaving()
+        public void DisablePeriodicSaving()
         {
             saveTimer.Stop();
         }

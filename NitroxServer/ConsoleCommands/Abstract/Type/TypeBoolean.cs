@@ -5,7 +5,7 @@ using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
-    public class TypeBoolean : TypeAbstract<bool>
+    public class TypeBoolean : TypeAbstract<bool?>
     {
         #region Singleton
         private static TypeBoolean get;
@@ -34,11 +34,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
 
-        public override bool read(string arg)
+        public override bool? read(string arg)
         {
             if (!isValid(arg))
             {
-                throw new IllegalArgumentException("Received a wrong boolean string value");
+                throw new IllegalArgumentException("Invalid boolean value received");
             }
 
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);

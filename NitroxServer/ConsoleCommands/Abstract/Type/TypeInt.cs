@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             if (!int.TryParse(arg, out _))
             {
-                throw new IllegalArgumentException("Invalid Integer received");
+                throw new IllegalArgumentException("Invalid integer received");
             }
 
             return _;

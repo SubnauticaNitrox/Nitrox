@@ -17,20 +17,13 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeString.Get, "password", true);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
-            try
-            {
-                string playerName = GetSenderName(sender);
-                serverConfig.AdminPassword = getArgAt(0);
+            string playerName = GetSenderName(sender);
+            serverConfig.AdminPassword = getArgAt(0);
 
-                Log.Info($"Admin password changed to \"{getArgAt(0)}\" by {playerName}");
-                SendMessageToPlayer(sender, "Admin password changed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error while attempting to change admin password", ex);
-            }
+            Log.Info($"Admin password changed to \"{getArgAt(0)}\" by {playerName}");
+            SendMessageToPlayer(sender, "Admin password changed");
         }
     }
 }

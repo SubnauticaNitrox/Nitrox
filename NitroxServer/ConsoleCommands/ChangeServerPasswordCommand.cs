@@ -17,21 +17,14 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeString.Get, "password", false);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
-            try
-            {
-                string playerName = GetSenderName(sender);
-                string password = Args.Length == 0 ? "" : getArgAt(0);
-                serverConfig.ServerPassword = password;
+            string playerName = GetSenderName(sender);
+            string password = getArgAt(0) ?? string.Empty;
+            serverConfig.ServerPassword = password;
 
-                Log.Info($"Server password changed to \"{password}\" by {playerName}");
-                SendMessageToPlayer(sender, "Server password changed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error attempting to change server password", ex);
-            }
+            Log.Info($"Server password changed to \"{password}\" by {playerName}");
+            SendMessageToPlayer(sender, "Server password changed");
         }
     }
 }

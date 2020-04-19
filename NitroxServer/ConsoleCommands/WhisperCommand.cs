@@ -14,17 +14,13 @@ namespace NitroxServer.ConsoleCommands
             addParameter(TypeString.Get, "msg", true);
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             Player foundPlayer = readArgAt(0);
 
             if (foundPlayer != null)
             {
-                string message = string.Format("[{0} -> YOU]: {1}",
-                    GetSenderName(sender),
-                    string.Join(" ", Args.Skip(1).ToArray())
-                    );
-
+                string message = $"[{GetSenderName(sender)} -> YOU]: {getArgOverflow(-1)}";
                 SendMessage(foundPlayer, message);
             }
             else

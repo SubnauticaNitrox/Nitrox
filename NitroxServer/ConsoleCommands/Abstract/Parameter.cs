@@ -2,23 +2,11 @@
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
-
-    public interface IParameter
-    {
-        string Name { get; }
-        bool IsRequired { get; }
-
-        string ToString();
-    }
-
     public class Parameter<T> : IParameter
     {
         public TypeAbstract<T> Type { get; }
-
-        public string Name { get; }
-
         public bool IsRequired { get; }
-
+        public string Name { get; }
 
         public Parameter(TypeAbstract<T> type, string name, bool isRequired)
         {
@@ -38,5 +26,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 IsRequired ? '}' : ']'
             );
         }
+    }
+
+    public interface IParameter
+    {
+        string Name { get; }
+        bool IsRequired { get; }
+
+        string ToString();
     }
 }

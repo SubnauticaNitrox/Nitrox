@@ -16,16 +16,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
         #endregion
 
-        public override bool isValid(string arg)
-        {
-            return !string.IsNullOrEmpty(arg);
-        }
+        public override bool isValid(string arg) => !string.IsNullOrEmpty(arg);
 
         public override string read(string arg)
         {
             if (!isValid(arg))
             {
-                throw new IllegalArgumentException("Received null/empty instead of a string for argument");
+                throw new IllegalArgumentException("Received null/empty instead of a valid string");
             }
 
             return arg;

@@ -8,12 +8,12 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly Server server;
 
-        public SummaryCommand(Server server) : base("summary", Perms.PLAYER, "Shows persisted data")
+        public SummaryCommand(Server server) : base("summary", Perms.PLAYER, "Shows persisted data", true)
         {
             this.server = server;
         }
 
-        public override void Perform(Optional<Player> sender)
+        protected override void Perform(Optional<Player> sender)
         {
             SendMessage(sender, server.SaveSummary);
         }

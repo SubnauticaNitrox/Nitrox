@@ -8,9 +8,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public TypeEnum()
         {
-            if (!GetType().IsEnum)
+            if (!typeof(T).IsEnum)
             {
-                throw new IllegalArgumentException($"Type {GetType().Name} isn't an enum");
+                throw new IllegalArgumentException($"Type {typeof(T).FullName} isn't an enum");
             }
         }
 
@@ -24,9 +24,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             T _;
 
-            if (!Enum.TryParse(arg, out _))
+            if (!Enum.TryParse(arg.ToUpper(), out _))
             {
-                throw new IllegalArgumentException("Invalid Enum string received");
+                throw new IllegalArgumentException("Invalid value received");
             }
 
             return _;
