@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeBoolean("on/off", false));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             if (IsValidArgAt(0))
             {

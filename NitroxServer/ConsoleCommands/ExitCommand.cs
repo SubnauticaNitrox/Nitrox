@@ -11,7 +11,7 @@ namespace NitroxServer.ConsoleCommands
             AddAlias("exit", "halt", "quit");
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             Server.Instance.Stop();
         }

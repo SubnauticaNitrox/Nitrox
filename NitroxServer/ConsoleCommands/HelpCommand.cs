@@ -14,7 +14,7 @@ namespace NitroxServer.ConsoleCommands
             AddAlias("?");
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             if (sender.HasValue)
             {

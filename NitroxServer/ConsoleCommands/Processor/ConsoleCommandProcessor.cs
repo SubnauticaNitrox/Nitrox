@@ -73,7 +73,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
         private void RunCommand(Command command, string[] parts, Optional<Player> player)
         {
-            command.TryPerform(parts.Skip(1).ToArray(), player);
+            command.TryExecute(parts.Skip(1).ToArray(), player);
         }
     }
 }

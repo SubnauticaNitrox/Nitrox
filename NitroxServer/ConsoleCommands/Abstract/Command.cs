@@ -37,9 +37,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
-        protected abstract void Perform(Optional<Player> sender);
+        protected abstract void Execute(Optional<Player> sender);
 
-        public void TryPerform(string[] args, Optional<Player> sender)
+        public void TryExecute(string[] args, Optional<Player> sender)
         {
             if (args.Length < required)
             {
@@ -56,7 +56,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             try
             {
                 Args = args;
-                Perform(sender);
+                Execute(sender);
             }
             catch (IllegalArgumentException e)
             {

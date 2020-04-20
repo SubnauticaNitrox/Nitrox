@@ -16,7 +16,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("day/night", false));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             string time = ReadArgAt(0);
 

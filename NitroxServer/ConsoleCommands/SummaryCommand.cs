@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
             this.server = server;
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             SendMessage(sender, server.SaveSummary);
         }

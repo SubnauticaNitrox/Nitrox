@@ -19,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("message", true));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             string joinedArgs = GetArgOverflow(-1);
 

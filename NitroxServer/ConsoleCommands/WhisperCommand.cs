@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("msg", true));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             Player foundPlayer = ReadArgAt<Player>(0);
 

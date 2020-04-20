@@ -16,7 +16,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypePlayer("name", true));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             Player targetPlayer = ReadArgAt<Player>(0);
             string playerName = ReadArgAt(0);

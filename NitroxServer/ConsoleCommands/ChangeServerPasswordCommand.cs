@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("password", false));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             string playerName = GetSenderName(sender);
             string password = ReadArgAt(0) ?? string.Empty;

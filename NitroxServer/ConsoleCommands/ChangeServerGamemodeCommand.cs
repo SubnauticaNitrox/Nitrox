@@ -18,7 +18,7 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeEnum<ServerGameMode>("gamemode", true));
         }
 
-        protected override void Perform(Optional<Player> sender)
+        protected override void Execute(Optional<Player> sender)
         {
             ServerGameMode? sgm = ReadArgAt<ServerGameMode>(0);
             string name = GetSenderName(sender);
