@@ -4,6 +4,7 @@ using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -14,15 +15,16 @@ namespace NitroxServer.ConsoleCommands
         public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
-            AddParameter(TypeString.Get, "password", true);
+            AddParameter(new TypeString("password", true));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
             string playerName = GetSenderName(sender);
-            serverConfig.AdminPassword = GetArgAt(0);
+            string newPassword = ReadArgAt(0);
+            serverConfig.AdminPassword = newPassword;
 
-            Log.Info($"Admin password changed to \"{GetArgAt(0)}\" by {playerName}");
+            Log.Info($"Admin password changed to \"{newPassword}\" by {playerName}");
             SendMessageToPlayer(sender, "Admin password changed");
         }
     }

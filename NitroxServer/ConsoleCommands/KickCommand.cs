@@ -9,6 +9,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -22,17 +23,16 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
 
-            AddParameter(TypePlayer.Get, "name", true);
-            AddParameter(TypeString.Get, "reason", false);
+            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypeString("reason", false));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            string playername = GetArgAt(0);
-
+            string playerName = ReadArgAt(0);
             try
             {
-                Player playerToKick = ReadArgAt(0);
+                Player playerToKick = ReadArgAt<Player>(0);
 
                 playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {GetArgOverflow()}"));
                 playerManager.PlayerDisconnected(playerToKick.connection);
@@ -45,15 +45,15 @@ namespace NitroxServer.ConsoleCommands
                 }
 
                 playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-                SendMessageToBoth(sender, $"The player {playername} has been disconnected");
+                SendMessageToBoth(sender, $"The player {playerName} has been disconnected");
             }
             catch (InvalidOperationException)
             {
-                SendMessageToBoth(sender, $"Error attempting to kick: {playername}, Player is not found");
+                SendMessageToBoth(sender, $"Error attempting to kick: {playerName}, Player is not found");
             }
             catch (Exception ex)
             {
-                Log.Error($"Error attempting to kick: {playername}", ex);
+                Log.Error($"Error attempting to kick: {playerName}", ex);
             }
         }
     }

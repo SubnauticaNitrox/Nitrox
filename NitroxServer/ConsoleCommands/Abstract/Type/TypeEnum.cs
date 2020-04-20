@@ -1,11 +1,12 @@
 ﻿using System;
 using NitroxServer.Exceptions;
 
-namespace NitroxServer.ConsoleCommands.Abstract
+namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeEnum<T> : TypeAbstract<T> where T : struct
+    public class TypeEnum<T> : Parameter<object> where T : struct
     {
-        public TypeEnum()
+
+        public TypeEnum(string name, bool required) : base(name, required)
         {
             if (!typeof(T).IsEnum)
             {
@@ -15,20 +16,19 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         public override bool IsValid(string arg)
         {
-            //Let's suppose enum are in UPPERCASE
-            return Enum.IsDefined(typeof(T), arg.ToUpper());
+            T result;
+            return Enum.TryParse(arg, true, out result);
         }
 
-        public override T Read(string arg)
+        public override object Read(string arg)
         {
-            T _;
-
-            if (!Enum.TryParse(arg.ToUpper(), out _))
+            T value;
+            if (!Enum.TryParse(arg, true, out value))
             {
                 throw new IllegalArgumentException("Invalid value received");
             }
 
-            return _;
+            return value;
         }
     }
 }

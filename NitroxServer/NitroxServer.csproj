@@ -310,7 +310,6 @@
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\Abstract\Parameter.cs" />
-    <Compile Include="ConsoleCommands\Abstract\TypeAbstract.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeBoolean.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeEnum.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeInt.cs" />

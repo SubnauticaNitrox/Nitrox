@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -12,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
         public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
-            AddParameter(TypeString.Get, "password", true);
+            AddParameter(new TypeString("password", true));
         }
 
         protected override void Perform(Optional<Player> sender)
@@ -21,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
 
             if (sender.HasValue)
             {
-                if (GetArgAt(0) == serverConfig.AdminPassword)
+                if (ReadArgAt(0) == serverConfig.AdminPassword)
                 {
                     sender.Value.Permissions = Perms.ADMIN;
                     message = $"Updated permissions to admin for {sender.Value.Name}";

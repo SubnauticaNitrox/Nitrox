@@ -1,6 +1,7 @@
 ﻿using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -8,14 +9,14 @@ namespace NitroxServer.ConsoleCommands
     {
         public SaveCommand() : base("save", Perms.ADMIN, "Saves the map")
         {
-            AddParameter(TypeBoolean.Get, "on/off", false);
+            AddParameter(new TypeBoolean("on/off", false));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
             if (IsValidArgAt(0))
             {
-                bool? toggle = ReadArgAt(0);
+                bool? toggle = ReadArgAt<bool?>(0);
 
                 if (toggle.HasValue)
                 {

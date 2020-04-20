@@ -4,6 +4,7 @@ using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -15,7 +16,7 @@ namespace NitroxServer.ConsoleCommands
         {
             this.playerManager = playerManager;
             AddAlias("say");
-            AddParameter(TypeString.Get, "message", true);
+            AddParameter(new TypeString("message", true));
         }
 
         protected override void Perform(Optional<Player> sender)

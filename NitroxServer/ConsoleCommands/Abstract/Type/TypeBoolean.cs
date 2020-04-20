@@ -3,35 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxServer.Exceptions;
 
-namespace NitroxServer.ConsoleCommands.Abstract
+namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeBoolean : TypeAbstract<bool?>
+    public class TypeBoolean : Parameter<bool?>, IParameter<object>
     {
-        #region Singleton
-        private static TypeBoolean get;
-
-        public static TypeBoolean Get
+        private readonly IList<string> noValues = new List<string>
         {
-            get
-            {
-                return get ?? (get = new TypeBoolean());
-            }
+            bool.FalseString,
+            "no",
+            "off"
+        };
+
+        private readonly IList<string> yesValues = new List<string>
+        {
+            bool.TrueString,
+            "yes",
+            "on"
+        };
+
+        public TypeBoolean(string name, bool isRequired) : base(name, isRequired)
+        {
         }
-        #endregion
 
-        private readonly IList<string> yesValues = new List<string>()
-        {
-            bool.TrueString, "yes", "on"
-        };
+        object IParameter<object>.DefaultValue => null;
 
-        private readonly IList<string> noValues = new List<string>()
+        object IParameter<object>.Read(string arg)
         {
-            bool.FalseString, "no", "off",
-        };
-
-        public override bool IsValid(string arg)
-        {
-            return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
+            return Read(arg);
         }
 
         public override bool? Read(string arg)
@@ -42,6 +40,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
 
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public override bool IsValid(string arg)
+        {
+            return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
     }
 }

@@ -1,30 +1,29 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using Microsoft.CSharp.RuntimeBinder;
+﻿using System;
 using System.Collections.Generic;
-using NitroxServer.Exceptions;
-using NitroxModel.Packets;
-using NitroxModel.Logger;
-using NitroxModel.Helper;
 using System.Linq;
 using System.Text;
-using System;
-
+using Microsoft.CSharp.RuntimeBinder;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
+        private int optional;
+
+        private int required;
         public string Name { get; }
         public string Description { get; }
         public List<string> Alias { get; }
         private string[] Args { get; set; }
         public Perms RequiredPermLevel { get; }
         public bool AllowedArgOverflow { get; }
-        public List<IParameter> Parameters { get; }
-
-        private int required = 0;
-        private int optional = 0;
+        public List<IParameter<object>> Parameters { get; }
 
         public Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
@@ -33,7 +32,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Name = name;
             RequiredPermLevel = perm;
             Alias = new List<string>();
-            Parameters = new List<IParameter>();
+            Parameters = new List<IParameter<object>>();
             AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
@@ -50,7 +49,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             if (!AllowedArgOverflow && args.Length > optional + required)
             {
-                SendMessage(sender, $"Error: Too much Parameters\nUsage: {ToHelpText().Trim()}");
+                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText().Trim()}");
                 return;
             }
 
@@ -71,9 +70,10 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Args = null;
         }
 
-        public bool IsValidArgAt(int index) => index < Args.Length && index >= 0 && Args.Length != 0;
-
-        public string GetArgAt(int index) => !IsValidArgAt(index) ? null : Args[index];
+        public bool IsValidArgAt(int index)
+        {
+            return index < Args.Length && index >= 0 && Args.Length != 0;
+        }
 
         public string GetArgOverflow(int offset = 0)
         {
@@ -85,59 +85,25 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return string.Empty;
         }
 
-        public dynamic ReadArgAt(int index)
+        public string ReadArgAt(int index)
         {
-            try
-            {
-                dynamic param = Parameters[index];
-                string arg = GetArgAt(index);
-
-                if (arg == null || param == null)
-                {
-                    Log.Error($"Index {index} doesn't exist for this command");
-                    return null;
-                }
-
-                dynamic typeabstract = param.Type;
-
-                return typeabstract?.read(arg);
-            }
-            catch (RuntimeBinderException ex)
-            {
-                Log.Error("Dynamic argument reading can't resolve the correct type, you are on your own", ex);
-            }
-
-            return null;
+            return ReadArgAt<string>(index);
         }
 
-        protected void AddParameter<T>(TypeAbstract<T> type, string name, bool isRequired)
+        public T ReadArgAt<T>(int index)
         {
-            AddParameter<T>(new Parameter<T>(type, name, isRequired));
-        }
-
-        protected void AddParameter<T>(IParameter param)
-        {
-            Validate.NotNull(param);
-            Parameters.Add(param);
-
-            if (param.IsRequired)
+            IParameter<object> param = Parameters[index];
+            string arg = !IsValidArgAt(index) ? null : Args[index];
+            if (typeof(T) == typeof(string))
             {
-                required++;
+                return (T)(object)arg;
             }
-            else
+
+            if (arg == null || param == null)
             {
-                optional++;
+                return default(T);
             }
-        }
-
-        protected void AddAlias(params string[] alias)
-        {
-            Alias.AddRange(alias);
-        }
-
-        protected void AddAlias(string alias)
-        {
-            Alias.Add(alias);
+            return (T)param.Read(arg);
         }
 
         public string ToHelpText()
@@ -160,7 +126,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        /// Send a message to an existing player
+        ///     Send a message to an existing player
         /// </summary>
         public void SendMessageToPlayer(Optional<Player> player, string message)
         {
@@ -171,7 +137,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        /// Send a message to an existing player, otherwise logs it in the console
+        ///     Send a message to an existing player, otherwise logs it in the console
         /// </summary>
         public void SendMessage(Optional<Player> player, string message)
         {
@@ -186,12 +152,40 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        /// Send a message to both console and an existing player
+        ///     Send a message to both console and an existing player
         /// </summary>
         public void SendMessageToBoth(Optional<Player> player, string message)
         {
             Log.Info(message);
             SendMessageToPlayer(player, message);
+        }
+
+        protected void AddParameter<T>(T param) where T : IParameter<object>
+        {
+            if (param.Equals(default(T)))
+            {
+                throw new ArgumentException("Parameter should not be null.", nameof(param));
+            }
+            Parameters.Add(param);
+
+            if (param.IsRequired)
+            {
+                required++;
+            }
+            else
+            {
+                optional++;
+            }
+        }
+
+        protected void AddAlias(params string[] alias)
+        {
+            Alias.AddRange(alias);
+        }
+
+        protected void AddAlias(string alias)
+        {
+            Alias.Add(alias);
         }
     }
 }

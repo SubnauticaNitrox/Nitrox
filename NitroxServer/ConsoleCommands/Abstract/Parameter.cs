@@ -2,37 +2,38 @@
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
-    public class Parameter<T> : IParameter
+    public abstract class Parameter<T> : IParameter<T>
     {
-        public TypeAbstract<T> Type { get; }
         public bool IsRequired { get; }
+        public virtual T DefaultValue => default(T);
+
         public string Name { get; }
 
-        public Parameter(TypeAbstract<T> type, string name, bool isRequired)
+        protected Parameter(string name, bool isRequired)
         {
-            Validate.NotNull(type);
             Validate.IsFalse(string.IsNullOrEmpty(name));
 
-            Type = type;
             Name = name;
             IsRequired = isRequired;
         }
 
+        public abstract bool IsValid(string arg);
+
+        public abstract T Read(string arg);
+
         public override string ToString()
         {
-            return string.Format("{0}{1}{2}",
-                IsRequired ? '{' : '[',
-                Name,
-                IsRequired ? '}' : ']'
-            );
+            return $"{(IsRequired ? '{' : '[')}{Name}{(IsRequired ? '}' : ']')}";
         }
     }
 
-    public interface IParameter
+    public interface IParameter<out T>
     {
         string Name { get; }
         bool IsRequired { get; }
+        T DefaultValue { get; }
+        T Read(string arg);
 
-        string ToString();
+        bool IsValid(string arg);
     }
 }

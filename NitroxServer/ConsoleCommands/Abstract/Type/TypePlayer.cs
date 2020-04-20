@@ -3,45 +3,27 @@ using NitroxModel.Helper;
 using NitroxServer.Exceptions;
 using NitroxServer.GameLogic;
 
-namespace NitroxServer.ConsoleCommands.Abstract
+namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypePlayer : TypeAbstract<Player>
+    public class TypePlayer : Parameter<Player>
     {
-        #region Singleton
-        private static TypePlayer get;
+        private readonly PlayerManager playerManager;
 
-        public static TypePlayer Get
+        public TypePlayer(string name, bool required) : base(name, required)
         {
-            get
-            {
-                return get ?? (get = new TypePlayer());
-            }
-        }
-        #endregion
-
-        private readonly PlayerManager pm;
-
-        public TypePlayer()
-        {
-            Validate.NotNull(pm = NitroxServiceLocator.LocateService<PlayerManager>(), "PlayerManager can't be null to resolve the command");
+            Validate.NotNull(playerManager = NitroxServiceLocator.LocateService<PlayerManager>(), "PlayerManager can't be null to resolve the command");
         }
 
         public override bool IsValid(string arg)
         {
-            Player _;
-            return pm.TryGetPlayerByName(arg, out _);
+            Player player;
+            return playerManager.TryGetPlayerByName(arg, out player);
         }
 
         public override Player Read(string arg)
         {
-            Player _;
-
-            if (!pm.TryGetPlayerByName(arg, out _))
-            {
-                throw new IllegalArgumentException("Player not found");
-            }
-
-            return _;
+            Player player;
+            return playerManager.TryGetPlayerByName(arg, out player) ? player : null;
         }
     }
 }

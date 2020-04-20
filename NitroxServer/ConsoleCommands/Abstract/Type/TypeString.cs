@@ -1,22 +1,18 @@
-﻿using NitroxServer.Exceptions;
+﻿using System;
+using NitroxServer.Exceptions;
 
-namespace NitroxServer.ConsoleCommands.Abstract
+namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeString : TypeAbstract<string>
+    public class TypeString : Parameter<string>
     {
-        #region Singleton
-        private static TypeString get;
-
-        public static TypeString Get
+        public TypeString(string name, bool isRequired) : base(name, isRequired)
         {
-            get
-            {
-                return get ?? (get = new TypeString());
-            }
         }
-        #endregion
 
-        public override bool IsValid(string arg) => !string.IsNullOrEmpty(arg);
+        public override bool IsValid(string arg)
+        {
+            return !string.IsNullOrEmpty(arg);
+        }
 
         public override string Read(string arg)
         {

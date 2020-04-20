@@ -1,37 +1,34 @@
 ﻿using NitroxServer.Exceptions;
 
-namespace NitroxServer.ConsoleCommands.Abstract
+namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeInt : TypeAbstract<int>
+    public class TypeInt : Parameter<int>, IParameter<object>
     {
-        #region Singleton
-        private static TypeInt get;
+        object IParameter<object>.DefaultValue => null;
 
-        public static TypeInt Get
+        public TypeInt(string name, bool isRequired) : base(name, isRequired)
         {
-            get
-            {
-                return get ?? (get = new TypeInt());
-            }
         }
-        #endregion
 
         public override bool IsValid(string arg)
         {
-            int _;
-            return int.TryParse(arg, out _);
+            int value;
+            return int.TryParse(arg, out value);
         }
 
         public override int Read(string arg)
         {
-            int _;
-
-            if (!int.TryParse(arg, out _))
+            int value;
+            if (!int.TryParse(arg, out value))
             {
                 throw new IllegalArgumentException("Invalid integer received");
             }
+            return value;
+        }
 
-            return _;
+        object IParameter<object>.Read(string arg)
+        {
+            return Read(arg);
         }
     }
 }

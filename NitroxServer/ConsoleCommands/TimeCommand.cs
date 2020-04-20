@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
@@ -12,12 +13,12 @@ namespace NitroxServer.ConsoleCommands
         public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "Changes the map time")
         {
             this.timeKeeper = timeKeeper;
-            AddParameter(TypeString.Get, "day/night", false);
+            AddParameter(new TypeString("day/night", false));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            string time = GetArgAt(0);
+            string time = ReadArgAt(0);
 
             switch (time?.ToLower())
             {

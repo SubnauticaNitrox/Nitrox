@@ -4,6 +4,7 @@ using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using System.Collections.Generic;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -17,14 +18,14 @@ namespace NitroxServer.ConsoleCommands
         public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "Loads entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
-            AddParameter(TypeInt.Get, "x", true);
-            AddParameter(TypeInt.Get, "y", true);
-            AddParameter(TypeInt.Get, "z", true);
+            AddParameter(new TypeInt("x", true));
+            AddParameter(new TypeInt("y", true));
+            AddParameter(new TypeInt("z", true));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Int3 batchId = new Int3(ReadArgAt(0), ReadArgAt(1), ReadArgAt(2));
+            Int3 batchId = new Int3(ReadArgAt<int>(0), ReadArgAt<int>(1), ReadArgAt<int>(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
             SendMessageToBoth(sender, $"Loaded {entities.Count} entities from batch {batchId}");

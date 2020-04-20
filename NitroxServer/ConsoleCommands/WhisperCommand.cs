@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -10,13 +11,13 @@ namespace NitroxServer.ConsoleCommands
         public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
             AddAlias("m", "whisper", "w");
-            AddParameter(TypePlayer.Get, "name", true);
-            AddParameter(TypeString.Get, "msg", true);
+            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypeString("msg", true));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Player foundPlayer = ReadArgAt(0);
+            Player foundPlayer = ReadArgAt<Player>(0);
 
             if (foundPlayer != null)
             {

@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -8,24 +9,16 @@ namespace NitroxServer.ConsoleCommands
     {
         public OpCommand() : base("op", Perms.ADMIN, "Sets an user as admin")
         {
-            AddParameter(TypePlayer.Get, "name", true);
+            AddParameter(new TypePlayer("name", true));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Player receivingPlayer = ReadArgAt(0);
-            string playerName = GetArgAt(0);
-            string message;
+            Player receivingPlayer = ReadArgAt<Player>(0);
+            string playerName = receivingPlayer.Name;
 
-            if (receivingPlayer != null)
-            {
-                receivingPlayer.Permissions = Perms.ADMIN;
-                message = $"Updated {playerName}\'s permissions to admin";
-            }
-            else
-            {
-                message = $"Could not update permissions of unknown player '{playerName}'";
-            }
+            receivingPlayer.Permissions = Perms.ADMIN;
+            string message = $"Updated {playerName}\'s permissions to admin";
 
             SendMessageToBoth(sender, message);
         }

@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -12,13 +13,13 @@ namespace NitroxServer.ConsoleCommands
         public DeopCommand(PlayerManager playerManager) : base("deop", Perms.ADMIN, "Removes admin rights from user")
         {
             this.playerManager = playerManager;
-            AddParameter(TypePlayer.Get, "name", true);
+            AddParameter(new TypePlayer("name", true));
         }
 
         protected override void Perform(Optional<Player> sender)
         {
-            Player targetPlayer = ReadArgAt(0);
-            string playerName = GetArgAt(0);
+            Player targetPlayer = ReadArgAt<Player>(0);
+            string playerName = ReadArgAt(0);
             string message;
 
             if (targetPlayer != null)
