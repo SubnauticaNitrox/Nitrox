@@ -24,6 +24,7 @@ namespace NitroxServer.ConsoleCommands
             string name = GetSenderName(sender);
 
             serverConfig.GameModeEnum = sgm.Value;
+
             SendMessageToBoth(sender, $"Server gamemode changed to \"{sgm?.ToString()}\" by {name}");
         }
     }

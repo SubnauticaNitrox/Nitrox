@@ -1,13 +1,10 @@
-﻿using System;
-using NitroxServer.Exceptions;
+﻿using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeString : Parameter<string>
     {
-        public TypeString(string name, bool isRequired) : base(name, isRequired)
-        {
-        }
+        public TypeString(string name, bool isRequired) : base(name, isRequired) { }
 
         public override bool IsValid(string arg)
         {

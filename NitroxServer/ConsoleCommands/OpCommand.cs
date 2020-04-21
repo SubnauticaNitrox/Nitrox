@@ -18,9 +18,8 @@ namespace NitroxServer.ConsoleCommands
             string playerName = receivingPlayer.Name;
 
             receivingPlayer.Permissions = Perms.ADMIN;
-            string message = $"Updated {playerName}\'s permissions to admin";
 
-            SendMessageToBoth(sender, message);
+            SendMessageToBoth(sender, $"Updated {playerName}\'s permissions to admin");
         }
     }
 }

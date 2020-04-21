@@ -4,11 +4,10 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeInt : Parameter<int>, IParameter<object>
     {
-        object IParameter<object>.DefaultValue => null;
+        object IParameter<object>.DefaultValue => 0;
+        object IParameter<object>.Read(string arg) => Read(arg);
 
-        public TypeInt(string name, bool isRequired) : base(name, isRequired)
-        {
-        }
+        public TypeInt(string name, bool isRequired) : base(name, isRequired) { }
 
         public override bool IsValid(string arg)
         {
@@ -23,12 +22,8 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             {
                 throw new IllegalArgumentException("Invalid integer received");
             }
-            return value;
-        }
 
-        object IParameter<object>.Read(string arg)
-        {
-            return Read(arg);
+            return value;
         }
     }
 }

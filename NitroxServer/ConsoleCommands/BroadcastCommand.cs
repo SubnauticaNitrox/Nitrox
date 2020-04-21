@@ -21,9 +21,9 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(Optional<Player> sender)
         {
-            string joinedArgs = GetArgOverflow(-1);
-
             ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
+            string joinedArgs = GetArgOverflow(-1);
+            
             playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));
 
             Log.Info("BROADCAST: " + joinedArgs);

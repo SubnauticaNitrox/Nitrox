@@ -18,23 +18,23 @@ namespace NitroxServer.ConsoleCommands
         {
             if (sender.HasValue)
             {
-                List<string> cmdsText = GetHelpText(sender.Value.Permissions);
+                List<string> cmdsText = GetHelpText(sender.Value.Permissions, true);
                 cmdsText.ForEach(cmdText => SendMessageToPlayer(sender, cmdText));
             }
             else
             {
-                List<string> cmdsText = GetHelpText(Perms.CONSOLE);
+                List<string> cmdsText = GetHelpText(Perms.CONSOLE, false);
                 cmdsText.ForEach(cmdText => Log.Info(cmdText));
             }
         }
 
-        private List<string> GetHelpText(Perms perm)
+        private List<string> GetHelpText(Perms perm, bool croppedText)
         {
-            // runtime query to avoid circular dependencies
+            //Runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= perm)
                                             .OrderByDescending(cmd => cmd.Name)
-                                            .Select(cmd => cmd.ToHelpText()));
+                                            .Select(cmd => cmd.ToHelpText(croppedText)));
         }
     }
 }

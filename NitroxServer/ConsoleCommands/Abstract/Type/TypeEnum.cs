@@ -25,7 +25,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             T value;
             if (!Enum.TryParse(arg, true, out value))
             {
-                throw new IllegalArgumentException("Invalid value received");
+                throw new IllegalArgumentException("Unknown value received");
             }
 
             return value;

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.CSharp.RuntimeBinder;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
@@ -15,8 +14,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
     public abstract class Command
     {
         private int optional;
-
         private int required;
+
         public string Name { get; }
         public string Description { get; }
         public List<string> Alias { get; }
@@ -43,13 +42,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             if (args.Length < required)
             {
-                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText().Trim()}");
+                SendMessage(sender, $"Error: Invalid Parameters\nUsage: {ToHelpText(true)}");
                 return;
             }
 
             if (!AllowedArgOverflow && args.Length > optional + required)
             {
-                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText().Trim()}");
+                SendMessage(sender, $"Error: Too many Parameters\nUsage: {ToHelpText(true)}");
                 return;
             }
 
@@ -94,6 +93,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             IParameter<object> param = Parameters[index];
             string arg = !IsValidArgAt(index) ? null : Args[index];
+
             if (typeof(T) == typeof(string))
             {
                 return (T)(object)arg;
@@ -103,10 +103,40 @@ namespace NitroxServer.ConsoleCommands.Abstract
             {
                 return default(T);
             }
+
             return (T)param.Read(arg);
         }
 
-        public string ToHelpText()
+        protected void AddParameter<T>(T param) where T : IParameter<object>
+        {
+            if (param.Equals(default(T)))
+            {
+                throw new ArgumentException("Parameter should'nt be null", nameof(param));
+            }
+
+            Parameters.Add(param);
+
+            if (param.IsRequired)
+            {
+                required++;
+            }
+            else
+            {
+                optional++;
+            }
+        }
+
+        protected void AddAlias(params string[] alias)
+        {
+            Alias.AddRange(alias);
+        }
+
+        protected void AddAlias(string alias)
+        {
+            Alias.Add(alias);
+        }
+
+        public string ToHelpText(bool cropped = false)
         {
             StringBuilder cmd = new StringBuilder(Name);
 
@@ -117,7 +147,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
 
-            return $"{cmd,-32} - {Description}";
+            return cropped ? $"- {cmd}" : $"{cmd,-32} - {Description}";
         }
 
         public string GetSenderName(Optional<Player> player)
@@ -158,34 +188,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             Log.Info(message);
             SendMessageToPlayer(player, message);
-        }
-
-        protected void AddParameter<T>(T param) where T : IParameter<object>
-        {
-            if (param.Equals(default(T)))
-            {
-                throw new ArgumentException("Parameter should not be null.", nameof(param));
-            }
-            Parameters.Add(param);
-
-            if (param.IsRequired)
-            {
-                required++;
-            }
-            else
-            {
-                optional++;
-            }
-        }
-
-        protected void AddAlias(params string[] alias)
-        {
-            Alias.AddRange(alias);
-        }
-
-        protected void AddAlias(string alias)
-        {
-            Alias.Add(alias);
         }
     }
 }

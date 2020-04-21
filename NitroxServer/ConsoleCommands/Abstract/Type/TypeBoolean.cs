@@ -7,30 +7,24 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeBoolean : Parameter<bool?>, IParameter<object>
     {
-        private readonly IList<string> noValues = new List<string>
+        private static readonly IList<string> noValues = new List<string>
         {
             bool.FalseString,
             "no",
             "off"
         };
 
-        private readonly IList<string> yesValues = new List<string>
+        private static readonly IList<string> yesValues = new List<string>
         {
             bool.TrueString,
             "yes",
             "on"
         };
 
-        public TypeBoolean(string name, bool isRequired) : base(name, isRequired)
-        {
-        }
-
         object IParameter<object>.DefaultValue => null;
+        object IParameter<object>.Read(string arg) => Read(arg);
 
-        object IParameter<object>.Read(string arg)
-        {
-            return Read(arg);
-        }
+        public TypeBoolean(string name, bool isRequired) : base(name, isRequired) { }
 
         public override bool? Read(string arg)
         {

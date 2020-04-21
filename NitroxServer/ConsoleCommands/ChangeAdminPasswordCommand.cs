@@ -22,6 +22,7 @@ namespace NitroxServer.ConsoleCommands
         {
             string playerName = GetSenderName(sender);
             string newPassword = ReadArgAt(0);
+
             serverConfig.AdminPassword = newPassword;
 
             Log.Info($"Admin password changed to \"{newPassword}\" by {playerName}");

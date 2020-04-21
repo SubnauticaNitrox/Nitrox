@@ -4,9 +4,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Parameter<T> : IParameter<T>
     {
-        public bool IsRequired { get; }
         public virtual T DefaultValue => default(T);
-
+        public bool IsRequired { get; }
         public string Name { get; }
 
         protected Parameter(string name, bool isRequired)
