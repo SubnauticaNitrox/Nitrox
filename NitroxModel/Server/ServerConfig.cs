@@ -7,7 +7,7 @@ namespace NitroxModel.Server
 {
     public class ServerConfig
     {
-        private readonly ServerConfigItem<bool> disableConsoleSetting;
+        private readonly ServerConfigItem<bool> disableConsoleSetting, disableAutoSaveSetting;
         private readonly ServerConfigItem<int> portSetting, saveIntervalSetting, maxConnectionsSetting;
         private readonly ServerConfigItem<string> saveNameSetting, serverPasswordSetting, adminPasswordSetting, gameModeSetting;
         private readonly ServerConfigItem<float> oxygenSetting, maxOxygenSetting, healthSetting, foodSetting, waterSetting, infectionSetting;
@@ -17,6 +17,7 @@ namespace NitroxModel.Server
                saveinterval: 120000,
                maxconnection: 100,
                disableconsole: false,
+               disableautosave: false,
                savename: "world",
                serverpassword: string.Empty,
                adminpassword: StringHelper.GenerateRandomString(12),
@@ -24,12 +25,13 @@ namespace NitroxModel.Server
         )
         { }
 
-        public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, string savename, string serverpassword, string adminpassword, ServerGameMode gamemodeSetting)
+        public ServerConfig(int port, int saveinterval, int maxconnection, bool disableconsole, bool disableautosave, string savename, string serverpassword, string adminpassword, ServerGameMode gamemodeSetting)
         {
             portSetting = new ServerConfigItem<int>("Port", port);
             saveIntervalSetting = new ServerConfigItem<int>("SaveInterval", saveinterval);
             maxConnectionsSetting = new ServerConfigItem<int>("MaxConnections", maxconnection);
             disableConsoleSetting = new ServerConfigItem<bool>("DisableConsole", disableconsole);
+            disableAutoSaveSetting = new ServerConfigItem<bool>("DisableAutoSave", disableautosave);
             saveNameSetting = new ServerConfigItem<string>("SaveName", savename);
             serverPasswordSetting = new ServerConfigItem<string>("ServerPassword", serverpassword);
             adminPasswordSetting = new ServerConfigItem<string>("AdminPassword", adminpassword);
@@ -97,6 +99,19 @@ namespace NitroxModel.Server
             set
             {
                 disableConsoleSetting.Value = value;
+            }
+        }     
+        
+        public bool DisableAutoSave
+        {
+            get
+            {
+                return disableAutoSaveSetting.Value;
+            }
+
+            set
+            {
+                disableAutoSaveSetting.Value = value;
             }
         }
 

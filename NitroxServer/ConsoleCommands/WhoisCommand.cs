@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
 {
     internal class WhoisCommand : Command
     {
-        public WhoisCommand() : base("whois", Perms.ADMIN, "Gets info for a user")
+        public WhoisCommand() : base("whois", Perms.PLAYER, "Shows informations over a player")
         {
             AddParameter(new TypePlayer("name", true));
         }

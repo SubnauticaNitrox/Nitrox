@@ -12,7 +12,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "Broadcasts a message on the server", true)
+        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.ADMIN, "Broadcasts a message on the server", true)
         {
             this.playerManager = playerManager;
             AddAlias("say");

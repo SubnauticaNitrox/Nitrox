@@ -92,7 +92,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public T ReadArgAt<T>(int index)
         {
             IParameter<object> param = Parameters[index];
-            string arg = !IsValidArgAt(index) ? null : Args[index];
+            string arg = IsValidArgAt(index) ? Args[index] : null;
 
             if (typeof(T) == typeof(string))
             {

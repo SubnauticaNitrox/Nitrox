@@ -11,6 +11,7 @@ namespace NitroxServer
     {
         private readonly Communication.NetworkingLayer.NitroxServer server;
         private readonly WorldPersistence worldPersistence;
+        private readonly ServerConfig serverConfig;
         private readonly Timer saveTimer;
         private readonly World world;
 
@@ -27,6 +28,7 @@ namespace NitroxServer
             }
 
             this.worldPersistence = worldPersistence;
+            this.serverConfig = serverConfig;
             this.server = server;
             this.world = world;
 
@@ -44,7 +46,7 @@ namespace NitroxServer
             get
             {
                 // TODO: Extend summary with more useful save file data
-                StringBuilder builder = new StringBuilder();
+                StringBuilder builder = new StringBuilder("\n");
                 builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
                 builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
@@ -77,8 +79,13 @@ namespace NitroxServer
             }
 
             Log.Info("Nitrox Server Started");
+
+            if (!serverConfig.DisableAutoSave)
+            {
+                EnablePeriodicSaving();
+            }
+
             IsRunning = true;
-            EnablePeriodicSaving();
 #if RELEASE
             IpLogger.PrintServerIps();
 #endif

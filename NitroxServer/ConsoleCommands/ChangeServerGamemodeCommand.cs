@@ -1,6 +1,4 @@
-﻿using System;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
+﻿using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
@@ -12,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeServerGamemodeCommand(ServerConfig serverConfig) : base("changeservergamemode", Perms.CONSOLE, "Changes server gamemode")
+        public ChangeServerGamemodeCommand(ServerConfig serverConfig) : base("changeservergamemode", Perms.ADMIN, "Changes server gamemode")
         {
             this.serverConfig = serverConfig;
             AddParameter(new TypeEnum<ServerGameMode>("gamemode", true));

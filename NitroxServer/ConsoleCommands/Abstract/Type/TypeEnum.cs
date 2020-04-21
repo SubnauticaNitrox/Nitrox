@@ -5,7 +5,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeEnum<T> : Parameter<object> where T : struct
     {
-
         public TypeEnum(string name, bool required) : base(name, required)
         {
             if (!typeof(T).IsEnum)

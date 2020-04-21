@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract.Type;

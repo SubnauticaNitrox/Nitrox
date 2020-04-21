@@ -17,7 +17,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         public abstract bool IsValid(string arg);
-
         public abstract T Read(string arg);
 
         public override string ToString()
@@ -28,11 +27,11 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
     public interface IParameter<out T>
     {
-        string Name { get; }
-        bool IsRequired { get; }
         T DefaultValue { get; }
-        T Read(string arg);
+        bool IsRequired { get; }
+        string Name { get; }
 
         bool IsValid(string arg);
+        T Read(string arg);
     }
 }
