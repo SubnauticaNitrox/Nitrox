@@ -9,19 +9,24 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
     {
         private static PlayerChatManager playerChatManager;
 
-        private Vector2 screenRes = new Vector2(1920, 1200);
+        private readonly Camera mainCamera = Camera.main;
+        private Vector2 screenRes = new Vector2(1920f, 1200f);
+        private Vector2 chatSize;
+        private Vector4 screenBorder;
         private Vector2 offset;
         private bool drag;
 
         private void Awake()
         {
             playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
+            chatSize = transform.parent.parent.GetComponent<RectTransform>().sizeDelta;
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             screenRes.y = (screenRes.x / Screen.width) * Screen.height;
-            offset = GetMouseWorldPostion() - (Vector2)playerChatManager.PlayerChaTransform.localPosition;
+            offset = GetMouseWorldPosition() - (Vector2)playerChatManager.PlayerChaTransform.localPosition;
+            screenBorder = new Vector4(-(screenRes.x - chatSize.x) / 2f, (screenRes.x - chatSize.x) / 2f, -(screenRes.y - chatSize.y) / 2f, (screenRes.y - chatSize.y) / 2f);
 
             drag = true;
             PlayerChatInputField.FreezeTime = true;
@@ -32,25 +37,30 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             drag = false;
             PlayerChatInputField.FreezeTime = false;
             PlayerChatInputField.ResetTimer();
-
-            if (Mathf.Abs(playerChatManager.PlayerChaTransform.localPosition.x * 2) >= screenRes.x || Mathf.Abs(playerChatManager.PlayerChaTransform.localPosition.y * 2) >= screenRes.y)
-            {
-                playerChatManager.PlayerChaTransform.localPosition = new Vector3(-500, 125, 0);
-            }
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (drag)
             {
-                playerChatManager.PlayerChaTransform.localPosition = GetMouseWorldPostion() - offset;
+                playerChatManager.PlayerChaTransform.localPosition = GetChatPosition();
             }
         }
 
-        private Vector2 GetMouseWorldPostion()
+        private Vector2 GetMouseWorldPosition()
         {
-            Vector3 viewport = Camera.main.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
-            return new Vector2((viewport.x - 0.5f) * screenRes.x, (viewport.y - 0.5f) * screenRes.y);
+            Vector3 position = mainCamera.ScreenToViewportPoint(UnityEngine.Input.mousePosition);
+            position.x = (position.x - 0.5f) * screenRes.x;
+            position.y = (position.y - 0.5f) * screenRes.y;
+            return position;
+        }
+
+        private Vector2 GetChatPosition()
+        {
+            Vector2 position = GetMouseWorldPosition() - offset;
+            position.x = Mathf.Clamp(position.x, screenBorder.x, screenBorder.y);
+            position.y = Mathf.Clamp(position.y, screenBorder.z, screenBorder.w);
+            return position;
         }
     }
 }

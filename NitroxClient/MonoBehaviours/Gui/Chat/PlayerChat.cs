@@ -37,7 +37,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
 
             canvasGroup = GetComponent<CanvasGroup>();
-            GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
 
             logEntryPrefab = GameObject.Find("ChatLogEntryPrefab");
             logEntryPrefab.AddComponent<PlayerChatLogItem>();
