@@ -25,7 +25,6 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string playerName = args.Get(0);
             Player playerToKick = args.Get<Player>(0);
 
             playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {args.GetTillEnd(1)}"));
@@ -39,7 +38,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-            SendMessage(args.Sender, $"The player {playerName} has been disconnected");
+            SendMessage(args.Sender, $"The player {playerToKick.Name} has been disconnected");
         }
     }
 }

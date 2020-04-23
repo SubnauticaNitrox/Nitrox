@@ -14,7 +14,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         public override string Read(string arg)
         {
             Validate.IsTrue(IsValid(arg), "Received null/empty instead of a valid string");
-
             return arg;
         }
     }

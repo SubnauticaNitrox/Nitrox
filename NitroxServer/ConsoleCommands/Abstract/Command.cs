@@ -11,11 +11,18 @@ using NitroxModel.Packets;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
-    public abstract class Command
+    public abstract partial class Command
     {
         private readonly List<string> aliases;
-        private int optional;
-        private int required;
+        private int optional, required;
+
+        public ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
+
+        public string Name { get; }
+        public string Description { get; }
+        public Perms RequiredPermLevel { get; }
+        public bool AllowedArgOverflow { get; }
+        public List<IParameter<object>> Parameters { get; }
 
         protected Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
@@ -28,15 +35,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
             AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
-
-        public string Name { get; }
-        public string Description { get; }
-        public Perms RequiredPermLevel { get; }
-        public bool AllowedArgOverflow { get; }
-
-        public ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
-
-        private List<IParameter<object>> Parameters { get; }
 
         protected abstract void Execute(CallArgs args);
 
@@ -79,26 +77,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
             return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
         }
 
-        /// <summary>
-        ///     Send a message to an existing player
-        /// </summary>
-        public void SendMessageToPlayer(Optional<Player> player, string message)
-        {
-            if (player.HasValue)
-            {
-                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-            }
-        }
-
-        /// <summary>
-        ///     Send a message to an existing player and logs it in the console
-        /// </summary>
-        public void SendMessage(Optional<Player> player, string message)
-        {
-            SendMessageToPlayer(player, message);
-            Log.Info(message);
-        }
-
         protected void AddParameter<T>(T param) where T : IParameter<object>
         {
             Validate.NotNull(param as object);
@@ -124,58 +102,24 @@ namespace NitroxServer.ConsoleCommands.Abstract
             aliases.Add(alias);
         }
 
-        public class CallArgs
+        /// <summary>
+        ///     Send a message to an existing player
+        /// </summary>
+        public void SendMessageToPlayer(Optional<Player> player, string message)
         {
-            public CallArgs(Command command, Optional<Player> sender, string[] args)
+            if (player.HasValue)
             {
-                Command = command;
-                Sender = sender;
-                Args = args;
+                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
             }
+        }
 
-            public Command Command { get; }
-            public string[] Args { get; }
-            public Optional<Player> Sender { get; }
-
-            public string SenderName => Sender.HasValue ? Sender.Value.Name : "SERVER";
-
-            public bool Valid(int index)
-            {
-                return index < Args.Length && index >= 0 && Args.Length != 0;
-            }
-
-            public string Get(int index)
-            {
-                return Get<string>(index);
-            }
-
-            public string GetTillEnd(int startIndex = 0)
-            {
-                // TODO: Proper argument capture/parse instead of this argument join hack
-                if (Args?.Length > 0)
-                {
-                    return string.Join(" ", Args.Skip(startIndex));
-                }
-
-                return string.Empty;
-            }
-
-            public T Get<T>(int index)
-            {
-                IParameter<object> param = Command.Parameters[index];
-                string arg = Valid(index) ? Args[index] : null;
-
-                if (arg == null)
-                {
-                    return default(T);
-                }
-                if (typeof(T) == typeof(string))
-                {
-                    return (T)(object)arg;
-                }
-
-                return (T)param.Read(arg);
-            }
+        /// <summary>
+        ///     Send a message to an existing player and logs it in the console
+        /// </summary>
+        public void SendMessage(Optional<Player> player, string message)
+        {
+            SendMessageToPlayer(player, message);
+            Log.Info(message);
         }
     }
 }

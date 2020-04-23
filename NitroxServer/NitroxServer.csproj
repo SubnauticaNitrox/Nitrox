@@ -308,6 +308,7 @@
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
+    <Compile Include="ConsoleCommands\Abstract\CallArgs.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
     <Compile Include="ConsoleCommands\Abstract\Parameter.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeBoolean.cs" />
