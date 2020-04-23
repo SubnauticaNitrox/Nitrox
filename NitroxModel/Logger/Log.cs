@@ -7,6 +7,7 @@ using NLog.Filters;
 using NLog.Fluent;
 using NLog.MessageTemplates;
 using NLog.Targets;
+using NLog.Targets.Wrappers;
 using NLog.Time;
 
 namespace NitroxModel.Logger
@@ -41,12 +42,12 @@ namespace NitroxModel.Logger
             string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${event-properties:item=PlayerName}${message} ${exception}";
 
             // Targets where to log to: File and Console
-            ColoredConsoleTarget logconsole = new ColoredConsoleTarget(nameof(logconsole))
+            ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
             {
                 Layout = layout,
                 DetectConsoleAvailable = true
             };
-            FileTarget logfile = new FileTarget(nameof(logfile))
+            FileTarget logFile = new FileTarget(nameof(logFile))
             {
                 FileName = "Nitrox Logs/nitrox.log",
                 ArchiveFileName = "Nitrox Logs/archives/nitrox.{#}.log",
@@ -56,10 +57,11 @@ namespace NitroxModel.Logger
                 Layout = layout,
                 EnableArchiveFileCompression = true,
             };
+            AsyncTargetWrapper logfileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
 
             // Rules for mapping loggers to targets
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, new NLog.Targets.Wrappers.AsyncTargetWrapper(logfile, 1000, NLog.Targets.Wrappers.AsyncTargetWrapperOverflowAction.Grow));
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfileAsync);
             config.AddRuleForOneLevel(LogLevel.Info,
                                       new MethodCallTarget("ingame",
                                                            (evt, obj) =>
@@ -76,7 +78,7 @@ namespace NitroxModel.Logger
                                                                }
                                                            }));
 
-            AddSensitiveFilter(config);
+            AddSensitiveFilter(config, target => target is AsyncTargetWrapper || target is FileTarget);
 
             // Apply config
             LogManager.Configuration = config;
@@ -194,7 +196,8 @@ namespace NitroxModel.Logger
         ///     Exclude sensitive logs parameters from being logged into (long-term) files
         /// </summary>
         /// <param name="config">The logger config to apply the filter to.</param>
-        private static void AddSensitiveFilter(LoggingConfiguration config)
+        /// <param name="applyDecider">Custom condition to decide whether to apply the sensitive log file to a log target.</param>
+        private static void AddSensitiveFilter(LoggingConfiguration config, Func<Target, bool> applyDecider)
         {
             WhenMethodFilter sensistiveLogFilter = new WhenMethodFilter(context =>
             {
@@ -218,12 +221,10 @@ namespace NitroxModel.Logger
             {
                 foreach (Target target in rule.Targets)
                 {
-                    if (!(target is FileTarget))
+                    if (applyDecider(target))
                     {
-                        continue;
+                        rule.Filters.Add(sensistiveLogFilter);
                     }
-                    rule.Filters.Add(sensistiveLogFilter);
-                    break;
                 }
             }
         }
