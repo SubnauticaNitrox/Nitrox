@@ -18,12 +18,11 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string playerName = GetSenderName(args.Sender);
             string newPassword = args.Get(0);
 
             serverConfig.AdminPassword = newPassword;
 
-            Log.Info($"Admin password changed to \"{newPassword}\" by {playerName}");
+            Log.Info($"Admin password changed to \"{newPassword}\" by {args.SenderName}");
             SendMessageToPlayer(args.Sender, "Admin password changed");
         }
     }

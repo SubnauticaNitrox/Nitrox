@@ -19,8 +19,8 @@ namespace NitroxServer.ConsoleCommands
 
             if (foundPlayer != null)
             {
-                string message = $"[{GetSenderName(args.Sender)} -> YOU]: {args.GetOverflow(-1)}";
-                SendMessage(foundPlayer, message);
+                string message = $"[{args.SenderName} -> YOU]: {args.GetOverflow(-1)}";
+                SendMessageToPlayer(foundPlayer, message);
             }
             else
             {

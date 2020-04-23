@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using NitroxModel.DataStructures.GameLogic;
@@ -12,27 +13,30 @@ namespace NitroxServer.ConsoleCommands.Abstract
 {
     public abstract class Command
     {
+        private readonly List<string> aliases;
         private int optional;
         private int required;
 
-        public string Name { get; }
-        public string Description { get; }
-        public List<string> Alias { get; }
-        public Perms RequiredPermLevel { get; }
-        public bool AllowedArgOverflow { get; }
-        public List<IParameter<object>> Parameters { get; }
-
-        public Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
+        protected Command(string name, Perms perm, string description, bool allowedArgOveflow = false)
         {
             Validate.NotNull(name);
 
             Name = name;
             RequiredPermLevel = perm;
-            Alias = new List<string>();
+            aliases = new List<string>();
             Parameters = new List<IParameter<object>>();
             AllowedArgOverflow = allowedArgOveflow;
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
+
+        public string Name { get; }
+        public string Description { get; }
+        public Perms RequiredPermLevel { get; }
+        public bool AllowedArgOverflow { get; }
+
+        public ReadOnlyCollection<string> Aliases => aliases.AsReadOnly();
+
+        private List<IParameter<object>> Parameters { get; }
 
         protected abstract void Execute(CallArgs args);
 
@@ -64,23 +68,15 @@ namespace NitroxServer.ConsoleCommands.Abstract
             }
         }
 
-        public string ToHelpText(bool cropped = false)
+        public string ToHelpText(bool cropText = false)
         {
             StringBuilder cmd = new StringBuilder(Name);
-
-            if (Alias?.Count > 0)
+            if (Aliases?.Count > 0)
             {
-                cmd.AppendFormat("/{0}", string.Join("/", Alias));
+                cmd.AppendFormat("/{0}", string.Join("/", Aliases));
             }
-
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
-
-            return cropped ? $"- {cmd}" : $"{cmd,-32} - {Description}";
-        }
-
-        public string GetSenderName(Optional<Player> player)
-        {
-            return player.HasValue ? player.Value.Name : "SERVER";
+            return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
         }
 
         /// <summary>
@@ -105,10 +101,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         protected void AddParameter<T>(T param) where T : IParameter<object>
         {
-            Validate.IsFalse(param.Equals(default(T)), "Parameter shouldn't be null");
+            Validate.NotNull(param as object);
 
             Parameters.Add(param);
-
             if (param.IsRequired)
             {
                 required++;
@@ -121,20 +116,16 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         protected void AddAlias(params string[] alias)
         {
-            Alias.AddRange(alias);
+            aliases.AddRange(alias);
         }
 
         protected void AddAlias(string alias)
         {
-            Alias.Add(alias);
+            aliases.Add(alias);
         }
 
         public class CallArgs
         {
-            public Command Command { get; }
-            public string[] Args { get; }
-            public Optional<Player> Sender { get; }
-
             public CallArgs(Command command, Optional<Player> sender, string[] args)
             {
                 Command = command;
@@ -142,7 +133,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 Args = args;
             }
 
-            public bool IsValidArgAt(int index)
+            public Command Command { get; }
+            public string[] Args { get; }
+            public Optional<Player> Sender { get; }
+
+            public string SenderName => Sender.HasValue ? Sender.Value.Name : "SERVER";
+
+            public bool Valid(int index)
             {
                 return index < Args.Length && index >= 0 && Args.Length != 0;
             }
@@ -165,14 +162,14 @@ namespace NitroxServer.ConsoleCommands.Abstract
             public T Get<T>(int index)
             {
                 IParameter<object> param = Command.Parameters[index];
-                string arg = IsValidArgAt(index) ? Args[index] : null;
+                string arg = Valid(index) ? Args[index] : null;
 
                 if (typeof(T) == typeof(string))
                 {
                     return (T)(object)arg;
                 }
 
-                if (arg == null || param == null)
+                if (arg == null)
                 {
                     return default(T);
                 }

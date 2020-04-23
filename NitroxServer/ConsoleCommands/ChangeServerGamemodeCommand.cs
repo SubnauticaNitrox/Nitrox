@@ -17,12 +17,10 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            ServerGameMode? sgm = args.Get<ServerGameMode>(0);
-            string name = GetSenderName(args.Sender);
+            ServerGameMode sgm = args.Get<ServerGameMode>(0);
 
-            serverConfig.GameModeEnum = sgm.Value;
-
-            SendMessage(args.Sender, $"Server gamemode changed to \"{sgm?.ToString()}\" by {name}");
+            serverConfig.GameModeEnum = sgm;
+            SendMessage(args.Sender, $"Server gamemode changed to \"{sgm.ToString()}\" by {args.SenderName}");
         }
     }
 }

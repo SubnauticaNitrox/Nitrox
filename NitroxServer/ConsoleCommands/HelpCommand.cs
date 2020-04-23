@@ -24,17 +24,20 @@ namespace NitroxServer.ConsoleCommands
             else
             {
                 List<string> cmdsText = GetHelpText(Perms.CONSOLE, false);
-                cmdsText.ForEach(cmdText => Log.Info(cmdText));
+                foreach (string cmdText in cmdsText)
+                {
+                    Log.Info(cmdText);
+                }
             }
         }
 
-        private List<string> GetHelpText(Perms perm, bool croppedText)
+        private List<string> GetHelpText(Perms permThreshold, bool cropText)
         {
             //Runtime query to avoid circular dependencies
             IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
-            return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= perm)
+            return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= permThreshold)
                                             .OrderByDescending(cmd => cmd.Name)
-                                            .Select(cmd => cmd.ToHelpText(croppedText)));
+                                            .Select(cmd => cmd.ToHelpText(cropText)));
         }
     }
 }
