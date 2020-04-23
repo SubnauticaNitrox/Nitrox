@@ -21,7 +21,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             "on"
         };
 
-        object IParameter<object>.DefaultValue => null;
         object IParameter<object>.Read(string arg) => Read(arg);
 
         public TypeBoolean(string name, bool isRequired) : base(name, isRequired) { }

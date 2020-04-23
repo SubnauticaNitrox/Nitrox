@@ -4,7 +4,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeInt : Parameter<int?>, IParameter<object>
     {
-        object IParameter<object>.DefaultValue => 0;
         object IParameter<object>.Read(string arg) => Read(arg);
 
         public TypeInt(string name, bool isRequired) : base(name, isRequired) { }

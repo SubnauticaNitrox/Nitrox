@@ -4,7 +4,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
     public class TypeFloat : Parameter<float?>, IParameter<object>
     {
-        object IParameter<object>.DefaultValue => 0f;
         object IParameter<object>.Read(string arg) => Read(arg);
 
         public TypeFloat(string name, bool isRequired) : base(name, isRequired) { }
