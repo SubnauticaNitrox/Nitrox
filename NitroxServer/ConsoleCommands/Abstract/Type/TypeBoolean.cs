@@ -21,8 +21,6 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             "on"
         };
 
-        object IParameter<object>.Read(string arg) => Read(arg);
-
         public TypeBoolean(string name, bool isRequired) : base(name, isRequired) { }
 
         public override bool IsValid(string arg)
@@ -35,6 +33,11 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             Validate.IsTrue(IsValid(arg), "Invalid boolean value received");
 
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
+        }
+
+        object IParameter<object>.Read(string arg)
+        {
+            return Read(arg);
         }
     }
 }

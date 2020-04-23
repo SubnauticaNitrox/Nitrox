@@ -1,7 +1,6 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
@@ -16,16 +15,16 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("password", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             string message = "Can't update permissions";
 
-            if (sender.HasValue)
+            if (args.Sender.HasValue)
             {
-                if (ReadArgAt(0) == serverConfig.AdminPassword)
+                if (args.Get(0) == serverConfig.AdminPassword)
                 {
-                    sender.Value.Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {sender.Value.Name}";
+                    args.Sender.Value.Permissions = Perms.ADMIN;
+                    message = $"Updated permissions to admin for {args.Sender.Value.Name}";
                 }
                 else
                 {
@@ -33,7 +32,7 @@ namespace NitroxServer.ConsoleCommands
                 }
             }
 
-            SendMessage(sender, message);
+            SendMessage(args.Sender, message);
         }
     }
 }

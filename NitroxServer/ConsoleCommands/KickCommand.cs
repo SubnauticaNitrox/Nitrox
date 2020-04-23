@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
-using NitroxModel.DataStructures.Util;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -24,12 +23,12 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("reason", false));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            string playerName = ReadArgAt(0);
-            Player playerToKick = ReadArgAt<Player>(0);
+            string playerName = args.Get(0);
+            Player playerToKick = args.Get<Player>(0);
 
-            playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {GetArgOverflow()}"));
+            playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {args.GetOverflow()}"));
             playerManager.PlayerDisconnected(playerToKick.connection);
 
             List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
@@ -40,7 +39,7 @@ namespace NitroxServer.ConsoleCommands
             }
 
             playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-            SendMessage(sender, $"The player {playerName} has been disconnected");
+            SendMessage(args.Sender, $"The player {playerName} has been disconnected");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 
@@ -14,12 +14,12 @@ namespace NitroxServer.ConsoleCommands
             AddAlias("?");
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            if (sender.HasValue)
+            if (args.Sender.HasValue)
             {
-                List<string> cmdsText = GetHelpText(sender.Value.Permissions, true);
-                cmdsText.ForEach(cmdText => SendMessageToPlayer(sender, cmdText));
+                List<string> cmdsText = GetHelpText(args.Sender.Value.Permissions, true);
+                cmdsText.ForEach(cmdText => SendMessageToPlayer(args.Sender, cmdText));
             }
             else
             {
@@ -31,7 +31,7 @@ namespace NitroxServer.ConsoleCommands
         private List<string> GetHelpText(Perms perm, bool croppedText)
         {
             //Runtime query to avoid circular dependencies
-            IEnumerable<Command> commands = NitroxModel.Core.NitroxServiceLocator.LocateService<IEnumerable<Command>>();
+            IEnumerable<Command> commands = NitroxServiceLocator.LocateService<IEnumerable<Command>>();
             return new List<string>(commands.Where(cmd => cmd.RequiredPermLevel <= perm)
                                             .OrderByDescending(cmd => cmd.Name)
                                             .Select(cmd => cmd.ToHelpText(croppedText)));

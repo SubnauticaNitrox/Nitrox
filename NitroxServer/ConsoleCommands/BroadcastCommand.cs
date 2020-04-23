@@ -1,10 +1,9 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -19,13 +18,10 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("message", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
-            string joinedArgs = GetArgOverflow(-1);
-            
-            playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));
-
+            string joinedArgs = args.GetOverflow(-1);
+            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, joinedArgs));
             Log.Info("BROADCAST: " + joinedArgs);
         }
     }

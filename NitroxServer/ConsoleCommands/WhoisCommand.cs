@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
@@ -13,9 +12,9 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypePlayer("name", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Player player = ReadArgAt<Player>(0);
+            Player player = args.Get<Player>(0);
 
             StringBuilder info = new StringBuilder($"==== {player.Name} ====\n");
             info.AppendLine($"ID: {player.Id}");
@@ -26,7 +25,7 @@ namespace NitroxServer.ConsoleCommands
             info.AppendLine($"Water: {player.Stats.Water}");
             info.AppendLine($"Infection: {player.Stats.InfectionAmount}");
 
-            SendMessage(sender, info.ToString());
+            SendMessage(args.Sender, info.ToString());
         }
     }
 }

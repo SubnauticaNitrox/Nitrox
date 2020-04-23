@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
@@ -16,25 +15,25 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("day/night", false));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            string time = ReadArgAt(0);
+            string time = args.Get(0);
 
             switch (time?.ToLower())
             {
                 case "day":
                     timeKeeper.SetDay();
-                    SendMessage(sender, "Time set to day");
+                    SendMessage(args.Sender, "Time set to day");
                     break;
 
                 case "night":
                     timeKeeper.SetNight();
-                    SendMessage(sender, "Time set to night");
+                    SendMessage(args.Sender, "Time set to night");
                     break;
 
                 default:
                     timeKeeper.SkipTime();
-                    SendMessage(sender, "Skipped time");
+                    SendMessage(args.Sender, "Skipped time");
                     break;
             }
         }

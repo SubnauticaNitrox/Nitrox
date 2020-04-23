@@ -1,8 +1,7 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -15,7 +14,7 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             List<Player> players = playerManager.GetConnectedPlayers();
             string playerList = "List of players : " + string.Join(", ", players);
@@ -25,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
                 playerList += "No players online";
             }
 
-            SendMessage(sender, playerList);
+            SendMessage(args.Sender, playerList);
         }
     }
 }

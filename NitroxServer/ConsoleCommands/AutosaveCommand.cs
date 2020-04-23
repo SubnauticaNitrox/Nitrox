@@ -1,8 +1,7 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxServer.ConsoleCommands.Abstract.Type;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -16,23 +15,22 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeBoolean("on/off", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            bool toggle = ReadArgAt<bool>(0);
+            bool toggle = args.Get<bool>(0);
 
             if (toggle)
             {
                 serverConfig.DisableAutoSave = false;
                 Server.Instance.EnablePeriodicSaving();
-                SendMessage(sender, "Enabled periodical saving");
+                SendMessage(args.Sender, "Enabled periodical saving");
             }
             else
             {
                 serverConfig.DisableAutoSave = true;
                 Server.Instance.DisablePeriodicSaving();
-                SendMessage(sender, "Disabled periodical saving");
+                SendMessage(args.Sender, "Disabled periodical saving");
             }
-
         }
     }
 }

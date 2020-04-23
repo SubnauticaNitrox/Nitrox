@@ -18,7 +18,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string Name { get; }
         public string Description { get; }
         public List<string> Alias { get; }
-        private string[] Args { get; set; }
         public Perms RequiredPermLevel { get; }
         public bool AllowedArgOverflow { get; }
         public List<IParameter<object>> Parameters { get; }
@@ -35,9 +34,9 @@ namespace NitroxServer.ConsoleCommands.Abstract
             Description = string.IsNullOrEmpty(description) ? "No description provided" : description;
         }
 
-        protected abstract void Execute(Optional<Player> sender);
+        protected abstract void Execute(CallArgs args);
 
-        public void TryExecute(string[] args, Optional<Player> sender)
+        public void TryExecute(Optional<Player> sender, string[] args)
         {
             if (args.Length < required)
             {
@@ -53,8 +52,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
             try
             {
-                Args = args;
-                Execute(sender);
+                Execute(new CallArgs(this, sender, args));
             }
             catch (ArgumentException e)
             {
@@ -64,72 +62,6 @@ namespace NitroxServer.ConsoleCommands.Abstract
             {
                 Log.Error("Fatal error while trying to execute the command", e);
             }
-
-            Args = null;
-        }
-
-        public bool IsValidArgAt(int index)
-        {
-            return index < Args.Length && index >= 0 && Args.Length != 0;
-        }
-
-        public string GetArgOverflow(int offset = 0)
-        {
-            if (Args?.Length != 0)
-            {
-                return string.Join(" ", Args.Skip(required + offset));
-            }
-
-            return string.Empty;
-        }
-
-        public string ReadArgAt(int index)
-        {
-            return ReadArgAt<string>(index);
-        }
-
-        public T ReadArgAt<T>(int index)
-        {
-            IParameter<object> param = Parameters[index];
-            string arg = IsValidArgAt(index) ? Args[index] : null;
-
-            if (typeof(T) == typeof(string))
-            {
-                return (T)(object)arg;
-            }
-
-            if (arg == null || param == null)
-            {
-                return default(T);
-            }
-
-            return (T)param.Read(arg);
-        }
-
-        protected void AddParameter<T>(T param) where T : IParameter<object>
-        {
-            Validate.IsFalse(param.Equals(default(T)), "Parameter should'nt be null");
-
-            Parameters.Add(param);
-
-            if (param.IsRequired)
-            {
-                required++;
-            }
-            else
-            {
-                optional++;
-            }
-        }
-
-        protected void AddAlias(params string[] alias)
-        {
-            Alias.AddRange(alias);
-        }
-
-        protected void AddAlias(string alias)
-        {
-            Alias.Add(alias);
         }
 
         public string ToHelpText(bool cropped = false)
@@ -169,6 +101,84 @@ namespace NitroxServer.ConsoleCommands.Abstract
         {
             SendMessageToPlayer(player, message);
             Log.Info(message);
+        }
+
+        protected void AddParameter<T>(T param) where T : IParameter<object>
+        {
+            Validate.IsFalse(param.Equals(default(T)), "Parameter shouldn't be null");
+
+            Parameters.Add(param);
+
+            if (param.IsRequired)
+            {
+                required++;
+            }
+            else
+            {
+                optional++;
+            }
+        }
+
+        protected void AddAlias(params string[] alias)
+        {
+            Alias.AddRange(alias);
+        }
+
+        protected void AddAlias(string alias)
+        {
+            Alias.Add(alias);
+        }
+
+        public class CallArgs
+        {
+            public Command Command { get; }
+            public string[] Args { get; }
+            public Optional<Player> Sender { get; }
+
+            public CallArgs(Command command, Optional<Player> sender, string[] args)
+            {
+                Command = command;
+                Sender = sender;
+                Args = args;
+            }
+
+            public bool IsValidArgAt(int index)
+            {
+                return index < Args.Length && index >= 0 && Args.Length != 0;
+            }
+
+            public string GetOverflow(int offset = 0)
+            {
+                if (Args?.Length > 0)
+                {
+                    return string.Join(" ", Args.Skip(Command.required + offset));
+                }
+
+                return string.Empty;
+            }
+
+            public string Get(int index)
+            {
+                return Get<string>(index);
+            }
+
+            public T Get<T>(int index)
+            {
+                IParameter<object> param = Command.Parameters[index];
+                string arg = IsValidArgAt(index) ? Args[index] : null;
+
+                if (typeof(T) == typeof(string))
+                {
+                    return (T)(object)arg;
+                }
+
+                if (arg == null || param == null)
+                {
+                    return default(T);
+                }
+
+                return (T)param.Read(arg);
+            }
         }
     }
 }

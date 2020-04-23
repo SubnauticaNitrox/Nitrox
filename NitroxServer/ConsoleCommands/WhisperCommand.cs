@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
@@ -14,18 +13,18 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("msg", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Player foundPlayer = ReadArgAt<Player>(0);
+            Player foundPlayer = args.Get<Player>(0);
 
             if (foundPlayer != null)
             {
-                string message = $"[{GetSenderName(sender)} -> YOU]: {GetArgOverflow(-1)}";
+                string message = $"[{GetSenderName(args.Sender)} -> YOU]: {args.GetOverflow(-1)}";
                 SendMessage(foundPlayer, message);
             }
             else
             {
-                SendMessage(sender, $"Unable to whisper, player not found.");
+                SendMessage(args.Sender, "Unable to whisper, player not found.");
             }
         }
     }

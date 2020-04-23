@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
@@ -13,9 +12,9 @@ namespace NitroxServer.ConsoleCommands
             this.server = server;
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            SendMessage(sender, server.SaveSummary);
+            SendMessage(args.Sender, server.SaveSummary);
         }
     }
 }

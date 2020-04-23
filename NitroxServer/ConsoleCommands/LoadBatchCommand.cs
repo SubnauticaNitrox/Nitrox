@@ -1,15 +1,14 @@
-﻿using NitroxModel.DataStructures.Util;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Entities.Spawning;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using System.Collections.Generic;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.ConsoleCommands
 {
     /// <summary>
-    /// Mainly used for testing but can be used to pregen the world
+    ///     Mainly used for testing but can be used to pregen the world
     /// </summary>
     internal class LoadBatchCommand : Command
     {
@@ -23,12 +22,12 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeInt("z", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Int3 batchId = new Int3(ReadArgAt<int>(0), ReadArgAt<int>(1), ReadArgAt<int>(2));
+            Int3 batchId = new Int3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
-            SendMessage(sender, $"Loaded {entities.Count} entities from batch {batchId}");
+            SendMessage(args.Sender, $"Loaded {entities.Count} entities from batch {batchId}");
         }
     }
 }

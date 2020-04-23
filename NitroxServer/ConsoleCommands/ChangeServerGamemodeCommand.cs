@@ -1,7 +1,6 @@
-﻿using NitroxModel.DataStructures.Util;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
@@ -16,14 +15,14 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeEnum<ServerGameMode>("gamemode", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            ServerGameMode? sgm = ReadArgAt<ServerGameMode>(0);
-            string name = GetSenderName(sender);
+            ServerGameMode? sgm = args.Get<ServerGameMode>(0);
+            string name = GetSenderName(args.Sender);
 
             serverConfig.GameModeEnum = sgm.Value;
 
-            SendMessage(sender, $"Server gamemode changed to \"{sgm?.ToString()}\" by {name}");
+            SendMessage(args.Sender, $"Server gamemode changed to \"{sgm?.ToString()}\" by {name}");
         }
     }
 }

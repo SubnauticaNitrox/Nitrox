@@ -1,6 +1,5 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -10,10 +9,10 @@ namespace NitroxServer.ConsoleCommands
         {
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             Server.Instance.Save();
-            SendMessageToPlayer(sender, "World saved");
+            SendMessageToPlayer(args.Sender, "World saved");
         }
     }
 }

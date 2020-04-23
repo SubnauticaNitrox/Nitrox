@@ -1,8 +1,7 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
@@ -17,15 +16,15 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypeString("password", false));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            string playerName = GetSenderName(sender);
-            string password = ReadArgAt(0) ?? string.Empty;
+            string playerName = GetSenderName(args.Sender);
+            string password = args.Get(0) ?? string.Empty;
 
             serverConfig.ServerPassword = password;
 
             Log.Info($"Server password changed to \"{password}\" by {playerName}");
-            SendMessageToPlayer(sender, "Server password changed");
+            SendMessageToPlayer(args.Sender, "Server password changed");
         }
     }
 }

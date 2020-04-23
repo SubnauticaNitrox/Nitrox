@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 
@@ -12,14 +11,14 @@ namespace NitroxServer.ConsoleCommands
             AddParameter(new TypePlayer("name", true));
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Player receivingPlayer = ReadArgAt<Player>(0);
+            Player receivingPlayer = args.Get<Player>(0);
             string playerName = receivingPlayer.Name;
 
             receivingPlayer.Permissions = Perms.ADMIN;
 
-            SendMessage(sender, $"Updated {playerName}\'s permissions to admin");
+            SendMessage(args.Sender, $"Updated {playerName}\'s permissions to admin");
         }
     }
 }

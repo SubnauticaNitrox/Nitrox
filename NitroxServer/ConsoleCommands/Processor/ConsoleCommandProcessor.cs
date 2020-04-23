@@ -1,19 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.Exceptions;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using System;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
         private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
-        private readonly char[] splitChar = new[] { ' ' };
+        private readonly char[] splitChar = { ' ' };
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
@@ -63,7 +63,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
             if (perms >= cmd.RequiredPermLevel)
             {
-                RunCommand(cmd, parts, player);
+                RunCommand(cmd, player, parts);
             }
             else
             {
@@ -71,9 +71,9 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        private void RunCommand(Command command, string[] parts, Optional<Player> player)
+        private void RunCommand(Command command, Optional<Player> player, string[] parts)
         {
-            command.TryExecute(parts.Skip(1).ToArray(), player);
+            command.TryExecute(player, parts.Skip(1).ToArray());
         }
     }
 }

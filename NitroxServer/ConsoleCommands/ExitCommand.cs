@@ -1,6 +1,5 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,7 +10,7 @@ namespace NitroxServer.ConsoleCommands
             AddAlias("exit", "halt", "quit");
         }
 
-        protected override void Execute(Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             Server.Instance.Stop();
         }
