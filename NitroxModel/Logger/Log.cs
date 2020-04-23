@@ -39,7 +39,7 @@ namespace NitroxModel.Logger
             logger = LogManager.GetCurrentClassLogger();
 
             LoggingConfiguration config = new LoggingConfiguration();
-            string layout = @"${date:format=HH\:mm\:ss.fff} [${level:uppercase=true}] ${event-properties:item=PlayerName}${message} ${exception}";
+            string layout = $@"${{date:format=HH\:mm\:ss.fff}} [${{level:uppercase=true}}] ${{event-properties:item={nameof(PlayerName)}}}${{message}} ${{exception}}";
 
             // Targets where to log to: File and Console
             ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
@@ -57,11 +57,11 @@ namespace NitroxModel.Logger
                 Layout = layout,
                 EnableArchiveFileCompression = true,
             };
-            AsyncTargetWrapper logfileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
+            AsyncTargetWrapper logFileAsync = new AsyncTargetWrapper(logFile, 1000, AsyncTargetWrapperOverflowAction.Grow);
 
             // Rules for mapping loggers to targets
             config.AddRule(LogLevel.Debug, LogLevel.Fatal, logConsole);
-            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logfileAsync);
+            config.AddRule(LogLevel.Debug, LogLevel.Fatal, logFileAsync);
             config.AddRuleForOneLevel(LogLevel.Info,
                                       new MethodCallTarget("ingame",
                                                            (evt, obj) =>
@@ -88,12 +88,17 @@ namespace NitroxModel.Logger
             }
         }
 
-        public static void SetPlayerName(string playerName)
+        public static string PlayerName
         {
-            logger.Info("Setting player name");
-            if (playerName != null)
+            set
             {
-                logger.SetProperty("PlayerName", string.Format($"{playerName} "));
+                if (string.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+                
+                logger.Info("Setting player name");
+                logger.SetProperty(nameof(PlayerName), $"[{value}] ");
             }
         }
 
