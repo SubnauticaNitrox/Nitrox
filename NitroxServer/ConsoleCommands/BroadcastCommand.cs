@@ -20,7 +20,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string joinedArgs = args.GetOverflow(-1);
+            string joinedArgs = args.GetTillEnd();
             playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, joinedArgs));
             Log.Info("BROADCAST: " + joinedArgs);
         }

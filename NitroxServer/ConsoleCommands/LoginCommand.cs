@@ -24,14 +24,14 @@ namespace NitroxServer.ConsoleCommands
                 if (args.Get(0) == serverConfig.AdminPassword)
                 {
                     args.Sender.Value.Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {args.Sender.Value.Name}";
+                    message = $"Updated permissions to admin for {args.SenderName}";
                 }
                 else
                 {
                     message = "Incorrect Password";
                 }
             }
-
+            
             SendMessage(args.Sender, message);
         }
     }

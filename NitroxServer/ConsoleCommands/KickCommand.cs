@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             string playerName = args.Get(0);
             Player playerToKick = args.Get<Player>(0);
 
-            playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {args.GetOverflow()}"));
+            playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {args.GetTillEnd(1)}"));
             playerManager.PlayerDisconnected(playerToKick.connection);
 
             List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);

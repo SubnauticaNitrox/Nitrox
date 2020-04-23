@@ -144,19 +144,20 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 return index < Args.Length && index >= 0 && Args.Length != 0;
             }
 
-            public string GetOverflow(int offset = 0)
-            {
-                if (Args?.Length > 0)
-                {
-                    return string.Join(" ", Args.Skip(Command.required + offset));
-                }
-
-                return string.Empty;
-            }
-
             public string Get(int index)
             {
                 return Get<string>(index);
+            }
+
+            public string GetTillEnd(int startIndex = 0)
+            {
+                // TODO: Proper argument capture/parse instead of this argument join hack
+                if (Args?.Length > 0)
+                {
+                    return string.Join(" ", Args.Skip(startIndex));
+                }
+
+                return string.Empty;
             }
 
             public T Get<T>(int index)
@@ -164,14 +165,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 IParameter<object> param = Command.Parameters[index];
                 string arg = Valid(index) ? Args[index] : null;
 
-                if (typeof(T) == typeof(string))
-                {
-                    return (T)(object)arg;
-                }
-
                 if (arg == null)
                 {
                     return default(T);
+                }
+                if (typeof(T) == typeof(string))
+                {
+                    return (T)(object)arg;
                 }
 
                 return (T)param.Read(arg);

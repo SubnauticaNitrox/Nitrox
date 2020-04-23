@@ -22,9 +22,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         public override Player Read(string arg)
         {
             Player player;
-
             Validate.IsTrue(playerManager.TryGetPlayerByName(arg, out player), "Player not found");
-
             return player;
         }
     }
