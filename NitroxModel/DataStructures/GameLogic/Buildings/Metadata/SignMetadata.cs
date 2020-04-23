@@ -27,7 +27,7 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
 
         public SignMetadata()
         {
-            //Constructor Serializacion
+            // Constructor for serialization
         }
 
         public SignMetadata(NitroxId id, string text, int colorIndex, int scaleIndex, bool[] elements, bool backgroundToggle)

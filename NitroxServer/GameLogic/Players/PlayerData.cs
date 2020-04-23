@@ -3,7 +3,6 @@ using ProtoBufNet;
 using System.Collections.Generic;
 using UnityEngine;
 using NitroxModel.DataStructures;
-using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -39,7 +38,7 @@ namespace NitroxServer.GameLogic.Players
             return boPlayers;
         }
 
-        public static PlayerData From(List<Player> players)
+        public static PlayerData From(IEnumerable<Player> players)
         {
             List<PersistedPlayerData> persistedPlayers = new List<PersistedPlayerData>();
 
@@ -47,8 +46,8 @@ namespace NitroxServer.GameLogic.Players
             {
                 PersistedPlayerData persistedPlayer = new PersistedPlayerData();
                 persistedPlayer.Name = player.Name;
-                persistedPlayer.EquippedItems = player.getAllEquipment();
-                persistedPlayer.Modules = player.getAllModules();
+                persistedPlayer.EquippedItems = player.GetEquipment();
+                persistedPlayer.Modules = player.GetModules();
                 persistedPlayer.Id = player.Id;
                 persistedPlayer.SpawnPosition = player.Position;
                 persistedPlayer.CurrentStats = player.Stats;

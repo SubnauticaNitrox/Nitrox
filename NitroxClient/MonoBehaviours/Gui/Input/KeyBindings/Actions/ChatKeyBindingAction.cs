@@ -7,8 +7,11 @@ namespace NitroxClient.MonoBehaviours.Gui.Input.KeyBindings.Actions
     {
         public override void Execute()
         {
-            PlayerChat chatManager = NitroxServiceLocator.LocateService<PlayerChat>();
-            chatManager.ShowChat();
+            // If no other UWE input field is currently active then allow chat to open.
+            if (FPSInputModule.current.lastGroup == null)
+            {
+                NitroxServiceLocator.LocateService<PlayerChatManager>().SelectChat();
+            }
         }
     }
 }

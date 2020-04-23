@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.Exceptions;
 using NitroxClient.Communication.MultiplayerSession;
@@ -349,6 +350,19 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
             catch (ClientConnectionFailedException)
             {
                 Log.InGame($"Unable to contact the remote server at: {ServerIp}:{ServerPort}");
+
+                if (ServerIp.Equals("127.0.0.1"))
+                {
+                    if (Process.GetProcessesByName("NitroxServer-Subnautica").Length == 0)
+                    {
+                        Log.InGame("Start your server first to join your self-hosted world");
+                    }
+                    else
+                    {
+                        Log.InGame("Seems like your firewall settings are interfering");
+                    } 
+                }
+
                 OnCancelClick();
             }
         }

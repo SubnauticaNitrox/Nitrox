@@ -15,7 +15,7 @@ namespace NitroxServer.GameLogic.Bases
         [ProtoMember(2)]
         public List<BasePiece> CompletedBasePieceHistory = new List<BasePiece>();
                 
-        public static BaseData from(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
+        public static BaseData From(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
         {
             BaseData baseData = new BaseData();
             baseData.PartiallyConstructedPieces = partiallyConstructedPieces;

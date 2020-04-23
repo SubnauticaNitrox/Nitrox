@@ -19,14 +19,12 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(CyclopsDamagePointRepaired packet)
         {
             GameObject gameObject = NitroxEntity.RequireObjectFrom(packet.Id);
-            SubRoot cyclops = GameObjectHelper.RequireComponent<SubRoot>(gameObject);
+            SubRoot cyclops = gameObject.RequireComponent<SubRoot>();
 
             using (packetSender.Suppress<CyclopsDamage>())
+            using (packetSender.Suppress<CyclopsDamagePointRepaired>())
             {
-                using (packetSender.Suppress<CyclopsDamagePointRepaired>())
-                {
-                    cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
-                }
+                cyclops.damageManager.damagePoints[packet.DamagePointIndex].liveMixin.AddHealth(packet.RepairAmount);
             }
         }
     }

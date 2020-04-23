@@ -1,16 +1,15 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using NitroxModel.Core;
-using System.Reflection;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
-using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
-using NitroxServer.Serialization.World;
 using NitroxServer.GameLogic.Entities;
-using NitroxServer.Communication.Packets.Processors.Abstract;
-using NitroxServer.Communication.Packets;
-using NitroxServer.ConfigParser;
+using NitroxServer.Serialization.World;
+using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Processor;
+using NitroxServer.Communication.NetworkingLayer.LiteNetLib;
+using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.Communication.Packets.Processors;
+using NitroxServer.Communication.Packets;
 
 namespace NitroxServer
 {
@@ -27,7 +26,7 @@ namespace NitroxServer
 
         private static void RegisterCoreDependencies(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<ServerConfig>().SingleInstance();
+            containerBuilder.RegisterType<NitroxModel.Server.ServerConfig>().SingleInstance();
             containerBuilder.RegisterType<Server>().SingleInstance();
             containerBuilder.RegisterType<PlayerManager>().SingleInstance();
             containerBuilder.RegisterType<DefaultServerPacketProcessor>().InstancePerLifetimeScope();
@@ -36,12 +35,9 @@ namespace NitroxServer
             containerBuilder.RegisterType<EntitySimulation>().SingleInstance();
             containerBuilder.RegisterType<ConsoleCommandProcessor>().SingleInstance();
 
-            containerBuilder.RegisterType<LiteNetLibServer>().SingleInstance();
-
-            containerBuilder.Register<Communication.NetworkingLayer.NitroxServer>(ctx =>
-            {
-                return ctx.Resolve<LiteNetLibServer>();
-            }).SingleInstance();
+            containerBuilder.RegisterType<LiteNetLibServer>()
+                            .As<Communication.NetworkingLayer.NitroxServer>()
+                            .SingleInstance();
         }
 
         private void RegisterWorld(ContainerBuilder containerBuilder)

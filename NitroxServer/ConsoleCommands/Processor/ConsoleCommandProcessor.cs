@@ -26,7 +26,6 @@ namespace NitroxServer.ConsoleCommands.Processor
                 }
 
                 commands[cmd.Name] = cmd;
-
                 foreach (string alias in cmd.Alias)
                 {
                     if (commands.ContainsKey(alias))

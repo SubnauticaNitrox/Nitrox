@@ -36,6 +36,9 @@ namespace NitroxServer.Serialization.World
         [ProtoMember(7)]
         public EscapePodData EscapePodData { get; set; }
 
+        [ProtoMember(8)]
+        public StoryTimingData StoryTimingData { get; set; }
+
         public bool IsValid()
         {
             return (ParsedBatchCells != null) && // Always returns false on empty saves
@@ -45,7 +48,8 @@ namespace NitroxServer.Serialization.World
                    (GameData != null) &&
                    (EntityData != null) &&
                    (EntityData.Entities.Count > 0) &&
-                   (EscapePodData != null);
+                   (EscapePodData != null) &&
+                   (StoryTimingData != null);
         }
     }
 }

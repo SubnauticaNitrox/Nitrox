@@ -13,5 +13,8 @@ namespace NitroxServer.GameLogic.Bases
         
         [ProtoMember(2)]
         public StoryGoalData StoryGoals { get; set; }
+        
+        [ProtoMember(3)]
+        public StoryTimingData StoryTiming { get; set; }
     }
 }

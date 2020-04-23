@@ -11,10 +11,11 @@ using UnityEngine;
 namespace NitroxPatcher.Patches.Dynamic
 {
     /// <summary>
-    /// Hook onto <see cref="SubFire.CreateFire(SubFire.RoomFire)"/>. We do this on the fire creation method because unlike <see cref="SubRoot.OnTakeDamage(DamageInfo)"/>, fires
-    /// can be created outside of <see cref="SubFire.OnTakeDamage(DamageInfo)"/>
+    ///     Hook onto <see cref="SubFire.CreateFire(SubFire.RoomFire)" />. We do this on the fire creation method because
+    ///     unlike <see cref="SubRoot.OnTakeDamage(DamageInfo)" />, fires
+    ///     can be created outside of <see cref="SubFire.OnTakeDamage(DamageInfo)" />
     /// </summary>
-    class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
+    internal class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(SubFire);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("CreateFire", BindingFlags.Instance | BindingFlags.Public);
@@ -37,14 +38,15 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 List<Transform> availableNodes = (List<Transform>)__instance.ReflectionGet("availableNodes");
                 Dictionary<CyclopsRooms, SubFire.RoomFire> roomFiresDict = (Dictionary<CyclopsRooms, SubFire.RoomFire>)__instance.ReflectionGet("roomFires");
-                
+
+                Fires fires = NitroxServiceLocator.LocateService<Fires>();
                 foreach (Transform transform in availableNodes)
                 {
                     if (transform.childCount > 0)
                     {
                         int nodeIndex = Array.IndexOf(roomFiresDict[startInRoom.roomLinks.room].spawnNodes, transform);
                         Fire fire = transform.GetComponentInChildren<Fire>();
-                        NitroxServiceLocator.LocateService<Fires>().OnCreate(transform.GetComponentInChildren<Fire>(), startInRoom, nodeIndex);
+                        fires.OnCreate(transform.GetComponentInChildren<Fire>(), startInRoom, nodeIndex);
                         return;
                     }
                 }

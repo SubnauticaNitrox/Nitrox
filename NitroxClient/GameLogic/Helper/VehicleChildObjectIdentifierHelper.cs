@@ -10,24 +10,24 @@ namespace NitroxClient.GameLogic.Helper
 {
     public class VehicleChildObjectIdentifierHelper
     {
-        private static readonly List<Type> interactiveChildTypes = new List<Type>() // we must sync ids of these types when creating vehicles (mainly cyclops)
+        private static readonly List<Type> interactiveChildTypes = new List<Type> // we must sync ids of these types when creating vehicles (mainly cyclops)
         {
-            { typeof(Openable) },
-            { typeof(CyclopsLocker) },
-            { typeof(Fabricator) },
-            { typeof(FireExtinguisherHolder) },
-            { typeof(StorageContainer) },
-            { typeof(SeamothStorageContainer) },
-            { typeof(VehicleDockingBay) },
-            { typeof(DockedVehicleHandTarget) },
-            { typeof(UpgradeConsole) },
-            { typeof(DockingBayDoor) },
-            { typeof(CyclopsDecoyLoadingTube) },
-            { typeof(BatterySource) },
-            { typeof(EnergyMixin) }
+            typeof(Openable),
+            typeof(CyclopsLocker),
+            typeof(Fabricator),
+            typeof(FireExtinguisherHolder),
+            typeof(StorageContainer),
+            typeof(SeamothStorageContainer),
+            typeof(VehicleDockingBay),
+            typeof(DockedVehicleHandTarget),
+            typeof(UpgradeConsole),
+            typeof(DockingBayDoor),
+            typeof(CyclopsDecoyLoadingTube),
+            typeof(BatterySource),
+            typeof(EnergyMixin)
         };
 
-        public static  List<InteractiveChildObjectIdentifier> ExtractInteractiveChildren(GameObject constructedObject)
+        public static List<InteractiveChildObjectIdentifier> ExtractInteractiveChildren(GameObject constructedObject)
         {
             List<InteractiveChildObjectIdentifier> interactiveChildren = new List<InteractiveChildObjectIdentifier>();
 
@@ -55,10 +55,10 @@ namespace NitroxClient.GameLogic.Helper
             return interactiveChildren;
         }
 
-        public static void SetInteractiveChildrenIds(GameObject constructedObject, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
+        public static void SetInteractiveChildrenIds(GameObject constructedObject, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers)
         {
             foreach (InteractiveChildObjectIdentifier childIdentifier in interactiveChildIdentifiers)
-            {                
+            {
                 Transform transform = constructedObject.transform.Find(childIdentifier.GameObjectNamePath);
 
                 if (transform != null)

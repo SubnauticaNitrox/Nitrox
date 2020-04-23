@@ -4,7 +4,6 @@ using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
-using NitroxServer.GameLogic.Entities.EntityBootstrappers;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
 using NitroxServer_Subnautica.GameLogic.Entities;
@@ -21,6 +20,7 @@ namespace NitroxServer_Subnautica
         public override void RegisterDependencies(ContainerBuilder containerBuilder)
         {
             base.RegisterDependencies(containerBuilder);
+
             containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
             containerBuilder.Register(c => new SubnauticaServerProtobufSerializer("Assembly-CSharp", "Assembly-CSharp-firstpass", "NitroxModel", "NitroxModel-Subnautica"))
                 .As<ServerProtobufSerializer>()
@@ -38,11 +38,11 @@ namespace NitroxServer_Subnautica
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
             containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
 
-            Dictionary<TechTypeModel, IEntityBootstrapper> bootstrappersByTechType = new Dictionary<TechTypeModel, IEntityBootstrapper>();
-            bootstrappersByTechType[TechType.CrashHome.Model()] = new CrashFishBootstrapper();
-            bootstrappersByTechType[TechType.Reefback.Model()] = new ReefbackBootstrapper();
-
-            containerBuilder.Register(c => bootstrappersByTechType).SingleInstance();
+            containerBuilder.Register(c => new Dictionary<TechTypeModel, IEntityBootstrapper>
+            {
+                [TechType.CrashHome.Model()] = new CrashFishBootstrapper(),
+                [TechType.Reefback.Model()] = new ReefbackBootstrapper()
+            }).SingleInstance();
 
         }
     }

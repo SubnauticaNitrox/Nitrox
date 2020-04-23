@@ -37,7 +37,7 @@ namespace NitroxModel.Packets
 
             foreach (SimulatedEntity entity in Entities)
             {
-                stringBuilder.Append(entity.ToString());
+                stringBuilder.Append(entity);
             }
 
             stringBuilder.Append("]");

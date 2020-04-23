@@ -12,7 +12,7 @@ using NitroxServer.ConsoleCommands.Processor;
 
 namespace NitroxServer_Subnautica
 {
-    class Program
+    public class Program
     {
         private static void Main(string[] args)
         {
@@ -25,11 +25,16 @@ namespace NitroxServer_Subnautica
             NitroxServiceLocator.BeginNewLifetimeScope();
 
             Server server;
-
             try
             {
                 server = NitroxServiceLocator.LocateService<Server>();
-                server.Start();
+                Log.Info($"Loaded save\n{server.SaveSummary}");
+                if (!server.Start())
+                {
+                    Log.Error("Unable to start server.");
+                    Console.WriteLine("\nPress any key to continue..");
+                    Console.ReadKey(true);
+                }
             }
             catch (Exception e)
             {
@@ -40,7 +45,6 @@ namespace NitroxServer_Subnautica
             CatchExitEvent();
 
             ConsoleCommandProcessor cmdProcessor = NitroxServiceLocator.LocateService<ConsoleCommandProcessor>();
-
             while (server.IsRunning)
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
@@ -87,16 +91,12 @@ namespace NitroxServer_Subnautica
             // better catch using WinAPI. This will handled process kill
             if (platid == PlatformID.Win32NT)
             {
-                SetConsoleCtrlHandler(consoleCtrlCheckDelegate, true);
+                SetConsoleCtrlHandler(ConsoleEventCallback, true);
             }
         }
 
-        // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
-        private delegate bool ConsoleEventDelegate(int eventType);
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
-
-        private static ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
 
         private static bool ConsoleEventCallback(int eventType)
         {
@@ -106,6 +106,7 @@ namespace NitroxServer_Subnautica
             }
             return false;
         }
+
         private static void OnCtrlCPressed(object sender, ConsoleCancelEventArgs e)
         {
             StopAndExitServer();
@@ -117,5 +118,8 @@ namespace NitroxServer_Subnautica
             Server.Instance.Stop();
             Environment.Exit(0);
         }
+
+        // See: https://docs.microsoft.com/en-us/windows/console/setconsolectrlhandler
+        private delegate bool ConsoleEventDelegate(int eventType);
     }
 }

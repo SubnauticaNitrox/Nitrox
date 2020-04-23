@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic.Entities.Spawning;
 
-namespace NitroxServer.GameLogic.Entities.EntityBootstrappers
+namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public interface IEntityBootstrapper
     {
