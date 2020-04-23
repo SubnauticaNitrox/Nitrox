@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxServer.Exceptions;
+using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
@@ -7,10 +7,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
     {
         public TypeEnum(string name, bool required) : base(name, required)
         {
-            if (!typeof(T).IsEnum)
-            {
-                throw new IllegalArgumentException($"Type {typeof(T).FullName} isn't an enum");
-            }
+            Validate.IsTrue(typeof(T).IsEnum, $"Type {typeof(T).FullName} isn't an enum");
         }
 
         public override bool IsValid(string arg)
@@ -22,10 +19,8 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         public override object Read(string arg)
         {
             T value;
-            if (!Enum.TryParse(arg, true, out value))
-            {
-                throw new IllegalArgumentException("Unknown value received");
-            }
+
+            Validate.IsTrue(Enum.TryParse(arg, true, out value), "Unknown value received");
 
             return value;
         }

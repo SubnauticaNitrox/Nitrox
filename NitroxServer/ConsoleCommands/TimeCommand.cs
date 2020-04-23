@@ -24,17 +24,17 @@ namespace NitroxServer.ConsoleCommands
             {
                 case "day":
                     timeKeeper.SetDay();
-                    SendMessageToBoth(sender, "Time set to day");
+                    SendMessage(sender, "Time set to day");
                     break;
 
                 case "night":
                     timeKeeper.SetNight();
-                    SendMessageToBoth(sender, "Time set to night");
+                    SendMessage(sender, "Time set to night");
                     break;
 
                 default:
                     timeKeeper.SkipTime();
-                    SendMessageToBoth(sender, "Skipped time");
+                    SendMessage(sender, "Skipped time");
                     break;
             }
         }

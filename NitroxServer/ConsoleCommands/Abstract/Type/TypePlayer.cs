@@ -1,6 +1,5 @@
 ﻿using NitroxModel.Core;
 using NitroxModel.Helper;
-using NitroxServer.Exceptions;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
@@ -24,10 +23,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         {
             Player player;
 
-            if (!playerManager.TryGetPlayerByName(arg, out player))
-            {
-                throw new IllegalArgumentException("Player not found");
-            }
+            Validate.IsTrue(playerManager.TryGetPlayerByName(arg, out player), "Player not found");
 
             return player;
         }

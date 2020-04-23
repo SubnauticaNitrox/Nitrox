@@ -1,4 +1,4 @@
-﻿using NitroxServer.Exceptions;
+﻿using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
@@ -13,10 +13,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public override string Read(string arg)
         {
-            if (!IsValid(arg))
-            {
-                throw new IllegalArgumentException("Received null/empty instead of a valid string");
-            }
+            Validate.IsTrue(IsValid(arg), "Received null/empty instead of a valid string");
 
             return arg;
         }

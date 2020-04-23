@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.GameLogic;
@@ -29,31 +27,20 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(Optional<Player> sender)
         {
             string playerName = ReadArgAt(0);
-            try
-            {
-                Player playerToKick = ReadArgAt<Player>(0);
+            Player playerToKick = ReadArgAt<Player>(0);
 
-                playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {GetArgOverflow()}"));
-                playerManager.PlayerDisconnected(playerToKick.connection);
-                List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
+            playerToKick.SendPacket(new PlayerKicked($"You were kicked from the server ! \n Reason : {GetArgOverflow()}"));
+            playerManager.PlayerDisconnected(playerToKick.connection);
 
-                if (revokedEntities.Count > 0)
-                {
-                    SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
-                    playerManager.SendPacketToAllPlayers(ownershipChange);
-                }
+            List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToKick);
+            if (revokedEntities.Count > 0)
+            {
+                SimulationOwnershipChange ownershipChange = new SimulationOwnershipChange(revokedEntities);
+                playerManager.SendPacketToAllPlayers(ownershipChange);
+            }
 
-                playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
-                SendMessageToBoth(sender, $"The player {playerName} has been disconnected");
-            }
-            catch (InvalidOperationException)
-            {
-                SendMessageToBoth(sender, $"Error attempting to kick: {playerName}, Player is not found");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error attempting to kick: {playerName}", ex);
-            }
+            playerManager.SendPacketToOtherPlayers(new Disconnect(playerToKick.Id), playerToKick);
+            SendMessage(sender, $"The player {playerName} has been disconnected");
         }
     }
 }

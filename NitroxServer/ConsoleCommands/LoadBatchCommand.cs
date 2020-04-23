@@ -28,7 +28,7 @@ namespace NitroxServer.ConsoleCommands
             Int3 batchId = new Int3(ReadArgAt<int>(0), ReadArgAt<int>(1), ReadArgAt<int>(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
-            SendMessageToBoth(sender, $"Loaded {entities.Count} entities from batch {batchId}");
+            SendMessage(sender, $"Loaded {entities.Count} entities from batch {batchId}");
         }
     }
 }

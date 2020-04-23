@@ -7,7 +7,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Abstract
 {
@@ -57,7 +56,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 Args = args;
                 Execute(sender);
             }
-            catch (IllegalArgumentException e)
+            catch (ArgumentException e)
             {
                 SendMessage(sender, $"Error: {e.Message}");
             }
@@ -109,10 +108,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
 
         protected void AddParameter<T>(T param) where T : IParameter<object>
         {
-            if (param.Equals(default(T)))
-            {
-                throw new ArgumentException("Parameter should'nt be null", nameof(param));
-            }
+            Validate.IsFalse(param.Equals(default(T)), "Parameter should'nt be null");
 
             Parameters.Add(param);
 
@@ -167,27 +163,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
         }
 
         /// <summary>
-        ///     Send a message to an existing player, otherwise logs it in the console
+        ///     Send a message to an existing player and logs it in the console
         /// </summary>
         public void SendMessage(Optional<Player> player, string message)
         {
-            if (player.HasValue)
-            {
-                player.Value.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-            }
-            else
-            {
-                Log.Info(message);
-            }
-        }
-
-        /// <summary>
-        ///     Send a message to both console and an existing player
-        /// </summary>
-        public void SendMessageToBoth(Optional<Player> player, string message)
-        {
-            Log.Info(message);
             SendMessageToPlayer(player, message);
+            Log.Info(message);
         }
     }
 }

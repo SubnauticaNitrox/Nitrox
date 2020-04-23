@@ -1,8 +1,8 @@
-﻿using NitroxServer.Exceptions;
+﻿using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeFloat : Parameter<float>, IParameter<object>
+    public class TypeFloat : Parameter<float?>, IParameter<object>
     {
         object IParameter<object>.DefaultValue => 0f;
         object IParameter<object>.Read(string arg) => Read(arg);
@@ -15,13 +15,11 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             return float.TryParse(arg, out value);
         }
 
-        public override float Read(string arg)
+        public override float? Read(string arg)
         {
             float value;
-            if (!float.TryParse(arg, out value))
-            {
-                throw new IllegalArgumentException("Invalid decimal number received");
-            }
+
+            Validate.IsTrue(float.TryParse(arg, out value), "Invalid decimal number received");
 
             return value;
         }

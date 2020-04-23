@@ -316,6 +316,7 @@
     <Compile Include="ConsoleCommands\Abstract\Type\TypeInt.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypePlayer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeString.cs" />
+    <Compile Include="ConsoleCommands\AutosaveCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
@@ -332,7 +333,6 @@
     <Compile Include="ConsoleCommands\TimeCommand.cs" />
     <Compile Include="ConsoleCommands\WhisperCommand.cs" />
     <Compile Include="Exceptions\DuplicateRegistrationException.cs" />
-    <Compile Include="Exceptions\IllegalArgumentException.cs" />
     <Compile Include="GameLogic\Bases\BaseManager.cs" />
     <Compile Include="GameLogic\Entities\NitroxEntitySlot.cs" />
     <Compile Include="GameLogic\Entities\Spawning\EntitySpawnPointFactory.cs" />

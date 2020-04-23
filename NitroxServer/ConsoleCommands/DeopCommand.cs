@@ -19,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
 
             targetPlayer.Permissions = Perms.PLAYER;
 
-            SendMessageToBoth(sender, $"Updated {playerName}\'s permissions to PLAYER");
+            SendMessage(sender, $"Updated {playerName}\'s permissions to PLAYER");
         }
     }
 }

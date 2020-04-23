@@ -33,7 +33,7 @@ namespace NitroxServer.ConsoleCommands
                 }
             }
 
-            SendMessageToBoth(sender, message);
+            SendMessage(sender, message);
         }
     }
 }

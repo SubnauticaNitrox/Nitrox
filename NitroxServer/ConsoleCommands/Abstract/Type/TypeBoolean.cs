@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxServer.Exceptions;
+using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
@@ -26,19 +26,16 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
 
         public TypeBoolean(string name, bool isRequired) : base(name, isRequired) { }
 
-        public override bool? Read(string arg)
-        {
-            if (!IsValid(arg))
-            {
-                throw new IllegalArgumentException("Invalid boolean value received");
-            }
-
-            return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
-        }
-
         public override bool IsValid(string arg)
         {
             return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase) || noValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
+        }
+
+        public override bool? Read(string arg)
+        {
+            Validate.IsTrue(IsValid(arg), "Invalid boolean value received");
+
+            return yesValues.Contains(arg, StringComparer.OrdinalIgnoreCase);
         }
     }
 }

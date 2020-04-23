@@ -221,7 +221,7 @@ namespace NitroxServer.Serialization.World
             Log.Info($"World GameMode: {gameMode}");
             Log.Info($"Server Password: {(string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword)}");
             Log.Info($"Admin Password: {config.AdminPassword}");
-            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000}min)" )}");
+            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)" )}");
 
             Log.Info("To get help for commands, run help in console or /help in chatbox");
 

@@ -1,8 +1,8 @@
-﻿using NitroxServer.Exceptions;
+﻿using NitroxModel.Helper;
 
 namespace NitroxServer.ConsoleCommands.Abstract.Type
 {
-    public class TypeInt : Parameter<int>, IParameter<object>
+    public class TypeInt : Parameter<int?>, IParameter<object>
     {
         object IParameter<object>.DefaultValue => 0;
         object IParameter<object>.Read(string arg) => Read(arg);
@@ -15,13 +15,11 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
             return int.TryParse(arg, out value);
         }
 
-        public override int Read(string arg)
+        public override int? Read(string arg)
         {
             int value;
-            if (!int.TryParse(arg, out value))
-            {
-                throw new IllegalArgumentException("Invalid integer received");
-            }
+
+            Validate.IsTrue(int.TryParse(arg, out value), "Invalid integer received");
 
             return value;
         }
