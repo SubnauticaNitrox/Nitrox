@@ -19,5 +19,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         {
             Unlocked = unlocked;
         }
+
+        public override string ToString()
+        {
+            return "[KeypadMetadata isOpen: " + Unlocked + "]";
+        }
     }
 }
