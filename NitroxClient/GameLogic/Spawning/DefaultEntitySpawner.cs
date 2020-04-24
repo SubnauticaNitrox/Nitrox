@@ -1,4 +1,5 @@
-﻿using NitroxClient.MonoBehaviours;
+﻿using NitroxClient.GameLogic.Spawning.Metadata;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.Helper;
@@ -43,6 +44,13 @@ namespace NitroxClient.GameLogic.Spawning
             else
             {
                 gameObject.SetActive(true);
+            }
+
+            Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
+
+            if (metadataProcessor.HasValue)
+            {
+                metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
             }
 
             return Optional.Of(gameObject);

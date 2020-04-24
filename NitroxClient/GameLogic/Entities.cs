@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -47,6 +48,12 @@ namespace NitroxClient.GameLogic
                 }
             }
 
+            packetSender.Send(update);
+        }
+
+        public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
+        {
+            EntityMetadataUpdate update = new EntityMetadataUpdate(id, metadata);
             packetSender.Send(update);
         }
 

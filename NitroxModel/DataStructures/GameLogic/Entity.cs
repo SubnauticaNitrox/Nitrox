@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
 using UnityEngine;
 
@@ -50,6 +51,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public NitroxId ParentId { get; set; }
+        
+        [ProtoMember(11)]
+        public EntityMetadata Metadata { get; set; }
 
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
@@ -68,6 +72,7 @@ namespace NitroxModel.DataStructures.GameLogic
             SpawnedByServer = spawnedByServer;
             WaterParkId = null;
             SerializedGameObject = null;
+            Metadata = null;
             ExistsInGlobalRoot = false;
 
             if (parentEntity != null)

@@ -234,6 +234,7 @@
     <Compile Include="ClientAutoFacRegistrar.cs" />
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
@@ -242,6 +243,9 @@
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\EntityMetadataProcessor.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\GenericEntityMetadataProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\CyclopsInitialAsyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\PlayerModulesInitialSyncProcessor.cs" />
     <Compile Include="GameLogic\InitialSync\StorageSlotsInitialSyncProcessor.cs" />
