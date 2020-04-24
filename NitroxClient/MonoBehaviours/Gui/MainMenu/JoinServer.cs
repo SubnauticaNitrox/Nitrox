@@ -478,11 +478,16 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
         private void StopMultiplayerClient()
         {
-            if (multiplayerClient != null)
+            if (!multiplayerClient)
             {
-                Multiplayer.Main.StopCurrentSession();
-                Destroy(multiplayerClient);
-                multiplayerClient = null;
+                return;
+            }
+
+            Multiplayer.Main.StopCurrentSession();
+            Destroy(multiplayerClient);
+            multiplayerClient = null;
+            if (multiplayerSession != null)
+            {
                 multiplayerSession.ConnectionStateChanged -= SessionConnectionStateChangedHandler;
             }
         }
