@@ -124,7 +124,7 @@ namespace NitroxServer.Serialization.World
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
-                
+
 
                 World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData.Entities,
@@ -168,7 +168,7 @@ namespace NitroxServer.Serialization.World
         private World CreateFreshWorld()
         {
             return CreateWorld(
-                DateTime.Now, 
+                DateTime.Now,
                 new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
@@ -203,7 +203,7 @@ namespace NitroxServer.Serialization.World
             world.GameData = gameData;
             world.EscapePodManager = new EscapePodManager(escapePods);
             world.GameMode = gameMode;
-            
+
             world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
                                                               NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
@@ -217,11 +217,10 @@ namespace NitroxServer.Serialization.World
             HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
-
-            Log.Info("World GameMode: " + gameMode);
-
-            Log.Info("Server Password: " + (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword));
-            Log.Info("Admin Password: " + config.AdminPassword);
+            Log.Info($"World GameMode: {gameMode}");
+            Log.Info($"Server Password: {(string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword)}");
+            Log.Info($"Admin Password: {config.AdminPassword}");
+            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)")}");
 
             Log.Info("To get help for commands, run help in console or /help in chatbox");
 

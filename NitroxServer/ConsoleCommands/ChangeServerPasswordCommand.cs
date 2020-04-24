@@ -1,9 +1,8 @@
-﻿using System;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,31 +10,20 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "[{password}]", "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", false));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            try
-            {
-                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                string password = args.Length == 0 ? "" : args[0];
-                serverConfig.ServerPassword = password;
+            string password = args.Get(0) ?? string.Empty;
 
-                Log.Info($"Server password changed to \"{password}\" by {playerName}");
-                SendMessageToPlayer(sender, "Server password changed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error attempting to change server password", ex);
-            }
-        }
+            serverConfig.ServerPassword = password;
 
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 0;
+            Log.Info($"Server password changed to \"{password}\" by {args.SenderName}");
+            SendMessageToPlayer(args.Sender, "Server password changed");
         }
     }
 }

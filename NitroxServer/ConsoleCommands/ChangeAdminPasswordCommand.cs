@@ -1,9 +1,8 @@
-﻿using System;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,30 +10,20 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "{password}", "Changes admin password")
+        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            try
-            {
-                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                serverConfig.AdminPassword = args[0];
+            string newPassword = args.Get(0);
 
-                Log.Info($"Admin password changed to \"{args[0]}\" by {playerName}");
-                SendMessageToPlayer(sender, "Admin password changed");
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"Error attempting to change admin password to \"{args[0]}\"", ex);
-            }
-        }
+            serverConfig.AdminPassword = newPassword;
 
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 1;
+            Log.Info($"Admin password changed to \"{newPassword}\" by {args.SenderName}");
+            SendMessageToPlayer(args.Sender, "Admin password changed");
         }
     }
 }
