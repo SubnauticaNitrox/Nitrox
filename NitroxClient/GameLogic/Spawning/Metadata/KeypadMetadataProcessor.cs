@@ -8,7 +8,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
     {
         public override void ProcessMetadata(GameObject gameObject, KeypadMetadata metadata)
         {
-            Log.Info($"Received keypad metadata chagen for {gameObject.name} with data of {metadata}");
+            Log.Info($"Received keypad metadata change for {gameObject.name} with data of {metadata}");
 
             KeypadDoorConsole keypad = gameObject.GetComponent<KeypadDoorConsole>();
             keypad.unlocked = metadata.Unlocked;

@@ -230,6 +230,7 @@
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
+    <Compile Include="DataStructures\GameLogic\Entities\Metadata\SealedDoorMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\KeypadMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\Metadata\EntityMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Entities\UwePrefab.cs" />

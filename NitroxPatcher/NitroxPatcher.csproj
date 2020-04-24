@@ -228,6 +228,7 @@
     <Compile Include="Main.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Sealed_Weld_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_CopyFrom_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_SetState_Patch.cs" />
     <Compile Include="Patches\Dynamic\CrashHome_Spawn_Patch.cs" />
