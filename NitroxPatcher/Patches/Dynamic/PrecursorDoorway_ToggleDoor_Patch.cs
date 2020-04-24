@@ -3,6 +3,8 @@ using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -16,9 +18,18 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxServiceLocator.LocateService<PrecursorManager>().TogglePrecursorDoor(entity.Id, open);
         }
 
+        public static void Postfix(PrecursorDoorway __instance)
+        {
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            PrecursorDoorwayMetadata keypadMetadata = new PrecursorDoorwayMetadata(__instance.isOpen);
+
+            Entities entities = NitroxServiceLocator.LocateService<Entities>();
+            entities.BroadcastMetadataUpdate(id, keypadMetadata);
+        }
+
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }
