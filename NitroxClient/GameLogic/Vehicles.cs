@@ -434,11 +434,7 @@ namespace NitroxClient.GameLogic
         {
             VehicleModel vehicle;
             vehiclesById.TryGetValue(vehicleId, out vehicle);
-            if (vehicle == null)
-            {
-                return Optional.Empty;
-            }
-            return Optional.Of((T)vehicle);
+            return Optional.OfNullable((T)vehicle);
         }
     }
 }
