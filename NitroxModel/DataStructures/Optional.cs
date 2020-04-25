@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using NitroxModel.Helper;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Util
@@ -28,7 +29,7 @@ namespace NitroxModel.DataStructures.Util
         {
             get
             {
-                return !IsDestroyedUnityObjectOrNull(Value);
+                return !IsDestroyedUnityObjectOrNull(Value) && hasValue;
             }
             set
             {
@@ -40,7 +41,20 @@ namespace NitroxModel.DataStructures.Util
         {
             // Check to satisfy unity objects. Sometimes they are internally destroyed but are not considered null.
             // For the purpose of optional, we consider a dead object to be the same as null.
-            return ReferenceEquals(value, null) || value.ToString() == "null";
+            if (ReferenceEquals(value, null))
+            {
+                return true;
+            }
+            return value.ToString() == "null";
+            // bool isUnityObject = typeof(TValue).GetMethod("GetCachedPtr", BindingFlags.Instance | BindingFlags.NonPublic) != null;
+            // return isUnityObject && !(bool)(object) value;
+            // return GetUnityObjectPtr(value) == IntPtr.Zero;
+        }
+
+        private static IntPtr? GetUnityObjectPtr(object value)
+        {
+            Func<IntPtr> method = ReflectionCache.GetReturn<IntPtr>("GetCachedPtr", value);
+            return method?.Invoke();
         }
 
         private Optional(T value)
@@ -123,6 +137,9 @@ namespace NitroxModel.DataStructures.Util
 
     public static class Optional
     {
+        internal static readonly object[] EmptyArray = new object[0];
+        internal static Func<object, int> CachedGetInstanceIDDelegate; 
+
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
         public static Optional<T> Of<T>(T value)

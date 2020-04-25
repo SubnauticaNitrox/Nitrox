@@ -109,5 +109,20 @@ namespace NitroxTest.Model
             Optional<int> op = Optional.Empty;
             op.HasValue.Should().BeFalse();
         }
+
+        [TestMethod]
+        public void OptionalUnityObjectEmpty()
+        {
+            Optional<UnityEngine.Object> op = Optional.Empty;
+            op.HasValue.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public void OptionalUnityObjectDead()
+        {
+            Console.WriteLine(new UnityEngine.Object().ToString());
+            Optional<UnityEngine.Object> op = new UnityEngine.Object();
+            op.HasValue.Should().BeFalse();
+        }
     }
 }

@@ -71,7 +71,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         private void OnPacketReceived(WrapperPacket wrapperPacket, NetPeer peer)
         {
-            Packet packet = Packet.Deserialize(wrapperPacket.packetData);
+            Packet packet = Packet.Deserialize(wrapperPacket.PacketData);
             packetReceiver.PacketReceived(packet);
         }
 
