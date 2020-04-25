@@ -22,25 +22,25 @@ namespace NitroxModel.DataStructures.Util
         public T Value { get; private set; }
 
         private bool hasValue;
-        
+
         [ProtoMember(2)]
         public bool HasValue
         {
             get
             {
-                if (ReferenceEquals(Value, null))
-                {
-                    return false;
-                }
-
-                // Check to satisfy unity objects.  Sometimes they are internally destroyed but are not considered null.
-                // For the purpose of optional, we consider a dead object to be the same as null.
-                return Value.ToString() != "null";
+                return !IsDestroyedUnityObjectOrNull(Value);
             }
             set
             {
                 hasValue = value;
             }
+        }
+
+        private static bool IsDestroyedUnityObjectOrNull<TValue>(TValue value)
+        {
+            // Check to satisfy unity objects. Sometimes they are internally destroyed but are not considered null.
+            // For the purpose of optional, we consider a dead object to be the same as null.
+            return ReferenceEquals(value, null) || value.ToString() == "null";
         }
 
         private Optional(T value)
@@ -66,6 +66,10 @@ namespace NitroxModel.DataStructures.Util
 
         internal static Optional<T> OfNullable(T value)
         {
+            if (IsDestroyedUnityObjectOrNull(value))
+            {
+                return Optional.Empty;
+            }
             return Equals(default(T), value) ? Optional.Empty : new Optional<T>(value);
         }
 
@@ -88,7 +92,10 @@ namespace NitroxModel.DataStructures.Util
             info.AddValue("hasValue", HasValue);
         }
 
-        public static implicit operator Optional<T>(OptionalEmpty none) => new Optional<T>();
+        public static implicit operator Optional<T>(OptionalEmpty none)
+        {
+            return new Optional<T>();
+        }
 
         public static implicit operator Optional<T>?(T obj)
         {
@@ -118,8 +125,15 @@ namespace NitroxModel.DataStructures.Util
     {
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
-        public static Optional<T> Of<T>(T value) => Optional<T>.Of(value);
-        public static Optional<T> OfNullable<T>(T value) => Optional<T>.OfNullable(value);
+        public static Optional<T> Of<T>(T value)
+        {
+            return Optional<T>.Of(value);
+        }
+
+        public static Optional<T> OfNullable<T>(T value)
+        {
+            return Optional<T>.OfNullable(value);
+        }
     }
 
     public sealed class OptionalNullException<T> : Exception
