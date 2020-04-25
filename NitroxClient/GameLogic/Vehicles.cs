@@ -412,6 +412,7 @@ namespace NitroxClient.GameLogic
         public void AddVehicle(VehicleModel vehicleModel)
         {
             vehiclesById.Add(vehicleModel.Id, vehicleModel);
+            Log.Debug($"{nameof(Vehicles)}: Added vehicle {vehicleModel}");
         }
 
         public bool RemoveVehicle(VehicleModel vehicleModel)
@@ -427,6 +428,17 @@ namespace NitroxClient.GameLogic
         public T GetVehicles<T>(NitroxId vehicleId) where T : VehicleModel
         {            
             return (T)vehiclesById[vehicleId];
+        }
+
+        public Optional<T> TryGetVehicle<T>(NitroxId vehicleId) where T : VehicleModel
+        {
+            VehicleModel vehicle;
+            vehiclesById.TryGetValue(vehicleId, out vehicle);
+            if (vehicle == null)
+            {
+                return Optional.Empty;
+            }
+            return Optional.Of((T)vehicle);
         }
     }
 }
