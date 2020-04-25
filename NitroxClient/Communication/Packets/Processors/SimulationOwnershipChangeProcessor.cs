@@ -60,9 +60,6 @@ namespace NitroxClient.Communication.Packets.Processors
             if (gameObject.HasValue)
             {
                 EntityPositionBroadcaster.WatchEntity(id, gameObject.Value);
-
-                RemotelyControlled remotelyControlled = gameObject.Value.GetComponent<RemotelyControlled>();
-                Object.Destroy(remotelyControlled);
             }
             else
             {
