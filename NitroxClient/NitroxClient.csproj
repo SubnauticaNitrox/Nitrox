@@ -279,6 +279,7 @@
     <Compile Include="MonoBehaviours\Gui\InGame\PlayerKickedModal.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\LoadingScreenVersionText.cs" />
     <Compile Include="MonoBehaviours\NitroxEntity.cs" />
+    <Compile Include="MonoBehaviours\RemotelyControlled.cs" />
     <Compile Include="Unity\Helper\AssetBundleLoader.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />

@@ -14,7 +14,7 @@ namespace NitroxClient.GameLogic.HUD
 
         void Update()
         {
-            HandReticle.main.SetInteractText("Another player is currently steering the Cyclops!");
+            HandReticle.main.SetInteractText("Another player is interacting with that object.");
             HandReticle.main.SetIcon(HandReticle.IconType.HandDeny, 1f);
         }
     }
