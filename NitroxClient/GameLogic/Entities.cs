@@ -23,12 +23,13 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<Int3, BatchCells> batchCellsById = new Dictionary<Int3, BatchCells>();
+        private readonly Dictionary<Int3, BatchCells> batchCellsById;
         private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
 
         public Entities(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
+            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.ReflectionGet("batch2cells");
 
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
@@ -84,9 +85,7 @@ namespace NitroxClient.GameLogic
 
             if (!batchCellsById.TryGetValue(batchId, out batchCells))
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(batchId); // Just in case
                 batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
-                batchCellsById.Add(batchId, batchCells);
             }
 
             entityCell = batchCells.Get(cellId, entity.AbsoluteEntityCell.Level);
