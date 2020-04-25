@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
+using NitroxModel.Packets.Core;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers

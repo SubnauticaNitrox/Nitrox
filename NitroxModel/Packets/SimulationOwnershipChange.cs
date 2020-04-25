@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class SimulationOwnershipChange : Packet
+    public class SimulationOwnershipChange : Packet, IVolatilePacket
     {
         public List<SimulatedEntity> Entities { get; }
 

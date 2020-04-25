@@ -1,10 +1,11 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PDAEntryRemove : Packet
+    public class PDAEntryRemove : Packet, IVolatilePacket
     {
         public TechType TechType;
         public float Progress;

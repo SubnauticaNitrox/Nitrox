@@ -1,10 +1,11 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class RemotePlayerEquipmentRemoved : Packet
+    public class RemotePlayerEquipmentRemoved : Packet, IVolatilePacket
     {
         public ushort PlayerId { get; }
         public TechType TechType { get; }

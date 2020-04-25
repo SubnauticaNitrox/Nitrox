@@ -1,10 +1,11 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DeconstructionBegin : Packet
+    public class DeconstructionBegin : Packet, IVolatilePacket
     {
         public NitroxId Id { get; }
 

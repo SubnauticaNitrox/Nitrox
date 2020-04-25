@@ -2,19 +2,34 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Communication.MultiplayerSession.ConnectionState;
-using NitroxClient.Debuggers;
 using NitroxClient.GameLogic;
 using NitroxModel;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
+using NitroxModel.Packets.Core;
 
 namespace NitroxClient.Communication.MultiplayerSession
 {
     public class MultiplayerSessionManager : IMultiplayerSession, IMultiplayerSessionConnectionContext
     {
         private readonly HashSet<Type> suppressedPacketsTypes = new HashSet<Type>();
+
+        private readonly PacketSender currentPacketSender;
+
+        public MultiplayerSessionManager(IClient client) : this(client, new Disconnected())
+        {
+            Log.Info("Initializing MultiplayerSessionManager...");
+        }
+
+        // Used as testing entry point
+        internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
+        {
+            Client = client;
+            CurrentState = initialState;
+            currentPacketSender = SendPacketNormal;
+        }
 
         public IClient Client { get; }
         public string IpAddress { get; private set; }
@@ -24,20 +39,6 @@ namespace NitroxClient.Communication.MultiplayerSession
         public AuthenticationContext AuthenticationContext { get; private set; }
         public IMultiplayerSessionConnectionState CurrentState { get; private set; }
         public MultiplayerSessionReservation Reservation { get; private set; }
-
-        public MultiplayerSessionManager(IClient client)
-        {
-            Log.Info("Initializing MultiplayerSessionManager...");
-            Client = client;
-            CurrentState = new Disconnected();
-        }
-
-        // Testing entry point
-        internal MultiplayerSessionManager(IClient client, IMultiplayerSessionConnectionState initialState)
-        {
-            Client = client;
-            CurrentState = initialState;
-        }
 
         public event MultiplayerSessionConnectionStateChangedEventHandler ConnectionStateChanged;
 
@@ -97,13 +98,7 @@ namespace NitroxClient.Communication.MultiplayerSession
 
         public bool Send(Packet packet)
         {
-            Type packetType = packet.GetType();
-            if (!suppressedPacketsTypes.Contains(packetType))
-            {
-                Client.Send(packet);
-                return true;
-            }
-            return false;
+            return currentPacketSender(packet);
         }
 
         public PacketSuppressor<T> Suppress<T>()
@@ -134,5 +129,32 @@ namespace NitroxClient.Communication.MultiplayerSession
             AuthenticationContext = null;
             Reservation = null;
         }
+
+        private bool SendPacketNormal(Packet packet)
+        {
+            Type packetType = packet.GetType();
+            if (!suppressedPacketsTypes.Contains(packetType))
+            {
+                Client.Send(packet);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        ///     Only sends packets that are non-volatile.
+        ///     Includes packets like: chat message or movement
+        ///     Excludes packets like: remove inventory item, remove equipment and other packets that change state when doing OnDestroy
+        /// </summary>
+        private bool SendPacketNonVolatile(Packet packet)
+        {
+            if (packet is IVolatilePacket)
+            {
+                return false;
+            }
+            return SendPacketNormal(packet);
+        }
+
+        private delegate bool PacketSender(Packet packet);
     }
 }

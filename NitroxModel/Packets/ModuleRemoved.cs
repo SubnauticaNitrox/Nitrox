@@ -1,10 +1,11 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ModuleRemoved : Packet
+    public class ModuleRemoved : Packet, IVolatilePacket
     {
         public NitroxId OwnerId { get; }
         public string Slot { get; }

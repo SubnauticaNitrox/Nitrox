@@ -12,6 +12,7 @@ using System.Collections.Generic;
 
 namespace NitroxModel.Packets
 {
+    // TODO: Move to "NitroxModel.Packets.Core" namespace
     [Serializable]
     public abstract class Packet
     {

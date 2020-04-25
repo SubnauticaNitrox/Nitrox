@@ -1,10 +1,11 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.Packets.Core;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class VehicleDestroyed : Packet
+    public class VehicleDestroyed : Packet, IVolatilePacket
     {
         public NitroxId Id { get; }
         public string PlayerName { get; }
