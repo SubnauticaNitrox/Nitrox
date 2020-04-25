@@ -10,8 +10,8 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public class ProtobufSerializer_Deserialize_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly Type TARGET_TYPE = typeof(ProtobufSerializer);
-        private static readonly MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo TARGET_METHOD = typeof(ProtobufSerializer).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.NonPublic);
+
         private static readonly NitroxProtobufSerializer serializer = NitroxServiceLocator.LocateServicePreLifetime<NitroxProtobufSerializer>();
 
         public static bool Prefix(Stream stream, object target, Type type)

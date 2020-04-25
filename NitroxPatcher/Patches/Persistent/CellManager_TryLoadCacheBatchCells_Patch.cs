@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +6,9 @@ using System.Reflection.Emit;
 
 namespace NitroxPatcher.Patches.Persistent
 {
-    class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
+    public class CellManager_TryLoadCacheBatchCells_Patch : NitroxPatch, IPersistentPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CellManager);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("TryLoadCacheBatchCells", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CellManager).GetMethod("TryLoadCacheBatchCells", BindingFlags.Public | BindingFlags.Instance);
         
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

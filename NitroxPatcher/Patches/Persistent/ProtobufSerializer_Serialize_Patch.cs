@@ -10,8 +10,7 @@ namespace NitroxPatcher.Patches.Persistent
 {
     public class ProtobufSerializer_Serialize_Patch : NitroxPatch, IPersistentPatch
     {
-        private static readonly Type TARGET_TYPE = typeof(ProtobufSerializer);
-        private static readonly MethodInfo TARGET_METHOD = TARGET_TYPE.GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
+        public static readonly MethodInfo TARGET_METHOD = typeof(ProtobufSerializer).GetMethod("Serialize", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
         ///     This patch is in a hot path so it needs this optimization.
