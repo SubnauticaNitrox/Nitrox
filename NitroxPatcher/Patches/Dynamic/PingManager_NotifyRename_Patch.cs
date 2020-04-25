@@ -24,14 +24,8 @@ namespace NitroxPatcher.Patches.Dynamic
             {
                 return;
             }
-            NitroxId nitroxId = NitroxEntity.GetId(instance.gameObject);
-            if (nitroxId == null)
-            {
-                Log.Error($"Missing Nitrox id on beacon: {instance.GetHierarchyPath()}");
-                return;
-            }
             
-            PingRenamed packet = new PingRenamed(nitroxId, instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
+            PingRenamed packet = new PingRenamed(NitroxEntity.GetId(instance.gameObject), instance.GetLabel(), SerializationHelper.GetBytes(instance.gameObject));
             NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
         }
 
