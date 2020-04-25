@@ -4,7 +4,7 @@ using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
+    public class DevConsole_Update_Patch : NitroxPatch, IDynamicPatch
     {
         public static void Prefix()
         {

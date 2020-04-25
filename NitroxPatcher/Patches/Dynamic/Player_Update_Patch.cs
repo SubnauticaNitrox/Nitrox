@@ -9,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Player_Update_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Player);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Player).GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(Player __instance)
         {

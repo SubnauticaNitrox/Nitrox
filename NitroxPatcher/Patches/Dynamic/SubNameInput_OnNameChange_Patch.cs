@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours;
@@ -13,8 +12,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SubNameInput_OnNameChange_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SubNameInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnNameChange", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(SubNameInput).GetMethod("OnNameChange", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(SubNameInput __instance)
         {

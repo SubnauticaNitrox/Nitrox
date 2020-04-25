@@ -8,8 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Fire_Douse_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Fire);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Douse", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(float) }, null);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Fire).GetMethod("Douse", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(float) }, null);
 
         public static void Postfix(Fire __instance, float amount)
         {

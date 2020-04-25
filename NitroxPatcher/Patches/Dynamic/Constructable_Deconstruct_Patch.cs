@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -8,8 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_Deconstruct_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Constructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Deconstruct");
+        public static readonly MethodInfo TARGET_METHOD = typeof(Constructable).GetMethod("Deconstruct");
         
         public static void Postfix(Constructable __instance, bool __result)
         {

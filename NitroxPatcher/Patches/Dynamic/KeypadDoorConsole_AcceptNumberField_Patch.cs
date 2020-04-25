@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -11,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class KeypadDoorConsole_AcceptNumberField_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(KeypadDoorConsole);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("AcceptNumberField", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(KeypadDoorConsole).GetMethod("AcceptNumberField", BindingFlags.NonPublic | BindingFlags.Instance);
         
         public static void Postfix(KeypadDoorConsole __instance)
         {

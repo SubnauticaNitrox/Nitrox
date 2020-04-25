@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -11,10 +10,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
+    public class ExosuitTorpedoArm_Shoot_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ExosuitTorpedoArm);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Shoot", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(ExosuitTorpedoArm).GetMethod("Shoot", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Prefix(ExosuitTorpedoArm __instance, bool __result, TorpedoType torpedoType, Transform siloTransform)
         {

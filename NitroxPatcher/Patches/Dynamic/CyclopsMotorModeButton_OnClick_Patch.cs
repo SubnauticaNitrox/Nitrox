@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -12,8 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsMotorModeButton_OnClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsMotorModeButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnClick", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsMotorModeButton).GetMethod("OnClick", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(CyclopsMotorModeButton __instance, out bool __state)
         {

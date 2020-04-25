@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Openable_PlayOpenAnimation_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Openable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("PlayOpenAnimation", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Openable).GetMethod("PlayOpenAnimation", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(Openable __instance, bool openState, float duration)
         {

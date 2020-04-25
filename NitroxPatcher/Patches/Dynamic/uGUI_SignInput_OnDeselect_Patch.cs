@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -8,8 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class uGUI_SignInput_OnDeselect_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(uGUI_SignInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnDeselect", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(uGUI_SignInput).GetMethod("OnDeselect", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(uGUI_SignInput __instance)
         {

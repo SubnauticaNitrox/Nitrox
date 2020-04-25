@@ -1,13 +1,11 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
     public class IngameMenu_QuitSubscreen_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(IngameMenu);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("QuitSubscreen");
+        public static readonly MethodInfo TARGET_METHOD = typeof(IngameMenu).GetMethod("QuitSubscreen");
 
         public static bool Prefix()
         {

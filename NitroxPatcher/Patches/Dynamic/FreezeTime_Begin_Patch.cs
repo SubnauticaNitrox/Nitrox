@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using UWE;
 
@@ -7,8 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class FreezeTime_Begin_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(FreezeTime);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Begin", BindingFlags.Public | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = typeof(FreezeTime).GetMethod("Begin", BindingFlags.Public | BindingFlags.Static);
 
         public static bool Prefix(string userId, bool dontPauseSound)
         {

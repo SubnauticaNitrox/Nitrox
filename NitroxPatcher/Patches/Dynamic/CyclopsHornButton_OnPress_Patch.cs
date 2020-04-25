@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsHornButton_OnPress_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsHornButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnPress", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsHornButton).GetMethod("OnPress", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(CyclopsHornButton __instance)
         {

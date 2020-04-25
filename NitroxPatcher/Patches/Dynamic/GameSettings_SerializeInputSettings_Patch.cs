@@ -10,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class GameSettings_SerializeInputSettings_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(GameSettings);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SerializeInputSettings", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = typeof(GameSettings).GetMethod("SerializeInputSettings", BindingFlags.NonPublic | BindingFlags.Static);
 
         public static void Postfix(GameSettings.ISerializer serializer)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxModel.Helper;
 
@@ -7,8 +6,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsMotorMode_SaveEngineStateAndPowerDown_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsMotorMode);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SaveEngineStateAndPowerDown", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsMotorMode).GetMethod("SaveEngineStateAndPowerDown", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(CyclopsMotorMode __instance)
         {

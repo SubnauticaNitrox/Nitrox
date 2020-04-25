@@ -15,8 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class ToggleLights_SetLightsActive_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ToggleLights);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetLightsActive", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(ToggleLights).GetMethod("SetLightsActive", BindingFlags.Public | BindingFlags.Instance);
 
         private static readonly HashSet<Type> syncedParents = new HashSet<Type>()
         {

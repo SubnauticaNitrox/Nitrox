@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Creature_ChooseBestAction_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Creature);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ChooseBestAction", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Creature).GetMethod("ChooseBestAction", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private static CreatureAction previousAction;
 

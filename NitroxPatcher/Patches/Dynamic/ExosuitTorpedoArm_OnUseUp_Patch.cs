@@ -7,7 +7,7 @@ using NitroxModel_Subnautica.Packets;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class ExosuitTorpedoArm_OnUseUp_Patch : NitroxPatch, IDynamicPatch
+    public class ExosuitTorpedoArm_OnUseUp_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(ExosuitTorpedoArm);
         public static readonly Type TARGET_INTERFACE = typeof(IExosuitArm);

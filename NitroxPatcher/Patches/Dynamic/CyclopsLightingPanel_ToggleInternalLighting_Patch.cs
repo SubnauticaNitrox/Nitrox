@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class CyclopsLightingPanel_ToggleInternalLighting_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsLightingPanel);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ToggleInternalLighting", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsLightingPanel).GetMethod("ToggleInternalLighting", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(CyclopsLightingPanel __instance, out bool __state)
         {

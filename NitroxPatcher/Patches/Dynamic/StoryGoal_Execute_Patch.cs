@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.Communication.Abstract;
 using NitroxModel.Core;
@@ -10,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class StoryGoal_Execute_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(StoryGoal);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = typeof(StoryGoal).GetMethod("Execute", BindingFlags.Public | BindingFlags.Static);
 
         public static void Prefix(string key, Story.GoalType goalType)
         {

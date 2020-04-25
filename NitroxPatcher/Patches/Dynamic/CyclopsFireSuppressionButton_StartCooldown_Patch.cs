@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -12,10 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic
      * Relays Cyclops FireSuppressionSystem to other players
      * This method was used instead of the OnClick to ensure, that the the suppression really started
      */
-    class CyclopsFireSuppressionButton_StartCooldown_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsFireSuppressionButton_StartCooldown_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsFireSuppressionSystemButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("StartCooldown", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsFireSuppressionSystemButton).GetMethod("StartCooldown", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(CyclopsFireSuppressionSystemButton __instance)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -11,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Sealed_Weld_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Sealed);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Weld", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Sealed).GetMethod("Weld", BindingFlags.Public | BindingFlags.Instance);
         
         public static bool Prefix(Sealed __instance, out bool __state)
         {

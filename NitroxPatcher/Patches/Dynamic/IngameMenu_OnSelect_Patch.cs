@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
@@ -8,8 +7,8 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class IngameMenu_OnSelect_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(IngameMenu);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnSelect");
+        public static readonly MethodInfo TARGET_METHOD = typeof(IngameMenu).GetMethod("OnSelect");
+
         public static readonly MethodInfo GAMEMODEUTILS_ISPERMADEATH_METHOD = typeof(GameModeUtils).GetMethod("IsPermadeath", BindingFlags.Public | BindingFlags.Static);
 
         public static void Postfix()

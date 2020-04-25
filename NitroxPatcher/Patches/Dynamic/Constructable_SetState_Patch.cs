@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.Helper;
@@ -14,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Constructable_SetState_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Constructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(Constructable __instance, bool value)
         {

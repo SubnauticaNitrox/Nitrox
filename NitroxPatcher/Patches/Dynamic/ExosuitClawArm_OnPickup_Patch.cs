@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -9,8 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class ExosuitClawArm_OnPickup_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ExosuitClawArm);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnPickup");
+        public static readonly MethodInfo TARGET_METHOD = typeof(ExosuitClawArm).GetMethod("OnPickup");
 
         public static bool Prefix(ExosuitClawArm __instance)
         {

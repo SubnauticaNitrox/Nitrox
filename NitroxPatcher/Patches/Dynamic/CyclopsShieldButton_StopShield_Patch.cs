@@ -8,10 +8,9 @@ using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class CyclopsShieldButton_StopShield_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsShieldButton_StopShield_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsShieldButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("StopShield", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsShieldButton).GetMethod("StopShield", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(CyclopsShieldButton __instance)
         {

@@ -8,8 +8,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class PDAScanner_NotifyProgress_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(PDAScanner);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("NotifyProgress", BindingFlags.NonPublic | BindingFlags.Static);
+        public static readonly MethodInfo TARGET_METHOD = typeof(PDAScanner).GetMethod("NotifyProgress", BindingFlags.NonPublic | BindingFlags.Static);
 
         public static void Prefix(PDAScanner.Entry entry)
         {

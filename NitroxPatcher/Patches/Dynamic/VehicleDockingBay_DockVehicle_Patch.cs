@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -8,8 +7,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class VehicleDockingBay_DockVehicle_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(VehicleDockingBay);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("DockVehicle");
+        public static readonly MethodInfo TARGET_METHOD = typeof(VehicleDockingBay).GetMethod("DockVehicle");
 
         public static bool Prefix(VehicleDockingBay __instance, Vehicle vehicle)
         {

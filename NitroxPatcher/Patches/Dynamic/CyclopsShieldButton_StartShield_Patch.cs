@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -8,10 +7,9 @@ using NitroxModel.DataStructures;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class CyclopsShieldButton_StartShield_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsShieldButton_StartShield_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsShieldButton);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("StartShield", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsShieldButton).GetMethod("StartShield", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(CyclopsShieldButton __instance)
         {

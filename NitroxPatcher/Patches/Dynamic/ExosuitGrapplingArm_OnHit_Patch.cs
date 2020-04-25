@@ -1,18 +1,15 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel_Subnautica.Packets;
-using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDynamicPatch
+    public class ExosuitGrapplingArm_OnHit_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(ExosuitGrapplingArm);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHit");
+        public static readonly MethodInfo TARGET_METHOD = typeof(ExosuitGrapplingArm).GetMethod("OnHit");
 
         public static bool Prefix(ExosuitGrapplingArm __instance, GrapplingHook ___hook)
         {

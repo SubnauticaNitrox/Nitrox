@@ -15,10 +15,9 @@ namespace NitroxPatcher.Patches.Dynamic
     ///     unlike <see cref="SubRoot.OnTakeDamage(DamageInfo)" />, fires
     ///     can be created outside of <see cref="SubFire.OnTakeDamage(DamageInfo)" />
     /// </summary>
-    internal class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
+    public class SubFire_CreateFire_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SubFire);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("CreateFire", BindingFlags.Instance | BindingFlags.Public);
+        public static readonly MethodInfo TARGET_METHOD = typeof(SubFire).GetMethod("CreateFire", BindingFlags.Instance | BindingFlags.Public);
 
         public static bool Prefix(SubFire __instance, SubFire.RoomFire startInRoom, out bool __state)
         {

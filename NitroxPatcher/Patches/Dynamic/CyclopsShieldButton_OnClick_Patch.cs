@@ -11,6 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly Type TARGET_CLASS = typeof(CyclopsShieldButton);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnClick", BindingFlags.Public | BindingFlags.Instance);
+
         public static readonly OpCode START_CUT_CODE = OpCodes.Ldsfld;
         public static readonly OpCode START_CUT_CODE_CALL = OpCodes.Callvirt;
         public static readonly FieldInfo PLAYER_MAIN_FIELD = typeof(Player).GetField("main", BindingFlags.Public | BindingFlags.Static);

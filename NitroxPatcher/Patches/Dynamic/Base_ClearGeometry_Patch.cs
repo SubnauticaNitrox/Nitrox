@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using Harmony;
 using NitroxClient.MonoBehaviours;
@@ -12,8 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Base_ClearGeometry_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Base);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ClearGeometry", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Base).GetMethod("ClearGeometry", BindingFlags.Public | BindingFlags.Instance);
 
         /**
          * When new bases are constructed it will sometimes clear all of the pieces 

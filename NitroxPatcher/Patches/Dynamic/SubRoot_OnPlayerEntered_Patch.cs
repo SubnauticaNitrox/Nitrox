@@ -7,10 +7,11 @@ using Harmony;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class SubRoot_OnPlayerEntered_Patch : NitroxPatch, IDynamicPatch
+    public class SubRoot_OnPlayerEntered_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(SubRoot);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnPlayerEntered", BindingFlags.Public | BindingFlags.Instance);
+        
         public static readonly OpCode START_INJECTION_CODE = OpCodes.Ldarg_0;
         public static readonly OpCode START_INJECTION_CODE_INVINCIBLE = OpCodes.Stfld;
         public static readonly FieldInfo LIVEMIXIN_INVINCIBLE = typeof(LiveMixin).GetField("invincible", BindingFlags.Public | BindingFlags.Instance);

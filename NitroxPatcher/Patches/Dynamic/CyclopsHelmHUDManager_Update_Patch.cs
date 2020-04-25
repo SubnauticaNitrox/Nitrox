@@ -1,14 +1,12 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxModel.Helper;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsHelmHUDManager_Update_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsHelmHUDManager);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsHelmHUDManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(CyclopsHelmHUDManager __instance)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -13,10 +12,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class CyclopsLightingPanel_OnSubConstructionComplete_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsLightingPanel_OnSubConstructionComplete_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsLightingPanel);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SubConstructionComplete", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsLightingPanel).GetMethod("SubConstructionComplete", BindingFlags.Public | BindingFlags.Instance);
 
         public static bool Prefix(CyclopsLightingPanel __instance)
         {

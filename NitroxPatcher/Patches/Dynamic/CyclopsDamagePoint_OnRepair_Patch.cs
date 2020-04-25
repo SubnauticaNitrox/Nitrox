@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -10,10 +9,9 @@ namespace NitroxPatcher.Patches.Dynamic
     /// <see cref="CyclopsExternalDamageManager.RepairPoint(CyclopsDamagePoint)"/> would seem like the correct method to patch, but adding to its postfix will
     /// execute before <see cref="CyclopsDamagePoint.OnRepair"/> is finished working. Both owners and non-owners will be able to repair damage points on a ship.
     /// </summary>
-    class CyclopsDamagePoint_OnRepair_Patch : NitroxPatch, IDynamicPatch
+    public class CyclopsDamagePoint_OnRepair_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(CyclopsDamagePoint);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnRepair", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(CyclopsDamagePoint).GetMethod("OnRepair", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(CyclopsDamagePoint __instance)
         {

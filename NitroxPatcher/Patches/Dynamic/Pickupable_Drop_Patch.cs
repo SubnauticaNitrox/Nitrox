@@ -9,8 +9,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Pickupable_Drop_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Pickupable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Drop", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3), typeof(bool) }, null);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Pickupable).GetMethod("Drop", BindingFlags.Public | BindingFlags.Instance, null, new Type[] { typeof(Vector3), typeof(Vector3), typeof(bool) }, null);
 
         public static void Postfix(Pickupable __instance, Vector3 dropPosition)
         {

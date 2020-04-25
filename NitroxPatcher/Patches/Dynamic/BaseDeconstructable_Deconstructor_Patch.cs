@@ -15,8 +15,7 @@ namespace NitroxPatcher.Patches.Dynamic
      */
     public class BaseDeconstructable_Deconstructor_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(BaseDeconstructable);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Deconstruct", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(BaseDeconstructable).GetMethod("Deconstruct", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Prefix(BaseDeconstructable __instance)
         {

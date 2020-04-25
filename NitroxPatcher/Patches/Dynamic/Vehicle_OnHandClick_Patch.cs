@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxClient.GameLogic.HUD;
@@ -12,8 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Vehicle_OnHandClick_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Vehicle);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Vehicle).GetMethod("OnHandClick", BindingFlags.Public | BindingFlags.Instance);
 
         private static Vehicle vehicle;
         private static GUIHand guiHand;

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Harmony;
+﻿using Harmony;
 using System.Reflection;
 using NitroxClient.MonoBehaviours;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
+    public class Base_CopyFrom_Patch : NitroxPatch, IDynamicPatch
     {
         public readonly MethodInfo METHOD = typeof(Base).GetMethod(nameof(Base.CopyFrom), BindingFlags.Public | BindingFlags.Instance);
 

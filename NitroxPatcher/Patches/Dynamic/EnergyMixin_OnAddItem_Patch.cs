@@ -1,5 +1,4 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using Harmony;
 using NitroxClient.GameLogic;
 using NitroxModel.Core;
@@ -7,10 +6,9 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
+    public class EnergyMixin_OnAddItem_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(EnergyMixin);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnAddItem", BindingFlags.NonPublic | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(EnergyMixin).GetMethod("OnAddItem", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static void Postfix(EnergyMixin __instance, InventoryItem item)
         {
