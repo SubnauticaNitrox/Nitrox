@@ -5,7 +5,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
-using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
@@ -69,8 +68,6 @@ namespace NitroxServer.GameLogic
             allPlayersByName.TryGetValue(playerName, out player);
             if ((player?.IsPermaDeath == true) && serverConfig.GameMode == "Hardcore")
             {
-                Log.Debug("Is Perma Death " + player.IsPermaDeath);
-                Log.Debug("serverConfig.GameMode " + serverConfig.GameMode);
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
             }
