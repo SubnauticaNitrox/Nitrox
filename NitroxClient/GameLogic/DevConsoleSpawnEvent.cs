@@ -24,13 +24,16 @@ namespace NitroxClient.GameLogic
 
         /// <summary>
         /// List of things that can be spawned : https://subnauticacommands.com/items
+        /// Vehicle that can be spawn : Seamoth, Exosuit
         /// </summary>
         public void Spawn(GameObject gameObject)
         {
             try
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
-                ConstructorBeginCrafting constructorBeginCrafting = VehicleHelper.BuildFrom(gameObject, childIdentifiers, new NitroxId(), 0f);
+                TechType techtype = CraftData.GetTechType(gameObject);
+
+                ConstructorBeginCrafting constructorBeginCrafting = VehicleHelper.BuildFrom(gameObject, techtype, childIdentifiers, new NitroxId(), 0f);
                 VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(constructorBeginCrafting);
 
                 if (vehicleModel != null)
@@ -38,9 +41,9 @@ namespace NitroxClient.GameLogic
                     VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
                     vehicles.AddVehicle(vehicleModel);
 
-                    VehicleHelper.SpawnDefaultBatteries(gameObject, childIdentifiers);
-
                     packetSender.Send(vehicleSpawned);
+
+                    VehicleHelper.SpawnDefaultBatteries(gameObject, childIdentifiers);
                 }
                 else
                 {

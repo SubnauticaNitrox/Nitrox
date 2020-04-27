@@ -31,11 +31,9 @@ namespace NitroxClient.GameLogic.Helper
             return res;
         }
 
-        public static ConstructorBeginCrafting BuildFrom(GameObject gameObject, List<InteractiveChildObjectIdentifier> childIdentifiers, NitroxId constructorId, float duration)
+        public static ConstructorBeginCrafting BuildFrom(GameObject gameObject, TechType techType, List<InteractiveChildObjectIdentifier> childIdentifiers, NitroxId constructorId, float duration)
         {
-            TechType techtype = CraftData.GetTechType(gameObject);
-
-            if (IsVehicle(techtype))
+            if (IsVehicle(techType))
             {
                 Optional<Vehicle> opvehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
 
@@ -78,7 +76,7 @@ namespace NitroxClient.GameLogic.Helper
                 return new ConstructorBeginCrafting(
                     constructorId,
                     constructedObjectId,
-                    techtype.Model(),
+                    techType.Model(),
                     duration,
                     childIdentifiers,
                     gameObject.transform.position,
@@ -91,7 +89,7 @@ namespace NitroxClient.GameLogic.Helper
             }
             else
             {
-                Log.Error("Impossible to build from a non-vehicle GameObject");
+                Log.Error($"Impossible to build from a non-vehicle GameObject (Received {techType})");
             }
 
             return null;

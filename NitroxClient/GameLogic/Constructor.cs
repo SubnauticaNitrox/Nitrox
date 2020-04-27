@@ -37,13 +37,13 @@ namespace NitroxClient.GameLogic
                 GameObject constructedObject = (GameObject)opConstructedObject.Value;
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
 
-                ConstructorBeginCrafting beginCrafting = VehicleHelper.BuildFrom(constructedObject, childIdentifiers, constructorId, duration);
+                ConstructorBeginCrafting beginCrafting = VehicleHelper.BuildFrom(constructedObject, techType, childIdentifiers, constructorId, duration);
                 VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(beginCrafting);
                 vehicles.AddVehicle(vehicleModel);
 
-                VehicleHelper.SpawnDefaultBatteries(constructedObject, childIdentifiers);
-
                 packetSender.Send(beginCrafting);
+
+                VehicleHelper.SpawnDefaultBatteries(constructedObject, childIdentifiers);
             }
             else
             {
