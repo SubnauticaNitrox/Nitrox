@@ -244,6 +244,7 @@
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\DevConsoleSpawnEvent.cs" />
+    <Compile Include="GameLogic\Helper\VehicleHelper.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\SealedDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\EntityMetadataProcessor.cs" />

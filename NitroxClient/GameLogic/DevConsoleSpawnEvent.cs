@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
-using NitroxClient.MonoBehaviours;
-using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
@@ -27,87 +23,32 @@ namespace NitroxClient.GameLogic
         }
 
         /// <summary>
-        /// Only Seamoth and exosuit can be spawned with /spawn command
-        /// Cyclops is spawned throught sub cyclops
+        /// List of things that can be spawned : https://subnauticacommands.com/items
         /// </summary>
         public void Spawn(GameObject gameObject)
         {
-            List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
-            Optional<Vehicle> opvehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
-            NitroxId constructedObjectId = NitroxEntity.GetId(gameObject);
-            string name = string.Empty;
-            float health = 200f;
-            Vector3[] Colours;
-
-            if (opvehicle.HasValue)
+            try
             {
-                Optional<LiveMixin> livemixin = Optional.OfNullable(opvehicle.Value.GetComponent<LiveMixin>());
+                List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
+                ConstructorBeginCrafting constructorBeginCrafting = VehicleHelper.BuildFrom(gameObject, childIdentifiers, new NitroxId(), 0f);
+                VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(constructorBeginCrafting);
 
-                if (livemixin.HasValue)
+                if (vehicleModel != null)
                 {
-                    health = livemixin.Value.health;
+                    VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
+                    vehicles.AddVehicle(vehicleModel);
+
+                    VehicleHelper.SpawnDefaultBatteries(gameObject, childIdentifiers);
+
+                    packetSender.Send(vehicleSpawned);
                 }
-
-                name = opvehicle.Value.GetName();
-                Colours = opvehicle.Value.subName?.GetColors();
-            }
-            else
-            {
-                Colours = new Vector3[] { new Vector3(0f, 0f, 1f) };
-            }
-
-            ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(
-                new NitroxId(),
-                NitroxEntity.GetId(gameObject),
-                CraftData.GetTechType(gameObject).Model(),
-                0,
-                childIdentifiers,
-                gameObject.transform.position,
-                gameObject.transform.rotation,
-                name,
-                Colours,
-                Colours,
-                health
-            );
-
-            VehicleModel vehicleModel = VehicleModelFactory.BuildFrom(beginCrafting);
-            VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
-            vehicles.AddVehicle(vehicleModel);
-
-            SpawnDefaultBatteries(gameObject, childIdentifiers);
-
-            packetSender.Send(vehicleSpawned);
-        }
-
-        private void SpawnDefaultBatteries(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
-        {
-
-            Optional<EnergyMixin> opEnergy = Optional.OfNullable(constructedObject.GetComponent<EnergyMixin>());
-            if (opEnergy.HasValue)
-            {
-                EnergyMixin mixin = opEnergy.Value;
-                mixin.ReflectionSet("allowedToPlaySounds", false);
-                mixin.SetBattery(mixin.defaultBattery, 1);
-                mixin.ReflectionSet("allowedToPlaySounds", true);
-            }
-
-            foreach (InteractiveChildObjectIdentifier identifier in childIdentifiers)
-            {
-                Optional<GameObject> opChildGameObject = NitroxEntity.GetObjectFrom(identifier.Id);
-
-                if (opChildGameObject.HasValue)
+                else
                 {
-                    Optional<EnergyMixin> opEnergyMixin = Optional.OfNullable(opChildGameObject.Value.GetComponent<EnergyMixin>());
-
-                    if (opEnergyMixin.HasValue)
-                    {
-
-                        EnergyMixin mixin = opEnergyMixin.Value;
-                        mixin.ReflectionSet("allowedToPlaySounds", false);
-                        mixin.SetBattery(mixin.defaultBattery, 1);
-                        mixin.ReflectionSet("allowedToPlaySounds", true);
-                    }
+                    Log.Error("Unable to sync spawned vehicle from devconsole");
                 }
+            } catch (Exception ex)
+            {
+                Log.Error("Error while trying to spawn from devconsole", ex);
             }
         }
     }
