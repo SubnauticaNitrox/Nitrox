@@ -307,6 +307,7 @@
     <Compile Include="Communication\Packets\Processors\MultiplayerSessionReservationRequestProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoiningMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipRequestProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleUndockingProcessor.cs" />
     <Compile Include="ConsoleCommands\Abstract\CallArgs.cs" />
     <Compile Include="ConsoleCommands\Abstract\Command.cs" />
