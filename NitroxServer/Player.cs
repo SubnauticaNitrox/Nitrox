@@ -21,17 +21,19 @@ namespace NitroxServer
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
         public string Name { get; set; }
+        public bool IsPermaDeath { get; set; }
         public Vector3 Position { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
 
-        public Player(ushort id, string name, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
+            IsPermaDeath = isPermaDeath;
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;

@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Server;
@@ -64,6 +65,16 @@ namespace NitroxServer.GameLogic
             }
 
             string playerName = authenticationContext.Username;
+            Player player;
+            allPlayersByName.TryGetValue(playerName, out player);
+            if ((player?.IsPermaDeath == true) && serverConfig.GameMode == "Hardcore")
+            {
+                Log.Debug("Is Perma Death " + player.IsPermaDeath);
+                Log.Debug("serverConfig.GameMode " + serverConfig.GameMode);
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
             if (reservedPlayerNames.Contains(playerName))
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.UNIQUE_PLAYER_NAME_CONSTRAINT_VIOLATED;
@@ -79,8 +90,6 @@ namespace NitroxServer.GameLogic
                 reservedPlayerNames.Add(playerName);
             }
 
-            Player player;
-            allPlayersByName.TryGetValue(playerName, out player);
 
             bool hasSeenPlayerBefore = player != null;
             ushort playerId = hasSeenPlayerBefore ? player.Id : ++currentPlayerId;
@@ -109,6 +118,7 @@ namespace NitroxServer.GameLogic
             {
                 player = new Player(playerContext.PlayerId,
                     playerContext.PlayerName,
+                    false,
                     playerContext,
                     connection,
                     NitroxVector3.Zero,
