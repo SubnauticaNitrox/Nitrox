@@ -12,12 +12,12 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             PrecursorDoorway precursorDoorway = gameObject.GetComponent<PrecursorDoorway>();
             precursorDoorway.isOpen = metadata.IsOpen;
+            Log.Debug("Toggled door metadata" + metadata.IsOpen);
 
             if (metadata.IsOpen)
             {
-                precursorDoorway.BroadcastMessage("ToggleDoor");
-
                 precursorDoorway.ToggleDoor(metadata.IsOpen);
+                Log.Debug("Toggled door " + metadata.IsOpen);
             }
         }
     }

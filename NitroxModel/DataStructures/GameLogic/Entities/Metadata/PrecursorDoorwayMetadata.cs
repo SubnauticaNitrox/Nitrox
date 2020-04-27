@@ -19,5 +19,10 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
         {
             IsOpen = isOpen;
         }
+
+        public override string ToString()
+        {
+            return "[PrecursorDoorwayMetadata isOpen: " + IsOpen + "]";
+        }
     }
 }

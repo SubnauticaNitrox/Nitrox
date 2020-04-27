@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Logger;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -21,10 +22,11 @@ namespace NitroxPatcher.Patches.Dynamic
         public static void Postfix(PrecursorDoorway __instance)
         {
             NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            PrecursorDoorwayMetadata keypadMetadata = new PrecursorDoorwayMetadata(__instance.isOpen);
+            PrecursorDoorwayMetadata precursorDoorwayMetadata = new PrecursorDoorwayMetadata(__instance.isOpen);
 
             Entities entities = NitroxServiceLocator.LocateService<Entities>();
-            entities.BroadcastMetadataUpdate(id, keypadMetadata);
+            entities.BroadcastMetadataUpdate(id, precursorDoorwayMetadata);
+            Log.Debug("Precursor toggle door metadata sent id " + id + " value " + __instance.isOpen);
         }
 
         public override void Patch(HarmonyInstance harmony)
