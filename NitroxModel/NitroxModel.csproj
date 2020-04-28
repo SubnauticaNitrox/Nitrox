@@ -287,7 +287,6 @@
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
-    <Compile Include="Packets\PrecursorDoorwayAction.cs" />
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
