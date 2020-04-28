@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -12,12 +13,14 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             PrecursorDoorway precursorDoorway = gameObject.GetComponent<PrecursorDoorway>();
             precursorDoorway.isOpen = metadata.IsOpen;
-            Log.Debug("Toggled door metadata" + metadata.IsOpen);
 
             if (metadata.IsOpen)
             {
-                precursorDoorway.ToggleDoor(metadata.IsOpen);
-                Log.Debug("Toggled door " + metadata.IsOpen);
+                precursorDoorway.BroadcastMessage("DisableField");
+            }
+            else
+            {
+                precursorDoorway.BroadcastMessage("EnableField");
             }
         }
     }
