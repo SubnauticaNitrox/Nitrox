@@ -43,7 +43,7 @@ namespace NitroxClient.GameLogic
             {
                 GameObject go = gameObjectWithId.Value;
 
-                if (go != null)
+                if (go)
                 {
                     update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position, gameObjectWithId.Value.transform.rotation);
                 }

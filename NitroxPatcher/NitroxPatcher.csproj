@@ -228,6 +228,8 @@
     <Compile Include="Main.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PropulsionCannon_ReleaseGrabbedObject_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PropulsionCannon_GrabObject_Patch.cs" />
     <Compile Include="Patches\Dynamic\Sealed_Weld_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_CopyFrom_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_SetState_Patch.cs" />
@@ -320,6 +322,7 @@
     <Compile Include="Patches\Dynamic\PilotingChair_ReleaseBy_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentSub_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_Update_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PrecursorDoorway_ToggleDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrefabPlaceholdersGroup_Spawn_Patch.cs" />
     <Compile Include="Patches\Dynamic\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Dynamic\Radio_PlayRadioMessage_Patch.cs" />

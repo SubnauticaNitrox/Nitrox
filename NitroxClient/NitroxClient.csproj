@@ -243,6 +243,7 @@
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\Spawning\Metadata\PrecursorDoorwayMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\SealedDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\EntityMetadataProcessor.cs" />
@@ -280,6 +281,7 @@
     <Compile Include="MonoBehaviours\Gui\InGame\PlayerKickedModal.cs" />
     <Compile Include="MonoBehaviours\Gui\MainMenu\LoadingScreenVersionText.cs" />
     <Compile Include="MonoBehaviours\NitroxEntity.cs" />
+    <Compile Include="MonoBehaviours\RemotelyControlled.cs" />
     <Compile Include="Unity\Helper\AssetBundleLoader.cs" />
     <Compile Include="Unity\Helper\RendererHelpers.cs" />
     <Compile Include="Communication\Abstract\IClient.cs" />

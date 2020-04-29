@@ -86,7 +86,10 @@ namespace NitroxClient.MonoBehaviours
         public void Start()
         {
             // Just in case this object comes to life via serialization
-            gameObjectsById[Id] = gameObject;
+            if (Id != null)
+            {
+                gameObjectsById[Id] = gameObject;
+            }
         }
 
         public void OnProtoSerializeObjectTree(ProtobufSerializer _)
