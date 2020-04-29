@@ -243,8 +243,6 @@
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
-    <Compile Include="GameLogic\DevConsoleSpawnEvent.cs" />
-    <Compile Include="GameLogic\Helper\VehicleHelper.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\SealedDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\EntityMetadataProcessor.cs" />
@@ -391,10 +389,10 @@
     <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
-    <Compile Include="GameLogic\Constructor.cs" />
+    <Compile Include="GameLogic\MobileVehicleBay.cs" />
     <Compile Include="GameLogic\Crafting.cs" />
     <Compile Include="GameLogic\Cyclops.cs" />
-    <Compile Include="GameLogic\DevConsole.cs" />
+    <Compile Include="GameLogic\NitroxConsole.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\DiveSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\Entities.cs" />
     <Compile Include="GameLogic\EquipmentSlots.cs" />

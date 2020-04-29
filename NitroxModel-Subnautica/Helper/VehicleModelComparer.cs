@@ -16,6 +16,7 @@ namespace NitroxModel_Subnautica.Helper
                 return CompareTo(x.TechType.Enum(), y.TechType.Enum());
             }
         }
+
         private int CompareTo(TechType x, TechType y)
         {
             if(x > y)

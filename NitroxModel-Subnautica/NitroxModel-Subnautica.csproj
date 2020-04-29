@@ -238,6 +238,7 @@
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
     <Compile Include="DataStructures\GameLogic\SeamothModel.cs" />
+    <Compile Include="Helper\VehicleConstructionFactory.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
     <Compile Include="Helper\Int3Converter.cs" />
     <Compile Include="Helper\TechTypeConverter.cs" />

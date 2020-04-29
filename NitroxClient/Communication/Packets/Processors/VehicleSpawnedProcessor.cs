@@ -19,7 +19,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             vehicles.AddVehicle(packet.VehicleModel);
 
-            GameObject gameObject = SerializationHelper.GetGameObject(packet.SerializeData);
+            GameObject gameObject = SerializationHelper.GetGameObject(packet.SerializedData);
             LargeWorldEntity.Register(gameObject);
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
             gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
