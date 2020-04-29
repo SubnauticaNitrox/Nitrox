@@ -22,10 +22,10 @@ namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        private readonly ServerProtobufSerializer serializer;
+        private readonly ServerProtoBufSerializer serializer;
         private readonly ServerConfig config;
 
-        public WorldPersistence(ServerProtobufSerializer serializer, ServerConfig config)
+        public WorldPersistence(ServerProtoBufSerializer serializer, ServerConfig config)
         {
             this.serializer = serializer;
             this.config = config;

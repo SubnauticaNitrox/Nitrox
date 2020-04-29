@@ -6,14 +6,14 @@ using ProtoBufNet.Meta;
 
 namespace NitroxServer.Serialization
 {
-    public class ServerProtobufSerializer
+    public class ServerProtoBufSerializer
     {
         private static readonly object[] emptyArray = { };
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
-        public ServerProtobufSerializer(params string[] assemblies)
+        public ServerProtoBufSerializer(params string[] assemblies)
         {
-            foreach(string assembly in assemblies)
+            foreach (string assembly in assemblies)
             {
                 RegisterAssemblyClasses(assembly);
             }
@@ -42,12 +42,12 @@ namespace NitroxServer.Serialization
             {
                 bool hasNitroxProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
 
-                if (hasNitroxProtobuf)
+                if (hasNitroxProtoBuf)
                 {
                     // As of the latest protobuf update they will automatically register detected attributes.
                     Model.Add(type, true);
                 }
-                else if(HasUweProtoContract(type))
+                else if (HasUweProtoContract(type))
                 {
                     Model.Add(type, true);
 
@@ -58,7 +58,7 @@ namespace NitroxServer.Serialization
 
         private bool HasUweProtoContract(Type type)
         {
-            foreach(object o in type.GetCustomAttributes(false))
+            foreach (object o in type.GetCustomAttributes(false))
             {
                 if (o.GetType().ToString().Contains("ProtoContractAttribute"))
                 {

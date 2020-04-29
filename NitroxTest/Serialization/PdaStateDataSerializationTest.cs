@@ -27,7 +27,7 @@ namespace NitroxTest.Serialization
         [TestMethod]
         public void Sanity()
         {
-            ServerProtobufSerializer server = new ServerProtobufSerializer();
+            ServerProtoBufSerializer server = new ServerProtoBufSerializer();
 
             PDAStateData deserialized;
             using (MemoryStream stream = new MemoryStream())

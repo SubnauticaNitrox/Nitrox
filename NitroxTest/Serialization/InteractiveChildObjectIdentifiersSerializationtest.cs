@@ -29,7 +29,7 @@ namespace NitroxTest.Serialization
         [TestMethod]
         public void Sanity()
         {
-            ServerProtobufSerializer server = new ServerProtobufSerializer();
+            ServerProtoBufSerializer server = new ServerProtoBufSerializer();
 
             ThreadSafeCollection<InteractiveChildObjectIdentifier> deserialized;
             using (MemoryStream stream = new MemoryStream())
@@ -51,7 +51,7 @@ namespace NitroxTest.Serialization
                 id.Id.ToString().Should().MatchRegex("^[a-zA-Z0-9\\-]{10,}$"); // matches hex and - character
                 id.GameObjectNamePath.Should().NotBeNull();
             }
-            
+
             iterationCount.ShouldBeEquivalentTo(3);
         }
     }

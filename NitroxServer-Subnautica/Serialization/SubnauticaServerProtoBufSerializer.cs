@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace NitroxServer_Subnautica.Serialization
 {
-    class SubnauticaServerProtobufSerializer : ServerProtobufSerializer
+    class SubnauticaServerProtobufSerializer : ServerProtoBufSerializer
     {
         public SubnauticaServerProtobufSerializer(params string[] assemblies) : base(assemblies)
         {
@@ -37,7 +37,7 @@ namespace NitroxServer_Subnautica.Serialization
 
             MetaType movementData = Model.Add(typeof(VehicleMovementData), false);
             movementData.AddSubType(100, typeof(ExosuitMovementData));
-            
+
             MetaType rotationData = Model.Add(typeof(RotationMetadata), false);
             rotationData.AddSubType(50, typeof(CorridorRotationMetadata));
             rotationData.AddSubType(60, typeof(MapRoomRotationMetadata));
