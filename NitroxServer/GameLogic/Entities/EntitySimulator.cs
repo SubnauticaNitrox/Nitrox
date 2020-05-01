@@ -9,7 +9,7 @@ namespace NitroxServer.GameLogic.Entities
 {
     public class EntitySimulation
     {
-        private static readonly SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
+        private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
 
         private readonly EntityManager entityManager;
         private readonly PlayerManager playerManager;

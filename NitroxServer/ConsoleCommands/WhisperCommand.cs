@@ -1,47 +1,31 @@
-﻿using System.Linq;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
-using NitroxModel.Packets;
-using NitroxModel.DataStructures.Util;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class WhisperCommand : Command
     {
-        private readonly PlayerManager playerManager;
-
-        public WhisperCommand(PlayerManager playerManager) : base("msg", Perms.PLAYER, "{name} {msg}", "Sends a private message to a player", new string[] { "m", "whisper", "w" })
+        public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
-            this.playerManager = playerManager;
+            AddAlias("m", "whisper", "w");
+            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypeString("msg", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Player foundPlayer;
+            Player foundPlayer = args.Get<Player>(0);
 
-            if (playerManager.TryGetPlayerByName(args[0], out foundPlayer))
+            if (foundPlayer != null)
             {
-                string message = string.Join(" ", args.Skip(1).ToArray());
-
-                if (sender.HasValue)
-                {
-                    foundPlayer.SendPacket(new ChatMessage(sender.Value.Id, message));
-                }
-                else
-                {
-                    foundPlayer.SendPacket(new ChatMessage(ChatMessage.SERVER_ID, message));
-                }
+                string message = $"[{args.SenderName} -> YOU]: {args.GetTillEnd(1)}";
+                SendMessageToPlayer(foundPlayer, message);
             }
             else
             {
-                Notify(sender, $"Unable to whisper {args[0]}, player not found.");
+                SendMessage(args.Sender, "Unable to whisper, player not found.");
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 2;
         }
     }
 }

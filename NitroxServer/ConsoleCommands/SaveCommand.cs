@@ -1,23 +1,18 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
 {
     internal class SaveCommand : Command
     {
-        public SaveCommand() : base("save", Perms.ADMIN, "", "Saves the map")
+        public SaveCommand() : base("save", Perms.ADMIN, "Saves the map")
         {
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             Server.Instance.Save();
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 0;
+            SendMessageToPlayer(args.Sender, "World saved");
         }
     }
 }

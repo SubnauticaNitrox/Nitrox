@@ -43,7 +43,6 @@ namespace NitroxServer_Subnautica
                 [TechType.CrashHome.Model()] = new CrashFishBootstrapper(),
                 [TechType.Reefback.Model()] = new ReefbackBootstrapper()
             }).SingleInstance();
-
         }
     }
 }

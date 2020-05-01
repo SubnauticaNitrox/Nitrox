@@ -1,5 +1,6 @@
 ﻿using NitroxClient.GameLogic.Helper;
 using NitroxClient.GameLogic.ItemDropActions;
+using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.DataStructures;
@@ -29,6 +30,13 @@ namespace NitroxClient.GameLogic.Spawning
             ExecuteDropItemAction(entity.TechType.Enum(), gameObject);
 
             NitroxEntity.SetNewId(gameObject, entity.Id);
+
+            Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);
+
+            if (metadataProcessor.HasValue)
+            {
+                metadataProcessor.Value.ProcessMetadata(gameObject, entity.Metadata);
+            }
 
             return Optional.Of(gameObject);
         }

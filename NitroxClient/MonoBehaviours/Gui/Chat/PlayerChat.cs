@@ -13,7 +13,7 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
         private const int LINE_CHAR_LIMIT = 255;
         private const int MESSAGES_LIMIT = 64;
         private const float TOGGLED_TRANSPARENCY = 0.4f;
-        public const float CHAT_VISIBILITY_TIME_LENGTH = 10f;
+        public const float CHAT_VISIBILITY_TIME_LENGTH = 6f;
 
         private static readonly Queue<ChatLogEntry> entries = new Queue<ChatLogEntry>();
         private Image[] backgroundImages;
@@ -37,7 +37,6 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
             playerChatManager = NitroxServiceLocator.LocateService<PlayerChatManager>();
 
             canvasGroup = GetComponent<CanvasGroup>();
-            GetComponentsInChildren<HorizontalOrVerticalLayoutGroup>();
 
             logEntryPrefab = GameObject.Find("ChatLogEntryPrefab");
             logEntryPrefab.AddComponent<PlayerChatLogItem>();

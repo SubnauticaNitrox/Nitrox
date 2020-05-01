@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.Exceptions;
-using NitroxServer.GameLogic;
-using NitroxModel.Packets;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using System;
+using NitroxModel.Logger;
+using NitroxModel.Packets;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.Exceptions;
 
 namespace NitroxServer.ConsoleCommands.Processor
 {
     public class ConsoleCommandProcessor
     {
         private readonly Dictionary<string, Command> commands = new Dictionary<string, Command>();
-        private readonly char[] splitChar = new[] { ' ' };
+        private readonly char[] splitChar = { ' ' };
 
         public ConsoleCommandProcessor(IEnumerable<Command> cmds)
         {
@@ -26,7 +25,7 @@ namespace NitroxServer.ConsoleCommands.Processor
                 }
 
                 commands[cmd.Name] = cmd;
-                foreach (string alias in cmd.Alias)
+                foreach (string alias in cmd.Aliases)
                 {
                     if (commands.ContainsKey(alias))
                     {
@@ -64,7 +63,7 @@ namespace NitroxServer.ConsoleCommands.Processor
 
             if (perms >= cmd.RequiredPermLevel)
             {
-                RunCommand(cmd, parts, player);
+                RunCommand(cmd, player, parts);
             }
             else
             {
@@ -72,18 +71,9 @@ namespace NitroxServer.ConsoleCommands.Processor
             }
         }
 
-        private void RunCommand(Command command, string[] parts, Optional<Player> player)
+        private void RunCommand(Command command, Optional<Player> player, string[] parts)
         {
-            string[] args = parts.Skip(1).ToArray();
-
-            if (command.VerifyArgs(args))
-            {
-                command.RunCommand(args, player);
-            }
-            else
-            {
-                command.Notify(player, string.Format("Received Command Arguments for {0}: {1}", command.Name, command.ArgsDescription));
-            }
+            command.TryExecute(player, parts.Skip(1).ToArray());
         }
     }
 }

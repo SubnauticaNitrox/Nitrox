@@ -1,7 +1,7 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -9,34 +9,30 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "{password}", "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             string message = "Can't update permissions";
 
-            if (sender.HasValue)
+            if (args.Sender.HasValue)
             {
-                if (args[0] == serverConfig.AdminPassword)
+                if (args.Get(0) == serverConfig.AdminPassword)
                 {
-                    sender.Value.Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {sender.Value.Name}";
+                    args.Sender.Value.Permissions = Perms.ADMIN;
+                    message = $"Updated permissions to admin for {args.SenderName}";
                 }
                 else
                 {
                     message = "Incorrect Password";
                 }
             }
-
-            Notify(sender, message);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 1;
+            
+            SendMessage(args.Sender, message);
         }
     }
 }

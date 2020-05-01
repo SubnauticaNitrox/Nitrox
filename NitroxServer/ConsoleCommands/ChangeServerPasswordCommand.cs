@@ -1,9 +1,9 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,31 +11,27 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "[{password}]", "Changes server password. Clear it without argument")
+        public ChangeServerPasswordCommand(ServerConfig serverConfig) : base("changeserverpassword", Perms.ADMIN, "Changes server password. Clear it without argument")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", false));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             try
             {
-                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                string password = args.Length == 0 ? "" : args[0];
+                string playerName = args.Sender.HasValue ? args.Sender.Value.Name : "SERVER";
+                string password = args.Args.Length == 0 ? string.Empty : args.Args[0];
                 serverConfig.ServerPassword = password;
 
                 Log.Info("Server password changed to {password} by {playername}", password, playerName);
-                SendMessageToPlayer(sender, "Server password changed");
+                SendMessageToPlayer(args.Sender, "Server password changed");
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Error attempting to change server password");
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 0;
         }
     }
 }

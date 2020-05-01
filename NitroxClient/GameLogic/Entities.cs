@@ -5,6 +5,7 @@ using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
@@ -22,12 +23,13 @@ namespace NitroxClient.GameLogic
         private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
         private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
         private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
-        private readonly Dictionary<Int3, BatchCells> batchCellsById = new Dictionary<Int3, BatchCells>();
+        private readonly Dictionary<Int3, BatchCells> batchCellsById;
         private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
 
         public Entities(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
+            batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.ReflectionGet("batch2cells");
 
             customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
             customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
@@ -41,12 +43,18 @@ namespace NitroxClient.GameLogic
             {
                 GameObject go = gameObjectWithId.Value;
 
-                if (go != null)
+                if (go)
                 {
                     update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position, gameObjectWithId.Value.transform.rotation);
                 }
             }
 
+            packetSender.Send(update);
+        }
+
+        public void BroadcastMetadataUpdate(NitroxId id, EntityMetadata metadata)
+        {
+            EntityMetadataUpdate update = new EntityMetadataUpdate(id, metadata);
             packetSender.Send(update);
         }
 
@@ -77,9 +85,7 @@ namespace NitroxClient.GameLogic
 
             if (!batchCellsById.TryGetValue(batchId, out batchCells))
             {
-                LargeWorldStreamer.main.cellManager.UnloadBatchCells(batchId); // Just in case
                 batchCells = LargeWorldStreamer.main.cellManager.InitializeBatchCells(batchId);
-                batchCellsById.Add(batchId, batchCells);
             }
 
             entityCell = batchCells.Get(cellId, entity.AbsoluteEntityCell.Level);

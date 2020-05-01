@@ -8,11 +8,12 @@ namespace NitroxClient.MonoBehaviours
 {
     public class EntityPositionBroadcaster : MonoBehaviour
     {
+        public static readonly float BROADCAST_INTERVAL = 0.25f;
+
         private static Dictionary<NitroxId, GameObject> watchingEntitiesById = new Dictionary<NitroxId, GameObject>();
         private Entities entityBroadcaster;
 
         private float time;
-        private float interpolationPeriod = 0.25f;
 
         public void Awake()
         {
@@ -24,7 +25,7 @@ namespace NitroxClient.MonoBehaviours
             time += Time.deltaTime;
 
             // Only do on a specific cadence to avoid hammering server
-            if (time >= interpolationPeriod)
+            if (time >= BROADCAST_INTERVAL)
             {
                 time = 0;
 
@@ -38,6 +39,9 @@ namespace NitroxClient.MonoBehaviours
         public static void WatchEntity(NitroxId id, GameObject gameObject)
         {
             watchingEntitiesById[id] = gameObject;
+            
+            RemotelyControlled remotelyControlled = gameObject.GetComponent<RemotelyControlled>();
+            Object.Destroy(remotelyControlled);
         }
 
         public static void StopWatchingEntity(NitroxId id)

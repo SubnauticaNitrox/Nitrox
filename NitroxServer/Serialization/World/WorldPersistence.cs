@@ -136,7 +136,8 @@ namespace NitroxServer.Serialization.World
                     throw new InvalidDataException("Save data is empty or not valid");
                 }
 
-                World world = CreateWorld(persistedData.WorldData.ServerStartTime ?? DateTime.UtcNow,
+
+                World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData.Entities,
                                           persistedData.BaseData.PartiallyConstructedPieces,
                                           persistedData.BaseData.CompletedBasePieceHistory,
@@ -171,7 +172,7 @@ namespace NitroxServer.Serialization.World
         private World CreateFreshWorld()
         {
             return CreateWorld(
-                DateTime.Now, 
+                DateTime.Now,
                 new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
@@ -220,6 +221,7 @@ namespace NitroxServer.Serialization.World
             HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
+            Log.Info($"World GameMode: {gameMode}");
             if (!string.IsNullOrWhiteSpace(config.ServerPassword))
             {
                 Log.InfoSensitive("Server Password: {password} ", config.ServerPassword);
@@ -229,7 +231,10 @@ namespace NitroxServer.Serialization.World
                 Log.Info("Server has no password set.");
             }
             Log.InfoSensitive("Admin Password: {password}", config.AdminPassword);
-            Log.Info("To get help for commands, run {commandName} in console or {chatCommandName} in chatbox", "help", "/help");
+            Log.Info($"Admin Password: {config.AdminPassword}");
+            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)")}");
+
+            Log.Info("To get help for commands, run help in console or /help in chatbox");
 
             return world;
         }

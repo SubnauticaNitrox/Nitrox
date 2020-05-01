@@ -19,7 +19,7 @@ namespace NitroxClient.Unity.Smoothing
 
         public ExosuitSmoothRotation(Quaternion initial)
         {
-            Target = SmoothValue = initial;
+            Target = Current = initial;
         }
 
         public ExosuitSmoothRotation()
@@ -28,7 +28,7 @@ namespace NitroxClient.Unity.Smoothing
 
         public new void FixedUpdate()
         {
-            SmoothValue = Quaternion.Slerp(SmoothValue, Target, timeCount + SMOOTHING_SPEED * Time.fixedDeltaTime);
+            Current = Quaternion.Slerp(Current, Target, timeCount + SMOOTHING_SPEED * Time.fixedDeltaTime);
             timeCount += SMOOTHING_SPEED * Time.fixedDeltaTime;
         }
     }

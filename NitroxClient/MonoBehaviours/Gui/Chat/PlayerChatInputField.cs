@@ -45,8 +45,9 @@ namespace NitroxClient.MonoBehaviours.Gui.Chat
                 return;
             }
 
-            if (selected)
+            if (selected && InputField.text != "")
             {
+                ResetTimer();
                 if (UnityEngine.Input.GetKey(KeyCode.Return))
                 {
                     if (UnityEngine.Input.GetKey(KeyCode.LeftShift))

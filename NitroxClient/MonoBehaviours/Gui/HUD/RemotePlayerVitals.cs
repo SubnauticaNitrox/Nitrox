@@ -76,7 +76,11 @@ namespace NitroxClient.MonoBehaviours.Gui.HUD
             waterBar?.UpdateVisual();
 
             // Make canvas face camera.
-            canvas.transform.forward = Camera.main.transform.forward;
+            Camera camera = Camera.main;
+            if (canvas && camera)
+            {
+                canvas.transform.forward = camera.transform.forward;
+            }
         }
 
         private Canvas CreateCanvas(Transform playerTransform)

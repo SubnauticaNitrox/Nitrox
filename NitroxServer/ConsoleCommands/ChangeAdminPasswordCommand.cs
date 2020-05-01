@@ -1,9 +1,9 @@
 ﻿using System;
-using NitroxModel.DataStructures.Util;
-using NitroxModel.Logger;
-using NitroxServer.ConsoleCommands.Abstract;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,30 +11,26 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "{password}", "Changes admin password")
+        public ChangeAdminPasswordCommand(ServerConfig serverConfig) : base("changeadminpassword", Perms.ADMIN, "Changes admin password")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
             try
             {
-                string playerName = sender.HasValue ? sender.Value.Name : "SERVER";
-                serverConfig.AdminPassword = args[0];
+                string playerName = args.Sender.HasValue ? args.Sender.Value.Name : "SERVER";
+                serverConfig.AdminPassword = args.Args[0];
 
-                Log.InfoSensitive("Admin password changed to {password} by {playername}", args[0], playerName);
-                SendMessageToPlayer(sender, "Admin password changed");
+                Log.InfoSensitive("Admin password changed to {password} by {playername}", args.Args[0], playerName);
+                SendMessageToPlayer(args.Sender, "Admin password changed");
             }
             catch (Exception ex)
             {
-                Log.ErrorSensitive(ex, "Error attempting to change admin password to {password}", args[0]);
+                Log.ErrorSensitive(ex, "Error attempting to change admin password to {password}", args.Args[0]);
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length >= 1;
         }
     }
 }

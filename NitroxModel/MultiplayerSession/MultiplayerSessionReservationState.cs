@@ -18,7 +18,10 @@ namespace NitroxModel.MultiplayerSession
         SERVER_PLAYER_CAPACITY_REACHED = 1 << 2,
 
         [Description("The password that you provided for the server is incorrect.")]
-        AUTHENTICATION_FAILED = 1 << 3
+        AUTHENTICATION_FAILED = 1 << 3,
+
+        [Description("The server is using hardcore gamemode, player is dead.")]
+        HARDCORE_PLAYER_DEAD = 1 << 4,
     }
 
     public static class MultiplayerSessionReservationStateExtensions
