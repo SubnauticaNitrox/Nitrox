@@ -11,7 +11,7 @@ jobs:
     - name: Checking out repository
       uses: actions/checkout@v2
       with:
-        submodules: true
+        submodules: 'true'
     - name: Download Subnautica files
       run: ./.github/depotDownloader/QXCTF.exe
     - name: Setup Nuget.exe
