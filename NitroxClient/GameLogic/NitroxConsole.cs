@@ -16,11 +16,13 @@ namespace NitroxClient.GameLogic
 
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
+        private readonly Item item;
 
-        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles)
+        public NitroxConsole(IPacketSender packetSender, Vehicles vehicles, Item item)
         {
             this.packetSender = packetSender;
             this.vehicles = vehicles;
+            this.item = item;
         }
 
         //List of things that can be spawned : https://subnauticacommands.com/items
@@ -30,12 +32,14 @@ namespace NitroxClient.GameLogic
 
             try
             {
-
                 if (vehicles.IsVehicle(techType))
                 {
                     SpawnVehicle(gameObject);
                 }
-
+                else
+                {
+                    SpawnItem(gameObject);
+                }
             }
             catch (Exception ex)
             {
@@ -55,33 +59,35 @@ namespace NitroxClient.GameLogic
             VehicleSpawned vehicleSpawned = new VehicleSpawned(SerializationHelper.GetBytes(gameObject), vehicleModel);
             vehicles.AddVehicle(vehicleModel);
 
+            Log.Debug($"Spawning vehicle {vehicleModel.TechType} with id {vehicleModel.Id} at {vehicleModel.Position}");
             packetSender.Send(vehicleSpawned);
 
             vehicles.SpawnDefaultBatteries(vehicleModel);
         }
 
         /// <summary>
-        /// Spawns a creature
+        /// Spawns a Pickupable item
         /// </summary>
+        private void SpawnItem(GameObject gameObject)
+        {
+            Optional<Pickupable> opitem = Optional.OfNullable(gameObject.GetComponent<Pickupable>());
+
+            if (opitem.HasValue)
+            {
+                Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
+                item.Dropped(gameObject, opitem.Value.GetTechType(), gameObject.transform.position);
+            }
+        }
+
         private void SpawnCreature(GameObject gameObject)
         {
             Optional<Creature> opcreature = Optional.OfNullable(gameObject.GetComponent<Creature>());
 
             if (opcreature.HasValue)
             {
-                Log.Debug($"NEED TO SPAWN A CREATURE HERE {opcreature.Value.name}");
+                Log.Debug($"Spawning creature {opcreature.Value.name} at {gameObject.transform.position}");
                 throw new NotImplementedException();
             }
-        }
-
-        private void SpawnItem(GameObject gameObject)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void SpawnBlueprint(GameObject gameObject)
-        {
-            throw new NotImplementedException();
         }
     }
 }
