@@ -22,6 +22,7 @@ namespace NitroxServer.GameLogic.Players
             {
                 Player player = new Player(playerData.Id,
                                            playerData.Name,
+                                           playerData.IsPermaDeath,
                                            null, //no connection/context as this player is not connected.
                                            null, 
                                            playerData.SpawnPosition, 
@@ -54,6 +55,7 @@ namespace NitroxServer.GameLogic.Players
                 persistedPlayer.SubRootId = player.SubRootId.OrElse(null);
                 persistedPlayer.Permissions = player.Permissions;
                 persistedPlayer.NitroxId = player.GameObjectId;
+                persistedPlayer.IsPermaDeath = player.IsPermaDeath;
 
                 persistedPlayers.Add(persistedPlayer);
             }
@@ -93,7 +95,10 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(9)]
             public NitroxId NitroxId { get; set; }
-            
+            [ProtoMember(10)]
+            public bool IsPermaDeath { get; set; }
+
+
         }
     }
 }
