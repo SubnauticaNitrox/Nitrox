@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Spawning;
 using NitroxClient.MonoBehaviours;
@@ -10,7 +9,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -19,20 +17,15 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
 
+        private readonly EntitySpawnerResolver entitySpawnerResolver = new EntitySpawnerResolver();
+
         private readonly HashSet<NitroxId> alreadySpawnedIds = new HashSet<NitroxId>();
-        private readonly DefaultEntitySpawner defaultEntitySpawner = new DefaultEntitySpawner();
-        private readonly SerializedEntitySpawner serializedEntitySpawner = new SerializedEntitySpawner();
-        private readonly Dictionary<TechType, IEntitySpawner> customSpawnersByTechType = new Dictionary<TechType, IEntitySpawner>();
         private readonly Dictionary<Int3, BatchCells> batchCellsById;
-        private readonly CellRootSpawner cellRootSpawner = new CellRootSpawner();
 
         public Entities(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
             batchCellsById = (Dictionary<Int3, BatchCells>)LargeWorldStreamer.main.cellManager.ReflectionGet("batch2cells");
-
-            customSpawnersByTechType[TechType.Crash] = new CrashEntitySpawner();
-            customSpawnersByTechType[TechType.Reefback] = new ReefbackEntitySpawner(defaultEntitySpawner);
         }
 
         public void BroadcastTransforms(Dictionary<NitroxId, GameObject> gameObjectsById)
@@ -112,7 +105,7 @@ namespace NitroxClient.GameLogic
 
             EntityCell cellRoot = EnsureCell(entity);
 
-            IEntitySpawner entitySpawner = ResolveEntitySpawner(entity);
+            IEntitySpawner entitySpawner = entitySpawnerResolver.ResolveEntitySpawner(entity);
             Optional<GameObject> gameObject = entitySpawner.Spawn(entity, parent, cellRoot);
 
             foreach (Entity childEntity in entity.ChildEntities)
@@ -125,25 +118,6 @@ namespace NitroxClient.GameLogic
                 alreadySpawnedIds.Add(childEntity.Id);
             }
 		}
-
-        private IEntitySpawner ResolveEntitySpawner(Entity entity)
-        {
-            if (entity.SerializedGameObject != null)
-            {
-                return serializedEntitySpawner;
-            }
-            if (entity.ClassId == "55d7ab35-de97-4d95-af6c-ac8d03bb54ca")
-            {
-                return cellRootSpawner;
-            }
-            TechType techType = entity.TechType.Enum();
-            if (customSpawnersByTechType.ContainsKey(techType))
-            {
-                return customSpawnersByTechType[techType];
-            }
-
-            return defaultEntitySpawner;
-        }
 
         private void UpdatePosition(Entity entity)
         {

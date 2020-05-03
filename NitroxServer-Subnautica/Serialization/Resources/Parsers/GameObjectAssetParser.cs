@@ -21,6 +21,11 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
                 gameObjectAsset.Components.Add(component);
             }
 
+            reader.ReadUInt32(); // Layer (not used)
+
+            int length = reader.ReadInt32();
+            gameObjectAsset.Name = reader.ReadStringLength(length);
+
             GameObjectsByAssetId.Add(identifier, gameObjectAsset);
         }
     }

@@ -27,7 +27,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             { 4, new TransformAssetParser()},
             { 49, new TextAssetParser() },
             { 114, new MonobehaviourAssetParser() },
-            { 115, new MonoscriptAssetParser() }
+            { 115, new MonoscriptAssetParser() },
+
+            // 224 is RectTransform. We don't currently directly interpret it; however, we want to parse it so that
+            // any transform links are maintained.  All of the beginning fields are exactly the same as a regular
+            // transform object.  It just has some additional metadata that is currently unused.
+            { 224, new TransformAssetParser()}
         };
 
         public static ResourceAssets Parse()
@@ -76,7 +81,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                     reader.Position = assetFileInfo.absoluteFilePos;
 
                     AssetIdentifier identifier = new AssetIdentifier(fileId, assetFileInfo.index);
-
+                    
                     AssetParser assetParser;
 
                     if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out assetParser))

@@ -210,7 +210,7 @@ namespace NitroxServer.Serialization.World
                                                               parsedBatchCells,
                                                               serializer,
                                                               NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
-                                                              NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
+                                                              NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
 
