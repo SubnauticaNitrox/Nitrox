@@ -3,7 +3,7 @@ using System.Linq;
 using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
@@ -18,8 +18,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(PlayerJoinedMultiplayerSession packet)
         {
-            List<TechType> techTypes = packet.EquippedTechTypes.Select(techType => techType.Enum()).ToList();
-            remotePlayerManager.Create(packet.PlayerContext, techTypes);
+            remotePlayerManager.Create(packet.PlayerContext, packet.EquippedTechTypes.Select(techType => techType.ToUnity()));
         }
     }
 }

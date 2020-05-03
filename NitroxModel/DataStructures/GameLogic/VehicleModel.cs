@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -10,6 +9,29 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class VehicleModel
     {
+        public VehicleModel()
+        {
+            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
+            DockingBayId = Optional.Empty;
+        }
+
+        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name,
+                            Vector3[] hsb,
+                            Vector3[] colours,
+                            float health)
+        {
+            TechType = techType;
+            Id = id;
+            Position = position;
+            Rotation = rotation;
+            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>(interactiveChildIdentifiers);
+            DockingBayId = dockingBayId;
+            Name = name;
+            HSB = hsb;
+            Colours = colours;
+            Health = health;
+        }
+
         [ProtoMember(1)]
         public TechType TechType { get; }
 
@@ -39,28 +61,6 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public float Health { get; set; } = 1;
-
-        public VehicleModel()
-        {
-            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
-            DockingBayId = Optional.Empty;
-        }
-
-        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,
-            Vector3[] colours,
-            float health)
-        {
-            TechType = techType;
-            Id = id;
-            Position = position;
-            Rotation = rotation;
-            InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>(interactiveChildIdentifiers);
-            DockingBayId = dockingBayId;
-            Name = name;
-            HSB = hsb;
-            Colours = colours;
-            Health = health;
-        }
 
         public override string ToString()
         {

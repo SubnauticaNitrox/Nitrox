@@ -19,19 +19,19 @@ namespace NitroxServer_Subnautica
     {
         private static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
-            {
-                // Called when dll is missing. Try resolving to Subnautica lib directory.
-                string dllFileName = eventArgs.Name.Split(',')[0] + ".dll";
-                string dllPath = Path.Combine(NitroxUtils.SubnauticaManagedLibsPath, dllFileName);
-                if (File.Exists(dllPath))
-                {
-                    Log.Debug($"Attempting to load dll: {dllPath}");
-                    return Assembly.LoadFile(dllPath);                     
-                }
-                
-                return eventArgs.RequestingAssembly;
-            };
+            // AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            // {
+            //     // Called when dll is missing. Try resolving to Subnautica lib directory.
+            //     string dllFileName = eventArgs.Name.Split(',')[0] + ".dll";
+            //     string dllPath = Path.Combine(NitroxUtils.SubnauticaManagedLibsPath, dllFileName);
+            //     if (File.Exists(dllPath))
+            //     {
+            //         Log.Debug($"Attempting to load dll: {dllPath}");
+            //         return Assembly.LoadFile(dllPath);
+            //     }
+            //     
+            //     return eventArgs.RequestingAssembly;
+            // };
             
             ConfigureConsoleWindow();
             ConfigureCultureInfo();

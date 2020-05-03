@@ -3,7 +3,6 @@ using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic

@@ -2,6 +2,7 @@
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -27,7 +28,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                if (vehicle.TechType.Enum() == TechType.Cyclops)
+                if (vehicle.TechType.ToUnity() == TechType.Cyclops)
                 {
                     cyclopsStillLoading++;
                     vehicles.CreateVehicle(vehicle);

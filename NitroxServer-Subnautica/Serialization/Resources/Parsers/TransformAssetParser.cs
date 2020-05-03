@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using AssetsTools.NET;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.Serialization.Resources.Datastructures;
 
@@ -17,18 +18,18 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Parsers
 
             reader.Position += 12;
 
-            transformAsset.LocalRotation = new NitroxQuaternion(
+            transformAsset.LocalRotation = new Quaternion(
                 reader.ReadSingle(), // Quaternion X
                 reader.ReadSingle(), // Quaternion Y
                 reader.ReadSingle(), // Quaternion Z
                 reader.ReadSingle()); // Quaternion W
 
-            transformAsset.LocalPosition = new NitroxVector3(
+            transformAsset.LocalPosition = new Vector3(
                reader.ReadSingle(), // Position X
                reader.ReadSingle(), // Position Y
                reader.ReadSingle()); // Position Z
 
-            transformAsset.LocalScale = new NitroxVector3(
+            transformAsset.LocalScale = new Vector3(
                reader.ReadSingle(), // Scale X
                reader.ReadSingle(), // Scale Y
                reader.ReadSingle()); // Scale Z

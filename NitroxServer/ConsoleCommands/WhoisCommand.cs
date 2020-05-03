@@ -19,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
             StringBuilder info = new StringBuilder($"==== {player.Name} ====\n");
             info.AppendLine($"ID: {player.Id}");
             info.AppendLine($"Role: {player.Permissions}");
-            info.AppendLine($"Position: {player.Position.x}, {player.Position.y}, {player.Position.z}");
+            info.AppendLine($"Position: {player.Position.X}, {player.Position.Y}, {player.Position.Z}");
             info.AppendLine($"Oxygen: {player.Stats.Oxygen}/{player.Stats.MaxOxygen}");
             info.AppendLine($"Food: {player.Stats.Food}");
             info.AppendLine($"Water: {player.Stats.Water}");

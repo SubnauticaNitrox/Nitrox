@@ -5,7 +5,6 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using UnityEngine;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
@@ -25,7 +24,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(DroppedItem packet, Player droppingPlayer)
         {
             bool existsInGlobalRoot = Map.Main.GlobalRootTechTypes.Contains(packet.TechType);
-            Entity entity = new Entity(packet.ItemPosition, packet.ItemRotation, Vector3.one, packet.TechType, 0, null, true, packet.WaterParkId.OrElse(null), packet.Bytes, existsInGlobalRoot, packet.Id);
+            Entity entity = new Entity(packet.ItemPosition, packet.ItemRotation, Vector3.One, packet.TechType, 0, null, true, packet.WaterParkId.OrElse(null), packet.Bytes, existsInGlobalRoot, packet.Id);
             entityManager.RegisterNewEntity(entity);
 
             SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, droppingPlayer);

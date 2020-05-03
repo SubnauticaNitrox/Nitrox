@@ -10,9 +10,12 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxClient.GameLogic
 {
@@ -69,7 +72,7 @@ namespace NitroxClient.GameLogic
             Transform camera = Camera.main.transform;
             Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
-            BasePiece basePiece = new BasePiece(id, placedPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
+            BasePiece basePiece = new BasePiece(id, placedPosition, quaternion, camera.position, camera.rotation, techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }
@@ -101,7 +104,7 @@ namespace NitroxClient.GameLogic
             }
 
             Transform camera = Camera.main.transform;
-            BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentId), true, Optional.Empty);
+            BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
             PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
             packetSender.Send(placedBasePiece);
         }

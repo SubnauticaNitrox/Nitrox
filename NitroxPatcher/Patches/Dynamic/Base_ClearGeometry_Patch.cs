@@ -7,6 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -24,36 +25,41 @@ namespace NitroxPatcher.Patches.Dynamic
          */
         public static Dictionary<string, NitroxId> NitroxIdByObjectKey = new Dictionary<string, NitroxId>();
 
+        public override void Patch(HarmonyInstance harmony)
+        {
+            PatchPrefix(harmony, TARGET_METHOD);
+        }
+
         public static void Prefix(Base __instance)
         {
-            if(__instance == null)
+            if (__instance == null)
             {
                 return;
             }
 
-            Transform[] cellObjects = (Transform[] )__instance.ReflectionGet("cellObjects");
+            Transform[] cellObjects = (Transform[])__instance.ReflectionGet("cellObjects");
 
-            if(cellObjects == null)
+            if (cellObjects == null)
             {
                 return;
             }
 
-            foreach(Transform cellObject in cellObjects)
+            foreach (Transform cellObject in cellObjects)
             {
-                if(cellObject != null)
+                if (cellObject != null)
                 {
-                    for(int i = 0; i < cellObject.childCount; i++)
+                    for (int i = 0; i < cellObject.childCount; i++)
                     {
                         Transform child = cellObject.GetChild(i);
-                        
+
                         if (child != null && child.gameObject != null)
                         {
                             // Ensure there is already a nitrox id, we don't want to go creating one
                             // which happens if you call GetId directly and it is missing.
-                            if(child.gameObject.GetComponent<NitroxEntity>() != null)
+                            if (child.gameObject.GetComponent<NitroxEntity>() != null)
                             {
                                 NitroxId id = NitroxEntity.GetId(child.gameObject);
-                                string key = getObjectKey(child.gameObject.name, child.position);
+                                string key = GetObjectKey(child.gameObject.name, child.position);
                                 NitroxIdByObjectKey[key] = id;
 
                                 Log.Debug("Clearing Base Geometry, storing id for later lookup: " + key + " " + id);
@@ -63,15 +69,10 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
             }
         }
-        
-        public static string getObjectKey(string name, Vector3 postion)
-        {
-            return name + postion.ToString();
-        }
 
-        public override void Patch(HarmonyInstance harmony)
+        public static string GetObjectKey(string name, Vector3 postion)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            return name + postion;
         }
     }
 }

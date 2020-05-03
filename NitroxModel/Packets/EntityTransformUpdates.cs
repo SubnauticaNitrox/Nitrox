@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class EntityTransformUpdates : Packet
     {
-        public List<EntityTransformUpdate> Updates { get; }
-
         public EntityTransformUpdates()
         {
             Updates = new List<EntityTransformUpdate>();
@@ -20,7 +17,9 @@ namespace NitroxModel.Packets
             Updates = updates;
         }
 
-        public void AddUpdate(NitroxId id, Vector3 position, Quaternion rotation)
+        public List<EntityTransformUpdate> Updates { get; }
+
+        public void AddUpdate(DTO.NitroxId id, DTO.Vector3 position, DTO.Quaternion rotation)
         {
             Updates.Add(new EntityTransformUpdate(id, position, rotation));
         }
@@ -40,16 +39,16 @@ namespace NitroxModel.Packets
         [Serializable]
         public class EntityTransformUpdate
         {
-            public NitroxId Id { get; }
-            public Vector3 Position { get; }
-            public Quaternion Rotation { get; }
-
-            public EntityTransformUpdate(NitroxId id, Vector3 position, Quaternion rotation)
+            public EntityTransformUpdate(DTO.NitroxId id, DTO.Vector3 position, DTO.Quaternion rotation)
             {
                 Id = id;
                 Position = position;
                 Rotation = rotation;
             }
+
+            public DTO.NitroxId Id { get; }
+            public DTO.Vector3 Position { get; }
+            public DTO.Quaternion Rotation { get; }
 
             public override string ToString()
             {

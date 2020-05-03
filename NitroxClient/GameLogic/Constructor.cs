@@ -9,9 +9,13 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
+using Color = UnityEngine.Color;
+using Vector3 = UnityEngine.Vector3;
+using Vector4 = UnityEngine.Vector4;
 
 namespace NitroxClient.GameLogic
 {
@@ -19,7 +23,7 @@ namespace NitroxClient.GameLogic
     {
         private readonly IPacketSender packetSender;
         private readonly Vehicles vehicles;
-        
+
         public MobileVehicleBay(IPacketSender packetSender, Vehicles vehicles)
         {
             this.packetSender = packetSender;
@@ -32,7 +36,7 @@ namespace NitroxClient.GameLogic
 
             Log.Debug("Building item from constructor with id: " + constructorId);
 
-            Optional<object> opConstructedObject = TransientLocalObjectManager.Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
+            Optional<object> opConstructedObject = Get(TransientObjectType.CONSTRUCTOR_INPUT_CRAFTED_GAMEOBJECT);
 
             if (opConstructedObject.HasValue)
             {
@@ -41,32 +45,42 @@ namespace NitroxClient.GameLogic
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(constructedObject);
                 Vehicle vehicle = constructedObject.GetComponent<Vehicle>();
                 NitroxId constructedObjectId = NitroxEntity.GetId(constructedObject);
-                Vector3[] HSB = new Vector3[5];
-                Vector3[] Colours = new Vector3[5];
-                Vector4 tmpColour = Color.white;
+                Vector3[] hsb = new Vector3[5];
+                Vector3[] colours = new Vector3[5];
                 string name = "";
                 float health = 1;
-                
+
                 if (!vehicle)
-                { // Cyclops
+                {
+                    // Cyclops
                     GameObject target = NitroxEntity.RequireObjectFrom(constructedObjectId);
                     SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                     SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
-                    Colours = subNameTarget.GetColors();
-                    HSB = subNameTarget.GetColors();
+                    colours = subNameTarget.GetColors();
+                    hsb = subNameTarget.GetColors();
                     name = subNameTarget.GetName();
                     health = target.GetComponent<LiveMixin>().health;
                 }
-                else if(vehicle)
-                { // Seamoth & Prawn Suit
+                else if (vehicle)
+                {
+                    // Seamoth & Prawn Suit
                     health = vehicle.GetComponent<LiveMixin>().health;
                     name = (string)vehicle.ReflectionCall("GetName", true);
-                    HSB = vehicle.subName.GetColors();
-                    Colours = vehicle.subName.GetColors();
+                    hsb = vehicle.subName.GetColors();
+                    colours = vehicle.subName.GetColors();
                 }
-                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorId, constructedObjectId, techType.Model(), duration, childIdentifiers, constructedObject.transform.position, constructedObject.transform.rotation, 
-                    name, HSB, Colours, health);
+                ConstructorBeginCrafting beginCrafting = new ConstructorBeginCrafting(constructorId,
+                                                                                      constructedObjectId,
+                                                                                      techType.ToDto(),
+                                                                                      duration,
+                                                                                      childIdentifiers,
+                                                                                      constructedObject.transform.position.ToDto(),
+                                                                                      constructedObject.transform.rotation.ToDto(),
+                                                                                      name,
+                                                                                      hsb.ToDto(),
+                                                                                      colours.ToDto(),
+                                                                                      health);
                 vehicles.AddVehicle(VehicleModelFactory.BuildFrom(beginCrafting));
                 packetSender.Send(beginCrafting);
 
@@ -81,11 +95,10 @@ namespace NitroxClient.GameLogic
         // As the normal spawn is suppressed, spawn default batteries afterwards
         private void SpawnDefaultBatteries(GameObject constructedObject, List<InteractiveChildObjectIdentifier> childIdentifiers)
         {
-            
             Optional<EnergyMixin> opEnergy = Optional.OfNullable(constructedObject.GetComponent<EnergyMixin>());
             if (opEnergy.HasValue)
             {
-                EnergyMixin mixin = opEnergy.Value;                
+                EnergyMixin mixin = opEnergy.Value;
                 mixin.ReflectionSet("allowedToPlaySounds", false);
                 mixin.SetBattery(mixin.defaultBattery, 1);
                 mixin.ReflectionSet("allowedToPlaySounds", true);
@@ -99,9 +112,8 @@ namespace NitroxClient.GameLogic
                 {
                     Optional<EnergyMixin> opEnergyMixin = Optional.OfNullable(opChildGameObject.Value.GetComponent<EnergyMixin>());
 
-                    if(opEnergyMixin.HasValue)
+                    if (opEnergyMixin.HasValue)
                     {
-                        
                         EnergyMixin mixin = opEnergyMixin.Value;
                         mixin.ReflectionSet("allowedToPlaySounds", false);
                         mixin.SetBattery(mixin.defaultBattery, 1);

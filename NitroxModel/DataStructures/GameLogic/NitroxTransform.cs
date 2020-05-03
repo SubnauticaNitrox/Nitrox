@@ -9,13 +9,13 @@ namespace NitroxModel.DataStructures.GameLogic
     public class NitroxTransform
     {
         [ProtoMember(1)]
-        public NitroxVector3 LocalPosition;
+        public Vector3 LocalPosition;
 
         [ProtoMember(2)]
-        public NitroxQuaternion LocalRotation;
+        public Quaternion LocalRotation;
         
         [ProtoMember(3)]
-        public NitroxVector3 LocalScale;
+        public Vector3 LocalScale;
 
         public NitroxMatrix4x4 localToWorldMatrix 
         {
@@ -28,7 +28,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public NitroxTransform Parent;
         public Entity Entity;
-        public NitroxVector3 Position
+        public Vector3 Position
         {
             get 
             {
@@ -42,7 +42,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 LocalPosition = NitroxMatrix4x4.ExtractTranslation(ref matrix);
             }
         }
-        public NitroxQuaternion Rotation
+        public Quaternion Rotation
         {
             get
             {
@@ -78,7 +78,7 @@ namespace NitroxModel.DataStructures.GameLogic
         /// <summary>
         /// NitroxTransform is always attached to an Entity
         /// </summary>
-        public NitroxTransform(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, Entity entity)
+        public NitroxTransform(Vector3 localPosition, Quaternion localRotation, Vector3 scale, Entity entity)
         {
             LocalPosition = localPosition;
             LocalRotation = localRotation;

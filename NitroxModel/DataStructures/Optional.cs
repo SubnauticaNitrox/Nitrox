@@ -75,6 +75,15 @@ namespace NitroxModel.DataStructures.Util
             return HasValue ? Value : elseValue;
         }
 
+        public Optional<TResult> IfValue<TResult>(Func<T, TResult> select)
+        {
+            if (HasValue)
+            {
+                return select(Value);
+            }
+            return Optional.Empty;
+        }
+
         internal static Optional<T> Of(T value)
         {
             if (value == null)

@@ -1,5 +1,5 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -7,7 +7,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly Random random;
 
-        public DeterministicBatchGenerator(Int3 batchId)
+        public DeterministicBatchGenerator(DTO.Int3 batchId)
         {
             random = new Random(batchId.GetHashCode());
         }
@@ -22,12 +22,12 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             return random.Next(min, max);
         }
 
-        public NitroxId NextId()
+        public DTO.NitroxId NextId()
         {
             byte[] bytes = new byte[16];
             random.NextBytes(bytes);
 
-            return new NitroxId(bytes);
+            return new DTO.NitroxId(bytes);
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class FabricatorBeginCrafting : Packet
     {
-        public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public DTO.NitroxId FabricatorId { get; }
+        public DTO.TechType TechType { get; }
         public float Duration { get; }
 
-        public FabricatorBeginCrafting(NitroxId fabricatorId, TechType techType, float duration)
+        public FabricatorBeginCrafting(DTO.NitroxId fabricatorId, DTO.TechType techType, float duration)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

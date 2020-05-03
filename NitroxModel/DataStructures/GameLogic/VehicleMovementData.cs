@@ -1,13 +1,31 @@
-﻿using ProtoBufNet;
-using System;
-using UnityEngine;
+﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
-    [ProtoContract]    
+    [ProtoContract]
     public class VehicleMovementData
     {
+        public VehicleMovementData()
+        {
+            // For serialization purposes
+        }
+
+        public VehicleMovementData(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, float health)
+        {
+            TechType = techType;
+            Id = id;
+            Position = position;
+            Rotation = rotation;
+            Velocity = velocity;
+            AngularVelocity = angularVelocity;
+            SteeringWheelYaw = steeringWheelYaw;
+            SteeringWheelPitch = steeringWheelPitch;
+            AppliedThrottle = appliedThrottle;
+            Health = health;
+        }
+
         [ProtoMember(1)]
         public TechType TechType { get; }
 
@@ -37,24 +55,5 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public float Health { get; }
-        
-        public VehicleMovementData()
-        {
-            // For serialization purposes
-        }
-
-        public VehicleMovementData(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle, float health)
-        {
-            TechType = techType;
-            Id = id;
-            Position = position;
-            Rotation = rotation;
-            Velocity = velocity;
-            AngularVelocity = angularVelocity;
-            SteeringWheelYaw = steeringWheelYaw;
-            SteeringWheelPitch = steeringWheelPitch;
-            AppliedThrottle = appliedThrottle;
-            Health = health;
-        }
     }
 }

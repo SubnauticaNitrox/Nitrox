@@ -1,11 +1,12 @@
 ﻿using System.Runtime.Serialization;
-using UnityEngine;
+using NitroxModel.DataStructures.Surrogates;
+using Color = NitroxModel.DataStructures.Color;
 
-namespace NitroxModel.DataStructures.Surrogates
+namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
-    public class ColorSurrogate : SerializationSurrogate<Color>
+    public class ColorSurrogate : SerializationSurrogate<UnityEngine.Color>
     {
-        protected override void GetObjectData(Color color, SerializationInfo info)
+        protected override void GetObjectData(UnityEngine.Color color, SerializationInfo info)
         {
             info.AddValue("r", color.r);
             info.AddValue("g", color.g);
@@ -13,7 +14,7 @@ namespace NitroxModel.DataStructures.Surrogates
             info.AddValue("a", color.a);
         }
 
-        protected override Color SetObjectData(Color color, SerializationInfo info)
+        protected override UnityEngine.Color SetObjectData(UnityEngine.Color color, SerializationInfo info)
         {
             color.r = info.GetSingle("r");
             color.g = info.GetSingle("g");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using NitroxModel.DataStructures;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 using NitroxModel.DataStructures.GameLogic;
@@ -9,7 +10,6 @@ namespace NitroxServer.Serialization
 {
     public class ServerProtobufSerializer
     {
-
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
         public ServerProtobufSerializer(params string[] assemblies)
@@ -41,14 +41,14 @@ namespace NitroxServer.Serialization
 
         private void RegisterHardCodedTypes()
         {
-            Model.Add(typeof(UnityEngine.Light), true);
-            Model.Add(typeof(UnityEngine.BoxCollider), true);
-            Model.Add(typeof(UnityEngine.SphereCollider), true);
-            Model.Add(typeof(UnityEngine.MeshCollider), true);
-            Model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(NitroxVector3));
-            Model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(NitroxQuaternion));
-            Model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
-            Model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
+            // Model.Add(typeof(UnityEngine.Light), true);
+            // Model.Add(typeof(UnityEngine.BoxCollider), true);
+            // Model.Add(typeof(UnityEngine.SphereCollider), true);
+            // Model.Add(typeof(UnityEngine.MeshCollider), true);
+            // Model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(Vector3));
+            // Model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(Quaternion));
+            // Model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
+            // Model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
         }
         
         private void RegisterAssemblyClasses(string assemblyName)

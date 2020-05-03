@@ -1,4 +1,4 @@
-﻿using NitroxModel.DataStructures;
+﻿using DTO = NitroxModel.DataStructures;
 using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(PlayerEquipmentRemoved packet, Player player)
         {
             string playerName = player.Name;
-            NitroxId itemId = packet.EquippedItemId;
+            DTO.NitroxId itemId = packet.EquippedItemId;
 
             player.RemoveEquipment(itemId);
 

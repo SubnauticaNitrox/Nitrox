@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -21,8 +25,8 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            Vector3 position = packet.PlayerSpawnData;
-            if (position.x == 0 && position.y == 0 && position.z == 0)
+            Vector3 position = packet.PlayerSpawnData.ToUnity();
+            if (Math.Abs(position.x) < 0.001 && Math.Abs(position.y) < 0.001 && Math.Abs(position.z) < 0.001)
             {
                 position = Player.mainObject.transform.position;
             }

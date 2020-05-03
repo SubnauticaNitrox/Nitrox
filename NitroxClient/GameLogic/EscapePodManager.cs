@@ -9,6 +9,8 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.DataStructures;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxClient.GameLogic
 {
@@ -39,8 +41,8 @@ namespace NitroxClient.GameLogic
         {
             Validate.NotNull(escapePod, "Escape pod can not be null");
 
-            EscapePod.main.transform.position = escapePod.Location;
-            EscapePod.main.playerSpawn.position = escapePod.Location + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
+            EscapePod.main.transform.position = escapePod.Location.ToUnity();
+            EscapePod.main.playerSpawn.position = escapePod.Location.ToUnity() + playerSpawnRelativeToEscapePodPosition; // This Might not correctly handle rotated EscapePods
 
             Rigidbody rigidbody = EscapePod.main.GetComponent<Rigidbody>();
             if (rigidbody != null)
@@ -95,7 +97,7 @@ namespace NitroxClient.GameLogic
                 escapePod = Object.Instantiate(EscapePod.main.gameObject);
             }
 
-            escapePod.transform.position = model.Location;
+            escapePod.transform.position = model.Location.ToUnity();
 
 
             StorageContainer storageContainer = escapePod.RequireComponentInChildren<StorageContainer>();

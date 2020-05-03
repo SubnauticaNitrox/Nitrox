@@ -1,16 +1,16 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PDAEntryAdd : Packet
     {
-        public TechType TechType;
+        public DTO.TechType TechType;
         public float Progress;
         public int Unlocked;
 
-        public PDAEntryAdd(TechType techType, float progress, int unlocked)
+        public PDAEntryAdd(DTO.TechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

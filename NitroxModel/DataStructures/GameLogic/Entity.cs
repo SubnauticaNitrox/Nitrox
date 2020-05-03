@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -16,46 +16,6 @@ namespace NitroxModel.DataStructures.GameLogic
         /// </summary>
         [ProtoMember(6)]
         public bool SpawnedByServer;
-
-        public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
-
-        [ProtoMember(1)]
-        public NitroxTransform Transform { get; set; }
-
-        [ProtoMember(2)]
-        public TechType TechType { get; set; }
-
-        [ProtoMember(3)]
-        public NitroxId Id { get; set; }
-
-        [ProtoMember(4)]
-        public int Level { get; set; }
-
-        [ProtoMember(5)]
-        public string ClassId { get; set; }
-
-        [ProtoMember(7)]
-        public NitroxId WaterParkId { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the the serialized GameObject for this entity which is used on the client-side to spawn it.
-        /// </summary>
-        /// <remarks>
-        ///     Used for player droppable items including items that hold metadata/state that a player can change and should be persisted on the server.
-        /// </remarks>
-        [ProtoMember(8)]
-        public byte[] SerializedGameObject { get; set; }
-
-        [ProtoMember(9)]
-        public bool ExistsInGlobalRoot { get; set; }
-
-        [ProtoMember(10)]
-        public NitroxId ParentId { get; set; }
-        
-        [ProtoMember(11)]
-        public EntityMetadata Metadata { get; set; }
-
-        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         public Entity()
         {
@@ -94,6 +54,47 @@ namespace NitroxModel.DataStructures.GameLogic
             SerializedGameObject = serializedGameObject;
             ExistsInGlobalRoot = existsInGlobalRoot;
         }
+
+        public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
+
+        [ProtoMember(1)]
+        public NitroxTransform Transform { get; set; }
+
+        [ProtoMember(2)]
+        public TechType TechType { get; set; }
+
+        [ProtoMember(3)]
+        public NitroxId Id { get; set; }
+
+        [ProtoMember(4)]
+        public int Level { get; set; }
+
+        [ProtoMember(5)]
+        public string ClassId { get; set; }
+
+        [ProtoMember(7)]
+        public NitroxId WaterParkId { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the the serialized GameObject for this entity which is used on the client-side to spawn it.
+        /// </summary>
+        /// <remarks>
+        ///     Used for player droppable items including items that hold metadata/state that a player can change and should be
+        ///     persisted on the server.
+        /// </remarks>
+        [ProtoMember(8)]
+        public byte[] SerializedGameObject { get; set; }
+
+        [ProtoMember(9)]
+        public bool ExistsInGlobalRoot { get; set; }
+
+        [ProtoMember(10)]
+        public NitroxId ParentId { get; set; }
+
+        [ProtoMember(11)]
+        public EntityMetadata Metadata { get; set; }
+
+        public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
         public override string ToString()
         {

@@ -1,12 +1,13 @@
 ﻿using System;
-using NitroxModel.Helper;
 using ProtoBufNet;
+using UnityEngine;
+using Mathf = NitroxModel.Helper.Mathf;
 
-namespace NitroxModel.DataStructures.GameLogic
+namespace NitroxModel.DataStructures
 {
     [ProtoContract]
     [Serializable]
-    public struct NitroxQuaternion
+    public struct Quaternion
     {
         [ProtoMember(1)]
         public float X;
@@ -20,7 +21,7 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(4)]
         public float W;
 
-        public NitroxQuaternion(float x, float y, float z, float w)
+        public Quaternion(float x, float y, float z, float w)
         {
             X = x;
             Y = y;
@@ -28,13 +29,13 @@ namespace NitroxModel.DataStructures.GameLogic
             W = w;
         }
 
-        public static NitroxQuaternion Normalize(NitroxQuaternion value)
+        public static Quaternion Normalize(Quaternion value)
         {
-            NitroxQuaternion ans;
+            Quaternion ans;
 
             float ls = value.X * value.X + value.Y * value.Y + value.Z * value.Z + value.W * value.W;
 
-            float invNorm = 1.0f / (float)Math.Sqrt((double)ls);
+            float invNorm = 1.0f / (float)Math.Sqrt(ls);
 
             ans.X = value.X * invNorm;
             ans.Y = value.Y * invNorm;
@@ -44,11 +45,11 @@ namespace NitroxModel.DataStructures.GameLogic
             return ans;
         }
 
-        public static NitroxQuaternion LookRotation(NitroxVector3 forward, NitroxVector3 up)
+        public static Quaternion LookRotation(Vector3 forward, Vector3 up)
         {
-            NitroxVector3 vector = NitroxVector3.Normalize(forward);
-            NitroxVector3 vector2 = NitroxVector3.Normalize(NitroxVector3.Cross(up, vector));
-            NitroxVector3 vector3 = NitroxVector3.Cross(vector, vector2);
+            Vector3 vector = Vector3.Normalize(forward);
+            Vector3 vector2 = Vector3.Normalize(Vector3.Cross(up, vector));
+            Vector3 vector3 = Vector3.Cross(vector, vector2);
             float m00 = vector2.X;
             float m01 = vector2.Y;
             float m02 = vector2.Z;
@@ -59,9 +60,8 @@ namespace NitroxModel.DataStructures.GameLogic
             float m21 = vector.Y;
             float m22 = vector.Z;
 
-
-            float num8 = (m00 + m11) + m22;
-            NitroxQuaternion quaternion;
+            float num8 = m00 + m11 + m22;
+            Quaternion quaternion;
             if (num8 > 0f)
             {
                 float num = Mathf.Sqrt(num8 + 1f);
@@ -72,9 +72,9 @@ namespace NitroxModel.DataStructures.GameLogic
                 quaternion.Z = (m01 - m10) * num;
                 return quaternion;
             }
-            if ((m00 >= m11) && (m00 >= m22))
+            if (m00 >= m11 && m00 >= m22)
             {
-                float num7 = Mathf.Sqrt(((1f + m00) - m11) - m22);
+                float num7 = Mathf.Sqrt(1f + m00 - m11 - m22);
                 float num4 = 0.5f / num7;
                 quaternion.X = 0.5f * num7;
                 quaternion.Y = (m01 + m10) * num4;
@@ -84,7 +84,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
             if (m11 > m22)
             {
-                float num6 = Mathf.Sqrt(((1f + m11) - m00) - m22);
+                float num6 = Mathf.Sqrt(1f + m11 - m00 - m22);
                 float num3 = 0.5f / num6;
                 quaternion.X = (m10 + m01) * num3;
                 quaternion.Y = 0.5f * num6;
@@ -92,7 +92,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 quaternion.W = (m20 - m02) * num3;
                 return quaternion;
             }
-            float num5 = Mathf.Sqrt(((1f + m22) - m00) - m11);
+            float num5 = Mathf.Sqrt(1f + m22 - m00 - m11);
             float num2 = 0.5f / num5;
             quaternion.X = (m20 + m02) * num2;
             quaternion.Y = (m21 + m12) * num2;
@@ -101,9 +101,9 @@ namespace NitroxModel.DataStructures.GameLogic
             return quaternion;
         }
 
-        public NitroxVector3 ToEuler()
+        public Vector3 ToEuler()
         {
-            NitroxVector3 result;
+            Vector3 result;
 
             float test = X * Y + Z * W;
             // singularity at north pole
@@ -127,16 +127,22 @@ namespace NitroxModel.DataStructures.GameLogic
                 result.Z = Mathf.RAD2DEG * Mathf.Asin(2 * X * Y + 2 * Z * W);
 
                 if (result.X < 0)
+                {
                     result.X += 360;
+                }
                 if (result.Y < 0)
+                {
                     result.Y += 360;
+                }
                 if (result.Z < 0)
+                {
                     result.Z += 360;
+                }
             }
             return result;
         }
 
-        public NitroxQuaternion(UnityEngine.Quaternion quaternion)
+        public Quaternion(UnityEngine.Quaternion quaternion)
         {
             X = quaternion.x;
             Y = quaternion.y;
@@ -144,22 +150,12 @@ namespace NitroxModel.DataStructures.GameLogic
             W = quaternion.w;
         }
 
-        public static NitroxQuaternion operator *(NitroxQuaternion lhs, NitroxQuaternion rhs)
+        public static Quaternion operator *(Quaternion lhs, Quaternion rhs)
         {
-            return new NitroxQuaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
-                lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
-                lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
-        }
-
-        public static implicit operator NitroxQuaternion(UnityEngine.Quaternion quaternion)
-        {
-            return new NitroxQuaternion(quaternion);
-        }
-
-        public static implicit operator UnityEngine.Quaternion(NitroxQuaternion quaternion)
-        {
-            return new UnityEngine.Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
+            return new Quaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
+                                        lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
+                                        lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
+                                        lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
         }
 
         public override string ToString()
@@ -167,7 +163,7 @@ namespace NitroxModel.DataStructures.GameLogic
             return "[Quaternion - {" + X + ", " + Y + ", " + Z + "," + W + "}]";
         }
 
-        public static NitroxQuaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)
+        public static Quaternion CreateFromYawPitchRoll(float yaw, float pitch, float roll)
         {
             //  Roll first, about axis the object is facing, then
             //  pitch upward, then yaw to face into the new heading
@@ -185,7 +181,7 @@ namespace NitroxModel.DataStructures.GameLogic
             sy = (float)Math.Sin(halfYaw);
             cy = (float)Math.Cos(halfYaw);
 
-            NitroxQuaternion result = new NitroxQuaternion();
+            Quaternion result = new Quaternion();
 
             result.X = cy * sp * cr + sy * cp * sr;
             result.Y = sy * cp * cr - cy * sp * sr;

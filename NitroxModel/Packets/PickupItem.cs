@@ -1,17 +1,16 @@
 ﻿using System;
-using UnityEngine;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PickupItem : Packet
     {
-        public NitroxId Id { get; }
-        public Vector3 ItemPosition { get; }
-        public TechType TechType { get; }
+        public DTO.NitroxId Id { get; }
+        public DTO.Vector3 ItemPosition { get; }
+        public DTO.TechType TechType { get; }
 
-        public PickupItem(Vector3 itemPosition, NitroxId id, TechType techType)
+        public PickupItem(DTO.Vector3 itemPosition, DTO.NitroxId id, DTO.TechType techType)
         {
             ItemPosition = itemPosition;
             Id = id;

@@ -13,9 +13,15 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
+using Color = UnityEngine.Color;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
+using DTO = NitroxModel.DataStructures;
+using Vector4 = UnityEngine.Vector4;
 
 namespace NitroxClient.GameLogic
 {
@@ -40,7 +46,7 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
-            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, vehicleModel.Health);            
+            CreateVehicle(vehicleModel.TechType.ToUnity(), vehicleModel.Id, vehicleModel.Position.ToUnity(), vehicleModel.Rotation.ToUnity(), vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB.ToUnity(), vehicleModel.Colours.ToUnity(), vehicleModel.Health);            
         }
 
         public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
@@ -66,10 +72,10 @@ namespace NitroxClient.GameLogic
 
         public void UpdateVehiclePosition(VehicleMovementData vehicleModel, Optional<RemotePlayer> player)
         {
-            Vector3 remotePosition = vehicleModel.Position;
-            Vector3 remoteVelocity = vehicleModel.Velocity;
-            Quaternion remoteRotation = vehicleModel.Rotation;
-            Vector3 angularVelocity = vehicleModel.AngularVelocity;
+            Vector3 remotePosition = vehicleModel.Position.ToUnity();
+            Vector3 remoteVelocity = vehicleModel.Velocity.ToUnity();
+            Quaternion remoteRotation = vehicleModel.Rotation.ToUnity();
+            Vector3 angularVelocity = vehicleModel.AngularVelocity.ToUnity();
 
             Vehicle vehicle = null;
             SubRoot subRoot = null;
@@ -105,7 +111,7 @@ namespace NitroxClient.GameLogic
                         if (vehicleModel.GetType() == typeof(ExosuitMovementData))
                         {
                             ExosuitMovementData exoSuitMovement = (ExosuitMovementData)vehicleModel;
-                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget, exoSuitMovement.RightAimTarget);
+                            mvc.SetArmPositions(exoSuitMovement.LeftAimTarget.ToUnity(), exoSuitMovement.RightAimTarget.ToUnity());
                         } else
                         {
                             Log.Error("Got exosuit vehicle but no ExosuitMovementData");
@@ -167,13 +173,13 @@ namespace NitroxClient.GameLogic
 
                 if (colours != null)
                 {
-                    Vector3[] colour = new Vector3[5];
+                    Vector3[] color = new Vector3[5];
 
                     for (int i = 0; i < hsb.Length; i++)
                     {
-                        colour[i] = hsb[i];
+                        color[i] = hsb[i];
                     }
-                    vehicle.vehicleColors = colour;
+                    vehicle.vehicleColors = color;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
 

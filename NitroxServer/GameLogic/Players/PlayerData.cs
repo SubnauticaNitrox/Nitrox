@@ -1,8 +1,8 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using ProtoBufNet;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.Util;
+using ProtoBufNet;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -13,7 +13,7 @@ namespace NitroxServer.GameLogic.Players
 
         [ProtoMember(1)]
         public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
-        
+
         public List<Player> GetPlayers()
         {
             List<Player> boPlayers = new List<Player>();
@@ -24,15 +24,15 @@ namespace NitroxServer.GameLogic.Players
                                            playerData.Name,
                                            playerData.IsPermaDeath,
                                            null, //no connection/context as this player is not connected.
-                                           null, 
-                                           playerData.SpawnPosition, 
-                                           playerData.NitroxId, 
-                                           NitroxModel.DataStructures.Util.Optional.OfNullable(playerData.SubRootId), 
-                                           playerData.Permissions, 
+                                           null,
+                                           playerData.SpawnPosition,
+                                           playerData.NitroxId,
+                                           Optional.OfNullable(playerData.SubRootId),
+                                           playerData.Permissions,
                                            playerData.CurrentStats,
-                                           playerData.EquippedItems, 
+                                           playerData.EquippedItems,
                                            playerData.Modules);
-                
+
                 boPlayers.Add(player);
             }
 
@@ -95,10 +95,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(9)]
             public NitroxId NitroxId { get; set; }
+
             [ProtoMember(10)]
             public bool IsPermaDeath { get; set; }
-
-
         }
     }
 }

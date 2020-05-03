@@ -1,7 +1,9 @@
 ﻿using System.Runtime.Serialization;
+using NitroxModel.DataStructures.Surrogates;
+using DTO = NitroxModel.DataStructures;
 using UnityEngine;
 
-namespace NitroxModel.DataStructures.Surrogates
+namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
     public class Vector3Surrogate : SerializationSurrogate<Vector3>
     {

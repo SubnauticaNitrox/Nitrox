@@ -6,9 +6,9 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel.Helper;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
-using NitroxModel_Subnautica.Helper;
+using DTO = NitroxModel.DataStructures;
 using System.Collections;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -57,13 +57,13 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
 
-        private void SetPDAEntryComplete(List<TechTypeModel> pdaEntryComplete)
+        private void SetPDAEntryComplete(List<DTO.TechType> pdaEntryComplete)
         {
             HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-            foreach (TechTypeModel item in pdaEntryComplete)
+            foreach (DTO.TechType item in pdaEntryComplete)
             {
-                complete.Add(item.Enum());
+                complete.Add(item.ToUnity());
             }
 
             Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
@@ -76,22 +76,22 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
+                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
             }
 
             Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
         }
         
-        private void SetKnownTech(List<TechTypeModel> techTypes)
+        private void SetKnownTech(List<DTO.TechType> techTypes)
         {
             Log.Info("Received initial sync packet with " + techTypes.Count + " known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                foreach (TechTypeModel techType in techTypes)
+                foreach (DTO.TechType techType in techTypes)
                 {
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                    KnownTech.Add(techType.Enum(), false);
+                    KnownTech.Add(techType.ToUnity(), false);
                 }
             }
         }

@@ -1,34 +1,22 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.NetworkingLayer;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxServer
 {
     public class Player : IProcessorContext
     {
-        private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
-        private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
-        public NitroxConnection connection { get; set; }
+        private readonly DTO.ThreadSafeCollection<EquippedItemData> equippedItems;
+        private readonly DTO.ThreadSafeCollection<EquippedItemData> modules;
+        private readonly DTO.ThreadSafeCollection<AbsoluteEntityCell> visibleCells = new DTO.ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
 
-        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
-        public PlayerContext PlayerContext { get; set; }
-        public ushort Id { get; }
-        public string Name { get; set; }
-        public bool IsPermaDeath { get; set; }
-        public Vector3 Position { get; set; }
-        public NitroxId GameObjectId { get; }
-        public Optional<NitroxId> SubRootId { get; set; }
-        public Perms Permissions { get; set; }
-        public PlayerStatsData Stats { get; set; }
-
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, DTO.Vector3 position, DTO.NitroxId playerId, Optional<DTO.NitroxId> subRootId, Perms perms, PlayerStatsData stats,
+                      IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
         {
             Id = id;
@@ -41,9 +29,22 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
-            this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
-            this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
+            this.equippedItems = new DTO.ThreadSafeCollection<EquippedItemData>(equippedItems);
+            this.modules = new DTO.ThreadSafeCollection<EquippedItemData>(modules);
         }
+
+        public NitroxConnection connection { get; set; }
+
+        public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
+        public PlayerContext PlayerContext { get; set; }
+        public ushort Id { get; }
+        public string Name { get; set; }
+        public bool IsPermaDeath { get; set; }
+        public DTO.Vector3 Position { get; set; }
+        public DTO.NitroxId GameObjectId { get; }
+        public Optional<DTO.NitroxId> SubRootId { get; set; }
+        public Perms Permissions { get; set; }
+        public PlayerStatsData Stats { get; set; }
 
         public static bool operator ==(Player left, Player right)
         {
@@ -103,7 +104,7 @@ namespace NitroxServer
             modules.Add(module);
         }
 
-        public void RemoveModule(NitroxId id)
+        public void RemoveModule(DTO.NitroxId id)
         {
             modules.RemoveAll(item => item.ItemId == id);
         }
@@ -118,7 +119,7 @@ namespace NitroxServer
             equippedItems.Add(equipment);
         }
 
-        public void RemoveEquipment(NitroxId id)
+        public void RemoveEquipment(DTO.NitroxId id)
         {
             equippedItems.RemoveAll(item => item.ItemId == id);
         }

@@ -118,7 +118,7 @@ namespace NitroxServer.GameLogic
                     false,
                     playerContext,
                     connection,
-                    NitroxVector3.Zero,
+                    Vector3.Zero,
                     new NitroxId(),
                     Optional.Empty,
                     Perms.PLAYER,

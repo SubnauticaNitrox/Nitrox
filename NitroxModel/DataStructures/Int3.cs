@@ -1,6 +1,6 @@
 ﻿using System;
 using ProtoBufNet;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.DataStructures
 {
@@ -12,15 +12,6 @@ namespace NitroxModel.DataStructures
     [ProtoContract]
     public class Int3
     {
-        [ProtoMember(1)]
-        public int X { get; set; }
-
-        [ProtoMember(2)]
-        public int Y { get; set; }
-
-        [ProtoMember(3)]
-        public int Z { get; set; }
-
         public Int3()
         {
             // For serialization purposes
@@ -33,6 +24,15 @@ namespace NitroxModel.DataStructures
             Z = z;
         }
 
+        [ProtoMember(1)]
+        public int X { get; set; }
+
+        [ProtoMember(2)]
+        public int Y { get; set; }
+
+        [ProtoMember(3)]
+        public int Z { get; set; }
+
         public override string ToString()
         {
             return "[Int3 - {" + X + ", " + Y + ", " + Z + "}]";
@@ -40,7 +40,7 @@ namespace NitroxModel.DataStructures
 
         public Vector3 ToVector3()
         {
-            return new Vector3((float)X, (float)Y, (float)Z);
+            return new Vector3(X, Y, Z);
         }
 
         public override bool Equals(object obj)
@@ -66,13 +66,13 @@ namespace NitroxModel.DataStructures
         public static Int3 Floor(float x, float y, float z)
         {
             return new Int3(Convert.ToInt32(Math.Floor(x)),
-                            Convert.ToInt32(Math.Floor(y)), 
+                            Convert.ToInt32(Math.Floor(y)),
                             Convert.ToInt32(Math.Floor(z)));
         }
 
         public static Int3 Floor(Vector3 vector)
         {
-            return Floor(vector.x, vector.y, vector.z);
+            return Floor(vector.X, vector.Y, vector.Z);
         }
 
         public static Int3 Ceil(float x, float y, float z)
@@ -84,7 +84,7 @@ namespace NitroxModel.DataStructures
 
         public static Int3 Ceil(Vector3 vector)
         {
-            return Ceil(vector.x, vector.y, vector.z);
+            return Ceil(vector.X, vector.Y, vector.Z);
         }
 
         public static Int3 operator <<(Int3 u, int s)
@@ -119,7 +119,7 @@ namespace NitroxModel.DataStructures
 
         public static Vector3 operator +(Int3 u, Vector3 v)
         {
-            return new Vector3((float)u.X + v.x, (float)u.Y + v.y, (float)u.Z + v.z);
+            return new Vector3(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
         }
 
         public static Int3 operator -(Int3 u, Int3 v)
@@ -151,6 +151,5 @@ namespace NitroxModel.DataStructures
         {
             return new Int3(u.X / s, u.Y / s, u.Z / s);
         }
-
     }
 }

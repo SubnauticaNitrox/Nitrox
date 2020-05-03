@@ -3,6 +3,7 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -14,10 +15,9 @@ namespace NitroxClient.Communication.Packets.Processors
         public override void Process(ItemPosition drop)
         {
             Optional<GameObject> opItem = NitroxEntity.GetObjectFrom(drop.Id);
-
             if (opItem.HasValue)
             {
-                MovementHelper.MoveRotateGameObject(opItem.Value, drop.Position, drop.Rotation, ITEM_TRANSFORM_SMOOTH_PERIOD);
+                MovementHelper.MoveRotateGameObject(opItem.Value, drop.Position.ToUnity(), drop.Rotation.ToUnity(), ITEM_TRANSFORM_SMOOTH_PERIOD);
             }
         }
     }

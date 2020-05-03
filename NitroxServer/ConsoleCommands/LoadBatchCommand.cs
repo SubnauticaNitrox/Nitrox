@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -24,7 +24,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            Int3 batchId = new Int3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
+            DTO.Int3 batchId = new DTO.Int3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
             SendMessage(args.Sender, $"Loaded {entities.Count} entities from batch {batchId}");

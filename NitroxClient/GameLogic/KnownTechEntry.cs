@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic
@@ -15,8 +16,7 @@ namespace NitroxClient.GameLogic
 
         public void Add(TechType techType, bool verbose)
         {
-            KnownTechEntryAdd EntryAdd = new KnownTechEntryAdd(techType.Model(), verbose);
-            packetSender.Send(EntryAdd);
+            packetSender.Send(new KnownTechEntryAdd(techType.ToDto(), verbose));
         }
     }
 }

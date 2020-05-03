@@ -48,7 +48,7 @@ namespace NitroxClient.GameLogic
             return playersById.Values;
         }
 
-        public RemotePlayer Create(PlayerContext playerContext, List<TechType> equippedTechTypes)
+        public RemotePlayer Create(PlayerContext playerContext, IEnumerable<TechType> equippedTechTypes)
         {
             Validate.NotNull(playerContext);
 

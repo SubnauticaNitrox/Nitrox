@@ -157,7 +157,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public static NitroxMatrix4x4 SetScale(NitroxVector3 localScale)
+        public static NitroxMatrix4x4 SetScale(Vector3 localScale)
         {
             NitroxMatrix4x4 scaleMatrix;
             scaleMatrix.M = new float[4, 4];
@@ -221,9 +221,9 @@ namespace NitroxModel.DataStructures.GameLogic
                    d * (e * jo_kn - f * io_km + g * in_jm);
         }
 
-        public static NitroxMatrix4x4 SetRotation(NitroxQuaternion localRotation)
+        public static NitroxMatrix4x4 SetRotation(Quaternion localRotation)
         {
-            NitroxQuaternion rot = NitroxQuaternion.Normalize(localRotation);
+            Quaternion rot = Quaternion.Normalize(localRotation);
             NitroxMatrix4x4 rotationMatrix;
             rotationMatrix.M = new float[4, 4];
             rotationMatrix[3, 3] = 1f;
@@ -259,7 +259,7 @@ namespace NitroxModel.DataStructures.GameLogic
             return rotationMatrix;
         }
 
-        public static NitroxMatrix4x4 SetTranslation(NitroxVector3 localPosition)
+        public static NitroxMatrix4x4 SetTranslation(Vector3 localPosition)
         {
             NitroxMatrix4x4 transMatrix;
             transMatrix.M = new float[4, 4];
@@ -277,9 +277,9 @@ namespace NitroxModel.DataStructures.GameLogic
             return transMatrix;
         }
 
-        public static NitroxVector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
+        public static Vector3 ExtractTranslation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 position;
+            Vector3 position;
             position.X = matrix[0, 3];
             position.Y = matrix[1, 3];
             position.Z = matrix[2, 3];
@@ -360,7 +360,7 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
-        public NitroxVector3 MultiplyPoint(NitroxVector3 localPosition)
+        public Vector3 MultiplyPoint(Vector3 localPosition)
         {
             float x = M[0, 0] * localPosition.X + M[0, 1] * localPosition.Y + M[0, 2] * localPosition.Z + M[0, 3];
             float y = M[1, 0] * localPosition.X + M[1, 1] * localPosition.Y + M[1, 2] * localPosition.Z + M[1, 3];
@@ -369,16 +369,16 @@ namespace NitroxModel.DataStructures.GameLogic
 
             if (w == 1)
             {
-                return new NitroxVector3(x, y, z);
+                return new Vector3(x, y, z);
             }
             else
             {
-                NitroxVector3 vector = new NitroxVector3(x, y, z) / w;
+                Vector3 vector = new Vector3(x, y, z) / w;
                 return vector;
             }
         }
 
-        public static NitroxMatrix4x4 TRS(NitroxVector3 localPos, NitroxQuaternion localRotation, NitroxVector3 localScale)
+        public static NitroxMatrix4x4 TRS(Vector3 localPos, Quaternion localRotation, Vector3 localScale)
         {
             NitroxMatrix4x4 scaleMatrix = SetScale(localScale);
             NitroxMatrix4x4 rotationMatrix = SetRotation(localRotation);
@@ -387,12 +387,12 @@ namespace NitroxModel.DataStructures.GameLogic
             return result;
         }
 
-        public static NitroxVector3 ExtractScale(ref NitroxMatrix4x4 matrix)
+        public static Vector3 ExtractScale(ref NitroxMatrix4x4 matrix)
         {
-            NitroxVector3 scale;
-            scale.X = NitroxVector3.Length(new NitroxVector3(matrix[0, 0], matrix[0, 1], matrix[0, 2]));
-            scale.Y = NitroxVector3.Length(new NitroxVector3(matrix[1, 0], matrix[1, 1], matrix[1, 2]));
-            scale.Z = NitroxVector3.Length(new NitroxVector3(matrix[2, 0], matrix[2, 1], matrix[2, 2]));
+            Vector3 scale;
+            scale.X = Vector3.Length(new Vector3(matrix[0, 0], matrix[0, 1], matrix[0, 2]));
+            scale.Y = Vector3.Length(new Vector3(matrix[1, 0], matrix[1, 1], matrix[1, 2]));
+            scale.Z = Vector3.Length(new Vector3(matrix[2, 0], matrix[2, 1], matrix[2, 2]));
 
             matrix[0, 0] /= scale.X;
             matrix[0, 1] /= scale.X;
@@ -409,9 +409,9 @@ namespace NitroxModel.DataStructures.GameLogic
             return scale;
         }
 
-        public static NitroxQuaternion ExtractRotation(ref NitroxMatrix4x4 matrix)
+        public static Quaternion ExtractRotation(ref NitroxMatrix4x4 matrix)
         {
-            NitroxQuaternion q = new NitroxQuaternion(0f, 0f, 0f, 1f);
+            Quaternion q = new Quaternion(0f, 0f, 0f, 1f);
 
             float trace = matrix[0,0] + matrix[1,1] + matrix[2,2];
             if (trace > 0)
@@ -450,12 +450,12 @@ namespace NitroxModel.DataStructures.GameLogic
                 }
             }
 
-            NitroxQuaternion.Normalize(q);
+            Quaternion.Normalize(q);
 
             return q;
         }
 
-        public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out NitroxVector3 localPosition, out NitroxQuaternion localRotation, out NitroxVector3 localScale)
+        public static void DecomposeMatrix(ref NitroxMatrix4x4 matrix, out Vector3 localPosition, out Quaternion localRotation, out Vector3 localScale)
         {
             NitroxMatrix4x4 before = new NitroxMatrix4x4(matrix);
 

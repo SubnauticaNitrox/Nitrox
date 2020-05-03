@@ -10,6 +10,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -45,7 +46,7 @@ namespace NitroxClient.GameLogic
 
                 if (go)
                 {
-                    update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position, gameObjectWithId.Value.transform.rotation);
+                    update.AddUpdate(gameObjectWithId.Key, gameObjectWithId.Value.transform.position.ToDto(), gameObjectWithId.Value.transform.rotation.ToDto());
                 }
             }
 
@@ -136,7 +137,7 @@ namespace NitroxClient.GameLogic
             {
                 return cellRootSpawner;
             }
-            TechType techType = entity.TechType.Enum();
+            TechType techType = entity.TechType.ToUnity();
             if (customSpawnersByTechType.ContainsKey(techType))
             {
                 return customSpawnersByTechType[techType];
@@ -154,9 +155,9 @@ namespace NitroxClient.GameLogic
                 return;
             }
             
-            opGameObject.Value.transform.position = entity.Transform.Position;
-            opGameObject.Value.transform.rotation = entity.Transform.Rotation;
-            opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
+            opGameObject.Value.transform.position = entity.Transform.Position.ToUnity();
+            opGameObject.Value.transform.rotation = entity.Transform.Rotation.ToUnity();
+            opGameObject.Value.transform.localScale = entity.Transform.LocalScale.ToUnity();
         }
         
         public bool WasSpawnedByServer(NitroxId id)

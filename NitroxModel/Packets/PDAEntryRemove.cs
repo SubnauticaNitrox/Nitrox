@@ -1,16 +1,16 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using NitroxTechType = NitroxModel.DataStructures.TechType;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class PDAEntryRemove : Packet
     {
-        public TechType TechType;
+        public NitroxTechType TechType;
         public float Progress;
         public int Unlocked;
 
-        public PDAEntryRemove(TechType techType, float progress, int unlocked)
+        public PDAEntryRemove(NitroxTechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

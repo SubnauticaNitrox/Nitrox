@@ -1,5 +1,6 @@
 ﻿using NitroxClient.Communication.Abstract;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic
@@ -15,26 +16,26 @@ namespace NitroxClient.GameLogic
 
         public void Add(PDAScanner.Entry entry)
         {
-            PDAEntryAdd EntryChanged = new PDAEntryAdd(entry.techType.Model(), entry.progress,entry.unlocked);
-            packetSender.Send(EntryChanged);
+            PDAEntryAdd entryChanged = new PDAEntryAdd(entry.techType.ToDto(), entry.progress,entry.unlocked);
+            packetSender.Send(entryChanged);
         }
 
         public void Progress(PDAScanner.Entry entry)
         {
-            PDAEntryProgress EntryChanged = new PDAEntryProgress(entry.techType.Model(), entry.progress, entry.unlocked);
-            packetSender.Send(EntryChanged);
+            PDAEntryProgress entryChanged = new PDAEntryProgress(entry.techType.ToDto(), entry.progress, entry.unlocked);
+            packetSender.Send(entryChanged);
         }
 
         public void Remove(PDAScanner.Entry entry)
         {
-            PDAEntryRemove EntryChanged = new PDAEntryRemove(entry.techType.Model(), entry.progress, entry.unlocked);
-            packetSender.Send(EntryChanged);
+            PDAEntryRemove entryChanged = new PDAEntryRemove(entry.techType.ToDto(), entry.progress, entry.unlocked);
+            packetSender.Send(entryChanged);
         }
 
         public void LogAdd(PDALog.Entry entry)
         {
-            PDALogEntryAdd EntryChanged = new PDALogEntryAdd(entry.data.key, entry.timestamp);
-            packetSender.Send(EntryChanged);
+            PDALogEntryAdd entryChanged = new PDALogEntryAdd(entry.data.key, entry.timestamp);
+            packetSender.Send(entryChanged);
         }
     }
 }

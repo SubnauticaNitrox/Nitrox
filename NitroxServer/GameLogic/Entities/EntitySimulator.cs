@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 
@@ -9,14 +9,14 @@ namespace NitroxServer.GameLogic.Entities
 {
     public class EntitySimulation
     {
-        private const SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = SimulationLockType.TRANSIENT;
+        private const DTO.SimulationLockType DEFAULT_ENTITY_SIMULATION_LOCKTYPE = DTO.SimulationLockType.TRANSIENT;
 
         private readonly EntityManager entityManager;
         private readonly PlayerManager playerManager;
-        private readonly HashSet<TechType> serverSpawnedSimulationWhiteList;
+        private readonly HashSet<DTO.TechType> serverSpawnedSimulationWhiteList;
         private readonly SimulationOwnershipData simulationOwnershipData;
 
-        public EntitySimulation(EntityManager entityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<TechType> serverSpawnedSimulationWhiteList)
+        public EntitySimulation(EntityManager entityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<DTO.TechType> serverSpawnedSimulationWhiteList)
         {
             this.entityManager = entityManager;
             this.simulationOwnershipData = simulationOwnershipData;
@@ -24,9 +24,9 @@ namespace NitroxServer.GameLogic.Entities
             this.serverSpawnedSimulationWhiteList = serverSpawnedSimulationWhiteList;
         }
 
-        public List<SimulatedEntity> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
+        public List<DTO.SimulatedEntity> CalculateSimulationChangesFromCellSwitch(Player player, AbsoluteEntityCell[] added, AbsoluteEntityCell[] removed)
         {
-            List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
+            List<DTO.SimulatedEntity> ownershipChanges = new List<DTO.SimulatedEntity>();
 
             AssignLoadedCellEntitySimulation(player, added, ownershipChanges);
 
@@ -36,9 +36,9 @@ namespace NitroxServer.GameLogic.Entities
             return ownershipChanges;
         }
 
-        public List<SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(Player player)
+        public List<DTO.SimulatedEntity> CalculateSimulationChangesFromPlayerDisconnect(Player player)
         {
-            List<SimulatedEntity> ownershipChanges = new List<SimulatedEntity>();
+            List<DTO.SimulatedEntity> ownershipChanges = new List<DTO.SimulatedEntity>();
 
             List<Entity> revokedEntities = RevokeAll(player);
             AssignEntitiesToNewPlayers(player, revokedEntities, ownershipChanges);
@@ -46,27 +46,27 @@ namespace NitroxServer.GameLogic.Entities
             return ownershipChanges;
         }
 
-        public SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player)
+        public DTO.SimulatedEntity AssignNewEntityToPlayer(Entity entity, Player player)
         {
             if (simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
             {
-                return new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
+                return new DTO.SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE);
             }
 
             throw new Exception("New entity was already being simulated by someone else: " + entity.Id);
         }
 
-        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<SimulatedEntity> ownershipChanges)
+        private void AssignLoadedCellEntitySimulation(Player player, AbsoluteEntityCell[] addedCells, List<DTO.SimulatedEntity> ownershipChanges)
         {
             List<Entity> entities = AssignForCells(player, addedCells);
 
             foreach (Entity entity in entities)
             {
-                ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+                ownershipChanges.Add(new DTO.SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
             }
         }
 
-        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<Entity> entities, List<SimulatedEntity> ownershipChanges)
+        private void AssignEntitiesToNewPlayers(Player oldPlayer, List<Entity> entities, List<DTO.SimulatedEntity> ownershipChanges)
         {
             foreach (Entity entity in entities)
             {
@@ -77,7 +77,7 @@ namespace NitroxServer.GameLogic.Entities
                     if (isOtherPlayer && player.CanSee(entity) && simulationOwnershipData.TryToAcquire(entity.Id, player, DEFAULT_ENTITY_SIMULATION_LOCKTYPE))
                     {
                         Log.Info("Player " + player.Name + " has taken over simulating " + entity.Id);
-                        ownershipChanges.Add(new SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
+                        ownershipChanges.Add(new DTO.SimulatedEntity(entity.Id, player.Id, true, DEFAULT_ENTITY_SIMULATION_LOCKTYPE));
                         return;
                     }
                 }
@@ -117,7 +117,7 @@ namespace NitroxServer.GameLogic.Entities
 
         private List<Entity> RevokeAll(Player player)
         {
-            List<NitroxId> revokedEntities = simulationOwnershipData.RevokeAllForOwner(player);
+            List<DTO.NitroxId> revokedEntities = simulationOwnershipData.RevokeAllForOwner(player);
 
             return entityManager.GetEntities(revokedEntities);
         }

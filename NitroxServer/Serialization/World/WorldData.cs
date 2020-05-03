@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Vehicles;
 using ProtoBufNet;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxServer.Serialization.World
 {
@@ -16,7 +16,7 @@ namespace NitroxServer.Serialization.World
         public const long VERSION = 1;
 
         [ProtoMember(1)]
-        public List<Int3> ParsedBatchCells { get; set; }
+        public List<DTO.Int3> ParsedBatchCells { get; set; }
 
         [ProtoMember(2)]
         public DateTime? ServerStartTime { get; set; }
@@ -41,15 +41,15 @@ namespace NitroxServer.Serialization.World
 
         public bool IsValid()
         {
-            return (ParsedBatchCells != null) && // Always returns false on empty saves
-                   (ServerStartTime.HasValue) &&
-                   (VehicleData != null) &&
-                   (InventoryData != null) &&
-                   (GameData != null) &&
-                   (EntityData != null) &&
-                   (EntityData.Entities.Count > 0) &&
-                   (EscapePodData != null) &&
-                   (StoryTimingData != null);
+            return ParsedBatchCells != null && // Always returns false on empty saves
+                   ServerStartTime.HasValue &&
+                   VehicleData != null &&
+                   InventoryData != null &&
+                   GameData != null &&
+                   EntityData != null &&
+                   EntityData.Entities.Count > 0 &&
+                   EscapePodData != null &&
+                   StoryTimingData != null;
         }
     }
 }

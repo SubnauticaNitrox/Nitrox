@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace NitroxModel.DataStructures.Surrogates
 {
-    public class QuaternionSurrogate : SerializationSurrogate<Quaternion>
+    public class QuaternionSurrogate : SerializationSurrogate<UnityEngine.Quaternion>
     {
-        protected override void GetObjectData(Quaternion quaternion, SerializationInfo info)
+        protected override void GetObjectData(UnityEngine.Quaternion quaternion, SerializationInfo info)
         {
             info.AddValue("w", quaternion.w);
             info.AddValue("x", quaternion.x);
@@ -13,7 +13,7 @@ namespace NitroxModel.DataStructures.Surrogates
             info.AddValue("z", quaternion.z);
         }
 
-        protected override Quaternion SetObjectData(Quaternion quaternion, SerializationInfo info)
+        protected override UnityEngine.Quaternion SetObjectData(UnityEngine.Quaternion quaternion, SerializationInfo info)
         {
             quaternion.w = info.GetSingle("w");
             quaternion.x = info.GetSingle("x");

@@ -1,8 +1,8 @@
 ﻿using System;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 
 namespace NitroxModel_Subnautica.Helper
@@ -11,7 +11,7 @@ namespace NitroxModel_Subnautica.Helper
     {
         public static VehicleModel BuildFrom(ConstructorBeginCrafting packet)
         {
-            switch (packet.TechType.Enum())
+            switch (packet.TechType.ToUnity())
             {
                 case TechType.Seamoth:
                     return new SeamothModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Colours, packet.Health);
@@ -23,7 +23,6 @@ namespace NitroxModel_Subnautica.Helper
                     return null;
                 default:
                     throw new Exception("Could not build from: " + packet.TechType);
-
             }
         }
     }

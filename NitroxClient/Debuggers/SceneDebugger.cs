@@ -9,12 +9,13 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Core;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using KeyCode = UnityEngine.KeyCode;
 using Mathf = UnityEngine.Mathf;
 
 namespace NitroxClient.Debuggers
@@ -620,9 +621,9 @@ namespace NitroxClient.Debuggers
                         style.fixedWidth = 250;
                         GUILayout.Box(img, style);
                     }
-                    else if (field.FieldType == typeof(NitroxId))
+                    else if (field.FieldType == typeof(DTO.NitroxId))
                     {
-                        GUILayout.Box(((NitroxId)field.GetValue(selectedMonoBehaviour)).ToString(), "options");
+                        GUILayout.Box(((DTO.NitroxId)field.GetValue(selectedMonoBehaviour)).ToString(), "options");
                     }
                     else if (field.FieldType == typeof(Int3))
                     {

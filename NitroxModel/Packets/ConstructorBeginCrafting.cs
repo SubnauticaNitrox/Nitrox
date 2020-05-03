@@ -1,28 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using DTO = NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures;
-using UnityEngine;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class ConstructorBeginCrafting : Packet
     {
-        public NitroxId ConstructorId { get; }
-        public NitroxId ConstructedItemId { get; }
-        public TechType TechType { get; }
-        public float Duration { get; }
-        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
-        public Vector3 Position { get; }
-        public Quaternion Rotation { get; }
-        public string Name { get; }
-        public Vector3[] HSB { get; }
-        public Vector3[] Colours { get; }
-        public float Health { get; }
-
-        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
-            string name, Vector3[] hsb, Vector3[] colours, float health)
+        public ConstructorBeginCrafting(DTO.NitroxId constructorId, DTO.NitroxId constructeditemId, DTO.TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, DTO.Vector3 position, DTO.Quaternion rotation,
+                                        string name, DTO.Vector3[] hsb, DTO.Vector3[] colours, float health)
         {
             ConstructorId = constructorId;
             ConstructedItemId = constructeditemId;
@@ -36,6 +23,18 @@ namespace NitroxModel.Packets
             Colours = colours;
             Health = health;
         }
+
+        public DTO.NitroxId ConstructorId { get; }
+        public DTO.NitroxId ConstructedItemId { get; }
+        public DTO.TechType TechType { get; }
+        public float Duration { get; }
+        public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
+        public DTO.Vector3 Position { get; }
+        public DTO.Quaternion Rotation { get; }
+        public string Name { get; }
+        public DTO.Vector3[] HSB { get; }
+        public DTO.Vector3[] Colours { get; }
+        public float Health { get; }
 
         public override string ToString()
         {

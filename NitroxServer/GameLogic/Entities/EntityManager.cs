@@ -1,25 +1,23 @@
-﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxServer.GameLogic.Entities.Spawning;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
-using NitroxModel.DataStructures;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.GameLogic.Entities
 {
     public class EntityManager
     {
+        private readonly BatchEntitySpawner batchEntitySpawner;
         private readonly Dictionary<NitroxId, Entity> entitiesById;
-
-        // Phasing entities can disappear if you go out of range. 
-        private readonly Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell;
 
         // Global root entities that are always visible.
         private readonly Dictionary<NitroxId, Entity> globalRootEntitiesById;
-        
-        private readonly BatchEntitySpawner batchEntitySpawner;
+
+        // Phasing entities can disappear if you go out of range. 
+        private readonly Dictionary<AbsoluteEntityCell, List<Entity>> phasingEntitiesByAbsoluteCell;
 
         public EntityManager(List<Entity> entities, BatchEntitySpawner batchEntitySpawner)
         {
@@ -43,8 +41,8 @@ namespace NitroxServer.GameLogic.Entities
 
             foreach (AbsoluteEntityCell cell in cells)
             {
-                List<Entity> cellEntities = GetEntities(cell);                
-                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));                                
+                List<Entity> cellEntities = GetEntities(cell);
+                entities.AddRange(cellEntities.Where(entity => cell.Level <= entity.Level));
             }
 
             return entities;
@@ -76,7 +74,7 @@ namespace NitroxServer.GameLogic.Entities
             {
                 return new List<Entity>(globalRootEntitiesById.Values);
             }
-        }        
+        }
 
         public List<Entity> GetEntities(AbsoluteEntityCell absoluteEntityCell)
         {
@@ -97,9 +95,9 @@ namespace NitroxServer.GameLogic.Entities
         {
             lock (entitiesById)
             {
-                return entitiesById.Join(ids, 
-                                         entity => entity.Value.Id, 
-                                         id => id, 
+                return entitiesById.Join(ids,
+                                         entity => entity.Value.Id,
+                                         id => id,
                                          (entity, id) => entity.Value)
                                    .ToList();
             }
@@ -201,9 +199,9 @@ namespace NitroxServer.GameLogic.Entities
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
+            IEnumerable<NitroxModel.DataStructures.Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach(Int3 batchId in distinctBatchIds)
+            foreach (NitroxModel.DataStructures.Int3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 

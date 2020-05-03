@@ -1,7 +1,7 @@
 ﻿using System;
 using NitroxModel.Helper;
 using ProtoBufNet;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -9,27 +9,6 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class AbsoluteEntityCell
     {
-        [ProtoMember(1)]
-        public Int3 BatchId { get; }
-
-        [ProtoMember(2)]
-        public Int3 CellId { get; }
-
-        [ProtoMember(3)]
-        public int Level { get; }
-
-        private Int3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
-        public Int3 Position => BatchPosition + CellId * GetCellSize();
-
-        public Int3 Center
-        {
-            get
-            {
-                Int3 cellSize = GetCellSize();
-                return BatchPosition + CellId * cellSize + (cellSize >> 1);
-            }
-        }
-
         public AbsoluteEntityCell()
         {
             // For serialization 
@@ -50,7 +29,28 @@ namespace NitroxModel.DataStructures.GameLogic
             BatchId = Int3.Floor(localPosition);
 
             Vector3 cell = (localPosition - BatchId.ToVector3()) * GetCellsPerBlock();
-            CellId = Int3.Floor(new Vector3(cell.x + 0.0001f, cell.y + 0.0001f, cell.z + 0.0001f));
+            CellId = Int3.Floor(new Vector3(cell.X + 0.0001f, cell.Y + 0.0001f, cell.Z + 0.0001f));
+        }
+
+        [ProtoMember(1)]
+        public Int3 BatchId { get; }
+
+        [ProtoMember(2)]
+        public Int3 CellId { get; }
+
+        [ProtoMember(3)]
+        public int Level { get; }
+
+        private Int3 BatchPosition => BatchId * Map.Main.BatchSize - Map.Main.BatchDimensionCenter;
+        public Int3 Position => BatchPosition + CellId * GetCellSize();
+
+        public Int3 Center
+        {
+            get
+            {
+                Int3 cellSize = GetCellSize();
+                return BatchPosition + CellId * cellSize + (cellSize >> 1);
+            }
         }
 
         public static bool operator ==(AbsoluteEntityCell left, AbsoluteEntityCell right)

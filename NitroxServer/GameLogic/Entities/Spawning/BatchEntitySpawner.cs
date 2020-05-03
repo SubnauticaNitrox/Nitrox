@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxServer.Serialization;
 using NitroxServer.Serialization.Resources.Datastructures;
-using UnityEngine;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -16,49 +15,21 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly BatchCellsParser batchCellsParser;
 
-        private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType;
-        private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
+        private readonly Dictionary<DTO.TechType, IEntityBootstrapper> customBootstrappersByTechType;
+        private readonly HashSet<DTO.Int3> emptyBatches = new HashSet<DTO.Int3>();
+        private readonly object emptyBatchesLock = new object();
+
+        private readonly object parsedBatchesLock = new object();
         private readonly Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId;
         private readonly UwePrefabFactory prefabFactory;
 
         private readonly UweWorldEntityFactory worldEntityFactory;
+        private HashSet<DTO.Int3> parsedBatches;
 
-        private readonly object parsedBatchesLock = new object();
-        private readonly object emptyBatchesLock = new object();
-        private HashSet<Int3> parsedBatches;
-
-        public List<Int3> SerializableParsedBatches
+        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<DTO.Int3> loadedPreviousParsed, ServerProtobufSerializer serializer,
+                                  Dictionary<DTO.TechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId)
         {
-            get
-            {
-                List<Int3> parsed;
-                List<Int3> empty;
-
-                lock (parsedBatchesLock)
-                {
-                    parsed = new List<Int3>(parsedBatches);
-                }
-
-                lock (emptyBatchesLock)
-                {
-                    empty = new List<Int3>(emptyBatches);
-                }
-
-                return parsed.Except(empty).ToList();
-            }
-            set
-            {
-                lock (parsedBatchesLock)
-                {
-                    parsedBatches = new HashSet<Int3>(value);
-                }
-            }
-        }
-
-        public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer,
-                                  Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, List<PrefabAsset>> placeholderPrefabsByGroupClassId)
-        {
-            parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
+            parsedBatches = new HashSet<DTO.Int3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
             this.prefabFactory = prefabFactory;
             this.customBootstrappersByTechType = customBootstrappersByTechType;
@@ -67,7 +38,35 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             batchCellsParser = new BatchCellsParser(entitySpawnPointFactory, serializer);
         }
 
-        public List<Entity> LoadUnspawnedEntities(Int3 batchId)
+        public List<DTO.Int3> SerializableParsedBatches
+        {
+            get
+            {
+                List<DTO.Int3> parsed;
+                List<DTO.Int3> empty;
+
+                lock (parsedBatchesLock)
+                {
+                    parsed = new List<DTO.Int3>(parsedBatches);
+                }
+
+                lock (emptyBatchesLock)
+                {
+                    empty = new List<DTO.Int3>(emptyBatches);
+                }
+
+                return parsed.Except(empty).ToList();
+            }
+            set
+            {
+                lock (parsedBatchesLock)
+                {
+                    parsedBatches = new HashSet<DTO.Int3>(value);
+                }
+            }
+        }
+
+        public List<Entity> LoadUnspawnedEntities(DTO.Int3 batchId)
         {
             lock (parsedBatches)
             {
@@ -113,7 +112,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         {
             List<UwePrefab> allowedPrefabs = FilterAllowedPrefabs(prefabs, entitySpawnPoint);
 
-            float rollingProbabilityDensity = allowedPrefabs.Sum(prefab => prefab.Probability / entitySpawnPoint.Density);
+            float rollingProbabilityDensity = Enumerable.Sum(allowedPrefabs, prefab => prefab.Probability / entitySpawnPoint.Density);
 
             if (rollingProbabilityDensity <= 0)
             {
@@ -128,19 +127,20 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             double rollingProbability = 0;
 
-            UwePrefab selectedPrefab = allowedPrefabs.FirstOrDefault(prefab =>
-            {
-                if (Math.Abs(prefab.Probability) < 0.0001)
-                {
-                    return false;
-                }
+            UwePrefab selectedPrefab = Enumerable.FirstOrDefault(allowedPrefabs,
+                                                                 prefab =>
+                                                                 {
+                                                                     if (Math.Abs(prefab.Probability) < 0.0001)
+                                                                     {
+                                                                         return false;
+                                                                     }
 
-                float probabilityDensity = prefab.Probability / entitySpawnPoint.Density;
+                                                                     float probabilityDensity = prefab.Probability / entitySpawnPoint.Density;
 
-                rollingProbability += probabilityDensity;
+                                                                     rollingProbability += probabilityDensity;
 
-                return rollingProbability >= randomNumber;
-            });
+                                                                     return rollingProbability >= randomNumber;
+                                                                 });
 
             if (selectedPrefab == null)
             {
@@ -210,7 +210,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, Vector3 scale, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
+        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, DTO.Vector3 scale, DTO.TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition,
                                               entitySpawnPoint.LocalRotation,
@@ -339,11 +339,11 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 
             if (prefabs.Count > 0)
             {
-                EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, entitySlot.AllowedTypes.ToList(), 1f, entitySlot.BiomeType);
+                EntitySpawnPoint entitySpawnPoint = new EntitySpawnPoint(parentEntity.AbsoluteEntityCell, transform.LocalPosition, transform.LocalRotation, Enumerable.ToList(entitySlot.AllowedTypes), 1f, entitySlot.BiomeType);
                 entities.AddRange(SpawnEntitiesUsingRandomDistribution(entitySpawnPoint, prefabs, deterministicBatchGenerator, parentEntity));
             }
 
-            return entities.FirstOrDefault();
+            return Enumerable.FirstOrDefault(entities);
         }
     }
 }

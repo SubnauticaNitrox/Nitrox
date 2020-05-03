@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using UnityEngine;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -11,15 +11,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public Vector3 LocalPosition;
 
         public Quaternion LocalRotation;
-        public AbsoluteEntityCell AbsoluteEntityCell { get; }
-        public Vector3 Scale { get; }
-        public string ClassId { get; }
-        public string BiomeType { get; }
-        public float Density { get; }
-        public bool CanSpawnCreature { get; private set; }
-        public List<string> AllowedTypes { get; }
-
-        public EntitySpawnPoint Parent { get; set; }
 
         public EntitySpawnPoint(AbsoluteEntityCell absoluteEntityCell, Vector3 localPosition, Quaternion localRotation, List<string> allowedTypes, float density, string biomeType)
         {
@@ -41,6 +32,19 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             LocalRotation = localRotation;
         }
 
-        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Local Position: {LocalPosition}, Local Rotation: {LocalRotation}, Scale: {Scale}, Class Id: {ClassId}, Biome Type: {BiomeType}, Density: {Density}, Can Spawn Creature: {CanSpawnCreature}]";
+        public AbsoluteEntityCell AbsoluteEntityCell { get; }
+        public Vector3 Scale { get; }
+        public string ClassId { get; }
+        public string BiomeType { get; }
+        public float Density { get; }
+        public bool CanSpawnCreature { get; private set; }
+        public List<string> AllowedTypes { get; }
+
+        public EntitySpawnPoint Parent { get; set; }
+
+        public override string ToString()
+        {
+            return $"[EntitySpawnPoint - {AbsoluteEntityCell}, Local Position: {LocalPosition}, Local Rotation: {LocalRotation}, Scale: {Scale}, Class Id: {ClassId}, Biome Type: {BiomeType}, Density: {Density}, Can Spawn Creature: {CanSpawnCreature}]";
+        }
     }
 }

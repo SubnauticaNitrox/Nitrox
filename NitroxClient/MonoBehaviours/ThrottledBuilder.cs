@@ -16,6 +16,8 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 using NitroxModel_Subnautica.Helper;
 using NitroxModel.DataStructures;
 using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxModel_Subnautica.DataStructures;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxClient.MonoBehaviours
 {
@@ -113,7 +115,7 @@ namespace NitroxClient.MonoBehaviours
         {
             Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " type: " + basePiecePlacedBuildEvent.BasePiece.TechType + " parentId: " + basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null));
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
-            GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
+            GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
             MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
             MultiplayerBuilder.overrideQuaternion = basePiece.Rotation;
             MultiplayerBuilder.overrideTransform = new GameObject().transform;

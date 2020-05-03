@@ -1,19 +1,12 @@
 ﻿using System;
-using UnityEngine;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class SeamothModulesAction : Packet
     {
-        public TechType TechType { get; }
-        public int SlotID { get; }
-        public NitroxId Id { get; }
-        public Vector3 Forward { get; }
-        public Quaternion Rotation { get; }
-
-        public SeamothModulesAction(TechType techType, int slotID, NitroxId id, Vector3 forward, Quaternion rotation)
+        public SeamothModulesAction(DTO.TechType techType, int slotID, DTO.NitroxId id, DTO.Vector3 forward, DTO.Quaternion rotation)
         {
             TechType = techType;
             SlotID = slotID;
@@ -21,6 +14,13 @@ namespace NitroxModel.Packets
             Forward = forward;
             Rotation = rotation;
         }
+
+        public DTO.TechType TechType { get; }
+        public int SlotID { get; }
+        public DTO.NitroxId Id { get; }
+        public DTO.Vector3 Forward { get; }
+        public DTO.Quaternion Rotation { get; }
+
         public override string ToString()
         {
             return "[SeamothModulesAction - TechType: " + TechType + " SlotID: " + SlotID + " Id:" + Id + " Forward: " + Forward + " Rotation: " + Rotation + "]";

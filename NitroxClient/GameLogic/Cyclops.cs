@@ -9,6 +9,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
 using UnityEngine;
@@ -389,15 +390,17 @@ namespace NitroxClient.GameLogic
 
                 if (info.HasValue)
                 {
-                    DamageInfo damage = info.Value;
+                    // TODO: Figure out why this is unused
+                    
+                    // DamageInfo damage = info.Value;
                     // Source of the damage. Used if the damage done to the Cyclops was not calculated on other clients. Currently it's just used to figure out what sounds and
                     // visual effects should be used.
-                    CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subId,
-                        damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
-                        damage.originalDamage,
-                        damage.damage,
-                        damage.position,
-                        damage.type);
+                    // CyclopsDamageInfoData serializedDamageInfo = new CyclopsDamageInfoData(subId,
+                    //     damage.dealer != null ? NitroxEntity.GetId(damage.dealer) : null,
+                    //     damage.originalDamage,
+                    //     damage.damage,
+                    //     damage.position.ToDto(),
+                    //     damage.type);
                 }
 
                 int[] damagePointIndexes = GetActiveDamagePoints(subRoot).ToArray();

@@ -3,6 +3,7 @@ using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             this.packetSender = packetSender;
         }
+
         public override void Process(SeamothModulesAction packet)
         {
             using (packetSender.Suppress<SeamothModulesAction>())
@@ -25,14 +27,14 @@ namespace NitroxClient.Communication.Packets.Processors
                 SeaMoth seamoth = _gameObject.GetComponent<SeaMoth>();
                 if (seamoth != null)
                 {
-                    TechType techType = packet.TechType.Enum();
+                    TechType techType = packet.TechType.ToUnity();
 
                     if (techType == TechType.SeamothElectricalDefense)
                     {
                         float[] chargearray = (float[])seamoth.ReflectionGet("quickSlotCharge");
                         float charge = chargearray[packet.SlotID];
                         float slotCharge = seamoth.GetSlotCharge(packet.SlotID);
-                        GameObject gameObject = global::Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform, false);
+                        GameObject gameObject = Utils.SpawnZeroedAt(seamoth.seamothElectricalDefensePrefab, seamoth.transform);
                         ElectricalDefense component = gameObject.GetComponent<ElectricalDefense>();
                         component.charge = charge;
                         component.chargeScalar = slotCharge;
@@ -40,7 +42,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
                     if (techType == TechType.SeamothTorpedoModule)
                     {
-                        Transform muzzle = (packet.SlotID != seamoth.GetSlotIndex("SeamothModule1") && packet.SlotID != seamoth.GetSlotIndex("SeamothModule3")) ? seamoth.torpedoTubeRight : seamoth.torpedoTubeLeft;
+                        Transform muzzle = packet.SlotID != seamoth.GetSlotIndex("SeamothModule1") && packet.SlotID != seamoth.GetSlotIndex("SeamothModule3") ? seamoth.torpedoTubeRight : seamoth.torpedoTubeLeft;
                         ItemsContainer storageInSlot = seamoth.GetStorageInSlot(packet.SlotID, TechType.SeamothTorpedoModule);
                         TorpedoType torpedoType = null;
 
@@ -54,7 +56,7 @@ namespace NitroxClient.Communication.Packets.Processors
                         }
 
                         //Original Function use Player Camera need parse owner camera values
-                        TorpedoShot(storageInSlot, torpedoType, muzzle,packet.Forward,packet.Rotation);
+                        TorpedoShot(storageInSlot, torpedoType, muzzle, packet.Forward.ToUnity(), packet.Rotation.ToUnity());
                     }
                 }
             }
@@ -65,12 +67,12 @@ namespace NitroxClient.Communication.Packets.Processors
         {
             if (torpedoType != null && container.DestroyItem(torpedoType.techType))
             {
-                GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>(torpedoType.prefab);
+                GameObject gameObject = Object.Instantiate(torpedoType.prefab);
                 Transform component = gameObject.GetComponent<Transform>();
                 SeamothTorpedo component2 = gameObject.GetComponent<SeamothTorpedo>();
                 Vector3 zero = Vector3.zero;
                 Rigidbody componentInParent = muzzle.GetComponentInParent<Rigidbody>();
-                Vector3 rhs = (!(componentInParent != null)) ? Vector3.zero : componentInParent.velocity;
+                Vector3 rhs = !(componentInParent != null) ? Vector3.zero : componentInParent.velocity;
                 float speed = Vector3.Dot(forward, rhs);
                 component2.Shoot(muzzle.position, rotation, speed, -1f);
 

@@ -2,7 +2,6 @@
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
-using UnityEngine;
 
 namespace NitroxModel_Subnautica.Packets
 {

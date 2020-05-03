@@ -1,15 +1,15 @@
 ﻿using System;
-using NitroxModel.DataStructures;
+using DTO = NitroxModel.DataStructures;
 
 namespace NitroxModel.Packets
 {
     [Serializable]
     public class FabricatorItemPickup : Packet
     {
-        public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public DTO.NitroxId FabricatorId { get; }
+        public DTO.TechType TechType { get; }
 
-        public FabricatorItemPickup(NitroxId fabricatorId, TechType techType)
+        public FabricatorItemPickup(DTO.NitroxId fabricatorId, DTO.TechType techType)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

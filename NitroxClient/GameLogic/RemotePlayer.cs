@@ -32,7 +32,7 @@ namespace NitroxClient.GameLogic
         public SubRoot SubRoot { get; private set; }
         public PilotingChair PilotingChair { get; private set; }
 
-        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, List<TechType> equippedTechTypes, PlayerModelManager playerModelManager)
+        public RemotePlayer(GameObject playerBody, PlayerContext playerContext, IEnumerable<TechType> equippedTechTypes, PlayerModelManager playerModelManager)
         {
             Body = playerBody;
             PlayerContext = playerContext;

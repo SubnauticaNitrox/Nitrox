@@ -5,6 +5,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -28,7 +29,7 @@ namespace NitroxPatcher.Patches.Dynamic
             
             NitroxId id;
 
-            string key = Base_ClearGeometry_Patch.getObjectKey(__result.name, __result.position);
+            string key = Base_ClearGeometry_Patch.GetObjectKey(__result.name, __result.position);
             
             if (Base_ClearGeometry_Patch.NitroxIdByObjectKey.TryGetValue(key, out id))
             {

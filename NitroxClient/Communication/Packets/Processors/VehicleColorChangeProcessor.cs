@@ -4,6 +4,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -29,7 +30,7 @@ namespace NitroxClient.Communication.Packets.Processors
                 subNameInput.SetSelected(colorPacket.Index);
 
                 // OnColorChange calls these two methods, in order to update the vehicle color and the color+text on the ingame panel, respectively:
-                subNameTarget.SetColor(colorPacket.Index, colorPacket.HSB, colorPacket.Color);
+                subNameTarget.SetColor(colorPacket.Index, colorPacket.HSB.ToUnity(), colorPacket.Color.ToUnity());
                 subNameInput.ReflectionCall("SetColor", args: new object[] { colorPacket.Index, colorPacket.Color });
             }
         }

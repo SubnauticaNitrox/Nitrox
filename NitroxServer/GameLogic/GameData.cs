@@ -1,8 +1,8 @@
-﻿using NitroxServer.GameLogic.Unlockables;
+﻿using System;
+using NitroxServer.GameLogic.Unlockables;
 using ProtoBufNet;
-using System;
 
-namespace NitroxServer.GameLogic.Bases
+namespace NitroxServer.GameLogic
 {
     [Serializable]
     [ProtoContract]

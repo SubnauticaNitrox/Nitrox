@@ -2,14 +2,16 @@
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using UnityEngine;
+using Color = UnityEngine.Color;
+using Vector3 = UnityEngine.Vector3;
 
 namespace NitroxClient.Debuggers
 {
     public class EntityDebugger : BaseDebugger
     {
-        private static Color labelBgColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
-        private static Color labelFgColor = Color.white;
-        private static float textXOffset = 20f;
+        private static readonly Color labelBgColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+        private static readonly Color labelFgColor = Color.white;
+        private static readonly float textXOffset = 20f;
         private static Texture2D lineTex;
 
         private static List<Rect> rects;
@@ -42,12 +44,15 @@ namespace NitroxClient.Debuggers
                 }
 
                 Vector3 screenPos = Player.main.viewModelCamera.WorldToScreenPoint(gameObject.transform.position);
-                if (screenPos.z > 0 && screenPos.z < 20 &&
-                    screenPos.x >= 0 && screenPos.x < Screen.width &&
-                    screenPos.y >= 0 && screenPos.y < Screen.height)
+                if (screenPos.z > 0 &&
+                    screenPos.z < 20 &&
+                    screenPos.x >= 0 &&
+                    screenPos.x < Screen.width &&
+                    screenPos.y >= 0 &&
+                    screenPos.y < Screen.height)
                 {
                     GUIStyle style = GUI.skin.label;
-                    GUIContent textContent = new GUIContent("ID " + id.ToString() + "   NAME " + gameObject.name);
+                    GUIContent textContent = new GUIContent("ID " + id + "   NAME " + gameObject.name);
                     Vector2 size = style.CalcSize(textContent);
                     size += new Vector2(10f, 0f); //for box edges
 
@@ -80,7 +85,7 @@ namespace NitroxClient.Debuggers
                     GUI.backgroundColor = labelBgColor;
                     GUI.color = labelFgColor;
                     GUI.Box(drawSize, textContent);
-                    
+
                     GUI.backgroundColor = oldBgColor;
                 }
             }
