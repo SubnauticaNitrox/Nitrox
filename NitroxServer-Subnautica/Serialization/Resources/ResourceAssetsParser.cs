@@ -115,15 +115,15 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         private static string FindDirectoryContainingResourceAssets()
         {
             List<string> errors = new List<string>();
-            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
-            if (!subnauticaPath.HasValue)
+            string subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
+            if (subnauticaPath == null)
             {
                 throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
             }
             
-            if (File.Exists(Path.Combine(subnauticaPath.Value, "Subnautica_Data", "resources.assets")))
+            if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
             {
-                return Path.Combine(subnauticaPath.Value, "Subnautica_Data");
+                return Path.Combine(subnauticaPath, "Subnautica_Data");
             }
             if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => Subnautica/Subnautica_Data/SubServer
             {

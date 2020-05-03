@@ -71,7 +71,7 @@ namespace NitroxLauncher
             logic.ServerStarted += ServerStarted;
             logic.ServerExited += ServerExited;
 
-            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame().OrElse(null))
+            logic.SetTargetedSubnauticaPath(GameInstallationFinder.Instance.FindGame())
                 .ContinueWith(task =>
                     {
                         if (logic.IsSubnauticaDirectory(task.Result))
