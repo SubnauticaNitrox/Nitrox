@@ -22,18 +22,23 @@ namespace NitroxClient.GameLogic.Spawning
             NitroxEntity.SetNewId(gameObject, entity.Id);
             CrafterLogic.NotifyCraftEnd(gameObject, techType);
 
-            if (parent.HasValue)
-            {
-                gameObject.transform.SetParent(parent.Value.transform, true);
-            }
-
             if (parent.HasValue && !parent.Value.GetComponent<LargeWorldEntityCell>())
             {
                 LargeWorldEntity.Register(gameObject); // This calls SetActive on the GameObject
             }
+            else if (gameObject.GetComponent<LargeWorldEntity>() != null && gameObject.transform.parent == null)
+            {
+                gameObject.transform.SetParent(cellRoot.liveRoot.transform, true);
+                LargeWorldEntity.Register(gameObject);
+            }
             else
             {
                 gameObject.SetActive(true);
+            }
+
+            if (parent.HasValue)
+            {
+                gameObject.transform.SetParent(parent.Value.transform, true);
             }
 
             Optional<EntityMetadataProcessor> metadataProcessor = EntityMetadataProcessor.FromMetaData(entity.Metadata);

@@ -21,6 +21,7 @@ namespace NitroxClient.GameLogic
 
         private readonly HashSet<NitroxId> alreadySpawnedIds = new HashSet<NitroxId>();
         private readonly Dictionary<Int3, BatchCells> batchCellsById;
+        private readonly Dictionary<NitroxId, List<Entity>> pendingParentEntitiesByParentId = new Dictionary<NitroxId, List<Entity>>();
 
         public Entities(IPacketSender packetSender)
         {
@@ -57,17 +58,23 @@ namespace NitroxClient.GameLogic
             {
                 LargeWorldStreamer.main.cellManager.UnloadBatchCells(ToInt3(entity.AbsoluteEntityCell.CellId)); // Just in case
 
-                if (!alreadySpawnedIds.Contains(entity.Id))
-                {
-                    Spawn(entity, Optional.Empty);
-                }
-                else
+                if (alreadySpawnedIds.Contains(entity.Id))
                 {
                     UpdatePosition(entity);
                 }
+                else if (entity.ParentId != null && !alreadySpawnedIds.Contains(entity.ParentId))
+                {
+                    AddPendingParentEntity(entity);
+                }
+                else
+                {
+                    Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.ParentId);
+                    Spawn(entity, parent);
+                    SpawnAnyPendingChildren(entity);
+                }
             }
         }
-
+        
         private EntityCell EnsureCell(Entity entity)
         {
             EntityCell entityCell;
@@ -119,9 +126,27 @@ namespace NitroxClient.GameLogic
             }
 		}
 
+        private void SpawnAnyPendingChildren(Entity entity)
+        {
+            List<Entity> pendingEntities;
+
+            if (pendingParentEntitiesByParentId.TryGetValue(entity.Id, out pendingEntities))
+            {
+                Optional<GameObject> parent = NitroxEntity.GetObjectFrom(entity.Id);
+
+                foreach (Entity child in pendingEntities)
+                {
+                    Spawn(entity, parent);
+                }
+
+                pendingParentEntitiesByParentId.Remove(entity.Id);
+            }
+        }
+
         private void UpdatePosition(Entity entity)
         {
             Optional<GameObject> opGameObject = NitroxEntity.GetObjectFrom(entity.Id);
+
             if (!opGameObject.HasValue)
             {
                 Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Transform: " + entity.Transform);
@@ -133,6 +158,19 @@ namespace NitroxClient.GameLogic
             opGameObject.Value.transform.localScale = entity.Transform.LocalScale;
         }
         
+        private void AddPendingParentEntity(Entity entity)
+        {
+            List<Entity> pendingEntities;
+
+            if (!pendingParentEntitiesByParentId.TryGetValue(entity.ParentId, out pendingEntities))
+            {
+                pendingEntities = new List<Entity>();
+                pendingParentEntitiesByParentId[entity.ParentId] = pendingEntities;
+            }
+
+            pendingEntities.Add(entity);
+        }
+
         public bool WasSpawnedByServer(NitroxId id)
         {
             return alreadySpawnedIds.Contains(id);
