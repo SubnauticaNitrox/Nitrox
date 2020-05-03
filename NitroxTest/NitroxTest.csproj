@@ -19,11 +19,10 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>bin\Release\</OutputPath>
+  <PropertyGroup>
+    <IsUnityLibrary>true</IsUnityLibrary>
+    <IsTestLibrary>true</IsTestLibrary>
+    <OutputPath>bin/$(Configuration)</OutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -48,6 +47,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -64,9 +65,6 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
-    </Compile>
     <Compile Include="Client\Communication\DeferredPacketReceiverTest.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionJoinedStateTests.cs" />
     <Compile Include="Client\Communication\MultiplayerSessionTests\ConnectionStateTests\ConnectionNegotiatedStateTests\SessionReservationRejectedStateTests.cs" />

@@ -116,13 +116,13 @@ namespace NitroxClient.MonoBehaviours
             Log.Info("BuildBasePiece " + basePiecePlacedBuildEvent.BasePiece.Id + " type: " + basePiecePlacedBuildEvent.BasePiece.TechType + " parentId: " + basePiecePlacedBuildEvent.BasePiece.ParentId.OrElse(null));
             BasePiece basePiece = basePiecePlacedBuildEvent.BasePiece;
             GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
-            MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
-            MultiplayerBuilder.overrideQuaternion = basePiece.Rotation;
+            MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
+            MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
             MultiplayerBuilder.overrideTransform = new GameObject().transform;
-            MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition;
-            MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation;
-            MultiplayerBuilder.placePosition = basePiece.ItemPosition;
-            MultiplayerBuilder.placeRotation = basePiece.Rotation;
+            MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition.ToUnity();
+            MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation.ToUnity();
+            MultiplayerBuilder.placePosition = basePiece.ItemPosition.ToUnity();
+            MultiplayerBuilder.placeRotation = basePiece.Rotation.ToUnity();
             MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
             MultiplayerBuilder.Begin(buildPrefab);
 

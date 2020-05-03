@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using System.Security.Principal;
 using System.Windows;
@@ -9,7 +10,8 @@ namespace NitroxLauncher
 {
     public class AppHelper
     {
-        public static string ProgramFileDirectory = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+        public static string ProgramFileDirectory { get; } = Environment.ExpandEnvironmentVariables("%ProgramW6432%");
+        public static string ServerExe { get; } = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location) ?? Directory.GetCurrentDirectory(), "Server", "NitroxServer-Subnautica.exe");
 
         public static bool IsAppRunningInAdmin()
         {
@@ -59,5 +61,4 @@ namespace NitroxLauncher
             }
         }
     }
-
 }

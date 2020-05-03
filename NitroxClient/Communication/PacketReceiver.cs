@@ -10,9 +10,13 @@ namespace NitroxClient.Communication
         private readonly NetworkDebugger networkDebugger;
         private readonly Queue<Packet> receivedPackets;
 
-        public PacketReceiver(NetworkDebugger networkDebugger = null)
+        public PacketReceiver()
         {
             receivedPackets = new Queue<Packet>();
+        }
+
+        public PacketReceiver(NetworkDebugger networkDebugger) : this()
+        {
             this.networkDebugger = networkDebugger;
         }
 

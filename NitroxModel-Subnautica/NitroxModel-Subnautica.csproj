@@ -14,16 +14,15 @@
     <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
+  <PropertyGroup>
+    <IsUnityLibrary>true</IsUnityLibrary>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Autofac.Configuration, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.Configuration.dll</HintPath>
-    </Reference>
-    <Reference Include="LitJSON, Version=0.16.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\LitJson.0.16.0\lib\net40\LitJSON.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\lib\protobuf-net.dll</HintPath>
@@ -36,9 +35,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
-    </Compile>
     <Compile Include="DataStructures\DataExtensions.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\CorridorRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseModuleRotationMetadata.cs" />
@@ -59,6 +55,7 @@
     <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
     <Compile Include="Helper\Int3Converter.cs" />
+    <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\VehicleModelFactory.cs" />
     <Compile Include="Helper\VehicleMovementFactory.cs" />
     <Compile Include="Logger\SubnauticaInGameLogger.cs" />

@@ -1,7 +1,6 @@
 ﻿using System;
+using NitroxModel.Helper;
 using ProtoBufNet;
-using UnityEngine;
-using Mathf = NitroxModel.Helper.Mathf;
 
 namespace NitroxModel.DataStructures
 {
@@ -142,20 +141,20 @@ namespace NitroxModel.DataStructures
             return result;
         }
 
-        public Quaternion(UnityEngine.Quaternion quaternion)
+        public Quaternion(Quaternion quaternion)
         {
-            X = quaternion.x;
-            Y = quaternion.y;
-            Z = quaternion.z;
-            W = quaternion.w;
+            X = quaternion.X;
+            Y = quaternion.Y;
+            Z = quaternion.Z;
+            W = quaternion.W;
         }
 
         public static Quaternion operator *(Quaternion lhs, Quaternion rhs)
         {
             return new Quaternion(lhs.W * rhs.X + lhs.X * rhs.W + lhs.Y * rhs.Z - lhs.Z * rhs.Y,
-                                        lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
-                                        lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
-                                        lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
+                                  lhs.W * rhs.Y + lhs.Y * rhs.W + lhs.Z * rhs.X - lhs.X * rhs.Z,
+                                  lhs.W * rhs.Z + lhs.Z * rhs.W + lhs.X * rhs.Y - lhs.Y * rhs.X,
+                                  lhs.W * rhs.W - lhs.X * rhs.X - lhs.Y * rhs.Y - lhs.Z * rhs.Z);
         }
 
         public override string ToString()

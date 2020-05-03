@@ -4,35 +4,33 @@ using NitroxClient.Communication;
 using NitroxClient.Map;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using NitroxTest.Model;
-using UnityEngine;
 
 namespace NitroxTest.Client.Communication
 {
     [TestClass]
     public class DeferredPacketReceiverTest
     {
-        private readonly VisibleCells visibleCells = new VisibleCells();
-        private PacketReceiver packetReceiver;
-
         // Test Data
         private const ushort PLAYER_ID = 1;
         private const int CELL_LEVEL = 3;
         private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
         private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
+        private readonly VisibleCells visibleCells = new VisibleCells();
         private AbsoluteEntityCell loadedCell;
-        private AbsoluteEntityCell unloadedCell;
-        private Int3 cellId = Int3.zero;
+        private PacketReceiver packetReceiver;
 
         [TestInitialize]
         public void TestInitialize()
         {
             packetReceiver = new PacketReceiver();
-            NitroxModel.Helper.Map.Main = new NitroxModel_Subnautica.Helper.SubnauticaMap();
+            Map.Main = new SubnauticaMap();
 
             loadedCell = new AbsoluteEntityCell(loadedActionPosition, CELL_LEVEL);
-            unloadedCell = new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
+            new AbsoluteEntityCell(unloadedActionPosition, CELL_LEVEL);
 
             visibleCells.Add(loadedCell);
         }

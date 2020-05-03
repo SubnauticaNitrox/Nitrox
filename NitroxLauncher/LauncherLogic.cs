@@ -171,7 +171,6 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
             nitroxEntryPatch.Remove();
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
@@ -184,9 +183,9 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
+            
+            SyncLibraries();
             SyncAssetBundles();
-            SyncMonoAssemblies();
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
 
             nitroxEntryPatch.Remove(); // Remove any previous instances first.
             nitroxEntryPatch.Apply();
@@ -201,10 +200,9 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
-
-            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
+            string serverPath = AppHelper.ServerExe;
             ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
+            startInfo.WorkingDirectory = Path.GetDirectoryName(serverPath);
 
             if (!standalone)
             {
@@ -332,44 +330,19 @@ namespace NitroxLauncher
                     TaskContinuationOptions.OnlyOnRanToCompletion);
         }
 
-        private void SyncAssembliesBetweenSubnauticaManagedAndLib()
+        private void SyncLibraries()
         {
-            string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
-            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
-
-            List<string> ignoreNitroxBinaries = new List<string>
+            string launcherLocation = AppDomain.CurrentDomain.BaseDirectory;
+            foreach (string dll in Directory.GetFileSystemEntries(launcherLocation, "*.dll").Select(Path.GetFileName))
             {
-                "NitroxModel.dll",
-                "NitroxServer.dll",
-                "NitroxServer-Subnautica.dll",
-                "NitroxModel-Subnautica.dll",
-                "NitroxPatcher.dll",
-                "NitroxClient.dll",
-                "0Harmony.dll",
-                "Autofac.dll",
-                "log4net.dll",
-                "protobuf-net.dll",
-                "LitJson.dll",
-                "dnlib.dll",
-                "AssetsTools.NET.dll",
-                "LiteNetLib.dll"
-            };
-            CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
-
-            List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
+                using (FileStream inDll = new FileStream(Path.Combine(launcherLocation, dll), FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (FileStream outDll = new FileStream(Path.Combine(NitroxUtils.SubnauticaManagedLibsPath, dll), FileMode.Create))
+                {
+                    inDll.CopyTo(outDll);
+                }
+            }
         }
-
-        private void SyncMonoAssemblies()
-        {
-            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
-            string launcherMonoPath = Path.Combine(libDirectory, "Mono");
-            string subnauticaMonoPath = Path.Combine(subnauticaPath, "MonoBleedingEdge");
-
-            List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(launcherMonoPath, subnauticaMonoPath, ignoreNoBinaries);
-        }
-
+        
         private void SyncAssetBundles()
         {
             string NormalizePath(string path)
@@ -398,54 +371,6 @@ namespace NitroxLauncher
                 string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
                 Log.Debug($"Copying asset file '{from}' to '{to}'");
                 File.Copy(from, to, true);
-            }
-        }
-
-        private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)
-        {
-            foreach (string sourceFilePath in Directory.GetFiles(source))
-            {
-                string fileName = Path.GetFileName(sourceFilePath);
-                if (dllsToIgnore.Contains(fileName))
-                {
-                    continue;
-                }
-
-                string destinationFilePath = Path.Combine(destination, fileName);
-                if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
-                {
-                    try
-                    {
-                        Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
-                        Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
-                        FileInfo destFileInfo = new FileInfo(destinationFilePath);
-                        FileInfo sourceFileInfo = new FileInfo(sourceFilePath);
-
-                        if (sourceVersion != destinationVersion || destFileInfo.LastWriteTime != sourceFileInfo.LastWriteTime)
-                        {
-                            File.Delete(destinationFilePath);
-                            File.Copy(sourceFilePath, destinationFilePath, true);
-                        }
-                    }
-                    catch (BadImageFormatException)
-                    {
-                        // note: discord-rpc.dll has no version information and will fail with BadImageFormatException.
-                        // This means the discord-rpc.dll is already present in the destination folder and will be ignored.
-                        // Only in case of other dll's the error will be logged.
-                        if (!fileName.Equals("discord-rpc.dll"))
-                        {
-                            Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error($"There was error during copying the assembly: {fileName}", e);
-                    }
-                }
-                else if (!File.Exists(destinationFilePath))
-                {
-                    File.Copy(sourceFilePath, destinationFilePath, true);
-                }
             }
         }
     }

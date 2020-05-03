@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.Debuggers.Interfaces;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.Debuggers
 {
-    public class NetworkDebugger : BaseDebugger
+    public class NetworkDebugger : BaseDebugger, IPacketSendListener
     {
         private const int PACKET_STORED_COUNT = 100;
         private readonly Dictionary<Type, int> countByType = new Dictionary<Type, int>();
@@ -30,7 +31,7 @@ namespace NitroxClient.Debuggers
             AddTab("Filter", RenderTabFilter);
         }
 
-        public void PacketSent(Packet packet)
+        public void OnPacketSent(Packet packet)
         {
             AddPacket(packet, true);
             sentCount++;

@@ -51,6 +51,7 @@ namespace NitroxClient
             containerBuilder.RegisterAssemblyTypes(currentAssembly)
                             .AssignableTo<BaseDebugger>()
                             .As<BaseDebugger>()
+                            .AsImplementedInterfaces()
                             .AsSelf()
                             .SingleInstance();
             

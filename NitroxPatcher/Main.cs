@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Autofac;
 using Harmony;
@@ -26,7 +27,7 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.EnableInGameMessages();
-
+            
             if (container != null)
             {
                 Log.Warn("Patches have already been detected! Call Apply or Restore instead.");

@@ -18,7 +18,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		DevVars.targets = DevVars.targets
 		SharedConfig.targets = SharedConfig.targets
-		tasks\DeployTask.targets = tasks\DeployTask.targets
+		AssemblyInfoCommon.cs = AssemblyInfoCommon.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NitroxModel-Subnautica", "NitroxModel-Subnautica\NitroxModel-Subnautica.csproj", "{0A377218-6B36-4522-89A3-A39CFC999209}"

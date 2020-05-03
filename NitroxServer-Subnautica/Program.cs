@@ -19,23 +19,10 @@ namespace NitroxServer_Subnautica
     {
         private static void Main(string[] args)
         {
-            // AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
-            // {
-            //     // Called when dll is missing. Try resolving to Subnautica lib directory.
-            //     string dllFileName = eventArgs.Name.Split(',')[0] + ".dll";
-            //     string dllPath = Path.Combine(NitroxUtils.SubnauticaManagedLibsPath, dllFileName);
-            //     if (File.Exists(dllPath))
-            //     {
-            //         Log.Debug($"Attempting to load dll: {dllPath}");
-            //         return Assembly.LoadFile(dllPath);
-            //     }
-            //     
-            //     return eventArgs.RequestingAssembly;
-            // };
-            
             ConfigureConsoleWindow();
             ConfigureCultureInfo();
-            
+            Log.Debug($"Launching with Subnautica path: {ConfigureDynamicAssemblyResolve(args?.Length > 0 ? args[0] : null)}");
+
             Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
@@ -66,6 +53,39 @@ namespace NitroxServer_Subnautica
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
+        }
+
+        private static string ConfigureDynamicAssemblyResolve(string subnauticaPath)
+        {
+            if (subnauticaPath == null)
+            {
+                subnauticaPath = NitroxUtils.SubnauticaManagedLibsPath;
+            }
+            if (!Directory.Exists(subnauticaPath))
+            {
+                throw new DirectoryNotFoundException($"Directory {subnauticaPath} does not exist.");
+            }
+
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            {
+                // Called when dll is missing. Try resolving to Subnautica lib directory.
+                string dllFileName = eventArgs.Name.Split(',')[0] + ".dll";
+                string dllPath = Path.Combine(subnauticaPath, dllFileName);
+                if (File.Exists(dllPath))
+                {
+                    Log.Debug($"Attempting to load dll: {dllPath}");
+                    return Assembly.LoadFile(dllPath);
+                }
+                
+                Console.WriteLine($"\nThe server cannot start because it's missing a dependency: {dllPath}");
+                Console.WriteLine("Press any key to continue..");
+                Console.ReadKey(true);
+                Environment.Exit(1);
+
+                return eventArgs.RequestingAssembly;
+            };
+
+            return subnauticaPath;
         }
 
         private static void ConfigureConsoleWindow()

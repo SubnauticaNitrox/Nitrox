@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -8,16 +7,35 @@ namespace NitroxModel.DataStructures.GameLogic
     [Serializable]
     public class NitroxTransform
     {
+        public Entity Entity;
+
         [ProtoMember(1)]
         public Vector3 LocalPosition;
 
         [ProtoMember(2)]
         public Quaternion LocalRotation;
-        
+
         [ProtoMember(3)]
         public Vector3 LocalScale;
 
-        public NitroxMatrix4x4 localToWorldMatrix 
+        public NitroxTransform Parent;
+
+        private NitroxTransform()
+        {
+        }
+
+        /// <summary>
+        ///     NitroxTransform is always attached to an Entity
+        /// </summary>
+        public NitroxTransform(Vector3 localPosition, Quaternion localRotation, Vector3 scale, Entity entity)
+        {
+            LocalPosition = localPosition;
+            LocalRotation = localRotation;
+            LocalScale = scale;
+            Entity = entity;
+        }
+
+        public NitroxMatrix4x4 localToWorldMatrix
         {
             get
             {
@@ -26,11 +44,9 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public NitroxTransform Parent;
-        public Entity Entity;
         public Vector3 Position
         {
-            get 
+            get
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
                 return matrix.MultiplyPoint(LocalPosition);
@@ -42,6 +58,7 @@ namespace NitroxModel.DataStructures.GameLogic
                 LocalPosition = NitroxMatrix4x4.ExtractTranslation(ref matrix);
             }
         }
+
         public Quaternion Rotation
         {
             get
@@ -63,27 +80,11 @@ namespace NitroxModel.DataStructures.GameLogic
         public void SetParent(NitroxTransform parent)
         {
             Parent = parent;
-            
-            
         }
 
         public void SetParent(NitroxTransform parent, bool worldPositionStays)
         {
             throw new NotImplementedException("This is not Implementwaed yet. Added by killzoms");
-        }
-
-        private NitroxTransform()
-        {}
-
-        /// <summary>
-        /// NitroxTransform is always attached to an Entity
-        /// </summary>
-        public NitroxTransform(Vector3 localPosition, Quaternion localRotation, Vector3 scale, Entity entity)
-        {
-            LocalPosition = localPosition;
-            LocalRotation = localRotation;
-            LocalScale = scale;
-            Entity = entity;
         }
 
         public override string ToString()

@@ -3,6 +3,7 @@ using LiteNetLib;
 using LiteNetLib.Utils;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.Debuggers;
+using NitroxClient.Debuggers.Interfaces;
 using NitroxClient.MonoBehaviours.Gui.InGame;
 using NitroxModel.Core;
 using NitroxModel.Logger;
@@ -18,14 +19,14 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
         private readonly NetPacketProcessor netPacketProcessor = new NetPacketProcessor();
         private readonly AutoResetEvent connectedEvent = new AutoResetEvent(false);
         private readonly PacketReceiver packetReceiver;
-        private readonly NetworkDebugger networkDebugger;
+        private readonly IPacketSendListener packetSendListener;
 
         private NetManager client;
 
-        public LiteNetLibClient(PacketReceiver packetReceiver, NetworkDebugger networkDebugger)
+        public LiteNetLibClient(PacketReceiver packetReceiver, IPacketSendListener packetSendListener)
         {
             this.packetReceiver = packetReceiver;
-            this.networkDebugger = networkDebugger;
+            this.packetSendListener = packetSendListener;
         }
 
         public void Start(string ipAddress, int serverPort)
@@ -53,7 +54,7 @@ namespace NitroxClient.Communication.NetworkingLayer.LiteNetLib
 
         public void Send(Packet packet)
         {
-            networkDebugger?.PacketSent(packet);
+            packetSendListener?.OnPacketSent(packet);
             client.SendToAll(netPacketProcessor.Write(packet.ToWrapperPacket()), NitroxDeliveryMethod.ToLiteNetLib(packet.DeliveryMethod));
             client.Flush();
         }

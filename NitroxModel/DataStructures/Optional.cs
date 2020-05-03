@@ -79,7 +79,7 @@ namespace NitroxModel.DataStructures.Util
         {
             if (HasValue)
             {
-                return select(Value);
+                return Optional.OfNullable(select(Value));
             }
             return Optional.Empty;
         }

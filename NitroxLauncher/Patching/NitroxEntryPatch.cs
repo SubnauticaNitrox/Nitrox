@@ -109,8 +109,6 @@ namespace NitroxLauncher.Patching
         private bool IsPatchApplied()
         {
             string gameInputPath = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);
-            string nitroxPatcherPath = Path.Combine(subnauticaManagedPath, NITROX_ASSEMBLY_NAME);
-
             using (ModuleDefMD module = ModuleDefMD.Load(gameInputPath))
             {
                 TypeDef gameInputType = module.GetTypes().First(x => x.FullName == GAME_INPUT_TYPE_NAME);

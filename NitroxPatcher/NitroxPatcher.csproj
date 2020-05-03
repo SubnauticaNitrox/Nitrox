@@ -21,6 +21,9 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\SharedConfig.targets" />
+  <PropertyGroup>
+    <IsUnityLibrary>true</IsUnityLibrary>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Lib.Harmony.1.2.0.1\lib\net35\0Harmony.dll</HintPath>
@@ -41,9 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />

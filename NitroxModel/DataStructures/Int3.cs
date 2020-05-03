@@ -24,6 +24,8 @@ namespace NitroxModel.DataStructures
             Z = z;
         }
 
+        public static Int3 Zero { get; } = new Int3(0, 0, 0);
+
         [ProtoMember(1)]
         public int X { get; set; }
 
