@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -16,10 +19,24 @@ namespace NitroxServer_Subnautica
     {
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, eventArgs) =>
+            {
+                // Called when dll is missing. Try resolving to Subnautica lib directory.
+                string dllFileName = eventArgs.Name.Split(',')[0] + ".dll";
+                string dllPath = Path.Combine(NitroxUtils.SubnauticaManagedLibsPath, dllFileName);
+                if (File.Exists(dllPath))
+                {
+                    Log.Debug($"Attempting to load dll: {dllPath}");
+                    return Assembly.LoadFile(dllPath);                     
+                }
+                
+                return eventArgs.RequestingAssembly;
+            };
+            
             ConfigureConsoleWindow();
             ConfigureCultureInfo();
             
-            NitroxModel.Helper.Map.Main = new SubnauticaMap();
+            Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
             NitroxServiceLocator.BeginNewLifetimeScope();

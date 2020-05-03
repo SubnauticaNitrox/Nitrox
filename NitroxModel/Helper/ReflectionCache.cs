@@ -7,54 +7,66 @@ namespace NitroxModel.Helper
     public static class ReflectionCache
     {
         private static readonly Dictionary<ReflectionKey, Delegate> cache = new Dictionary<ReflectionKey, Delegate>();
-        
-        public static Func<TReturn> GetReturn<TReturn>(string methodName, object instance)
+
+        private static readonly BindingFlags searchForEverytingUsefulFlags = BindingFlags.Instance |
+                                                                             BindingFlags.Public |
+                                                                             BindingFlags.NonPublic |
+                                                                             BindingFlags.SetField |
+                                                                             BindingFlags.SetProperty |
+                                                                             BindingFlags.GetField |
+                                                                             BindingFlags.GetProperty |
+                                                                             BindingFlags.InvokeMethod;
+
+        public static Func<object, TReturn> InstanceMethod<TReturn>(string methodName, object instance)
         {
             Type instanceType = instance.GetType();
-            Type returnType = typeof(TReturn);
             Delegate del;
-            if (cache.TryGetValue(new ReflectionKey(instanceType, returnType), out del))
+            if (cache.TryGetValue(new ReflectionKey(instanceType, methodName), out del))
             {
-                return (Func<TReturn>)del;
+                return (Func<object, TReturn>)del;
             }
-            
-            MethodInfo methodInfo = instanceType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
+
+            MethodInfo methodInfo = instanceType.GetMethod(methodName, searchForEverytingUsefulFlags);
             if (methodInfo == null)
             {
+                cache[new ReflectionKey(instanceType, methodName)] = null; // Cache that this type doesn't have the method
                 return null;
             }
-            Func<TReturn> result = (Func<TReturn>) Delegate.CreateDelegate(typeof(Func<TReturn>), instance, methodInfo);
-            cache[new ReflectionKey(instanceType, returnType)] = result;
+            Func<object, TReturn> result = (Func<object, TReturn>)Delegate.CreateDelegate(typeof(Func<TReturn>), instanceType, methodInfo);
+            cache[new ReflectionKey(instanceType, methodName)] = result;
             return result;
         }
 
         private struct ReflectionKey
         {
             public Type InstanceType { get; }
-            public Type ResultType { get; }
+            public string MethodName { get; }
 
-            public ReflectionKey(Type instanceType, Type resultType)
+            public ReflectionKey(Type instanceType, string methodName)
             {
                 InstanceType = instanceType;
-                ResultType = resultType;
+                MethodName = methodName;
             }
 
             public bool Equals(ReflectionKey other)
             {
-                return Equals(InstanceType, other.InstanceType) && Equals(ResultType, other.ResultType);
+                return InstanceType == other.InstanceType && MethodName == other.MethodName;
             }
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                return obj is ReflectionKey && Equals((ReflectionKey) obj);
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+                return obj is ReflectionKey && Equals((ReflectionKey)obj);
             }
 
             public override int GetHashCode()
             {
                 unchecked
                 {
-                    return ((InstanceType != null ? InstanceType.GetHashCode() : 0) * 397) ^ (ResultType != null ? ResultType.GetHashCode() : 0);
+                    return ((InstanceType != null ? InstanceType.GetHashCode() : 0) * 397) ^ (MethodName != null ? MethodName.GetHashCode() : 0);
                 }
             }
 

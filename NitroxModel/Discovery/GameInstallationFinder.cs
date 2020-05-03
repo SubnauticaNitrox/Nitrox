@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery.InstallationFinders;
 
@@ -17,8 +18,8 @@ namespace NitroxModel.Discovery
         private readonly IFindGameInstallation[] finders = {
             new GameInCurrentDirectoryFinder(),
             new ConfigFileGameFinder(),
-            new EpicGamesInstallationFinder(),
             new SteamGameRegistryFinder(),
+            new EpicGamesInstallationFinder(),
         };
         
         /// <summary>
@@ -42,7 +43,7 @@ namespace NitroxModel.Discovery
                 }
                 
                 errors?.Clear();
-                return path;
+                return Path.GetFullPath(path.Value); // Make path separators consistent
             }
 
             return Optional.Empty;

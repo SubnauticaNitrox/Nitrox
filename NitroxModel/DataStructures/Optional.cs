@@ -29,7 +29,15 @@ namespace NitroxModel.DataStructures.Util
         {
             get
             {
-                return !IsDestroyedUnityObjectOrNull(Value) && hasValue;
+                if (ReferenceEquals(Value, null))
+                {
+                    return false;
+                }
+                if (IsDestroyedUnityObject(Value))
+                {
+                    return false;
+                }
+                return hasValue;
             }
             set
             {
@@ -37,24 +45,23 @@ namespace NitroxModel.DataStructures.Util
             }
         }
 
-        private static bool IsDestroyedUnityObjectOrNull<TValue>(TValue value)
+        private static bool IsDestroyedUnityObject(T value)
         {
             // Check to satisfy unity objects. Sometimes they are internally destroyed but are not considered null.
             // For the purpose of optional, we consider a dead object to be the same as null.
-            if (ReferenceEquals(value, null))
-            {
-                return true;
-            }
-            return value.ToString() == "null";
-            // bool isUnityObject = typeof(TValue).GetMethod("GetCachedPtr", BindingFlags.Instance | BindingFlags.NonPublic) != null;
-            // return isUnityObject && !(bool)(object) value;
-            // return GetUnityObjectPtr(value) == IntPtr.Zero;
+            return NitroxUtils.IsUnityApiAvailable && GetUnityObjectInstanceID(value) == 0;
         }
 
-        private static IntPtr? GetUnityObjectPtr(object value)
+        private static int? GetUnityObjectInstanceID(T value)
         {
-            Func<IntPtr> method = ReflectionCache.GetReturn<IntPtr>("GetCachedPtr", value);
-            return method?.Invoke();
+            Func<object, int> method = ReflectionCache.InstanceMethod<int>("GetInstanceID", value);
+            if (method == null)
+            {
+                // Not a unity object, should be higher than 0 because it's a valid instance.
+                return 1;
+            }
+
+            return method.Invoke(value);
         }
 
         private Optional(T value)
@@ -80,17 +87,17 @@ namespace NitroxModel.DataStructures.Util
 
         internal static Optional<T> OfNullable(T value)
         {
-            if (IsDestroyedUnityObjectOrNull(value))
+            if (ReferenceEquals(value, null) || IsDestroyedUnityObject(value))
             {
                 return Optional.Empty;
             }
-            return Equals(default(T), value) ? Optional.Empty : new Optional<T>(value);
+            return new Optional<T>(value);
         }
 
         public override string ToString()
         {
-            string str = Value != null ? Value.ToString() : "Nothing";
-            return $"Optional Contains: {str}";
+            bool hasPtrMethod = ReflectionCache.InstanceMethod<IntPtr>("GetCachedPtr", Value) != null;
+            return $"Optional<{typeof(T)}> has value: {HasValue}, is null: {Value == null}, has ptr method: {hasPtrMethod}, Unity ptr: {GetUnityObjectInstanceID(Value)}";
         }
 
         private Optional(SerializationInfo info, StreamingContext context)
@@ -138,7 +145,7 @@ namespace NitroxModel.DataStructures.Util
     public static class Optional
     {
         internal static readonly object[] EmptyArray = new object[0];
-        internal static Func<object, int> CachedGetInstanceIDDelegate; 
+        internal static Func<object, int> CachedGetInstanceIDDelegate;
 
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
