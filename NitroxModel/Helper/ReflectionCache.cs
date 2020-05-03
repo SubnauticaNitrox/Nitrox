@@ -17,13 +17,13 @@ namespace NitroxModel.Helper
                                                                              BindingFlags.GetProperty |
                                                                              BindingFlags.InvokeMethod;
 
-        public static Func<object, TReturn> InstanceMethod<TReturn>(string methodName, object instance)
+        public static Func<TIn, TReturn> InstanceMethod<TIn, TReturn>(string methodName, TIn instance)
         {
             Type instanceType = instance.GetType();
             Delegate del;
             if (cache.TryGetValue(new ReflectionKey(instanceType, methodName), out del))
             {
-                return (Func<object, TReturn>)del;
+                return (Func<TIn, TReturn>)del;
             }
 
             MethodInfo methodInfo = instanceType.GetMethod(methodName, searchForEverytingUsefulFlags);
@@ -32,7 +32,8 @@ namespace NitroxModel.Helper
                 cache[new ReflectionKey(instanceType, methodName)] = null; // Cache that this type doesn't have the method
                 return null;
             }
-            Func<object, TReturn> result = (Func<object, TReturn>)Delegate.CreateDelegate(typeof(Func<TReturn>), instanceType, methodInfo);
+            
+            Func<TIn, TReturn> result = (Func<TIn, TReturn>)Delegate.CreateDelegate(typeof(Func<TIn, TReturn>), null, methodInfo);
             cache[new ReflectionKey(instanceType, methodName)] = result;
             return result;
         }

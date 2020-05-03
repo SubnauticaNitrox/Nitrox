@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using NitroxModel.DataStructures;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxServer.UnityStubs;
 
 namespace NitroxServer.Serialization
 {
@@ -41,14 +43,15 @@ namespace NitroxServer.Serialization
 
         private void RegisterHardCodedTypes()
         {
-            // Model.Add(typeof(UnityEngine.Light), true);
-            // Model.Add(typeof(UnityEngine.BoxCollider), true);
-            // Model.Add(typeof(UnityEngine.SphereCollider), true);
-            // Model.Add(typeof(UnityEngine.MeshCollider), true);
-            // Model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(Vector3));
-            // Model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(Quaternion));
-            // Model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
-            // Model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
+            Assembly unity = AppDomain.CurrentDomain.GetAssemblies().First(assembly => assembly.GetName().Name == "UnityEngine");
+            Model.Add(unity.GetType("UnityEngine.Light"), true);
+            Model.Add(unity.GetType("UnityEngine.BoxCollider"), true);
+            Model.Add(unity.GetType("UnityEngine.SphereCollider"), true);
+            Model.Add(unity.GetType("UnityEngine.MeshCollider"), true);
+            Model.Add(unity.GetType("UnityEngine.Vector3"), false).SetSurrogate(typeof(Vector3));
+            Model.Add(unity.GetType("UnityEngine.Quaternion"), false).SetSurrogate(typeof(Quaternion));
+            Model.Add(unity.GetType("UnityEngine.Transform"), false).SetSurrogate(typeof(NitroxTransform));
+            Model.Add(unity.GetType("UnityEngine.GameObject"), false).SetSurrogate(typeof(GameObject));            
         }
         
         private void RegisterAssemblyClasses(string assemblyName)

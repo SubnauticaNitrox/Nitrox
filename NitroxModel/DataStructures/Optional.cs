@@ -54,7 +54,7 @@ namespace NitroxModel.DataStructures.Util
 
         private static int? GetUnityObjectInstanceID(T value)
         {
-            Func<object, int> method = ReflectionCache.InstanceMethod<int>("GetInstanceID", value);
+            Func<T, int> method = ReflectionCache.InstanceMethod<T, int>("GetInstanceID", value);
             if (method == null)
             {
                 // Not a unity object, should be higher than 0 because it's a valid instance.
@@ -105,7 +105,7 @@ namespace NitroxModel.DataStructures.Util
 
         public override string ToString()
         {
-            bool hasPtrMethod = ReflectionCache.InstanceMethod<IntPtr>("GetCachedPtr", Value) != null;
+            bool hasPtrMethod = ReflectionCache.InstanceMethod<T, IntPtr>("GetCachedPtr", Value) != null;
             return $"Optional<{typeof(T)}> has value: {HasValue}, is null: {Value == null}, has ptr method: {hasPtrMethod}, Unity ptr: {GetUnityObjectInstanceID(Value)}";
         }
 
