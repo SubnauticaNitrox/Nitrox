@@ -9,9 +9,9 @@ using UnityEngine;
 
 namespace NitroxServer_Subnautica.Serialization
 {
-    class SubnauticaServerProtobufSerializer : ServerProtoBufSerializer
+    class SubnauticaServerProtoBufSerializer : ServerProtoBufSerializer
     {
-        public SubnauticaServerProtobufSerializer(params string[] assemblies) : base(assemblies)
+        public SubnauticaServerProtoBufSerializer(params string[] assemblies) : base(assemblies)
         {
             RegisterHardCodedTypes();
         }
