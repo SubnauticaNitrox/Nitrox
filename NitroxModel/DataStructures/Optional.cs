@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using NitroxModel.Helper;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.Util
@@ -28,11 +29,14 @@ namespace NitroxModel.DataStructures.Util
         {
             get
             {
-                if (IsDestroyedUnityObjectOrNull(Value))
+                if (ReferenceEquals(Value, null))
                 {
                     return false;
                 }
-
+                if (IsDestroyedUnityObject(Value))
+                {
+                    return false;
+                }
                 return hasValue;
             }
             set
@@ -40,21 +44,24 @@ namespace NitroxModel.DataStructures.Util
                 hasValue = value;
             }
         }
-        
-        private static bool IsDestroyedUnityObjectOrNull<TValue>(TValue value)
+
+        private static bool IsDestroyedUnityObject(T value)
         {
             // Check to satisfy unity objects. Sometimes they are internally destroyed but are not considered null.
             // For the purpose of optional, we consider a dead object to be the same as null.
-            if (ReferenceEquals(value, null))
+            return NitroxUtils.IsUnityApiAvailable && GetUnityObjectInstanceID(value) == 0;
+        }
+
+        private static int? GetUnityObjectInstanceID(T value)
+        {
+            Func<T, int> method = ReflectionCache.InstanceMethod<T, int>("GetInstanceID", value);
+            if (method == null)
             {
-                return true;
-            }
-            else if (value is UnityEngine.Object)
-            {
-                return value?.ToString() == "null";
+                // Not a unity object, should be higher than 0 because it's a valid instance.
+                return 1;
             }
 
-            return false;
+            return method.Invoke(value);
         }
 
         private Optional(T value)
@@ -80,11 +87,11 @@ namespace NitroxModel.DataStructures.Util
 
         internal static Optional<T> OfNullable(T value)
         {
-            if (IsDestroyedUnityObjectOrNull(value))
+            if (ReferenceEquals(value, null) || IsDestroyedUnityObject(value))
             {
                 return Optional.Empty;
             }
-            return Equals(default(T), value) ? Optional.Empty : new Optional<T>(value);
+            return new Optional<T>(value);
         }
 
         public override string ToString()

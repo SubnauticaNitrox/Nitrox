@@ -270,7 +270,9 @@
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Helper\Mathf.cs" />
+    <Compile Include="Helper\NitroxUtils.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
+    <Compile Include="Helper\ReflectionCache.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\IPHelper.cs" />
