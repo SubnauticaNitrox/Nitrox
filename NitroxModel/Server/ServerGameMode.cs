@@ -5,12 +5,12 @@ namespace NitroxModel.Server
     public enum ServerGameMode
     {
         [Description("Survival")]
-        SURVIVAL,
-        [Description("Creative")]
-        CREATIVE,
+        SURVIVAL = 0,
         [Description("Freedom")]
-        FREEDOM,
+        FREEDOM = 2,
         [Description("Hardcore")]
-        HARDCORE
+        HARDCORE = 257,
+        [Description("Creative")]
+        CREATIVE = 1790,
     }
 }
