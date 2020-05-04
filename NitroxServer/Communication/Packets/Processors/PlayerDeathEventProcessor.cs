@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.SendPacket(playerKicked);
             }
 
-            player.LastTeleportationPosition = packet.DeathPosition;
+            player.LastStoredPosition = packet.DeathPosition;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

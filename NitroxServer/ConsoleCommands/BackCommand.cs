@@ -1,8 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -18,10 +16,10 @@ namespace NitroxServer.ConsoleCommands
 
             Player player = args.Sender.Value;
 
-            Validate.IsTrue(player.LastTeleportationPosition.HasValue, "No previous location...");
-            player.Teleport(player.LastTeleportationPosition.Value);
+            Validate.IsTrue(player.LastStoredPosition.HasValue, "No previous location...");
+            player.Teleport(player.LastStoredPosition.Value);
 
-            SendMessage(args.Sender, $"Teleported back {player.LastTeleportationPosition.Value}");
+            SendMessage(args.Sender, $"Teleported back {player.LastStoredPosition.Value}");
         }
     }
 }

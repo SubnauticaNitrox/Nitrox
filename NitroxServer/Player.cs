@@ -42,7 +42,7 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
-            LastTeleportationPosition = Optional.Empty;
+            LastStoredPosition = Optional.Empty;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
@@ -152,7 +152,7 @@ namespace NitroxServer
 
             SendPacket(playerTeleported);
             Position = playerTeleported.DestinationTo;
-            LastTeleportationPosition = playerTeleported.DestinationFrom;
+            LastStoredPosition = playerTeleported.DestinationFrom;
         }
 
         protected bool Equals(Player other)

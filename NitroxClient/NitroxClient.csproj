@@ -231,6 +231,7 @@
     <Compile Include="Communication\PacketReceiver.cs" />
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />

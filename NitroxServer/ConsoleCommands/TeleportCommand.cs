@@ -1,6 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using UnityEngine;
