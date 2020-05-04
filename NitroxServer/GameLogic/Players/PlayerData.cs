@@ -9,11 +9,11 @@ namespace NitroxServer.GameLogic.Players
     [ProtoContract]
     public class PlayerData
     {
-        public const long VERSION = 2;
+        public const short VERSION = 2;
 
         [ProtoMember(1)]
         public List<PersistedPlayerData> Players = new List<PersistedPlayerData>();
-        
+
         public List<Player> GetPlayers()
         {
             List<Player> boPlayers = new List<Player>();
@@ -30,9 +30,8 @@ namespace NitroxServer.GameLogic.Players
                                            Optional.OfNullable(playerData.SubRootId), 
                                            playerData.Permissions, 
                                            playerData.CurrentStats,
-                                           playerData.EquippedItems, 
+                                           playerData.EquippedItems,
                                            playerData.Modules);
-                
                 boPlayers.Add(player);
             }
 
@@ -95,10 +94,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(9)]
             public NitroxId NitroxId { get; set; }
-            [ProtoMember(10)]
+            
             public bool IsPermaDeath { get; set; }
-
-
+            [ProtoMember(10)]
         }
     }
 }

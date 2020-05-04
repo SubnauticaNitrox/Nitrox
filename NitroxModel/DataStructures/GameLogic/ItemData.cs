@@ -22,6 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // For serialization
         }
 
+        [Nitrox.Newtonsoft.Json.JsonConstructor]
         public ItemData(NitroxId containerId, NitroxId itemId, byte[] serializedData)
         {
             ContainerId = containerId;

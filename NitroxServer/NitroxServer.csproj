@@ -64,6 +64,10 @@
     <Reference Include="protobuf-net">
       <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="Nitrox.Newtonsoft.Json">
+      <HintPath>..\lib\Nitrox.Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Web.Extensions" />
@@ -201,12 +205,14 @@
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
+    <Compile Include="Serialization\ServerJsonSerializer.cs" />
     <Compile Include="Serialization\ServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\IServerSerializer.cs" />
     <Compile Include="Serialization\World\PersistedWorldData.cs" />
     <Compile Include="Serialization\World\World.cs" />
     <Compile Include="Serialization\World\WorldData.cs" />
     <Compile Include="Serialization\World\WorldPersistence.cs" />
-    <Compile Include="Serialization\World\SaveVersion.cs" />
+    <Compile Include="Serialization\World\SaveFileVersions.cs" />
     <Compile Include="Serialization\World\VersionMismatchException.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="ServerAutoFacRegistrar.cs" />

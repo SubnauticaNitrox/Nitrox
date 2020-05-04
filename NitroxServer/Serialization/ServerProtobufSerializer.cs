@@ -6,7 +6,7 @@ using ProtoBufNet.Meta;
 
 namespace NitroxServer.Serialization
 {
-    public class ServerProtoBufSerializer
+    public class ServerProtoBufSerializer : IServerSerializer
     {
         private static readonly object[] emptyArray = { };
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();

@@ -1,11 +1,20 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using NitroxModel.Core;
+using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel.Server;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Bases;
 using NitroxServer.GameLogic.Entities;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
+using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
 using System;
 using System.Collections.Generic;
@@ -22,52 +31,65 @@ namespace NitroxServer.Serialization.World
 {
     public class WorldPersistence
     {
-        private readonly ServerProtoBufSerializer serializer;
+        /// <summary>
+        ///  <see cref="protoBufSerializer"/> is for subnautica batch files
+        ///  <see cref="saveDataSerializer"/> is for nitrox save files
+        /// </summary>
+        private readonly ServerProtoBufSerializer protoBufSerializer;
+        private readonly IServerSerializer saveDataSerializer;
+        private readonly string fileEnding;
         private readonly ServerConfig config;
 
-        public WorldPersistence(ServerProtoBufSerializer serializer, ServerConfig config)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config)
         {
-            this.serializer = serializer;
+            this.protoBufSerializer = protoBufSerializer;
             this.config = config;
+
+            saveDataSerializer = config.SaveFileSerializer == SaveFileSerializer.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
+            fileEnding = config.SaveFileSerializer == SaveFileSerializer.PROTOBUF ? ".nitrox" : ".json";
         }
 
         public void Save(World world, string saveDir)
         {
             try
             {
-                PersistedWorldData persistedData = new PersistedWorldData();
-                persistedData.WorldData.ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches;
-                persistedData.WorldData.ServerStartTime = world.TimeKeeper.ServerStartTime;
-                persistedData.WorldData.EntityData = EntityData.From(world.EntityManager.GetAllEntities());
-                persistedData.BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory());
-                persistedData.WorldData.VehicleData = VehicleData.From(world.VehicleManager.GetVehicles());
-                persistedData.WorldData.InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems());
-                persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
-                persistedData.WorldData.GameData = world.GameData;
-                persistedData.WorldData.StoryTimingData = StoryTimingData.From(world.EventTriggerer);
-                persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
+                PersistedWorldData persistedData = new PersistedWorldData
+                {
+                    BaseData = BaseData.From(world.BaseManager.GetPartiallyConstructedPieces(), world.BaseManager.GetCompletedBasePieceHistory()),
+                    PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers()),
+                    WorldData =
+                    {
+                        ParsedBatchCells = world.BatchEntitySpawner.SerializableParsedBatches,
+                        ServerStartTime = world.TimeKeeper.ServerStartTime,
+                        EntityData = EntityData.From(world.EntityManager.GetAllEntities()),
+                        VehicleData = VehicleData.From(world.VehicleManager.GetVehicles()),
+                        InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems()),
+                        GameData = world.GameData,
+                        StoryTimingData = StoryTimingData.From(world.EventTriggerer),
+                        EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods())
+                    }
+                };
 
                 if (!Directory.Exists(saveDir))
                 {
                     Directory.CreateDirectory(saveDir);
                 }
 
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "BaseData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "Version" + fileEnding)))
                 {
-                    serializer.Serialize(stream, new SaveVersion(BaseData.VERSION));
-                    serializer.Serialize(stream, persistedData.BaseData);
+                    saveDataSerializer.Serialize(stream, new SaveFileVersions());
                 }
-
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "PlayerData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "BaseData" + fileEnding)))
                 {
-                    serializer.Serialize(stream, new SaveVersion(PlayerData.VERSION));
-                    serializer.Serialize(stream, persistedData.PlayerData);
+                    saveDataSerializer.Serialize(stream, persistedData.BaseData);
                 }
-
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "WorldData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "PlayerData" + fileEnding)))
                 {
-                    serializer.Serialize(stream, new SaveVersion(WorldData.VERSION));
-                    serializer.Serialize(stream, persistedData.WorldData);
+                    saveDataSerializer.Serialize(stream, persistedData.PlayerData);
+                }
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "WorldData" + fileEnding)))
+                {
+                    saveDataSerializer.Serialize(stream, persistedData.WorldData);
                 }
 
                 Log.Info("World state saved.");
@@ -88,36 +110,42 @@ namespace NitroxServer.Serialization.World
                 }
 
                 PersistedWorldData persistedData = new PersistedWorldData();
+                SaveFileVersions versions;
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "BaseData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "Version" + fileEnding)))
                 {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != BaseData.VERSION)
+                    versions = saveDataSerializer.Deserialize<SaveFileVersions>(stream);
+                    if (versions == null)
+                    {
+                        throw new VersionMismatchException("Version file is null");
+                    }
+                }
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "BaseData" + fileEnding)))
+                {
+                    if (versions.BaseDataVersion != BaseData.VERSION)
                     {
                         throw new VersionMismatchException("BaseData file is too old");
                     }
-                    persistedData.BaseData = serializer.Deserialize<BaseData>(stream);
+                    persistedData.BaseData = saveDataSerializer.Deserialize<BaseData>(stream);
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "PlayerData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "PlayerData" + fileEnding)))
                 {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != PlayerData.VERSION)
+                    if (versions.PlayerDataVersion != PlayerData.VERSION)
                     {
                         throw new VersionMismatchException("PlayerData file is too old");
                     }
-                    persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
+                    persistedData.PlayerData = saveDataSerializer.Deserialize<PlayerData>(stream);
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "WorldData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "WorldData" + fileEnding)))
                 {
-                    SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
-                    if (version.Version != WorldData.VERSION)
+                    if (versions.WorldDataVersion != WorldData.VERSION)
                     {
                         throw new VersionMismatchException("WorldData file is too old");
                     }
 
-                    persistedData.WorldData = serializer.Deserialize<WorldData>(stream);
+                    persistedData.WorldData = saveDataSerializer.Deserialize<WorldData>(stream);
                 }
 
                 if (persistedData == null || !persistedData.IsValid())
@@ -142,13 +170,16 @@ namespace NitroxServer.Serialization.World
 
                 return Optional.Of(world);
             }
-            catch (DirectoryNotFoundException)
-            {
-                Log.Info("No previous save file found - creating a new one.");
-            }
             catch (Exception ex)
             {
-                Log.Info("Could not load world: " + ex + " creating a new one.");
+                if (ex is DirectoryNotFoundException || ex is FileNotFoundException)
+                {
+                    Log.Info("No previous save file found - creating a new one.");
+                }
+                else
+                {
+                    Log.Info("Could not load world: " + ex + " creating a new one.");
+                }
             }
 
             return Optional.Empty;
@@ -208,7 +239,7 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                                                               parsedBatchCells,
-                                                              serializer,
+                                                              protoBufSerializer,
                                                               NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                                                               NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
 

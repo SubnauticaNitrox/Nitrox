@@ -27,7 +27,10 @@ namespace NitroxServer_Subnautica
                                           "Assembly-CSharp-firstpass",
                                           "NitroxModel",
                                           "NitroxModel-Subnautica"))
-                            .As<ServerProtobufSerializer>()
+                            .As<ServerProtoBufSerializer, IServerSerializer>()
+                            .SingleInstance();
+            containerBuilder.Register(c => new SubnauticaServerJsonSerializer())
+                            .As<ServerJsonSerializer, IServerSerializer>()
                             .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
