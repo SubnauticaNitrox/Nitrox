@@ -28,19 +28,33 @@ namespace NitroxModel.DataStructures.Util
         {
             get
             {
-                return !IsDestroyedUnityObjectOrNull(Value);
+                if (IsDestroyedUnityObjectOrNull(Value))
+                {
+                    return false;
+                }
+
+                return hasValue;
             }
             set
             {
                 hasValue = value;
             }
         }
-
+        
         private static bool IsDestroyedUnityObjectOrNull<TValue>(TValue value)
         {
             // Check to satisfy unity objects. Sometimes they are internally destroyed but are not considered null.
             // For the purpose of optional, we consider a dead object to be the same as null.
-            return ReferenceEquals(value, null) || value.ToString() == "null";
+            if (ReferenceEquals(value, null))
+            {
+                return true;
+            }
+            else if (value is UnityEngine.Object)
+            {
+                return value?.ToString() == "null";
+            }
+
+            return false;
         }
 
         private Optional(T value)

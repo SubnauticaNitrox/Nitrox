@@ -12,7 +12,7 @@ namespace NitroxModel.Discovery
         ///     Searches for Subnautica installation directory.
         /// </summary>
         /// <param name="errors">Error messages that can be set if it failed to find the game.</param>
-        /// <returns>Optional with path to Subnautica installation directory or <see cref="Optional{T}.Empty" /> if not found.</returns>
-        Optional<string> FindGame(List<string> errors = null);
+        /// <returns>Nullable path to the Subnautica installation path.</returns>
+        string FindGame(List<string> errors = null);
     }
 }

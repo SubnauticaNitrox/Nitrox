@@ -32,7 +32,7 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.Register(c => resourceAssets).SingleInstance();
             containerBuilder.Register(c => resourceAssets.WorldEntitiesByClassId).SingleInstance();
-            containerBuilder.Register(c => resourceAssets.PlaceholderPrefabsByGroupClassId).SingleInstance();
+            containerBuilder.Register(c => resourceAssets.PrefabPlaceholderGroupsByGroupClassId).SingleInstance();
             containerBuilder.RegisterType<SubnauticaUweWorldEntityFactory>().As<UweWorldEntityFactory>().SingleInstance();
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
