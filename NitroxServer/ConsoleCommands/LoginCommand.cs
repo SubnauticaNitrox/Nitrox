@@ -1,4 +1,5 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
@@ -17,22 +18,17 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string message = "Can't update permissions";
+            Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
 
-            if (args.Sender.HasValue)
+            if (args.Get(0) == serverConfig.AdminPassword)
             {
-                if (args.Get(0) == serverConfig.AdminPassword)
-                {
-                    args.Sender.Value.Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {args.SenderName}";
-                }
-                else
-                {
-                    message = "Incorrect Password";
-                }
+                args.Sender.Value.Permissions = Perms.ADMIN;
+                SendMessage(args.Sender, $"Updated permissions to admin for {args.SenderName}");
             }
-            
-            SendMessage(args.Sender, message);
+            else
+            {
+                SendMessage(args.Sender, "Incorrect Password");
+            }
         }
     }
 }

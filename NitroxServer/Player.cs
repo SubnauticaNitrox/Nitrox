@@ -14,9 +14,9 @@ namespace NitroxServer
     {
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
+        
         public NitroxConnection connection { get; set; }
-
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
@@ -27,6 +27,7 @@ namespace NitroxServer
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
+        public Optional<Vector3> LastTeleportationPosition { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
@@ -41,8 +42,10 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
+            LastTeleportationPosition = Optional.Empty;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
+            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
         }
 
         public static bool operator ==(Player left, Player right)
@@ -141,6 +144,15 @@ namespace NitroxServer
         public void SendPacket(Packet packet)
         {
             connection.SendPacket(packet);
+        }
+
+        public void Teleport(Vector3 destination)
+        {
+            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination);
+
+            SendPacket(playerTeleported);
+            Position = playerTeleported.DestinationTo;
+            LastTeleportationPosition = playerTeleported.DestinationFrom;
         }
 
         protected bool Equals(Player other)

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
@@ -69,10 +68,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
         public string ToHelpText(bool cropText = false)
         {
             StringBuilder cmd = new StringBuilder(Name);
+
             if (Aliases?.Count > 0)
             {
                 cmd.AppendFormat("/{0}", string.Join("/", Aliases));
             }
+
             cmd.AppendFormat(" {0}", string.Join(" ", Parameters));
             return cropText ? $"{cmd}" : $"{cmd,-32} - {Description}";
         }
@@ -80,8 +81,8 @@ namespace NitroxServer.ConsoleCommands.Abstract
         protected void AddParameter<T>(T param) where T : IParameter<object>
         {
             Validate.NotNull(param as object);
-
             Parameters.Add(param);
+
             if (param.IsRequired)
             {
                 required++;

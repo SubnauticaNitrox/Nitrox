@@ -14,7 +14,6 @@ namespace NitroxClient.MonoBehaviours
 
 #if DEBUG
             EnableDeveloperFeatures();
-            AttachWarpToCommand();
 #endif
 
             CreateDebugger();
@@ -26,12 +25,6 @@ namespace NitroxClient.MonoBehaviours
             DevConsole.disableConsole = false;
             Application.runInBackground = true;
             Log.Info($"Unity run in background set to {Application.runInBackground.ToString().ToUpperInvariant()}.");
-        }
-
-        private void AttachWarpToCommand()
-        {
-            GameObject consoleRoot = new GameObject();
-            consoleRoot.AddComponent<WarpToCommand>();
         }
 
         private void CreateDebugger()
