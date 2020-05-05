@@ -265,6 +265,7 @@
     <Compile Include="Client\PlayerPreferences\TestConstants.cs" />
     <Compile Include="Core\DependencyInjectionTests.cs" />
     <Compile Include="DataStructures\ThreadSafeCollectionTest.cs" />
+    <Compile Include="Helper\ReflectionCacheTests.cs" />
     <Compile Include="Model\OptionalTest.cs" />
     <Compile Include="Model\PacketProcessorTest.cs" />
     <Compile Include="Model\Packets\PacketsSerializableTest.cs" />

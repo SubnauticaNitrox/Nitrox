@@ -54,13 +54,13 @@ namespace NitroxModel.DataStructures.Util
 
         private static int? GetUnityObjectInstanceID(T value)
         {
-            Func<T, int> method = ReflectionCache.InstanceMethod<T, int>("GetInstanceID", value);
+            Func<object, int> method = ReflectionCache.InstanceMethod<int>("GetInstanceID", value);
             if (method == null)
             {
                 // Not a unity object, should be higher than 0 because it's a valid instance.
                 return 1;
             }
-
+            
             return method.Invoke(value);
         }
 

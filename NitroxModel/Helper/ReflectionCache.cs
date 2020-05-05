@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace NitroxModel.Helper
@@ -17,25 +18,32 @@ namespace NitroxModel.Helper
                                                                              BindingFlags.GetProperty |
                                                                              BindingFlags.InvokeMethod;
 
-        public static Func<TIn, TReturn> InstanceMethod<TIn, TReturn>(string methodName, TIn instance)
+        public static Func<object, TOut> InstanceMethod<TOut>(string methodName, object instance)
         {
-            Type instanceType = instance.GetType();
+            Type declaringType = instance.GetType();
             Delegate del;
-            if (cache.TryGetValue(new ReflectionKey(instanceType, methodName), out del))
+            if (cache.TryGetValue(new ReflectionKey(declaringType, methodName), out del))
             {
-                return (Func<TIn, TReturn>)del;
+                return (Func<object, TOut>)del;
             }
 
-            MethodInfo methodInfo = instanceType.GetMethod(methodName, searchForEverytingUsefulFlags);
-            if (methodInfo == null)
+            Func<object, TOut> method = CreateInstancedDelegate<TOut>(methodName, instance);
+            cache[new ReflectionKey(declaringType, methodName)] = method;
+            return method;
+        }
+
+        private static Func<object, TOut> CreateInstancedDelegate<TOut>(string methodName, object instance)
+        {
+            Type instanceType = instance.GetType();
+            MethodInfo method = instanceType.GetMethod(methodName, searchForEverytingUsefulFlags);
+            if (method == null)
             {
-                cache[new ReflectionKey(instanceType, methodName)] = null; // Cache that this type doesn't have the method
                 return null;
             }
-            
-            Func<TIn, TReturn> result = (Func<TIn, TReturn>)Delegate.CreateDelegate(typeof(Func<TIn, TReturn>), null, methodInfo);
-            cache[new ReflectionKey(instanceType, methodName)] = result;
-            return result;
+
+            ParameterExpression instanceParam = Expression.Parameter(typeof(object), "instance");
+            MethodCallExpression body = Expression.Call(Expression.Convert(instanceParam, instanceType), method);
+            return Expression.Lambda<Func<object, TOut>>(body, instanceParam).Compile();
         }
 
         private struct ReflectionKey
