@@ -273,7 +273,7 @@
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\StringHelper.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
-    <Compile Include="Helper\IPHelper.cs" />
+    <Compile Include="Helper\WebHelper.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
     <Compile Include="Packets\EntityMetadataUpdate.cs" />
