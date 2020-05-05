@@ -22,13 +22,14 @@ namespace NitroxModel.Helper
         {
             Type declaringType = instance.GetType();
             Delegate del;
-            if (cache.TryGetValue(new ReflectionKey(declaringType, methodName), out del))
+            ReflectionKey cacheKey = new ReflectionKey(declaringType, methodName);
+            if (cache.TryGetValue(cacheKey, out del))
             {
                 return (Func<object, TOut>)del;
             }
 
             Func<object, TOut> method = CreateInstancedDelegate<TOut>(methodName, instance);
-            cache[new ReflectionKey(declaringType, methodName)] = method;
+            cache[cacheKey] = method;
             return method;
         }
 
