@@ -3,7 +3,7 @@ using Nitrox.Newtonsoft.Json;
 using Nitrox.Newtonsoft.Json.Linq;
 using UnityEngine;
 
-namespace NitroxModel.DataStructures.Surrogates.JsonConverter
+namespace NitroxModel.DataStructures.JsonConverter
 {
     public class ColorConverter : JsonConverter<Color>
     {

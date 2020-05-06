@@ -5,7 +5,7 @@ using Nitrox.Newtonsoft.Json;
 using Nitrox.Newtonsoft.Json.Serialization;
 using ProtoBufNet;
 
-namespace NitroxModel.DataStructures.Surrogates.JsonConverter
+namespace NitroxModel.DataStructures.JsonConverter
 {
     public class AttributeContractResolver : DefaultContractResolver
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using Nitrox.Newtonsoft.Json;
 
-namespace NitroxModel.DataStructures.Surrogates.JsonConverter
+namespace NitroxModel.DataStructures.JsonConverter
 {
     public class TechTypeConverter : JsonConverter<TechType>
     {
@@ -18,7 +18,7 @@ namespace NitroxModel.DataStructures.Surrogates.JsonConverter
             }
             else
             {
-                return new TechType((string)reader.Value);
+                existingValue = new TechType((string)reader.Value);
             }
             return existingValue;
         }
