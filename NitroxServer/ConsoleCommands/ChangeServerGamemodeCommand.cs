@@ -21,6 +21,18 @@ namespace NitroxServer.ConsoleCommands
 
             serverConfig.GameModeEnum = sgm;
             SendMessage(args.Sender, $"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
+            if (serverConfig.IsGamemodeHardcore())
+            {
+                serverConfig.DisableAutoSave = true;
+                Server.Instance.DisablePeriodicSaving();
+                SendMessage(args.Sender, "Disabled periodical saving");
+            }
+            else if (serverConfig.DisableAutoSave)
+            {
+                serverConfig.DisableAutoSave = false;
+                Server.Instance.EnablePeriodicSaving();
+                SendMessage(args.Sender, "Enabled periodical saving");
+            }
         }
     }
 }

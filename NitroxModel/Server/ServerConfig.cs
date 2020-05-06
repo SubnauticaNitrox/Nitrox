@@ -182,5 +182,14 @@ namespace NitroxModel.Server
 
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(oxygenSetting.Value, maxOxygenSetting.Value, healthSetting.Value, foodSetting.Value, waterSetting.Value, infectionSetting.Value);
         #endregion
+
+        public bool IsGamemodeHardcore()
+        {
+            if(GameMode == "Hardcore")
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

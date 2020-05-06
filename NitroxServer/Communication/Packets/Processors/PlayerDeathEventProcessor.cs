@@ -17,7 +17,7 @@ namespace NitroxServer.Communication.Packets.Processors
 
         public override void Process(PlayerDeathEvent packet, Player player)
         {
-            if(serverConfig.GameMode == "Hardcore")
+            if(serverConfig.IsGamemodeHardcore())
             {
                 player.IsPermaDeath = true;
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");
