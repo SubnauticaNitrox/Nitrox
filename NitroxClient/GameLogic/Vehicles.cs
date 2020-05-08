@@ -244,8 +244,6 @@ namespace NitroxClient.GameLogic
             }
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
-            
-            Log.Debug($"Successfully created vehicle {id}");
 
             // Send event after everthing is created            
             if (VehicleCreated != null)
