@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
@@ -23,6 +24,8 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             this.waitScreenItem = waitScreenItem;
 
+            Log.Info($"Starting cyclops vehicle sync");
+
             vehicles.VehicleCreated += OnVehicleCreated;
 
             foreach (VehicleModel vehicle in packet.Vehicles)
@@ -30,13 +33,16 @@ namespace NitroxClient.GameLogic.InitialSync
                 if (vehicle.TechType.Enum() == TechType.Cyclops)
                 {
                     cyclopsStillLoading++;
+
+                    Log.Info($"Synchronizing cyclops vehicle {vehicle.Id} {vehicle.Name}");
+
                     vehicles.CreateVehicle(vehicle);
                 }
             }
 
             totalCyclopsToLoad = cyclopsStillLoading;
 
-            yield return new WaitUntil(() => cyclopsStillLoading == 0);
+            yield return new WaitUntil(() => cyclopsStillLoading <= 0);
         }
 
         private void OnVehicleCreated(GameObject gameObject)
@@ -46,7 +52,7 @@ namespace NitroxClient.GameLogic.InitialSync
             cyclopsStillLoading--;
 
             // After all cyclops are created
-            if (cyclopsStillLoading == 0)
+            if (cyclopsStillLoading <= 0)
             {
                 vehicles.VehicleCreated -= OnVehicleCreated;
             }            

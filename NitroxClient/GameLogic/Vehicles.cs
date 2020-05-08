@@ -47,10 +47,14 @@ namespace NitroxClient.GameLogic
         {
             if (techType == TechType.Cyclops)
             {
+                Log.Info($"Creating Cyclops vehicle {id}");
+
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health));
             }
             else
             {
+                Log.Info($"Loading tech prefab {techType.ToString()} for vehicle {id}");
+
                 GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
 
                 if (techPrefab != null)
@@ -135,25 +139,71 @@ namespace NitroxClient.GameLogic
 
         private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
         {
+            Log.Info($"Loaded tech prefab {techType.ToString()} for vehicle {id}");
+
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
+
+            if (gameObject == null)
+            {
+                Log.Error($"Failed to create gameObject from prefab {prefab.ToString()} for {id}");
+                return;
+            }
+
+            Log.Info($"Created gameObject for vehicle {id}");
+
             gameObject.transform.rotation = spawnRotation;
             gameObject.SetActive(true);
             gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
+            
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+            if (rigidBody == null)
+            {
+                Log.Error($"Failed to create rigidBody from prefab {prefab.ToString()} for {id}");
+                return;
+            }
+
+            Log.Info($"Created rigidBody for vehicle {id}");
+
             rigidBody.isKinematic = false;
             NitroxEntity.SetNewId(gameObject, id);
+
             // Updates names and colours with persisted data
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             {
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
+                if (vehicle == null)
+                {
+                    Log.Error($"Failed to get vehicle component from prefab {prefab.ToString()} for {id}");
+                    return;
+                }
+
+                Log.Info($"Fetched vehicle component for vehicle {id}");
+
                 if (dockingBayId.HasValue)
                 {
+                    Log.Info($"Attempting to setup docking bay {dockingBayId.ToString()} for {id}");
+
                     GameObject dockingBayBase = NitroxEntity.RequireObjectFrom(dockingBayId.Value);
+                    if (dockingBayBase == null)
+                    {
+                        Log.Error($"dockingBayBase {dockingBayId.ToString()} could not be found for {id}!");
+                        return;
+                    }
+
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
+                    if (dockingBay == null)
+                    {
+                        Log.Error($"dockingBay {dockingBayId.ToString()} could not be found for {id}!");
+                        return;
+                    }
+
                     dockingBay.DockVehicle(vehicle);
-                } else if(techType == TechType.Exosuit)
+
+                    Log.Info($"Setup docking bay {dockingBayId.ToString()} for {id}");
+                } 
+                else if(techType == TechType.Exosuit)
                 {
                     // exosuits tend to fall through the ground after spawning. This should prevent that
                     vehicle.ReflectionSet("onGround", true);
@@ -163,18 +213,25 @@ namespace NitroxClient.GameLogic
                 {
                     vehicle.vehicleName = name;
                     vehicle.subName.DeserializeName(vehicle.vehicleName);
+
+                    Log.Info($"Set vehicle name to {name} for {id}");
                 }
 
                 if (colours != null)
                 {
+                    Log.Info($"Updating vehicle colors for {id}");
+
                     Vector3[] colour = new Vector3[5];
 
                     for (int i = 0; i < hsb.Length; i++)
                     {
                         colour[i] = hsb[i];
                     }
+                    
                     vehicle.vehicleColors = colour;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+
+                    Log.Info($"Updated vehicle colors for {id}");
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;
@@ -182,9 +239,18 @@ namespace NitroxClient.GameLogic
             else if(techType == TechType.Cyclops)
             {
                 GameObject target = NitroxEntity.RequireObjectFrom(id);
+                if (target == null)
+                {
+                    Log.Error($"Failed to get cyclops game object for {id}");
+                    return;
+                }
+
+                Log.Info($"Fetched gameObject for cyclops for {id}");
+
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                 SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
                 subNameInput.OnNameChange(name);
+                
                 for (int i = 0; i < hsb.Length; i++)
                 {
                     subNameInput.SetSelected(i);
@@ -200,7 +266,9 @@ namespace NitroxClient.GameLogic
             }
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
-                  
+            
+            Log.Info($"Successfully created vehicle {id}");
+
             // Send event after everthing is created            
             if (VehicleCreated != null)
             {
