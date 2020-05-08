@@ -38,7 +38,9 @@ namespace NitroxPatcher.Patches.Dynamic
                 
                 if (instr.opcode == OpCodes.Call && instr.operand.Equals(CUT_METHOD))
                 {
-                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
+                    CodeInstruction newInstr = new CodeInstruction(OpCodes.Ldc_I4_0);
+                    newInstr.labels = instr.labels;
+                    yield return newInstr;
                 }
                 else
                 {
