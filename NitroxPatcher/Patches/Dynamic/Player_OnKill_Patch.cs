@@ -20,7 +20,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, ILGenerator ilGenerator, IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> instructionList = instructions.ToList();
-            Label jmpLabel = ilGenerator.DefineLabel();
             int startCut = 0;
             int endCut = instructionList.Count;
             /**
@@ -35,25 +34,17 @@ namespace NitroxPatcher.Patches.Dynamic
             */
             for (int i = 0; i < instructionList.Count; i++)
             {
-                CodeInstruction instruction = instructionList[i];
-                if (instruction.opcode.Equals(OpCodes.Br))
+                CodeInstruction instr = instructionList[i];
+                
+                if (instr.opcode == OpCodes.Call && instr.operand.Equals(CUT_METHOD))
                 {
-                    instructionList[i] = new CodeInstruction(OpCodes.Brtrue, jmpLabel);
+                    yield return new CodeInstruction(OpCodes.Ldc_I4_0);
                 }
-                else if (instruction.opcode.Equals(START_CUT_CODE) && instruction.operand.Equals(CUT_METHOD))
+                else
                 {
-                    startCut = i;
+                    yield return instr;
                 }
-                else if (endCut == instructionList.Count && instruction.opcode.Equals(END_CUT_CODE))
-                {
-                    endCut = (i + 1) - startCut;
-                    instructionList[i + 1].labels.RemoveAt(0);
-                    instructionList[i + 1].labels.Add(jmpLabel);
-                }
-
             }
-            instructionList.RemoveRange(startCut, endCut);
-            return instructionList;
         }
 
         public static bool Prefix(Player __instance)
