@@ -150,7 +150,7 @@ namespace NitroxClient.GameLogic
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
             
             Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
-            if (rigidBody == null)
+            if (!rigidBody)
             {
                 Log.Error($"Failed to create rigidBody from prefab {prefab.ToString()} for {id}");
                 return;
