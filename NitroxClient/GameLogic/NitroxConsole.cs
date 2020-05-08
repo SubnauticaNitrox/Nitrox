@@ -39,6 +39,7 @@ namespace NitroxClient.GameLogic
                 else
                 {
                     SpawnItem(gameObject);
+                    //TODO: Add support for no AI creature that need to be spawned as well
                 }
             }
             catch (Exception ex)
@@ -76,17 +77,6 @@ namespace NitroxClient.GameLogic
             {
                 Log.Debug($"Spawning item {opitem.Value.GetTechName()} at {gameObject.transform.position}");
                 item.Dropped(gameObject, opitem.Value.GetTechType(), gameObject.transform.position);
-            }
-        }
-
-        private void SpawnCreature(GameObject gameObject)
-        {
-            Optional<Creature> opcreature = Optional.OfNullable(gameObject.GetComponent<Creature>());
-
-            if (opcreature.HasValue)
-            {
-                Log.Debug($"Spawning creature {opcreature.Value.name} at {gameObject.transform.position}");
-                throw new NotImplementedException();
             }
         }
     }

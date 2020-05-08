@@ -149,7 +149,9 @@ namespace NitroxClient.GameLogic
 
             if (!opGameObject.HasValue)
             {
-                Log.Error("Entity was already spawned but not found(is it in another chunk?) NitroxId: " + entity.Id + " TechType: " + entity.TechType + " ClassId: " + entity.ClassId + " Transform: " + entity.Transform);
+#if DEBUG
+                Log.Error($"Entity was already spawned but not found(is it in another chunk?) NitroxId: {entity.Id} TechType: {entity.TechType} ClassId: {entity.ClassId} Transform: {entity.Transform}");
+#endif
                 return;
             }
             
