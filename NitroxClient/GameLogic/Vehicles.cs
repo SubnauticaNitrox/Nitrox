@@ -47,14 +47,10 @@ namespace NitroxClient.GameLogic
         {
             if (techType == TechType.Cyclops)
             {
-                Log.Info($"Creating Cyclops vehicle {id}");
-
                 LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health));
             }
             else
             {
-                Log.Info($"Loading tech prefab {techType.ToString()} for vehicle {id}");
-
                 GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
 
                 if (techPrefab != null)
