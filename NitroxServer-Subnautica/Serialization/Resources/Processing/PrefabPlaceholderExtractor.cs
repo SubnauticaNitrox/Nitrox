@@ -22,33 +22,58 @@ namespace NitroxServer_Subnautica.Serialization.Resources.Processing
             foreach (GameObjectAsset placeholderGroup in GameObjectAssetParser.GameObjectsByAssetId.Values)
             {
                 List<AssetIdentifier> prefabPlaceholders;
-
+                
                 if (!PrefabPlaceholdersGroupParser.PrefabPlaceholderIdsByGameObjectId.TryGetValue(placeholderGroup.Identifier, out prefabPlaceholders))
                 {
                     continue;
                 }
-
+                
                 string placeholderGroupClassId = PrefabIdentifierParser.ClassIdByGameObjectId[placeholderGroup.Identifier];
 
-                List<PrefabAsset> prefabs;
-
-                if (!resourceAssets.PlaceholderPrefabsByGroupClassId.TryGetValue(placeholderGroupClassId, out prefabs))
-                {
-                    prefabs = new List<PrefabAsset>();
-                    resourceAssets.PlaceholderPrefabsByGroupClassId[placeholderGroupClassId] = prefabs;
-                }
-                
+                List<PrefabAsset> spawnablePrefabs = new List<PrefabAsset>();
+                               
                 foreach (AssetIdentifier prefabPlaceholderId in prefabPlaceholders)
                 {
                     PrefabPlaceholderAsset prefabPlaceholderAsset = PrefabPlaceholderParser.PrefabPlaceholderIdToPlaceholderAsset[prefabPlaceholderId];
-                    GameObjectAsset prefabPlaceholder = GameObjectAssetParser.GameObjectsByAssetId[prefabPlaceholderAsset.GameObjectIdentifier];                    
-                    TransformAsset localTransform = GetTransform(prefabPlaceholder);
-
-                    Optional<NitroxEntitySlot> entitySlot = GetEntitySlot(prefabPlaceholderAsset.ClassId);
-
-                    prefabs.Add(new PrefabAsset(prefabPlaceholderAsset.ClassId, localTransform, entitySlot));
+                    spawnablePrefabs.Add(CreatePrefabAsset(prefabPlaceholderAsset.GameObjectIdentifier, prefabPlaceholderAsset.ClassId));
                 }
+
+                GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[placeholderGroup.Identifier];
+                TransformAsset localTransform = GetTransform(gameObject);
+
+                List<PrefabAsset> existingPrefabs = GetChildPrefabs(localTransform);
+
+                resourceAssets.PrefabPlaceholderGroupsByGroupClassId[placeholderGroupClassId] = new PrefabPlaceholdersGroupAsset(spawnablePrefabs, existingPrefabs);
             }
+        }
+
+        private PrefabAsset CreatePrefabAsset(AssetIdentifier gameObjectId, string classId)
+        {
+            GameObjectAsset gameObject = GameObjectAssetParser.GameObjectsByAssetId[gameObjectId];
+            TransformAsset localTransform = GetTransform(gameObject);
+
+            Optional<NitroxEntitySlot> entitySlot = (classId != null) ? GetEntitySlot(classId) : Optional.Empty;
+            List<PrefabAsset> children = GetChildPrefabs(localTransform);
+
+            return new PrefabAsset(gameObject.Name, classId, localTransform, entitySlot, children);
+        }
+
+        private List<PrefabAsset> GetChildPrefabs(TransformAsset parentTransform)
+        {
+            List<PrefabAsset> children = new List<PrefabAsset>();
+
+            foreach (AssetIdentifier childTransformId in TransformAssetParser.ChildrenIdsByParentId[parentTransform.Identifier])
+            {
+                TransformAsset childTransform = TransformAssetParser.TransformsByAssetId[childTransformId];
+
+                string childClassId;
+
+                PrefabIdentifierParser.ClassIdByGameObjectId.TryGetValue(childTransform.GameObjectIdentifier, out childClassId);
+
+                children.Add(CreatePrefabAsset(childTransform.GameObjectIdentifier, childClassId));
+            }
+
+            return children;
         }
 
         private Optional<NitroxEntitySlot> GetEntitySlot(string classId)

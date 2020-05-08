@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using NLog;
 using NLog.Config;
 using NLog.Filters;
@@ -195,6 +196,22 @@ namespace NitroxModel.Logger
                 .Info()
                 .Message(message?.ToString(), args)
                 .Write();
+        }
+
+        /// <summary>
+        ///     Get log file friendly name of the application that is currently logging.
+        /// </summary>
+        /// <returns>Friendly display name of the current application.</returns>
+        private static string GetLoggerName()
+        {
+            string name = Assembly.GetEntryAssembly()?.GetName().Name ?? "Client"; // Unity Engine does not set Assembly name so lets default to 'Client'.
+            return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
+        }
+
+        // Helping method for formatting string correctly with arguments
+        private static string Format(string fmt, params object[] arg)
+        {
+            return string.Format(fmt, arg);
         }
 
         /// <summary>

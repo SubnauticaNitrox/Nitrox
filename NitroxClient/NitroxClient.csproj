@@ -239,6 +239,8 @@
     <Compile Include="GameLogic\Bases\Spawning\BaseLadderSpawnProcessor.cs" />
     <Compile Include="GameLogic\Bases\Spawning\NoOpBasePieceSpawnProcessor.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\Spawning\EntitySpawnerResolver.cs" />
+    <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\PrecursorDoorwayMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\SealedDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\KeypadMetadataProcessor.cs" />

@@ -9,15 +9,19 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     {
         [ProtoMember(1)]
         public bool Sealed { get; }
-        
+
+        [ProtoMember(2)]
+        public float OpenedAmount { get; }
+
         public SealedDoorMetadata()
         {
             // Constructor for serialization
         }
 
-        public SealedDoorMetadata(bool Sealed)
+        public SealedDoorMetadata(bool Sealed, float OpenedAmount)
         {
             this.Sealed = Sealed;
+            this.OpenedAmount = OpenedAmount;
         }
     }
 }

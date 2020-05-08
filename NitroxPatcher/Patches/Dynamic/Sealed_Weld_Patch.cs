@@ -14,27 +14,18 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(Sealed);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Weld", BindingFlags.Public | BindingFlags.Instance);
         
-        public static bool Prefix(Sealed __instance, out bool __state)
+        public static void Postfix(Sealed __instance)
         {
-            __state = __instance._sealed;
-            return true;
-        }
+            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+            SealedDoorMetadata doorMetadata = new SealedDoorMetadata(__instance._sealed, __instance.openedAmount);
+            Entities entities = NitroxServiceLocator.LocateService<Entities>();
 
-        public static void Postfix(Sealed __instance, bool __state)
-        {
-            if (__state != __instance._sealed)
-            {
-                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-                SealedDoorMetadata doorMetadata = new SealedDoorMetadata(__instance._sealed);
-
-                Entities entities = NitroxServiceLocator.LocateService<Entities>();
-                entities.BroadcastMetadataUpdate(id, doorMetadata);
-            }
+            entities.BroadcastMetadataUpdate(id, doorMetadata);
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }
