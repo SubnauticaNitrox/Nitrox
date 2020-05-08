@@ -24,8 +24,6 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             this.waitScreenItem = waitScreenItem;
 
-            Log.Debug($"Starting cyclops vehicle sync");
-
             vehicles.VehicleCreated += OnVehicleCreated;
 
             foreach (VehicleModel vehicle in packet.Vehicles)
@@ -42,7 +40,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             totalCyclopsToLoad = cyclopsStillLoading;
 
-            yield return new WaitUntil(() => cyclopsStillLoading <= 0);
+            yield return new WaitUntil(() => cyclopsStillLoading == 0);
         }
 
         private void OnVehicleCreated(GameObject gameObject)
@@ -52,7 +50,7 @@ namespace NitroxClient.GameLogic.InitialSync
             cyclopsStillLoading--;
 
             // After all cyclops are created
-            if (cyclopsStillLoading <= 0)
+            if (cyclopsStillLoading == 0)
             {
                 vehicles.VehicleCreated -= OnVehicleCreated;
             }            

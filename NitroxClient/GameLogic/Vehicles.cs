@@ -139,8 +139,6 @@ namespace NitroxClient.GameLogic
 
         private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
         {
-            //Log.Debug($"Loaded tech prefab {techType.ToString()} for vehicle {id}");
-
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
 
@@ -149,8 +147,6 @@ namespace NitroxClient.GameLogic
                 Log.Error($"Failed to create gameObject from prefab {prefab.ToString()} for {id}");
                 return;
             }
-
-            //Log.Debug($"Created gameObject for vehicle {id}");
 
             gameObject.transform.rotation = spawnRotation;
             gameObject.SetActive(true);
@@ -164,8 +160,6 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            //Log.Debug($"Created rigidBody for vehicle {id}");
-
             rigidBody.isKinematic = false;
             NitroxEntity.SetNewId(gameObject, id);
 
@@ -173,27 +167,23 @@ namespace NitroxClient.GameLogic
             if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             {
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
-                if (vehicle == null)
+                if (!vehicle)
                 {
                     Log.Error($"Failed to get vehicle component from prefab {prefab.ToString()} for {id}");
                     return;
                 }
 
-                //Log.Debug($"Fetched vehicle component for vehicle {id}");
-
                 if (dockingBayId.HasValue)
                 {
-                    Log.Info($"Attempting to setup docking bay {dockingBayId.ToString()} for {id}");
-
                     GameObject dockingBayBase = NitroxEntity.RequireObjectFrom(dockingBayId.Value);
-                    if (dockingBayBase == null)
+                    if (!dockingBayBase)
                     {
                         Log.Error($"dockingBayBase {dockingBayId.ToString()} could not be found for {id}!");
                         return;
                     }
 
                     VehicleDockingBay dockingBay = dockingBayBase.GetComponentInChildren<VehicleDockingBay>();
-                    if (dockingBay == null)
+                    if (!dockingBay)
                     {
                         Log.Error($"dockingBay {dockingBayId.ToString()} could not be found for {id}!");
                         return;
@@ -201,7 +191,7 @@ namespace NitroxClient.GameLogic
 
                     dockingBay.DockVehicle(vehicle);
 
-                    Log.Info($"Setup docking bay {dockingBayId.ToString()} for {id}");
+                    Log.Debug($"Setup docking bay {dockingBayId.ToString()} for {id}");
                 } 
                 else if(techType == TechType.Exosuit)
                 {
@@ -213,14 +203,10 @@ namespace NitroxClient.GameLogic
                 {
                     vehicle.vehicleName = name;
                     vehicle.subName.DeserializeName(vehicle.vehicleName);
-
-                    //Log.Debug($"Set vehicle name to {name} for {id}");
                 }
 
                 if (colours != null)
                 {
-                    //Log.Debug($"Updating vehicle colors for {id}");
-
                     Vector3[] colour = new Vector3[5];
 
                     for (int i = 0; i < hsb.Length; i++)
@@ -230,8 +216,6 @@ namespace NitroxClient.GameLogic
                     
                     vehicle.vehicleColors = colour;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
-
-                    //Log.Debug($"Updated vehicle colors for {id}");
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;
@@ -239,13 +223,11 @@ namespace NitroxClient.GameLogic
             else if(techType == TechType.Cyclops)
             {
                 GameObject target = NitroxEntity.RequireObjectFrom(id);
-                if (target == null)
+                if (!target)
                 {
                     Log.Error($"Failed to get cyclops game object for {id}");
                     return;
                 }
-
-                //Log.Debug($"Fetched gameObject for cyclops for {id}");
 
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                 SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
