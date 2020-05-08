@@ -24,7 +24,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             this.waitScreenItem = waitScreenItem;
 
-            Log.Info($"Starting cyclops vehicle sync");
+            Log.Debug($"Starting cyclops vehicle sync");
 
             vehicles.VehicleCreated += OnVehicleCreated;
 
@@ -34,7 +34,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     cyclopsStillLoading++;
 
-                    Log.Info($"Synchronizing cyclops vehicle {vehicle.Id} {vehicle.Name}");
+                    Log.Debug($"Synchronizing cyclops vehicle {vehicle.Id} {vehicle.Name}");
 
                     vehicles.CreateVehicle(vehicle);
                 }

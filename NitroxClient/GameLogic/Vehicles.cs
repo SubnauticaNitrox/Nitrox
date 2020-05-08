@@ -139,7 +139,7 @@ namespace NitroxClient.GameLogic
 
         private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
         {
-            Log.Info($"Loaded tech prefab {techType.ToString()} for vehicle {id}");
+            //Log.Debug($"Loaded tech prefab {techType.ToString()} for vehicle {id}");
 
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -150,7 +150,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            Log.Info($"Created gameObject for vehicle {id}");
+            //Log.Debug($"Created gameObject for vehicle {id}");
 
             gameObject.transform.rotation = spawnRotation;
             gameObject.SetActive(true);
@@ -164,7 +164,7 @@ namespace NitroxClient.GameLogic
                 return;
             }
 
-            Log.Info($"Created rigidBody for vehicle {id}");
+            //Log.Debug($"Created rigidBody for vehicle {id}");
 
             rigidBody.isKinematic = false;
             NitroxEntity.SetNewId(gameObject, id);
@@ -179,7 +179,7 @@ namespace NitroxClient.GameLogic
                     return;
                 }
 
-                Log.Info($"Fetched vehicle component for vehicle {id}");
+                //Log.Debug($"Fetched vehicle component for vehicle {id}");
 
                 if (dockingBayId.HasValue)
                 {
@@ -214,12 +214,12 @@ namespace NitroxClient.GameLogic
                     vehicle.vehicleName = name;
                     vehicle.subName.DeserializeName(vehicle.vehicleName);
 
-                    Log.Info($"Set vehicle name to {name} for {id}");
+                    //Log.Debug($"Set vehicle name to {name} for {id}");
                 }
 
                 if (colours != null)
                 {
-                    Log.Info($"Updating vehicle colors for {id}");
+                    //Log.Debug($"Updating vehicle colors for {id}");
 
                     Vector3[] colour = new Vector3[5];
 
@@ -231,7 +231,7 @@ namespace NitroxClient.GameLogic
                     vehicle.vehicleColors = colour;
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
 
-                    Log.Info($"Updated vehicle colors for {id}");
+                    //Log.Debug($"Updated vehicle colors for {id}");
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;
@@ -245,7 +245,7 @@ namespace NitroxClient.GameLogic
                     return;
                 }
 
-                Log.Info($"Fetched gameObject for cyclops for {id}");
+                //Log.Debug($"Fetched gameObject for cyclops for {id}");
 
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                 SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
@@ -267,7 +267,7 @@ namespace NitroxClient.GameLogic
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers); //Copy From ConstructorBeginCraftingProcessor
             
-            Log.Info($"Successfully created vehicle {id}");
+            Log.Debug($"Successfully created vehicle {id}");
 
             // Send event after everthing is created            
             if (VehicleCreated != null)

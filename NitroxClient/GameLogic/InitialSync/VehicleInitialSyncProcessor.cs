@@ -25,11 +25,11 @@ namespace NitroxClient.GameLogic.InitialSync
             int totalSyncedVehicles = 0;
             int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.Enum() != TechType.Cyclops).Count();
 
-            Log.Info("Starting initial vehicle sync with " + nonCyclopsVehicleCount + " non-cyclops vehicles");
+            Log.Debug("Starting initial vehicle sync with " + nonCyclopsVehicleCount + " non-cyclops vehicles");
 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                Log.Info($"Attempting to sync vehicle {vehicle.Id} {vehicle.Name}");
+                Log.Debug($"Attempting to sync vehicle {vehicle.Id} {vehicle.Name}");
 
                 if (vehicle.TechType.Enum() != TechType.Cyclops)
                 {
@@ -37,13 +37,13 @@ namespace NitroxClient.GameLogic.InitialSync
                     vehicles.CreateVehicle(vehicle);
                     totalSyncedVehicles++;
 
-                    Log.Info($"Synced vehicle {vehicle.Id} {vehicle.Name} {totalSyncedVehicles}/{nonCyclopsVehicleCount}");
+                    Log.Debug($"Synced vehicle {vehicle.Id} {vehicle.Name} {totalSyncedVehicles}/{nonCyclopsVehicleCount}");
 
                     yield return null;
                 }
             }
 
-            Log.Info($"Finished syncing {totalSyncedVehicles} vehicles");
+            Log.Debug($"Finished syncing {totalSyncedVehicles} vehicles");
         }
     }
 }
