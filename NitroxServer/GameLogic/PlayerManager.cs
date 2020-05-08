@@ -66,7 +66,7 @@ namespace NitroxServer.GameLogic
             string playerName = authenticationContext.Username;
             Player player;
             allPlayersByName.TryGetValue(playerName, out player);
-            if ((player?.IsPermaDeath == true) && serverConfig.IsGamemodeHardcore())
+            if ((player?.IsPermaDeath == true) && serverConfig.IsGameModeHardcore())
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
                 return new MultiplayerSessionReservation(correlationId, rejectedState);
@@ -192,6 +192,14 @@ namespace NitroxServer.GameLogic
             Player player;
             allPlayersByName.TryGetValue(playerName, out player);
             return Optional.OfNullable(player);
+        }
+
+        public void UpdatePlayer(Player player)
+        {
+            if (allPlayersByName.ContainsKey(player.Name))
+            {
+                allPlayersByName[player.Name] = player;
+            }
         }
 
         public void SendPacketToAllPlayers(Packet packet)
