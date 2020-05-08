@@ -309,16 +309,9 @@ namespace NitroxClient.GameLogic
                 GameObject target = NitroxEntity.RequireObjectFrom(id);
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                 SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
-                subNameInput.OnNameChange(name);
 
-                try
-                {
-                    subNameTarget.DeserializeColors(hsb);
-                } catch (Exception ex)
-                {
-                    Log.Error($"{nameof(Vehicles)}: Error while setuping cyclops color", ex);
-                    subNameTarget.ReflectionCall("Awake", false, false); //Default color
-                }
+                subNameInput.OnNameChange(name);
+                subNameTarget.DeserializeColors(hsb);
 
                 target.GetComponent<LiveMixin>().health = health;
 

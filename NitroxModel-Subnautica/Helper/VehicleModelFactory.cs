@@ -26,7 +26,6 @@ namespace NitroxModel_Subnautica.Helper
                     return null;
                 default:
                     throw new Exception($"Could not build from: {packet.TechType}");
-
             }
         }
 
@@ -44,7 +43,6 @@ namespace NitroxModel_Subnautica.Helper
                     return null;
                 default:
                     throw new Exception($"Could not build from: {techType}");
-
             }
         }
     }
