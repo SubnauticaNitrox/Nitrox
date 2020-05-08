@@ -14,29 +14,24 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(Player).GetMethod(nameof(Player.OnKill), BindingFlags.Public | BindingFlags.Instance);
 
-        public static readonly OpCode START_CUT_CODE = OpCodes.Call;
-        public static readonly MethodInfo CUT_METHOD = typeof(GameModeUtils).GetMethod(nameof(GameModeUtils.IsPermadeath), BindingFlags.Public | BindingFlags.Static);
-        public static readonly OpCode END_CUT_CODE = OpCodes.Ret;
-        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, ILGenerator ilGenerator, IEnumerable<CodeInstruction> instructions)
+        public static readonly MethodInfo SKIP_METHOD = typeof(GameModeUtils).GetMethod(nameof(GameModeUtils.IsPermadeath), BindingFlags.Public | BindingFlags.Static);
+        public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             List<CodeInstruction> instructionList = instructions.ToList();
-            int startCut = 0;
-            int endCut = instructionList.Count;
             /**
-            * Cuts out
+            * Skips
             * if (GameModeUtils.IsPermadeath())
             * {
             *      SaveLoadManager.main.ClearSlotAsync(SaveLoadManager.main.GetCurrentSlot());
             *      this.EndGame();
             *      return;
             * }
-            *    
             */
             for (int i = 0; i < instructionList.Count; i++)
             {
                 CodeInstruction instr = instructionList[i];
                 
-                if (instr.opcode == OpCodes.Call && instr.operand.Equals(CUT_METHOD))
+                if (instr.opcode == OpCodes.Call && instr.operand.Equals(SKIP_METHOD))
                 {
                     CodeInstruction newInstr = new CodeInstruction(OpCodes.Ldc_I4_0);
                     newInstr.labels = instr.labels;
@@ -49,22 +44,9 @@ namespace NitroxPatcher.Patches.Dynamic
             }
         }
 
-        public static bool Prefix(Player __instance)
-        {
-            Log.Debug("OnKill event has been triggered");
-            return true;
-        }
-
-        public static void Postfix(Player __instance)
-        {
-            Log.Debug("OnKill event is now over");
-        }
-
         public override void Patch(HarmonyInstance harmony)
         {
-            HarmonyInstance.DEBUG = true;
-            PatchMultiple(harmony, TARGET_METHOD, true, false, true);
-            //PatchTranspiler(harmony, TARGET_METHOD);
+            PatchTranspiler(harmony, TARGET_METHOD);
         }
     }
 }

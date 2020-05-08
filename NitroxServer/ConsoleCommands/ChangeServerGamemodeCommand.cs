@@ -18,12 +18,12 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             ServerGameMode sgm = args.Get<ServerGameMode>(0);
-            bool currentGamemodeHardcore = serverConfig.IsGameModeHardcore();
+            bool currentGamemodeHardcore = serverConfig.IsGameMode("Hardcore");
 
             serverConfig.GameModeEnum = sgm;
             SendMessage(args.Sender, $"Server gamemode changed to \"{sgm}\" by {args.SenderName}");
             
-            if (serverConfig.IsGameModeHardcore())
+            if (serverConfig.IsGameMode("Hardcore"))
             {
                 serverConfig.DisableAutoSave = true;
                 Server.Instance.DisablePeriodicSaving();

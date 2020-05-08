@@ -183,9 +183,9 @@ namespace NitroxModel.Server
         public PlayerStatsData DefaultPlayerStats => new PlayerStatsData(oxygenSetting.Value, maxOxygenSetting.Value, healthSetting.Value, foodSetting.Value, waterSetting.Value, infectionSetting.Value);
         #endregion
 
-        public bool IsGameModeHardcore()
+        public bool IsGameMode(string gamemode)
         {
-            return GameMode == "Hardcore";
+            return GameMode == gamemode;
         }
     }
 }
