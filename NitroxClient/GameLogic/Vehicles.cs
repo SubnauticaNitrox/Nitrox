@@ -138,7 +138,7 @@ namespace NitroxClient.GameLogic
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
 
-            if (gameObject == null)
+            if (!gameObject)
             {
                 Log.Error($"Failed to create gameObject from prefab {prefab.ToString()} for {id}");
                 return;
