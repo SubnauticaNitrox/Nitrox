@@ -97,6 +97,11 @@ namespace NitroxServer.GameLogic
             reservations.Add(reservationKey, playerContext);
             assetPackage.ReservationKey = reservationKey;
 
+            if (ConnectedPlayers().Count() == 1)
+            {
+                Server.Instance.EnablePeriodicSaving();
+            }
+
             return new MultiplayerSessionReservation(correlationId, playerId, reservationKey);
         }
 
@@ -160,6 +165,12 @@ namespace NitroxServer.GameLogic
             {
                 Player player = assetPackage.Player;
                 reservedPlayerNames.Remove(player.Name);
+
+                if (ConnectedPlayers().Count() == 0)
+                {
+                    Server.Instance.DisablePeriodicSaving();
+                    Server.Instance.Save();
+                }
             }
 
             assetsByConnection.Remove(connection);
