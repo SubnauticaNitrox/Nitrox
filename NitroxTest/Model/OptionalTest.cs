@@ -127,6 +127,10 @@ namespace NitroxTest.Model
             // If Optional<object> then it should always do all checks because anything can be in it.
             Optional<object> bAsObj = Optional<object>.Of(new B());
             bAsObj.HasValue.Should().BeFalse();
+            
+            // Value type should always pass
+            Optional<object> testInt = Optional<object>.Of(5);
+            testInt.HasValue.Should().BeTrue();
         }
 
         private class A

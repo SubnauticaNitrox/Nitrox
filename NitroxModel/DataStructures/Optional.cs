@@ -34,7 +34,7 @@ namespace NitroxModel.DataStructures.Util
         {
             // Generate new HasValue check based on global filters for types.
             Type type = typeof(T);
-            bool isObj = typeof(T) == typeof(object);
+            bool isObj = type == typeof(object);
             foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
             {
                 if (isObj || filter.Key.IsAssignableFrom(type))
@@ -49,7 +49,7 @@ namespace NitroxModel.DataStructures.Util
             }
 
             // Update check to just check has values directly for future calls (this is an optimization).
-            if (valueChecks != null)
+            if (valueChecks != null && !isObj)
             {
                 valueChecksForT = val =>
                 {
@@ -62,6 +62,27 @@ namespace NitroxModel.DataStructures.Util
                         if (!check(val))
                         {
                             return false;
+                        }
+                    }
+                    return true;
+                };
+            }
+            else if (valueChecks != null && isObj)
+            {
+                valueChecksForT = val =>
+                {
+                    if (ReferenceEquals(val, null))
+                    {
+                        return false;
+                    }
+                    if (!val.GetType().IsValueType) // for Optional<object> we need to check if value-type since it can't be cast to object and will NRE
+                    {
+                        foreach (Func<object, bool> check in valueChecks)
+                        {
+                            if (!check(val))
+                            {
+                                return false;
+                            }
                         }
                     }
                     return true;
