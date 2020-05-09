@@ -24,7 +24,7 @@ namespace NitroxModel.DataStructures.Util
         /// <summary>
         ///     List of <see cref="HasValue" /> condition checks for current type (due to being a static on generic class).
         /// </summary>
-        internal static List<Func<object, bool>> valueChecks;
+        private static List<Func<object, bool>> valueChecks;
 
         /// <summary>
         ///     Has value check that can be replaced and defaults to generating a value check for current <see cref="T" /> based on
@@ -34,9 +34,10 @@ namespace NitroxModel.DataStructures.Util
         {
             // Generate new HasValue check based on global filters for types.
             Type type = typeof(T);
+            bool isObj = typeof(T) == typeof(object);
             foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
             {
-                if (filter.Key.IsAssignableFrom(type))
+                if (isObj || filter.Key.IsAssignableFrom(type))
                 {
                     // Only create the list in memory when required.
                     if (valueChecks == null)
@@ -186,17 +187,8 @@ namespace NitroxModel.DataStructures.Util
         /// </param>
         public static void ApplyHasValueCondition<T>(Func<T, bool> hasValueCondition) where T : class
         {
-            Func<object, bool> condition = o => hasValueCondition(o as T);
-
-            // Always add when T = object because it can be anything.
-            if (Optional<object>.valueChecks == null)
-            {
-                Optional<object>.valueChecks = new List<Func<object, bool>>();
-            }
-            Optional<object>.valueChecks.Add(condition);
-
             // Add to global so that the Optional<T> can lazily evaluate which conditions it should add to its checks based on its type.
-            ValueConditions.Add(typeof(T), condition);
+            ValueConditions.Add(typeof(T), o => hasValueCondition(o as T));
         }
     }
 
