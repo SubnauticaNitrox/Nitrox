@@ -67,7 +67,7 @@ namespace NitroxClient.GameLogic
                 Log.Error("Cooldown time does not match pickup or punch time");
                 return;
             }
-            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, Optional.Empty, Optional.Empty);
+            BroadcastArmAction(TechType.ExosuitClawArmModule, clawArm, action, null, null);
         }
 
         public void UseClaw(ExosuitClawArm clawArm, ExosuitArmAction armAction)
@@ -101,7 +101,7 @@ namespace NitroxClient.GameLogic
             }
         }       
 
-        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Optional<Vector3> opVector, Optional<Quaternion> opRotation)
+        public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());            
             ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, opVector, opRotation);
@@ -111,11 +111,11 @@ namespace NitroxClient.GameLogic
         public void BroadcastArmAction(TechType techType, IExosuitArm exosuitArm, ExosuitArmAction armAction)
         {
             NitroxId id = NitroxEntity.GetId(exosuitArm.GetGameObject());
-            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, Optional.Empty, Optional.Empty);
+            ExosuitArmActionPacket packet = new ExosuitArmActionPacket(techType, id, armAction, null, null);
             packetSender.Send(packet);
         }
 
-        public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Optional<Vector3> opHitVector)
+        public void UseGrappling(ExosuitGrapplingArm grapplingArm, ExosuitArmAction armAction, Vector3? opHitVector)
         {
             if (armAction == ExosuitArmAction.END_USE_TOOL)
             {
@@ -154,7 +154,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        public void UseTorpedo(ExosuitTorpedoArm torpedoArm, ExosuitArmAction armAction, Optional<Vector3> opVector, Optional<Quaternion> opRotation)
+        public void UseTorpedo(ExosuitTorpedoArm torpedoArm, ExosuitArmAction armAction, Vector3? opVector, Quaternion? opRotation)
         {            
             if (armAction == ExosuitArmAction.START_USE_TOOL || armAction == ExosuitArmAction.ALT_HIT)
             {
@@ -165,8 +165,8 @@ namespace NitroxClient.GameLogic
                 }
                 Vector3 forward = opVector.Value;
                 Quaternion rotation = opRotation.Value;
-                Transform silo = default(Transform);
-                if(armAction == ExosuitArmAction.START_USE_TOOL)
+                Transform silo;
+                if (armAction == ExosuitArmAction.START_USE_TOOL)
                 {
                     silo = torpedoArm.siloFirst;
                 }

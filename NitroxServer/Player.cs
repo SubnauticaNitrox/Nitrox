@@ -27,7 +27,7 @@ namespace NitroxServer
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
-        public Optional<Vector3> LastStoredPosition { get; set; }
+        public Vector3? LastStoredPosition { get; set; }
 
         public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
@@ -42,7 +42,7 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
-            LastStoredPosition = Optional.Empty;
+            LastStoredPosition = null;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
             visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);

@@ -76,7 +76,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt)
+        public static void IsPresent<T>(Optional<T> opt) where T : class
         {
             if (!opt.HasValue)
             {
@@ -84,7 +84,7 @@ namespace NitroxModel.Helper
             }
         }
 
-        public static void IsPresent<T>(Optional<T> opt, string message)
+        public static void IsPresent<T>(Optional<T> opt, string message) where T : class
         {
             if (!opt.HasValue)
             {
