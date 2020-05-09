@@ -123,6 +123,10 @@ namespace NitroxTest.Model
             
             Optional<B> b = Optional.Of(new B());
             b.HasValue.Should().BeFalse();
+            
+            // If Optional<object> then it should always do all checks because anything can be in it.
+            Optional<object> bAsObj = Optional<object>.Of(new B());
+            bAsObj.HasValue.Should().BeFalse();
         }
 
         private class A

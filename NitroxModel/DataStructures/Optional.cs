@@ -22,9 +22,9 @@ namespace NitroxModel.DataStructures.Util
         private delegate bool HasValueDelegate(T value);
 
         /// <summary>
-        ///     List of <see cref="HasValue"/> condition checks for current type (due to being a static on generic class).
+        ///     List of <see cref="HasValue" /> condition checks for current type (due to being a static on generic class).
         /// </summary>
-        private static List<Func<object, bool>> valueChecks;
+        internal static List<Func<object, bool>> valueChecks;
 
         /// <summary>
         ///     Has value check that can be replaced and defaults to generating a value check for current <see cref="T" /> based on
@@ -176,13 +176,27 @@ namespace NitroxModel.DataStructures.Util
         public static Optional<T> OfNullable<T>(T value) => Optional<T>.OfNullable(value);
 
         /// <summary>
-        ///     Adds a condition to the optional of the given type that is checked whenever <see cref="Optional{T}.HasValue" /> is checked.
+        ///     Adds a condition to the optional of the given type that is checked whenever <see cref="Optional{T}.HasValue" /> is
+        ///     checked.
         /// </summary>
-        /// <param name="hasValueCondition">Condition to add to the <see cref="Optional{T}.HasValue"/> check.</param>
-        /// <param arg="T">Type that should have the extra condition. The given type will also apply to more specific types than itself.</param>
+        /// <param name="hasValueCondition">Condition to add to the <see cref="Optional{T}.HasValue" /> check.</param>
+        /// <param arg="T">
+        ///     Type that should have the extra condition. The given type will also apply to more specific types than
+        ///     itself.
+        /// </param>
         public static void ApplyHasValueCondition<T>(Func<T, bool> hasValueCondition) where T : class
         {
-            ValueConditions.Add(typeof(T), o => hasValueCondition(o as T));
+            Func<object, bool> condition = o => hasValueCondition(o as T);
+
+            // Always add when T = object because it can be anything.
+            if (Optional<object>.valueChecks == null)
+            {
+                Optional<object>.valueChecks = new List<Func<object, bool>>();
+            }
+            Optional<object>.valueChecks.Add(condition);
+
+            // Add to global so that the Optional<T> can lazily evaluate which conditions it should add to its checks based on its type.
+            ValueConditions.Add(typeof(T), condition);
         }
     }
 
