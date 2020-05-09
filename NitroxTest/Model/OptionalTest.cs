@@ -109,5 +109,30 @@ namespace NitroxTest.Model
             Optional<int> op = Optional.Empty;
             op.HasValue.Should().BeFalse();
         }
+
+        [TestMethod]
+        public void OptionalHasValueDynamicChecks()
+        {
+            Optional.ApplyHasValueCondition<A>(v => v.Threshold <= 200);
+            
+            Optional<A> a = Optional.Of(new A());
+            a.HasValue.Should().BeTrue();
+            
+            Optional<A> actuallyB = Optional.Of<A>(new B());
+            actuallyB.HasValue.Should().BeFalse();
+            
+            Optional<B> b = Optional.Of(new B());
+            b.HasValue.Should().BeFalse();
+        }
+
+        private class A
+        {
+            public virtual int Threshold => 200;
+        }
+
+        private class B : A
+        {
+            public override int Threshold => 201;
+        }
     }
 }
