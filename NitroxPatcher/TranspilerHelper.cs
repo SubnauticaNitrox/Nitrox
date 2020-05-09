@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 
 namespace NitroxPatcher
@@ -21,6 +22,30 @@ namespace NitroxPatcher
         private static IEnumerable<LocalVariableInfo> GetMatchingLocalVariables<T>(MethodBase method)
         {
             return method.GetMethodBody()?.LocalVariables.Where(v => v.LocalType == typeof(T)) ?? new LocalVariableInfo[0];
+        }
+
+        /// <summary>
+        /// Outputs an If (Multiplayer.Active) check
+        /// </summary>
+        /// <param name="jmpLabel">Spot to jump to if Multiplayer.Active is false</param>
+        /// <param name="generator">The ILGenerator</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> IsMultiplayer(Label jmpLabel, ILGenerator generator)
+        {
+            yield return new CodeInstruction(OpCodes.Callvirt, typeof(Multiplayer).GetProperty("Active", BindingFlags.Public | BindingFlags.Static).GetGetMethod());
+            yield return new CodeInstruction(OpCodes.Brfalse, jmpLabel); // If false jump to the end of the code block
+        }
+
+        /// <summary>
+        /// Outputs an If (!Multiplayer.Active) check
+        /// </summary>
+        /// <param name="jmpLabel">Spot to jump to if Multiplayer.Active is true</param>
+        /// <param name="generator">The ILGenerator</param>
+        /// <returns></returns>
+        public static IEnumerable<CodeInstruction> IsNotMultiplayer(Label jmpLabel, ILGenerator generator)
+        {
+            yield return new CodeInstruction(OpCodes.Callvirt, typeof(Multiplayer).GetProperty("Active", BindingFlags.Public | BindingFlags.Static).GetGetMethod());
+            yield return new CodeInstruction(OpCodes.Brtrue, jmpLabel); // If true jump to the end of the code block
         }
 
         /// <summary>
