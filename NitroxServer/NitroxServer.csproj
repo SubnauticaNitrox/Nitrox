@@ -317,11 +317,14 @@
     <Compile Include="ConsoleCommands\Abstract\Type\TypePlayer.cs" />
     <Compile Include="ConsoleCommands\Abstract\Type\TypeString.cs" />
     <Compile Include="ConsoleCommands\AutosaveCommand.cs" />
+    <Compile Include="ConsoleCommands\BackCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
+    <Compile Include="ConsoleCommands\TeleportCommand.cs" />
+    <Compile Include="ConsoleCommands\WarpCommand.cs" />
     <Compile Include="ConsoleCommands\WhoisCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />
     <Compile Include="ConsoleCommands\ListCommand.cs" />

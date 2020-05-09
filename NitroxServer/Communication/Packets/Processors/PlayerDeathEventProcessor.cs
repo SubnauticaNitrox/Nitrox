@@ -9,6 +9,7 @@ namespace NitroxServer.Communication.Packets.Processors
     {
         private readonly PlayerManager playerManager;
         private readonly ServerConfig serverConfig;
+
         public PlayerDeathEventProcessor(PlayerManager playerManager, ServerConfig serverConfig)
         {
             this.playerManager = playerManager;
@@ -23,6 +24,8 @@ namespace NitroxServer.Communication.Packets.Processors
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");
                 player.SendPacket(playerKicked);
             }
+
+            player.LastStoredPosition = packet.DeathPosition;
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

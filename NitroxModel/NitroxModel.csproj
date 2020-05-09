@@ -281,10 +281,12 @@
     <Compile Include="Packets\EscapePodRadioRepair.cs" />
     <Compile Include="Packets\EscapePodRepair.cs" />
     <Compile Include="Packets\IShortString.cs" />
+    <Compile Include="Packets\GameModeChanged.cs" />
     <Compile Include="Packets\PlayerPermaDeathEvent.cs" />
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />
     <Compile Include="Packets\PlayerEquipmentRemoved.cs" />
+    <Compile Include="Packets\PlayerTeleported.cs" />
     <Compile Include="Packets\RadioPlayPendingMessage.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentAdded.cs" />
     <Compile Include="Packets\RemotePlayerEquipmentRemoved.cs" />
