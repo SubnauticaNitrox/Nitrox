@@ -194,14 +194,6 @@ namespace NitroxServer.GameLogic
             return Optional.OfNullable(player);
         }
 
-        public void UpdatePlayer(Player player)
-        {
-            if (allPlayersByName.ContainsKey(player.Name))
-            {
-                allPlayersByName[player.Name] = player;
-            }
-        }
-
         public void SendPacketToAllPlayers(Packet packet)
         {
             foreach (Player player in ConnectedPlayers())

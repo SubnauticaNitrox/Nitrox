@@ -20,7 +20,6 @@ namespace NitroxServer.Communication.Packets.Processors
             if(serverConfig.IsGameMode("Hardcore"))
             {
                 player.IsPermaDeath = true;
-                playerManager.UpdatePlayer(player);
                 PlayerKicked playerKicked = new PlayerKicked("Permanent death from hardcore mode");
                 player.SendPacket(playerKicked);
             }
