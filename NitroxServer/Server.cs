@@ -80,7 +80,7 @@ namespace NitroxServer
 
             Log.Info("Nitrox Server Started");
 
-            if (!serverConfig.DisableAutoSave && !serverConfig.IsGameMode("Hardcore"))
+            if (!serverConfig.DisableAutoSave)
             {
                 EnablePeriodicSaving();
             }
