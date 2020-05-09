@@ -4,7 +4,7 @@
     {
         public static NitroxModel.DataStructures.Int3 Model(this global::Int3 int3)
         {
-           return new NitroxModel.DataStructures.Int3(int3.x, int3.y, int3.z);
+            return new NitroxModel.DataStructures.Int3(int3.x, int3.y, int3.z);
         }
 
         public static global::Int3 Global(this NitroxModel.DataStructures.Int3 int3)

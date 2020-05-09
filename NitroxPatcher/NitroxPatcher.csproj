@@ -328,6 +328,7 @@
     <Compile Include="Patches\Dynamic\Radio_PlayRadioMessage_Patch.cs" />
     <Compile Include="Patches\Dynamic\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Dynamic\Seamoth_SubConstructionComplete_Patch.cs" />
+    <Compile Include="Patches\Dynamic\SpawnConsoleCommand_OnConsoleCommand_Patch.cs" />
     <Compile Include="Patches\Dynamic\Stalker_CheckLoseTooth_Patch.cs" />
     <Compile Include="Patches\Dynamic\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubConsoleCommand_OnConsoleCommand_sub_Patch.cs" />

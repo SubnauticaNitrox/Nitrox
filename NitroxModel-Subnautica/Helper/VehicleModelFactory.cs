@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
+using UnityEngine;
+using NitroxTechType = NitroxModel.DataStructures.TechType;
 
 namespace NitroxModel_Subnautica.Helper
 {
-    public class VehicleModelFactory
+    public static class VehicleModelFactory
     {
         public static VehicleModel BuildFrom(ConstructorBeginCrafting packet)
         {
@@ -22,8 +25,24 @@ namespace NitroxModel_Subnautica.Helper
                 case TechType.RocketBase:
                     return null;
                 default:
-                    throw new Exception("Could not build from: " + packet.TechType);
+                    throw new Exception($"Could not build from: {packet.TechType}");
+            }
+        }
 
+        public static VehicleModel BuildFrom(NitroxTechType techType, NitroxId ConstructedItemId, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
+        {
+            switch (techType.Enum())
+            {
+                case TechType.Seamoth:
+                    return new SeamothModel(techType, ConstructedItemId, position, rotation, interactiveChildIdentifiers, Optional.Empty, name, hsb, colours, health);
+                case TechType.Exosuit:
+                    return new ExosuitModel(techType, ConstructedItemId, position, rotation, interactiveChildIdentifiers, Optional.Empty, name, hsb, colours, health);
+                case TechType.Cyclops:
+                    return new CyclopsModel(techType, ConstructedItemId, position, rotation, interactiveChildIdentifiers, Optional.Empty, name, hsb, colours, health);
+                case TechType.RocketBase:
+                    return null;
+                default:
+                    throw new Exception($"Could not build from: {techType}");
             }
         }
     }

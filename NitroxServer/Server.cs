@@ -4,6 +4,7 @@ using NitroxModel.Server;
 using NitroxServer.Serialization.World;
 using System.Configuration;
 using System.Text;
+using System.Linq;
 
 namespace NitroxServer
 {
@@ -54,6 +55,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+                builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
 
                 return builder.ToString();
             }
