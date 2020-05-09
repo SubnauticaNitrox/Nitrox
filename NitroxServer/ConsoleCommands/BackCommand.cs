@@ -1,5 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxServer.ConsoleCommands.Abstract;
 
 namespace NitroxServer.ConsoleCommands
@@ -13,12 +14,13 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
-
             Player player = args.Sender.Value;
-
-            Validate.IsTrue(player.LastStoredPosition.HasValue, "No previous location...");
+            if (player.LastStoredPosition == null)
+            {
+                Log.InGame("No previous location...");
+                return;
+            }
             player.Teleport(player.LastStoredPosition.Value);
-
             SendMessage(args.Sender, $"Teleported back {player.LastStoredPosition.Value}");
         }
     }

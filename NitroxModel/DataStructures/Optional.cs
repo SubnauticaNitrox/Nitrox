@@ -17,7 +17,7 @@ namespace NitroxModel.DataStructures.Util
     /// <typeparam name="T"></typeparam>
     [Serializable]
     [ProtoContract]
-    public struct Optional<T> : ISerializable
+    public struct Optional<T> : ISerializable where T : class
     {
         private delegate bool HasValueDelegate(T value);
 
@@ -36,7 +36,7 @@ namespace NitroxModel.DataStructures.Util
             Type type = typeof(T);
             bool isObj = type == typeof(object);
             foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
-            {
+            { 
                 if (isObj || filter.Key.IsAssignableFrom(type))
                 {
                     // Only create the list in memory when required.
@@ -44,12 +44,14 @@ namespace NitroxModel.DataStructures.Util
                     {
                         valueChecks = new List<Func<object, bool>>();
                     }
-                    valueChecks.Add(filter.Value);
+                    
+                    // Exclude check for Optional<object> if the type doesn't match the type of the filter (because it'll always fail anyway be null for `o as T`) 
+                    valueChecks.Add(isObj ? o => !filter.Key.IsInstanceOfType(o) || filter.Value(o) : filter.Value);
                 }
             }
 
             // Update check to just check has values directly for future calls (this is an optimization).
-            if (valueChecks != null && !isObj)
+            if (valueChecks != null)
             {
                 valueChecksForT = val =>
                 {
@@ -67,27 +69,6 @@ namespace NitroxModel.DataStructures.Util
                     return true;
                 };
             }
-            else if (valueChecks != null && isObj)
-            {
-                valueChecksForT = val =>
-                {
-                    if (ReferenceEquals(val, null))
-                    {
-                        return false;
-                    }
-                    if (!val.GetType().IsValueType) // for Optional<object> we need to check if value-type since it can't be cast to object and will NRE
-                    {
-                        foreach (Func<object, bool> check in valueChecks)
-                        {
-                            if (!check(val))
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                    return true;
-                };
-            }
             else
             {
                 valueChecksForT = val => !ReferenceEquals(val, null);
@@ -100,25 +81,12 @@ namespace NitroxModel.DataStructures.Util
         [ProtoMember(1)]
         public T Value { get; private set; }
 
-        private bool hasValue;
-
         [ProtoMember(2)]
-        public bool HasValue
-        {
-            get
-            {
-                return valueChecksForT(Value) && hasValue;
-            }
-            set
-            {
-                hasValue = value;
-            }
-        }
+        public bool HasValue => valueChecksForT(Value);
 
         private Optional(T value)
         {
             Value = value;
-            hasValue = true;
         }
 
         public T OrElse(T elseValue)
@@ -150,14 +118,12 @@ namespace NitroxModel.DataStructures.Util
         private Optional(SerializationInfo info, StreamingContext context)
         {
             Value = (T)info.GetValue("value", typeof(T));
-            hasValue = info.GetBoolean("hasValue");
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("value", Value);
-            info.AddValue("hasValue", HasValue);
         }
 
         public static implicit operator Optional<T>(OptionalEmpty none)
@@ -194,8 +160,8 @@ namespace NitroxModel.DataStructures.Util
         internal static Dictionary<Type, Func<object, bool>> ValueConditions = new Dictionary<Type, Func<object, bool>>();
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
-        public static Optional<T> Of<T>(T value) => Optional<T>.Of(value);
-        public static Optional<T> OfNullable<T>(T value) => Optional<T>.OfNullable(value);
+        public static Optional<T> Of<T>(T value) where T : class => Optional<T>.Of(value);
+        public static Optional<T> OfNullable<T>(T value) where T : class => Optional<T>.OfNullable(value);
 
         /// <summary>
         ///     Adds a condition to the optional of the given type that is checked whenever <see cref="Optional{T}.HasValue" /> is
