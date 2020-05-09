@@ -1,7 +1,8 @@
-﻿using NitroxServer.ConsoleCommands.Abstract;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
-using NitroxServer.ConfigParser;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Helper;
+using NitroxModel.Server;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -9,34 +10,25 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly ServerConfig serverConfig;
 
-        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "{password}", "Log in to server as admin (requires password)")
+        public LoginCommand(ServerConfig serverConfig) : base("login", Perms.PLAYER, "Log in to server as admin (requires password)")
         {
             this.serverConfig = serverConfig;
+            AddParameter(new TypeString("password", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            string message = "Can't update permissions";
+            Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
 
-            if (sender.HasValue)
+            if (args.Get(0) == serverConfig.AdminPassword)
             {
-                if (args[0] == serverConfig.AdminPassword)
-                {
-                    sender.Value.Permissions = Perms.ADMIN;
-                    message = $"Updated permissions to admin for {sender.Value.Name}";
-                }
-                else
-                {
-                    message = "Incorrect Password";
-                }
+                args.Sender.Value.Permissions = Perms.ADMIN;
+                SendMessage(args.Sender, $"Updated permissions to admin for {args.SenderName}");
             }
-
-            Notify(sender, message);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 1;
+            else
+            {
+                SendMessage(args.Sender, "Incorrect Password");
+            }
         }
     }
 }

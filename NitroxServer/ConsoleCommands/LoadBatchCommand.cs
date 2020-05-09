@@ -1,36 +1,33 @@
-﻿using NitroxModel.DataStructures.Util;
-using NitroxServer.ConsoleCommands.Abstract;
-using NitroxServer.GameLogic.Entities.Spawning;
+﻿using System.Collections.Generic;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using System.Collections.Generic;
+using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
+using NitroxServer.GameLogic.Entities.Spawning;
 
 namespace NitroxServer.ConsoleCommands
 {
     /// <summary>
-    /// Mainly used for testing but can be used to pregen the world
+    ///     Mainly used for testing but can be used to pregen the world
     /// </summary>
     internal class LoadBatchCommand : Command
     {
         private readonly BatchEntitySpawner batchEntitySpawner;
 
-        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "{x} {y} {z}", "Loads entities at x y z")
+        public LoadBatchCommand(BatchEntitySpawner batchEntitySpawner) : base("loadbatch", Perms.CONSOLE, "Loads entities at x y z")
         {
             this.batchEntitySpawner = batchEntitySpawner;
+            AddParameter(new TypeInt("x", true));
+            AddParameter(new TypeInt("y", true));
+            AddParameter(new TypeInt("z", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            Int3 batchId = new Int3(int.Parse(args[0]), int.Parse(args[1]), int.Parse(args[2]));
+            Int3 batchId = new Int3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
             List<Entity> entities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 
-            Notify(sender, $"Loaded {entities.Count} entities from batch {batchId}");
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            int _;
-            return args.Length == 3 && int.TryParse(args[0], out _) && int.TryParse(args[1], out _) && int.TryParse(args[2], out _);
+            SendMessage(args.Sender, $"Loaded {entities.Count} entities from batch {batchId}");
         }
     }
 }

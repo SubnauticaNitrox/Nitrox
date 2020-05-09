@@ -122,7 +122,8 @@ namespace NitroxModel.Logger
             filter.LevelMax = Level.Fatal;
 
             RollingFileAppender fileAppender = new RollingFileAppender();
-            fileAppender.File = Path.Combine(GameInstallationFinder.Instance.FindGame().OrElse(""), "Nitrox Logs", "nitrox-.log"); // Attempt to create 'Nitrox Logs' dir where the game is.
+            string basePath = GameInstallationFinder.Instance.FindGame();
+            fileAppender.File = Path.Combine(basePath ?? "", "Nitrox Logs", "nitrox-.log"); // Attempt to create 'Nitrox Logs' dir where the game is.
             fileAppender.AppendToFile = true;
             fileAppender.RollingStyle = RollingFileAppender.RollingMode.Date;
             fileAppender.MaxSizeRollBackups = 10;

@@ -27,7 +27,12 @@ namespace NitroxServer_Subnautica.Serialization.Resources
             { 4, new TransformAssetParser()},
             { 49, new TextAssetParser() },
             { 114, new MonobehaviourAssetParser() },
-            { 115, new MonoscriptAssetParser() }
+            { 115, new MonoscriptAssetParser() },
+
+            // 224 is RectTransform. We don't currently directly interpret it; however, we want to parse it so that
+            // any transform links are maintained.  All of the beginning fields are exactly the same as a regular
+            // transform object.  It just has some additional metadata that is currently unused.
+            { 224, new TransformAssetParser()}
         };
 
         public static ResourceAssets Parse()
@@ -76,7 +81,7 @@ namespace NitroxServer_Subnautica.Serialization.Resources
                     reader.Position = assetFileInfo.absoluteFilePos;
 
                     AssetIdentifier identifier = new AssetIdentifier(fileId, assetFileInfo.index);
-
+                    
                     AssetParser assetParser;
 
                     if (assetParsersByClassId.TryGetValue(assetFileInfo.curFileType, out assetParser))
@@ -115,15 +120,15 @@ namespace NitroxServer_Subnautica.Serialization.Resources
         private static string FindDirectoryContainingResourceAssets()
         {
             List<string> errors = new List<string>();
-            Optional<string> subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
-            if (!subnauticaPath.HasValue)
+            string subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
+            if (subnauticaPath == null)
             {
                 throw new DirectoryNotFoundException($"Could not locate Subnautica installation directory:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
             }
             
-            if (File.Exists(Path.Combine(subnauticaPath.Value, "Subnautica_Data", "resources.assets")))
+            if (File.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "resources.assets")))
             {
-                return Path.Combine(subnauticaPath.Value, "Subnautica_Data");
+                return Path.Combine(subnauticaPath, "Subnautica_Data");
             }
             if (File.Exists(Path.Combine("..", "resources.assets")))   //  SubServer => Subnautica/Subnautica_Data/SubServer
             {

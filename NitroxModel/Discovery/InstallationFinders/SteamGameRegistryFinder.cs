@@ -2,7 +2,6 @@
 using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.Win32;
-using NitroxModel.DataStructures.Util;
 
 namespace NitroxModel.Discovery.InstallationFinders
 {
@@ -11,19 +10,19 @@ namespace NitroxModel.Discovery.InstallationFinders
         public const int SUBNAUTICA_APP_ID = 264710;
         public const string SUBNAUTICA_GAME_NAME = "Subnautica";
 
-        public Optional<string> FindGame(List<string> errors = null)
+        public string FindGame(List<string> errors = null)
         {
             string steamPath = (string)ReadRegistrySafe("Software\\Valve\\Steam", "SteamPath");
             if (string.IsNullOrEmpty(steamPath))
             {
                 errors?.Add("It appears you don't have Steam installed.");
-                return Optional.Empty;
+                return null;
             }
 
             string appsPath = Path.Combine(steamPath, "steamapps");
             if (File.Exists(Path.Combine(appsPath, $"appmanifest_{SUBNAUTICA_APP_ID}.acf")))
             {
-                return Optional.Of(Path.Combine(appsPath, "common", SUBNAUTICA_GAME_NAME));
+                return Path.Combine(appsPath, "common", SUBNAUTICA_GAME_NAME);
             }
 
             string path = SearchAllInstallations(Path.Combine(appsPath, "libraryfolders.vdf"), SUBNAUTICA_APP_ID, SUBNAUTICA_GAME_NAME);
@@ -33,10 +32,10 @@ namespace NitroxModel.Discovery.InstallationFinders
             }
             else
             {
-                return Optional.Of(path);
+                return path;
             }
 
-            return Optional.Empty;
+            return null;
         }
 
         /// <summary>

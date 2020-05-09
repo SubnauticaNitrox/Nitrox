@@ -10,9 +10,10 @@ jobs:
     steps:
     - name: Checking out repository
       uses: actions/checkout@v2
+      with:
+        submodules: 'true'
     - name: Download Subnautica files
-      run: |
-          ./.github/depotDownloader/QXCTF.exe
+      run: ./.github/depotDownloader/QXCTF.exe
     - name: Setup Nuget.exe
       uses: warrenbuckley/Setup-Nuget@v1
     - name: Restore packages
@@ -21,6 +22,8 @@ jobs:
       uses: warrenbuckley/Setup-MSBuild@v1
     - name: Build with MSBuild
       run: msbuild Nitrox.sln -p:Configuration=Release
+    - name: Delete unneeded files for zipped launcher
+      run: Remove-Item –path .\NitroxLauncher\bin\Release\*.* -include *.dll,*.pdb,*.xml
     - name: Uploading zipped launcher
       uses: actions/upload-artifact@v1
       with:

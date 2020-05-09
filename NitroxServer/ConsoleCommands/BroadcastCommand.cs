@@ -1,9 +1,9 @@
-﻿using NitroxModel.DataStructures.Util;
+﻿using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -11,24 +11,16 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.CONSOLE, "{message}", "Broadcasts a message on the server", new[] {"say"})
+        public BroadcastCommand(PlayerManager playerManager) : base("broadcast", Perms.ADMIN, "Broadcasts a message on the server", true)
         {
             this.playerManager = playerManager;
+            AddAlias("say");
+            AddParameter(new TypeString("message", true));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            string joinedArgs = string.Join(" ", args);
-
-            ushort senderId = sender.HasValue ? sender.Value.Id : ChatMessage.SERVER_ID;
-            playerManager.SendPacketToAllPlayers(new ChatMessage(senderId, joinedArgs));
-
-            Log.Info("BROADCAST: " + joinedArgs);
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length > 0;
+            SendMessageToAllPlayers(args.GetTillEnd());
         }
     }
 }

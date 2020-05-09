@@ -227,6 +227,10 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
+    <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PropulsionCannon_ReleaseGrabbedObject_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PropulsionCannon_GrabObject_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Sealed_Weld_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_CopyFrom_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_SetState_Patch.cs" />
     <Compile Include="Patches\Dynamic\CrashHome_Spawn_Patch.cs" />
@@ -318,11 +322,13 @@
     <Compile Include="Patches\Dynamic\PilotingChair_ReleaseBy_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_SetCurrentSub_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_Update_Patch.cs" />
+    <Compile Include="Patches\Dynamic\PrecursorDoorway_ToggleDoor_Patch.cs" />
     <Compile Include="Patches\Dynamic\PrefabPlaceholdersGroup_Spawn_Patch.cs" />
     <Compile Include="Patches\Dynamic\Radio_OnRepair_Patch.cs" />
     <Compile Include="Patches\Dynamic\Radio_PlayRadioMessage_Patch.cs" />
     <Compile Include="Patches\Dynamic\SeaMoth_OnUpgradeModuleUse_Patch.cs" />
     <Compile Include="Patches\Dynamic\Seamoth_SubConstructionComplete_Patch.cs" />
+    <Compile Include="Patches\Dynamic\SpawnConsoleCommand_OnConsoleCommand_Patch.cs" />
     <Compile Include="Patches\Dynamic\Stalker_CheckLoseTooth_Patch.cs" />
     <Compile Include="Patches\Dynamic\StoryGoal_Execute_Patch.cs" />
     <Compile Include="Patches\Dynamic\SubConsoleCommand_OnConsoleCommand_sub_Patch.cs" />
@@ -353,6 +359,7 @@
     <Compile Include="Patches\Persistent\EscapePodFirstUseCinematicsController_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
+    <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
   </ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxServer.ConsoleCommands.Abstract;
+using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
 
 namespace NitroxServer.ConsoleCommands
@@ -9,34 +9,33 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly TimeKeeper timeKeeper;
 
-        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "{day/night}", "Changes the map time")
+        public TimeCommand(TimeKeeper timeKeeper) : base("time", Perms.ADMIN, "Changes the map time")
         {
             this.timeKeeper = timeKeeper;
+            AddParameter(new TypeString("day/night", false));
         }
 
-        public override void RunCommand(string[] args, Optional<Player> sender)
+        protected override void Execute(CallArgs args)
         {
-            switch (args[0].ToLower())
+            string time = args.Get(0);
+
+            switch (time?.ToLower())
             {
                 case "day":
                     timeKeeper.SetDay();
-                    Notify(sender, "Time set to day");
+                    SendMessageToAllPlayers("Time set to day");
                     break;
 
                 case "night":
                     timeKeeper.SetNight();
-                    Notify(sender, "Time set to night");
+                    SendMessageToAllPlayers("Time set to night");
                     break;
 
                 default:
-                    Notify(sender, "Cannot set time, invalid parameters (day/night)");
+                    timeKeeper.SkipTime();
+                    SendMessageToAllPlayers("Skipped time");
                     break;
             }
-        }
-
-        public override bool VerifyArgs(string[] args)
-        {
-            return args.Length == 1;
         }
     }
 }

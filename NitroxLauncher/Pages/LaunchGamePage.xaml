@@ -40,19 +40,17 @@
                 <ColumnDefinition Width="269*"/>
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Margin="0,2,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
-                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold">GAME DEVELOPER</TextBlock>
-                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Unknownworlds</TextBlock>
+            <StackPanel Margin="0,94,0,0" Grid.Column="2" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
+                <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold"><Run Text="GAME DEVELOPER"/></TextBlock>
+                <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap"><Run Text="Unknownworlds"/></TextBlock>
             </StackPanel>
 
-            <StackPanel Margin="0,55,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
+            <StackPanel Margin="0,94,0,0" Grid.Column="1" HorizontalAlignment="Left" Width="171" Height="44" VerticalAlignment="Top">
                 <TextBlock FontSize="12" Foreground="#7FFFFFFF" Margin="0,0,0,6" FontWeight="Bold">MOD DEVELOPERS</TextBlock>
                 <TextBlock FontSize="14" Foreground="White" Margin="0,0,0,12" TextWrapping="Wrap">Team Nitrox</TextBlock>
             </StackPanel>
 
-            <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Grid.Column="2" Margin="0,0,10,0" Height="148" VerticalAlignment="Top">
-                <Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><LineBreak/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/>
-            </TextBlock>
+            <TextBlock FontSize="16" Foreground="White" TextWrapping="Wrap" Grid.Column="1" Margin="0,0,10,0" Height="87" VerticalAlignment="Top" Grid.ColumnSpan="2"><Run Text="Nitrox is an open-source, multiplayer modification for the game Subnautica."/><Run Text=" "/><Run Text="The project is maintained by the community with regular support and updates from the generous contributors."/></TextBlock>
 
             <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="3" Height="138">
                 <Button Style="{StaticResource LargeButton}" Click="MultiplayerButton_Click" ToolTip="Launch the game with multiplayer enabled." Background="#FF007BFF" Width="Auto" HorizontalAlignment="Stretch" Margin="0,0,0,8">
@@ -129,6 +127,6 @@
             </StackPanel>
 
         </Grid>
-        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="49" VerticalAlignment="Top" Margin="30,295,355,0" Grid.Row="1" Grid.Column="1" />
+        <Image Stretch="Uniform" Source="{StaticResource SubnauticaMainImage}" Height="48" VerticalAlignment="Center" Margin="193,161,192,186" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" />
     </Grid>
 </local:PageBase>

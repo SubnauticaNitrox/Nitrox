@@ -137,7 +137,7 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
 
             if (ip == "127.0.0.1")
             {
-                return IPHelper.GetPublicIP() + ":" + port;
+                return WebHelper.GetPublicIP() + ":" + port;
             }
             else
             {

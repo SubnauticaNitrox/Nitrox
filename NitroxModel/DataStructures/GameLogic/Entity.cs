@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using ProtoBufNet;
 using UnityEngine;
 
@@ -50,6 +51,14 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public NitroxId ParentId { get; set; }
+        
+        [ProtoMember(11)]
+        public EntityMetadata Metadata { get; set; }
+
+        // If set, this entity already exists as a gameobject in the world (maybe as a child of a prefab we already spawned).  This
+        // id can be used to find the object and update the corresponding id.
+        [ProtoMember(12)]
+        public int? ExistingGameObjectChildIndex { get; set; }
 
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
@@ -58,7 +67,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public Entity(Vector3 localPosition, Quaternion localRotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId id, Entity parentEntity = null)
+        public Entity(Vector3 localPosition, Quaternion localRotation, Vector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
         {
             Transform = new NitroxTransform(localPosition, localRotation, scale, this);
             TechType = techType;
@@ -68,7 +77,9 @@ namespace NitroxModel.DataStructures.GameLogic
             SpawnedByServer = spawnedByServer;
             WaterParkId = null;
             SerializedGameObject = null;
+            Metadata = null;
             ExistsInGlobalRoot = false;
+            ExistingGameObjectChildIndex = existingGameObjectChildIndex;
 
             if (parentEntity != null)
             {
@@ -88,11 +99,12 @@ namespace NitroxModel.DataStructures.GameLogic
             WaterParkId = waterParkId;
             SerializedGameObject = serializedGameObject;
             ExistsInGlobalRoot = existsInGlobalRoot;
+            ExistingGameObjectChildIndex = null;
         }
 
         public override string ToString()
         {
-            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + "]";
+            return "[Entity Transform: " + Transform + " TechType: " + TechType + " Id: " + Id + " Level: " + Level + " classId: " + ClassId + " ChildEntities: " + string.Join(",\n ", ChildEntities) + " SpawnedByServer: " + SpawnedByServer + " ExistingGameObjectChildIndex: " + ExistingGameObjectChildIndex + "]";
         }
 
         [ProtoAfterDeserialization]

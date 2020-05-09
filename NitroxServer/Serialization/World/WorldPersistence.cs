@@ -11,12 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxServer.ConfigParser;
 using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World
 {
@@ -44,6 +44,7 @@ namespace NitroxServer.Serialization.World
                 persistedData.WorldData.InventoryData = InventoryData.From(world.InventoryManager.GetAllInventoryItems(), world.InventoryManager.GetAllStorageSlotItems());
                 persistedData.PlayerData = PlayerData.From(world.PlayerManager.GetAllPlayers());
                 persistedData.WorldData.GameData = world.GameData;
+                persistedData.WorldData.StoryTimingData = StoryTimingData.From(world.EventTriggerer);
                 persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
 
                 if (!Directory.Exists(config.SaveName))
@@ -123,7 +124,7 @@ namespace NitroxServer.Serialization.World
                 {
                     throw new InvalidDataException("Persisted state is not valid");
                 }
-                
+
 
                 World world = CreateWorld(persistedData.WorldData.ServerStartTime.Value,
                                           persistedData.WorldData.EntityData.Entities,
@@ -136,6 +137,7 @@ namespace NitroxServer.Serialization.World
                                           persistedData.WorldData.GameData,
                                           persistedData.WorldData.ParsedBatchCells,
                                           persistedData.WorldData.EscapePodData.EscapePods,
+                                          persistedData.WorldData.StoryTimingData,
                                           config.GameMode);
 
                 return Optional.Of(world);
@@ -165,8 +167,13 @@ namespace NitroxServer.Serialization.World
 
         private World CreateFreshWorld()
         {
-            World world = CreateWorld(DateTime.Now, new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(), new List<VehicleModel>(), new List<Player>(), new List<ItemData>(), new List<ItemData>(), new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() }, new List<Int3>(), new List<EscapePodModel>(), config.GameMode);
-            return world;
+            return CreateWorld(
+                DateTime.Now,
+                new List<Entity>(), new List<BasePiece>(), new List<BasePiece>(),
+                new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
+                new List<ItemData>(),
+                new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
+                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
         }
 
         private World CreateWorld(DateTime serverStartTime,
@@ -180,6 +187,7 @@ namespace NitroxServer.Serialization.World
                                   GameData gameData,
                                   List<Int3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
+                                  StoryTimingData storyTimingData,
                                   string gameMode)
         {
             World world = new World();
@@ -188,32 +196,31 @@ namespace NitroxServer.Serialization.World
 
             world.SimulationOwnershipData = new SimulationOwnershipData();
             world.PlayerManager = new PlayerManager(players, config);
-            world.EventTriggerer = new EventTriggerer(world.PlayerManager);
+            world.EventTriggerer = new EventTriggerer(world.PlayerManager, storyTimingData.ElapsedTime, storyTimingData.AuroraExplosionTime);
             world.BaseManager = new BaseManager(partiallyConstructedPieces, completedBasePieceHistory);
             world.InventoryManager = new InventoryManager(inventoryItems, storageSlotItems);
             world.VehicleManager = new VehicleManager(vehicles, world.InventoryManager);
             world.GameData = gameData;
             world.EscapePodManager = new EscapePodManager(escapePods);
             world.GameMode = gameMode;
-            
+
             world.BatchEntitySpawner = new BatchEntitySpawner(NitroxServiceLocator.LocateService<EntitySpawnPointFactory>(),
                                                               NitroxServiceLocator.LocateService<UweWorldEntityFactory>(),
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                                                               parsedBatchCells,
                                                               serializer,
                                                               NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
-                                                              NitroxServiceLocator.LocateService<Dictionary<string, List<PrefabAsset>>>());
+                                                              NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
 
             HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
-
-            Log.Info("World GameMode: " + gameMode);
-
-            Log.Info("Server Password: " + (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword));
-            Log.Info("Admin Password: " + config.AdminPassword);
+            Log.Info($"World GameMode: {gameMode}");
+            Log.Info($"Server Password: {(string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword)}");
+            Log.Info($"Admin Password: {config.AdminPassword}");
+            Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)")}");
 
             Log.Info("To get help for commands, run help in console or /help in chatbox");
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
 using UnityEngine;
+using System.Text;
 
 namespace NitroxModel.Packets
 {
@@ -39,14 +40,16 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            string s = "[ConstructorBeginCrafting - ConstructorId: " + ConstructorId + " ConstructedItemId: " + ConstructedItemId + " TechType: " + TechType + " Duration: " + Duration + " Health: " + Health + " InteractiveChildIdentifiers: (";
+            StringBuilder s = new StringBuilder($"[ConstructorBeginCrafting - ConstructorId: {ConstructorId} ConstructedItemId: {ConstructedItemId} TechType: {TechType} Duration: {Duration} Health: {Health} InteractiveChildIdentifiers: (");
 
             foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {
-                s += childIdentifier + " ";
+                s.Append($"{childIdentifier} ");
             }
 
-            return s + ")" + " Position" + Position + " Rotation" + Rotation;
+            s.Append($") Position{Position} Rotation{Rotation}");
+
+            return s.ToString();
         }
     }
 }

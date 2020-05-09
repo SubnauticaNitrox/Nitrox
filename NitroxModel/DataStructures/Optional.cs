@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using ProtoBufNet;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace NitroxModel.DataStructures.Util
 {
@@ -20,22 +19,73 @@ namespace NitroxModel.DataStructures.Util
     [ProtoContract]
     public struct Optional<T> : ISerializable
     {
+        private delegate bool HasValueDelegate(T value);
+
+        /// <summary>
+        ///     List of <see cref="HasValue"/> condition checks for current type (due to being a static on generic class).
+        /// </summary>
+        private static List<Func<object, bool>> valueChecks;
+
+        /// <summary>
+        ///     Has value check that can be replaced and defaults to generating a value check for current <see cref="T" /> based on
+        ///     global filter conditions that were set.
+        /// </summary>
+        private static HasValueDelegate valueChecksForT = value =>
+        {
+            // Generate new HasValue check based on global filters for types.
+            Type type = typeof(T);
+            foreach (KeyValuePair<Type, Func<object, bool>> filter in Optional.ValueConditions)
+            {
+                if (filter.Key.IsAssignableFrom(type))
+                {
+                    // Only create the list in memory when required.
+                    if (valueChecks == null)
+                    {
+                        valueChecks = new List<Func<object, bool>>();
+                    }
+                    valueChecks.Add(filter.Value);
+                }
+            }
+
+            // Update check to just check has values directly for future calls (this is an optimization).
+            if (valueChecks != null)
+            {
+                valueChecksForT = val =>
+                {
+                    if (ReferenceEquals(val, null))
+                    {
+                        return false;
+                    }
+                    foreach (Func<object, bool> check in valueChecks)
+                    {
+                        if (!check(val))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                };
+            }
+            else
+            {
+                valueChecksForT = val => !ReferenceEquals(val, null);
+            }
+
+            // Give initial result based on the updated check delegate
+            return valueChecksForT(value);
+        };
+
         [ProtoMember(1)]
         public T Value { get; private set; }
 
         private bool hasValue;
-        
+
         [ProtoMember(2)]
         public bool HasValue
         {
             get
             {
-                // If Unity object is destroyed then this optional also has no value (because a dead object is useless, same as null).
-                if (Value is Object)
-                {
-                    return Value?.ToString() != "null";
-                }
-                return hasValue;
+                return valueChecksForT(Value) && hasValue;
             }
             set
             {
@@ -66,7 +116,7 @@ namespace NitroxModel.DataStructures.Util
 
         internal static Optional<T> OfNullable(T value)
         {
-            return Equals(default(T), value) ? Optional.Empty : new Optional<T>(value);
+            return !valueChecksForT(value) ? Optional.Empty : new Optional<T>(value);
         }
 
         public override string ToString()
@@ -88,7 +138,10 @@ namespace NitroxModel.DataStructures.Util
             info.AddValue("hasValue", HasValue);
         }
 
-        public static implicit operator Optional<T>(OptionalEmpty none) => new Optional<T>();
+        public static implicit operator Optional<T>(OptionalEmpty none)
+        {
+            return new Optional<T>();
+        }
 
         public static implicit operator Optional<T>?(T obj)
         {
@@ -116,10 +169,21 @@ namespace NitroxModel.DataStructures.Util
 
     public static class Optional
     {
+        internal static Dictionary<Type, Func<object, bool>> ValueConditions = new Dictionary<Type, Func<object, bool>>();
         public static OptionalEmpty Empty { get; } = new OptionalEmpty();
 
         public static Optional<T> Of<T>(T value) => Optional<T>.Of(value);
         public static Optional<T> OfNullable<T>(T value) => Optional<T>.OfNullable(value);
+
+        /// <summary>
+        ///     Adds a condition to the optional of the given type that is checked whenever <see cref="Optional{T}.HasValue" /> is checked.
+        /// </summary>
+        /// <param name="hasValueCondition">Condition to add to the <see cref="Optional{T}.HasValue"/> check.</param>
+        /// <param arg="T">Type that should have the extra condition. The given type will also apply to more specific types than itself.</param>
+        public static void ApplyHasValueCondition<T>(Func<T, bool> hasValueCondition) where T : class
+        {
+            ValueConditions.Add(typeof(T), o => hasValueCondition(o as T));
+        }
     }
 
     public sealed class OptionalNullException<T> : Exception

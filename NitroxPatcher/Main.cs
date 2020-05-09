@@ -5,6 +5,7 @@ using Harmony;
 using NitroxClient;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
+using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxPatcher.Modules;
@@ -26,6 +27,7 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.EnableInGameMessages();
+            Optional.ApplyHasValueCondition<Object>(o => (bool)o);
 
             if (container != null)
             {

@@ -61,5 +61,10 @@ namespace NitroxModel.DataStructures.GameLogic
             Colours = colours;
             Health = health;
         }
+
+        public override string ToString()
+        {
+            return $"{nameof(TechType)}: {TechType}, {nameof(Id)}: {Id}, {nameof(Position)}: {Position}, {nameof(Name)}: {Name}";
+        }
     }
 }

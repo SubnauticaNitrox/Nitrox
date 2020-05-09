@@ -83,6 +83,24 @@ namespace NitroxLauncher
             }
         }
 
+        public async void CheckNitroxVersion()
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                string latestVersion = WebHelper.GetNitroxLatestVersion();
+
+                if (!string.IsNullOrEmpty(latestVersion) && latestVersion != Version)
+                {
+                    MessageBox.Show($"A new version of the mod ({latestVersion}) is available !\n\nPlease check our website to download it",
+                        "New version available",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Question,
+                        MessageBoxResult.OK,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
         public async Task<string> SetTargetedSubnauticaPath(string path)
         {
             if (SubnauticaPath == path || !Directory.Exists(path))
@@ -105,7 +123,7 @@ namespace NitroxLauncher
                     {
                         AppHelper.RestartAsAdmin();
                     }
-                    
+
                     return path;
                 },
                 CancellationToken.None,
