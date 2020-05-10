@@ -42,16 +42,16 @@ namespace NitroxClient.GameLogic
         //We need to get TechType from parameters because CraftData can't resolve TechType.Cyclops by himself
         public VehicleModel BuildVehicleModelFrom(GameObject gameObject, TechType techType)
         {
-            if (IsVehicle(techType))
+            if (VehicleHelper.IsVehicle(techType))
             {
                 List<InteractiveChildObjectIdentifier> childIdentifiers = VehicleChildObjectIdentifierHelper.ExtractInteractiveChildren(gameObject);
                 Optional<Vehicle> opvehicle = Optional.OfNullable(gameObject.GetComponent<Vehicle>());
 
                 NitroxId constructedObjectId = NitroxEntity.GetId(gameObject);
-                Vector3[] Colours = new Vector3[5];
-                Vector3[] HSB = new Vector3[5];
+                Vector3[] HSB = VehicleHelper.GetPrimalDefaultColours();
                 string name = string.Empty;
                 float health = 200f;
+
 
                 if (opvehicle.HasValue)
                 { //Seamoth & Exosuit
@@ -63,7 +63,13 @@ namespace NitroxClient.GameLogic
                     }
 
                     name = opvehicle.Value.GetName();
-                    Colours = HSB = opvehicle.Value.subName?.GetColors();
+
+                    if (techType == TechType.Exosuit)
+                    {   //For odd reasons the default colors aren't set yet for exosuit so we force it
+                        opvehicle.Value.ReflectionCall("RegenerateRenderInfo", false, false);
+                    }
+
+                    HSB = opvehicle.Value.subName?.GetColors();
                 }
                 else
                 { //Cyclops
@@ -73,8 +79,8 @@ namespace NitroxClient.GameLogic
                         SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
                         SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
-                        Colours = subNameTarget?.GetColors();
                         name = subNameTarget?.GetName();
+                        HSB = subNameTarget?.GetColors();
 
                         Optional<LiveMixin> livemixin = Optional.OfNullable(target.GetComponent<LiveMixin>());
 
@@ -97,8 +103,7 @@ namespace NitroxClient.GameLogic
                     childIdentifiers,
                     Optional.Empty,
                     name,
-                    Colours,
-                    HSB,
+                    HSB ?? VehicleHelper.GetDefaultColours(techType), //Shouldn't be null now, but just in case
                     health
                 );
             }
@@ -108,20 +113,6 @@ namespace NitroxClient.GameLogic
             }
 
             return null;
-        }
-
-        public bool IsVehicle(TechType techtype)
-        {
-            switch (techtype)
-            {
-                case TechType.Seamoth:
-                case TechType.Exosuit:
-                case TechType.Cyclops:
-                    return true;
-
-                default:
-                    return false;
-            }
         }
 
         public void SpawnDefaultBatteries(VehicleModel vehicleModel)
@@ -165,23 +156,23 @@ namespace NitroxClient.GameLogic
         public void CreateVehicle(VehicleModel vehicleModel)
         {
             AddVehicle(vehicleModel);
-            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Colours, vehicleModel.Health);
+            CreateVehicle(vehicleModel.TechType.Enum(), vehicleModel.Id, vehicleModel.Position, vehicleModel.Rotation, vehicleModel.InteractiveChildIdentifiers, vehicleModel.DockingBayId, vehicleModel.Name, vehicleModel.HSB, vehicleModel.Health);
         }
 
-        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
+        public void CreateVehicle(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
         {
             try
             {
                 if (techType == TechType.Cyclops)
                 {
-                    LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health));
+                    LightmappedPrefabs.main.RequestScenePrefab("cyclops", (go) => OnVehiclePrefabLoaded(techType, go, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health));
                 }
                 else
                 {
                     GameObject techPrefab = CraftData.GetPrefabForTechType(techType, false);
                     Validate.NotNull(techPrefab, $"{nameof(Vehicles)}: No prefab for tech type: {techType}");
 
-                    OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health);
+                    OnVehiclePrefabLoaded(techType, techPrefab, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health);
                 }
             }
             catch (Exception ex)
@@ -260,7 +251,7 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health)
+        private void OnVehiclePrefabLoaded(TechType techType, GameObject prefab, NitroxId id, Vector3 spawnPosition, Quaternion spawnRotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
         {
             // Partially copied from SubConsoleCommand.OnSubPrefabLoaded
             GameObject gameObject = Utils.SpawnPrefabAt(prefab, null, spawnPosition);
@@ -269,7 +260,7 @@ namespace NitroxClient.GameLogic
             gameObject.SendMessage("StartConstruction", SendMessageOptions.DontRequireReceiver);
 
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
-            Rigidbody rigidBody = gameObject.GetComponent<Rigidbody>();
+            Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
             rigidBody.isKinematic = false;
             NitroxEntity.SetNewId(gameObject, id);
 
@@ -293,13 +284,13 @@ namespace NitroxClient.GameLogic
                 if (!string.IsNullOrEmpty(name))
                 {
                     vehicle.vehicleName = name;
-                    vehicle.subName.DeserializeName(vehicle.vehicleName);
+                    vehicle.subName?.DeserializeName(vehicle.vehicleName);
                 }
 
-                if (colours != null)
+                if (hsb != null)
                 {
-                    vehicle.vehicleColors = colours;
-                    vehicle.subName.DeserializeColors(vehicle.vehicleColors);
+                    vehicle.vehicleColors = hsb;
+                    vehicle.subName?.DeserializeColors(hsb);
                 }
 
                 vehicle.GetComponent<LiveMixin>().health = health;

@@ -23,7 +23,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         }
 
-        public ExosuitModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health) : base (techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health)
+        public ExosuitModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,  float health) : base (techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             LeftArmId = new NitroxId();
             RightArmId = new NitroxId();

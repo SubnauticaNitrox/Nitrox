@@ -19,11 +19,10 @@ namespace NitroxModel.Packets
         public Quaternion Rotation { get; }
         public string Name { get; }
         public Vector3[] HSB { get; }
-        public Vector3[] Colours { get; }
         public float Health { get; }
 
         public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
-            string name, Vector3[] hsb, Vector3[] colours, float health)
+            string name, Vector3[] hsb, float health)
         {
             ConstructorId = constructorId;
             ConstructedItemId = constructeditemId;
@@ -34,7 +33,6 @@ namespace NitroxModel.Packets
             Rotation = rotation;
             Name = name;
             HSB = hsb;
-            Colours = colours;
             Health = health;
         }
 
