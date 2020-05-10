@@ -34,21 +34,18 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(8)]
         public Vector3[] HSB { get; set; }
 
-        [ProtoMember(9)]
-        public Vector3[] Colours { get; set; }
 
-        [ProtoMember(10)]
+        [ProtoMember(9)]
         public float Health { get; set; } = 1;
 
         public VehicleModel()
         {
+            // For serialization purposes
             InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional.Empty;
         }
 
-        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,
-            Vector3[] colours,
-            float health)
+        public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
         {
             TechType = techType;
             Id = id;
@@ -58,13 +55,12 @@ namespace NitroxModel.DataStructures.GameLogic
             DockingBayId = dockingBayId;
             Name = name;
             HSB = hsb;
-            Colours = colours;
             Health = health;
         }
 
         public override string ToString()
         {
-            return $"{nameof(TechType)}: {TechType}, {nameof(Id)}: {Id}, {nameof(Position)}: {Position}, {nameof(Name)}: {Name}";
+            return $"[TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Name: {Name}, Health: {Health}, DockingBayId: {DockingBayId}";
         }
     }
 }

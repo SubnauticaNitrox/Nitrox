@@ -56,5 +56,10 @@ namespace NitroxModel.DataStructures.GameLogic
             AppliedThrottle = appliedThrottle;
             Health = health;
         }
+
+        public override string ToString()
+        {
+            return $"[TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Velocity: {Velocity}, AngularVelocity: {AngularVelocity}, SteeringWheelYaw: {SteeringWheelYaw}, SteeringWheelPitch: {SteeringWheelPitch}, AppliedThrottle: {AppliedThrottle}, Health: {Health}]";
+        }
     }
 }

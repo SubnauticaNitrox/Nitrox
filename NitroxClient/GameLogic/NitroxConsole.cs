@@ -6,6 +6,7 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic
@@ -32,7 +33,7 @@ namespace NitroxClient.GameLogic
 
             try
             {
-                if (vehicles.IsVehicle(techType))
+                if (VehicleHelper.IsVehicle(techType))
                 {
                     SpawnVehicle(gameObject);
                 }
