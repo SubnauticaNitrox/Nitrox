@@ -1,6 +1,6 @@
 ﻿namespace NitroxModel.Server
 {
-    public enum SaveFileSerializer
+    public enum ServerSerializerMode
     {
         PROTOBUF,
         JSON

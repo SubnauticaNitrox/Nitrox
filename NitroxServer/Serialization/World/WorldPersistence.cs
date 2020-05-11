@@ -32,11 +32,10 @@ namespace NitroxServer.Serialization.World
     public class WorldPersistence
     {
         /// <summary>
-        ///  <see cref="protoBufSerializer"/> is for subnautica batch files
-        ///  <see cref="saveDataSerializer"/> is for nitrox save files
+        ///  For nitrox save files
         /// </summary>
-        private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly IServerSerializer saveDataSerializer;
+        private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly string fileEnding;
         private readonly ServerConfig config;
 
@@ -45,8 +44,8 @@ namespace NitroxServer.Serialization.World
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
 
-            saveDataSerializer = config.SaveFileSerializer == SaveFileSerializer.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
-            fileEnding = config.SaveFileSerializer == SaveFileSerializer.PROTOBUF ? ".nitrox" : ".json";
+            saveDataSerializer = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
+            fileEnding = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
         }
 
         public void Save(World world, string saveDir)
@@ -79,14 +78,17 @@ namespace NitroxServer.Serialization.World
                 {
                     saveDataSerializer.Serialize(stream, new SaveFileVersions());
                 }
+
                 using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "BaseData" + fileEnding)))
                 {
                     saveDataSerializer.Serialize(stream, persistedData.BaseData);
                 }
+
                 using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "PlayerData" + fileEnding)))
                 {
                     saveDataSerializer.Serialize(stream, persistedData.PlayerData);
                 }
+
                 using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "WorldData" + fileEnding)))
                 {
                     saveDataSerializer.Serialize(stream, persistedData.WorldData);
@@ -117,9 +119,10 @@ namespace NitroxServer.Serialization.World
                     versions = saveDataSerializer.Deserialize<SaveFileVersions>(stream);
                     if (versions == null)
                     {
-                        throw new VersionMismatchException("Version file is null");
+                        throw new InvalidDataException("Version file is empty or corrupted");
                     }
                 }
+
                 using (Stream stream = File.OpenRead(Path.Combine(saveDir, "BaseData" + fileEnding)))
                 {
                     if (versions.BaseDataVersion != BaseData.VERSION)
@@ -148,9 +151,9 @@ namespace NitroxServer.Serialization.World
                     persistedData.WorldData = saveDataSerializer.Deserialize<WorldData>(stream);
                 }
 
-                if (persistedData == null || !persistedData.IsValid())
+                if (!persistedData.IsValid())
                 {
-                    throw new InvalidDataException("Persisted state is not valid");
+                    throw new InvalidDataException("Save files are not valid");
                 }
 
 

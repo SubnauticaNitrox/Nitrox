@@ -8,19 +8,26 @@ namespace NitroxServer.Serialization.World
     public class SaveFileVersions
     {
         [ProtoMember(1)]
-        public long BaseDataVersion;
+        public readonly short BaseDataVersion;
 
         [ProtoMember(2)]
-        public long PlayerDataVersion;
+        public readonly short PlayerDataVersion;
 
         [ProtoMember(3)]
-        public long WorldDataVersion;
+        public readonly short WorldDataVersion;
 
         public SaveFileVersions()
         {
             BaseDataVersion = BaseData.VERSION;
             PlayerDataVersion = PlayerData.VERSION;
             WorldDataVersion = WorldData.VERSION;
+        }
+
+        public SaveFileVersions(short baseDataVersion, short playerDataVersion, short worldDataVersion)
+        {
+            BaseDataVersion = baseDataVersion;
+            PlayerDataVersion = playerDataVersion;
+            WorldDataVersion = worldDataVersion;
         }
     }
 }
