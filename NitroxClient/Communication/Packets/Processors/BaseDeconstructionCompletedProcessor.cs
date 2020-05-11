@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class DeconstructionCompletedProcessor : ClientPacketProcessor<DeconstructionCompleted>
+    public class BaseDeconstructionCompletedProcessor : ClientPacketProcessor<BaseDeconstructionCompleted>
     {
-        public override void Process(DeconstructionCompleted packet)
+        public override void Process(BaseDeconstructionCompleted packet)
         {
             GameObject deconstructing = NitroxEntity.RequireObjectFrom(packet.Id);
             UnityEngine.Object.Destroy(deconstructing);

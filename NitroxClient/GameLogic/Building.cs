@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
             Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(baseGhost);
 
             BasePiece basePiece = new BasePiece(id, placedPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
+            BaseConstructionBegin placedBasePiece = new BaseConstructionBegin(basePiece);
             packetSender.Send(placedBasePiece);
         }
 
@@ -102,7 +102,7 @@ namespace NitroxClient.GameLogic
 
             Transform camera = Camera.main.transform;
             BasePiece basePiece = new BasePiece(id, itemPosition, quaternion, camera.position, camera.rotation, techType.Model(), Optional.OfNullable(parentId), true, Optional.Empty);
-            PlaceBasePiece placedBasePiece = new PlaceBasePiece(basePiece);
+            BaseConstructionBegin placedBasePiece = new BaseConstructionBegin(basePiece);
             packetSender.Send(placedBasePiece);
         }
 
@@ -121,7 +121,7 @@ namespace NitroxClient.GameLogic
 
             if (amount < 0.95f) // Construction complete event handled by function below
             {
-                ConstructionAmountChanged amountChanged = new ConstructionAmountChanged(id, amount);
+                BaseConstructionAmountChanged amountChanged = new BaseConstructionAmountChanged(id, amount);
                 packetSender.Send(amountChanged);
             }
         }
@@ -192,13 +192,13 @@ namespace NitroxClient.GameLogic
 
             Log.Info("Construction Completed " + id);
 
-            ConstructionCompleted constructionCompleted = new ConstructionCompleted(id, baseId);
+            BaseConstructionCompleted constructionCompleted = new BaseConstructionCompleted(id, baseId);
             packetSender.Send(constructionCompleted);
         }
 
         public void DeconstructionBegin(NitroxId id)
         {
-            DeconstructionBegin deconstructionBegin = new DeconstructionBegin(id);
+            BaseDeconstructionBegin deconstructionBegin = new BaseDeconstructionBegin(id);
             packetSender.Send(deconstructionBegin);
         }
 
@@ -206,7 +206,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId id = NitroxEntity.GetId(gameObject);
 
-            DeconstructionCompleted deconstructionCompleted = new DeconstructionCompleted(id);
+            BaseDeconstructionCompleted deconstructionCompleted = new BaseDeconstructionCompleted(id);
             packetSender.Send(deconstructionCompleted);
         }
     }

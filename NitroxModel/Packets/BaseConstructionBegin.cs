@@ -4,11 +4,11 @@ using NitroxModel.DataStructures.GameLogic;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class PlaceBasePiece : Packet
+    public class BaseConstructionBegin : Packet
     {
         public BasePiece BasePiece;
 
-        public PlaceBasePiece(BasePiece basePiece)
+        public BaseConstructionBegin(BasePiece basePiece)
         {
             BasePiece = basePiece;
         }

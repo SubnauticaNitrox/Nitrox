@@ -5,18 +5,18 @@ using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class ConstructionAmountChangedPacketProcessor : AuthenticatedPacketProcessor<ConstructionAmountChanged>
+    public class BaseConstructionAmountChangedPacketProcessor : AuthenticatedPacketProcessor<BaseConstructionAmountChanged>
     {
         private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public ConstructionAmountChangedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
+        public BaseConstructionAmountChangedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
             this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
-        public override void Process(ConstructionAmountChanged packet, Player player)
+        public override void Process(BaseConstructionAmountChanged packet, Player player)
         {
             baseManager.BasePieceConstructionAmountChanged(packet.Id, packet.ConstructionAmount);
             playerManager.SendPacketToOtherPlayers(packet, player);

@@ -5,18 +5,18 @@ using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class DeconstructionBeginPacketProcessor : AuthenticatedPacketProcessor<DeconstructionBegin>
+    public class BaseDeconstructionBeginPacketProcessor : AuthenticatedPacketProcessor<BaseDeconstructionBegin>
     {
         private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public DeconstructionBeginPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
+        public BaseDeconstructionBeginPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
             this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
-        public override void Process(DeconstructionBegin packet, Player player)
+        public override void Process(BaseDeconstructionBegin packet, Player player)
         {
             baseManager.BasePieceDeconstructionBegin(packet.Id);
             playerManager.SendPacketToOtherPlayers(packet, player);

@@ -4,16 +4,16 @@ using NitroxModel.Packets;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class ConstructionAmountChangedProcessor : ClientPacketProcessor<ConstructionAmountChanged>
+    public class BaseConstructionAmountChangedProcessor : ClientPacketProcessor<BaseConstructionAmountChanged>
     {
         private BuildThrottlingQueue buildEventQueue;
 
-        public ConstructionAmountChangedProcessor(BuildThrottlingQueue buildEventQueue)
+        public BaseConstructionAmountChangedProcessor(BuildThrottlingQueue buildEventQueue)
         {
             this.buildEventQueue = buildEventQueue;
         }        
 
-        public override void Process(ConstructionAmountChanged amountChanged)
+        public override void Process(BaseConstructionAmountChanged amountChanged)
         {
             buildEventQueue.EnqueueAmountChanged(amountChanged.Id, amountChanged.ConstructionAmount);
         }

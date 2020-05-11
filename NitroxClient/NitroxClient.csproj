@@ -323,8 +323,8 @@
     <Compile Include="Communication\Packets\Processors\AddEscapePodProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CellEntitiesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ChatMessageProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConstructionCompletedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionAmountChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ConstructorBeginCraftingProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CreatureActionChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsActivateHornProcessor.cs" />
@@ -334,8 +334,8 @@
     <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DeconstructionBeginProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DeconstructionCompletedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseDeconstructionBeginProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseDeconstructionCompletedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DisconnectProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleAddedProcessor.cs" />
@@ -366,7 +366,7 @@
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryProgressProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PDAScannerEntryAddProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PickupItemProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlaceBasePieceProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionBeginProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />

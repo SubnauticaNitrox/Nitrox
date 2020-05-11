@@ -5,20 +5,20 @@ using NitroxServer.GameLogic.Bases;
 
 namespace NitroxServer.Communication.Packets.Processors
 {
-    public class ConstructionCompletedPacketProcessor : AuthenticatedPacketProcessor<ConstructionCompleted>
+    public class BaseConstructionBeginPacketProcessor : AuthenticatedPacketProcessor<BaseConstructionBegin>
     {
         private readonly BaseManager baseManager;
         private readonly PlayerManager playerManager;
         
-        public ConstructionCompletedPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
+        public BaseConstructionBeginPacketProcessor(BaseManager baseManager, PlayerManager playerManager)
         {
             this.baseManager = baseManager;
             this.playerManager = playerManager;
         }
 
-        public override void Process(ConstructionCompleted packet, Player player)
+        public override void Process(BaseConstructionBegin packet, Player player)
         {
-            baseManager.BasePieceConstructionCompleted(packet.PieceId, packet.BaseId);
+            baseManager.BasePieceConstructionBegin(packet.BasePiece);
             playerManager.SendPacketToOtherPlayers(packet, player);
         }
     }

@@ -4,12 +4,12 @@ using NitroxModel.DataStructures;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class ConstructionCompleted : Packet
+    public class BaseConstructionCompleted : Packet
     {
         public NitroxId PieceId { get; }
         public NitroxId BaseId { get; }
 
-        public ConstructionCompleted(NitroxId id, NitroxId baseId)
+        public BaseConstructionCompleted(NitroxId id, NitroxId baseId)
         {
             PieceId = id;
             BaseId = baseId;

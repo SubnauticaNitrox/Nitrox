@@ -322,13 +322,13 @@
     <Compile Include="Packets\CellEntities.cs" />
     <Compile Include="Packets\CellVisibilityChanged.cs" />
     <Compile Include="Packets\ChatMessage.cs" />
-    <Compile Include="Packets\ConstructionAmountChanged.cs" />
-    <Compile Include="Packets\ConstructionCompleted.cs" />
+    <Compile Include="Packets\BaseConstructionAmountChanged.cs" />
+    <Compile Include="Packets\BaseConstructionCompleted.cs" />
     <Compile Include="Packets\ConstructorBeginCrafting.cs" />
     <Compile Include="Packets\CorrelatedPacket.cs" />
     <Compile Include="Packets\SceneDebuggerChange.cs" />
-    <Compile Include="Packets\DeconstructionBegin.cs" />
-    <Compile Include="Packets\DeconstructionCompleted.cs" />
+    <Compile Include="Packets\BaseDeconstructionBegin.cs" />
+    <Compile Include="Packets\BaseDeconstructionCompleted.cs" />
     <Compile Include="Packets\ServerCommand.cs" />
     <Compile Include="Packets\Disconnect.cs" />
     <Compile Include="Packets\DroppedItem.cs" />
@@ -357,7 +357,7 @@
     <Compile Include="Packets\PDAEntryRemove.cs" />
     <Compile Include="Packets\PDALogEntryAdd.cs" />
     <Compile Include="Packets\PickupItem.cs" />
-    <Compile Include="Packets\PlaceBasePiece.cs" />
+    <Compile Include="Packets\BaseConstructionBegin.cs" />
     <Compile Include="Packets\PlayerDeathEvent.cs" />
     <Compile Include="Packets\PlayerJoinedMultiplayerSession.cs" />
     <Compile Include="Packets\PlayerJoiningMultiplayerSession.cs" />

@@ -7,19 +7,15 @@ namespace NitroxServer.GameLogic.Bases
     [ProtoContract]
     public class BaseData
     {
-        public const long VERSION = 2;
-        
-        [ProtoMember(1)]
-        public List<BasePiece> PartiallyConstructedPieces = new List<BasePiece>();
+        public const long VERSION = 3;
 
-        [ProtoMember(2)]
-        public List<BasePiece> CompletedBasePieceHistory = new List<BasePiece>();
-                
-        public static BaseData From(List<BasePiece> partiallyConstructedPieces, List<BasePiece> completedBasePieceHistory)
+        [ProtoMember(1)]
+        public List<BasePiece> BasePieces = new List<BasePiece>();
+
+        public static BaseData From(List<BasePiece> basePieces)
         {
             BaseData baseData = new BaseData();
-            baseData.PartiallyConstructedPieces = partiallyConstructedPieces;
-            baseData.CompletedBasePieceHistory = completedBasePieceHistory;
+            baseData.BasePieces = basePieces;
 
             return baseData;
         }

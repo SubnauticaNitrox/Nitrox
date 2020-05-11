@@ -9,16 +9,16 @@ using static NitroxClient.GameLogic.Helper.TransientLocalObjectManager;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class DeconstructionBeginProcessor : ClientPacketProcessor<DeconstructionBegin>
+    public class BaseDeconstructionBeginProcessor : ClientPacketProcessor<BaseDeconstructionBegin>
     {
         private readonly IPacketSender packetSender;
 
-        public DeconstructionBeginProcessor(IPacketSender packetSender)
+        public BaseDeconstructionBeginProcessor(IPacketSender packetSender)
         {
             this.packetSender = packetSender;
         }
 
-        public override void Process(DeconstructionBegin packet)
+        public override void Process(BaseDeconstructionBegin packet)
         {
             Log.Info("Received deconstruction packet for id: " + packet.Id);
 
@@ -27,7 +27,7 @@ namespace NitroxClient.Communication.Packets.Processors
             Constructable constructable = deconstructing.GetComponent<Constructable>();
             BaseDeconstructable baseDeconstructable = deconstructing.GetComponent<BaseDeconstructable>();
 
-            using (packetSender.Suppress<DeconstructionBegin>())
+            using (packetSender.Suppress<BaseDeconstructionBegin>())
             {
                 if (baseDeconstructable != null)
                 {

@@ -268,10 +268,10 @@
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SignChangedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DeconstructionCompletedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\DeconstructionBeginPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConstructionCompletedPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\ConstructionAmountChangedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseDeconstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseDeconstructionBeginPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionCompletedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionAmountChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ModuleRemovedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ItemContainerRemovePacketProcessor.cs" />
@@ -297,7 +297,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleNameChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleRemovePacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleMovementPacketProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlaceBasePiecePacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\BaseConstructionBeginPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\DefaultServerPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityTransformUpdatesProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\MovementPacketProcessor.cs" />

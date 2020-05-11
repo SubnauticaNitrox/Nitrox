@@ -290,7 +290,7 @@ namespace NitroxClient.MonoBehaviours
                 Constructable constructable = constructing.GetComponentInChildren<Constructable>();
                 constructable.constructedAmount = amountChanged.Amount;
 
-                using (packetSender.Suppress<ConstructionAmountChanged>())
+                using (packetSender.Suppress<BaseConstructionAmountChanged>())
                 {
                     constructable.Construct();
                 }

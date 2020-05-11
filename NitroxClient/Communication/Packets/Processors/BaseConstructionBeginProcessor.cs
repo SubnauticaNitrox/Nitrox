@@ -4,16 +4,16 @@ using NitroxClient.GameLogic.Bases;
 
 namespace NitroxClient.Communication.Packets.Processors
 {
-    public class PlaceBasePieceProcessor : ClientPacketProcessor<PlaceBasePiece>
+    public class BaseConstructionBeginProcessor : ClientPacketProcessor<BaseConstructionBegin>
     {
         private BuildThrottlingQueue buildEventQueue;
 
-        public PlaceBasePieceProcessor(BuildThrottlingQueue buildEventQueue)
+        public BaseConstructionBeginProcessor(BuildThrottlingQueue buildEventQueue)
         {
             this.buildEventQueue = buildEventQueue;
         }
 
-        public override void Process(PlaceBasePiece packet)
+        public override void Process(BaseConstructionBegin packet)
         {
             buildEventQueue.EnqueueBasePiecePlaced(packet.BasePiece);
         }

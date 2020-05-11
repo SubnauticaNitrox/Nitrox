@@ -4,18 +4,18 @@ using NitroxModel.DataStructures;
 namespace NitroxModel.Packets
 {
     [Serializable]
-    public class DeconstructionBegin : Packet
+    public class BaseDeconstructionCompleted : Packet
     {
         public NitroxId Id { get; }
 
-        public DeconstructionBegin(NitroxId id)
+        public BaseDeconstructionCompleted(NitroxId id)
         {
             Id = id;
         }
 
         public override string ToString()
         {
-            return "[DeconstructionBegin Id: " + Id + "]";
+            return "[DeconstructionCompleted Id: " + Id + "]";
         }
     }
 }
