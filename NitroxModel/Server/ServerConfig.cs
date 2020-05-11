@@ -22,7 +22,7 @@ namespace NitroxModel.Server
                serverpassword: string.Empty,
                adminpassword: StringHelper.GenerateRandomString(12),
                gamemodeSetting: ServerGameMode.SURVIVAL,
-               serverserializermode: ServerSerializerMode.JSON
+               serverserializermode: ServerSerializerMode.PROTOBUF
         )
         { }
 

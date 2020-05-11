@@ -44,6 +44,7 @@ namespace NitroxServer.Serialization.World
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
 
+            Log.Debug($"Using {config.SerializerModeEnum} as save file serializer");
             saveDataSerializer = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
             fileEnding = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
         }
