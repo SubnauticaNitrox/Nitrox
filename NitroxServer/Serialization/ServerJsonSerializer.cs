@@ -28,16 +28,20 @@ namespace NitroxServer.Serialization
 
         public void Serialize(Stream stream, object o)
         {
-            using (StreamWriter streamWriter = new StreamWriter(stream))
+            stream.Position = 0;
+            using (JsonTextWriter jsonTextWriter = new JsonTextWriter(new StreamWriter(stream)))
             {
-                streamWriter.AutoFlush = true;
-                serializer.Serialize(streamWriter, o);
+                serializer.Serialize(jsonTextWriter, o);
             }
         }
 
         public T Deserialize<T>(Stream stream)
         {
-            return (T)serializer.Deserialize(new StreamReader(stream), typeof(T));
+            stream.Position = 0;
+            using (JsonTextReader jsonTextReader = new JsonTextReader(new StreamReader(stream)))
+            {
+                return (T)serializer.Deserialize(jsonTextReader, typeof(T));
+            }
         }
 
         private void RegisterConverters()

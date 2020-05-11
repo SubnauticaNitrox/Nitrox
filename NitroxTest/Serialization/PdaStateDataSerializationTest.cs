@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures.GameLogic;
@@ -32,10 +31,15 @@ namespace NitroxTest.Serialization
             foreach (IServerSerializer serializer in serializers)
             {
                 PDAStateData deserialized;
+                byte[] buffer;
                 using (MemoryStream stream = new MemoryStream())
                 {
                     serializer.Serialize(stream, state);
-                    stream.Position = 0;
+                    buffer = stream.GetBuffer();
+                }
+
+                using (MemoryStream stream = new MemoryStream(buffer))
+                {
                     deserialized = serializer.Deserialize<PDAStateData>(stream);
                 }
 
