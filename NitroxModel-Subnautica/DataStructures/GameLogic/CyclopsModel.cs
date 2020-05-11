@@ -33,9 +33,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(7)]
         public CyclopsMotorMode.CyclopsMotorModes EngineMode { get; set; }
 
-        public CyclopsModel()
+        protected CyclopsModel()
         {
-
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public CyclopsModel(NitroxModel.DataStructures.GameLogic.NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health) : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)

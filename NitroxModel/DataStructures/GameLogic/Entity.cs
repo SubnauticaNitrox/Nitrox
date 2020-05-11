@@ -61,9 +61,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
-        public Entity()
+        protected Entity()
         {
-            // Default Constructor for serialization
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
