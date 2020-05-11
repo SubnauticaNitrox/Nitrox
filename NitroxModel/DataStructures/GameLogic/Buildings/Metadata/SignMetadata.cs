@@ -25,7 +25,7 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Metadata
         [ProtoMember(6)]
         public bool Background { get; set; }
 
-        public SignMetadata()
+        protected SignMetadata()
         {
             //Constructor for serialization. Has to be "protected" for json serialization.
         }

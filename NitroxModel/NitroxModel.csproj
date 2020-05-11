@@ -91,12 +91,12 @@
     <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
-    <Compile Include="DataStructures\Int3.cs" />
-    <Compile Include="DataStructures\JsonConverter\ColorConverter.cs" />
+	<Compile Include="DataStructures\Int3.cs" />
+	<Compile Include="DataStructures\JsonConverter\ColorConverter.cs" />
 	<Compile Include="DataStructures\JsonConverter\NitroxIdConverter.cs" />
-    <Compile Include="DataStructures\JsonConverter\AttributeContractResolver.cs" />
-    <Compile Include="DataStructures\JsonConverter\QuaternionConverter.cs" />
-    <Compile Include="DataStructures\JsonConverter\TechTypeConverter.cs" />
+	<Compile Include="DataStructures\JsonConverter\AttributeContractResolver.cs" />
+	<Compile Include="DataStructures\JsonConverter\QuaternionConverter.cs" />
+	<Compile Include="DataStructures\JsonConverter\TechTypeConverter.cs" />
     <Compile Include="DataStructures\JsonConverter\Vector3Converter.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\ThreadSafeCollection.cs" />
