@@ -27,7 +27,7 @@ namespace NitroxModel_Subnautica.Helper
         public override int BatchSize => 160;
         public override NitroxInt3 BatchDimensions => new NitroxInt3(BatchSize, BatchSize, BatchSize);
         public override NitroxInt3 DimensionsInMeters => new NitroxInt3(4096, 3200, 4096);
-        public override NitroxInt3 DimensionsInBatches => NitroxInt3.Ceil(DimensionsInMeters.ToVector3() / BATCH_SIZE);
+        public override NitroxInt3 DimensionsInBatches => NitroxInt3.Ceil(DimensionsInMeters / BATCH_SIZE);
         public override NitroxInt3 BatchDimensionCenter => new NitroxInt3(DimensionsInMeters.X / 2, DimensionsInMeters.Y - SKYBOX_METERS_ABOVE_WATER, DimensionsInMeters.Z / 2);
         public override List<NitroxTechType> GlobalRootTechTypes { get; } = GLOBAL_ROOT_TECH_TYPES;
     }

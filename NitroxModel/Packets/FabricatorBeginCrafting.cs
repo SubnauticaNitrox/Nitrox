@@ -7,10 +7,10 @@ namespace NitroxModel.Packets
     public class FabricatorBeginCrafting : Packet
     {
         public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public DataStructures.TechType TechType { get; }
         public float Duration { get; }
 
-        public FabricatorBeginCrafting(NitroxId fabricatorId, TechType techType, float duration)
+        public FabricatorBeginCrafting(NitroxId fabricatorId, DataStructures.TechType techType, float duration)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.Spawning
@@ -34,7 +35,7 @@ namespace NitroxClient.GameLogic.Spawning
                 return existingGameObjectSpawner;
             }
 
-            TechType techType = entity.TechType.Enum();
+            TechType techType = entity.TechType.ToUnity();
             if (customSpawnersByTechType.ContainsKey(techType))
             {
                 return customSpawnersByTechType[techType];

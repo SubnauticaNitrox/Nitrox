@@ -11,7 +11,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NitroxServer.GameLogic.Unlockables;
-using NitroxModel.DataStructures;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
@@ -173,7 +172,7 @@ namespace NitroxServer.Serialization.World
                 new List<VehicleModel>(), new List<Player>(), new List<ItemData>(),
                 new List<ItemData>(),
                 new GameData() { PDAState = new PDAStateData(), StoryGoals = new StoryGoalData() },
-                new List<Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
+                new List<NitroxModel.DataStructures.Int3>(), new List<EscapePodModel>(), new StoryTimingData(), config.GameMode);
         }
 
         private World CreateWorld(DateTime serverStartTime,
@@ -185,7 +184,7 @@ namespace NitroxServer.Serialization.World
                                   List<ItemData> inventoryItems,
                                   List<ItemData> storageSlotItems,
                                   GameData gameData,
-                                  List<Int3> parsedBatchCells,
+                                  List<NitroxModel.DataStructures.Int3> parsedBatchCells,
                                   List<EscapePodModel> escapePods,
                                   StoryTimingData storyTimingData,
                                   string gameMode)
@@ -209,12 +208,12 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                                                               parsedBatchCells,
                                                               serializer,
-                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
+                                                              NitroxServiceLocator.LocateService<Dictionary<NitroxModel.DataStructures.TechType, IEntityBootstrapper>>(),
                                                               NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
 
-            HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
+            HashSet<NitroxModel.DataStructures.TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxModel.DataStructures.TechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             Log.Info($"World GameMode: {gameMode}");

@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     public class FabricatorItemPickup : Packet
     {
         public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public DataStructures.TechType TechType { get; }
 
-        public FabricatorItemPickup(NitroxId fabricatorId, TechType techType)
+        public FabricatorItemPickup(NitroxId fabricatorId, DataStructures.TechType techType)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

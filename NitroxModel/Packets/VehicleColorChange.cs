@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -9,10 +10,10 @@ namespace NitroxModel.Packets
     {
         public NitroxId Id { get; }
         public int Index { get; }
-        public Vector3 HSB { get; }
-        public Color Color { get; }
+        public NitroxVector3 HSB { get; }
+        public NitroxColor Color { get; }
 
-        public VehicleColorChange(int index, NitroxId id, Vector3 hsb, Color color)
+        public VehicleColorChange(int index, NitroxId id, NitroxVector3 hsb, NitroxColor color)
         {
             Id = id;
             Index = index;

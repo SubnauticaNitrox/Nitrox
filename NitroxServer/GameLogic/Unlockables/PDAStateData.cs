@@ -10,10 +10,10 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         [ProtoMember(1)]
-        public ThreadSafeCollection<TechTypeModel> UnlockedTechTypes { get; } = new ThreadSafeCollection<TechType>();
+        public ThreadSafeCollection<TechTypeModel> UnlockedTechTypes { get; } = new ThreadSafeCollection<TechTypeModel>();
 
         [ProtoMember(2)]
-        public ThreadSafeCollection<TechTypeModel> KnownTechTypes { get; } = new ThreadSafeCollection<TechType>();
+        public ThreadSafeCollection<TechTypeModel> KnownTechTypes { get; } = new ThreadSafeCollection<TechTypeModel>();
 
         [ProtoMember(3)]
         public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();

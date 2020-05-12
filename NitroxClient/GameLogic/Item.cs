@@ -5,6 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -36,7 +37,7 @@ namespace NitroxClient.GameLogic
         public void PickedUp(Vector3 itemPosition, NitroxId id, TechType techType)
         {
             Log.Info("PickedUp " + id + " " + techType);
-            PickupItem pickupItem = new PickupItem(itemPosition, id, techType.Model());
+            PickupItem pickupItem = new PickupItem(itemPosition.ToDto(), id, techType.ToDto());
             packetSender.Send(pickupItem);
         }
 
@@ -48,7 +49,7 @@ namespace NitroxClient.GameLogic
             
             Log.Debug("Dropping item with id: " + id);
 
-            DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.Model(), dropPosition, gameObject.transform.rotation, bytes);
+            DroppedItem droppedItem = new DroppedItem(id, waterparkId, techType.ToDto(), dropPosition.ToDto(), gameObject.transform.rotation.ToDto(), bytes);
             packetSender.Send(droppedItem);
         }
 

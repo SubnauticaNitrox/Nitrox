@@ -2,6 +2,7 @@
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 using UWE;
@@ -12,12 +13,12 @@ namespace NitroxClient.GameLogic.Spawning
     {
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
-            TechType techType = entity.TechType.Enum();
+            TechType techType = entity.TechType.ToUnity();
 
             GameObject gameObject = CreateGameObject(techType, entity.ClassId);
-            gameObject.transform.position = entity.Transform.Position;
-            gameObject.transform.rotation = entity.Transform.Rotation;
-            gameObject.transform.localScale = entity.Transform.LocalScale;
+            gameObject.transform.position = entity.Transform.Position.ToUnity();
+            gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
+            gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
             NitroxEntity.SetNewId(gameObject, entity.Id);
             CrafterLogic.NotifyCraftEnd(gameObject, techType);

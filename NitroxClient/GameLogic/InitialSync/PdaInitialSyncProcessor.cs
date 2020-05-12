@@ -9,6 +9,7 @@ using NitroxModel.Helper;
 using TechTypeModel = NitroxModel.DataStructures.TechType;
 using NitroxModel_Subnautica.Helper;
 using System.Collections;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
@@ -63,7 +64,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (TechTypeModel item in pdaEntryComplete)
             {
-                complete.Add(item.Enum());
+                complete.Add(item.ToUnity());
             }
 
             Log.Info("PDAEntryComplete Save:" + pdaEntryComplete.Count + " Read Partial Client Final Count:" + complete.Count);
@@ -76,7 +77,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (PDAEntry entry in entries)
             {
-                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
+                partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.ToUnity(), unlocked = entry.Unlocked });
             }
 
             Log.Info("PDAEntryPartial Save :" + entries.Count + " Read Partial Client Final Count:" + partial.Count);
@@ -91,7 +92,7 @@ namespace NitroxClient.GameLogic.InitialSync
                 foreach (TechTypeModel techType in techTypes)
                 {
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
-                    KnownTech.Add(techType.Enum(), false);
+                    KnownTech.Add(techType.ToUnity(), false);
                 }
             }
         }

@@ -82,7 +82,7 @@ namespace NitroxServer.GameLogic.Players
             public ushort Id { get; set; }
 
             [ProtoMember(5)]
-            public Vector3 SpawnPosition { get; set; }
+            public NitroxVector3 SpawnPosition { get; set; }
 
             [ProtoMember(6)]
             public PlayerStatsData CurrentStats { get; set; }

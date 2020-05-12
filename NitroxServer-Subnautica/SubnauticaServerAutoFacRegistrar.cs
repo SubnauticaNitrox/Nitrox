@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using NitroxModel.DataStructures.GameLogic.Entities;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -40,8 +41,8 @@ namespace NitroxServer_Subnautica
 
             containerBuilder.Register(c => new Dictionary<TechTypeModel, IEntityBootstrapper>
             {
-                [TechType.CrashHome.Model()] = new CrashFishBootstrapper(),
-                [TechType.Reefback.Model()] = new ReefbackBootstrapper()
+                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
+                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
             }).SingleInstance();
         }
     }

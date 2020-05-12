@@ -6,6 +6,6 @@ namespace NitroxServer.GameLogic.Entities.Spawning
 {
     public interface IEntitySpawner
     {
-        List<Entity> LoadUnspawnedEntities(Int3 batchId);
+        List<Entity> LoadUnspawnedEntities(NitroxModel.DataStructures.Int3 batchId);
     }
 }

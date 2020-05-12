@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -8,10 +9,10 @@ namespace NitroxModel.Packets
     public class PickupItem : Packet
     {
         public NitroxId Id { get; }
-        public Vector3 ItemPosition { get; }
-        public TechType TechType { get; }
+        public NitroxVector3 ItemPosition { get; }
+        public DataStructures.TechType TechType { get; }
 
-        public PickupItem(Vector3 itemPosition, NitroxId id, TechType techType)
+        public PickupItem(NitroxVector3 itemPosition, NitroxId id, DataStructures.TechType techType)
         {
             ItemPosition = itemPosition;
             Id = id;

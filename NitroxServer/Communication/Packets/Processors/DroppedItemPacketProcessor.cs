@@ -25,7 +25,7 @@ namespace NitroxServer.Communication.Packets.Processors
         public override void Process(DroppedItem packet, Player droppingPlayer)
         {
             bool existsInGlobalRoot = Map.Main.GlobalRootTechTypes.Contains(packet.TechType);
-            Entity entity = new Entity(packet.ItemPosition, packet.ItemRotation, Vector3.one, packet.TechType, 0, null, true, packet.WaterParkId.OrElse(null), packet.Bytes, existsInGlobalRoot, packet.Id);
+            Entity entity = new Entity(packet.ItemPosition, packet.ItemRotation, NitroxVector3.One, packet.TechType, 0, null, true, packet.WaterParkId.OrElse(null), packet.Bytes, existsInGlobalRoot, packet.Id);
             entityManager.RegisterNewEntity(entity);
 
             SimulatedEntity simulatedEntity = entitySimulation.AssignNewEntityToPlayer(entity, droppingPlayer);

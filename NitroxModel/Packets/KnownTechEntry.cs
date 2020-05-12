@@ -6,10 +6,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class KnownTechEntryAdd : Packet
     {
-        public TechType TechType;
-        public bool Verbose;
+        public NitroxModel.DataStructures.TechType TechType { get; }
+        public bool Verbose { get; }
 
-        public KnownTechEntryAdd(TechType techType, bool verbose)
+        public KnownTechEntryAdd(NitroxModel.DataStructures.TechType techType, bool verbose)
         {
             TechType = techType;
             Verbose = verbose;

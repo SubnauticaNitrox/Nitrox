@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PDAEntryProgress : Packet
     {
-        public TechType TechType;
+        public NitroxModel.DataStructures.TechType TechType;
         public float Progress;
         public int Unlocked;
 
-        public PDAEntryProgress(TechType techType, float progress, int unlocked)
+        public PDAEntryProgress(NitroxModel.DataStructures.TechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

@@ -23,7 +23,7 @@ namespace NitroxModel.Packets
         public bool FirstTimeConnecting { get; }
         public InitialPDAData PDAData { get; }
         public InitialStoryGoalData StoryGoalData { get; }
-        public Vector3 PlayerSpawnData { get; }
+        public NitroxVector3 PlayerSpawnData { get; }
         public Optional<NitroxId> PlayerSubRootId { get; }
         public PlayerStatsData PlayerStatsData { get; }
         public List<InitialRemotePlayerData> RemotePlayerData { get; }
@@ -43,7 +43,7 @@ namespace NitroxModel.Packets
             IEnumerable<ItemData> storageSlots,
             InitialPDAData pdaData,
             InitialStoryGoalData storyGoalData,
-            Vector3 playerSpawnData,
+            NitroxVector3 playerSpawnData,
             Optional<NitroxId> playerSubRootId,
             PlayerStatsData playerStatsData,
             IEnumerable<InitialRemotePlayerData> remotePlayerData,

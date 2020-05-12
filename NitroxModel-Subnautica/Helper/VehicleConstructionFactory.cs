@@ -1,6 +1,7 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 
 namespace NitroxModel_Subnautica.Helper
 {

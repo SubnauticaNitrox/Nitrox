@@ -105,7 +105,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
             if (!opEntity.HasValue)
@@ -201,9 +201,9 @@ namespace NitroxServer.GameLogic.Entities
 
         private void LoadUnspawnedEntities(AbsoluteEntityCell[] cells)
         {
-            IEnumerable<Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
+            IEnumerable<NitroxModel.DataStructures.Int3> distinctBatchIds = cells.Select(cell => cell.BatchId).Distinct();
 
-            foreach(Int3 batchId in distinctBatchIds)
+            foreach(NitroxModel.DataStructures.Int3 batchId in distinctBatchIds)
             {
                 List<Entity> spawnedEntities = batchEntitySpawner.LoadUnspawnedEntities(batchId);
 

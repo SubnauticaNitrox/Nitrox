@@ -4,13 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
-using NitroxModel.DataStructures;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization
@@ -38,7 +36,7 @@ namespace NitroxServer.Serialization
             surrogateTypes.Add("UnityEngine.Quaternion", typeof(NitroxQuaternion));
         }
 
-        public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
+        public List<EntitySpawnPoint> ParseBatchData(NitroxModel.DataStructures.Int3 batchId)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
             
@@ -47,7 +45,7 @@ namespace NitroxServer.Serialization
             return spawnPoints;
         }
 
-        public void ParseFile(Int3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
+        public void ParseFile(NitroxModel.DataStructures.Int3 batchId, string pathPrefix, string prefix, string suffix, List<EntitySpawnPoint> spawnPoints)
         {
             List<string> errors = new List<string>();
             string subnauticaPath = GameInstallationFinder.Instance.FindGame(errors);
@@ -75,7 +73,7 @@ namespace NitroxServer.Serialization
          * generated worlds.  In the final release, this 'cache' has simply been baked into a final version that
          * we can parse. 
          */
-        private void ParseCacheCells(Int3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
+        private void ParseCacheCells(NitroxModel.DataStructures.Int3 batchId, string fileName, List<EntitySpawnPoint> spawnPoints)
         {
             using (Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -105,7 +103,7 @@ namespace NitroxServer.Serialization
             }
         }
 
-        private void ParseGameObjectsWithHeader(byte[] data, Int3 batchId, Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints, out bool wasLegacy)
+        private void ParseGameObjectsWithHeader(byte[] data, NitroxModel.DataStructures.Int3 batchId, NitroxModel.DataStructures.Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints, out bool wasLegacy)
         {
             wasLegacy = false;
 
@@ -130,7 +128,7 @@ namespace NitroxServer.Serialization
             return;
         }
 
-        private void ParseGameObjectsFromStream(Stream stream, Int3 batchId, Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
+        private void ParseGameObjectsFromStream(Stream stream, NitroxModel.DataStructures.Int3 batchId, NitroxModel.DataStructures.Int3 cellId, int level, List<EntitySpawnPoint> spawnPoints)
         {
             LoopHeader gameObjectCount = serializer.Deserialize<LoopHeader>(stream);
 
@@ -231,7 +229,7 @@ namespace NitroxServer.Serialization
         }
 
         [ProtoMember(1)]
-        public Int3 cellId;
+        public NitroxModel.DataStructures.Int3 cellId;
 
         [ProtoMember(2)]
         public int level;

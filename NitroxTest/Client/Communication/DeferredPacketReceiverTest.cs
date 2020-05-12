@@ -18,8 +18,8 @@ namespace NitroxTest.Client.Communication
         // Test Data
         private const ushort PLAYER_ID = 1;
         private const int CELL_LEVEL = 3;
-        private readonly Vector3 loadedActionPosition = new Vector3(50, 50, 50);
-        private readonly Vector3 unloadedActionPosition = new Vector3(200, 200, 200);
+        private readonly NitroxVector3 loadedActionPosition = new NitroxVector3(50, 50, 50);
+        private readonly NitroxVector3 unloadedActionPosition = new NitroxVector3(200, 200, 200);
         private AbsoluteEntityCell loadedCell;
         private AbsoluteEntityCell unloadedCell;
         private Int3 cellId = Int3.zero;

@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -48,7 +47,7 @@ namespace NitroxModel.DataStructures.GameLogic
             {
                 NitroxMatrix4x4 matrix = Parent != null ? Parent.localToWorldMatrix : NitroxMatrix4x4.Identity;
                 NitroxMatrix4x4.ExtractScale(ref matrix); // This is to just get the scale out of the matrix so the rotation is accurate
-                Quaternion rotation = NitroxMatrix4x4.ExtractRotation(ref matrix) * LocalRotation;
+                NitroxQuaternion rotation = NitroxMatrix4x4.ExtractRotation(ref matrix) * LocalRotation;
                 return rotation;
             }
             set

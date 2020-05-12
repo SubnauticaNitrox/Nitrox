@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)SharedConfig.targets"/>
+
+  <!-- UnityEngine libraries to include -->
+  <!-- TODO: Fix NitroxModel's and NitroxServer's dependency on Unity for protobuf surrogates and assets parsing and then remove the exception rules here -->
+  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(MSBuildProjectName)' == 'NitroxModel' or '$(MSBuildProjectName)' == 'NitroxServer'">
+    <Reference Include="$(SubnauticaManaged)\UnityEngine*.dll">
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp*.dll">
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>
