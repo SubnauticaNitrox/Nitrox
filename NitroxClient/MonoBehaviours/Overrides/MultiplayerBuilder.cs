@@ -226,7 +226,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
-                CorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as CorridorRotationMetadata);
+                BaseCorridorRotationMetadata corridorRotationMetadata = (rotationMetadata as BaseCorridorRotationMetadata);
                 BaseAddCorridorGhost corridor = (component as BaseAddCorridorGhost);
                 corridor.ReflectionSet("rotation", corridorRotationMetadata.Rotation);
 
@@ -239,7 +239,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
-                MapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as MapRoomRotationMetadata);
+                BaseMapRoomRotationMetadata mapRoomRotationMetadata = (rotationMetadata as BaseMapRoomRotationMetadata);
                 BaseAddMapRoomGhost mapRoom = (component as BaseAddMapRoomGhost);
                 mapRoom.ReflectionSet("cellType", mapRoomRotationMetadata.CellType);
                 mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
@@ -254,7 +254,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
                 BaseAddModuleGhost module = (component as BaseAddModuleGhost);
 
-                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.Cell.Global(), (Base.Direction)baseModuleRotationMetadata.Direction);
+                module.anchoredFace = new Base.Face(baseModuleRotationMetadata.AnchoredFaceCell.Global(), (Base.Direction)baseModuleRotationMetadata.AnchoredFaceDirection);
                 module.ReflectionCall("RebuildGhostGeometry");
             }
         }

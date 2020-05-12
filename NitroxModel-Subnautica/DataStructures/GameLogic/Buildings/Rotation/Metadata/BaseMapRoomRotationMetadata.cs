@@ -6,8 +6,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract]
-    public class MapRoomRotationMetadata : RotationMetadata
+    public class BaseMapRoomRotationMetadata : RotationMetadata
     {
+        public const long VERSION = 2;
+
         // The map room internally maintains a cellType and connectionMask for rotation - these values
         // are updated when the scroll wheel changes.
         [ProtoMember(1)]
@@ -16,12 +18,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(2)]
         public int ConnectionMask { get; set; }
 
-        public MapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
+        public BaseMapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
         {
             // For serialization purposes
         }
 
-        public MapRoomRotationMetadata(byte cellType, int connectionMask) : base (typeof(BaseAddMapRoomGhost))
+        public BaseMapRoomRotationMetadata(byte cellType, int connectionMask) : base (typeof(BaseAddMapRoomGhost))
         {
             CellType = cellType;
             ConnectionMask = connectionMask;
@@ -29,7 +31,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 
         public override string ToString()
         {
-            return "[MapRoomRotationMetadata CellType: " + CellType + " ConnectionMask: " + ConnectionMask + " ]";
+            return "[BaseMapRoomRotationMetadata CellType: " + CellType + " ConnectionMask: " + ConnectionMask + " ]";
         }
     }
 }

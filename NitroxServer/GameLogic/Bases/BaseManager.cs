@@ -111,7 +111,7 @@ namespace NitroxServer.GameLogic.Bases
         {
 
 #if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("BasePieceConstructionCompleted - id: " + id + " - baseId: " + baseId);
+            NitroxModel.Logger.Log.Debug("BasePieceDeconstructionBegin - id: " + id + " - baseId: " + baseId);
 #endif
 
             BasePiece basePiece;

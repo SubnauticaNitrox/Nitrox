@@ -116,8 +116,14 @@ namespace NitroxClient.GameLogic.InitialSync
 
                     // if current BasePiece has Hull-Fortifications then add them here, otherwise the hull-integrity can be too low 
                     // causing breaches before the fortifications are loaded later on another BasePiece
-                    // #TODO BUILDING# #ISSUE 1030#
-
+                    // #ISSUE 1030#
+                    foreach (BasePiece item2 in basePieces)
+                    {
+                        if (item2.TechType.Name.Contains("Reinforcement") && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
+                        {
+                            internalList.Add(item2);
+                        }
+                    }
                 }
             }
 

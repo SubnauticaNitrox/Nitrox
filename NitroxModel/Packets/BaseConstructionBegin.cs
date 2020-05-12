@@ -15,7 +15,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[PlaceBasePiece - BasePiece: " + BasePiece + "]";
+            return "[BaseConstructionBegin - BasePiece: " + BasePiece + "]";
         }
     }
 }

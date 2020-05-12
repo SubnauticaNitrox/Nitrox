@@ -7,9 +7,9 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
 {
     [Serializable]
     [ProtoContract]
-    public class BaseModuleRotationMetadata : RotationMetadata
+    public class BaseFaceRotationMetadata : RotationMetadata
     {
-        public const long VERSION = 2;
+        public const long VERSION = 1;
 
         // Base modules anchor based on a face.  This can be constructed via these two attributes.
         [ProtoMember(1)]
@@ -21,25 +21,22 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(3)]
         public int AnchoredFaceType { get; set; }
 
-        [ProtoMember(4)]
-        public int ModuleDirection { get; set; }
 
-        public BaseModuleRotationMetadata() : base(typeof(BaseAddModuleGhost))
+        public BaseFaceRotationMetadata() : base(typeof(BaseAddFaceGhost))
         {
             // For serialization purposes
         }
 
-        public BaseModuleRotationMetadata(Int3 cell, int facedirection, int facetype, int moduledirection) : base (typeof(BaseAddModuleGhost))
+        public BaseFaceRotationMetadata(Int3 cell, int facedirection, int facetype) : base(typeof(BaseAddFaceGhost))
         {
             AnchoredFaceCell = cell.Model();
             AnchoredFaceDirection = facedirection;
             AnchoredFaceType = facetype;
-            ModuleDirection = moduledirection;
         }
 
         public override string ToString()
         {
-            return "[BaseModuleRotationMetadata AnchoredFaceCell: " + AnchoredFaceCell + " AnchoredFaceDirection: " + AnchoredFaceDirection + " AnchoredFaceType: " + AnchoredFaceType + " ModuleDirection: " + ModuleDirection + "]";
+            return "[BaseFaceRotationMetadata AnchoredFaceCell: " + AnchoredFaceCell + " AnchoredFaceDirection: " + AnchoredFaceDirection + " AnchoredFaceType: " + AnchoredFaceType + "]";
         }
     }
 }
