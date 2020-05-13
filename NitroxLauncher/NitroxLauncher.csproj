@@ -280,7 +280,8 @@
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
   <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build">    
     <ItemGroup>
-      <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*.*" />
+      <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*.dll" />
+      <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*." />
     </ItemGroup>
 
     <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
