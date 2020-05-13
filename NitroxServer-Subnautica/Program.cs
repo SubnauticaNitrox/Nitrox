@@ -70,7 +70,13 @@ namespace NitroxServer_Subnautica
                 dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
             }
 
-            return Assembly.LoadFile(dllPath);
+            // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
+            using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (MemoryStream mstream = new MemoryStream())
+            {
+                stream.CopyTo(mstream);
+                return Assembly.Load(mstream.ToArray());
+            }
         }
 
         private static void ConfigureConsoleWindow()
