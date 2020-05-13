@@ -171,6 +171,12 @@
     <Compile Include="GameLogic\StoryTimingData.cs" />
     <Compile Include="GameLogic\Unlockables\StoryGoalData.cs" />
     <Compile Include="GameLogic\Vehicles\VehicleManager.cs" />
+    <Compile Include="Serialization\JsonConverter\AttributeContractResolver.cs" />
+    <Compile Include="Serialization\JsonConverter\ColorConverter.cs" />
+    <Compile Include="Serialization\JsonConverter\NitroxIdConverter.cs" />
+    <Compile Include="Serialization\JsonConverter\QuaternionConverter.cs" />
+    <Compile Include="Serialization\JsonConverter\TechTypeConverter.cs" />
+    <Compile Include="Serialization\JsonConverter\Vector3Converter.cs" />
     <Compile Include="Serialization\Resources\Datastructures\AssetIdentifier.cs" />
     <Compile Include="Serialization\Resources\Datastructures\GameObjectAsset.cs" />
     <Compile Include="Serialization\Resources\Datastructures\MonobehaviourAsset.cs" />
