@@ -9,7 +9,6 @@
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>Nitrox.Bootloader</RootNamespace>
         <AssemblyName>Nitrox.Bootloader</AssemblyName>
-        <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <NitroxLibrary>false</NitroxLibrary>
     </PropertyGroup>
