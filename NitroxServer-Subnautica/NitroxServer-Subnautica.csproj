@@ -54,7 +54,7 @@
       <HintPath>..\packages\Mono.Cecil.0.11.2\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\lib\protobuf-net.dll</HintPath>
+      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

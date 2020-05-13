@@ -62,7 +62,7 @@ namespace NitroxServer_Subnautica
         {
             string dllFileName = args.Name.Split(',')[0] + ".dll";
 
-            // Load DLLs where
+            // Load DLLs where this program (exe) is located
             string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), dllFileName);
             if (!File.Exists(dllPath))
             {

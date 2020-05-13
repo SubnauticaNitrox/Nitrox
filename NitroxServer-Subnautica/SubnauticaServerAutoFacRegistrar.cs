@@ -3,7 +3,6 @@ using Autofac;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
-using NitroxModel_Subnautica.Helper;
 using NitroxServer;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.Serialization;
@@ -23,9 +22,13 @@ namespace NitroxServer_Subnautica
             base.RegisterDependencies(containerBuilder);
 
             containerBuilder.Register(c => SimulationWhitelist.ForServerSpawned).SingleInstance();
-            containerBuilder.Register(c => new SubnauticaServerProtobufSerializer("Assembly-CSharp", "Assembly-CSharp-firstpass", "NitroxModel", "NitroxModel-Subnautica"))
-                .As<ServerProtobufSerializer>()
-                .SingleInstance();
+            containerBuilder.Register(c => new SubnauticaServerProtobufSerializer(
+                                          "Assembly-CSharp",
+                                          "Assembly-CSharp-firstpass",
+                                          "NitroxModel",
+                                          "NitroxModel-Subnautica"))
+                            .As<ServerProtobufSerializer>()
+                            .SingleInstance();
 
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
 
@@ -39,11 +42,7 @@ namespace NitroxServer_Subnautica
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
             containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
 
-            containerBuilder.Register(c => new Dictionary<TechTypeModel, IEntityBootstrapper>
-            {
-                [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(),
-                [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()
-            }).SingleInstance();
+            containerBuilder.Register(c => new Dictionary<TechTypeModel, IEntityBootstrapper> { [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(), [TechType.Reefback.ToDto()] = new ReefbackBootstrapper() }).SingleInstance();
         }
     }
 }

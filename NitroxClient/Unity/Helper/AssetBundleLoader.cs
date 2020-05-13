@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Linq;
-using System.Reflection;
+using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +11,7 @@ namespace NitroxClient.Unity.Helper
 {
     public class AssetBundleLoader
     {
-        private static readonly string assetRootFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "../../AssetBundles");
+        private static readonly string assetRootFolder = NitroxAppData.Instance.AssetsPath;
 
         public static IEnumerator LoadAsset(string name)
         {

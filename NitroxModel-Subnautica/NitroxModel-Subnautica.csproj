@@ -37,7 +37,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\lib\protobuf-net.dll</HintPath>
+      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,6 +61,10 @@
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
     <Compile Include="DataStructures\GameLogic\SeamothModel.cs" />
+    <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
+    <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\VehicleConstructionFactory.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
