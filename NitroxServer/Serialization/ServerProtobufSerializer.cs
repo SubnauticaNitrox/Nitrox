@@ -8,7 +8,7 @@ namespace NitroxServer.Serialization
 {
     public class ServerProtobufSerializer
     {
-
+        private static readonly object[] emptyArray = { };
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
         public ServerProtobufSerializer(params string[] assemblies)
@@ -40,7 +40,7 @@ namespace NitroxServer.Serialization
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0);
+                bool hasNitroxProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
 
                 if (hasNitroxProtobuf)
                 {
@@ -78,10 +78,9 @@ namespace NitroxServer.Serialization
                     foreach (object customAttribute in property.GetCustomAttributes(false))
                     {
                         Type attributeType = customAttribute.GetType();
-
                         if (attributeType.ToString().Contains("ProtoMemberAttribute"))
                         {
-                            int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
+                            int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, emptyArray);
                             Model[type].Add(tag, property.Name);
                         }
                     }

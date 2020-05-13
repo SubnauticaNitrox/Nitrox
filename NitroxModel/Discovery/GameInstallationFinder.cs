@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NitroxModel.DataStructures.Util;
+using System.IO;
 using NitroxModel.Discovery.InstallationFinders;
 
 namespace NitroxModel.Discovery
@@ -42,7 +42,7 @@ namespace NitroxModel.Discovery
                 }
                 
                 errors?.Clear();
-                return path;
+                return Path.GetFullPath(path);
             }
 
             return null;

@@ -17,10 +17,27 @@ namespace NitroxServer_Subnautica
 {
     public class Program
     {
-        private static readonly Lazy<string> gameInstallDir = new Lazy<string>(() => GameInstallationFinder.Instance.FindGame()); 
+        private static Lazy<string> gameInstallDir; 
         
         private static void Main(string[] args)
         {
+            // Allow game path to be given as command argument
+            if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
+            {
+                string gameDir = Path.GetFullPath(args[0]);
+                Log.Info($"Using game files from: {gameDir}");
+                gameInstallDir = new Lazy<string>(() => gameDir);
+            }
+            else
+            {
+                gameInstallDir = new Lazy<string>(() =>
+                {
+                    string gameDir = GameInstallationFinder.Instance.FindGame();
+                    Log.Info($"Using game files from: {gameDir}");
+                    return gameDir;
+                });
+            }
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
             ConfigureConsoleWindow();
@@ -60,7 +77,11 @@ namespace NitroxServer_Subnautica
         
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
-            string dllFileName = args.Name.Split(',')[0] + ".dll";
+            string dllFileName = args.Name.Split(',')[0];
+            if (!dllFileName.EndsWith(".dll", StringComparison.InvariantCultureIgnoreCase))
+            {
+                dllFileName += ".dll";
+            }
 
             // Load DLLs where this program (exe) is located
             string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), dllFileName);
