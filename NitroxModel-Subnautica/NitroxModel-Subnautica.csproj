@@ -237,6 +237,7 @@
     <Compile Include="DataStructures\GameLogic\Entities\SubnauticaUweWorldEntityFactory.cs" />
     <Compile Include="DataStructures\GameLogic\ExosuitModel.cs" />
     <Compile Include="DataStructures\GameLogic\ExoSuitMovementData.cs" />
+    <Compile Include="DataStructures\GameLogic\NeptuneRocketModel.cs" />
     <Compile Include="DataStructures\GameLogic\SeamothModel.cs" />
     <Compile Include="Helper\VehicleConstructionFactory.cs" />
     <Compile Include="Helper\SubnauticaMap.cs" />
@@ -264,6 +265,8 @@
     <Compile Include="Packets\CyclopsToggleFloodLights.cs" />
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\ExosuitArmActionPacket.cs" />
+    <Compile Include="Packets\RocketStageUpdate.cs" />
+    <Compile Include="Packets\RocketToggleElevator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

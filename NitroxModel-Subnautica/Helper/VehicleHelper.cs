@@ -47,6 +47,7 @@ namespace NitroxModel_Subnautica.Helper
                 case TechType.Seamoth:
                 case TechType.Exosuit:
                 case TechType.Cyclops:
+                case TechType.RocketBase:
                     return true;
 
                 default:

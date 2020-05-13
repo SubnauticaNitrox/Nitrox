@@ -21,7 +21,6 @@ namespace NitroxClient.GameLogic
 {
     public class Vehicles
     {
-        private Cyclops cyclops;
         private readonly IPacketSender packetSender;
         private readonly PlayerManager playerManager;
         private readonly IMultiplayerSession multiplayerSession;
@@ -36,7 +35,6 @@ namespace NitroxClient.GameLogic
             this.playerManager = playerManager;
             this.multiplayerSession = multiplayerSession;
             vehiclesById = new Dictionary<NitroxId, VehicleModel>();
-            cyclops = null;
         }
 
         //We need to get TechType from parameters because CraftData can't resolve TechType.Cyclops by himself
@@ -71,7 +69,7 @@ namespace NitroxClient.GameLogic
 
                     HSB = opvehicle.Value.subName?.GetColors();
                 }
-                else
+                else if (techType == TechType.Cyclops)
                 { //Cyclops
                     try
                     {
@@ -92,6 +90,20 @@ namespace NitroxClient.GameLogic
                     catch (Exception ex)
                     {
                         Log.Error($"{nameof(Vehicles)}: Error while trying to spawn a cyclops ({constructedObjectId})", ex);
+                    }
+                }
+                else
+                { //Rocket
+                    Optional<Rocket> oprocket = Optional.OfNullable(gameObject.GetComponent<Rocket>());
+
+                    if (oprocket.HasValue)
+                    {
+                        name = oprocket.Value.subName?.GetName();
+                        HSB = oprocket.Value.subName?.GetColors();
+                    }
+                    else
+                    {
+                        Log.Error($"{nameof(Vehicles)}: Error while trying to spawn a rocket (Received {techType})");
                     }
                 }
 
@@ -262,6 +274,7 @@ namespace NitroxClient.GameLogic
             CrafterLogic.NotifyCraftEnd(gameObject, CraftData.GetTechType(gameObject));
             Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
             rigidBody.isKinematic = false;
+
             NitroxEntity.SetNewId(gameObject, id);
 
             // Updates names and colours with persisted data
@@ -306,8 +319,24 @@ namespace NitroxClient.GameLogic
 
                 target.GetComponent<LiveMixin>().health = health;
 
-                // Set internal and external lights
-                SetCyclopsModes(id);
+                // Set internal and external lights via runtime query to avoid circular dependencies
+                NitroxServiceLocator.LocateService<Cyclops>().SetAllModes(GetVehicles<CyclopsModel>(id));
+            }
+            else if (techType == TechType.RocketBase)
+            {
+                Rocket rocket = gameObject.RequireComponent<Rocket>();
+
+                if (!string.IsNullOrEmpty(name))
+                {
+                    rocket.rocketName = name;
+                    rocket.subName?.DeserializeName(name);
+                }
+
+                if (hsb != null)
+                {
+                    rocket.rocketColors = hsb;
+                    rocket.subName?.DeserializeColors(hsb);
+                }
             }
 
             VehicleChildObjectIdentifierHelper.SetInteractiveChildrenIds(gameObject, interactiveChildIdentifiers);
@@ -317,16 +346,6 @@ namespace NitroxClient.GameLogic
             {
                 VehicleCreated(gameObject);
             }
-        }
-
-        private void SetCyclopsModes(NitroxId id)
-        {
-            if (cyclops == null)
-            {
-                cyclops = NitroxServiceLocator.LocateService<Cyclops>();
-            }
-
-            cyclops.SetAllModes(GetVehicles<CyclopsModel>(id));
         }
 
         public void DestroyVehicle(NitroxId id, bool isPiloting)

@@ -22,7 +22,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public CyclopsFireData()
         {
-
+            //For serialization purposes
         }
 
         public CyclopsFireData(NitroxId fireId, NitroxId cyclopsId, CyclopsRooms room, int nodeIndex)
@@ -35,12 +35,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[CyclopsFireData"
-                + " FireId: " + FireId
-                + " CyclopsId: " + CyclopsId
-                + " Room: " + Room
-                + " FireNodeIndex: " + NodeIndex
-                + "]";
+            return $"[CyclopsFireData FireId: {FireId} CyclopsId: {CyclopsId} Room: {Room} FireNodeIndex: {NodeIndex}]";
         }
     }
 }

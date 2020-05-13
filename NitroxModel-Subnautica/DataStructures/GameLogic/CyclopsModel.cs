@@ -35,10 +35,11 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public CyclopsModel()
         {
-
+            //For serialization purposes
         }
 
-        public CyclopsModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health) : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        public CyclopsModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health) 
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             FloodLightsOn = true;
             InternalLightsOn = true;

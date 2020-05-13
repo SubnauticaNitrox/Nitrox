@@ -27,5 +27,10 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             LeftAimTarget = leftAimTarget;
             RightAimTarget = rightAimTarget;
         }
+
+        public override string ToString()
+        {
+            return $"[ExosuitMovementData : {base.ToString()}, LeftAimTarget: {LeftAimTarget}, RightAimTarget: {RightAimTarget}]";
+        }
     }
 }

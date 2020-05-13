@@ -226,6 +226,8 @@
       <Link>Properties\AssemblyInfoCommon.cs</Link>
     </Compile>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\RocketConstructor_StartRocketConstruction_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_SubConstructionComplete_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />

@@ -34,15 +34,15 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(8)]
         public Vector3[] HSB { get; set; }
 
-
         [ProtoMember(9)]
-        public float Health { get; set; } = 1;
+        public float Health { get; set; }
 
         public VehicleModel()
         {
             // For serialization purposes
             InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional.Empty;
+            Health = 1;
         }
 
         public VehicleModel(TechType techType, NitroxId id, Vector3 position, Quaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
@@ -60,7 +60,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return $"[TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Name: {Name}, Health: {Health}, DockingBayId: {DockingBayId}";
+            return $"[TechType: {TechType}, Id: {Id}, Position: {Position}, Rotation: {Rotation}, Name: {Name}, Health: {Health}, DockingBayId: {DockingBayId}]";
         }
     }
 }

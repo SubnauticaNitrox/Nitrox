@@ -17,12 +17,18 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public SeamothModel()
         {
-
+            //For serialization purposes
         }
 
-        public SeamothModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health) : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        public SeamothModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, float health)
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             LightOn = true;
+        }
+
+        public override string ToString()
+        {
+            return $"[SeamothModel : {base.ToString()}, LightOn: {LightOn}]";
         }
     }
 }

@@ -23,7 +23,7 @@ namespace NitroxModel_Subnautica.Helper
                 case TechType.Cyclops:
                     return new CyclopsModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
                 case TechType.RocketBase:
-                    return null;
+                    return new NeptuneRocketModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
                 default:
                     throw new Exception($"Could not build from: {packet.TechType}");
             }
@@ -40,7 +40,7 @@ namespace NitroxModel_Subnautica.Helper
                 case TechType.Cyclops:
                     return new CyclopsModel(techType, ConstructedItemId, position, rotation, interactiveChildIdentifiers, Optional.Empty, name, hsb, health);
                 case TechType.RocketBase:
-                    return null;
+                    return new NeptuneRocketModel(techType, ConstructedItemId, position, rotation, interactiveChildIdentifiers, Optional.Empty, name, hsb, health);
                 default:
                     throw new Exception($"Could not build from: {techType}");
             }

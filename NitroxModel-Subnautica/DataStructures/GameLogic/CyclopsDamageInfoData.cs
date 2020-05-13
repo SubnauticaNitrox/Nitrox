@@ -29,7 +29,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public CyclopsDamageInfoData()
         {
-            // Default Constructor for serialization
+            //For serialization purposes
         }
 
         public CyclopsDamageInfoData(NitroxId receiverId, NitroxId dealerId, float originalDamage, float damage, Vector3 position, DamageType type)
@@ -44,13 +44,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
 
         public override string ToString()
         {
-            return "[DamageInfoData - ReceiverId: " + ReceiverId
-                + " DealerId:" + DealerId
-                + " OriginalDamage: " + OriginalDamage 
-                + " Damage: " + Damage
-                + " Position: " + Position
-                + " Type: " + Type
-                + "}]";
+            return $"[DamageInfoData - ReceiverId: {ReceiverId} DealerId:{DealerId} OriginalDamage: {OriginalDamage} Damage: {Damage} Position: {Position} Type: {Type}}}]";
         }
     }
 }
