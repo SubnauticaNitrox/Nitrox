@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -17,7 +18,8 @@ namespace NitroxServer_Subnautica
 {
     public class Program
     {
-        private static Lazy<string> gameInstallDir; 
+        private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
+        private static Lazy<string> gameInstallDir;
         
         private static void Main(string[] args)
         {
@@ -91,12 +93,20 @@ namespace NitroxServer_Subnautica
                 dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
             }
 
+            // Return cached assembly
+            if (resolvedAssemblyCache.TryGetValue(dllPath, out Assembly val))
+            {
+                return val;
+            }
+            
             // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
             using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (MemoryStream mstream = new MemoryStream())
             {
                 stream.CopyTo(mstream);
-                return Assembly.Load(mstream.ToArray());
+                Assembly assembly = Assembly.Load(mstream.ToArray());
+                resolvedAssemblyCache[dllPath] = assembly;
+                return assembly;
             }
         }
 
