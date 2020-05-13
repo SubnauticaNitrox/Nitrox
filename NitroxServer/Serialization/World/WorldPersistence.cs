@@ -30,7 +30,7 @@ namespace NitroxServer.Serialization.World
             this.config = config;
         }
 
-        public void Save(World world)
+        public void Save(World world, string saveDir)
         {
             try
             {
@@ -46,24 +46,24 @@ namespace NitroxServer.Serialization.World
                 persistedData.WorldData.StoryTimingData = StoryTimingData.From(world.EventTriggerer);
                 persistedData.WorldData.EscapePodData = EscapePodData.From(world.EscapePodManager.GetEscapePods());
 
-                if (!Directory.Exists(config.SaveName))
+                if (!Directory.Exists(saveDir))
                 {
-                    Directory.CreateDirectory(config.SaveName);
+                    Directory.CreateDirectory(saveDir);
                 }
 
-                using (Stream stream = File.OpenWrite(Path.Combine(config.SaveName, "BaseData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "BaseData.nitrox")))
                 {
                     serializer.Serialize(stream, new SaveVersion(BaseData.VERSION));
                     serializer.Serialize(stream, persistedData.BaseData);
                 }
 
-                using (Stream stream = File.OpenWrite(Path.Combine(config.SaveName, "PlayerData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "PlayerData.nitrox")))
                 {
                     serializer.Serialize(stream, new SaveVersion(PlayerData.VERSION));
                     serializer.Serialize(stream, persistedData.PlayerData);
                 }
 
-                using (Stream stream = File.OpenWrite(Path.Combine(config.SaveName, "WorldData.nitrox")))
+                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "WorldData.nitrox")))
                 {
                     serializer.Serialize(stream, new SaveVersion(WorldData.VERSION));
                     serializer.Serialize(stream, persistedData.WorldData);
@@ -77,18 +77,18 @@ namespace NitroxServer.Serialization.World
             }
         }
 
-        private Optional<World> LoadFromFile()
+        private Optional<World> LoadFromFile(string saveDir)
         {
             try
             {
-                if (!Directory.Exists(config.SaveName))
+                if (!Directory.Exists(saveDir))
                 {
                     throw new DirectoryNotFoundException();
                 }
 
                 PersistedWorldData persistedData = new PersistedWorldData();
 
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "BaseData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "BaseData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
                     if (version.Version != BaseData.VERSION)
@@ -98,7 +98,7 @@ namespace NitroxServer.Serialization.World
                     persistedData.BaseData = serializer.Deserialize<BaseData>(stream);
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "PlayerData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "PlayerData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
                     if (version.Version != PlayerData.VERSION)
@@ -108,7 +108,7 @@ namespace NitroxServer.Serialization.World
                     persistedData.PlayerData = serializer.Deserialize<PlayerData>(stream);
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(config.SaveName, "WorldData.nitrox")))
+                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "WorldData.nitrox")))
                 {
                     SaveVersion version = serializer.Deserialize<SaveVersion>(stream);
                     if (version.Version != WorldData.VERSION)
@@ -155,7 +155,7 @@ namespace NitroxServer.Serialization.World
 
         public World Load()
         {
-            Optional<World> fileLoadedWorld = LoadFromFile();
+            Optional<World> fileLoadedWorld = LoadFromFile(config.SaveName);
             if (fileLoadedWorld.HasValue)
             {
                 return fileLoadedWorld.Value;

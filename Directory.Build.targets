@@ -9,7 +9,11 @@
       <Private>false</Private>
     </Reference>
 
-    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp*.dll">
+    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp.dll">
+      <Private>false</Private>
+    </Reference>
+
+    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll">
       <Private>false</Private>
     </Reference>
   </ItemGroup>

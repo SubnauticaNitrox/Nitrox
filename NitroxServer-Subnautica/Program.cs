@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NitroxModel.Core;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Discovery;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.Helper;
 using NitroxServer;
@@ -14,11 +17,15 @@ namespace NitroxServer_Subnautica
 {
     public class Program
     {
+        private static readonly Lazy<string> gameInstallDir = new Lazy<string>(() => GameInstallationFinder.Instance.FindGame()); 
+        
         private static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+            AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
             ConfigureConsoleWindow();
             ConfigureCultureInfo();
-            
+
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
             NitroxServiceLocator.InitializeDependencyContainer(new SubnauticaServerAutoFacRegistrar());
@@ -49,6 +56,21 @@ namespace NitroxServer_Subnautica
             {
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
+        }
+        
+        private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            string dllFileName = args.Name.Split(',')[0] + ".dll";
+
+            // Load DLLs where
+            string dllPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), dllFileName);
+            if (!File.Exists(dllPath))
+            {
+                // Try find game managed libraries
+                dllPath = Path.Combine(gameInstallDir.Value, "Subnautica_Data", "Managed", dllFileName);
+            }
+
+            return Assembly.LoadFile(dllPath);
         }
 
         private static void ConfigureConsoleWindow()
