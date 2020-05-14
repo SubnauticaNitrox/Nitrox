@@ -4,17 +4,17 @@
 
   <!-- UnityEngine libraries to include -->
   <!-- TODO: Fix NitroxModel's and NitroxServer's dependency on Unity for protobuf surrogates and assets parsing and then remove the exception rules here -->
-  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(MSBuildProjectName)' == 'NitroxModel' or '$(MSBuildProjectName)' == 'NitroxServer'">
+  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true' or '$(MSBuildProjectName)' == 'NitroxModel' or '$(MSBuildProjectName)' == 'NitroxServer'">
     <Reference Include="$(SubnauticaManaged)\UnityEngine*.dll">
-      <Private>false</Private>
+      <Private>$(TestLibrary)</Private>
     </Reference>
 
     <Reference Include="$(SubnauticaManaged)\Assembly-CSharp.dll">
-      <Private>false</Private>
+      <Private>$(TestLibrary)</Private>
     </Reference>
 
     <Reference Include="$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll">
-      <Private>false</Private>
+      <Private>$(TestLibrary)</Private>
     </Reference>
   </ItemGroup>
 </Project>
