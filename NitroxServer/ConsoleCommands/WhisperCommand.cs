@@ -9,7 +9,7 @@ namespace NitroxServer.ConsoleCommands
         public WhisperCommand() : base("msg", Perms.PLAYER, "Sends a private message to a player", true)
         {
             AddAlias("m", "whisper", "w");
-            AddParameter(new TypePlayer("name", true, true));
+            AddParameter(new TypePlayer("name", true));
             AddParameter(new TypeString("msg", true));
         }
 

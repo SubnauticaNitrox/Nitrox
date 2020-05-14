@@ -13,7 +13,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly PlayerManager playerManager;
 
-        public UnbanCommand(PlayerManager playerManager) : base("unban", Perms.ADMIN, "Unbans a player from the server", true)
+        public UnbanCommand(PlayerManager playerManager) : base("unban", Perms.ADMIN, "Unbans a player from the server")
         {
             this.playerManager = playerManager;
 

@@ -9,7 +9,7 @@ namespace NitroxServer.ConsoleCommands.Abstract.Type
         private static readonly PlayerManager playerManager = NitroxServiceLocator.LocateService<PlayerManager>();
         private readonly bool connectionRequired;
 
-        public TypePlayer(string name, bool required, bool connectionRequired) : base(name, required)
+        public TypePlayer(string name, bool required, bool connectionRequired = true) : base(name, required)
         {
             Validate.NotNull(playerManager, "PlayerManager can't be null to resolve the command");
             this.connectionRequired = connectionRequired;
