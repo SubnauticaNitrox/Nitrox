@@ -6,11 +6,11 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PDAEntryRemove : Packet
     {
-        public NitroxModel.DataStructures.TechType TechType;
+        public TechType TechType;
         public float Progress;
         public int Unlocked;
 
-        public PDAEntryRemove(NitroxModel.DataStructures.TechType techType, float progress, int unlocked)
+        public PDAEntryRemove(TechType techType, float progress, int unlocked)
         {
             TechType = techType;
             Progress = progress;

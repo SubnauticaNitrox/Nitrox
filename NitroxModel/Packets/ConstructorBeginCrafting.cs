@@ -11,7 +11,7 @@ namespace NitroxModel.Packets
     {
         public NitroxId ConstructorId { get; }
         public NitroxId ConstructedItemId { get; }
-        public NitroxModel.DataStructures.TechType TechType { get; }
+        public TechType TechType { get; }
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
         public NitroxVector3 Position { get; }
@@ -20,7 +20,7 @@ namespace NitroxModel.Packets
         public NitroxVector3[] HSB { get; }
         public float Health { get; }
 
-        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, NitroxModel.DataStructures.TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, NitroxVector3 position, NitroxQuaternion rotation, 
+        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, NitroxVector3 position, NitroxQuaternion rotation, 
             string name, NitroxVector3[] hsb, float health)
         {
             ConstructorId = constructorId;

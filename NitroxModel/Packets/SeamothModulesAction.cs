@@ -7,13 +7,13 @@ namespace NitroxModel.Packets
     [Serializable]
     public class SeamothModulesAction : Packet
     {
-        public DataStructures.TechType TechType { get; }
+        public TechType TechType { get; }
         public int SlotID { get; }
         public NitroxId Id { get; }
         public NitroxVector3 Forward { get; }
         public NitroxQuaternion Rotation { get; }
 
-        public SeamothModulesAction(DataStructures.TechType techType, int slotID, NitroxId id, NitroxVector3 forward, NitroxQuaternion rotation)
+        public SeamothModulesAction(TechType techType, int slotID, NitroxId id, NitroxVector3 forward, NitroxQuaternion rotation)
         {
             TechType = techType;
             SlotID = slotID;

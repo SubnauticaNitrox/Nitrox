@@ -7,10 +7,10 @@ namespace NitroxModel.Packets
     [Serializable]
     public class PlayerEquipmentAdded : Packet
     {
-        public DataStructures.TechType TechType { get; }
+        public TechType TechType { get; }
         public EquippedItemData EquippedItem { get; }
 
-        public PlayerEquipmentAdded(DataStructures.TechType techType, EquippedItemData equippedItem)
+        public PlayerEquipmentAdded(TechType techType, EquippedItemData equippedItem)
         {
             TechType = techType;
             EquippedItem = equippedItem;
