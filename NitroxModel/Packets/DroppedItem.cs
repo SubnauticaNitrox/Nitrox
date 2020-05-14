@@ -1,6 +1,5 @@
 ﻿using System;
 using NitroxModel.DataStructures.Util;
-using UnityEngine;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 

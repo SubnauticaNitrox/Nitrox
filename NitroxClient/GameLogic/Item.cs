@@ -22,7 +22,7 @@ namespace NitroxClient.GameLogic
 
         public void UpdatePosition(NitroxId id, Vector3 location, Quaternion rotation)
         {
-            ItemPosition itemPosition = new ItemPosition(id, location, rotation);
+            ItemPosition itemPosition = new ItemPosition(id, location.ToDto(), rotation.ToDto());
             packetSender.Send(itemPosition);
         }
 

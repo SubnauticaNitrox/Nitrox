@@ -5,7 +5,7 @@ namespace NitroxModel.DataStructures.GameLogic
 {
     [ProtoContract]
     [Serializable]
-    public class NitroxColor
+    public struct NitroxColor
     {
         public float R { get; private set; }
         public float G { get; private set; }
