@@ -282,7 +282,6 @@
     <Compile Include="Packets\EscapePodRepair.cs" />
     <Compile Include="Packets\IShortString.cs" />
     <Compile Include="Packets\GameModeChanged.cs" />
-    <Compile Include="Packets\PlayerBannedEvent.cs" />
     <Compile Include="Packets\PlayerPermaDeathEvent.cs" />
     <Compile Include="Packets\PingRenamed.cs" />
     <Compile Include="Packets\PlayerEquipmentAdded.cs" />

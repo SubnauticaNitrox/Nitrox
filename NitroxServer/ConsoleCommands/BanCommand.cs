@@ -26,8 +26,9 @@ namespace NitroxServer.ConsoleCommands
         protected override void Execute(CallArgs args)
         {
             Player playerToBan = args.Get<Player>(0);
+            playerToBan.IsPlayerBanned = true;
 
-            playerToBan.SendPacket(new PlayerKicked($"You were banned from the server ! \n Reason : {args.GetTillEnd(1)}"));
+            playerToBan.SendPacket(new PlayerKicked($"You were banned from the server! \n Reason : {args.GetTillEnd(1)}"));
             playerManager.PlayerDisconnected(playerToBan.connection);
 
             List<SimulatedEntity> revokedEntities = entitySimulation.CalculateSimulationChangesFromPlayerDisconnect(playerToBan);

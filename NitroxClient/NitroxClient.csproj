@@ -233,7 +233,6 @@
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PlayerBannedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
