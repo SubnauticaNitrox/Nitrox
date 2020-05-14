@@ -5,7 +5,6 @@ using NitroxModel.Packets;
 using NitroxServer.Communication.Packets.Processors.Abstract;
 using NitroxServer.GameLogic;
 using NitroxServer.GameLogic.Entities;
-using UnityEngine;
 
 namespace NitroxServer.Communication.Packets.Processors
 {

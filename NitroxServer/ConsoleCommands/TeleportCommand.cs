@@ -2,7 +2,6 @@
 using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
-using UnityEngine;
 
 namespace NitroxServer.ConsoleCommands
 {

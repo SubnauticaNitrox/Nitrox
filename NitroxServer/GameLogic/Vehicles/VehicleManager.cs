@@ -4,7 +4,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Items;
-using UnityEngine;
 
 namespace NitroxServer.GameLogic.Vehicles
 {

@@ -3,8 +3,7 @@
   <Import Project="$(SolutionDir)SharedConfig.targets"/>
 
   <!-- UnityEngine libraries to include -->
-  <!-- TODO: Fix NitroxModel's and NitroxServer's dependency on Unity for protobuf surrogates and assets parsing and then remove the exception rules here -->
-  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true' or '$(MSBuildProjectName)' == 'NitroxServer'">
+  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
     <Reference Include="$(SubnauticaManaged)\UnityEngine*.dll">
       <Private>$(TestLibrary)</Private>
     </Reference>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
@@ -203,7 +204,7 @@ namespace NitroxServer.Serialization
     {
         public override string ToString()
         {
-            return string.Format("(cellId={0}, level={1})", cellId, level);
+            return $"(cellId={cellId}, level={level})";
         }
 
         [ProtoMember(1)]

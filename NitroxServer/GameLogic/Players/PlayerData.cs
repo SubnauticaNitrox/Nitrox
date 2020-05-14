@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using System.Collections.Generic;
-using UnityEngine;
 using NitroxModel.DataStructures;
 
 namespace NitroxServer.GameLogic.Players

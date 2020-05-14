@@ -2,7 +2,6 @@
 using NitroxServer.GameLogic.Entities.Spawning;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures;
