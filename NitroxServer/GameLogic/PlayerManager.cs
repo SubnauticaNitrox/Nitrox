@@ -66,6 +66,13 @@ namespace NitroxServer.GameLogic
             string playerName = authenticationContext.Username;
             Player player;
             allPlayersByName.TryGetValue(playerName, out player);
+
+            if (player?.IsPlayerBanned == true)
+            {
+                MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.PLAYER_BANNED;
+                return new MultiplayerSessionReservation(correlationId, rejectedState);
+            }
+
             if ((player?.IsPermaDeath == true) && serverConfig.IsGameMode("Hardcore"))
             {
                 MultiplayerSessionReservationState rejectedState = MultiplayerSessionReservationState.REJECTED | MultiplayerSessionReservationState.HARDCORE_PLAYER_DEAD;
@@ -120,6 +127,7 @@ namespace NitroxServer.GameLogic
             {
                 player = new Player(playerContext.PlayerId,
                     playerContext.PlayerName,
+                    false,
                     false,
                     playerContext,
                     connection,

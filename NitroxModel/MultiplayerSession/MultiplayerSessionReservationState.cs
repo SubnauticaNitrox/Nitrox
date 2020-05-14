@@ -22,6 +22,9 @@ namespace NitroxModel.MultiplayerSession
 
         [Description("The server is using hardcore gamemode, player is dead.")]
         HARDCORE_PLAYER_DEAD = 1 << 4,
+        
+        [Description("The player has been banned from the server.")]
+        PLAYER_BANNED = 1 << 5,
     }
 
     public static class MultiplayerSessionReservationStateExtensions

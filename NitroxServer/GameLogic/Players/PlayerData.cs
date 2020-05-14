@@ -23,6 +23,7 @@ namespace NitroxServer.GameLogic.Players
                 Player player = new Player(playerData.Id,
                                            playerData.Name,
                                            playerData.IsPermaDeath,
+                                           playerData.IsPlayerBanned,
                                            null, //no connection/context as this player is not connected.
                                            null, 
                                            playerData.SpawnPosition, 
@@ -56,6 +57,7 @@ namespace NitroxServer.GameLogic.Players
                 persistedPlayer.Permissions = player.Permissions;
                 persistedPlayer.NitroxId = player.GameObjectId;
                 persistedPlayer.IsPermaDeath = player.IsPermaDeath;
+                persistedPlayer.IsPlayerBanned = player.IsPlayerBanned;
 
                 persistedPlayers.Add(persistedPlayer);
             }
@@ -97,6 +99,8 @@ namespace NitroxServer.GameLogic.Players
             public NitroxId NitroxId { get; set; }
             [ProtoMember(10)]
             public bool IsPermaDeath { get; set; }
+            [ProtoMember(11)]
+            public bool IsPlayerBanned { get; set; }
 
 
         }

@@ -263,6 +263,7 @@
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedPacketProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\PlayerBannedEventProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathEventProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentRemovedProcessor.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="ConsoleCommands\Abstract\Type\TypeString.cs" />
     <Compile Include="ConsoleCommands\AutosaveCommand.cs" />
     <Compile Include="ConsoleCommands\BackCommand.cs" />
+    <Compile Include="ConsoleCommands\BanCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerGamemodeCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />

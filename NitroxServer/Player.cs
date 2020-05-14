@@ -22,6 +22,7 @@ namespace NitroxServer
         public ushort Id { get; }
         public string Name { get; set; }
         public bool IsPermaDeath { get; set; }
+        public bool IsPlayerBanned { get; set; }
         public Vector3 Position { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
@@ -29,12 +30,13 @@ namespace NitroxServer
         public PlayerStatsData Stats { get; set; }
         public Vector3? LastStoredPosition { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+        public Player(ushort id, string name, bool isPermaDeath, bool isPlayerBanned, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
         {
             Id = id;
             Name = name;
             IsPermaDeath = isPermaDeath;
+            IsPlayerBanned = isPlayerBanned;
             PlayerContext = playerContext;
             this.connection = connection;
             Position = position;
