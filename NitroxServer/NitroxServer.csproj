@@ -325,6 +325,7 @@
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
+    <Compile Include="ConsoleCommands\UnbanCommand.cs" />
     <Compile Include="ConsoleCommands\WarpCommand.cs" />
     <Compile Include="ConsoleCommands\WhoisCommand.cs" />
     <Compile Include="ConsoleCommands\KickCommand.cs" />

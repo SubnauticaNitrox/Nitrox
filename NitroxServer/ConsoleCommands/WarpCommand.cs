@@ -9,7 +9,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public WarpCommand() : base("warpto", Perms.ADMIN, "Teleports you on a player")
         {
-            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypePlayer("name", true, true));
         }
 
         protected override void Execute(CallArgs args)

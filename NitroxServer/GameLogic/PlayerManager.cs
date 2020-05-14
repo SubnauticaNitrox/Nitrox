@@ -184,10 +184,25 @@ namespace NitroxServer.GameLogic
             assetsByConnection.Remove(connection);
         }
 
-        public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
+        public bool TryGetConnectedPlayerByName(string playerName, out Player foundPlayer)
         {
             foundPlayer = null;
             foreach (Player player in ConnectedPlayers())
+            {
+                if (player.Name == playerName)
+                {
+                    foundPlayer = player;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool TryGetPlayerByName(string playerName, out Player foundPlayer)
+        {
+            foundPlayer = null;
+            foreach (Player player in allPlayersByName.Values)
             {
                 if (player.Name == playerName)
                 {

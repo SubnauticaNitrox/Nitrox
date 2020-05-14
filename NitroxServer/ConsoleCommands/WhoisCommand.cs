@@ -9,7 +9,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public WhoisCommand() : base("whois", Perms.PLAYER, "Shows informations over a player")
         {
-            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypePlayer("name", true, true));
         }
 
         protected override void Execute(CallArgs args)

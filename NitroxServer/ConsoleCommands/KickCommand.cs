@@ -19,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
             this.playerManager = playerManager;
             this.entitySimulation = entitySimulation;
 
-            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypePlayer("name", true, true));
             AddParameter(new TypeString("reason", false));
         }
 

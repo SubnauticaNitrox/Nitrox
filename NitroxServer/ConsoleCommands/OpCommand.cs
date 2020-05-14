@@ -8,7 +8,7 @@ namespace NitroxServer.ConsoleCommands
     {
         public OpCommand() : base("op", Perms.ADMIN, "Sets an user as admin")
         {
-            AddParameter(new TypePlayer("name", true));
+            AddParameter(new TypePlayer("name", true, true));
         }
 
         protected override void Execute(CallArgs args)
