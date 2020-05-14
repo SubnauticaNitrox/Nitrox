@@ -16,7 +16,7 @@ namespace NitroxServer.Serialization.World
         public const long VERSION = 1;
 
         [ProtoMember(1)]
-        public List<NitroxModel.DataStructures.Int3> ParsedBatchCells { get; set; }
+        public List<Int3> ParsedBatchCells { get; set; }
 
         [ProtoMember(2)]
         public DateTime? ServerStartTime { get; set; }
