@@ -29,7 +29,7 @@ namespace Nitrox.Bootloader
                     try
                     {
                         // Delete the path so that the launcher should be used to launch Nitrox
-                        File.Delete(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox"), "launcherpath.txt"));
+                        File.Delete(nitroxLauncherPathFile);
                     }
                     catch (Exception)
                     {
