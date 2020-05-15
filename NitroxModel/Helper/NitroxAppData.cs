@@ -6,7 +6,6 @@ namespace NitroxModel.Helper
     public class NitroxAppData
     {
         private static NitroxAppData instance;
-        private string launcherPath;
 
         private NitroxAppData()
         {

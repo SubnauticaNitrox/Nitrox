@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -23,6 +24,18 @@ namespace Nitrox.Bootloader
             try
             {
                 string valueInFile = File.ReadAllText(nitroxLauncherPathFile).Trim();
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        // Delete the path so that the launcher should be used to launch Nitrox
+                        File.Delete(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox"), "launcherpath.txt"));
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                });
                 return Directory.Exists(valueInFile) ? valueInFile : null;
             }
             catch
@@ -34,26 +47,15 @@ namespace Nitrox.Bootloader
         
         public static void Execute()
         {
-            if (nitroxLauncherDir.Value == null)
+            string error = NitroxLoadError;
+            if (error != null)
             {
-                Console.WriteLine("Nitrox launcher path not set in AppData. Nitrox will not start.");
+                Console.WriteLine(error);
                 return;
             }
 
             Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    // Delete the path so that the launcher should be used to launch Nitrox
-                    File.Delete(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox"), "launcherpath.txt"));
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            });
-            
+
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
 
@@ -65,6 +67,24 @@ namespace Nitrox.Bootloader
             Assembly core = Assembly.Load(new AssemblyName("NitroxPatcher"));
             Type mainType = core.GetType("NitroxPatcher.Main");
             mainType.InvokeMember("Execute", BindingFlags.Public | BindingFlags.Static | BindingFlags.InvokeMethod, null, null, null);
+        }
+
+        
+        private static string NitroxLoadError
+        {
+            get
+            {
+                if (nitroxLauncherDir.Value == null)
+                {
+                    return "Nitrox launcher path not set in AppData. Nitrox will not start.";
+                }
+                if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
+                {
+                    return "Nitrox will not start because QModManager is active.";
+                }
+
+                return "";
+            }
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
