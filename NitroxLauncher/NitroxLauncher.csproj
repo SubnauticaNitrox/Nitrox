@@ -276,9 +276,9 @@
     <Resource Include="Images\serverIllustration.png" />
   </ItemGroup>
 
-  <!-- Move assets from Subnautica assets to launcher. 
+  <!-- Move assets from Subnautica assets to launcher.
        TODO: Try fix this as a project reference to Nitrox.Subnautica.Assets that will copy the files on build automatically. -->
-  <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build">    
+  <Target Name="MoveNitroxAssetsToLauncherOutput" AfterTargets="Build" Condition="'$(OS)' == 'Windows_NT'">
     <ItemGroup>
       <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*.dll" />
       <NitroxSubnauticaAssets Include="..\Nitrox.Subnautica.Assets\**\*." />
@@ -286,6 +286,6 @@
 
     <Copy SourceFiles="@(NitroxSubnauticaAssets)" DestinationFolder="$(TargetDir)\%(RecursiveDir)" />
   </Target>
-  
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition="'$(OS)' == 'Windows_NT'" />
 </Project>
