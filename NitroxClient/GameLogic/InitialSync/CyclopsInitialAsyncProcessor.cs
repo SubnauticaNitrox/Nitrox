@@ -13,9 +13,10 @@ namespace NitroxClient.GameLogic.InitialSync
 {
     public class CyclopsInitialAsyncProcessor : InitialSyncProcessor
     {
+        private int cyclopsLoaded;
+        private int totalCyclopsToLoad;
         private readonly Vehicles vehicles;
         private WaitScreen.ManualWaitItem waitScreenItem;
-        private int cyclopsLoaded = 0, totalCyclopsToLoad = 0;
 
         public CyclopsInitialAsyncProcessor(Vehicles vehicles)
         {
@@ -24,8 +25,8 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            IEnumerable<VehicleModel> cyclops = packet.Vehicles.Where(v => v.TechType.Enum() == TechType.Cyclops);
-            totalCyclopsToLoad = cyclops.Count();
+            IList<VehicleModel> cyclopses = packet.Vehicles.Where(v => v.TechType.Enum() == TechType.Cyclops).ToList();
+            totalCyclopsToLoad = cyclopses.Count;
 
             this.waitScreenItem = waitScreenItem;
 
@@ -33,7 +34,7 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 vehicles.VehicleCreated += OnVehicleCreated;
 
-                foreach (VehicleModel vehicle in cyclops)
+                foreach (VehicleModel vehicle in cyclopses)
                 {
                     Log.Debug($"Trying to spawn {vehicle}");
                     vehicles.CreateVehicle(vehicle);
