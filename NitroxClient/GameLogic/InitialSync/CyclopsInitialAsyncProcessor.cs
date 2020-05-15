@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
-    class CyclopsInitialAsyncProcessor : InitialSyncProcessor
+    public class CyclopsInitialAsyncProcessor : InitialSyncProcessor
     {
         private readonly Vehicles vehicles;
         private WaitScreen.ManualWaitItem waitScreenItem;
