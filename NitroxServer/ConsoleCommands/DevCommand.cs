@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly VehicleManager vehicleManager;
 
-        public DevCommand(VehicleManager vehicleManager) : base("dev", Perms.CONSOLE, "Become a Nitrox Wizard", true)
+        public DevCommand(VehicleManager vehicleManager) : base("dev", Perms.CONSOLE, "Become a Nitrox Wizard")
         {
             this.vehicleManager = vehicleManager;
             AddParameter(new TypeString("magicword", true));
@@ -30,6 +30,7 @@ namespace NitroxServer.ConsoleCommands
             switch (command)
             {
                 case "vehicles_list":
+                    SendMessage(args.Sender, "Vehicles list :");
                     vehicleManager.GetVehicles()
                         .ToList()
                         .ForEach(vm => SendMessage(args.Sender, vm.ToString() + "\n"));
@@ -39,6 +40,7 @@ namespace NitroxServer.ConsoleCommands
                     vehicleManager.GetVehicles()
                         .ToList()
                         .ForEach(vm => vehicleManager.RemoveVehicle(vm.Id));
+                    SendMessage(args.Sender, "Done");
                     break;
 
                 case "vehicles_reflectionset":

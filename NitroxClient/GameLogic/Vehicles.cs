@@ -50,7 +50,6 @@ namespace NitroxClient.GameLogic
                 string name = string.Empty;
                 float health = 200f;
 
-
                 if (opvehicle.HasValue)
                 { //Seamoth & Exosuit
                     Optional<LiveMixin> livemixin = Optional.OfNullable(opvehicle.Value.GetComponent<LiveMixin>());
@@ -507,10 +506,16 @@ namespace NitroxClient.GameLogic
                 place until after the player exits the vehicle.  This causes the player body to strech to
                 the current cyclops position.
         */
-        IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
+        public IEnumerator AllowMovementPacketsAfterDockingAnimation(PacketSuppressor<Movement> movementSuppressor)
         {
             yield return new WaitForSeconds(3.0f);
             movementSuppressor.Dispose();
+        }
+
+        public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, GameObject gameObject, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            packetSender.Send(new VehiclePositionFix(id, gameObject.transform.position));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)
