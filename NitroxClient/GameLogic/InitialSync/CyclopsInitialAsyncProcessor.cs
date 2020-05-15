@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -13,9 +14,8 @@ namespace NitroxClient.GameLogic.InitialSync
     class CyclopsInitialAsyncProcessor : InitialSyncProcessor
     {
         private readonly Vehicles vehicles;
-        private int cyclopsLoaded = 0;
-        private int totalCyclopsToLoad = 0;
         private WaitScreen.ManualWaitItem waitScreenItem;
+        private int cyclopsLoaded = 0, totalCyclopsToLoad = 0;
 
         public CyclopsInitialAsyncProcessor(Vehicles vehicles)
         {
@@ -24,20 +24,19 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            IEnumerable<VehicleModel> cyclops = packet.Vehicles.Where(v => v.TechType.Enum() == TechType.Cyclops);
+            totalCyclopsToLoad = cyclops.Count();
+
             this.waitScreenItem = waitScreenItem;
-            totalCyclopsToLoad = packet.Vehicles.Where(v => v.TechType.Enum() == TechType.Cyclops).Count();
 
             if (totalCyclopsToLoad > 0)
             {
                 vehicles.VehicleCreated += OnVehicleCreated;
 
-                foreach (VehicleModel vehicle in packet.Vehicles)
+                foreach (VehicleModel vehicle in cyclops)
                 {
-                    if (vehicle.TechType.Enum() == TechType.Cyclops)
-                    {
-                        Log.Debug($"Trying to spawn {vehicle}");
-                        vehicles.CreateVehicle(vehicle);
-                    }
+                    Log.Debug($"Trying to spawn {vehicle}");
+                    vehicles.CreateVehicle(vehicle);
                 }
             }
 
@@ -47,14 +46,16 @@ namespace NitroxClient.GameLogic.InitialSync
         private void OnVehicleCreated(GameObject gameObject)
         {
             cyclopsLoaded++;
-            Log.Debug($"Spawned cyclops {NitroxEntity.GetId(gameObject)}");
             waitScreenItem.SetProgress(cyclopsLoaded, totalCyclopsToLoad);
+
+            Log.Debug($"Spawned cyclops {NitroxEntity.GetId(gameObject)}");
 
             // After all cyclops are created
             if (cyclopsLoaded == totalCyclopsToLoad)
             {
                 vehicles.VehicleCreated -= OnVehicleCreated;
-            } else
+            }
+            else
             {
                 Log.Debug($"We still need to load {totalCyclopsToLoad - cyclopsLoaded} cyclops");
             }
