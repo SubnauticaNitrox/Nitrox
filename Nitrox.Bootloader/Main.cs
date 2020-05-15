@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Nitrox.Bootloader
 {
@@ -38,6 +39,20 @@ namespace Nitrox.Bootloader
                 Console.WriteLine("Nitrox launcher path not set in AppData. Nitrox will not start.");
                 return;
             }
+
+            Environment.SetEnvironmentVariable("NITROX_LAUNCHER_PATH", nitroxLauncherDir.Value);
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    // Delete the path so that the launcher should be used to launch Nitrox
+                    File.Delete(Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox"), "launcherpath.txt"));
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            });
             
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;

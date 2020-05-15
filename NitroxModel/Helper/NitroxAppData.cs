@@ -17,37 +17,11 @@ namespace NitroxModel.Helper
 
         private string RootDir { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
 
-        public string LauncherPath
-        {
-            get
-            {
-                if (launcherPath != null && Directory.Exists(launcherPath))
-                {
-                    return launcherPath;
-                }
-
-                string file = Path.Combine(RootDir, "launcherpath.txt");
-                if (!File.Exists(file))
-                {
-                    return null;
-                }
-
-                try
-                {
-                    string value = File.ReadAllText(file).Trim();
-                    if (!Directory.Exists(value))
-                    {
-                        return null;
-                    }
-                    return launcherPath = value;
-                }
-                catch
-                {
-                    // ignored
-                }
-                return null;
-            }
-        }
+        /// <summary>
+        ///     Gets the launcher path from the environment variable.
+        ///     Set by Nitrox.Bootloader.Main.
+        /// </summary>
+        public string LauncherPath => Environment.GetEnvironmentVariable("NITROX_LAUNCHER_PATH");
 
         public string AssetsPath => Path.Combine(LauncherPath, "AssetBundles");
 
