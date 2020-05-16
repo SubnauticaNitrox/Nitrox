@@ -71,8 +71,7 @@ namespace NitroxLauncher.Patching
         private Exception RetryWait(Action action, int interval, int retries = 0)
         {
             Exception lastException = null;
-            retries++; // Always run at least once initially.
-            while (retries > 0)
+            while (retries >= 0)
             {
                 try
                 {
