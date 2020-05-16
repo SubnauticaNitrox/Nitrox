@@ -70,7 +70,7 @@ namespace NitroxClient.GameLogic
                         opvehicle.Value.ReflectionCall("RegenerateRenderInfo", false, false);
                     }
 
-                    hsb = opvehicle.Value.subName.GetColors().ToDto();
+                    hsb = opvehicle.Value.subName.AliveOrNull()?.GetColors().ToDto();
                 }
                 else
                 { //Cyclops
@@ -81,7 +81,7 @@ namespace NitroxClient.GameLogic
                         SubName subNameTarget = (SubName)subNameInput.ReflectionGet("target");
 
                         name = subNameTarget.GetName();
-                        hsb = subNameTarget.GetColors().ToDto();
+                        hsb = subNameTarget.AliveOrNull()?.GetColors().ToDto();
 
                         Optional<LiveMixin> livemixin = Optional.OfNullable(target.GetComponent<LiveMixin>());
 
