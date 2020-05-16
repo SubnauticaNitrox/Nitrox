@@ -31,9 +31,9 @@ namespace Nitrox.Bootloader
                         // Delete the path so that the launcher should be used to launch Nitrox
                         File.Delete(nitroxLauncherPathFile);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        // ignored
+                        Console.WriteLine($"Unable to delete the launcherpath.txt file. Nitrox will launch again without launcher. Error:{Environment.NewLine}{ex}");
                     }
                 });
                 return Directory.Exists(valueInFile) ? valueInFile : null;
