@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
 
         public static bool Prefix(Rocket __instance)
-        {        
+        {
             GameObject gameObject = __instance.gameObject;
             NitroxId id = NitroxEntity.GetId(gameObject);
             Optional<NeptuneRocketModel> model = NitroxServiceLocator.LocateService<Vehicles>().TryGetVehicle<NeptuneRocketModel>(id);
@@ -31,7 +31,7 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             __instance.currentRocketStage = model.Value.CurrentRocketStage;
-            __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
+            //__instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
 
             Optional<ElevatorCallControl> opelevator = Optional.OfNullable(gameObject.GetComponentInChildren<ElevatorCallControl>());
 

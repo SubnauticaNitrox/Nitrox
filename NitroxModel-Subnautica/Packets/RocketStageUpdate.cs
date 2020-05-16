@@ -8,19 +8,23 @@ namespace NitroxModel_Subnautica.Packets
     public class RocketStageUpdate : Packet
     {
         public NitroxId Id { get; }
-        public TechType TechType { get; }
-        public int NewStage { get; }
+        public int NewRocketStage { get; }
+        public NitroxId ConstructorId { get; }
+        public TechType CurrentStageTech { get; }
+        public byte[] SerializedBuiltGameObject { get; }
 
-        public RocketStageUpdate(NitroxId id, TechType techType, int newStage)
+        public RocketStageUpdate(NitroxId id, NitroxId constructorId, int newRocketStage, TechType currentStageTech, byte[] serializedBuiltGameObject)
         {
             Id = id;
-            TechType = techType;
-            NewStage = newStage;
+            ConstructorId = constructorId;
+            NewRocketStage = newRocketStage;
+            CurrentStageTech = currentStageTech;
+            SerializedBuiltGameObject = serializedBuiltGameObject;
         }
 
         public override string ToString()
         {
-            return $"[RocketStageUpdate Id: {Id}, TechType: {TechType}, Stage: {NewStage}]";
+            return $"[RocketStageUpdate - Id: {Id}, ConstructorId: {ConstructorId}, NewRocketStage: {NewRocketStage}, CurrentStageTech: {CurrentStageTech}]";
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
@@ -7,7 +6,6 @@ using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
-using NitroxModel.Helper;
 using NitroxModel.Logger;
 using UnityEngine;
 
@@ -17,36 +15,42 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(RocketConstructor).GetMethod("StartRocketConstruction", BindingFlags.Public | BindingFlags.Instance);
 
-        public static readonly OpCode INJECTION_CODE = OpCodes.Callvirt;
-        public static readonly object INJECTION_OPERAND = typeof(Rocket).GetMethod("StartRocketConstruction", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly OpCode INJECTION_CODE = OpCodes.Stloc_2;
 
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
-            Validate.NotNull(INJECTION_OPERAND);
-
             foreach (CodeInstruction instruction in instructions)
             {
                 yield return instruction;
 
-                if (instruction.opcode == INJECTION_CODE && instruction.operand.Equals(INJECTION_OPERAND))
+                /* if (this.crafterLogic.Craft(currentStageTech, craftTime)) {
+			     *      GameObject toBuild = this.rocket.StartRocketConstruction();
+                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket, currentStageTech, this); 
+			     *      ItemGoalTracker.OnConstruct(currentStageTech);
+			     *      this.SendBuildBots(toBuild);
+		         * }
+                 */
+                if (instruction.opcode == INJECTION_CODE)
                 {
-
-                    yield return new CodeInstruction(OpCodes.Ldloc_0);
-                    yield return new CodeInstruction(OpCodes.Ldloc_2);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldfld, typeof(RocketConstructor).GetField("rocket", BindingFlags.Public | BindingFlags.Instance)); //this.rocket
+                    yield return new CodeInstruction(OpCodes.Ldarg_0); //this
+                    yield return new CodeInstruction(OpCodes.Ldloc_0); //techtype
+                    yield return new CodeInstruction(OpCodes.Ldloc_2); //toBuild GO
                     yield return new CodeInstruction(OpCodes.Call, typeof(RocketConstructor_StartRocketConstruction_Patch).GetMethod("Callback", BindingFlags.Static | BindingFlags.Public));
                 }
 
             }
         }
 
-        public static void Callback(TechType techType, GameObject rocket)
+        public static void Callback(Rocket rocketInstanceAttachedToConstructor, RocketConstructor rocketConstructor, TechType currentStageTech, GameObject gameObjectToBuild)
         {
-            NitroxId nitroxId = NitroxEntity.GetId(rocket);
+            NitroxId rocketId = NitroxEntity.GetId(rocketInstanceAttachedToConstructor.gameObject);
+            NitroxId constructorId = NitroxEntity.GetId(rocketConstructor.gameObject);
 
-            Log.Info($"{nameof(RocketConstructor_StartRocketConstruction_Patch)}: Tried to broadcast update : RocketBase: {nitroxId}, ");
+            Log.Info($"{nameof(RocketConstructor_StartRocketConstruction_Patch)}: Tried to broadcast update : RocketBase: {rocketId}, RocketConstructor {constructorId}, currentStageTech {currentStageTech}");
 
-            NitroxServiceLocator.LocateService<Rockets>().BroadCastRocketStateUpdate(nitroxId, techType);
-
+            NitroxServiceLocator.LocateService<Rockets>().BroadCastRocketStateUpdate(rocketId, constructorId, currentStageTech, gameObjectToBuild);
         }
 
         public override void Patch(HarmonyInstance harmony)

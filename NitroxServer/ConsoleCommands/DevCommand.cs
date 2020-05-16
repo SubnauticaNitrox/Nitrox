@@ -15,7 +15,7 @@ namespace NitroxServer.ConsoleCommands
     {
         private readonly VehicleManager vehicleManager;
 
-        public DevCommand(VehicleManager vehicleManager) : base("dev", Perms.CONSOLE, "Become a Nitrox Wizard")
+        public DevCommand(VehicleManager vehicleManager) : base("dev", Perms.ADMIN, "Become a Nitrox Wizard")
         {
             this.vehicleManager = vehicleManager;
             AddParameter(new TypeString("magicword", true));

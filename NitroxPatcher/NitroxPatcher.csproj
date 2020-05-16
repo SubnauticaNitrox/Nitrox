@@ -227,7 +227,8 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Patches\Dynamic\RocketConstructor_StartRocketConstruction_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Rocket_SubConstructionComplete_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_CallElevator_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_ElevatorControlButtonActivate_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
@@ -365,6 +366,7 @@
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Patches\Dynamic\Rocket_Start_Patch.cs" />
     <Compile Include="TranspilerHelper.cs" />
   </ItemGroup>
   <ItemGroup>

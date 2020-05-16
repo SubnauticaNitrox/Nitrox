@@ -34,6 +34,11 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             ElevatorUp = false;
         }
 
+        public void IncrementStage()
+        {
+            CurrentRocketStage += 1;
+        }
+
         public override string ToString()
         {
             return $"[NeptuneRocketModel : {base.ToString()}, CurrentRocketStage: {CurrentRocketStage}, ElevatorUp: {ElevatorUp}, ElevatorPosition: {ElevatorPosition}]";

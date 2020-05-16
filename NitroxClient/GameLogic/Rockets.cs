@@ -1,11 +1,10 @@
 ﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.MonoBehaviours;
+using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
 using NitroxModel_Subnautica.Packets;
-using UnityEngine;
 
 namespace NitroxClient.GameLogic
 {
@@ -20,17 +19,23 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastElevatorActivation(NitroxId id, bool up)
+        public void BroadcastElevatorCall(NitroxId id, bool up)
         {
-            using (packetSender.Suppress<RocketToggleElevator>())
+            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
+
+            if (model.HasValue)
             {
-                vehicles.GetVehicles<NeptuneRocketModel>(id).ElevatorUp = up;
+                model.Value.ElevatorUp = up;
                 RocketToggleElevator packet = new RocketToggleElevator(id, up);
                 packetSender.Send(packet);
             }
+            else
+            {
+                Log.Error($"Rockets: Can't find model for rocket with id {id}");
+            }
         }
 
-        public void BroadCastRocketStateUpdate(NitroxId id, TechType techType)
+        public void BroadCastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, UnityEngine.GameObject builtGameObject)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
 
@@ -39,16 +44,16 @@ namespace NitroxClient.GameLogic
                 using (packetSender.Suppress<RocketStageUpdate>())
                 {
                     model.Value.CurrentRocketStage += 1;
-                    RocketStageUpdate packet = new RocketStageUpdate(id, techType, model.Value.CurrentRocketStage);
+                    RocketStageUpdate packet = new RocketStageUpdate(id, constructorId, model.Value.CurrentRocketStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject));
                     packetSender.Send(packet);
                 }
             }
             else
             {
-                Log.Error($"Rockets: Can't find model for rocket with id {id} and techtype {techType}");
+                Log.Error($"Rockets: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
             }
         }
     }
 
-    //TODO: Add more sync for end rocket
+}
 }
