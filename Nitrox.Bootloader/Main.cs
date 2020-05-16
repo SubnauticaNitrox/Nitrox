@@ -47,7 +47,7 @@ namespace Nitrox.Bootloader
         
         public static void Execute()
         {
-            string error = NitroxLoadError;
+            string error = ValidateNitroxSetup();
             if (error != null)
             {
                 Console.WriteLine(error);
@@ -70,21 +70,18 @@ namespace Nitrox.Bootloader
         }
 
         
-        private static string NitroxLoadError
+        private static string ValidateNitroxSetup()
         {
-            get
+            if (nitroxLauncherDir.Value == null)
             {
-                if (nitroxLauncherDir.Value == null)
-                {
-                    return "Nitrox launcher path not set in AppData. Nitrox will not start.";
-                }
-                if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
-                {
-                    return "Nitrox will not start because QModManager is active.";
-                }
-
-                return "";
+                return "Nitrox launcher path not set in AppData. Nitrox will not start.";
             }
+            if (AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("QMod", StringComparison.Ordinal)) != null)
+            {
+                return "Nitrox will not start because QModManager is active.";
+            }
+
+            return null;
         }
 
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
