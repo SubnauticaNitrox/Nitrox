@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using UnityEngine;
 
 namespace NitroxModel_Subnautica.Helper
 {
@@ -10,8 +9,15 @@ namespace NitroxModel_Subnautica.Helper
             switch (techType)
             {
                 case TechType.Seamoth:
+                    return new[] {
+                        new NitroxVector3(0f, 0f, 1f),
+                        new NitroxVector3(0f, 0f, 0f),
+                        new NitroxVector3(0f, 0f, 1f),
+                        new NitroxVector3(0.577f, 0.447f, 0.604f),
+                        new NitroxVector3(0.114f, 0.729f, 0.965f)
+                    };
                 case TechType.Exosuit:
-                    return new NitroxVector3[] {
+                    return new[] {
                         new NitroxVector3(0f, 0f, 1f),            //_Color
                         new NitroxVector3(0f, 0f, 0f),            //_Tint
                         new NitroxVector3(0f, 0f, 1f),            //_Color
@@ -20,7 +26,7 @@ namespace NitroxModel_Subnautica.Helper
                     };
 
                 case TechType.Cyclops:
-                    return new NitroxVector3[]
+                    return new[]
                     {
                         new NitroxVector3(1f, 0f, 1f),
                         new NitroxVector3(0.6f, 0.4f, 0.4f),
