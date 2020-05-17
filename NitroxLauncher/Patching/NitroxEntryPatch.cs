@@ -60,6 +60,7 @@ namespace NitroxLauncher.Patching
                 module.Write(modifiedAssemblyCSharp);
             }
 
+            // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
             Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
             if (error != null)
             {
@@ -77,7 +78,7 @@ namespace NitroxLauncher.Patching
                 {
                     retries--;
                     action();
-                    return lastException;
+                    return null;
                 }
                 catch (Exception ex)
                 {
