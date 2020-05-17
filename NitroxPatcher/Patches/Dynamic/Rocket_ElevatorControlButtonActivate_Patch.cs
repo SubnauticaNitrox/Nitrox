@@ -12,16 +12,25 @@ namespace NitroxPatcher.Patches.Dynamic
     {
         public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("ElevatorControlButtonActivate", BindingFlags.Public | BindingFlags.Instance);
 
-        public static void Prefix(Rocket __instance)
+
+        public static void Prefix(Rocket __instance, Rocket.RocketElevatorStates __state)
         {
-            NitroxId id = NitroxEntity.GetId(__instance.gameObject);
-            bool up = __instance.elevatorState == Rocket.RocketElevatorStates.AtBottom;
-            NitroxServiceLocator.LocateService<Rockets>().BroadcastElevatorCall(id, up);
+            __state = __instance.elevatorState;
+        }
+
+        public static void Postfix(Rocket __instance, Rocket.RocketElevatorStates __state)
+        {
+            if (__instance.elevatorState != __state)
+            {
+                NitroxId id = NitroxEntity.GetId(__instance.gameObject);
+                bool up = __instance.elevatorState == Rocket.RocketElevatorStates.AtBottom;
+                NitroxServiceLocator.LocateService<Rockets>().BroadcastElevatorCall(id, up);
+            }
         }
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchPrefix(harmony, TARGET_METHOD);
+            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
         }
     }
 }
