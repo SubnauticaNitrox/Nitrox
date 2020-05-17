@@ -7,7 +7,7 @@ using NitroxServer.GameLogic.Vehicles;
 
 namespace NitroxServer_Subnautica.Communication.Packets.Processors
 {
-    class RocketToggleElevatorProcessor : AuthenticatedPacketProcessor<RocketToggleElevator>
+    public class RocketToggleElevatorProcessor : AuthenticatedPacketProcessor<RocketToggleElevator>
     {
         private readonly VehicleManager vehicleManager;
         private readonly PlayerManager playerManager;
@@ -22,7 +22,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
         {
             Optional<NeptuneRocketModel> opRocket = vehicleManager.GetVehicleModel<NeptuneRocketModel>(packet.Id);
 
-            if (opRocket.HasValue && opRocket.Value.GetType() == typeof(NeptuneRocketModel))
+            if (opRocket.HasValue)
             {
                 opRocket.Value.ElevatorUp = packet.Up;
             }

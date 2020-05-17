@@ -41,12 +41,9 @@ namespace NitroxClient.GameLogic
 
             if (model.HasValue)
             {
-                using (packetSender.Suppress<RocketStageUpdate>())
-                {
-                    model.Value.CurrentRocketStage += 1;
-                    RocketStageUpdate packet = new RocketStageUpdate(id, constructorId, model.Value.CurrentRocketStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject));
-                    packetSender.Send(packet);
-                }
+                model.Value.CurrentRocketStage += 1;
+                RocketStageUpdate packet = new RocketStageUpdate(id, constructorId, model.Value.CurrentRocketStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject));
+                packetSender.Send(packet);
             }
             else
             {
@@ -54,6 +51,4 @@ namespace NitroxClient.GameLogic
             }
         }
     }
-
-}
 }

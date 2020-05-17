@@ -25,7 +25,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
                 /* if (this.crafterLogic.Craft(currentStageTech, craftTime)) {
 			     *      GameObject toBuild = this.rocket.StartRocketConstruction();
-                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket, currentStageTech, this); 
+                 *  ->  RocketConstructor_StartRocketConstruction_Patch.Callback(this.rocket, currentStageTech, this, toBuild); 
 			     *      ItemGoalTracker.OnConstruct(currentStageTech);
 			     *      this.SendBuildBots(toBuild);
 		         * }
@@ -48,8 +48,7 @@ namespace NitroxPatcher.Patches.Dynamic
             NitroxId rocketId = NitroxEntity.GetId(rocketInstanceAttachedToConstructor.gameObject);
             NitroxId constructorId = NitroxEntity.GetId(rocketConstructor.gameObject);
 
-            Log.Info($"{nameof(RocketConstructor_StartRocketConstruction_Patch)}: Tried to broadcast update : RocketBase: {rocketId}, RocketConstructor {constructorId}, currentStageTech {currentStageTech}");
-
+            Log.Info($"{nameof(RocketConstructor_StartRocketConstruction_Patch)}: Broadcasting update : RocketBase: {rocketId}, RocketConstructor {constructorId}, currentStageTech {currentStageTech}");
             NitroxServiceLocator.LocateService<Rockets>().BroadCastRocketStateUpdate(rocketId, constructorId, currentStageTech, gameObjectToBuild);
         }
 

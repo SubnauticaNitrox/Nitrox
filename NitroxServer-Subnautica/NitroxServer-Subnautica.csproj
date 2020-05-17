@@ -257,6 +257,7 @@
     <Compile Include="Communication\Packets\Processors\CyclopsToggleEngineStateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleFloodlightsProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\CyclopsToggleInternalLightingProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketToggleElevatorProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ToggleLightsProcessor.cs" />
     <Compile Include="ConsoleWindow.cs" />

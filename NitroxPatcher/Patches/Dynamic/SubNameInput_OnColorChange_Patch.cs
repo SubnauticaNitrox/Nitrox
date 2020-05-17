@@ -13,8 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class SubNameInput_OnColorChange_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(SubNameInput);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("OnColorChange", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(SubNameInput).GetMethod("OnColorChange", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Postfix(SubNameInput __instance, ColorChangeEventData eventData)
         {
@@ -24,9 +23,15 @@ namespace NitroxPatcher.Patches.Dynamic
                 GameObject parentVehicle;
                 Vehicle vehicle = subname.GetComponentInParent<Vehicle>();
                 SubRoot subRoot = subname.GetComponentInParent<SubRoot>();
+                Rocket rocket = subname.GetComponentInParent<Rocket>();
+
                 if (vehicle)
                 {
                     parentVehicle = vehicle.gameObject;
+                }
+                else if (rocket)
+                {
+                    parentVehicle = rocket.gameObject;
                 }
                 else
                 {

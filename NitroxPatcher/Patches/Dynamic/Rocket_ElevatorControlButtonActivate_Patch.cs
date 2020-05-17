@@ -10,8 +10,7 @@ namespace NitroxPatcher.Patches.Dynamic
 {
     public class Rocket_ElevatorControlButtonActivate_Patch : NitroxPatch, IDynamicPatch
     {
-        public static readonly Type TARGET_CLASS = typeof(Rocket);
-        public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("ElevatorControlButtonActivate", BindingFlags.Public | BindingFlags.Instance);
+        public static readonly MethodInfo TARGET_METHOD = typeof(Rocket).GetMethod("ElevatorControlButtonActivate", BindingFlags.Public | BindingFlags.Instance);
 
         public static void Prefix(Rocket __instance)
         {
