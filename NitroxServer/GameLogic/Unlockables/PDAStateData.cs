@@ -2,7 +2,6 @@
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxServer.GameLogic.Unlockables
 {
@@ -10,27 +9,27 @@ namespace NitroxServer.GameLogic.Unlockables
     public class PDAStateData
     {
         [ProtoMember(1)]
-        public ThreadSafeCollection<TechTypeModel> UnlockedTechTypes { get; } = new ThreadSafeCollection<TechTypeModel>();
+        public ThreadSafeCollection<TechType> UnlockedTechTypes { get; } = new ThreadSafeCollection<TechType>();
 
         [ProtoMember(2)]
-        public ThreadSafeCollection<TechTypeModel> KnownTechTypes { get; } = new ThreadSafeCollection<TechTypeModel>();
+        public ThreadSafeCollection<TechType> KnownTechTypes { get; } = new ThreadSafeCollection<TechType>();
 
         [ProtoMember(3)]
         public ThreadSafeCollection<string> EncyclopediaEntries { get; } = new ThreadSafeCollection<string>();
 
         [ProtoMember(4)]
-        public ThreadSafeDictionary<TechTypeModel, PDAEntry> PartiallyUnlockedByTechType { get; } = new ThreadSafeDictionary<TechTypeModel, PDAEntry>();
+        public ThreadSafeDictionary<TechType, PDAEntry> PartiallyUnlockedByTechType { get; } = new ThreadSafeDictionary<TechType, PDAEntry>();
 
         [ProtoMember(5)]
         public ThreadSafeCollection<PDALogEntry> PdaLog { get; } = new ThreadSafeCollection<PDALogEntry>();
 
-        public void UnlockedTechType(TechTypeModel techType)
+        public void UnlockedTechType(TechType techType)
         {
             PartiallyUnlockedByTechType.Remove(techType);
             UnlockedTechTypes.Add(techType);
         }
 
-        public void AddKnownTechType(TechTypeModel techType)
+        public void AddKnownTechType(TechType techType)
         {
             KnownTechTypes.Add(techType);
         }
@@ -45,7 +44,7 @@ namespace NitroxServer.GameLogic.Unlockables
             PdaLog.Add(entry);
         }
 
-        public void EntryProgressChanged(TechTypeModel techType, float progress, int unlocked)
+        public void EntryProgressChanged(TechType techType, float progress, int unlocked)
         {
             PDAEntry pdaEntry;
             if (!PartiallyUnlockedByTechType.TryGetValue(techType, out pdaEntry))
@@ -59,8 +58,8 @@ namespace NitroxServer.GameLogic.Unlockables
 
         public InitialPDAData GetInitialPDAData()
         {
-            return new InitialPDAData(new List<TechTypeModel>(UnlockedTechTypes),
-                new List<TechTypeModel>(KnownTechTypes),
+            return new InitialPDAData(new List<TechType>(UnlockedTechTypes),
+                new List<TechType>(KnownTechTypes),
                 new List<string>(EncyclopediaEntries),
                 new List<PDAEntry>(PartiallyUnlockedByTechType.Values),
                 new List<PDALogEntry>(PdaLog));
