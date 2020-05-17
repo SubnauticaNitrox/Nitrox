@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Ionic.Zip;
 using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -183,6 +184,15 @@ namespace NitroxServer.Serialization.World
                 else
                 {
                     Log.Info("Could not load world: " + ex + " creating a new one.");
+                }
+
+                //Backup world if loading fails
+                using (ZipFile zipFile = new ZipFile(Path.Combine(config.SaveName, "worldBackup.zip")))
+                {
+                    zipFile.AddFile(Path.Combine(config.SaveName, "Version" + fileEnding));
+                    zipFile.AddFile(Path.Combine(config.SaveName, "BaseData" + fileEnding));
+                    zipFile.AddFile(Path.Combine(config.SaveName, "PlayerData" + fileEnding));
+                    zipFile.AddFile(Path.Combine(config.SaveName, "WorldData" + fileEnding));
                 }
             }
 
