@@ -1,5 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata
@@ -11,6 +10,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
             StarshipDoor starshipDoor = gameObject.GetComponent<StarshipDoor>();
             starshipDoor.doorOpen = metadata.DoorOpen;
             starshipDoor.doorLocked = metadata.DoorLocked;
+
             if (metadata.DoorLocked)
             {
                 starshipDoor.LockDoor();

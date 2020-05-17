@@ -9,6 +9,7 @@ namespace NitroxModel.DataStructures.GameLogic.Entities.Metadata
     {
         [ProtoMember(1)]
         public bool DoorLocked { get; }
+
         [ProtoMember(2)]
         public bool DoorOpen { get; }
 
