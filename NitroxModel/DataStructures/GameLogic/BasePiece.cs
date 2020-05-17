@@ -20,7 +20,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxQuaternion Rotation { get; set; }
 
         [ProtoMember(4)]
-        public TechType TechType { get; set; }
+        public NitroxTechType TechType { get; set; }
 
         [ProtoMember(5)]
         public Optional<NitroxId> ParentId { get; set; }
@@ -56,7 +56,7 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, TechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
         {
             Id = id;
             ItemPosition = itemPosition;

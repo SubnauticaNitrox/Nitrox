@@ -86,10 +86,10 @@
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\Int3.cs" />
     <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
-    <Compile Include="DataStructures\TechType.cs" />
     <Compile Include="DataStructures\ThreadSafeCollection.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />

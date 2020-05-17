@@ -22,7 +22,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxTransform Transform { get; set; }
 
         [ProtoMember(2)]
-        public TechType TechType { get; set; }
+        public NitroxTechType TechType { get; set; }
 
         [ProtoMember(3)]
         public NitroxId Id { get; set; }
@@ -66,7 +66,7 @@ namespace NitroxModel.DataStructures.GameLogic
             // Default Constructor for serialization
         }
 
-        public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
+        public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)
         {
             Transform = new NitroxTransform(localPosition, localRotation, scale, this);
             TechType = techType;
@@ -87,7 +87,7 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public Entity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 scale, TechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
+        public Entity(NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId waterParkId, byte[] serializedGameObject, bool existsInGlobalRoot, NitroxId id)
         {
             Transform = new NitroxTransform(position, rotation, scale, this);
             TechType = techType;

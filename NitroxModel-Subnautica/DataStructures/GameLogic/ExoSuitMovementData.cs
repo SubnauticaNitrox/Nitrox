@@ -20,7 +20,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             // For serialization purposes
         }
 
-        public ExosuitMovementData(NitroxModel.DataStructures.TechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
+        public ExosuitMovementData(NitroxModel.DataStructures.GameLogic.NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, NitroxVector3 velocity, NitroxVector3 angularVelocity, float steeringWheelYaw, float steeringWheelPitch, bool appliedThrottle,
                                    NitroxVector3 leftAimTarget, NitroxVector3 rightAimTarget, float health) : base(techType,id,position,rotation,velocity,angularVelocity,steeringWheelYaw,steeringWheelPitch,appliedThrottle,health)
         {
             LeftAimTarget = leftAimTarget;

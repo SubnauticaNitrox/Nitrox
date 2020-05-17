@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel_Subnautica.DataStructures;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxServer_Subnautica.GameLogic.Entities
 {
@@ -13,7 +13,7 @@ namespace NitroxServer_Subnautica.GameLogic.Entities
          * list should not be checked for non-server spawned items as they were probably dropped
          * by the player and are mostly guaranteed to move.
          */
-        public static readonly HashSet<TechTypeModel> ForServerSpawned = new HashSet<TechTypeModel>
+        public static readonly HashSet<NitroxTechType> ForServerSpawned = new HashSet<NitroxTechType>
         {
             TechType.Shocker.ToDto(),
             TechType.Biter.ToDto(),

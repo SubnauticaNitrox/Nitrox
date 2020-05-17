@@ -10,7 +10,7 @@ namespace NitroxModel.DataStructures.GameLogic
     public class VehicleModel
     {
         [ProtoMember(1)]
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
 
         [ProtoMember(2)]
         public NitroxId Id { get; set; }
@@ -44,7 +44,7 @@ namespace NitroxModel.DataStructures.GameLogic
             DockingBayId = Optional.Empty;
         }
 
-        public VehicleModel(TechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
+        public VehicleModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, IEnumerable<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
         {
             TechType = techType;
             Id = id;

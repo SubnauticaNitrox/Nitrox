@@ -209,12 +209,12 @@ namespace NitroxServer.Serialization.World
                                                               NitroxServiceLocator.LocateService<UwePrefabFactory>(),
                                                               parsedBatchCells,
                                                               serializer,
-                                                              NitroxServiceLocator.LocateService<Dictionary<TechType, IEntityBootstrapper>>(),
+                                                              NitroxServiceLocator.LocateService<Dictionary<NitroxTechType, IEntityBootstrapper>>(),
                                                               NitroxServiceLocator.LocateService<Dictionary<string, PrefabPlaceholdersGroupAsset>>());
 
             world.EntityManager = new EntityManager(entities, world.BatchEntitySpawner);
 
-            HashSet<TechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<TechType>>();
+            HashSet<NitroxTechType> serverSpawnedSimulationWhiteList = NitroxServiceLocator.LocateService<HashSet<NitroxTechType>>();
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             Log.Info($"World GameMode: {gameMode}");

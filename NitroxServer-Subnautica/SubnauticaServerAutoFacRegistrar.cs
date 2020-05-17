@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Entities;
@@ -11,7 +12,6 @@ using NitroxServer_Subnautica.GameLogic.Entities.Spawning;
 using NitroxServer_Subnautica.GameLogic.Entities.Spawning.EntityBootstrappers;
 using NitroxServer_Subnautica.Serialization;
 using NitroxServer_Subnautica.Serialization.Resources;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
 
 namespace NitroxServer_Subnautica
 {
@@ -41,7 +41,7 @@ namespace NitroxServer_Subnautica
 
             SubnauticaUwePrefabFactory prefabFactory = new SubnauticaUwePrefabFactory(resourceAssets.LootDistributionsJson);
             containerBuilder.Register(c => prefabFactory).As<UwePrefabFactory>().SingleInstance();
-            containerBuilder.Register(c => new Dictionary<TechTypeModel, IEntityBootstrapper>
+            containerBuilder.Register(c => new Dictionary<NitroxTechType, IEntityBootstrapper>
             {
                 [TechType.CrashHome.ToDto()] = new CrashFishBootstrapper(), 
                 [TechType.Reefback.ToDto()] = new ReefbackBootstrapper()

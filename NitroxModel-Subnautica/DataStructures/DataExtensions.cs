@@ -21,12 +21,12 @@ namespace NitroxModel_Subnautica.DataStructures
             return new Vector3(v.X, v.Y, v.Z);
         }
 
-        public static NitroxModel.DataStructures.TechType ToDto(this TechType v)
+        public static NitroxModel.DataStructures.GameLogic.NitroxTechType ToDto(this TechType v)
         {
-            return new NitroxModel.DataStructures.TechType(v.ToString());
+            return new NitroxModel.DataStructures.GameLogic.NitroxTechType(v.ToString());
         }
 
-        public static TechType ToUnity(this NitroxModel.DataStructures.TechType v)
+        public static TechType ToUnity(this NitroxModel.DataStructures.GameLogic.NitroxTechType v)
         {
             return (TechType)Enum.Parse(typeof(TechType), v.Name);
         }

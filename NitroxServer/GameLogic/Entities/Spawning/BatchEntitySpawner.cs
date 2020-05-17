@@ -15,7 +15,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
     {
         private readonly BatchCellsParser batchCellsParser;
 
-        private readonly Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType;
+        private readonly Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType;
         private readonly HashSet<Int3> emptyBatches = new HashSet<Int3>();
         private readonly Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId;
         private readonly UwePrefabFactory prefabFactory;
@@ -55,7 +55,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         }
 
         public BatchEntitySpawner(EntitySpawnPointFactory entitySpawnPointFactory, UweWorldEntityFactory worldEntityFactory, UwePrefabFactory prefabFactory, List<Int3> loadedPreviousParsed, ServerProtobufSerializer serializer,
-                                  Dictionary<TechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId)
+                                  Dictionary<NitroxTechType, IEntityBootstrapper> customBootstrappersByTechType, Dictionary<string, PrefabPlaceholdersGroupAsset> prefabPlaceholderGroupsbyClassId)
         {
             parsedBatches = new HashSet<Int3>(loadedPreviousParsed);
             this.worldEntityFactory = worldEntityFactory;
@@ -209,7 +209,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
             }
         }
 
-        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, TechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
+        private IEnumerable<Entity> CreateEntityWithChildren(EntitySpawnPoint entitySpawnPoint, NitroxVector3 scale, NitroxTechType techType, int cellLevel, string classId, DeterministicBatchGenerator deterministicBatchGenerator, Entity parentEntity = null)
         {
             Entity spawnedEntity = new Entity(entitySpawnPoint.LocalPosition,
                                               entitySpawnPoint.LocalRotation,
@@ -351,7 +351,7 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 Entity prefabEntity = new Entity(transform.LocalPosition,
                              transform.LocalRotation,
                              transform.LocalScale,
-                             new TechType("None"),
+                             new NitroxTechType("None"),
                              1,
                              prefab.ClassId,
                              true,

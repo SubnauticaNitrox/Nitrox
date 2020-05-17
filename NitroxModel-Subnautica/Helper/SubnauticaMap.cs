@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Helper;
-using NitroxTechType = NitroxModel.DataStructures.TechType;
 using NitroxInt3 = NitroxModel.DataStructures.Int3;
 
 namespace NitroxModel_Subnautica.Helper

@@ -6,8 +6,6 @@ using NitroxModel.DataStructures.Util;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic;
-using UnityEngine;
-using NitroxTechType = NitroxModel.DataStructures.TechType;
 
 namespace NitroxModel_Subnautica.Helper
 {
