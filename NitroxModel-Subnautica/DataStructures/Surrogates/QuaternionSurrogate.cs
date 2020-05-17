@@ -11,13 +11,16 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
     {
         [ProtoMember(1)]
         public float X { get; private set; }
+
         [ProtoMember(2)]
         public float Y { get; private set; }
+
         [ProtoMember(3)]
         public float Z { get; private set; }
+
         [ProtoMember(4)]
         public float W { get; private set; }
-        
+
         protected override void GetObjectData(Quaternion quaternion, SerializationInfo info)
         {
             info.AddValue("w", quaternion.w);
@@ -34,7 +37,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
             quaternion.z = info.GetSingle("z");
             return quaternion;
         }
-        
+
         public static implicit operator QuaternionSurrogate(Quaternion v)
         {
             return new QuaternionSurrogate
@@ -45,12 +48,12 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.z
             };
         }
-        
+
         public static implicit operator Quaternion(QuaternionSurrogate surrogate)
         {
             return new Quaternion(surrogate.X, surrogate.Y, surrogate.Z, surrogate.W);
         }
-        
+
         public static implicit operator QuaternionSurrogate(NitroxQuaternion v)
         {
             return new QuaternionSurrogate
@@ -61,7 +64,7 @@ namespace NitroxModel_Subnautica.DataStructures.Surrogates
                 Z = v.Z
             };
         }
-        
+
         public static implicit operator NitroxQuaternion(QuaternionSurrogate surrogate)
         {
             return new NitroxQuaternion(surrogate.X, surrogate.Y, surrogate.Z, surrogate.W);
