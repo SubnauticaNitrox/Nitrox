@@ -26,7 +26,7 @@ namespace NitroxPatcher
         public static void Execute()
         {
             Log.Setup(true);
-            
+
             if (container != null)
             {
                 Log.Warn($"Patches have already been detected! Call {nameof(Apply)} or {nameof(Restore)} instead.");
@@ -51,7 +51,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Debug("Applying dynamic patch {patchName}", patch.GetType().Name);
+                Log.Debug($"Applying dynamic patch {patch.GetType().Name}");
                 patch.Patch(harmony);
             }
 
@@ -72,7 +72,7 @@ namespace NitroxPatcher
 
             foreach (IDynamicPatch patch in container.Resolve<IDynamicPatch[]>())
             {
-                Log.Debug("Restoring dynamic patch {patchName}", patch.GetType().Name);
+                Log.Debug($"Restoring dynamic patch {patch.GetType().Name}");
                 patch.Restore(harmony);
             }
 
@@ -88,7 +88,7 @@ namespace NitroxPatcher
 
             foreach (IPersistentPatch patch in container.Resolve<IEnumerable<IPersistentPatch>>())
             {
-                Log.Debug("Applying persistent patch {patchName}", patch.GetType().Name);
+                Log.Debug($"Applying persistent patch {patch.GetType().Name}");
                 patch.Patch(harmony);
             }
 

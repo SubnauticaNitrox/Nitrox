@@ -33,14 +33,14 @@ namespace NitroxClient.GameLogic.InitialSync
             int storageSlotsSynced = 0;
 
             using (packetSender.Suppress<StorageSlotItemAdd>())
-            {                
+            {
                 foreach (ItemData itemData in packet.StorageSlots)
                 {
                     waitScreenItem.SetProgress(storageSlotsSynced, packet.StorageSlots.Count);
 
                     GameObject item = SerializationHelper.GetGameObject(itemData.SerializedData);
 
-                    Log.Debug("Initial StorageSlot item data for {itemName} giving to container {itemContainerId}", item.name, itemData.ContainerId);
+                    Log.Debug($"Initial StorageSlot item data for {item.name} giving to container {itemData.ContainerId}");
 
                     NitroxEntity.SetNewId(item, itemData.ItemId);
                     slots.AddItem(item, itemData.ContainerId, true);

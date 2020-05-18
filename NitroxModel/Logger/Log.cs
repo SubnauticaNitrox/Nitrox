@@ -97,70 +97,58 @@ namespace NitroxModel.Logger
                 {
                     return;
                 }
-                
+
                 logger.Info("Setting player name");
                 logger.SetProperty(nameof(PlayerName), $"[{value}] ");
             }
         }
 
         [Conditional("DEBUG")]
-        public static void Trace(object message, params object[] args)
+        public static void Debug(string message) => logger.Debug(message);
+        [Conditional("DEBUG")]
+        public static void Debug(object message) => Debug(message?.ToString());
+
+        public static void Info(string message) => logger.Info(message);
+        public static void Info(object message) => Info(message?.ToString());
+
+        public static void Warn(string message) => logger.Warn(message);
+        public static void Warn(object message) => Warn(message?.ToString());
+
+        public static void Error(Exception ex) => logger.Error(ex);
+        public static void Error(Exception ex, string message) => logger.Error(ex, message);
+        public static void Error(string message) => logger.Error(message);
+
+        public static void InGame(object message) => InGame(message?.ToString());
+        public static void InGame(string message)
         {
-            logger.Trace(message?.ToString(), args);
+            if (InGameLogger == null)
+            {
+                logger.Warn($"{nameof(InGameLogger)} has not been set.");
+                return;
+            }
+            logger
+                .WithProperty("game", true)
+                .Info()
+                .Message(message)
+                .Write();
         }
 
         [Conditional("DEBUG")]
-        public static void Debug(object message, params object[] args)
-        {
-            logger.Debug(message?.ToString(), args);
-        }
-
-        public static void Info(object message, params object[] args)
-        {
-            logger.Info(message?.ToString(), args);
-        }
-
-        public static void Warn(object message, params object[] args)
-        {
-            logger.Warn(message?.ToString(), args);
-        }
-
-        public static void Error(object message, params object[] args)
-        {
-            logger.Error(message?.ToString(), args);
-        }
-
-        public static void Error(Exception ex)
-        {
-            logger.Error(ex);
-        }
-
-        public static void Error(Exception ex, string message, params object[] args)
-        {
-            logger.Error(ex, message, args);
-        }
-
-        public static void Fatal(object message, params object[] args)
-        {
-            logger.Fatal().Message(message?.ToString(), args).Write();
-        }
-
-        [Conditional("DEBUG")]
-        public static void DebugSensitive(object message, params object[] args)
+        public static void DebugSensitive(string message, params object[] args)
         {
             logger
                 .WithProperty("sensitive", true)
                 .Debug()
-                .Message(message?.ToString(), args)
+                .Message(message, args)
                 .Write();
         }
 
-        public static void InfoSensitive(object message, params object[] args)
+        public static void InfoSensitive(string message, params object[] args)
         {
             logger
                 .WithProperty("sensitive", true)
                 .Info()
-                .Message(message?.ToString(), args)
+                .Message(message, args)
                 .Write();
         }
 
@@ -174,16 +162,16 @@ namespace NitroxModel.Logger
                 .Write();
         }
 
-        public static void ErrorSensitive(object message, params object[] args)
+        public static void ErrorSensitive(string message, params object[] args)
         {
             logger
                 .WithProperty("sensitive", true)
                 .Error()
-                .Message(message?.ToString(), args)
+                .Message(message, args)
                 .Write();
         }
 
-        public static void InGame(object message, bool containsPersonalInfo = false, params object[] args)
+        public static void InGameSensitive(string message, params object[] args)
         {
             if (InGameLogger == null)
             {
@@ -191,10 +179,10 @@ namespace NitroxModel.Logger
                 return;
             }
             logger
-                .WithProperty("sensitive", containsPersonalInfo)
+                .WithProperty("sensitive", true)
                 .WithProperty("game", true)
                 .Info()
-                .Message(message?.ToString(), args)
+                .Message(message, args)
                 .Write();
         }
 

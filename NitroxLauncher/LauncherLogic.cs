@@ -105,7 +105,7 @@ namespace NitroxLauncher
                     {
                         AppHelper.RestartAsAdmin();
                     }
-                    
+
                     return path;
                 },
                 CancellationToken.None,
@@ -437,9 +437,9 @@ namespace NitroxLauncher
                             Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception ex)
                     {
-                        Log.Error(e, $"There was error during copying the assembly: {fileName}");
+                        Log.Error(ex, $"There was error during copying the assembly: {fileName}");
                     }
                 }
                 else if (!File.Exists(destinationFilePath))

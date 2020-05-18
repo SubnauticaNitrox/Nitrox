@@ -25,12 +25,13 @@ namespace NitroxServer.ConsoleCommands
                 string password = args.Args.Length == 0 ? string.Empty : args.Args[0];
                 serverConfig.ServerPassword = password;
 
-                Log.Info("Server password changed to {password} by {playername}", password, playerName);
+                Log.InfoSensitive("Server password changed to {password} by {playername}", password, playerName);
                 SendMessageToPlayer(args.Sender, "Server password changed");
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Error attempting to change server password");
+                string password = args.Args.Length == 0 ? string.Empty : args.Args[0];
+                Log.ErrorSensitive(ex, "Error attempting to change server password to {password}", password);
             }
         }
     }

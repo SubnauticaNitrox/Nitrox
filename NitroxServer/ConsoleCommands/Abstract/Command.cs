@@ -56,13 +56,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
             {
                 Execute(new CallArgs(this, sender, args));
             }
-            catch (ArgumentException e)
+            catch (ArgumentException ex)
             {
-                SendMessage(sender, $"Error: {e.Message}");
+                SendMessage(sender, $"Error: {ex.Message}");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error("Fatal error while trying to execute the command", e);
+                Log.Error(ex, "Fatal error while trying to execute the command");
             }
         }
 

@@ -32,7 +32,7 @@ namespace NitroxModel.Server
                 }
                 catch (Exception ex)
                 {
-                    Log.Error("Can't refresh server app settings", ex);
+                    Log.Error(ex, "Can't refresh server app settings");
                 }
             }
 
@@ -44,7 +44,7 @@ namespace NitroxModel.Server
 
             Name = itemName;
             value = defaultValue; //not Value, we don't want to rewrite the config to default value again and again
-        
+
             try
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));

@@ -112,7 +112,7 @@ namespace NitroxClient.MonoBehaviours
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "Error processing packet {$packet}", packet);
+                    Log.Error(ex, $"Error processing packet {packet}");
                 }
             }
         }
@@ -170,7 +170,7 @@ namespace NitroxClient.MonoBehaviours
             items.Clear();
 
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
-            
+
             LoadingScreenVersionText.DisableWarningText();
             DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.IpAddress + ":" + Main.multiplayerSession.ServerPort);
             PlayerChatManager.LoadChatKeyHint();

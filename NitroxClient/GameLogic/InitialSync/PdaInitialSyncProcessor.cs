@@ -23,72 +23,72 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            AddEncyclopediaEntries(packet.PDAData.EncyclopediaEntries);
+            SetEncyclopediaEntry(packet.PDAData.EncyclopediaEntries);
             waitScreenItem.SetProgress(0.2f);
             yield return null;
 
-            AddPdaEntryComplete(packet.PDAData.UnlockedTechTypes);
+            SetPDAEntryComplete(packet.PDAData.UnlockedTechTypes);
             waitScreenItem.SetProgress(0.4f);
             yield return null;
 
-            AddPdaEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
+            SetPDAEntryPartial(packet.PDAData.PartiallyUnlockedTechTypes);
             waitScreenItem.SetProgress(0.6f);
             yield return null;
 
-            AddKnownTech(packet.PDAData.KnownTechTypes);
+            SetKnownTech(packet.PDAData.KnownTechTypes);
             waitScreenItem.SetProgress(0.8f);
             yield return null;
 
-            AddPdaLogs(packet.PDAData.PDALogEntries);
+            SetPDALog(packet.PDAData.PDALogEntries);
             waitScreenItem.SetProgress(1f);
             yield return null;
         }
-        
-        private void AddEncyclopediaEntries(List<string> newEntries)
+
+        private void SetEncyclopediaEntry(List<string> entries)
         {
-            Log.Info("Received initial sync packet with " + newEntries.Count + " encyclopedia entries");
+            Log.Info($"Received initial sync packet with {entries.Count} encyclopedia entries");
 
             using (packetSender.Suppress<PDAEncyclopediaEntryAdd>())
             {
-                foreach (string entry in newEntries)
+                foreach (string entry in entries)
                 {
                     PDAEncyclopedia.Add(entry, false);
                 }
             }
         }
 
-        private void AddPdaEntryComplete(List<TechTypeModel> newEntries)
+        private void SetPDAEntryComplete(List<TechTypeModel> pdaEntryComplete)
         {
             HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-            foreach (TechTypeModel item in newEntries)
+            foreach (TechTypeModel item in pdaEntryComplete)
             {
                 complete.Add(item.Enum());
             }
 
-            Log.Info("PDAEntryComplete save (added/new total): {pdaCompleteAdded}/{pdaCompleteTotal}", newEntries.Count, complete.Count);
+            Log.Info($"PDAEntryComplete: New added: {pdaEntryComplete.Count}, Total: {complete.Count}");
 
         }
 
-        private void AddPdaEntryPartial(List<PDAEntry> newEntries)
+        private void SetPDAEntryPartial(List<PDAEntry> entries)
         {
             List<PDAScanner.Entry> partial = (List<PDAScanner.Entry>)(typeof(PDAScanner).GetField("partial", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-            foreach (PDAEntry entry in newEntries)
+            foreach (PDAEntry entry in entries)
             {
                 partial.Add(new PDAScanner.Entry { progress = entry.Progress, techType = entry.TechType.Enum(), unlocked = entry.Unlocked });
             }
 
-            Log.Debug("PDAEntryPartial save (added/new total): {pdaPartialAdded}/{pdaPartialTotal}", newEntries.Count, partial.Count);
+            Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
         }
-        
-        private void AddKnownTech(ICollection<TechTypeModel> newKnownTechTypes)
+
+        private void SetKnownTech(ICollection<TechTypeModel> techTypes)
         {
-            Log.Info("Received initial sync packet with {techTypeAdded} known tech types", newKnownTechTypes.Count);
+            Log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
 
             using (packetSender.Suppress<KnownTechEntryAdd>())
             {
-                foreach (TechTypeModel techType in newKnownTechTypes)
+                foreach (TechTypeModel techType in techTypes)
                 {
                     HashSet<TechType> complete = (HashSet<TechType>)(typeof(PDAScanner).GetField("complete", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
                     KnownTech.Add(techType.Enum(), false);
@@ -96,15 +96,15 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
 
-        private void AddPdaLogs(ICollection<PDALogEntry> newPdaLogEntries)
+        private void SetPDALog(ICollection<PDALogEntry> logEntries)
         {
-            Log.Info("Received initial sync packet with {pdaEntriesAdded} pda log entries", newPdaLogEntries.Count);
+            Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 
             using (packetSender.Suppress<PDALogEntryAdd>())
             {
                 Dictionary<string, PDALog.Entry> entries = (Dictionary<string, PDALog.Entry>)(typeof(PDALog).GetField("entries", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null));
 
-                foreach (PDALogEntry logEntry in newPdaLogEntries)
+                foreach (PDALogEntry logEntry in logEntries)
                 {
                     if (!entries.ContainsKey(logEntry.Key))
                     {

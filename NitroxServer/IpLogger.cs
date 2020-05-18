@@ -62,7 +62,7 @@ namespace NitroxServer
 
                 if (splitIpParts[0] == "10" || splitIpParts[0] == "192" && splitIpParts[1] == "168" || splitIpParts[0] == "172" && secondPart > 15 && secondPart < 32) //To get if IP is private
                 {
-                    Log.Info("If playing on LAN, use this IP: {ip}", eachIp.Address); // Local IP doesn't need sensitive logging
+                    Log.Info($"If playing on LAN, use this IP: {eachIp.Address}"); // Local IP doesn't need sensitive logging
                 }
             }
         }
@@ -99,7 +99,7 @@ namespace NitroxServer
             else
             {
                 Log.Warn("Could not get your external IP. You are on your own...");
-            }            
+            }
         }
     }
 }

@@ -45,7 +45,7 @@ namespace NitroxClient.GameLogic.Spawning
         {
             return false;
         }
-        
+
         private void EnableRigidBody(GameObject gameObject)
         {
             Rigidbody rigidBody = gameObject.RequireComponent<Rigidbody>();
@@ -66,7 +66,7 @@ namespace NitroxClient.GameLogic.Spawning
 
         private void ExecuteDropItemAction(TechType techType, GameObject gameObject)
         {
-            Log.Debug("Performing drop action for tech type {$techType}", techType);
+            Log.Debug($"Performing drop action for tech type {techType}");
 
             ItemDropAction itemDropAction = ItemDropAction.FromTechType(techType);
             itemDropAction.ProcessDroppedItem(gameObject);

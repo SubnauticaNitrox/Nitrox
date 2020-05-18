@@ -20,7 +20,7 @@ namespace NitroxServer.GameLogic.Items
         public void ItemAdded(ItemData itemData)
         {
             inventoryItemsById[itemData.ItemId] = itemData;
-            Log.Debug("Received inventory item {itemId} to container {itemContainerId}. Total items: {totalItemCount}", itemData.ItemId, itemData.ContainerId, inventoryItemsById.Count);
+            Log.Debug($"Received inventory item {itemData.ItemId} to container {itemData.ContainerId}. Total items: {inventoryItemsById.Count}");
         }
 
         public void ItemRemoved(NitroxId itemId)

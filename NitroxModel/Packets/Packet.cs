@@ -18,7 +18,7 @@ namespace NitroxModel.Packets
         private static readonly SurrogateSelector surrogateSelector;
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter serializer;
-        
+
         static Packet()
         {
             surrogateSelector = new SurrogateSelector();
@@ -33,13 +33,13 @@ namespace NitroxModel.Packets
                                                        t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
                                                        t.IsClass &&
                                                        !t.IsAbstract);
-            foreach(Type type in surrogates)
+            foreach (Type type in surrogates)
             {
                 ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
                 Type surrogatedType = type.BaseType.GetGenericArguments()[0];
                 surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                Log.Debug("Added surrogate {surrogate} for type {surrogatedType}", surrogate, surrogatedType);
+                Log.Debug($"Added surrogate {surrogate} for type {surrogatedType}");
             }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.
@@ -89,7 +89,7 @@ namespace NitroxModel.Packets
             ISurrogateSelector selector;
             return (serializer.SurrogateSelector.GetSurrogate(type, Packet.serializer.Context, out selector) != null);
         }
-        
+
         public WrapperPacket ToWrapperPacket()
         {
             return new WrapperPacket(Serialize());

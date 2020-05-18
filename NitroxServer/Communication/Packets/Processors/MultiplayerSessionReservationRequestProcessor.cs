@@ -29,7 +29,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 authenticationContext,
                 correlationId);
 
-            Log.Info("Reservation processed successfully: {@reservation}...", reservation);
+            Log.Info($"Reservation processed successfully: {reservation}...");
 
             connection.SendPacket(reservation);
         }

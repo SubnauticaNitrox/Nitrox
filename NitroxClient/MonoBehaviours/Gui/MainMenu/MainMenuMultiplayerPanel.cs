@@ -190,10 +190,9 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
                 IPHostEntry hostEntry = Dns.GetHostEntry(match.Groups[1].Value);
                 return new IPEndPoint(hostEntry.AddressList[0], match.Groups[2].Success ? int.Parse(match.Groups[2].Value) : 11000);
             }
-            catch (SocketException e)
+            catch (SocketException ex)
             {
-                Log.ErrorSensitive("Unable to resolve the address {hostname}", hostname);
-                Log.Error(e);
+                Log.ErrorSensitive(ex, "Unable to resolve the address {hostname}", hostname);
                 return null;
             }
         }
