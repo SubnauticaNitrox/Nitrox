@@ -621,7 +621,7 @@ namespace NitroxClient.GameLogic
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - sending notify for self constructing object - id: " + id + " amount: " + instance.constructedAmount);
 #endif
-                    BaseConstructionAmountChanged amountChanged = new BaseConstructionAmountChanged(id, instance.constructedAmount, true);
+                    BaseConstructionAmountChanged amountChanged = new BaseConstructionAmountChanged(id, instance.constructedAmount);
                     packetSender.Send(amountChanged);
                 }
             }
@@ -715,7 +715,7 @@ namespace NitroxClient.GameLogic
 #if TRACE && BUILDING
                         NitroxModel.Logger.Log.Debug("Constructable_Deconstruct_Post - sending notify for self deconstructing object  - id: " + id + " amount: " + instance.constructedAmount);
 #endif
-                        BaseConstructionAmountChanged amountChanged = new BaseConstructionAmountChanged(id, instance.constructedAmount, false);
+                        BaseConstructionAmountChanged amountChanged = new BaseConstructionAmountChanged(id, instance.constructedAmount);
                         packetSender.Send(amountChanged);
                     }
                 }
@@ -967,7 +967,7 @@ namespace NitroxClient.GameLogic
 #if TRACE && BUILDING
                         NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self end constructed object - id: " + id + " parentbaseId: " + parentBaseId);
 #endif
-                        BaseConstructionCompleted constructionCompleted = new BaseConstructionCompleted(id, parentBaseId);
+                        BaseConstructionCompleted constructionCompleted = new BaseConstructionCompleted(id);
                         packetSender.Send(constructionCompleted);
                     }
                     else
@@ -1104,11 +1104,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        internal void Constructable_AmountChanged_Remote(NitroxId id, float constructionAmount, bool construct)
+        internal void Constructable_AmountChanged_Remote(NitroxId id, float constructionAmount)
         {
 
 #if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("Constructable_AmountChanged_Remote - id: " + id + " amount: " + constructionAmount + " construct: " + construct);
+            NitroxModel.Logger.Log.Debug("Constructable_AmountChanged_Remote - id: " + id + " amount: " + constructionAmount);
 #endif
 
             remoteEventActive = true;
@@ -1118,7 +1118,7 @@ namespace NitroxClient.GameLogic
 
                 if (constructingGameObject == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_AmountChanged_Remote - received AmountChange for unknown id: " + id + " amount: " + constructionAmount + " construct: " + construct);
+                    NitroxModel.Logger.Log.Error("Constructable_AmountChanged_Remote - received AmountChange for unknown id: " + id + " amount: " + constructionAmount);
                     remoteEventActive = false;
                     return;
                 }
@@ -1126,13 +1126,14 @@ namespace NitroxClient.GameLogic
                 if (constructionAmount > 0.05f && constructionAmount < 0.95f)
                 {
                     Constructable constructable = constructingGameObject.GetComponentInChildren<Constructable>();
-                    constructable.constructedAmount = constructionAmount;
-                    if (construct)
+                    if (constructable.constructedAmount < constructionAmount)
                     {
+                        constructable.constructedAmount = constructionAmount;
                         constructable.Construct();
                     }
                     else
                     {
+                        constructable.constructedAmount = constructionAmount;
                         constructable.Deconstruct();
                     }
                 }
@@ -1143,11 +1144,11 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        internal void Constructable_ConstructionCompleted_Remote(NitroxId id, NitroxId parentbaseId)
+        internal void Constructable_ConstructionCompleted_Remote(NitroxId id)
         {
 
 #if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("Constructable_ConstructionCompleted_Remote - id: " + id + " parentbaseId: " + parentbaseId);
+            NitroxModel.Logger.Log.Debug("Constructable_ConstructionCompleted_Remote - id: " + id);
 #endif
 
             remoteEventActive = true;
@@ -1158,7 +1159,7 @@ namespace NitroxClient.GameLogic
 
                 if (constructingGameObject == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_ConstructionCompleted_Remote - received ConstructionComplete for unknown id: " + id + " parentbaseID: " + parentbaseId);
+                    NitroxModel.Logger.Log.Error("Constructable_ConstructionCompleted_Remote - received ConstructionComplete for unknown id: " + id);
                     remoteEventActive = false;
                     return;
                 }

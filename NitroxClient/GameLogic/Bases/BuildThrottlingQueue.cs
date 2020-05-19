@@ -26,42 +26,37 @@ namespace NitroxClient.GameLogic.Bases
             return false;
         }
 
-        public void EnqueueBasePiecePlaced(BasePiece basePiece)
+        public void EnqueueConstructionBegin(BasePiece basePiece)
         {
-            Log.Info("Enqueuing base piece to be placed id: " + basePiece.Id + " parentId: " + basePiece.ParentId.OrElse(null));
-            Enqueue(new BasePiecePlacedEvent(basePiece));
+            Enqueue(new ConstructionBeginEvent(basePiece));
         }
 
-        public void EnqueueConstructionCompleted(NitroxId id, NitroxId baseId)
+        public void EnqueueConstructionCompleted(NitroxId id)
         {
-            Log.Info("Enqueuing item to have construction completed id: " + id);
-            Enqueue(new ConstructionCompletedEvent(id, baseId));
+            Enqueue(new ConstructionCompletedEvent(id));
         }
 
         public void EnqueueAmountChanged(NitroxId id, float amount)
         {
-            Log.Info("Enqueuing item to have construction amount changed id: " + id);
             Enqueue(new ConstructionAmountChangedEvent(id, amount));
         }
 
         public void EnqueueDeconstructionBegin(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction beginning id: " + id);
             Enqueue(new DeconstructionBeginEvent(id));
         }
 
         public void EnqueueDeconstructionCompleted(NitroxId id)
         {
-            Log.Info("Enqueuing item to have deconstruction completed id: " + id);
             Enqueue(new DeconstructionCompletedEvent(id));
         }
     }
 
-    public class BasePiecePlacedEvent : BuildEvent
+    public class ConstructionBeginEvent : BuildEvent
     {
         public BasePiece BasePiece { get; }
 
-        public BasePiecePlacedEvent(BasePiece basePiece)
+        public ConstructionBeginEvent(BasePiece basePiece)
         {
             BasePiece = basePiece;
         }
@@ -97,12 +92,10 @@ namespace NitroxClient.GameLogic.Bases
     public class ConstructionCompletedEvent : BuildEvent
     {
         public NitroxId PieceId { get; }
-        public NitroxId BaseId { get; }
 
-        public ConstructionCompletedEvent(NitroxId pieceId, NitroxId baseId)
+        public ConstructionCompletedEvent(NitroxId pieceId)
         {
             PieceId = pieceId;
-            BaseId = baseId;
         }
 
         public bool RequiresFreshFrame()

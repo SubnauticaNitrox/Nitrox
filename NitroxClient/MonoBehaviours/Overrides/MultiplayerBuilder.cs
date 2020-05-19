@@ -63,7 +63,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
             MultiplayerBuilder.prefab = modulePrefab;
             MultiplayerBuilder.Update();
-            return true;
+            return MultiplayerBuilder.canPlace;
         }
 
         // Token: 0x06002B99 RID: 11161 RVA: 0x00103D44 File Offset: 0x00101F44

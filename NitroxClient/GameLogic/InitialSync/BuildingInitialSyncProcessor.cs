@@ -73,11 +73,11 @@ namespace NitroxClient.GameLogic.InitialSync
             {
                 foreach (BasePiece basePiece in basePieces)
                 {
-                    buildEventQueue.EnqueueBasePiecePlaced(basePiece);
+                    buildEventQueue.EnqueueConstructionBegin(basePiece);
 
                     if (basePiece.ConstructionCompleted)
                     {
-                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Id, basePiece.BaseId);
+                        buildEventQueue.EnqueueConstructionCompleted(basePiece.Id);
                     }
                     else
                     {
@@ -114,9 +114,10 @@ namespace NitroxClient.GameLogic.InitialSync
                 {
                     internalList.Add(item);
 
-                    // if current BasePiece has Hull-Fortifications then add them here, otherwise the hull-integrity can be too low 
+                    // If current BasePiece has Hull-Fortifications then add them here, otherwise the hull-integrity can be too low 
                     // causing breaches before the fortifications are loaded later on another BasePiece
-                    // #ISSUE 1030#
+                    // #ISSUE 1030# 
+                    // Rework or completely remove later, when figured out how to supress hull integrity calculation and update while InitialSync
                     foreach (BasePiece item2 in basePieces)
                     {
                         if (item2.TechType.Name.Contains("Reinforcement") && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
@@ -148,8 +149,7 @@ namespace NitroxClient.GameLogic.InitialSync
             // All finished energy storage pieces. They need to be placed before energy-consuming objects are placed
             foreach (BasePiece item in basePieces)
             {
-                //ToDo: include reactors, etc. when they are fixed
-                if (item.ConstructionCompleted && (item.TechType.Name.Contains("Solar")) && !internalList.Contains(item))
+                if (item.ConstructionCompleted && (item.TechType.Name.Contains("Solar") || item.TechType.Name.ToUpper().Contains("REACTOR") || item.TechType.Name.Contains("ThermalPlant") || item.TechType.Name.Contains("PowerTransmitter")) && !internalList.Contains(item))
                 {
                     internalList.Add(item);
                 }
@@ -182,52 +182,6 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
             }
 
-
-            // Restructure the internalList via Base-Relation to get all ordered Pieces for multiple bases in coherently sequences 
-            // and build the bases one by one under maintaining upper buildsequence. This suppresses mixed Base-Ids at Building. 
-
-            // #TODO BUILDING# Reactivate Later when Base-Ids are properly updated and synced
-            /*
-            List<BasePiece> internalList2 = new List<BasePiece>();
-
-            string currentBaseId;
-            while (internalList.Count > 0)
-            {
-                if (internalList[0].BaseId != null)
-                {
-                    currentBaseId = internalList[0].BaseId.ToString();
-
-                    List<BasePiece> itemsToMove = new List<BasePiece>();
-                    foreach (BasePiece item in internalList)
-                    {
-                        if (item.BaseId != null)
-                        {
-                            if (item.BaseId.ToString() == currentBaseId)
-                            {
-                                itemsToMove.Add(item);
-                            }
-                        }
-                    }
-                    foreach (BasePiece item in itemsToMove)
-                    {
-                        internalList2.Add(item);
-                        internalList.Remove(item);
-                    }
-                }
-                else
-                {
-                    internalList2.Add(internalList[0]);
-                    internalList.Remove(internalList[0]);
-                }
-            }
-            //take over the rest of unassigned pieces
-            foreach (BasePiece item in internalList)
-            {
-                internalList2.Add(item);
-            }
-
-            return internalList2;
-            */
             return internalList;
         }
     }

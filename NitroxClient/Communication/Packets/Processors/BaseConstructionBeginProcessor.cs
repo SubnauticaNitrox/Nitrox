@@ -15,7 +15,7 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(BaseConstructionBegin packet)
         {
-            buildEventQueue.EnqueueBasePiecePlaced(packet.BasePiece);
+            buildEventQueue.EnqueueConstructionBegin(packet.BasePiece);
         }
     }
 }
