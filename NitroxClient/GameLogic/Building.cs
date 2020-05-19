@@ -542,6 +542,9 @@ namespace NitroxClient.GameLogic
 
         }
 
+        // Besides switching the state of currently handling a builderTool, this method is also intended to precheck if a construction/action even is allowed. If a 
+        // remote player is currently using a gameobject (e.g. Fabricator) or is too using the buildertool on the same object, we want to deny the local action here 
+        // and give a info to the player. 
         public bool BuilderTool_HandleInput_Pre(GameObject gameObject)
         {
 
@@ -1288,7 +1291,8 @@ namespace NitroxClient.GameLogic
             if (instance.isBase)
             {
                 NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
-                
+
+
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("BaseRoot_Constructor_Post - New BaseRoot Instance - instance: " + instance + " instance.gameObject: " + instance.gameObject + " gameObjectId: " + id );
 #endif

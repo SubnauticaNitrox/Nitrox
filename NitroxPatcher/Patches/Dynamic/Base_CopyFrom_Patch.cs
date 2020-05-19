@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Harmony;
+﻿using Harmony;
 using System.Reflection;
-using NitroxClient.MonoBehaviours;
+using NitroxModel.Core;
+using NitroxClient.GameLogic;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
@@ -14,14 +11,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(Base __instance, Base sourceBase)
         {
-            NitroxEntity entity = sourceBase.GetComponent<NitroxEntity>();
-
-            if (!sourceBase.GetComponent<BaseRoot>())
-            {
-                entity = sourceBase.transform.parent.GetComponent<NitroxEntity>();
-            }
-
-            NitroxEntity.SetNewId(__instance.gameObject, entity.Id);
+            NitroxServiceLocator.LocateService<Building>().Base_CopyFrom_Pre(__instance, sourceBase);
         }
 
         public override void Patch(HarmonyInstance harmony)

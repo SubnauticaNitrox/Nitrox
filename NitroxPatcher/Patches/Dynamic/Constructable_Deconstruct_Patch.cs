@@ -13,14 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
         
         public static void Postfix(Constructable __instance, bool __result)
         {
-            if (__result && __instance.constructedAmount <= 0f)
-            {
-                NitroxServiceLocator.LocateService<Building>().DeconstructionComplete(__instance.gameObject);
-            }
-            else if (!__instance._constructed && __instance.constructedAmount > 0)
-            {
-                NitroxServiceLocator.LocateService<Building>().ChangeConstructionAmount(__instance.gameObject, __instance.constructedAmount);
-            }
+            NitroxServiceLocator.LocateService<Building>().Constructable_Deconstruct_Post(__instance, __result);
         }
         
         public override void Patch(HarmonyInstance harmony)
