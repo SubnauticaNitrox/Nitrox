@@ -47,8 +47,6 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             NitroxId rocketId = NitroxEntity.GetId(rocketInstanceAttachedToConstructor.gameObject);
             NitroxId constructorId = NitroxEntity.GetId(rocketConstructor.gameObject);
-
-            Log.Info($"{nameof(RocketConstructor_StartRocketConstruction_Patch)}: Broadcasting update : RocketBase: {rocketId}, RocketConstructor {constructorId}, currentStageTech {currentStageTech}");
             NitroxServiceLocator.LocateService<Rockets>().BroadCastRocketStateUpdate(rocketId, constructorId, currentStageTech, gameObjectToBuild);
         }
 

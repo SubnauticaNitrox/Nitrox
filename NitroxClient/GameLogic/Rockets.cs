@@ -1,4 +1,5 @@
-﻿using NitroxClient.Communication.Abstract;
+﻿using System;
+using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -19,22 +20,6 @@ namespace NitroxClient.GameLogic
             this.vehicles = vehicles;
         }
 
-        public void BroadcastElevatorCall(NitroxId id, bool up)
-        {
-            Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
-
-            if (model.HasValue)
-            {
-                model.Value.ElevatorUp = up;
-                RocketToggleElevator packet = new RocketToggleElevator(id, up);
-                packetSender.Send(packet);
-            }
-            else
-            {
-                Log.Error($"Rockets: Can't find model for rocket with id {id}");
-            }
-        }
-
         public void BroadCastRocketStateUpdate(NitroxId id, NitroxId constructorId, TechType currentStageTech, UnityEngine.GameObject builtGameObject)
         {
             Optional<NeptuneRocketModel> model = vehicles.TryGetVehicle<NeptuneRocketModel>(id);
@@ -49,6 +34,11 @@ namespace NitroxClient.GameLogic
             {
                 Log.Error($"Rockets: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
             }
+        }
+
+        public void BroadcastElevatorCall(NitroxId id, bool up)
+        {
+            throw new NotImplementedException();
         }
     }
 }

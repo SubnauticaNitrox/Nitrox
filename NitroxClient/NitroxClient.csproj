@@ -237,7 +237,6 @@
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RocketStageUpdateProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\RocketToggleElevatorProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\Bases\Spawning\BasePieceSpawnProcessor.cs" />

@@ -227,8 +227,6 @@
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Patches\Dynamic\RocketConstructor_StartRocketConstruction_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Rocket_CallElevator_Patch.cs" />
-    <Compile Include="Patches\Dynamic\Rocket_ElevatorControlButtonActivate_Patch.cs" />
     <Compile Include="Patches\Dynamic\Rocket_Start_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />

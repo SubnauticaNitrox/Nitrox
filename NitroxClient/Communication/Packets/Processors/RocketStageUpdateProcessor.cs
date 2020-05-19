@@ -1,5 +1,4 @@
-﻿using NitroxClient.Communication.Abstract;
-using NitroxClient.Communication.Packets.Processors.Abstract;
+﻿using NitroxClient.Communication.Packets.Processors.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.Unity.Helper;
@@ -20,12 +19,13 @@ namespace NitroxClient.Communication.Packets.Processors
 
         public override void Process(RocketStageUpdate packet)
         {
-            GameObject gameObjectTobuild = SerializationHelper.GetGameObject(packet.SerializedBuiltGameObject);
+            GameObject gameObjectTobuild = SerializationHelper.GetGameObject(packet.SerializedGameObject);
             Optional<GameObject> gameObjectConstructor = NitroxEntity.GetObjectFrom(packet.ConstructorId);
             GameObject gameObjectRocket = NitroxEntity.RequireObjectFrom(packet.Id);
 
             Rocket rocket = gameObjectRocket.RequireComponent<Rocket>();
             rocket.StartRocketConstruction();
+
             ItemGoalTracker.OnConstruct(packet.CurrentStageTech);
 
             if (gameObjectConstructor.HasValue)

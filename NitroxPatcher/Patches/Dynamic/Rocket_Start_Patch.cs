@@ -29,18 +29,6 @@ namespace NitroxPatcher.Patches.Dynamic
             }
 
             __instance.currentRocketStage = model.Value.CurrentRocketStage;
-            __instance.elevatorState = model.Value.ElevatorUp ? Rocket.RocketElevatorStates.AtTop : Rocket.RocketElevatorStates.AtBottom;
-
-            Optional<ElevatorCallControl> opelevator = Optional.OfNullable(gameObject.GetComponentInChildren<ElevatorCallControl>());
-
-            if (opelevator.HasValue)
-            {
-                opelevator.Value.elevatorUp = model.Value.ElevatorUp;
-            }
-            else
-            {
-                Log.Error($"{nameof(Rocket_Start_Patch)}: Unable to find the ElevatorCallControl inside the RocketBase");
-            }
 
             return true;
         }

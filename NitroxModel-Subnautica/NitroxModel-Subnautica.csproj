@@ -266,7 +266,6 @@
     <Compile Include="Packets\CyclopsToggleInternalLighting.cs" />
     <Compile Include="Packets\ExosuitArmActionPacket.cs" />
     <Compile Include="Packets\RocketStageUpdate.cs" />
-    <Compile Include="Packets\RocketToggleElevator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
