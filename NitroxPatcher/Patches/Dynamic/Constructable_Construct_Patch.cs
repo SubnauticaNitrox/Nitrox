@@ -11,11 +11,6 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(Constructable);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Construct");
 
-        public static bool Prefix(Constructable __instance)
-        {
-            return NitroxServiceLocator.LocateService<Building>().Constructable_Construct_Pre(__instance);
-        }
-
         public static void Postfix(Constructable __instance, bool __result)
         {
             NitroxServiceLocator.LocateService<Building>().Constructable_Construct_Post(__instance, __result);
@@ -23,7 +18,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public override void Patch(HarmonyInstance harmony)
         {
-            PatchMultiple(harmony, TARGET_METHOD, true, true, false);
+            PatchPostfix(harmony, TARGET_METHOD);
         }
     }
 }

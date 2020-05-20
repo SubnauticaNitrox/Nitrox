@@ -444,24 +444,6 @@ namespace NitroxClient.GameLogic
             }
         }
 
-        // Memorize the id from an object that gets to 100% finished
-        public bool Constructable_Construct_Pre(Constructable instance)
-        {
-
-            NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
-
-#if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("Constructable_Construct_Pre - instance: " + instance + " id: " + id + " construced: " + instance._constructed + " amount: " + instance.constructedAmount + " remoteEventActive: " + remoteEventActive);
-#endif
-            if (id != null)
-            {
-                transferIdforConstructableBaseConstructing = id;
-                NitroxEntity.RemoveId(instance.gameObject);
-            }
-
-            return true;
-        }
-
         // Memorize the id in case of deconstructing a already finished piece
         public void BaseDeconstructable_Deconstruct_Pre(BaseDeconstructable instance)
         {
