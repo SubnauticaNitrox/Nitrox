@@ -187,6 +187,21 @@ namespace NitroxClient.MonoBehaviours.Overrides
 
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
+#if TRACE && BUILDING
+                if (!flag2)
+                {
+                    if (component.TargetBase != null)
+                    {
+                        NitroxModel.Logger.Log.Error("MulitplayerBuilder - UpdateGhostModel failed - constructableBase: " + componentInParent);
+                    }
+                    else
+                    {
+                        flag2 = true;
+                    }
+
+                }
+#endif
+
                 if (rotationMetadata.HasValue)
                 {
                     ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
@@ -203,6 +218,17 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 List<GameObject> list = new List<GameObject>();
                 MultiplayerBuilder.GetObstacles(MultiplayerBuilder.placePosition, MultiplayerBuilder.placeRotation, MultiplayerBuilder.bounds, list);
+
+#if TRACE && BUILDING
+                if (list.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        NitroxModel.Logger.Log.Error("MulitplayerBuilder - Obstacles detected - constructableBase: " + componentInParent + " obstacle : " + item);
+                    }
+                }
+#endif
+
                 flag2 = list.Count == 0;
                 list.Clear();
             }

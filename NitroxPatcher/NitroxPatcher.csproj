@@ -230,6 +230,7 @@
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeCellDeconstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseRoot_Constructor_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Dynamic\BuilderTool_OnHoverConstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\BuilderTool_OnHoverBaseDeconstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\CellManager_RegisterEntity_Patch.cs" />
