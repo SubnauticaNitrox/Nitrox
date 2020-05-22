@@ -53,7 +53,7 @@ namespace NitroxClient.Debuggers
             if (string.IsNullOrEmpty(debuggerName))
             {
                 string name = GetType().Name;
-                DebuggerName = name.Substring(0, name.IndexOf("Debugger"));
+                DebuggerName = name.Substring(0, name.IndexOf("Debugger", StringComparison.Ordinal));
             }
             else
             {

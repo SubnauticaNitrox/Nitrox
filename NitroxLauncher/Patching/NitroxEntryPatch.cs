@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using FileAttributes = System.IO.FileAttributes;
@@ -10,7 +12,7 @@ namespace NitroxLauncher.Patching
     internal class NitroxEntryPatch
     {
         public const string GAME_ASSEMBLY_NAME = "Assembly-CSharp.dll";
-        public const string NITROX_ASSEMBLY_NAME = "NitroxPatcher.dll";
+        public const string NITROX_ASSEMBLY_NAME = "Nitrox.Bootloader.dll";
         public const string GAME_ASSEMBLY_MODIFIED_NAME = "Assembly-CSharp-Nitrox.dll";
 
         private const string NITROX_ENTRY_TYPE_NAME = "Main";
@@ -19,7 +21,7 @@ namespace NitroxLauncher.Patching
         private const string GAME_INPUT_TYPE_NAME = "GameInput";
         private const string GAME_INPUT_METHOD_NAME = "Awake";
 
-        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void NitroxPatcher.Main::Execute()";
+        private const string NITROX_EXECUTE_INSTRUCTION = "System.Void Nitrox.Bootloader.Main::Execute()";
 
         private readonly string subnauticaManagedPath;
 
@@ -58,11 +60,35 @@ namespace NitroxLauncher.Patching
                 module.Write(modifiedAssemblyCSharp);
             }
 
-            File.SetAttributes(assemblyCSharp, FileAttributes.Normal);
-            File.Delete(assemblyCSharp);
+            // The assembly might be used by other code or some other program might work in it. Retry to be on the safe side.
+            Exception error = RetryWait(() => File.Delete(assemblyCSharp), 100, 5);
+            if (error != null)
+            {
+                throw error;
+            }
             File.Move(modifiedAssemblyCSharp, assemblyCSharp);
         }
 
+        private Exception RetryWait(Action action, int interval, int retries = 0)
+        {
+            Exception lastException = null;
+            while (retries >= 0)
+            {
+                try
+                {
+                    retries--;
+                    action();
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    lastException = ex;
+                    Task.Delay(interval).Wait();
+                }
+            }
+            return lastException;
+        }
+        
         public void Remove()
         {
             string assemblyCSharp = Path.Combine(subnauticaManagedPath, GAME_ASSEMBLY_NAME);

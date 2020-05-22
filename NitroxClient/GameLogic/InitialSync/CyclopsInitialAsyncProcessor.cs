@@ -6,7 +6,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -25,7 +25,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
-            IList<VehicleModel> cyclopses = packet.Vehicles.Where(v => v.TechType.Enum() == TechType.Cyclops).ToList();
+            IList<VehicleModel> cyclopses = packet.Vehicles.Where(v => v.TechType.ToUnity() == TechType.Cyclops).ToList();
             totalCyclopsToLoad = cyclopses.Count;
 
             this.waitScreenItem = waitScreenItem;

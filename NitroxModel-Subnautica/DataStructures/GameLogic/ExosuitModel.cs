@@ -3,7 +3,6 @@ using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using NitroxModel.DataStructures;
 
 namespace NitroxModel_Subnautica.DataStructures.GameLogic
@@ -23,8 +22,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
             //For serialization purposes
         }
 
-        public ExosuitModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb,  float health) 
-            : base (techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
+        public ExosuitModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
+            : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             LeftArmId = new NitroxId();
             RightArmId = new NitroxId();

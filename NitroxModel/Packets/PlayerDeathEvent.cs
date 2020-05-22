@@ -1,5 +1,5 @@
 ﻿using System;
-using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -7,9 +7,9 @@ namespace NitroxModel.Packets
     public class PlayerDeathEvent : Packet
     {
         public string PlayerName { get; }
-        public Vector3 DeathPosition { get; }
+        public NitroxVector3 DeathPosition { get; }
 
-        public PlayerDeathEvent(string playerName, Vector3 deathPosition)
+        public PlayerDeathEvent(string playerName, NitroxVector3 deathPosition)
         {
             PlayerName = playerName;
             DeathPosition = deathPosition;
