@@ -35,12 +35,12 @@ namespace NitroxServer.Serialization
         {
             Model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
         }
-        
+
         private void RegisterAssemblyClasses(string assemblyName)
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
+                bool hasNitroxProtoBuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
 
                 if (hasNitroxProtoBuf)
                 {

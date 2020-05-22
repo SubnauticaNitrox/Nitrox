@@ -17,16 +17,7 @@ using NitroxServer.GameLogic.Items;
 using NitroxServer.GameLogic.Players;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.GameLogic.Vehicles;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using NitroxServer.GameLogic.Unlockables;
-using NitroxModel.Core;
-using NitroxModel.DataStructures.GameLogic.Entities;
 using NitroxServer.Serialization.Resources.Datastructures;
-using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures;
-using NitroxModel.Server;
 
 namespace NitroxServer.Serialization.World
 {
@@ -45,7 +36,7 @@ namespace NitroxServer.Serialization.World
             this.protoBufSerializer = protoBufSerializer;
             this.config = config;
 
-            Log.Debug($"Using {config.SerializerModeEnum} as save file serializer");
+            Log.Info($"Using {config.SerializerModeEnum} as save file serializer");
             saveDataSerializer = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? (IServerSerializer)protoBufSerializer : jsonSerializer;
             fileEnding = config.SerializerModeEnum == ServerSerializerMode.PROTOBUF ? ".nitrox" : ".json";
         }

@@ -1,27 +1,27 @@
 ﻿using System;
 using Nitrox.Newtonsoft.Json;
 using Nitrox.Newtonsoft.Json.Linq;
-using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.DataStructures.JsonConverter
 {
-    public class Vector3Converter : JsonConverter<Vector3>
+    public class Vector3Converter : JsonConverter<NitroxVector3>
     {
-        public override void WriteJson(JsonWriter writer, Vector3 value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, NitroxVector3 value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("x");
-            writer.WriteValue(value.x);
-            writer.WritePropertyName("y");
-            writer.WriteValue(value.y);
-            writer.WritePropertyName("z");
-            writer.WriteValue(value.z);
+            writer.WritePropertyName("X");
+            writer.WriteValue(value.X);
+            writer.WritePropertyName("Y");
+            writer.WriteValue(value.Y);
+            writer.WritePropertyName("Z");
+            writer.WriteValue(value.Z);
             writer.WriteEndObject();
         }
 
-        public override Vector3 ReadJson(JsonReader reader, Type objectType, Vector3 existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override NitroxVector3 ReadJson(JsonReader reader, Type objectType, NitroxVector3 existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            return JObject.Load(reader).ToObject<Vector3>();
+            return JObject.Load(reader).ToObject<NitroxVector3>();
         }
     }
 }

@@ -24,11 +24,11 @@ namespace NitroxServer.GameLogic.Players
                                            playerData.Name,
                                            playerData.IsPermaDeath,
                                            null, //no connection/context as this player is not connected.
-                                           null, 
-                                           playerData.SpawnPosition, 
-                                           playerData.NitroxId, 
-                                           Optional.OfNullable(playerData.SubRootId), 
-                                           playerData.Permissions, 
+                                           null,
+                                           playerData.SpawnPosition,
+                                           playerData.NitroxId,
+                                           Optional.OfNullable(playerData.SubRootId),
+                                           playerData.Permissions,
                                            playerData.CurrentStats,
                                            playerData.EquippedItems,
                                            playerData.Modules);
@@ -94,9 +94,9 @@ namespace NitroxServer.GameLogic.Players
 
             [ProtoMember(9)]
             public NitroxId NitroxId { get; set; }
-            
-            public bool IsPermaDeath { get; set; }
+
             [ProtoMember(10)]
+            public bool IsPermaDeath { get; set; }
         }
     }
 }

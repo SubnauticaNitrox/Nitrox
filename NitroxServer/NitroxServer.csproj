@@ -68,7 +68,7 @@
       <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="Nitrox.Newtonsoft.Json">
-      <HintPath>..\lib\Nitrox.Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\Nitrox.Subnautica.Assets\Nitrox.Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />

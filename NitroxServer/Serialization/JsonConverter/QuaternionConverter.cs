@@ -1,29 +1,29 @@
 ﻿using System;
 using Nitrox.Newtonsoft.Json;
 using Nitrox.Newtonsoft.Json.Linq;
-using UnityEngine;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.DataStructures.JsonConverter
 {
-    public class QuaternionConverter : JsonConverter<Quaternion>
+    public class QuaternionConverter : JsonConverter<NitroxQuaternion>
     {
-        public override void WriteJson(JsonWriter writer, Quaternion value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, NitroxQuaternion value, JsonSerializer serializer)
         {
             writer.WriteStartObject();
-            writer.WritePropertyName("x");
-            writer.WriteValue(value.x);
-            writer.WritePropertyName("y");
-            writer.WriteValue(value.y);
-            writer.WritePropertyName("z");
-            writer.WriteValue(value.z);
-            writer.WritePropertyName("w");
-            writer.WriteValue(value.w);
+            writer.WritePropertyName("X");
+            writer.WriteValue(value.X);
+            writer.WritePropertyName("Y");
+            writer.WriteValue(value.Y);
+            writer.WritePropertyName("Z");
+            writer.WriteValue(value.Z);
+            writer.WritePropertyName("W");
+            writer.WriteValue(value.W);
             writer.WriteEndObject();
         }
 
-        public override Quaternion ReadJson(JsonReader reader, Type objectType, Quaternion existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override NitroxQuaternion ReadJson(JsonReader reader, Type objectType, NitroxQuaternion existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            return JObject.Load(reader).ToObject<Quaternion>();
+            return JObject.Load(reader).ToObject<NitroxQuaternion>();
         }
     }
 }

@@ -1,18 +1,18 @@
 ﻿using System;
 using Nitrox.Newtonsoft.Json;
-using TechTypeModel = NitroxModel.DataStructures.TechType;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.DataStructures.JsonConverter
 {
-    public class TechTypeConverter : JsonConverter<TechTypeModel>
+    public class TechTypeConverter : JsonConverter<NitroxTechType>
     {
-        public override void WriteJson(JsonWriter writer, TechTypeModel value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, NitroxTechType value, JsonSerializer serializer)
         {
             writer.WriteValue(value.Name);
         }
-        public override TechTypeModel ReadJson(JsonReader reader, Type objectType, TechTypeModel existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override NitroxTechType ReadJson(JsonReader reader, Type objectType, NitroxTechType existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            return reader.Value == null ? null : new TechTypeModel((string)reader.Value);
+            return reader.Value == null ? null : new NitroxTechType((string)reader.Value);
         }
     }
 }
