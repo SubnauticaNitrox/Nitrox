@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using NitroxModel.DataStructures.Surrogates;
@@ -23,23 +22,22 @@ namespace NitroxModel.Packets
         {
             surrogateSelector = new SurrogateSelector();
             streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
+            IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
+                                    .SelectMany(a => a.GetTypes()
+                                                      .Where(t =>
+                                                                 t.BaseType != null &&
+                                                                 t.BaseType.IsGenericType &&
+                                                                 t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
+                                                                 t.IsClass &&
+                                                                 !t.IsAbstract));
 
-            Type[] types = Assembly.GetExecutingAssembly()
-                .GetTypes();
-
-            IEnumerable<Type> surrogates = types.Where(t =>
-                                                       t.BaseType != null &&
-                                                       t.BaseType.IsGenericType &&
-                                                       t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                       t.IsClass &&
-                                                       !t.IsAbstract);
-            foreach(Type type in surrogates)
+            foreach (Type type in types)
             {
                 ISerializationSurrogate surrogate = (ISerializationSurrogate)Activator.CreateInstance(type);
                 Type surrogatedType = type.BaseType.GetGenericArguments()[0];
                 surrogateSelector.AddSurrogate(surrogatedType, streamingContext, surrogate);
 
-                Log.Debug("Added surrogate " + surrogate + " for type " + surrogatedType);
+                Log.Debug("Added surrogate " + surrogate.GetType().Name + " for type " + surrogatedType);
             }
 
             // For completeness, we could pass a StreamingContextStates.CrossComputer.

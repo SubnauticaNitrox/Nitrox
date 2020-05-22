@@ -7,6 +7,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -34,7 +35,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 }
 
                 NitroxId id = NitroxEntity.GetId(parentVehicle);
-                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb, eventData.color);
+                VehicleColorChange packet = new VehicleColorChange(__instance.SelectedColorIndex, id, eventData.hsb.ToDto(), eventData.color.ToDto());
                 NitroxServiceLocator.LocateService<IPacketSender>().Send(packet);
             }
         }

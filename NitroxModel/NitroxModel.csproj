@@ -9,7 +9,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NitroxModel</RootNamespace>
     <AssemblyName>NitroxModel</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -17,18 +16,15 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <DefineConstants>RELEASE,TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <Import Project="$(SolutionDir)\SharedConfig.targets" />
   <ItemGroup>
     <Reference Include="Autofac, Version=2.6.3.862, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.2.6.3.862\lib\NET35\Autofac.dll</HintPath>
@@ -38,191 +34,22 @@
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
       <HintPath>..\packages\log4net.2.0.8\lib\net35-full\log4net.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="LZ4">
-      <HintPath>..\lib\LZ4.dll</HintPath>
+      <HintPath>..\Nitrox.Subnautica.Assets\LZ4.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\lib\protobuf-net.dll</HintPath>
+      <HintPath>..\Nitrox.Subnautica.Assets\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System.configuration" />
-    <Reference Include="UnityEngine">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine.AccessibilityModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.AccessibilityModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AIModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.AIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ARModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ARModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.AssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClothModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ClothModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterInputModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ClusterInputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ClusterRendererModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ClusterRendererModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.CrashReportingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.DirectorModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.FileSystemHttpModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.FileSystemHttpModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.GameCenterModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.GameCenterModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.GridModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.GridModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.HotReloadModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.HotReloadModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ImageConversionModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.IMGUIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.InputModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.InputModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.JSONSerializeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.LocalizationModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.LocalizationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ParticleSystemModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.PerformanceReportingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.Physics2DModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ProfilerModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ProfilerModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.ScreenCaptureModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.SharedInternalsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.SpriteMaskModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SpriteShapeModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.SpriteShapeModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.StreamingModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.StreamingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.SubstanceModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.SubstanceModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TerrainModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TerrainPhysicsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TerrainPhysicsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TextRenderingModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TilemapModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.TLSModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.TLSModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UIElementsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UIModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UmbraModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UmbraModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UNETModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UNETModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityAnalyticsModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityConnectModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityConnectModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityWebRequestModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VehiclesModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.VehiclesModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VideoModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.VideoModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.VRModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.VRModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.WindModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.WindModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.XRModule">
-      <HintPath>$(SubnauticaManaged)\UnityEngine.XRModule.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\AssemblyInfoCommon.cs">
-      <Link>Properties\AssemblyInfoCommon.cs</Link>
-    </Compile>
     <Compile Include="Core\IAutoFacRegistrar.cs" />
     <Compile Include="Core\NitroxEnvironment.cs" />
     <Compile Include="Core\NitroxServiceLocator.cs" />
@@ -243,6 +70,7 @@
     <Compile Include="DataStructures\GameLogic\InitialPDAData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialRemotePlayerData.cs" />
     <Compile Include="DataStructures\GameLogic\InitialStoryGoalData.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxColor.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxMatrix4x4.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxTransform.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector4.cs" />
@@ -258,10 +86,10 @@
     <Compile Include="DataStructures\GameLogic\PowerType.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxQuaternion.cs" />
     <Compile Include="DataStructures\GameLogic\NitroxVector3.cs" />
+    <Compile Include="DataStructures\GameLogic\NitroxTechType.cs" />
     <Compile Include="DataStructures\NitroxId.cs" />
     <Compile Include="DataStructures\Int3.cs" />
-    <Compile Include="DataStructures\Surrogates\TechTypeSurrogate.cs" />
-    <Compile Include="DataStructures\TechType.cs" />
+    <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
     <Compile Include="DataStructures\ThreadSafeCollection.cs" />
     <Compile Include="DataStructures\ThreadSafeDictionary.cs" />
     <Compile Include="Discovery\InstallationFinders\EpicGamesInstallationFinder.cs" />
@@ -270,9 +98,9 @@
     <Compile Include="Discovery\InstallationFinders\SteamGameRegistryFinder.cs" />
     <Compile Include="Discovery\InstallationFinders\ConfigFileGameFinder.cs" />
     <Compile Include="Helper\Mathf.cs" />
+    <Compile Include="Helper\NitroxAppData.cs" />
     <Compile Include="Helper\PirateDetection.cs" />
     <Compile Include="Helper\StringHelper.cs" />
-    <Compile Include="Helper\TextureScaler.cs" />
     <Compile Include="Helper\WebHelper.cs" />
     <Compile Include="Logger\InGameLogger.cs" />
     <Compile Include="Networking\NitroxDeliveryMethod.cs" />
@@ -301,10 +129,6 @@
     <Compile Include="DataStructures\SimulatedEntity.cs" />
     <Compile Include="DataStructures\PriorityQueue.cs" />
     <Compile Include="DataStructures\GameLogic\VehicleMovementData.cs" />
-    <Compile Include="DataStructures\Surrogates\ColorSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\QuaternionSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\SerializationSurrogate.cs" />
-    <Compile Include="DataStructures\Surrogates\Vector3Surrogate.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Helper\Map.cs" />
     <Compile Include="Helper\ReflectionHelper.cs" />
@@ -399,11 +223,4 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -15,7 +15,7 @@ namespace NitroxClient.GameLogic
     public class RemotePlayer : INitroxPlayer
     {
         private readonly PlayerModelManager playerModelManager;
-        private readonly HashSet<TechType> equipment = new HashSet<TechType>();
+        private readonly HashSet<TechType> equipment;
 
         public PlayerContext PlayerContext { get; }
         public GameObject Body { get; set; }

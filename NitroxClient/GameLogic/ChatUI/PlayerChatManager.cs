@@ -3,6 +3,7 @@ using NitroxClient.Communication.Abstract;
 using NitroxClient.MonoBehaviours.Gui.Chat;
 using NitroxClient.Unity.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.ChatUI
@@ -70,7 +71,7 @@ namespace NitroxClient.GameLogic.ChatUI
             
             // Chat message
             multiplayerSession.Send(new ChatMessage(multiplayerSession.Reservation.PlayerId, trimmedInput));
-            playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.InputText, multiplayerSession.PlayerSettings.PlayerColor);
+            playerChat.WriteLogEntry(multiplayerSession.AuthenticationContext.Username, playerChat.InputText, multiplayerSession.PlayerSettings.PlayerColor.ToUnity());
             playerChat.InputText = "";
             playerChat.Select();
         }
