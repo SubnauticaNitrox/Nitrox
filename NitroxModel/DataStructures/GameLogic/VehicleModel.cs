@@ -39,7 +39,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         protected VehicleModel()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
             InteractiveChildIdentifiers = new ThreadSafeCollection<InteractiveChildObjectIdentifier>();
             DockingBayId = Optional.Empty;
         }

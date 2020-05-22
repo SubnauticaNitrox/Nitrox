@@ -15,7 +15,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         protected InitialRemotePlayerData()
         {
-            //Constructor for serialization. Has to be "protected" for json serialization.
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public InitialRemotePlayerData(PlayerContext playerContext, NitroxVector3 position, Optional<NitroxId> subRootId, List<NitroxTechType> equippedTechTypes)
