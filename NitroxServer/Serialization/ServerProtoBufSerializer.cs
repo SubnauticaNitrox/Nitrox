@@ -25,11 +25,27 @@ namespace NitroxServer.Serialization
             Model.SerializeWithLengthPrefix(stream, o, o.GetType(), PrefixStyle.Base128, 0);
         }
 
+        public void Serialize(string filePath, object o)
+        {
+            using (Stream stream = File.OpenWrite(filePath))
+            {
+                Serialize(stream, o);
+            }
+        }
+
         public T Deserialize<T>(Stream stream)
         {
             T t = (T)Activator.CreateInstance(typeof(T));
             Model.DeserializeWithLengthPrefix(stream, t, typeof(T), PrefixStyle.Base128, 0);
             return t;
+        }
+
+        public T Deserialize<T>(string filePath)
+        {
+            using (Stream stream = File.OpenRead(filePath))
+            {
+                return Deserialize<T>(stream);
+            }
         }
 
         public void Deserialize(Stream stream, object o, Type t)

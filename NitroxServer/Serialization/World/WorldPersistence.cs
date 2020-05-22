@@ -67,25 +67,10 @@ namespace NitroxServer.Serialization.World
                     Directory.CreateDirectory(saveDir);
                 }
 
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "Version" + fileEnding)))
-                {
-                    saveDataSerializer.Serialize(stream, new SaveFileVersions());
-                }
-
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "BaseData" + fileEnding)))
-                {
-                    saveDataSerializer.Serialize(stream, persistedData.BaseData);
-                }
-
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "PlayerData" + fileEnding)))
-                {
-                    saveDataSerializer.Serialize(stream, persistedData.PlayerData);
-                }
-
-                using (Stream stream = File.OpenWrite(Path.Combine(saveDir, "WorldData" + fileEnding)))
-                {
-                    saveDataSerializer.Serialize(stream, persistedData.WorldData);
-                }
+                saveDataSerializer.Serialize(Path.Combine(saveDir, "Version" + fileEnding), new SaveFileVersions());
+                saveDataSerializer.Serialize(Path.Combine(saveDir, "BaseData" + fileEnding), persistedData.BaseData);
+                saveDataSerializer.Serialize(Path.Combine(saveDir, "PlayerData" + fileEnding), persistedData.PlayerData);
+                saveDataSerializer.Serialize(Path.Combine(saveDir, "WorldData" + fileEnding), persistedData.WorldData);
 
                 Log.Info("World state saved.");
             }
@@ -107,42 +92,32 @@ namespace NitroxServer.Serialization.World
                 PersistedWorldData persistedData = new PersistedWorldData();
                 SaveFileVersions versions;
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "Version" + fileEnding)))
+
+                versions = saveDataSerializer.Deserialize<SaveFileVersions>(Path.Combine(saveDir, "Version" + fileEnding));
+
+                if (versions == null)
                 {
-                    versions = saveDataSerializer.Deserialize<SaveFileVersions>(stream);
-                    if (versions == null)
-                    {
-                        throw new InvalidDataException("Version file is empty or corrupted");
-                    }
+                    throw new InvalidDataException("Version file is empty or corrupted");
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "BaseData" + fileEnding)))
+                if (versions.BaseDataVersion != BaseData.VERSION)
                 {
-                    if (versions.BaseDataVersion != BaseData.VERSION)
-                    {
-                        throw new VersionMismatchException("BaseData file is too old");
-                    }
-                    persistedData.BaseData = saveDataSerializer.Deserialize<BaseData>(stream);
+                    throw new VersionMismatchException("BaseData file is too old");
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "PlayerData" + fileEnding)))
+                if (versions.PlayerDataVersion != PlayerData.VERSION)
                 {
-                    if (versions.PlayerDataVersion != PlayerData.VERSION)
-                    {
-                        throw new VersionMismatchException("PlayerData file is too old");
-                    }
-                    persistedData.PlayerData = saveDataSerializer.Deserialize<PlayerData>(stream);
+                    throw new VersionMismatchException("PlayerData file is too old");
                 }
 
-                using (Stream stream = File.OpenRead(Path.Combine(saveDir, "WorldData" + fileEnding)))
+                if (versions.WorldDataVersion != WorldData.VERSION)
                 {
-                    if (versions.WorldDataVersion != WorldData.VERSION)
-                    {
-                        throw new VersionMismatchException("WorldData file is too old");
-                    }
-
-                    persistedData.WorldData = saveDataSerializer.Deserialize<WorldData>(stream);
+                    throw new VersionMismatchException("WorldData file is too old");
                 }
+
+                persistedData.BaseData = saveDataSerializer.Deserialize<BaseData>(Path.Combine(saveDir, "BaseData" + fileEnding));
+                persistedData.PlayerData = saveDataSerializer.Deserialize<PlayerData>(Path.Combine(saveDir, "PlayerData" + fileEnding));
+                persistedData.WorldData = saveDataSerializer.Deserialize<WorldData>(Path.Combine(saveDir, "WorldData" + fileEnding));
 
                 if (!persistedData.IsValid())
                 {

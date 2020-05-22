@@ -13,7 +13,6 @@ namespace NitroxServer.Serialization
         {
             serializer = new JsonSerializer
             {
-                Formatting = Formatting.Indented,
                 TypeNameHandling = TypeNameHandling.Auto,
                 ContractResolver = new AttributeContractResolver()
             };
@@ -35,10 +34,26 @@ namespace NitroxServer.Serialization
             }
         }
 
+        public void Serialize(string filePath, object o)
+        {
+            using (StreamWriter stream = File.CreateText(filePath))
+            {
+                serializer.Serialize(stream, o);
+            }
+        }
+
         public T Deserialize<T>(Stream stream)
         {
             stream.Position = 0;
             using (JsonTextReader jsonTextReader = new JsonTextReader(new StreamReader(stream)))
+            {
+                return (T)serializer.Deserialize(jsonTextReader, typeof(T));
+            }
+        }
+
+        public T Deserialize<T>(string filePath)
+        {
+            using (StreamReader jsonTextReader = File.OpenText(filePath))
             {
                 return (T)serializer.Deserialize(jsonTextReader, typeof(T));
             }
