@@ -146,7 +146,6 @@
     <Compile Include="ConsoleCommands\ChangeServerPasswordCommand.cs" />
     <Compile Include="ConsoleCommands\DeopCommand.cs" />
     <Compile Include="ConsoleCommands\ChangeAdminPasswordCommand.cs" />
-    <Compile Include="ConsoleCommands\DevCommand.cs" />
     <Compile Include="ConsoleCommands\HelpCommand.cs" />
     <Compile Include="ConsoleCommands\TeleportCommand.cs" />
     <Compile Include="ConsoleCommands\WarpCommand.cs" />

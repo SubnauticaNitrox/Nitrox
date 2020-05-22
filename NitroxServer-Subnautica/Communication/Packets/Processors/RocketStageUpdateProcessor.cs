@@ -26,7 +26,7 @@ namespace NitroxServer_Subnautica.Communication.Packets.Processors
 
             if (opRocket.HasValue)
             {
-                opRocket.Value.CurrentRocketStage = packet.NewStage;
+                opRocket.Value.CurrentStage = packet.NewStage;
             }
 
             playerManager.SendPacketToOtherPlayers(packet, player);

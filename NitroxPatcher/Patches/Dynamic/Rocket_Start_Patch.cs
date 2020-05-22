@@ -28,7 +28,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return false;
             }
 
-            __instance.currentRocketStage = model.Value.CurrentRocketStage;
+            __instance.currentRocketStage = model.Value.CurrentStage;
 
             return true;
         }

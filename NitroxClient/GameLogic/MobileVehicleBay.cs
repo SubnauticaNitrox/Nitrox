@@ -45,11 +45,11 @@ namespace NitroxClient.GameLogic
 
                 vehicles.SpawnDefaultBatteries(constructedObject, childIdentifiers);
 
-                Optional<MonoBehaviour> monoBehaviour = Optional.OfNullable(constructor.GetComponent<MonoBehaviour>());
+                MonoBehaviour monoBehaviour = constructor.GetComponent<MonoBehaviour>();
                 //We want to store the fallen position of the object to avoid flying object on reload 
-                if (monoBehaviour.HasValue)
+                if (monoBehaviour)
                 {
-                    monoBehaviour.Value.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(vehicleModel.Id, constructedObject, duration + 10.0f));
+                    monoBehaviour.StartCoroutine(vehicles.UpdateVehiclePositionAfterSpawn(vehicleModel.Id, constructedObject, duration + 10.0f));
                 }
             }
             else

@@ -12,7 +12,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
     public class NeptuneRocketModel : VehicleModel
     {
         [ProtoMember(1)]
-        public int CurrentRocketStage { get; set; }
+        public int CurrentStage { get; set; }
 
         [ProtoMember(2)]
         public bool ElevatorUp { get; set; }
@@ -25,13 +25,13 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         public NeptuneRocketModel(NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
             : base(techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
-            CurrentRocketStage = 0;
+            CurrentStage = 0;
             ElevatorUp = false;
         }
 
         public override string ToString()
         {
-            return $"[NeptuneRocketModel : {base.ToString()}, CurrentRocketStage: {CurrentRocketStage}, ElevatorUp: {ElevatorUp}]";
+            return $"[NeptuneRocketModel : {base.ToString()}, CurrentStage: {CurrentStage}, ElevatorUp: {ElevatorUp}]";
         }
     }
 }

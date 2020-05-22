@@ -99,7 +99,7 @@ namespace NitroxClient.GameLogic
                     if (oprocket.HasValue)
                     {
                         name = oprocket.Value.subName?.GetName();
-                        HSB = oprocket.Value.subName?.GetColors();
+                        hsb = oprocket.Value.subName?.GetColors().ToDto();
                     }
                     else
                     {
@@ -516,7 +516,7 @@ namespace NitroxClient.GameLogic
         public IEnumerator UpdateVehiclePositionAfterSpawn(NitroxId id, GameObject gameObject, float duration)
         {
             yield return new WaitForSeconds(duration);
-            packetSender.Send(new VehiclePositionFix(id, gameObject.transform.position));
+            packetSender.Send(new VehiclePositionFix(id, gameObject.transform.position.ToDto()));
         }
 
         public void BroadcastOnPilotModeChanged(Vehicle vehicle, bool isPiloting)

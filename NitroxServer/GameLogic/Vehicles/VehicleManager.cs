@@ -42,7 +42,7 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
-        public void UpdateVehiclePosition(NitroxId id, Vector3 position)
+        public void UpdateVehiclePosition(NitroxId id, NitroxVector3 position)
         {
             if (vehiclesById.ContainsKey(id))
             {
@@ -50,7 +50,7 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
-        public void UpdateVehicleRotation(NitroxId id, Quaternion rotation)
+        public void UpdateVehicleRotation(NitroxId id, NitroxQuaternion rotation)
         {
             if (vehiclesById.ContainsKey(id))
             {

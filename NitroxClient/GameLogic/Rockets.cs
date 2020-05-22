@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxClient.Communication.Abstract;
+﻿using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.Util;
@@ -26,19 +25,14 @@ namespace NitroxClient.GameLogic
 
             if (model.HasValue)
             {
-                model.Value.CurrentRocketStage += 1;
-                RocketStageUpdate packet = new RocketStageUpdate(id, constructorId, model.Value.CurrentRocketStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject));
+                model.Value.CurrentStage += 1;
+                RocketStageUpdate packet = new RocketStageUpdate(id, constructorId, model.Value.CurrentStage, currentStageTech, SerializationHelper.GetBytes(builtGameObject));
                 packetSender.Send(packet);
             }
             else
             {
                 Log.Error($"Rockets: Can't find model for rocket with id {id} with constructor {constructorId} and currentStageTech {currentStageTech}");
             }
-        }
-
-        public void BroadcastElevatorCall(NitroxId id, bool up)
-        {
-            throw new NotImplementedException();
         }
     }
 }
