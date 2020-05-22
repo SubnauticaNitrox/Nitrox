@@ -1,6 +1,6 @@
 ﻿using System;
-using Nitrox.Newtonsoft.Json;
-using Nitrox.Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.DataStructures.JsonConverter

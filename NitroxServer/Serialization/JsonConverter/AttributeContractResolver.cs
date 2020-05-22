@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Nitrox.Newtonsoft.Json;
-using Nitrox.Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.JsonConverter

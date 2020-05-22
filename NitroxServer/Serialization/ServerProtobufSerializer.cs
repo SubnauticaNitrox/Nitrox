@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
 
@@ -40,18 +41,32 @@ namespace NitroxServer.Serialization
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtoBuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
-
-                if (hasNitroxProtoBuf)
+                try
                 {
-                    // As of the latest protobuf update they will automatically register detected attributes.
-                    Model.Add(type, true);
+                    bool hasNitroxProtoBuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
+
+                    if (hasNitroxProtoBuf)
+                    {
+                        // As of the latest protobuf update they will automatically register detected attributes.
+                        Model.Add(type, true);
+                    }
+                    else if (HasUweProtoContract(type))
+                    {
+                        Model.Add(type, true);
+
+                        ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
+                    }
                 }
-                else if (HasUweProtoContract(type))
+                catch (Exception ex)
                 {
-                    Model.Add(type, true);
-
-                    ManuallyRegisterUweProtoMembers(type.GetMembers(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance), type);
+                    if (type.FullName.Contains("Oculus.Platform.Models"))
+                    {
+                        Log.Debug($"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}. However it's probably caused from different Newtonsoft.Json versions of Oculus and Nitrox and can be ignored.");
+                    }
+                    else
+                    {
+                        Log.Error($"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}", ex);
+                    }
                 }
             }
         }

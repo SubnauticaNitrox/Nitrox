@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Nitrox.Newtonsoft.Json;
+using Newtonsoft.Json;
 using NitroxModel.DataStructures.JsonConverter;
 using NitroxModel.Logger;
 
@@ -18,7 +18,7 @@ namespace NitroxServer.Serialization
                 ContractResolver = new AttributeContractResolver()
             };
 
-            serializer.Error += delegate (object sender, Nitrox.Newtonsoft.Json.Serialization.ErrorEventArgs e)
+            serializer.Error += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
                 Log.Error("Error in JsonSerializer.", e.ErrorContext.Error);
             };

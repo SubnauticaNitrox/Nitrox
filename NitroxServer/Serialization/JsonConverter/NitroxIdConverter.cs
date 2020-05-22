@@ -1,5 +1,5 @@
 ﻿using System;
-using Nitrox.Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace NitroxModel.DataStructures.JsonConverter
 {
