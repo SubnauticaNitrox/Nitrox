@@ -164,7 +164,15 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
 
                 MultiplayerBuilder.renderers = MaterialExtensions.AssignMaterial(MultiplayerBuilder.ghostModel, MultiplayerBuilder.ghostStructureMaterial);
-                MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
+                // Initialize as if Player is outside. Player subroot and renderers are updated on a later InitialSyncProcessor.
+                if (IsInitialSyncing)
+                {
+                    MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, false);
+                }
+                else
+                {
+                    MultiplayerBuilder.SetupRenderers(MultiplayerBuilder.ghostModel, Player.main.IsInSub());
+                }
                 MultiplayerBuilder.CreatePowerPreview(MultiplayerBuilder.constructableTechType, MultiplayerBuilder.ghostModel);
                 MultiplayerBuilder.InitBounds(MultiplayerBuilder.prefab);
             }
@@ -184,10 +192,10 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 Transform transform = componentInParent.transform;
                 transform.position = MultiplayerBuilder.placePosition;
                 transform.rotation = MultiplayerBuilder.placeRotation;
+                BaseGhost component = ghostModel.GetComponent<BaseGhost>();
 
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
-#if TRACE && BUILDING
                 if (!flag2)
                 {
                     if (component.TargetBase != null)
@@ -198,9 +206,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                     {
                         flag2 = true;
                     }
-
                 }
-#endif
 
                 if (rotationMetadata.HasValue)
                 {
@@ -219,7 +225,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 List<GameObject> list = new List<GameObject>();
                 MultiplayerBuilder.GetObstacles(MultiplayerBuilder.placePosition, MultiplayerBuilder.placeRotation, MultiplayerBuilder.bounds, list);
 
-#if TRACE && BUILDING
                 if (list.Count > 0)
                 {
                     foreach (var item in list)
@@ -227,7 +232,6 @@ namespace NitroxClient.MonoBehaviours.Overrides
                         NitroxModel.Logger.Log.Error("MulitplayerBuilder - Obstacles detected - constructableBase: " + componentInParent + " obstacle : " + item);
                     }
                 }
-#endif
 
                 flag2 = list.Count == 0;
                 list.Clear();
@@ -437,8 +441,12 @@ namespace NitroxClient.MonoBehaviours.Overrides
             bool flag2 = false;
             if (currentSub != null)
             {
-                flag = currentSub.isBase;
-                flag2 = currentSub.isCyclops;
+                // Outside Modules (e.g. SolarPanel) need to be handled differently then normal Furniture. We need the subroot only for the transform assignment but not the flags.
+                if (!MultiplayerBuilder.allowedOutside)
+                {
+                    flag = currentSub.isBase;
+                    flag2 = currentSub.isCyclops;
+                }
                 gameObject.transform.parent = currentSub.GetModulesRoot();
             }
             else if (MultiplayerBuilder.placementTarget != null && MultiplayerBuilder.allowedOutside)
@@ -462,6 +470,16 @@ namespace NitroxClient.MonoBehaviours.Overrides
             }
 
             componentInParent3.SetIsInside(flag || flag2);
+            // An outside module needs to be linked to the surrounding daylight and not the base interiourlight
+            if (!MultiplayerBuilder.allowedOutside)
+            {
+                SkyEnvironmentChanged.Send(gameObject, currentSub);
+            }
+            else
+            {
+                SubRoot dummyComp = null;
+                SkyEnvironmentChanged.Send(gameObject, dummyComp);
+            }
             SkyEnvironmentChanged.Send(gameObject, currentSub);
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
@@ -1025,6 +1043,8 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 }
             }
         }
+
+        public static bool IsInitialSyncing = false;
 
         public static Vector3 overridePosition;
 

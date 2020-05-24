@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.GameLogic.Bases;
 using NitroxClient.MonoBehaviours;
 using NitroxClient.MonoBehaviours.Overrides;
 using NitroxClient.Unity.Helper;
+using NitroxModel.Core;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
@@ -93,6 +95,8 @@ namespace NitroxClient.GameLogic
         private readonly IPacketSender packetSender;
         private readonly RotationMetadataFactory rotationMetadataFactory;
 
+        public bool IsInitialSyncing = false;
+
         // Contains the last hovered constructable object hovered by the current player. Is needed to ensure fired events for the correct item.
         private Constructable lastHoveredConstructable = null;
 
@@ -102,25 +106,7 @@ namespace NitroxClient.GameLogic
         // State if a construction Event is raised by Initialsync or a current remote player.
         private bool remoteEventActive = false;
 
-        // Signal if the baseGhost is finishing its GeometryUpdate. As mentioned above, we are only interested in GeometryUpdates of the visible
-        // objects. This happens in the finishing of the baseGhost. 
-        bool baseGhostIsFinishing = false;
-
-        // Cache for saving and reassigning Ids on Base or Layout changes
-        private List<GeometryInfo> idCacheForGeometryUpdate = new List<GeometryInfo>();
-
-        // After constructing a new object we assign a new Id to the constructing gameobject. (Or set the transmitted id from the remote event.)
-        // When a gameobject triggers a GeometryChange we need to save the Id before.
-        private NitroxId transferIdforConstructableBaseConstructing = null;
-
-        // When a gameObject is fully constructed and is to start deconstructing we also need to transfer the Id.
-        private NitroxId transferIdforConstructableBaseDeconstructing = null;
-
-        // Some objects like Ladders or Waterparks spawn surfaces on two floors. For this we need to know which surfaces are related.
-        private Dictionary<NitroxId, NitroxId> relationTopBottomIds = new Dictionary<NitroxId, NitroxId>();
-
         // For the base objects themself as master objects of a base-complex we can't assign Ids to the ghosts, 
-        // 
         private Dictionary<GameObject, NitroxId> baseGhostsIDCache = new Dictionary<GameObject, NitroxId>();
 
 
@@ -129,291 +115,12 @@ namespace NitroxClient.GameLogic
             this.packetSender = packetSender;
             this.rotationMetadataFactory = rotationMetadataFactory;
         }
-
-
-        // Section: Geometry Change Methods
-
-        // Start signal of a geometrychange for the viewable gameobjects
-        public void BaseGhost_Finish_Pre(BaseGhost baseGhost)
-        {
-#if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("BaseGhost_Finish_Pre");
-#endif
-
-            baseGhostIsFinishing = true;
-        }
-
-        private string generateGameObjectTransformInfo(Transform transform)
-        {
-            return transform.name + " " + transform.parent.position.ToString() + " " + transform.GetSiblingIndex().ToString();
-        }
-
-        // Before the geometrychange we need to save the ids
-        public void Base_ClearGeometry_Pre(Base @base)
-        {
-            // Base_ClearGeometry_Pre is called twice. One time for the ghost layout and one time for the viewable layout. We are only interested in the viewable layout. 
-            {
-                idCacheForGeometryUpdate.Clear();
-
-                Transform[] cellObjects = (Transform[])@base.ReflectionGet("cellObjects");
-
-                if (cellObjects == null)
-                {
-                    return;
-                }
-
-                foreach (Transform cellObject in cellObjects)
-                {
-                    if (cellObject != null)
-                    {
-                        for (int i = 0; i < cellObject.childCount; i++)
-                        {
-                            Transform surface = cellObject.GetChild(i);
-
-                            if (surface != null && surface.gameObject != null)
-                            {
-
-#if TRACE && BUILDING
-                                string info = generateGameObjectTransformInfo(surface);
-                                NitroxModel.Logger.Log.Debug("Base_ClearGeometry_Pre - current clear for : " + info);
-#endif
-                                if (!surface.name.Contains("CorridorConnector"))
-                                {
-
-                                    NitroxId id = NitroxEntity.GetIdNullable(surface.gameObject);
-
-                                    // Have to ignore BaseRoomCorridorConnector, because they are automatically spawned in case of adding a Corridor or a Hatch to a Room
-                                    if (id != null)
-                                    {
-
-#if TRACE && BUILDING
-                                        NitroxModel.Logger.Log.Debug("Base_ClearGeometry_Pre - saving id for : " + info + " id: " + id);
-#endif
-
-                                        string parentCellContent = string.Empty;
-                                        if (surface.GetSiblingIndex() == 0)
-                                        {
-                                            for (int j = 0; j < surface.parent.childCount; j++)
-                                            {
-                                                if (surface.gameObject != null)
-                                                {
-                                                    parentCellContent = parentCellContent + surface.parent.GetChild(j).name;
-                                                }
-                                            }
-                                        }
-
-                                        GeometryInfo geometryInfo = new GeometryInfo() { Name = surface.name, Id = id, CellPosition = surface.parent.position, CellIndex = surface.GetSiblingIndex(), CellContent = parentCellContent };
-                                        idCacheForGeometryUpdate.Add(geometryInfo);
-                                        NitroxEntity.RemoveId(surface.gameObject);
-                                    }
-                                    else
-                                    {
-                                        NitroxModel.Logger.Log.Error("Base_ClearGeometry_Pre - no NitroxId found on GameObject: " + surface.name + " cellPosition: " + surface.parent.position + " surfaceIndex: " + surface.GetSiblingIndex());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // At respawning after geometrychange reassign the Ids
-
-        public void BaseDeconstructable_MakeCellDeconstructable_Post(GameObject gameObject)
-        {
-            Base_Spawn_Pieces(gameObject.GetComponentInParent<Base>(), gameObject.transform);
-        }
-
-        public void BaseDeconstructable_MakeFaceDeconstructable_Post(GameObject gameObject)
-        {
-            Base_Spawn_Pieces(gameObject.GetComponentInParent<Base>(), gameObject.transform);
-        }
-
-        public void Base_SpawnPiece_Post(Base @base, Transform surface)
-        {
-            Base_Spawn_Pieces(@base, surface);
-        }
-
-        private void Base_Spawn_Pieces(Base @base, Transform surface)
-        {
-            if (!@base.isGhost && surface.parent.position != Vector3.zero)
-                // No spawning or id transfer vor objects that as unassigned ghosts
-            {
-
-#if TRACE && BUILDING
-                NitroxId baseId = NitroxEntity.GetIdNullable(@base.gameObject);
-                NitroxId pieceId = NitroxEntity.GetIdNullable(surface.gameObject);
-                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - base: " + @base + " baseId: " + baseId + " piece: " + surface.gameObject + " pieceID: " + pieceId + " piecePosition: " + surface.position + " pieceIndex: " + surface.GetSiblingIndex() + " pieceCellPosition: " + surface.parent.position + " pieceCellIndex: " + surface.parent.GetSiblingIndex());
-                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - baseGhostIsFinishing: " + baseGhostIsFinishing + " transferIdforConstructableBaseConstructing: " + transferIdforConstructableBaseConstructing);
-#endif
-
-                NitroxId id = NitroxEntity.GetIdNullable(surface.gameObject);
-                if (id == null && surface.GetComponent<BaseDeconstructable>() != null && !surface.name.Contains("CorridorConnector"))
-                {
-                    // In case a vertical connector exists and a ladder is build inside the base, then this vertical connector changes its shape and name
-                    if (surface.name.Contains("ConnectorTube"))
-                    {
-                        if (surface.name.Contains("Window"))
-                        {
-                            if (idCacheForGeometryUpdate.Exists(g => g.Name == surface.name.Replace("ConnectorTubeWindow", "ConnectorTube") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()))
-                            {
-                                id = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace("ConnectorTubeWindow", "ConnectorTube") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()).Id;
-
-#if TRACE && BUILDING
-                                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - setting id for : " + generateGameObjectTransformInfo(surface) + " id: " + id);
-#endif
-
-                                NitroxEntity.SetNewId(surface.gameObject, id);
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (idCacheForGeometryUpdate.Exists(g => g.Name == surface.name.Replace("ConnectorTube", "ConnectorTubeWindow") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()))
-                            {
-                                id = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace("ConnectorTube", "ConnectorTubeWindow") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()).Id;
-
-#if TRACE && BUILDING
-                                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - setting id for : " + generateGameObjectTransformInfo(surface) + " id: " + id);
-#endif
-
-                                NitroxEntity.SetNewId(surface.gameObject, id);
-                                return;
-                            }
-                        }
-                    }
-
-                    // In other cases e.g adding rooms on top/bottom of each other or adding pieces that generate/remove stilts, the index of the childs is changed because surface are integrated/removed
-                    if (surface.GetSiblingIndex() != 0 && idCacheForGeometryUpdate.Exists(g => g.CellPosition == surface.parent.position && g.CellIndex == 0))
-                    {
-                        GeometryInfo cachedInfo = idCacheForGeometryUpdate.Find(g => g.CellPosition == surface.parent.position && g.CellIndex == 0);
-                        string currentParentContent = string.Empty;
-                        for (int i = 0; i < surface.parent.childCount; i++)
-                        {
-                            currentParentContent = currentParentContent + surface.parent.GetChild(i).name;
-                        }
-
-                        // Check if the FaceIndex has moved. Multiple changes can happen at the same time. 
-                        int moveFaceIndex = 0;
-
-                        if (cachedInfo.CellContent.Contains("RoomExteriorTop") && !currentParentContent.Contains("RoomExteriorTop"))
-                        // Case: A new room has been added to the top of an existing room, which removes the upper outer-transform of the existing room.
-                        {
-                            moveFaceIndex = moveFaceIndex + 1;
-                        }
-                        if (cachedInfo.CellContent.Contains("RoomExteriorBottom") && !currentParentContent.Contains("RoomExteriorBottom"))
-                        // Case: A new room has been added to the bottom of an existing room.
-                        {
-                            moveFaceIndex = moveFaceIndex + 1;
-                        }
-                        if (cachedInfo.CellContent.Contains("AdjustableSupport") && !currentParentContent.Contains("AdjustableSupport"))
-                        // Case: If a room or a corridor stands on stillts and a new room or corridor is placed below the existing one, the stillts get removed from the existing one. 
-                        {
-                            moveFaceIndex = moveFaceIndex + 1;
-                        }
-                        if (currentParentContent.Contains("RoomExteriorTop") && !cachedInfo.CellContent.Contains("RoomExteriorTop"))
-                        // Case: Opposites of above.
-                        {
-                            moveFaceIndex = moveFaceIndex - 1;
-                        }
-                        if (currentParentContent.Contains("RoomExteriorBottom") && !cachedInfo.CellContent.Contains("RoomExteriorBottom"))
-                        {
-                            moveFaceIndex = moveFaceIndex - 1;
-                        }
-                        if (currentParentContent.Contains("AdjustableSupport") && !cachedInfo.CellContent.Contains("AdjustableSupport"))
-                        {
-                            moveFaceIndex = moveFaceIndex - 1;
-                        }
-
-                        if (moveFaceIndex != 0)
-                        {
-                            if (idCacheForGeometryUpdate.Exists(g => g.Name == surface.name && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex() + moveFaceIndex))
-                            {
-                                id = idCacheForGeometryUpdate.Find(g => g.Name == surface.name && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex() + moveFaceIndex).Id;
-
-#if TRACE && BUILDING
-                                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - setting id for : " + generateGameObjectTransformInfo(surface) + " id: " + id);
-#endif
-
-                                NitroxEntity.SetNewId(surface.gameObject, id);
-                                return;
-                            }
-                        }
-                    }
-
-                    // At last try to find the object by its name, position and index if no changes have happened
-                    if (idCacheForGeometryUpdate.Exists(g => g.Name == surface.name && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()))
-                    {
-                        id = idCacheForGeometryUpdate.Find(g => g.Name == surface.name && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex()).Id;
-
-#if TRACE && BUILDING
-                        NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - setting id for : " + generateGameObjectTransformInfo(surface) + " id: " + id);
-#endif
-
-                        NitroxEntity.SetNewId(surface.gameObject, id);
-                        return;
-                    }
-
-                    //do only do when we are not in ghost mode
-                    if (baseGhostIsFinishing && surface.gameObject.GetComponent<BaseDeconstructable>())
-                    {
-
-                        // If no cached id could be found, but we have a cachedID from a new Piece
-                        if (transferIdforConstructableBaseConstructing != null)
-                        {
-
-#if TRACE && BUILDING
-                        NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - setting id for : " + generateGameObjectTransformInfo(surface) + " id: " + transferIdforConstructableBaseConstructing);
-#endif
-                            NitroxEntity.SetNewId(surface.gameObject, transferIdforConstructableBaseConstructing);
-
-
-                            if (surface.name.Contains("BaseRoomWaterParkBottom") || surface.name.Contains("BaseRoomLadderTop") || surface.name.Contains("BaseCorridorLadderTop"))
-                            // For WaterParks the BottomShape is always spawned first. For Ladders the TopShape is alwayse spawned first, no matter if build from the lower or upper floor.
-                            {
-                                if (!relationTopBottomIds.ContainsKey(transferIdforConstructableBaseConstructing))
-                                {
-                                    NitroxId nitroxIdforOtherPart = new NitroxId();
-                                    relationTopBottomIds.Add(transferIdforConstructableBaseConstructing, nitroxIdforOtherPart);
-                                    transferIdforConstructableBaseConstructing = nitroxIdforOtherPart;
-
-#if TRACE && BUILDING
-                                NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - caching a new Id for the other Top or Bottom part - cachedPieceIdFromConstructableBasePre: " + transferIdforConstructableBaseConstructing);
-#endif
-
-                                }
-                                else
-                                {
-                                    transferIdforConstructableBaseConstructing = null;
-                                }
-                            }
-                            else
-                            {
-                                transferIdforConstructableBaseConstructing = null;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        // End signal of of a geometrychange for the viewable gameobjects
-        public void BaseGhost_Finish_Post(BaseGhost instance)
-        {
-
-#if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("BaseGhost_Finish_Post");
-#endif
-
-            baseGhostIsFinishing = false;
-        }
-
-        // For Base objects we also need to transfer the ids
-        public void Base_CopyFrom_Pre(Base instance, Base sourceBase)
+        
+        // For Base objects we need to transfer the ids
+        public void Base_CopyFrom_Pre(Base targetBase, Base sourceBase)
         {
             NitroxId sourceBaseId = NitroxEntity.GetIdNullable(sourceBase.gameObject);
-            NitroxId targetBaseId = NitroxEntity.GetIdNullable(instance.gameObject);
+            NitroxId targetBaseId = NitroxEntity.GetIdNullable(targetBase.gameObject);
 
 #if TRACE && BUILDING
             BaseRoot sourceBaseRoot = sourceBase.GetComponent<BaseRoot>();
@@ -421,96 +128,73 @@ namespace NitroxClient.GameLogic
             NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - Base copy - sourceBase: " + sourceBase + " targetBase: " + instance + " targetBaseIsGhost: " + instance.isGhost + " sourceBaseId: " + sourceBaseId + " targetBaseId: " + targetBaseId + " sourceBaseRoot: " + sourceBaseRoot + " targetBaseRoot: " + targetBaseRoot);
 #endif
 
-            if (baseGhostsIDCache.ContainsKey(sourceBase.gameObject) && targetBaseId == null && !instance.isGhost)
+            if (baseGhostsIDCache.ContainsKey(sourceBase.gameObject) && targetBaseId == null && !targetBase.isGhost)
             {
 
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - assigning cached Id from remote event or initial loading: " + baseGhostsIDCache[sourceBase.gameObject]);
 #endif
 
-                NitroxEntity.SetNewId(instance.gameObject, baseGhostsIDCache[sourceBase.gameObject]);
+                NitroxEntity.SetNewId(targetBase.gameObject, baseGhostsIDCache[sourceBase.gameObject]);
             }
-            else
+            // Transferring from a real base to a ghost base in case of beginning deconstruction of the last basepiece. Need this if player does not completely destroy 
+            // last piece instead chooses to reconstruct this last piece.
+            else if (sourceBaseId != null && !sourceBase.isGhost && !baseGhostsIDCache.ContainsKey(targetBase.gameObject))
             {
-                if (sourceBaseId != null && targetBaseId == null && !instance.isGhost)
-                {
+                baseGhostsIDCache[targetBase.gameObject] = sourceBaseId;
 
 #if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - assining id from local constructing of a new BaseComplex: " + sourceBaseId);
+                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - caching Base Id from deconstructing object: " + sourceBaseId);
 #endif
-
-                    NitroxEntity.SetNewId(instance.gameObject, sourceBaseId);
-                }
             }
         }
 
-        // Memorize the id in case of deconstructing a already finished piece
-        public void BaseDeconstructable_Deconstruct_Pre(BaseDeconstructable instance)
+        // Suppress item consumption and recalculation of construction amount at construction
+        public bool Constructable_Construct_Pre(Constructable instance, ref bool result)
         {
-            NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
-            if (id == null)
+            if (remoteEventActive)
             {
-                NitroxModel.Logger.Log.Error("BaseDeconstructable_Deconstruct_Pre - Trying to deconstruct an Object that has no NitroxId - gameObject: " + instance.gameObject);
-            }
-            else
-            {
-                if (instance.name.Contains("BaseRoomWaterParkTop") || instance.name.Contains("BaseRoomLadderBottom") || instance.name.Contains("BaseCorridorLadderBottom"))
+                if (instance.constructed)
                 {
-                    foreach (KeyValuePair<NitroxId, NitroxId> item in relationTopBottomIds)
-                    {
-                        if (item.Value == id)
-                        {
-                            transferIdforConstructableBaseDeconstructing = item.Key;
-                            NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Key).Value);
-                            NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Value).Value);
-                            break;
-                        }
-                    }
+                    result = false;
                 }
                 else
                 {
-                    transferIdforConstructableBaseDeconstructing = id;
-                    NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(id).Value);
+                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Validate.NotNull(updateMaterial);
+                    updateMaterial.Invoke(instance, new object[] { });
+                    if (instance.constructedAmount >= 1f)
+                    {
+                        instance.SetState(true, true);
+                    }
+                    result = true;
                 }
-
-#if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("BaseDeconstructable_Deconstruct_Pre - saving guid from instance: " + instance.name + " cachedPieceIdFromConstructableBaseFinished: " + transferIdforConstructableBaseDeconstructing);
-#endif
+                return false;
             }
+            return true;
         }
 
-        // Reassign the cached id to the now constructable object
-        public bool ConstructableBase_SetState_Pre(ConstructableBase instance, bool value, bool setAmount)
+        // Suppress item granting and recalculation of construction amount at construction  and remove NitroxId from 
+        public bool Constructable_Deconstruct_Pre(Constructable instance, ref bool result)
         {
-            // Cache the id of a constructableBase that gets 100% finished
-            if (value == true && setAmount == true && !instance._constructed)
+            if (remoteEventActive)
             {
-                NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
-                if (id != null)
+                if (instance.constructed)
                 {
-                    transferIdforConstructableBaseConstructing = id;
-
-#if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("ConstructableBase_SetState_Pre - caching id to transferIdforConstructableBaseConstructing: " + transferIdforConstructableBaseConstructing);
-#endif
-
-                    NitroxEntity.RemoveId(instance.gameObject);
+                    result = false;
                 }
-            }
-
-            // Reassign the cached id to the now constructable object
-            if (value == false && setAmount == false && instance._constructed)
-            {
-                if (transferIdforConstructableBaseDeconstructing != null)
+                else
                 {
-
-#if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("ConstructableBase_SetState_Pre - setting id cachedPieceIdFromConstructableBaseFinished: " + transferIdforConstructableBaseDeconstructing);
-#endif
-
-                    NitroxEntity.SetNewId(instance.gameObject, transferIdforConstructableBaseDeconstructing);
-                    transferIdforConstructableBaseDeconstructing = null;
+                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Validate.NotNull(updateMaterial);
+                    updateMaterial.Invoke(instance, new object[] { });
+                    if (instance.constructedAmount <= 0f)
+                    {
+                        UnityEngine.Object.Destroy(instance.gameObject);
+                    }
+                    result = true;
                 }
+                return false;
             }
             return true;
         }
@@ -605,22 +289,13 @@ namespace NitroxClient.GameLogic
 #endif
 
             //Check if we raised the event by using our own BuilderTool or if it came as post Event of a Remote-Action or Init-Action
-            if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool)
+            if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool && !remoteEventActive)
             {
 
                 if (result && instance.constructedAmount < 1f)
                 {
-                    //Send every event, because recourses used for construction (or gained for deconstruction) are else not properly taken or credited, 
-                    //because we don't know exactly at which percentage-rate they are needed for every single item. Transfered packets are tiny and 
-                    //building something is only a small amount of play time.
-                    //Positive side effect is, that the process becomes smoother at the remote player side. 
-                    /*if (timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
-                    {
-                        return;
-                    }
-                    timeSinceLastConstructionChangeEvent = 0.0f;*/
-
                     NitroxId id = NitroxEntity.GetId(instance.gameObject);
+
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - sending notify for self constructing object - id: " + id + " amount: " + instance.constructedAmount);
 #endif
@@ -629,7 +304,6 @@ namespace NitroxClient.GameLogic
                 }
             }
 
-            // Construction finished of a remote is finsihed
             if (result && instance.constructedAmount == 1f && remoteEventActive)
             {
 
@@ -637,30 +311,6 @@ namespace NitroxClient.GameLogic
                 NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - finished construct remote");
 #endif
 
-                // ##TODO BUILDING## This is a quick fix. Remove this block when energy-sync is implemented. 
-                if (instance.gameObject.name.Contains("Solar"))
-                {
-
-#if TRACE && BUILDING
-                    NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - Energy");
-#endif
-
-                    if (instance.gameObject.name.Contains("Solar"))
-                    {
-                        PowerSource _powersource = instance.gameObject.GetComponent<PowerSource>();
-
-                        if (_powersource)
-                        {
-#if TRACE && BUILDING
-                            NitroxModel.Logger.Log.Debug("Constructable_Construct_Post - Energy _powersource: " + _powersource);
-#endif
-                            //TODO: Remind for later
-                            //initialize with 50% after RemoteConstruction >> ToDo: use additional flag for only setting at initalsync or update to explicit value when energy is synced 
-                            _powersource.SetPower(_powersource.maxPower / 2);
-                        }
-                    }
-                }
-                // ##
             }
         }
 
@@ -672,7 +322,7 @@ namespace NitroxClient.GameLogic
 #endif
 
             //Check if we raised the event by using our own BuilderTool or if it came as post Event of a Remote-Action or Init-Action
-            if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool)
+            if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool && !remoteEventActive)
             {
                 NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
                 if (id == null)
@@ -689,16 +339,6 @@ namespace NitroxClient.GameLogic
 #endif
                         BaseDeconstructionCompleted deconstructionCompleted = new BaseDeconstructionCompleted(id);
                         packetSender.Send(deconstructionCompleted);
-
-                        if (relationTopBottomIds.ContainsKey(id))
-                        {
-                            if (NitroxEntity.GetObjectFrom(relationTopBottomIds[id]).HasValue)
-                            {
-                                NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(relationTopBottomIds[id]).Value);
-                            }
-                            relationTopBottomIds.Remove(id);
-                        }
-                        NitroxEntity.RemoveId(instance.gameObject);
 
                     }
                     else if (result && instance.constructedAmount > 0f)
@@ -723,18 +363,29 @@ namespace NitroxClient.GameLogic
                     }
                 }
             }
+
+            if (result && instance.constructedAmount <= 0f)
+            {
+                if (instance.gameObject)
+                {
+                    NitroxEntity.RemoveId(instance.gameObject);
+                    UnityEngine.Object.Destroy(instance.gameObject);
+                }
+            }
         }
 
 
         public void Constructable_NotifyConstructedChanged_Post(Constructable instance)
         {
-            NitroxId tempId = NitroxEntity.GetIdNullable(instance.gameObject);
+
 #if TRACE && BUILDING
+            NitroxId tempId = NitroxEntity.GetIdNullable(instance.gameObject);
             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - instance: " + instance + " id: " + tempId + " _construced: " + instance._constructed + " amount: " + instance.constructedAmount);
 #endif
 
             if (!remoteEventActive)
             {
+
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - no remoteAction");
 #endif
@@ -742,6 +393,7 @@ namespace NitroxClient.GameLogic
                 // Case: A new base piece has been build by player
                 if (!instance._constructed && instance.constructedAmount == 0f)
                 {
+
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - case new instance");
 #endif
@@ -749,22 +401,18 @@ namespace NitroxClient.GameLogic
                     {
 
                         NitroxId id = NitroxEntity.GetId(instance.gameObject);
-
                         NitroxId parentId = null;
-
                         SubRoot sub = Player.main.currentSub;
-
                         if (sub != null)
                         {
                             parentId = NitroxEntity.GetId(sub.gameObject);
                         }
                         else
                         {
-                            Base playerBase = instance.gameObject.GetComponentInParent<Base>();
-
-                            if (playerBase != null)
+                            Base nearBase = instance.gameObject.GetComponentInParent<Base>();
+                            if (nearBase != null)
                             {
-                                parentId = NitroxEntity.GetId(playerBase.gameObject);
+                                parentId = NitroxEntity.GetId(nearBase.gameObject);
                             }
                         }
 
@@ -835,11 +483,12 @@ namespace NitroxClient.GameLogic
                                         }
                                         else
                                         {
-                                            parentBaseId = NitroxEntity.GetId(ghost.GhostBase.gameObject);
-#if TRACE && BUILDING
-                                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - ghost base had no id, assigned new one: " + parentBaseId);
-#endif
+                                            parentBaseId = new NitroxId();
+                                            baseGhostsIDCache[ghost.GhostBase.gameObject] = parentBaseId;
 
+#if TRACE && BUILDING
+                                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - ghost base had no id, cached new one: " + baseGhostsIDCache[ghost.GhostBase.gameObject]);
+#endif
                                         }
                                     }
                                     else
@@ -927,18 +576,18 @@ namespace NitroxClient.GameLogic
 #endif
 
                             //fix for wrong techType
-                            TechType _orig = instance.techType;
-                            if (_orig == TechType.BaseCorridor)
+                            TechType origTechType = instance.techType;
+                            if (origTechType == TechType.BaseCorridor)
                             {
-                                _orig = TechType.BaseConnector;
+                                origTechType = TechType.BaseConnector;
                             }
-                            NitroxModel.DataStructures.TechType _techType = _orig.Model();
+                            NitroxModel.DataStructures.TechType techType = origTechType.Model();
 
 #if TRACE && BUILDING
-                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - _techType: " + _techType);
+                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + techType);
 #endif
 
-                            BasePiece basePiece = new BasePiece(id, placedPosition, instance.gameObject.transform.rotation, camera.position, camera.rotation, _techType, Optional.OfNullable(parentBaseId), false, rotationMetadata);
+                            BasePiece basePiece = new BasePiece(id, placedPosition, instance.gameObject.transform.rotation, camera.position, camera.rotation, techType, Optional.OfNullable(parentBaseId), false, rotationMetadata);
 
 #if TRACE && BUILDING
                             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece);
@@ -956,7 +605,7 @@ namespace NitroxClient.GameLogic
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - case item finished - lastHoveredConstructable: " + lastHoveredConstructable + " instance: " + instance + " currentlyHandlingBuilderTool: " + currentlyHandlingBuilderTool);
 #endif
-                    if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool)
+                    if (lastHoveredConstructable != null && lastHoveredConstructable == instance && currentlyHandlingBuilderTool && !remoteEventActive)
                     {
 
                         NitroxId id = NitroxEntity.GetId(instance.gameObject);
@@ -983,24 +632,30 @@ namespace NitroxClient.GameLogic
                     }
                 }
                 //case: A finished item was started to be deconstructed by the local player
-                else if (!instance._constructed && instance.constructedAmount == 1f)
+                else if (!instance._constructed && instance.constructedAmount == 1f && !remoteEventActive)
                 {
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - case item deconstruct");
 #endif
 
-                    NitroxId id = NitroxEntity.GetId(instance.gameObject);
+                    NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
+                    if (id == null)
+                    {
+                        NitroxModel.Logger.Log.Error("Constructable_NotifyConstructedChanged_Post - no id on local object - object: " + instance.gameObject);
+                    }
+                    else
+                    {
 
 #if TRACE && BUILDING
                     NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin deconstructing object - id: " + id);
 #endif
 
-                    BaseDeconstructionBegin deconstructionBegin = new BaseDeconstructionBegin(id);
-                    packetSender.Send(deconstructionBegin);
+                        BaseDeconstructionBegin deconstructionBegin = new BaseDeconstructionBegin(id);
+                        packetSender.Send(deconstructionBegin);
+                    }
                 }
 
                 lastHoveredConstructable = null;
-
             }
         }
 
@@ -1035,6 +690,7 @@ namespace NitroxClient.GameLogic
                 MultiplayerBuilder.placePosition = basePiece.ItemPosition;
                 MultiplayerBuilder.placeRotation = basePiece.Rotation;
                 MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
+                MultiplayerBuilder.IsInitialSyncing = IsInitialSyncing;
 
                 if (!MultiplayerBuilder.Begin(buildPrefab))
                 {
@@ -1051,7 +707,7 @@ namespace NitroxClient.GameLogic
                     parentBase = NitroxEntity.GetObjectFrom(basePiece.ParentId.Value).OrElse(null);
                     // In case of the first piece of a newly constructed Base from a remote Player or at InitialSync
                     // the ParentId has a Value, but the Id belongs to the BaseGhost instead of any known NitroxEntity.
-                    // parentBase will be null, let this untouched to let the Multiplayer-Builder generate a ghost and
+                    // ParentBase will be null, let this untouched to let the Multiplayer-Builder generate a ghost and
                     // assign the Id afterwards. 
                 }
 
@@ -1063,17 +719,16 @@ namespace NitroxClient.GameLogic
                     SubRoot subRoot = (parentBase != null) ? parentBase.GetComponent<SubRoot>() : null;
                     gameObject = MultiplayerBuilder.TryPlaceFurniture(subRoot);
                     constructable = gameObject.RequireComponentInParent<Constructable>();
-
+                    NitroxEntity.SetNewId(gameObject, basePiece.Id);
                 }
                 else
                 {
-                    if (transferIdforConstructableBaseConstructing != null)
-                    {
-                        transferIdforConstructableBaseConstructing = null; //clear it for the case, the last constructed object wasn't a finished one
-                    }
+                    // Clear the cache, in case, the last constructed object wasn't finished and a former id is still cached
+                    NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().ClearPreservedIdForConstructing(); 
 
                     constructable = MultiplayerBuilder.TryPlaceBase(parentBase);
                     gameObject = constructable.gameObject;
+                    NitroxEntity.SetNewId(gameObject, basePiece.Id);
                     BaseGhost ghost = constructable.GetComponentInChildren<BaseGhost>();
 
 #if TRACE && BUILDING
@@ -1093,19 +748,13 @@ namespace NitroxClient.GameLogic
                         NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - setting new Base Id to ghostBase: " + ghost.GhostBase.gameObject + " parentBaseID: " + basePiece.ParentId.Value);
 #endif 
                         baseGhostsIDCache[ghost.GhostBase.gameObject] = basePiece.ParentId.Value;
-
                     }
                 }
 
-                NitroxEntity.SetNewId(gameObject, basePiece.Id);
-
-                /**
-                 * Manually call start to initialize the object as we may need to interact with it within the same frame.
-                 */
-                System.Reflection.MethodInfo startCrafting = typeof(Constructable).GetMethod("Start", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                Validate.NotNull(startCrafting);
-                startCrafting.Invoke(constructable, new object[] { });
-
+                // Initialization of the ressourceMap of the constructable.
+                System.Reflection.MethodInfo initResourceMap = typeof(Constructable).GetMethod("InitResourceMap", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                Validate.NotNull(initResourceMap);
+                initResourceMap.Invoke(constructable, new object[] { });
             }
             finally
             {
@@ -1132,7 +781,7 @@ namespace NitroxClient.GameLogic
                     return;
                 }
 
-                if (constructionAmount > 0.05f && constructionAmount < 0.95f)
+                if (constructionAmount > 0f && constructionAmount < 1f)
                 {
                     Constructable constructable = constructingGameObject.GetComponentInChildren<Constructable>();
                     if (constructable.constructedAmount < constructionAmount)
@@ -1186,7 +835,6 @@ namespace NitroxClient.GameLogic
                     {
                         constructable.constructedAmount = 1f;
                         constructable.Construct();
-                        constructable.SetState(true, true);
                     }
                 }
             }
@@ -1253,15 +901,6 @@ namespace NitroxClient.GameLogic
                     return;
                 }
 
-                if (relationTopBottomIds.ContainsKey(id))
-                {
-                    if (NitroxEntity.GetObjectFrom(relationTopBottomIds[id]).HasValue)
-                    {
-                        NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(relationTopBottomIds[id]).Value);
-                    }
-                    relationTopBottomIds.Remove(id);
-                }
-
                 NitroxEntity.RemoveId(deconstructing);
 
                 ConstructableBase constructableBase = deconstructing.GetComponent<ConstructableBase>();
@@ -1283,43 +922,40 @@ namespace NitroxClient.GameLogic
             }
         }
 
-
-        internal class GeometryInfo
-        {
-            internal string Name;
-            internal NitroxId Id;
-            internal Vector3 CellPosition;
-            internal int CellIndex;
-            internal string CellContent;
-        }
-
-
-        // SECTION: For tracing purposes. Will be removed when functionality is fully verified. 
-
-        public void BaseRoot_Constructor_Post(BaseRoot instance)
-        {
-            if (instance.isBase)
-            {
-                NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
-
-
-#if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("BaseRoot_Constructor_Post - New BaseRoot Instance - instance: " + instance + " instance.gameObject: " + instance.gameObject + " gameObjectId: " + id );
-#endif
-
-            }
-        }
-
-        public bool CellManager_RegisterEntity_Pre(GameObject baseEntity)
+        // Suppress hull integrity calculation on InitialSync
+        // CURRENTLY BROKEN: Patch not working
+        public bool GameModeUtils_RequiresReinforcements_Pre(ref bool result)
         {
 
 #if TRACE && BUILDING
-            if (remoteEventActive)
-            {
-                NitroxModel.Logger.Log.Debug("CellManager_RegisterEntity_Pre - instance: " + baseEntity + " instance.name: " + baseEntity.name);
-            }
+            NitroxModel.Logger.Log.Debug("GameModeUtils_RequiresReinforcements_Post - remoteEventActive: " + remoteEventActive + " IsInitialSyncing: " + IsInitialSyncing + " original result: " + result);
 #endif
 
+            if (IsInitialSyncing)
+            {
+                result = false;
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Suppress rotation hints on Initialsync and remote build
+        // CURRENTLY BROKEN: Patch not working
+        public bool Builder_ShowRotationControlsHint_Pre()
+        {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - isInitialSyncing: " + IsInitialSyncing + " remoteEventActive: " + remoteEventActive);
+#endif
+
+            if (IsInitialSyncing || remoteEventActive)
+            {
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - returning false");
+#endif
+                return false;
+            }
             return true;
         }
     }

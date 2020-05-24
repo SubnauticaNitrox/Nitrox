@@ -229,13 +229,13 @@
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeCellDeconstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeFaceDeconstructable_Patch.cs" />
-    <Compile Include="Patches\Dynamic\BaseRoot_Constructor_Patch.cs" />
     <Compile Include="Patches\Dynamic\Base_SpawnPiece_Patch.cs" />
     <Compile Include="Patches\Dynamic\BuilderTool_OnHoverConstructable_Patch.cs" />
     <Compile Include="Patches\Dynamic\BuilderTool_OnHoverBaseDeconstructable_Patch.cs" />
-    <Compile Include="Patches\Dynamic\CellManager_RegisterEntity_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Builder_ShowRotationControlsHint_Patch.cs" />
     <Compile Include="Patches\Dynamic\ConstructableBase_SetState_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_NotifyConstructedChanged_Patch.cs" />
+    <Compile Include="Patches\Dynamic\GameModeUtils_RequireReinforcements_Patch.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\PropulsionCannon_ReleaseGrabbedObject_Patch.cs" />

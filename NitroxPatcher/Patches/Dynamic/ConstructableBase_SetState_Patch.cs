@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -11,9 +11,9 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(ConstructableBase);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
 
-        public static bool Prefix(ConstructableBase __instance, bool __result, bool value, bool setAmount)
+        public static void Prefix(ConstructableBase __instance, bool __result, bool value, bool setAmount)
         {
-            return NitroxServiceLocator.LocateService<Building>().ConstructableBase_SetState_Pre(__instance, value, setAmount);
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().ConstructableBase_SetState_Pre(__instance, value, setAmount);
         }
 
         public override void Patch(HarmonyInstance harmony)

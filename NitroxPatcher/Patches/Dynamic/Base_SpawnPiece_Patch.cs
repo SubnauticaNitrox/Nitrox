@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
 using UnityEngine;
 
@@ -19,7 +19,7 @@ namespace NitroxPatcher.Patches.Dynamic
                 return;
             }
 
-            NitroxServiceLocator.LocateService<Building>().Base_SpawnPiece_Post(__instance, __result);
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().Base_SpawnPiece_Post(__instance, __result);
         }
 
         public override void Patch(HarmonyInstance harmony)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -13,7 +13,7 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static void Prefix(BaseDeconstructable __instance)
         {
-            NitroxServiceLocator.LocateService<Building>().BaseDeconstructable_Deconstruct_Pre(__instance);
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().BaseDeconstructable_Deconstruct_Pre(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)

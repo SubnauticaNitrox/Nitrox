@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ namespace NitroxPatcher.Patches.Dynamic
         
         public static void Postfix(Transform geometry)
         {
-            NitroxServiceLocator.LocateService<Building>().BaseDeconstructable_MakeCellDeconstructable_Post(geometry.gameObject);
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().BaseDeconstructable_MakeCellDeconstructable_Post(geometry.gameObject);
         }
 
         public override void Patch(HarmonyInstance harmony)

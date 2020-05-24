@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic;
+using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
 
 namespace NitroxPatcher.Patches.Dynamic
@@ -11,15 +11,14 @@ namespace NitroxPatcher.Patches.Dynamic
         public static readonly Type TARGET_CLASS = typeof(BaseGhost);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("Finish", BindingFlags.Public | BindingFlags.Instance);
 
-        public static bool Prefix(BaseGhost __instance)
+        public static void Prefix(BaseGhost __instance)
         {
-            NitroxServiceLocator.LocateService<Building>().BaseGhost_Finish_Pre(__instance);
-            return true;
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().BaseGhost_Finish_Pre(__instance);
         }
 
         public static void Postfix(BaseGhost __instance)
         {
-            NitroxServiceLocator.LocateService<Building>().BaseGhost_Finish_Post(__instance);
+            NitroxServiceLocator.LocateService<GeometryLayoutChangeHandler>().BaseGhost_Finish_Post(__instance);
         }
 
         public override void Patch(HarmonyInstance harmony)
