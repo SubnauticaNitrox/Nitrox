@@ -8,6 +8,7 @@ using NitroxClient.GameLogic.PlayerModel.ColorSwap;
 using NitroxClient.GameLogic.PlayerModel.Equipment;
 using NitroxClient.GameLogic.PlayerModel.Equipment.Abstract;
 using NitroxClient.MonoBehaviours;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -82,7 +83,7 @@ namespace NitroxClient.GameLogic.PlayerModel
             FieldInfo pingTabEntriesField = typeof(uGUI_PingTab).GetField("entries", BindingFlags.NonPublic | BindingFlags.Instance);
             Dictionary<int, uGUI_PingEntry> pingEntries = (Dictionary<int, uGUI_PingEntry>)pingTabEntriesField.GetValue(pingTab);
             uGUI_PingEntry pingEntry = pingEntries[ping.GetInstanceID()];
-            pingEntry.icon.color = player.PlayerSettings.PlayerColor;
+            pingEntry.icon.color = player.PlayerSettings.PlayerColor.ToUnity();
 
             GameObject pingEntryGameObject = pingEntry.gameObject;
             pingEntryGameObject.transform.Find("ColorToggle").gameObject.SetActive(false);

@@ -13,6 +13,7 @@ using NitroxModel.Core;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.MultiplayerSession;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -392,7 +393,7 @@ namespace NitroxClient.MonoBehaviours.Gui.MainMenu
 
             SetCurrentPreference(playerName, playerColor);
 
-            PlayerSettings playerSettings = new PlayerSettings(playerColor);
+            PlayerSettings playerSettings = new PlayerSettings(playerColor.ToDto());
             AuthenticationContext authenticationContext = new AuthenticationContext(playerName);
 
             multiplayerSession.RequestSessionReservation(playerSettings, authenticationContext);

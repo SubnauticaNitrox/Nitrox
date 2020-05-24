@@ -3,13 +3,12 @@ using System.IO;
 using System.Reflection;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
-using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxServer.Serialization
 {
     public class ServerProtobufSerializer
     {
-
+        private static readonly object[] emptyArray = { };
         protected RuntimeTypeModel Model { get; } = TypeModel.Create();
 
         public ServerProtobufSerializer(params string[] assemblies)
@@ -18,8 +17,6 @@ namespace NitroxServer.Serialization
             {
                 RegisterAssemblyClasses(assembly);
             }
-
-            RegisterHardCodedTypes();
         }
 
         public void Serialize(Stream stream, object o)
@@ -38,24 +35,12 @@ namespace NitroxServer.Serialization
         {
             Model.DeserializeWithLengthPrefix(stream, o, t, PrefixStyle.Base128, 0);
         }
-
-        private void RegisterHardCodedTypes()
-        {
-            Model.Add(typeof(UnityEngine.Light), true);
-            Model.Add(typeof(UnityEngine.BoxCollider), true);
-            Model.Add(typeof(UnityEngine.SphereCollider), true);
-            Model.Add(typeof(UnityEngine.MeshCollider), true);
-            Model.Add(typeof(UnityEngine.Vector3), false).SetSurrogate(typeof(NitroxVector3));
-            Model.Add(typeof(UnityEngine.Quaternion), false).SetSurrogate(typeof(NitroxQuaternion));
-            Model.Add(typeof(UnityEngine.Transform), false).SetSurrogate(typeof(NitroxTransform));
-            Model.Add(typeof(UnityEngine.GameObject), false).SetSurrogate(typeof(UnityStubs.GameObject));            
-        }
         
         private void RegisterAssemblyClasses(string assemblyName)
         {
             foreach (Type type in Assembly.Load(assemblyName).GetTypes())
             {
-                bool hasNitroxProtobuf = (type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0);
+                bool hasNitroxProtobuf = type.GetCustomAttributes(typeof(ProtoContractAttribute), false).Length > 0;
 
                 if (hasNitroxProtobuf)
                 {
@@ -93,10 +78,9 @@ namespace NitroxServer.Serialization
                     foreach (object customAttribute in property.GetCustomAttributes(false))
                     {
                         Type attributeType = customAttribute.GetType();
-
                         if (attributeType.ToString().Contains("ProtoMemberAttribute"))
                         {
-                            int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, new object[] { });
+                            int tag = (int)attributeType.GetProperty("Tag", BindingFlags.Public | BindingFlags.Instance).GetValue(customAttribute, emptyArray);
                             Model[type].Add(tag, property.Name);
                         }
                     }

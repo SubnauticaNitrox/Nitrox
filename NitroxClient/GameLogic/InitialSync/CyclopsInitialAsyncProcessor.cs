@@ -1,17 +1,21 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using NitroxClient.GameLogic.InitialSync.Base;
+using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures.GameLogic;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
-using NitroxModel_Subnautica.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.InitialSync
 {
-    class CyclopsInitialAsyncProcessor : InitialSyncProcessor
+    public class CyclopsInitialAsyncProcessor : InitialSyncProcessor
     {
+        private int cyclopsLoaded;
+        private int totalCyclopsToLoad;
         private readonly Vehicles vehicles;
-        private int cyclopsStillLoading = 0;
-        private int totalCyclopsToLoad = 0;
         private WaitScreen.ManualWaitItem waitScreenItem;
 
         public CyclopsInitialAsyncProcessor(Vehicles vehicles)
@@ -21,35 +25,41 @@ namespace NitroxClient.GameLogic.InitialSync
 
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
+            IList<VehicleModel> cyclopses = packet.Vehicles.Where(v => v.TechType.ToUnity() == TechType.Cyclops).ToList();
+            totalCyclopsToLoad = cyclopses.Count;
+
             this.waitScreenItem = waitScreenItem;
 
-            vehicles.VehicleCreated += OnVehicleCreated;
-
-            foreach (VehicleModel vehicle in packet.Vehicles)
+            if (totalCyclopsToLoad > 0)
             {
-                if (vehicle.TechType.Enum() == TechType.Cyclops)
+                vehicles.VehicleCreated += OnVehicleCreated;
+
+                foreach (VehicleModel vehicle in cyclopses)
                 {
-                    cyclopsStillLoading++;
+                    Log.Debug($"Trying to spawn {vehicle}");
                     vehicles.CreateVehicle(vehicle);
                 }
             }
 
-            totalCyclopsToLoad = cyclopsStillLoading;
-
-            yield return new WaitUntil(() => cyclopsStillLoading == 0);
+            yield return new WaitUntil(() => cyclopsLoaded == totalCyclopsToLoad);
         }
 
         private void OnVehicleCreated(GameObject gameObject)
         {
-            waitScreenItem.SetProgress((totalCyclopsToLoad - cyclopsStillLoading), totalCyclopsToLoad);
-            
-            cyclopsStillLoading--;
+            cyclopsLoaded++;
+            waitScreenItem.SetProgress(cyclopsLoaded, totalCyclopsToLoad);
+
+            Log.Debug($"Spawned cyclops {NitroxEntity.GetId(gameObject)}");
 
             // After all cyclops are created
-            if (cyclopsStillLoading == 0)
+            if (cyclopsLoaded == totalCyclopsToLoad)
             {
                 vehicles.VehicleCreated -= OnVehicleCreated;
-            }            
+            }
+            else
+            {
+                Log.Debug($"We still need to load {totalCyclopsToLoad - cyclopsLoaded} cyclops");
+            }
         }
     }
 }

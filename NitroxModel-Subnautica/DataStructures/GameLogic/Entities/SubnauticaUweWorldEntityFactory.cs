@@ -21,8 +21,8 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Entities
 
             if (worldEntitiesByClassId.TryGetValue(classId, out worldEntityInfo))
             {
-                UweWorldEntity uweWorldEntity = new UweWorldEntity(worldEntityInfo.techType.Model(),
-                                                                   worldEntityInfo.localScale,
+                UweWorldEntity uweWorldEntity = new UweWorldEntity(worldEntityInfo.techType.ToDto(),
+                                                                   worldEntityInfo.localScale.ToDto(),
                                                                    worldEntityInfo.classId,
                                                                    worldEntityInfo.slotType.ToString(),
                                                                    (int)worldEntityInfo.cellLevel);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(SolutionDir)SharedConfig.targets"/>
+
+  <!-- UnityEngine libraries to include -->
+  <ItemGroup Condition="'$(UnityModLibrary)' == 'true' or '$(TestLibrary)' == 'true'">
+    <Reference Include="$(SubnauticaManaged)\UnityEngine*.dll">
+      <Private>$(TestLibrary)</Private>
+    </Reference>
+
+    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp.dll">
+      <Private>$(TestLibrary)</Private>
+    </Reference>
+
+    <Reference Include="$(SubnauticaManaged)\Assembly-CSharp-firstpass.dll">
+      <Private>$(TestLibrary)</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.DataStructures.Util;
 using NitroxModel.Discovery;
 using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxServer.GameLogic.Entities.Spawning;
 using NitroxServer.UnityStubs;
-using NitroxModel.DataStructures;
 using ProtoBufNet;
 
 namespace NitroxServer.Serialization
@@ -205,7 +204,7 @@ namespace NitroxServer.Serialization
     {
         public override string ToString()
         {
-            return string.Format("(cellId={0}, level={1})", cellId, level);
+            return $"(cellId={cellId}, level={level})";
         }
 
         [ProtoMember(1)]

@@ -13,10 +13,10 @@ namespace NitroxServer.GameLogic.Entities
 
         private readonly EntityManager entityManager;
         private readonly PlayerManager playerManager;
-        private readonly HashSet<TechType> serverSpawnedSimulationWhiteList;
+        private readonly HashSet<NitroxTechType> serverSpawnedSimulationWhiteList;
         private readonly SimulationOwnershipData simulationOwnershipData;
 
-        public EntitySimulation(EntityManager entityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<TechType> serverSpawnedSimulationWhiteList)
+        public EntitySimulation(EntityManager entityManager, SimulationOwnershipData simulationOwnershipData, PlayerManager playerManager, HashSet<NitroxTechType> serverSpawnedSimulationWhiteList)
         {
             this.entityManager = entityManager;
             this.simulationOwnershipData = simulationOwnershipData;
