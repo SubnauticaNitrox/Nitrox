@@ -4,6 +4,7 @@ using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 
 namespace NitroxClient.GameLogic.InitialSync
@@ -23,11 +24,11 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             int totalSyncedVehicles = 0;
-            int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.Enum() != TechType.Cyclops).Count();
+            int nonCyclopsVehicleCount = packet.Vehicles.Where(v => v.TechType.ToUnity() != TechType.Cyclops).Count();
 
             foreach (VehicleModel vehicle in packet.Vehicles)
             {
-                if (vehicle.TechType.Enum() != TechType.Cyclops)
+                if (vehicle.TechType.ToUnity() != TechType.Cyclops)
                 {
                     waitScreenItem.SetProgress(totalSyncedVehicles, nonCyclopsVehicleCount);
                     vehicles.CreateVehicle(vehicle);

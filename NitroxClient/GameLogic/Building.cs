@@ -11,6 +11,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -587,7 +588,7 @@ namespace NitroxClient.GameLogic
                             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + techType);
 #endif
 
-                            BasePiece basePiece = new BasePiece(id, placedPosition, instance.gameObject.transform.rotation, camera.position, camera.rotation, techType, Optional.OfNullable(parentBaseId), false, rotationMetadata);
+                            BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
 
 #if TRACE && BUILDING
                             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece);

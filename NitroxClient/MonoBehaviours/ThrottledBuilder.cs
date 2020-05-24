@@ -5,6 +5,11 @@ using NitroxModel.Logger;
 using System;
 using UnityEngine;
 using NitroxClient.GameLogic;
+using NitroxModel_Subnautica.Helper;
+using NitroxModel.DataStructures;
+using NitroxClient.GameLogic.Bases.Spawning;
+using NitroxModel_Subnautica.DataStructures;
+
 
 namespace NitroxClient.MonoBehaviours
 {

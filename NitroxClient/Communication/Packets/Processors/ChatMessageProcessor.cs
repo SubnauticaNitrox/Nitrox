@@ -7,6 +7,7 @@ using NitroxModel.Core;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.Communication.Packets.Processors
@@ -47,7 +48,7 @@ namespace NitroxClient.Communication.Packets.Processors
             }
 
             RemotePlayer remotePlayerInstance = remotePlayer.Value;
-            playerChatManager.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor);
+            playerChatManager.AddMessage(remotePlayerInstance.PlayerName, message.Text, remotePlayerInstance.PlayerSettings.PlayerColor.ToUnity());
             playerChatManager.ShowChat();
         }
 

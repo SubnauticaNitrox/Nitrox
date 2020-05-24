@@ -15,11 +15,13 @@ namespace NitroxServer.ConsoleCommands
         {
             Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
             Player player = args.Sender.Value;
+
             if (player.LastStoredPosition == null)
             {
-                Log.InGame("No previous location...");
+                SendMessage(args.Sender, "No previous location...");
                 return;
             }
+
             player.Teleport(player.LastStoredPosition.Value);
             SendMessage(args.Sender, $"Teleported back {player.LastStoredPosition.Value}");
         }

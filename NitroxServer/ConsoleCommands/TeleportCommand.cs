@@ -2,7 +2,6 @@
 using NitroxModel.Helper;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
-using UnityEngine;
 
 namespace NitroxServer.ConsoleCommands
 {
@@ -20,7 +19,7 @@ namespace NitroxServer.ConsoleCommands
         {
             Validate.IsTrue(args.Sender.HasValue, "This command can't be used by CONSOLE");
 
-            Vector3 position = new Vector3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
+            NitroxVector3 position = new NitroxVector3(args.Get<int>(0), args.Get<int>(1), args.Get<int>(2));
             args.Sender.Value.Teleport(position);
 
             SendMessage(args.Sender, $"Teleported to {position}");

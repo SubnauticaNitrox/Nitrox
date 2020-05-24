@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.GameLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.PlayerModel.ColorSwap.Strategy;
 using NitroxClient.Unity.Helper;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 using static NitroxClient.GameLogic.PlayerModel.PlayerEquipmentConstants;
 
@@ -13,7 +14,7 @@ namespace NitroxClient.GameLogic.PlayerModel.ColorSwap
         public Action<ColorSwapAsyncOperation> CreateColorSwapTask(INitroxPlayer nitroxPlayer)
         {
             GameObject playerModel = nitroxPlayer.PlayerModel;
-            Color playerColor = nitroxPlayer.PlayerSettings.PlayerColor;
+            Color playerColor = nitroxPlayer.PlayerSettings.PlayerColor.ToUnity();
             IColorSwapStrategy colorSwapStrategy = new HueSaturationVibrancySwapper(playerColor);
 
             SkinnedMeshRenderer radiationVestRenderer = playerModel.GetRenderer(RADIATION_SUIT_VEST_GAME_OBJECT_NAME);

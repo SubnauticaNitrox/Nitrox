@@ -2,7 +2,6 @@
 using NitroxServer.GameLogic.Entities.Spawning;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
 using NitroxModel.DataStructures;
@@ -105,7 +104,7 @@ namespace NitroxServer.GameLogic.Entities
             }
         }
 
-        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, Vector3 position, Quaternion rotation)
+        public Optional<AbsoluteEntityCell> UpdateEntityPosition(NitroxId id, NitroxVector3 position, NitroxQuaternion rotation)
         {
             Optional<Entity> opEntity = GetEntityById(id);
             if (!opEntity.HasValue)

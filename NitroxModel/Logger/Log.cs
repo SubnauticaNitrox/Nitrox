@@ -84,7 +84,14 @@ namespace NitroxModel.Logger
         // Should we print the calling method for this for more debug context?
         public static void Debug(string fmt, params object[] arg)
         {
-            log.Debug(Format(fmt, arg));
+            if (arg == null || arg.Length < 1)
+            {
+                log.Debug(fmt);
+            }
+            else
+            {
+                log.Debug(Format(fmt, arg));
+            }
         }
 
         public static void Debug(object o)

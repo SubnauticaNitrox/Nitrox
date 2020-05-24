@@ -6,7 +6,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.GameLogic.Unlockables;
 using NitroxServer.Serialization;
-using NitroxTechType = NitroxModel.DataStructures.TechType;
 
 namespace NitroxTest.Serialization
 {

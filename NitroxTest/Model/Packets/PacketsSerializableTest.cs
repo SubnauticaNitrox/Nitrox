@@ -9,6 +9,7 @@ using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NitroxModel.DataStructures.Surrogates;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures.Surrogates;
 
 namespace NitroxTest.Model.Packets
 {

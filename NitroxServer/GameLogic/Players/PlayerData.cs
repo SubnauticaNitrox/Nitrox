@@ -1,8 +1,8 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
 using System.Collections.Generic;
-using UnityEngine;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.Util;
 
 namespace NitroxServer.GameLogic.Players
 {
@@ -27,7 +27,7 @@ namespace NitroxServer.GameLogic.Players
                                            null, 
                                            playerData.SpawnPosition, 
                                            playerData.NitroxId, 
-                                           NitroxModel.DataStructures.Util.Optional.OfNullable(playerData.SubRootId), 
+                                           Optional.OfNullable(playerData.SubRootId), 
                                            playerData.Permissions, 
                                            playerData.CurrentStats,
                                            playerData.EquippedItems, 
@@ -82,7 +82,7 @@ namespace NitroxServer.GameLogic.Players
             public ushort Id { get; set; }
 
             [ProtoMember(5)]
-            public Vector3 SpawnPosition { get; set; }
+            public NitroxVector3 SpawnPosition { get; set; }
 
             [ProtoMember(6)]
             public PlayerStatsData CurrentStats { get; set; }

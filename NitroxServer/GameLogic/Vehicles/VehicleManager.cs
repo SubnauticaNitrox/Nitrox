@@ -4,7 +4,6 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxServer.GameLogic.Items;
-using UnityEngine;
 
 namespace NitroxServer.GameLogic.Vehicles
 {
@@ -51,12 +50,10 @@ namespace NitroxServer.GameLogic.Vehicles
             }
         }
 
-        public void UpdateVehicleColours(int index, NitroxId id, Vector3 hsb, Color colour)
+        public void UpdateVehicleColours(int index, NitroxId id, NitroxVector3 hsb)
         {
             if (vehiclesById.ContainsKey(id))
             {
-                Vector4 tmpVect = colour;
-                vehiclesById[id].Colours[index] = tmpVect;
                 vehiclesById[id].HSB[index] = hsb;
             }
         }

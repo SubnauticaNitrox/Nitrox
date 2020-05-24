@@ -1,6 +1,6 @@
 ﻿using System;
+using NitroxModel.DataStructures.GameLogic;
 using ProtoBufNet;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures
 {
@@ -38,11 +38,6 @@ namespace NitroxModel.DataStructures
             return "[Int3 - {" + X + ", " + Y + ", " + Z + "}]";
         }
 
-        public Vector3 ToVector3()
-        {
-            return new Vector3((float)X, (float)Y, (float)Z);
-        }
-
         public override bool Equals(object obj)
         {
             Int3 int3 = obj as Int3;
@@ -70,9 +65,9 @@ namespace NitroxModel.DataStructures
                             Convert.ToInt32(Math.Floor(z)));
         }
 
-        public static Int3 Floor(Vector3 vector)
+        public static Int3 Floor(NitroxVector3 vector)
         {
-            return Floor(vector.x, vector.y, vector.z);
+            return Floor(vector.X, vector.Y, vector.Z);
         }
 
         public static Int3 Ceil(float x, float y, float z)
@@ -82,9 +77,9 @@ namespace NitroxModel.DataStructures
                             Convert.ToInt32(Math.Ceiling(z)));
         }
 
-        public static Int3 Ceil(Vector3 vector)
+        public static Int3 Ceil(NitroxVector3 vector)
         {
-            return Ceil(vector.x, vector.y, vector.z);
+            return Ceil(vector.X, vector.Y, vector.Z);
         }
 
         public static Int3 operator <<(Int3 u, int s)
@@ -117,9 +112,14 @@ namespace NitroxModel.DataStructures
             return new Int3(u.X + s, u.Y + s, u.Z + s);
         }
 
-        public static Vector3 operator +(Int3 u, Vector3 v)
+        public static NitroxVector3 operator +(Int3 u, NitroxVector3 v)
         {
-            return new Vector3((float)u.X + v.x, (float)u.Y + v.y, (float)u.Z + v.z);
+            return new NitroxVector3(u.X + v.X, u.Y + v.Y, u.Z + v.Z);
+        }
+        
+        public static implicit operator NitroxVector3(Int3 v)
+        {
+            return new NitroxVector3(v.X, v.Y, v.Z);
         }
 
         public static Int3 operator -(Int3 u, Int3 v)

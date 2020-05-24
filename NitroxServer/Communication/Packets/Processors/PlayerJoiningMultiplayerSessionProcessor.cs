@@ -41,7 +41,7 @@ namespace NitroxServer.Communication.Packets.Processors
             }
 
             List<EquippedItemData> equippedItems = player.GetEquipment();
-            List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+            List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
             PlayerJoinedMultiplayerSession playerJoinedPacket = new PlayerJoinedMultiplayerSession(player.PlayerContext, techTypes);
             playerManager.SendPacketToOtherPlayers(playerJoinedPacket, player);
@@ -67,7 +67,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 player.Position,
                 player.SubRootId,
                 player.Stats,
-                getRemotePlayerData(player),
+                GetRemotePlayerData(player),
                 world.EntityManager.GetGlobalRootEntities(),
                 world.GameMode,
                 player.Permissions);
@@ -75,7 +75,7 @@ namespace NitroxServer.Communication.Packets.Processors
             player.SendPacket(initialPlayerSync);
         }
 
-        private List<InitialRemotePlayerData> getRemotePlayerData(Player player)
+        private List<InitialRemotePlayerData> GetRemotePlayerData(Player player)
         {
             List<InitialRemotePlayerData> playerData = new List<InitialRemotePlayerData>();
 
@@ -84,7 +84,7 @@ namespace NitroxServer.Communication.Packets.Processors
                 if (!player.Equals(otherPlayer))
                 {
                     List<EquippedItemData> equippedItems = otherPlayer.GetEquipment();
-                    List<TechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
+                    List<NitroxTechType> techTypes = equippedItems.Select(equippedItem => equippedItem.TechType).ToList();
 
                     InitialRemotePlayerData remotePlayer = new InitialRemotePlayerData(otherPlayer.PlayerContext, otherPlayer.Position, otherPlayer.SubRootId, techTypes);
                     playerData.Add(remotePlayer);

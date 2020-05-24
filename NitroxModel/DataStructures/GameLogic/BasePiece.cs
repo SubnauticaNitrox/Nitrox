@@ -2,7 +2,6 @@
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System;
-using UnityEngine;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
@@ -15,22 +14,22 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId Id { get; set; }
 
         [ProtoMember(2)]
-        public Vector3 ItemPosition { get; set; }
+        public NitroxVector3 ItemPosition { get; set; }
 
         [ProtoMember(3)]
-        public Quaternion Rotation { get; set; }
+        public NitroxQuaternion Rotation { get; set; }
 
         [ProtoMember(4)]
-        public TechType TechType { get; set; }
+        public NitroxTechType TechType { get; set; }
 
         [ProtoMember(5)]
         public Optional<NitroxId> ParentId { get; set; }
 
         [ProtoMember(6)]
-        public Vector3 CameraPosition { get; set; }
+        public NitroxVector3 CameraPosition { get; set; }
 
         [ProtoMember(7)]
-        public Quaternion CameraRotation { get; set; }
+        public NitroxQuaternion CameraRotation { get; set; }
 
         [ProtoMember(8)]
         public float ConstructionAmount { get; set; }
@@ -60,7 +59,7 @@ namespace NitroxModel.DataStructures.GameLogic
             Metadata = Optional.Empty;
         }
 
-        public BasePiece(NitroxId id, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
+        public BasePiece(NitroxId id, NitroxVector3 itemPosition, NitroxQuaternion rotation, NitroxVector3 cameraPosition, NitroxQuaternion cameraRotation, NitroxTechType techType, Optional<NitroxId> parentId, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
         {
             Id = id;
             ItemPosition = itemPosition;

@@ -28,7 +28,7 @@ namespace NitroxClient.Debuggers
         private bool sendToServer;
         private bool showUnityMethods;
         private bool showSystemMethods;
-        private bool hitMode = false;
+        private bool hitMode;
         private Vector2 gameObjectScrollPos;
 
         /// <summary>
@@ -395,7 +395,7 @@ namespace NitroxClient.Debuggers
             else
             {
                 // Searching. Return all gameobjects with matching type name.
-                if (gameObjectSearch != gameObjectSearchCache)
+                if (gameObjectSearch != gameObjectSearchCache && gameObjectSearch.Length > 2)
                 {
                     try
                     {
@@ -412,7 +412,6 @@ namespace NitroxClient.Debuggers
                         Type type = AppDomain.CurrentDomain.GetAssemblies()
                         .Select(a => a.GetType(gameObjectSearch, false, true))
                         .FirstOrDefault(t => t != null);
-                        gameObjectSearchResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch)).OrderBy(go => go.name).ToList();
                         if (type != null)
                         {
                             List<GameObject> gameObjects = Resources.FindObjectsOfTypeAll<GameObject>()
@@ -420,6 +419,10 @@ namespace NitroxClient.Debuggers
                                 .ToList();
 
                             gameObjectSearchResult = gameObjects;
+                        }
+                        else
+                        {
+                            gameObjectSearchResult = Resources.FindObjectsOfTypeAll<GameObject>().Where(go => Regex.IsMatch(go.name, gameObjectSearch, RegexOptions.IgnoreCase)).OrderBy(go => go.name).ToList();
                         }
                         gameObjectSearchCache = gameObjectSearch;
                     }
