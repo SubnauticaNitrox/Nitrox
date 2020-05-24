@@ -418,7 +418,7 @@ namespace NitroxClient.GameLogic
                         }
 
                         Transform camera = Camera.main.transform;
-                        BasePiece basePiece = new BasePiece(id, instance.gameObject.transform.position, instance.gameObject.transform.rotation, camera.position, camera.rotation, instance.techType.Model(), Optional.OfNullable(parentId), true, Optional.Empty);
+                        BasePiece basePiece = new BasePiece(id, instance.gameObject.transform.position.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), instance.techType.ToDto(), Optional.OfNullable(parentId), true, Optional.Empty);
 
 #if TRACE && BUILDING
                         NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece );
@@ -582,13 +582,13 @@ namespace NitroxClient.GameLogic
                             {
                                 origTechType = TechType.BaseConnector;
                             }
-                            NitroxModel.DataStructures.TechType techType = origTechType.Model();
+                            
 
 #if TRACE && BUILDING
                             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + techType);
 #endif
 
-                            BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), techType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
+                            BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), origTechType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
 
 #if TRACE && BUILDING
                             NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - sending notify for self begin constructing object - basePiece: " + basePiece);
@@ -677,19 +677,19 @@ namespace NitroxClient.GameLogic
                 NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - techTypeEnum: " + basePiece.TechType.Enum());
 #endif
 
-                GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.Enum());
+                GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
 
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - buildPrefab: " + buildPrefab);
 #endif
 
-                MultiplayerBuilder.overridePosition = basePiece.ItemPosition;
-                MultiplayerBuilder.overrideQuaternion = basePiece.Rotation;
+                MultiplayerBuilder.overridePosition = basePiece.ItemPosition.ToUnity();
+                MultiplayerBuilder.overrideQuaternion = basePiece.Rotation.ToUnity();
                 MultiplayerBuilder.overrideTransform = new GameObject().transform;
-                MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition;
-                MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation;
-                MultiplayerBuilder.placePosition = basePiece.ItemPosition;
-                MultiplayerBuilder.placeRotation = basePiece.Rotation;
+                MultiplayerBuilder.overrideTransform.position = basePiece.CameraPosition.ToUnity();
+                MultiplayerBuilder.overrideTransform.rotation = basePiece.CameraRotation.ToUnity();
+                MultiplayerBuilder.placePosition = basePiece.ItemPosition.ToUnity();
+                MultiplayerBuilder.placeRotation = basePiece.Rotation.ToUnity();
                 MultiplayerBuilder.rotationMetadata = basePiece.RotationMetadata;
                 MultiplayerBuilder.IsInitialSyncing = IsInitialSyncing;
 
