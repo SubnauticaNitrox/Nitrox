@@ -480,7 +480,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 SubRoot dummyComp = null;
                 SkyEnvironmentChanged.Send(gameObject, dummyComp);
             }
-            SkyEnvironmentChanged.Send(gameObject, currentSub);
+            
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
 

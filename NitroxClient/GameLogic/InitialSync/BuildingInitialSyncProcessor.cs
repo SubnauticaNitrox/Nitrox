@@ -46,6 +46,7 @@ namespace NitroxClient.GameLogic.InitialSync
             if (basePieces.Count == 0)
             {
                 completed = true;
+                NitroxServiceLocator.LocateService<Building>().IsInitialSyncing = false;
             }
             else
             {
