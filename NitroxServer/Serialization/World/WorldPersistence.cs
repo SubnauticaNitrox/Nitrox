@@ -145,21 +145,21 @@ namespace NitroxServer.Serialization.World
             {
                 if (ex is DirectoryNotFoundException || ex is FileNotFoundException)
                 {
-                    Log.Info("No previous save file found - creating a new one.");
+                    Log.Warn("No previous save file found - creating a new one.");
                 }
                 else
                 {
-                    Log.Info("Could not load world: " + ex + " creating a new one.");
-                }
+                    //Backup world if loading fails
+                    using (ZipFile zipFile = new ZipFile())
+                    {
+                        zipFile.AddFile(Path.Combine(saveDir, "Version" + fileEnding));
+                        zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
+                        zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
+                        zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
+                        zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
+                    }
 
-                //Backup world if loading fails
-                using (ZipFile zipFile = new ZipFile())
-                {
-                    zipFile.AddFile(Path.Combine(saveDir, "Version" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "BaseData" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "PlayerData" + fileEnding));
-                    zipFile.AddFile(Path.Combine(saveDir, "WorldData" + fileEnding));
-                    zipFile.Save(Path.Combine(saveDir, "worldBackup.zip"));
+                    Log.Error("Could not load world: " + ex + " creating a new one.");
                 }
             }
 
