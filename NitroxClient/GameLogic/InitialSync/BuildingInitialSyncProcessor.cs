@@ -114,7 +114,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             foreach (BasePiece item in basePieces)
             {
-                if ((item.TechType.Name.Contains("Corridor") || item.TechType.Name.Contains("Room") || item.TechType.Name.Contains("Foundation") || item.TechType.Name.Contains("Connector")))
+                if (item.TechType.Name.Contains("Corridor") || item.TechType.Name.Contains("Room") || item.TechType.Name.Contains("Foundation") || item.TechType.Name.Contains("Connector") || item.TechType.Name.Contains("Observatory") || (item.TechType.Name.Contains("Moonpool") && !item.TechType.Name.Contains("Console")) )
                 {
                     internalList.Add(item);
 
@@ -124,7 +124,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     // Rework or completely remove later, when figured out how to supress hull integrity calculation and update while InitialSync
                     foreach (BasePiece item2 in basePieces)
                     {
-                        if (item2.TechType.Name.Contains("Reinforcement") && item2.ConstructionCompleted && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
+                        if ((item2.TechType.Name.Contains("Reinforcement") || item2.TechType.Name.Contains("Bulkhead")) && item2.ConstructionCompleted && item.ItemPosition == item2.ItemPosition && !internalList.Contains(item2))
                         {
                             internalList.Add(item2);
                         }
