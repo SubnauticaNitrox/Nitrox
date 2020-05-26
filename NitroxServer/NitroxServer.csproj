@@ -90,6 +90,7 @@
     <Compile Include="Communication\Packets\Processors\FireDousedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRadioRepairProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EscapePodRepairProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedPacketProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerDeathEventProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerEquipmentAddedProcessor.cs" />

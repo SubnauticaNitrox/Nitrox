@@ -54,6 +54,7 @@
     <Compile Include="Communication\Packets\Processors\BedEnterProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\EntityMetadataUpdateProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\GameModeChangedProcessor.cs" />
+    <Compile Include="Communication\Packets\Processors\EnergyMixinValueChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PingRenamedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerTeleportedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\RadioPlayPendingMessageProcessor.cs" />
@@ -193,7 +194,6 @@
     <Compile Include="Communication\Packets\Processors\PlayerDeathProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerJoinedMultiplayerSessionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\PlayerStatsProcessor.cs" />
-    <Compile Include="Communication\Packets\Processors\PowerLevelChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SignChangedProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\SimulationOwnershipChangeProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\StoryEventHandler.cs" />
@@ -277,7 +277,6 @@
     <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceManager.cs" />
     <Compile Include="GameLogic\PlayerPreferences\PlayerPreferenceState.cs" />
     <Compile Include="GameLogic\PlayerPreferences\UnityPreferenceStateProvider.cs" />
-    <Compile Include="GameLogic\Power.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\RadiationSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\PlayerModel\Equipment\ReinforcedSuitVisibilityHandler.cs" />
     <Compile Include="GameLogic\RemotePlayer.cs" />
@@ -322,7 +321,6 @@
     <Compile Include="MonoBehaviours\PlayerDeathBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />
-    <Compile Include="MonoBehaviours\PowerMonitor.cs" />
     <Compile Include="MonoBehaviours\ThrottledBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

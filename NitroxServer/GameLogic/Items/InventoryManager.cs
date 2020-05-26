@@ -9,12 +9,12 @@ namespace NitroxServer.GameLogic.Items
     public class InventoryManager
     {
         private readonly ThreadSafeDictionary<NitroxId, ItemData> inventoryItemsById;
-        private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsById;
+        private readonly ThreadSafeDictionary<NitroxId, ItemData> storageSlotItemsByContainerId;
 
         public InventoryManager(List<ItemData> inventoryItems, List<ItemData> storageSlotItems)
         {
             inventoryItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(inventoryItems.ToDictionary(item => item.ItemId), false);
-            storageSlotItemsById = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ItemId), false);
+            storageSlotItemsByContainerId = new ThreadSafeDictionary<NitroxId, ItemData>(storageSlotItems.ToDictionary(item => item.ContainerId), false);
         }
 
         public void ItemAdded(ItemData itemData)
@@ -35,17 +35,17 @@ namespace NitroxServer.GameLogic.Items
 
         public void StorageItemAdded(ItemData itemData)
         {
-            storageSlotItemsById[itemData.ContainerId] = itemData;
+            storageSlotItemsByContainerId[itemData.ContainerId] = itemData;
         }
 
         public bool StorageItemRemoved(NitroxId ownerId)
         {
-            return storageSlotItemsById.Remove(ownerId);
+            return storageSlotItemsByContainerId.Remove(ownerId);
         }
 
         public ICollection<ItemData> GetAllStorageSlotItems()
         {
-            return storageSlotItemsById.Values;
+            return storageSlotItemsByContainerId.Values;
         }
     }
 }

@@ -13,19 +13,7 @@ namespace NitroxModel_Subnautica.Helper
     {
         public static VehicleModel BuildFrom(ConstructorBeginCrafting packet)
         {
-            switch (packet.TechType.ToUnity())
-            {
-                case TechType.Seamoth:
-                    return new SeamothModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
-                case TechType.Exosuit:
-                    return new ExosuitModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
-                case TechType.Cyclops:
-                    return new CyclopsModel(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
-                case TechType.RocketBase:
-                    return null;
-                default:
-                    throw new Exception($"Could not build from: {packet.TechType}");
-            }
+            return BuildFrom(packet.TechType, packet.ConstructedItemId, packet.Position, packet.Rotation, packet.InteractiveChildIdentifiers, Optional.Empty, packet.Name, packet.HSB, packet.Health);
         }
 
         public static VehicleModel BuildFrom(NitroxTechType techType, NitroxId constructedItemId, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb, float health)
