@@ -160,7 +160,9 @@ namespace NitroxClient.GameLogic.Bases
                                 }
                                 else
                                 {
+#if TRACE && BUILDING
                                     NitroxModel.Logger.Log.Error("Base_ClearGeometry_Pre - no NitroxId found on GameObject: " + surface.name + " cellPosition: " + surface.parent.position + " surfaceIndex: " + surface.GetSiblingIndex());
+#endif
                                 }
                             }
                         }
