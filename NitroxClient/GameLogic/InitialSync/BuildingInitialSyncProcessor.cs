@@ -59,6 +59,9 @@ namespace NitroxClient.GameLogic.InitialSync
                 }
 #endif
 
+                ThrottledBuilder.main.WaitItem = waitScreenItem;
+                ThrottledBuilder.main.Count = orderedbasePieces.Count;
+
                 QueueUpPieces(orderedbasePieces);
                 ThrottledBuilder.main.QueueDrained += FinishedCompletedBuildings;
             }

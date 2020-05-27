@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\Dynamic\BaseAddModuleGhost_SetupGhost_Patch.cs" />
+    <Compile Include="Patches\Dynamic\BaseHullStrength_OnPostRebuildGeometry_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeCellDeconstructable_Patch.cs" />
@@ -59,7 +61,6 @@
     <Compile Include="Patches\Dynamic\Builder_ShowRotationControlsHint_Patch.cs" />
     <Compile Include="Patches\Dynamic\ConstructableBase_SetState_Patch.cs" />
     <Compile Include="Patches\Dynamic\Constructable_NotifyConstructedChanged_Patch.cs" />
-    <Compile Include="Patches\Dynamic\GameModeUtils_RequireReinforcements_Patch.cs" />
     <Compile Include="Patches\Dynamic\KeypadDoorConsole_AcceptNumberField_Patch.cs" />
     <Compile Include="Patches\Dynamic\Player_OnKill_Patch.cs" />
     <Compile Include="Patches\Dynamic\PropulsionCannon_ReleaseGrabbedObject_Patch.cs" />

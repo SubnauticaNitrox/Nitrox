@@ -19,6 +19,8 @@ namespace NitroxClient.MonoBehaviours
     public class ThrottledBuilder : MonoBehaviour
     {
         public static ThrottledBuilder main;
+        public int Count = 0;
+        public WaitScreen.ManualWaitItem WaitItem = null;
 
         public event EventHandler QueueDrained;
         private BuildThrottlingQueue buildEvents;
@@ -72,6 +74,21 @@ namespace NitroxClient.MonoBehaviours
                 }
 
                 isNextEventFrameBlocked = (processedFrameBlockingEvent && buildEvents.NextEventRequiresFreshFrame());
+
+                if (WaitItem != null && Count != 0)
+                {
+                    int prog = Count - buildEvents.Count;
+                    if (prog < 0)
+                    {
+                        prog = Convert.ToInt32(Count / 2 - prog * -1 / 2);
+                    }
+                    else
+                    {
+                        prog = Convert.ToInt32(prog / 2 + Count / 2);
+                    }
+
+                    WaitItem.SetProgress(prog, Count);
+                }
             }
         }
 

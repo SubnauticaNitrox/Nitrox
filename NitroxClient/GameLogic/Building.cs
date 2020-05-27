@@ -125,8 +125,8 @@ namespace NitroxClient.GameLogic
 
 #if TRACE && BUILDING
             BaseRoot sourceBaseRoot = sourceBase.GetComponent<BaseRoot>();
-            BaseRoot targetBaseRoot = instance.GetComponent<BaseRoot>();
-            NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - Base copy - sourceBase: " + sourceBase + " targetBase: " + instance + " targetBaseIsGhost: " + instance.isGhost + " sourceBaseId: " + sourceBaseId + " targetBaseId: " + targetBaseId + " sourceBaseRoot: " + sourceBaseRoot + " targetBaseRoot: " + targetBaseRoot);
+            BaseRoot targetBaseRoot = targetBase.GetComponent<BaseRoot>();
+            NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - Base copy - sourceBase: " + sourceBase + " targetBase: " + targetBase + " targetBaseIsGhost: " + targetBase.isGhost + " sourceBaseId: " + sourceBaseId + " targetBaseId: " + targetBaseId + " sourceBaseRoot: " + sourceBaseRoot + " targetBaseRoot: " + targetBaseRoot);
 #endif
 
             if (baseGhostsIDCache.ContainsKey(sourceBase.gameObject) && targetBaseId == null && !targetBase.isGhost)
@@ -573,7 +573,7 @@ namespace NitroxClient.GameLogic
                             Optional<RotationMetadata> rotationMetadata = rotationMetadataFactory.From(ghost);
 
 #if TRACE && BUILDING
-                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + instance.techType + " techType.Model(): " + instance.techType.Model());
+                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + instance.techType + " techType.Model(): " + instance.techType.ToDto());
 #endif
 
                             //fix for wrong techType
@@ -582,10 +582,10 @@ namespace NitroxClient.GameLogic
                             {
                                 origTechType = TechType.BaseConnector;
                             }
-                            
+
 
 #if TRACE && BUILDING
-                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + techType);
+                            NitroxModel.Logger.Log.Debug("Constructable_NotifyConstructedChanged_Post - techType: " + origTechType);
 #endif
 
                             BasePiece basePiece = new BasePiece(id, placedPosition.ToDto(), instance.gameObject.transform.rotation.ToDto(), camera.position.ToDto(), camera.rotation.ToDto(), origTechType.ToDto(), Optional.OfNullable(parentBaseId), false, rotationMetadata);
@@ -674,7 +674,7 @@ namespace NitroxClient.GameLogic
             {
 
 #if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - techTypeEnum: " + basePiece.TechType.Enum());
+                NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - techTypeEnum: " + basePiece.TechType.ToUnity());
 #endif
 
                 GameObject buildPrefab = CraftData.GetBuildPrefab(basePiece.TechType.ToUnity());
@@ -924,25 +924,48 @@ namespace NitroxClient.GameLogic
         }
 
         // Suppress hull integrity calculation on InitialSync
-        // CURRENTLY BROKEN: Patch not working
-        public bool GameModeUtils_RequiresReinforcements_Pre(ref bool result)
+        public bool BaseHullStrength_OnPostRebuildGeometry_Pre(BaseHullStrength instance, Base b)
         {
-
-#if TRACE && BUILDING
-            NitroxModel.Logger.Log.Debug("GameModeUtils_RequiresReinforcements_Post - remoteEventActive: " + remoteEventActive + " IsInitialSyncing: " + IsInitialSyncing + " original result: " + result);
-#endif
-
-            if (IsInitialSyncing)
+            if (IsInitialSyncing || remoteEventActive)
             {
-                result = false;
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_SetupGhost_Pre");
+#endif
+                if (GameModeUtils.RequiresReinforcements())
+                {
+                    float num = 10f;
+                    ((List<LiveMixin>)instance.ReflectionGet("victims")).Clear();
+                    foreach (Int3 cell in ((Base)instance.ReflectionGet("baseComp")).AllCells)
+                    {
+                        if (((Base)instance.ReflectionGet("baseComp")).GridToWorld(cell).y < 0f)
+                        {
+                            Transform cellObject = ((Base)instance.ReflectionGet("baseComp")).GetCellObject(cell);
+                            if (cellObject != null)
+                            {
+                                ((List<LiveMixin>)instance.ReflectionGet("victims")).Add(cellObject.GetComponent<LiveMixin>());
+                                num += ((Base)instance.ReflectionGet("baseComp")).GetHullStrength(cell);
+                            }
+                        }
+                    }
+                    if (!UnityEngine.Mathf.Approximately(num, (float)instance.ReflectionGet("totalStrength")))
+                    {
+                        if (!IsInitialSyncing) // Display no Messages on Initialsync
+                        {
+                            // If remote player finished construction of a base structure, calculate the distance 
+                            // and display the message only if remote player is near the lokal player.
+                            // ## TODO BUILDING ##
+                            // Calulate if near and then:
+                            // ErrorMessage.AddMessage(Language.main.GetFormat<float, float>("BaseHullStrChanged", num - (float)instance.ReflectionGet("totalStrength"), num));
+                        }
+                    }
+                    instance.ReflectionSet("totalStrength", num);
+                }
                 return false;
             }
-            
             return true;
         }
 
-        // Suppress rotation hints on Initialsync and remote build
-        // CURRENTLY BROKEN: Patch not working
+        // Suppress rotation hints on InitialSync and build actions of remote player
         public bool Builder_ShowRotationControlsHint_Pre()
         {
 
@@ -955,6 +978,25 @@ namespace NitroxClient.GameLogic
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - returning false");
 #endif
+                return false;
+            }
+            return true;
+        }
+
+        // Suppress rotation hints on InitialSync and build actions of remote player
+        public bool BaseAddModuleGhost_SetupGhost_Pre(BaseAddModuleGhost instance)
+        {
+            if (IsInitialSyncing || remoteEventActive)
+            {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("BaseAddModuleGhost_SetupGhost_Pre");
+#endif
+                
+                instance.ReflectionCall("UpdateSize", false, false, new object[] { Int3.one });
+                instance.ReflectionSet("direction", Base.Direction.North);
+                instance.ReflectionSet("directions", new List<Base.Direction>(Base.HorizontalDirections));
+
                 return false;
             }
             return true;

@@ -13,7 +13,6 @@ namespace NitroxPatcher.Patches.Dynamic
 
         public static bool Prefix()
         {
-            //##TODO > currently not working
             return NitroxServiceLocator.LocateService<Building>().Builder_ShowRotationControlsHint_Pre();
         }
 
