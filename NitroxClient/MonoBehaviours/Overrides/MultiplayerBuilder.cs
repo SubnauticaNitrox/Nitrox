@@ -194,14 +194,14 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 transform.rotation = MultiplayerBuilder.placeRotation;
                 BaseGhost component = ghostModel.GetComponent<BaseGhost>();
 
-                if (rotationMetadata.HasValue && MultiplayerBuilder.allowedOutside)
+                if (rotationMetadata.HasValue && component is BaseAddCorridorGhost)
                 {
                     ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
                 }
 
                 flag2 = componentInParent.UpdateGhostModel(MultiplayerBuilder.GetAimTransform(), MultiplayerBuilder.ghostModel, default(RaycastHit), out flag, componentInParent);
 
-                if (rotationMetadata.HasValue && !MultiplayerBuilder.allowedOutside)
+                if (rotationMetadata.HasValue && !(component is BaseAddCorridorGhost))
                 {
                     ApplyRotationMetadata(MultiplayerBuilder.ghostModel, rotationMetadata.Value);
                 }
