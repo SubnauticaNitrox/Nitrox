@@ -18,18 +18,21 @@ namespace NitroxModel.Packets
         private static readonly StreamingContext streamingContext;
         private static readonly BinaryFormatter serializer;
 
+        private static readonly string[] blacklistedAssemblies = { "NLog" };
+
         static Packet()
         {
             surrogateSelector = new SurrogateSelector();
             streamingContext = new StreamingContext(StreamingContextStates.All); // Our surrogates can be safely used in every context.
             IEnumerable<Type> types = AppDomain.CurrentDomain.GetAssemblies()
-                                    .SelectMany(a => a.GetTypes()
-                                                      .Where(t =>
-                                                                 t.BaseType != null &&
-                                                                 t.BaseType.IsGenericType &&
-                                                                 t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
-                                                                 t.IsClass &&
-                                                                 !t.IsAbstract));
+                                               .Where(assembly => !blacklistedAssemblies.Contains(assembly.GetName().Name))
+                                               .SelectMany(a => a.GetTypes()
+                                                                 .Where(t =>
+                                                                            t.BaseType != null &&
+                                                                            t.BaseType.IsGenericType &&
+                                                                            t.BaseType.GetGenericTypeDefinition() == typeof(SerializationSurrogate<>) &&
+                                                                            t.IsClass &&
+                                                                            !t.IsAbstract));
 
             foreach (Type type in types)
             {

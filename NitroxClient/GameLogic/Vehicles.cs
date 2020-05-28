@@ -92,7 +92,7 @@ namespace NitroxClient.GameLogic
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"{nameof(Vehicles)}: Error while trying to spawn a cyclops ({constructedObjectId})", ex);
+                        Log.Error(ex, $"{nameof(Vehicles)}: Error while trying to spawn a cyclops. Id: {constructedObjectId}");
                     }
                 }
 
@@ -178,7 +178,7 @@ namespace NitroxClient.GameLogic
             }
             catch (Exception ex)
             {
-                Log.Error($"{nameof(Vehicles)}: Error while creating a vehicle {techType} {id}", ex);
+                Log.Error(ex, $"{nameof(Vehicles)}: Error while creating a vehicle. TechType: {techType} Id: {id}");
             }
         }
 

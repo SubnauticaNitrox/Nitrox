@@ -51,7 +51,7 @@ namespace NitroxClient.GameLogic.InitialSync
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(ex, $"Error deserializing item data (Id: {itemdata.ItemId})");
+                        Log.Error(ex, $"Error deserializing item data. Id: {itemdata.ItemId}");
                         continue;
                     }
 

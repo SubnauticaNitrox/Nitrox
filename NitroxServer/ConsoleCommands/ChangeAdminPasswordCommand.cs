@@ -1,5 +1,4 @@
-﻿using System;
-using NitroxModel.DataStructures.GameLogic;
+﻿using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.Logger;
 using NitroxModel.Server;
 using NitroxServer.ConsoleCommands.Abstract;
@@ -19,18 +18,12 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            try
-            {
-                string playerName = args.Sender.HasValue ? args.Sender.Value.Name : "SERVER";
-                serverConfig.AdminPassword = args.Args[0];
+            string newPassword = args.Get(0);
 
-                Log.InfoSensitive("Admin password changed to {password} by {playername}", args.Args[0], playerName);
-                SendMessageToPlayer(args.Sender, "Admin password changed");
-            }
-            catch (Exception ex)
-            {
-                Log.ErrorSensitive(ex, "Error attempting to change admin password to {password}", args.Args[0]);
-            }
+            serverConfig.AdminPassword = newPassword;
+
+            Log.InfoSensitive("Admin password changed to {password} by {playername}", newPassword, args.SenderName);
+            SendMessageToPlayer(args.Sender, "Admin password changed");
         }
     }
 }

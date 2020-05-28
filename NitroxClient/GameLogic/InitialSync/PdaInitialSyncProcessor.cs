@@ -81,7 +81,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
             Log.Debug($"PDAEntryPartial: New added: {entries.Count}, Total: {partial.Count}");
         }
-        
+
         private void SetKnownTech(List<NitroxTechType> techTypes)
         {
             Log.Info($"Received initial sync packet with {techTypes.Count} known tech types");
@@ -96,7 +96,7 @@ namespace NitroxClient.GameLogic.InitialSync
             }
         }
 
-        private void SetPDALog(ICollection<PDALogEntry> logEntries)
+        private void SetPDALog(List<PDALogEntry> logEntries)
         {
             Log.Info($"Received initial sync packet with {logEntries.Count} pda log entries");
 

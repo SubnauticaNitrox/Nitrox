@@ -7,7 +7,7 @@ namespace NitroxModel_Subnautica.Logger
         public void Log(object message) => Log(message?.ToString());
         public void Log(string message)
         {
-            if (message == null)
+            if (string.IsNullOrEmpty(message))
             {
                 return;
             }

@@ -81,7 +81,7 @@ namespace NitroxServer.Serialization
                     }
                     else
                     {
-                        Log.Error($"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}", ex);
+                        Log.Error(ex, $"ServerProtoBufSerializer has thrown an error registering the type: {type} from {assemblyName}");
                     }
                 }
             }

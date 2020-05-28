@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NLog;
+using NLog.Conditions;
 using NLog.Config;
 using NLog.Filters;
 using NLog.Fluent;
@@ -40,7 +41,7 @@ namespace NitroxModel.Logger
             logger = LogManager.GetCurrentClassLogger();
 
             LoggingConfiguration config = new LoggingConfiguration();
-            string layout = $@"${{date:format=HH\:mm\:ss.fff}} [${{level:uppercase=true}}] ${{event-properties:item={nameof(PlayerName)}}}${{message}} ${{exception}}";
+            string layout = $@"[${{date:format=HH\:mm\:ss}} {GetLoggerName()}${{event-properties:item={nameof(PlayerName)}}}][${{level:uppercase=true}}] ${{message}} ${{exception}}";
 
             // Targets where to log to: File and Console
             ColoredConsoleTarget logConsole = new ColoredConsoleTarget(nameof(logConsole))
@@ -48,10 +49,27 @@ namespace NitroxModel.Logger
                 Layout = layout,
                 DetectConsoleAvailable = true
             };
+
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Error"),
+                ForegroundColor = ConsoleOutputColor.Red
+            });
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Warn"),
+                ForegroundColor = ConsoleOutputColor.Yellow
+            });
+            logConsole.RowHighlightingRules.Add(new ConsoleRowHighlightingRule
+            {
+                Condition = ConditionParser.ParseExpression("level == LogLevel.Debug"),
+                ForegroundColor = ConsoleOutputColor.DarkGray
+            });
+
             FileTarget logFile = new FileTarget(nameof(logFile))
             {
-                FileName = "Nitrox Logs/nitrox.log",
-                ArchiveFileName = "Nitrox Logs/archives/nitrox.{#}.log",
+                FileName = $"Nitrox Logs/Nitrox-{GetLoggerName()}.log",
+                ArchiveFileName = "Nitrox Logs/archives/Nitrox-{GetLoggerName()}.{#}.log",
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveNumbering = ArchiveNumberingMode.Date,
                 MaxArchiveFiles = 7,
@@ -71,8 +89,7 @@ namespace NitroxModel.Logger
                                                                {
                                                                    return;
                                                                }
-                                                               object isGameLog;
-                                                               evt.Properties.TryGetValue("game", out isGameLog);
+                                                               evt.Properties.TryGetValue("game", out object isGameLog);
                                                                if (isGameLog != null && (bool)isGameLog)
                                                                {
                                                                    InGameLogger.Log(evt.FormattedMessage);
@@ -93,13 +110,15 @@ namespace NitroxModel.Logger
         {
             set
             {
+#if DEBUG //Player name in log file is just important with two instances => Developer
                 if (string.IsNullOrEmpty(value))
                 {
                     return;
                 }
 
-                logger.Info("Setting player name");
-                logger.SetProperty(nameof(PlayerName), $"[{value}] ");
+                logger.Info($"Setting player name to {value}");
+                logger.SetProperty(nameof(PlayerName), $"-{value}");
+#endif
             }
         }
 
@@ -196,12 +215,6 @@ namespace NitroxModel.Logger
             return name.IndexOf("server", StringComparison.InvariantCultureIgnoreCase) >= 0 ? "Server" : name;
         }
 
-        // Helping method for formatting string correctly with arguments
-        private static string Format(string fmt, params object[] arg)
-        {
-            return string.Format(fmt, arg);
-        }
-
         /// <summary>
         ///     Exclude sensitive logs parameters from being logged into (long-term) files
         /// </summary>
@@ -209,10 +222,9 @@ namespace NitroxModel.Logger
         /// <param name="applyDecider">Custom condition to decide whether to apply the sensitive log file to a log target.</param>
         private static void AddSensitiveFilter(LoggingConfiguration config, Func<Target, bool> applyDecider)
         {
-            WhenMethodFilter sensistiveLogFilter = new WhenMethodFilter(context =>
+            WhenMethodFilter sensitiveLogFilter = new WhenMethodFilter(context =>
             {
-                object isSensitive;
-                context.Properties.TryGetValue("sensitive", out isSensitive);
+                context.Properties.TryGetValue("sensitive", out object isSensitive);
                 if (isSensitive != null && (bool)isSensitive)
                 {
                     for (int i = 0; i < context.MessageTemplateParameters.Count; i++)
@@ -233,7 +245,7 @@ namespace NitroxModel.Logger
                 {
                     if (applyDecider(target))
                     {
-                        rule.Filters.Add(sensistiveLogFilter);
+                        rule.Filters.Add(sensitiveLogFilter);
                     }
                 }
             }
