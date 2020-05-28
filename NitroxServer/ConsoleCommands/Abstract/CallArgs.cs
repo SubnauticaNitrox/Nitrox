@@ -7,6 +7,12 @@ namespace NitroxServer.ConsoleCommands.Abstract
     {
         public class CallArgs
         {
+            public Command Command { get; }
+            public string[] Args { get; }
+            public Optional<Player> Sender { get; }
+
+            public string SenderName => Sender.HasValue ? Sender.Value.Name : "SERVER";
+
             public CallArgs(Command command, Optional<Player> sender, string[] args)
             {
                 Command = command;
@@ -14,13 +20,7 @@ namespace NitroxServer.ConsoleCommands.Abstract
                 Args = args;
             }
 
-            public Command Command { get; }
-            public string[] Args { get; }
-            public Optional<Player> Sender { get; }
-
-            public string SenderName => Sender.HasValue ? Sender.Value.Name : "SERVER";
-
-            public bool Valid(int index)
+            public bool IsValid(int index)
             {
                 return index < Args.Length && index >= 0 && Args.Length != 0;
             }
@@ -44,12 +44,13 @@ namespace NitroxServer.ConsoleCommands.Abstract
             public T Get<T>(int index)
             {
                 IParameter<object> param = Command.Parameters[index];
-                string arg = Valid(index) ? Args[index] : null;
+                string arg = IsValid(index) ? Args[index] : null;
 
                 if (arg == null)
                 {
                     return default(T);
                 }
+
                 if (typeof(T) == typeof(string))
                 {
                     return (T)(object)arg;

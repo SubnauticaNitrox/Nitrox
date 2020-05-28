@@ -1,6 +1,4 @@
 ﻿using NitroxModel.DataStructures.GameLogic;
-using NitroxModel.Logger;
-using NitroxModel.Packets;
 using NitroxServer.ConsoleCommands.Abstract;
 using NitroxServer.ConsoleCommands.Abstract.Type;
 using NitroxServer.GameLogic;
@@ -20,9 +18,7 @@ namespace NitroxServer.ConsoleCommands
 
         protected override void Execute(CallArgs args)
         {
-            string joinedArgs = args.GetTillEnd();
-            playerManager.SendPacketToAllPlayers(new ChatMessage(ChatMessage.SERVER_ID, joinedArgs));
-            Log.Info("BROADCAST: " + joinedArgs);
+            SendMessageToAllPlayers(args.GetTillEnd());
         }
     }
 }

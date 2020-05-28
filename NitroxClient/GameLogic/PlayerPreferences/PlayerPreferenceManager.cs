@@ -1,5 +1,6 @@
 ﻿using NitroxModel.Helper;
 using NitroxModel.MultiplayerSession;
+using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.PlayerPreferences
@@ -56,7 +57,7 @@ namespace NitroxClient.GameLogic.PlayerPreferences
                 return state.LastSetPlayerPreference.Clone();
             }
 
-            Color playerColor = RandomColorGenerator.GenerateColor();
+            Color playerColor = RandomColorGenerator.GenerateColor().ToUnity();
             PlayerPreference defaultPlayerPreference = new PlayerPreference(playerColor);
 
             state.LastSetPlayerPreference = defaultPlayerPreference;

@@ -24,9 +24,9 @@ namespace NitroxModel.DataStructures.GameLogic
         [ProtoMember(6)]
         public float InfectionAmount { get; }
 
-        public PlayerStatsData()
+        protected PlayerStatsData()
         {
-            // For serialization purposes
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public PlayerStatsData(float oxygen, float maxOxygen, float health, float food, float water, float infectionAmount)

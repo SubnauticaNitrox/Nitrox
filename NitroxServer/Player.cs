@@ -6,7 +6,6 @@ using NitroxModel.MultiplayerSession;
 using NitroxModel.Packets;
 using NitroxModel.Packets.Processors.Abstract;
 using NitroxServer.Communication.NetworkingLayer;
-using UnityEngine;
 
 namespace NitroxServer
 {
@@ -14,21 +13,22 @@ namespace NitroxServer
     {
         private readonly ThreadSafeCollection<EquippedItemData> equippedItems;
         private readonly ThreadSafeCollection<EquippedItemData> modules;
-        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
+        private readonly ThreadSafeCollection<AbsoluteEntityCell> visibleCells;
+        
         public NitroxConnection connection { get; set; }
-
         public PlayerSettings PlayerSettings => PlayerContext.PlayerSettings;
         public PlayerContext PlayerContext { get; set; }
         public ushort Id { get; }
         public string Name { get; set; }
         public bool IsPermaDeath { get; set; }
-        public Vector3 Position { get; set; }
+        public NitroxVector3 Position { get; set; }
         public NitroxId GameObjectId { get; }
         public Optional<NitroxId> SubRootId { get; set; }
         public Perms Permissions { get; set; }
         public PlayerStatsData Stats { get; set; }
+        public NitroxVector3? LastStoredPosition { get; set; }
 
-        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, Vector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
+        public Player(ushort id, string name, bool isPermaDeath, PlayerContext playerContext, NitroxConnection connection, NitroxVector3 position, NitroxId playerId, Optional<NitroxId> subRootId, Perms perms, PlayerStatsData stats, IEnumerable<EquippedItemData> equippedItems,
                       IEnumerable<EquippedItemData> modules)
         {
             Id = id;
@@ -41,8 +41,10 @@ namespace NitroxServer
             GameObjectId = playerId;
             Permissions = perms;
             Stats = stats;
+            LastStoredPosition = null;
             this.equippedItems = new ThreadSafeCollection<EquippedItemData>(equippedItems);
             this.modules = new ThreadSafeCollection<EquippedItemData>(modules);
+            visibleCells = new ThreadSafeCollection<AbsoluteEntityCell>(new HashSet<AbsoluteEntityCell>(), false);
         }
 
         public static bool operator ==(Player left, Player right)
@@ -141,6 +143,15 @@ namespace NitroxServer
         public void SendPacket(Packet packet)
         {
             connection.SendPacket(packet);
+        }
+
+        public void Teleport(NitroxVector3 destination)
+        {
+            PlayerTeleported playerTeleported = new PlayerTeleported(Name, Position, destination);
+
+            SendPacket(playerTeleported);
+            Position = playerTeleported.DestinationTo;
+            LastStoredPosition = playerTeleported.DestinationFrom;
         }
 
         protected bool Equals(Player other)

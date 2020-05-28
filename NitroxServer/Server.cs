@@ -3,7 +3,9 @@ using NitroxModel.Logger;
 using NitroxModel.Server;
 using NitroxServer.Serialization.World;
 using System.Configuration;
+using System.IO;
 using System.Text;
+using System.Linq;
 
 namespace NitroxServer
 {
@@ -47,6 +49,7 @@ namespace NitroxServer
             {
                 // TODO: Extend summary with more useful save file data
                 StringBuilder builder = new StringBuilder("\n");
+                builder.AppendLine($" - Save location: {Path.GetFullPath(serverConfig.SaveName)}");
                 builder.AppendLine($" - Radio messages stored: {world.GameData.StoryGoals.RadioQueue.Count}");
                 builder.AppendLine($" - Story goals completed: {world.GameData.StoryGoals.CompletedGoals.Count}");
                 builder.AppendLine($" - Story goals unlocked: {world.GameData.StoryGoals.GoalUnlocks.Count}");
@@ -54,6 +57,7 @@ namespace NitroxServer
                 builder.AppendLine($" - Storage slot items: {world.InventoryManager.GetAllStorageSlotItems().Count}");
                 builder.AppendLine($" - Inventory items: {world.InventoryManager.GetAllInventoryItems().Count}");
                 builder.AppendLine($" - Known tech: {world.GameData.PDAState.KnownTechTypes.Count}");
+                builder.AppendLine($" - Vehicles: {world.VehicleManager.GetVehicles().Count()}");
 
                 return builder.ToString();
             }
@@ -67,7 +71,7 @@ namespace NitroxServer
             }
 
             IsSaving = true;
-            worldPersistence.Save(world);
+            worldPersistence.Save(world, serverConfig.SaveName);
             IsSaving = false;
         }
 

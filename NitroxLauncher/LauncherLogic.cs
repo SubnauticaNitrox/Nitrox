@@ -83,6 +83,24 @@ namespace NitroxLauncher
             }
         }
 
+        public async void CheckNitroxVersion()
+        {
+            await Task.Factory.StartNew(() =>
+            {
+                string latestVersion = WebHelper.GetNitroxLatestVersion();
+
+                if (!string.IsNullOrEmpty(latestVersion) && latestVersion != Version)
+                {
+                    MessageBox.Show($"A new version of the mod ({latestVersion}) is available !\n\nPlease check our website to download it",
+                        "New version available",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Question,
+                        MessageBoxResult.OK,
+                        MessageBoxOptions.DefaultDesktopOnly);
+                }
+            }, CancellationToken.None, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
         public async Task<string> SetTargetedSubnauticaPath(string path)
         {
             if (SubnauticaPath == path || !Directory.Exists(path))
@@ -171,7 +189,6 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
             nitroxEntryPatch.Remove();
             gameProcess = StartSubnautica() ?? await WaitForProcessAsync();
         }
@@ -184,10 +201,15 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Subnautica is already running");
             }
 #endif
-            SyncAssetBundles();
-            SyncMonoAssemblies();
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
-
+            // Store path where launcher is in AppData for Nitrox bootstrapper to read
+            string nitroxAppData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Nitrox");
+            Directory.CreateDirectory(nitroxAppData);
+            File.WriteAllText(Path.Combine(nitroxAppData, "launcherpath.txt"), Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+            
+            // TODO: The launcher should override FileRead win32 API for the Subnautica process to give it the modified Assembly-CSharp from memory 
+            string bootloaderName = "Nitrox.Bootloader.dll";
+            File.Copy(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), bootloaderName), Path.Combine(subnauticaPath, "Subnautica_Data", "Managed", bootloaderName), true);
+            
             nitroxEntryPatch.Remove(); // Remove any previous instances first.
             nitroxEntryPatch.Apply();
 
@@ -201,10 +223,10 @@ namespace NitroxLauncher
                 throw new Exception("An instance of Nitrox Server is already running");
             }
 
-            SyncAssembliesBetweenSubnauticaManagedAndLib();
-
-            string serverPath = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib", "NitroxServer-Subnautica.exe");
+            string launcherDir = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            string serverPath = Path.Combine(launcherDir, "NitroxServer-Subnautica.exe");
             ProcessStartInfo startInfo = new ProcessStartInfo(serverPath);
+            startInfo.WorkingDirectory = launcherDir;
 
             if (!standalone)
             {
@@ -330,123 +352,6 @@ namespace NitroxLauncher
                         return proc;
                     },
                     TaskContinuationOptions.OnlyOnRanToCompletion);
-        }
-
-        private void SyncAssembliesBetweenSubnauticaManagedAndLib()
-        {
-            string subnauticaManagedPath = Path.Combine(subnauticaPath, "Subnautica_Data", "Managed");
-            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
-
-            List<string> ignoreNitroxBinaries = new List<string>
-            {
-                "NitroxModel.dll",
-                "NitroxServer.dll",
-                "NitroxServer-Subnautica.dll",
-                "NitroxModel-Subnautica.dll",
-                "NitroxPatcher.dll",
-                "NitroxClient.dll",
-                "0Harmony.dll",
-                "Autofac.dll",
-                "log4net.dll",
-                "protobuf-net.dll",
-                "LitJson.dll",
-                "dnlib.dll",
-                "AssetsTools.NET.dll",
-                "LiteNetLib.dll"
-            };
-            CopyAllAssemblies(subnauticaManagedPath, libDirectory, ignoreNitroxBinaries);
-
-            List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(libDirectory, subnauticaManagedPath, ignoreNoBinaries);
-        }
-
-        private void SyncMonoAssemblies()
-        {
-            string libDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "lib");
-            string launcherMonoPath = Path.Combine(libDirectory, "Mono");
-            string subnauticaMonoPath = Path.Combine(subnauticaPath, "MonoBleedingEdge");
-
-            List<string> ignoreNoBinaries = new List<string>();
-            CopyAllAssemblies(launcherMonoPath, subnauticaMonoPath, ignoreNoBinaries);
-        }
-
-        private void SyncAssetBundles()
-        {
-            string NormalizePath(string path)
-            {
-                return Path.GetFullPath(new Uri(path).LocalPath)
-                    .TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                    .ToUpperInvariant();
-            }
-
-            string currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            // Don't try to sync Asset Bundles if the user placed the launcher in the root of the Subnautica folder.
-            if (NormalizePath(currentDirectory) == NormalizePath(subnauticaPath))
-            {
-                return;
-            }
-
-            string subnauticaAssetsPath = Path.Combine(subnauticaPath, "AssetBundles");
-            string currentDirectoryAssetsPath = Path.Combine(currentDirectory, "AssetBundles");
-
-            string[] assetBundles = Directory.GetFiles(currentDirectoryAssetsPath);
-            Log.DebugSensitive("Copying asset files from Launcher directory {0} to Subnautica {1}", currentDirectoryAssetsPath, subnauticaAssetsPath);
-            foreach (string assetBundle in assetBundles)
-            {
-                string from = Path.Combine(currentDirectoryAssetsPath, Path.GetFileName(assetBundle));
-                string to = Path.Combine(subnauticaAssetsPath, Path.GetFileName(assetBundle));
-                Log.DebugSensitive("Copying asset file {0} to {1}", from, to);
-                File.Copy(from, to, true);
-            }
-        }
-
-        private void CopyAllAssemblies(string source, string destination, List<string> dllsToIgnore)
-        {
-            foreach (string sourceFilePath in Directory.GetFiles(source))
-            {
-                string fileName = Path.GetFileName(sourceFilePath);
-                if (dllsToIgnore.Contains(fileName))
-                {
-                    continue;
-                }
-
-                string destinationFilePath = Path.Combine(destination, fileName);
-                if (File.Exists(destinationFilePath) && fileName.EndsWith("dll"))
-                {
-                    try
-                    {
-                        Version sourceVersion = AssemblyName.GetAssemblyName(sourceFilePath).Version;
-                        Version destinationVersion = AssemblyName.GetAssemblyName(destinationFilePath).Version;
-                        FileInfo destFileInfo = new FileInfo(destinationFilePath);
-                        FileInfo sourceFileInfo = new FileInfo(sourceFilePath);
-
-                        if (sourceVersion != destinationVersion || destFileInfo.LastWriteTime != sourceFileInfo.LastWriteTime)
-                        {
-                            File.Delete(destinationFilePath);
-                            File.Copy(sourceFilePath, destinationFilePath, true);
-                        }
-                    }
-                    catch (BadImageFormatException)
-                    {
-                        // note: discord-rpc.dll has no version information and will fail with BadImageFormatException.
-                        // This means the discord-rpc.dll is already present in the destination folder and will be ignored.
-                        // Only in case of other dll's the error will be logged.
-                        if (!fileName.Equals("discord-rpc.dll"))
-                        {
-                            Log.Error($"There was an BadImageFormatException determining the version of the assembly: {fileName}");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, $"There was error during copying the assembly: {fileName}");
-                    }
-                }
-                else if (!File.Exists(destinationFilePath))
-                {
-                    File.Copy(sourceFilePath, destinationFilePath, true);
-                }
-            }
         }
     }
 }

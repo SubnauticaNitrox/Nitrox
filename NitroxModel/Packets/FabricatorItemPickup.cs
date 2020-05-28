@@ -1,5 +1,6 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -7,9 +8,9 @@ namespace NitroxModel.Packets
     public class FabricatorItemPickup : Packet
     {
         public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
 
-        public FabricatorItemPickup(NitroxId fabricatorId, TechType techType)
+        public FabricatorItemPickup(NitroxId fabricatorId, NitroxTechType techType)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

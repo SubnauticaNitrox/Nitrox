@@ -1,7 +1,6 @@
 ﻿using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
-using UnityEngine;
 using System.Collections.Generic;
 
 namespace NitroxServer.GameLogic
@@ -66,7 +65,7 @@ namespace NitroxServer.GameLogic
 
             EscapePodModel escapePod = new EscapePodModel();
             escapePod.InitEscapePodModel(new NitroxId(),
-                                         new Vector3(-112.2f + ESCAPE_POD_X_OFFSET * totalEscapePods, 0.0f, -322.6f),
+                                         new NitroxVector3(-112.2f + ESCAPE_POD_X_OFFSET * totalEscapePods, 0.0f, -322.6f),
                                          new NitroxId(),
                                          new NitroxId(),
                                          new NitroxId(),

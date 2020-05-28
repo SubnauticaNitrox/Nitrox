@@ -1,5 +1,6 @@
 ﻿using System;
 using NitroxModel.DataStructures;
+using NitroxModel.DataStructures.GameLogic;
 
 namespace NitroxModel.Packets
 {
@@ -7,10 +8,10 @@ namespace NitroxModel.Packets
     public class FabricatorBeginCrafting : Packet
     {
         public NitroxId FabricatorId { get; }
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
         public float Duration { get; }
 
-        public FabricatorBeginCrafting(NitroxId fabricatorId, TechType techType, float duration)
+        public FabricatorBeginCrafting(NitroxId fabricatorId, NitroxTechType techType, float duration)
         {
             FabricatorId = fabricatorId;
             TechType = techType;

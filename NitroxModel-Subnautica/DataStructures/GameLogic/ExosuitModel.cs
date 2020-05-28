@@ -18,12 +18,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic
         [ProtoMember(11)]
         public NitroxId RightArmId { get; }
 
-        public ExosuitModel()
+        protected ExosuitModel()
         {
-
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public ExosuitModel(NitroxModel.DataStructures.TechType techType, NitroxId id, Vector3 position, Quaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, Vector3[] hsb, Vector3[] colours, float health) : base (techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, colours, health)
+        public ExosuitModel(NitroxModel.DataStructures.GameLogic.NitroxTechType techType, NitroxId id, NitroxVector3 position, NitroxQuaternion rotation, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Optional<NitroxId> dockingBayId, string name, NitroxVector3[] hsb,  float health) : base (techType, id, position, rotation, interactiveChildIdentifiers, dockingBayId, name, hsb, health)
         {
             LeftArmId = new NitroxId();
             RightArmId = new NitroxId();

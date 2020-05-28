@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures;
-using UnityEngine;
+using System.Text;
 
 namespace NitroxModel.Packets
 {
@@ -11,18 +11,17 @@ namespace NitroxModel.Packets
     {
         public NitroxId ConstructorId { get; }
         public NitroxId ConstructedItemId { get; }
-        public TechType TechType { get; }
+        public NitroxTechType TechType { get; }
         public float Duration { get; }
         public List<InteractiveChildObjectIdentifier> InteractiveChildIdentifiers { get; }
-        public Vector3 Position { get; }
-        public Quaternion Rotation { get; }
+        public NitroxVector3 Position { get; }
+        public NitroxQuaternion Rotation { get; }
         public string Name { get; }
-        public Vector3[] HSB { get; }
-        public Vector3[] Colours { get; }
+        public NitroxVector3[] HSB { get; }
         public float Health { get; }
 
-        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, TechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, Vector3 position, Quaternion rotation, 
-            string name, Vector3[] hsb, Vector3[] colours, float health)
+        public ConstructorBeginCrafting(NitroxId constructorId, NitroxId constructeditemId, NitroxTechType techType, float duration, List<InteractiveChildObjectIdentifier> interactiveChildIdentifiers, NitroxVector3 position, NitroxQuaternion rotation, 
+            string name, NitroxVector3[] hsb, float health)
         {
             ConstructorId = constructorId;
             ConstructedItemId = constructeditemId;
@@ -33,20 +32,21 @@ namespace NitroxModel.Packets
             Rotation = rotation;
             Name = name;
             HSB = hsb;
-            Colours = colours;
             Health = health;
         }
 
         public override string ToString()
         {
-            string s = "[ConstructorBeginCrafting - ConstructorId: " + ConstructorId + " ConstructedItemId: " + ConstructedItemId + " TechType: " + TechType + " Duration: " + Duration + " Health: " + Health + " InteractiveChildIdentifiers: (";
+            StringBuilder s = new StringBuilder($"[ConstructorBeginCrafting - ConstructorId: {ConstructorId} ConstructedItemId: {ConstructedItemId} TechType: {TechType} Duration: {Duration} Health: {Health} InteractiveChildIdentifiers: (");
 
             foreach (InteractiveChildObjectIdentifier childIdentifier in InteractiveChildIdentifiers)
             {
-                s += childIdentifier + " ";
+                s.Append($"{childIdentifier} ");
             }
 
-            return s + ")" + " Position" + Position + " Rotation" + Rotation;
+            s.Append($") Position{Position} Rotation{Rotation}");
+
+            return s.ToString();
         }
     }
 }

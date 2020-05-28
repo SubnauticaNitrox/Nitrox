@@ -3,6 +3,7 @@ using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace NitroxClient.GameLogic
         public void FabricatorCrafingStarted(GameObject crafter, TechType techType, float duration)
         {
             NitroxId crafterId = NitroxEntity.GetId(crafter);
-            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.Model(), duration);
+            FabricatorBeginCrafting fabricatorBeginCrafting = new FabricatorBeginCrafting(crafterId, techType.ToDto(), duration);
             packetSender.Send(fabricatorBeginCrafting);
         }
 
@@ -28,7 +29,7 @@ namespace NitroxClient.GameLogic
         {
             NitroxId crafterId = NitroxEntity.GetId(gameObject);
 
-            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.Model());
+            FabricatorItemPickup fabricatorItemPickup = new FabricatorItemPickup(crafterId, techType.ToDto());
             packetSender.Send(fabricatorItemPickup);
             Log.Debug(fabricatorItemPickup);
         }

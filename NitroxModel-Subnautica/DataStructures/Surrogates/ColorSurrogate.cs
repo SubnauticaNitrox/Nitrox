@@ -1,7 +1,8 @@
 ﻿using System.Runtime.Serialization;
+using NitroxModel.DataStructures.Surrogates;
 using UnityEngine;
 
-namespace NitroxModel.DataStructures.Surrogates
+namespace NitroxModel_Subnautica.DataStructures.Surrogates
 {
     public class ColorSurrogate : SerializationSurrogate<Color>
     {

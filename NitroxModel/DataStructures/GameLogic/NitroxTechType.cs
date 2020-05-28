@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using ProtoBufNet;
 
-namespace NitroxModel.DataStructures
+namespace NitroxModel.DataStructures.GameLogic
 {
     /*
      * Shim tech type model to bridge the gap between original subnautica and BZ
      */
     [ProtoContract]
     [Serializable]
-    public class TechType
+    public class NitroxTechType
     {
         [ProtoMember(1)]
         public string Name { get; set; }
 
-        public TechType()
+        protected NitroxTechType()
         {
-            // Serialization Constructor
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
-        public TechType(string name)
+        public NitroxTechType(string name)
         {
             Name = name;
         }
@@ -31,7 +31,7 @@ namespace NitroxModel.DataStructures
 
         public override bool Equals(object obj)
         {
-            TechType type = obj as TechType;
+            NitroxTechType type = obj as NitroxTechType;
 
             return !ReferenceEquals(type, null) &&
                    Name == type.Name;

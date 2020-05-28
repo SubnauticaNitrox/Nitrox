@@ -7,6 +7,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Logger;
+using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.Helper;
 using UnityEngine;
 
@@ -17,9 +18,9 @@ namespace NitroxClient.GameLogic.Spawning
         public Optional<GameObject> Spawn(Entity entity, Optional<GameObject> parent, EntityCell cellRoot)
         {
             GameObject gameObject = SerializationHelper.GetGameObject(entity.SerializedGameObject);
-            gameObject.transform.position = entity.Transform.Position;
-            gameObject.transform.rotation = entity.Transform.Rotation;
-            gameObject.transform.localScale = entity.Transform.LocalScale;
+            gameObject.transform.position = entity.Transform.Position.ToUnity();
+            gameObject.transform.rotation = entity.Transform.Rotation.ToUnity();
+            gameObject.transform.localScale = entity.Transform.LocalScale.ToUnity();
 
             if (entity.WaterParkId != null)
             {
@@ -27,7 +28,7 @@ namespace NitroxClient.GameLogic.Spawning
             }
 
             EnableRigidBody(gameObject);
-            ExecuteDropItemAction(entity.TechType.Enum(), gameObject);
+            ExecuteDropItemAction(entity.TechType.ToUnity(), gameObject);
 
             NitroxEntity.SetNewId(gameObject, entity.Id);
 

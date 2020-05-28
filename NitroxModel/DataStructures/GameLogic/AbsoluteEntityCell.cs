@@ -1,7 +1,6 @@
 ﻿using System;
 using NitroxModel.Helper;
 using ProtoBufNet;
-using UnityEngine;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -30,9 +29,9 @@ namespace NitroxModel.DataStructures.GameLogic
             }
         }
 
-        public AbsoluteEntityCell()
+        protected AbsoluteEntityCell()
         {
-            // For serialization 
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public AbsoluteEntityCell(Int3 batchId, Int3 cellId, int level)
@@ -42,15 +41,15 @@ namespace NitroxModel.DataStructures.GameLogic
             Level = level;
         }
 
-        public AbsoluteEntityCell(Vector3 worldSpace, int level)
+        public AbsoluteEntityCell(NitroxVector3 worldSpace, int level)
         {
             Level = level;
 
-            Vector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter.ToVector3()) / Map.Main.BatchSize;
+            NitroxVector3 localPosition = (worldSpace + Map.Main.BatchDimensionCenter) / Map.Main.BatchSize;
             BatchId = Int3.Floor(localPosition);
 
-            Vector3 cell = (localPosition - BatchId.ToVector3()) * GetCellsPerBlock();
-            CellId = Int3.Floor(new Vector3(cell.x + 0.0001f, cell.y + 0.0001f, cell.z + 0.0001f));
+            NitroxVector3 cell = (localPosition - BatchId) * GetCellsPerBlock();
+            CellId = Int3.Floor(new NitroxVector3(cell.X + 0.0001f, cell.Y + 0.0001f, cell.Z + 0.0001f));
         }
 
         public static bool operator ==(AbsoluteEntityCell left, AbsoluteEntityCell right)
