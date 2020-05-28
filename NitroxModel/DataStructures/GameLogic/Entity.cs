@@ -9,13 +9,6 @@ namespace NitroxModel.DataStructures.GameLogic
     [ProtoContract]
     public class Entity
     {
-        /// <summary>
-        ///     Keeps track if an entity was spawned by the server or a player
-        ///     Server-spawned entities need to be techType white-listed to be simulated
-        /// </summary>
-        [ProtoMember(6)]
-        public bool SpawnedByServer;
-
         public AbsoluteEntityCell AbsoluteEntityCell => new AbsoluteEntityCell(Transform.Position, Level);
 
         [ProtoMember(1)]
@@ -32,6 +25,13 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(5)]
         public string ClassId { get; set; }
+
+        /// <summary>
+        ///     Keeps track if an entity was spawned by the server or a player
+        ///     Server-spawned entities need to be techType white-listed to be simulated
+        /// </summary>
+        [ProtoMember(6)]
+        public bool SpawnedByServer;
 
         [ProtoMember(7)]
         public NitroxId WaterParkId { get; set; }
@@ -50,7 +50,7 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoMember(10)]
         public NitroxId ParentId { get; set; }
-        
+
         [ProtoMember(11)]
         public EntityMetadata Metadata { get; set; }
 
@@ -61,9 +61,9 @@ namespace NitroxModel.DataStructures.GameLogic
 
         public List<Entity> ChildEntities { get; set; } = new List<Entity>();
 
-        public Entity()
+        protected Entity()
         {
-            // Default Constructor for serialization
+            // Constructor for serialization. Has to be "protected" for json serialization.
         }
 
         public Entity(NitroxVector3 localPosition, NitroxQuaternion localRotation, NitroxVector3 scale, NitroxTechType techType, int level, string classId, bool spawnedByServer, NitroxId id, int? existingGameObjectChildIndex, Entity parentEntity = null)

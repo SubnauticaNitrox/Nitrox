@@ -44,12 +44,12 @@ namespace NitroxModel.DataStructures.GameLogic
         public NitroxId BaseId { get; set; }
 
         [ProtoMember(12, DynamicType = true)]
-        public Optional<RotationMetadata> RotationMetadata {get; set; }
-        
+        public Optional<RotationMetadata> RotationMetadata { get; set; }
+
         [ProtoMember(13, DynamicType = true)]
         public Optional<BasePieceMetadata> Metadata { get; set; }
-                
-        public BasePiece()
+
+        protected BasePiece()
         {
             ParentId = Optional.Empty;
             RotationMetadata = Optional.Empty;

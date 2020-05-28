@@ -24,10 +24,10 @@ namespace NitroxServer.Serialization
     class BatchCellsParser
     {
         private readonly EntitySpawnPointFactory entitySpawnPointFactory;
-        private readonly ServerProtobufSerializer serializer;
+        private readonly ServerProtoBufSerializer serializer;
         private readonly Dictionary<string, Type> surrogateTypes = new Dictionary<string, Type>();
 
-        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtobufSerializer serializer)
+        public BatchCellsParser(EntitySpawnPointFactory entitySpawnPointFactory, ServerProtoBufSerializer serializer)
         {
             this.entitySpawnPointFactory = entitySpawnPointFactory;
             this.serializer = serializer;
@@ -40,7 +40,7 @@ namespace NitroxServer.Serialization
         public List<EntitySpawnPoint> ParseBatchData(Int3 batchId)
         {
             List<EntitySpawnPoint> spawnPoints = new List<EntitySpawnPoint>();
-            
+
             ParseFile(batchId, "CellsCache", "baked-", "", spawnPoints);
 
             return spawnPoints;
@@ -65,7 +65,7 @@ namespace NitroxServer.Serialization
                 //Log.Debug("File does not exist: " + fileName);
                 return;
             }
-            
+
             ParseCacheCells(batchId, fileName, spawnPoints);
         }
 
@@ -136,7 +136,7 @@ namespace NitroxServer.Serialization
             for (int goCounter = 0; goCounter < gameObjectCount.Count; goCounter++)
             {
                 GameObject gameObject = DeserializeGameObject(stream);
-                
+
                 if (gameObject.TotalComponents > 0)
                 {
 
@@ -175,7 +175,7 @@ namespace NitroxServer.Serialization
                 }
 
                 Validate.NotNull(type, $"No type or surrogate found for {componentHeader.TypeName}!");
-                
+
                 object component = FormatterServices.GetUninitializedObject(type);
                 serializer.Deserialize(stream, component, type);
 
@@ -183,7 +183,7 @@ namespace NitroxServer.Serialization
             }
         }
     }
-    
+
     [ProtoContract]
     public class CellsFileHeader
     {

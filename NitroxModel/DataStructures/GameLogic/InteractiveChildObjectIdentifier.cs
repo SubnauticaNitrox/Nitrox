@@ -1,12 +1,22 @@
 ﻿using System;
+using ProtoBufNet;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
     [Serializable]
+    [ProtoContract]
     public class InteractiveChildObjectIdentifier
     {
-        public NitroxId Id { get; }
-        public string GameObjectNamePath { get; }
+        [ProtoMember(1)]
+        public NitroxId Id { get; set; }
+
+        [ProtoMember(2)]
+        public string GameObjectNamePath { get; set; }
+
+        protected InteractiveChildObjectIdentifier()
+        {
+            // Constructor for serialization. Has to be "protected" for json serialization.
+        }
 
         public InteractiveChildObjectIdentifier(NitroxId id, string gameObjectNamePath)
         {
