@@ -213,7 +213,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\BatchCellsParser.cs" />
     <Compile Include="Serialization\ServerJsonSerializer.cs" />
-    <Compile Include="Serialization\ServerProtobufSerializer.cs" />
+    <Compile Include="Serialization\ServerProtoBufSerializer.cs" />
     <Compile Include="Serialization\IServerSerializer.cs" />
     <Compile Include="Serialization\World\PersistedWorldData.cs" />
     <Compile Include="Serialization\World\World.cs" />
