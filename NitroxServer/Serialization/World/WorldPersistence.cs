@@ -230,8 +230,8 @@ namespace NitroxServer.Serialization.World
             world.EntitySimulation = new EntitySimulation(world.EntityManager, world.SimulationOwnershipData, world.PlayerManager, serverSpawnedSimulationWhiteList);
 
             Log.Info($"World GameMode: {gameMode}");
-            Log.Info($"Server Password: {(string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword)}");
-            Log.Info($"Admin Password: {config.AdminPassword}");
+            Log.InfoSensitive("Server Password: {password}", string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword);
+            Log.InfoSensitive("Admin Password: {password}", config.AdminPassword);
             Log.Info($"Autosave: {(config.DisableAutoSave ? "DISABLED" : $"ENABLED ({config.SaveInterval / 60000} min)")}");
 
             Log.Info("To get help for commands, run help in console or /help in chatbox");

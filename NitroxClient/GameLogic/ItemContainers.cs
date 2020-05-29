@@ -30,7 +30,7 @@ namespace NitroxClient.GameLogic
             ItemData itemData = new ItemData(GetOwner(containerTransform), itemId, bytes);
             if (packetSender.Send(new ItemContainerAdd(itemData)))
             {
-                Log.Debug($"Sent: Added item '{pickupable.GetTechType()}' to container '{containerTransform.gameObject.GetHierarchyPath()}'");
+                Log.Debug($"Sent: Added item {pickupable.GetTechType()} to container {containerTransform.gameObject.GetHierarchyPath()}");
             }
         }
 
@@ -39,7 +39,7 @@ namespace NitroxClient.GameLogic
             NitroxId itemId = NitroxEntity.GetId(pickupable.gameObject);
             if (packetSender.Send(new ItemContainerRemove(GetOwner(containerTransform), itemId)))
             {
-                Log.Debug($"Sent: removed item '{pickupable.GetTechType()}' from container '{containerTransform.gameObject.GetHierarchyPath()}'");
+                Log.Debug($"Sent: Removed item {pickupable.GetTechType()} from container {containerTransform.gameObject.GetHierarchyPath()}");
             }
         }
 
@@ -48,13 +48,13 @@ namespace NitroxClient.GameLogic
             Optional<GameObject> owner = NitroxEntity.GetObjectFrom(containerId);
             if (!owner.HasValue)
             {
-                Log.Error("Unable to find inventory container with id: " + containerId);
+                Log.Error($"Unable to find inventory container with id {containerId}");
                 return;
             }
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner.Value);
             if (!opContainer.HasValue)
             {
-                Log.Error("Could not find container field on object " + owner.Value.name);
+                Log.Error($"Could not find container field on GameObject {owner.Value.GetHierarchyPath()}");
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace NitroxClient.GameLogic
             Optional<ItemsContainer> opContainer = InventoryContainerHelper.GetBasedOnOwnersType(owner);
             if (!opContainer.HasValue)
             {
-                Log.Error($"Could not find item container behaviour on object '{owner.name}' with Nitrox id '{ownerId}'");
+                Log.Error($"Could not find item container behaviour on object {owner.GetHierarchyPath()} with id {ownerId}");
                 return;
             }
 
@@ -96,9 +96,9 @@ namespace NitroxClient.GameLogic
             StorageContainer storageContainer = locker.GetComponentInChildren<StorageContainer>();
             if (!storageContainer)
             {
-                throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{LockerId}");                
+                throw new Exception($"Could not find {nameof(StorageContainer)} From Object: submarine_locker_01_0{LockerId}");
             }
-            
+
             return NitroxEntity.GetId(storageContainer.gameObject);
         }
 

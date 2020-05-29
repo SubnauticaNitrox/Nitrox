@@ -44,6 +44,7 @@ namespace NitroxServer_Subnautica
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
             ConfigureConsoleWindow();
             ConfigureCultureInfo();
+            Log.Setup();
 
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
@@ -62,9 +63,9 @@ namespace NitroxServer_Subnautica
                     Console.ReadKey(true);
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Log.Error(e.ToString());
+                Log.Error(ex);
                 return;
             }
 
@@ -159,7 +160,7 @@ namespace NitroxServer_Subnautica
 
         // Prevents Garbage Collection issue where server closes and an exception occurs for this handle.
         private static readonly ConsoleEventDelegate consoleCtrlCheckDelegate = ConsoleEventCallback;
-        
+
         private static bool ConsoleEventCallback(int eventType)
         {
             if (eventType == 2) // close

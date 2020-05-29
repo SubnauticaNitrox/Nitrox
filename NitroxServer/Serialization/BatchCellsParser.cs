@@ -62,7 +62,6 @@ namespace NitroxServer.Serialization
 
             if (!File.Exists(fileName))
             {
-                //Log.Debug("File does not exist: " + fileName);
                 return;
             }
 

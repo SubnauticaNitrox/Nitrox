@@ -22,7 +22,7 @@ namespace NitroxServer.ConsoleCommands
 
             serverConfig.ServerPassword = password;
 
-            Log.Info($"Server password changed to \"{password}\" by {args.SenderName}");
+            Log.InfoSensitive("Server password changed to {password} by {playername}", password, args.SenderName);
             SendMessageToPlayer(args.Sender, "Server password changed");
         }
     }

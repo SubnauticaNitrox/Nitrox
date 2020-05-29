@@ -11,6 +11,8 @@ namespace NitroxLauncher
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            Log.Setup();
+            
             // Set default style for all windows to the style with the target type 'Window' (in App.xaml).
             FrameworkElement.StyleProperty.OverrideMetadata(typeof(Window),
                 new FrameworkPropertyMetadata
@@ -50,8 +52,7 @@ namespace NitroxLauncher
             // If something went wrong. Close the server
             MainWindow window = (MainWindow)Current.MainWindow;
             window?.CloseInternalServerAndRemovePatchAsync();
-
-            Log.Error(e.Exception.GetBaseException().ToString());
+            Log.Error(e.Exception.GetBaseException().ToString()); // Gets the exception that was unhandled, not the "dispatched unhandled" exception.
             MessageBox.Show(GetExceptionError(e.Exception), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 

@@ -19,7 +19,7 @@ namespace NitroxServer.Serialization
 
             serializer.Error += delegate (object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
             {
-                Log.Error("Error in JsonSerializer.", e.ErrorContext.Error);
+                Log.Error(e.ErrorContext.Error, "Error while initializing JsonSerializer.");
             };
 
             RegisterConverters();
