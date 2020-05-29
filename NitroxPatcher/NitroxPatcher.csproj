@@ -191,6 +191,10 @@
     <Compile Include="Patches\Persistent\GameInput_Initialize_Patch.cs" />
     <Compile Include="Patches\Persistent\GameInput_SetupDefaultKeyboardBindings_Patch.cs" />
     <Compile Include="Patches\Persistent\uGUI_FeedbackCollector_IsEnabled_Patch.cs" />
+    <Compile Include="PatchLogic\Bases\Building.cs" />
+    <Compile Include="PatchLogic\Bases\GeometryLayoutChangeHandler.cs" />
+    <Compile Include="PatchLogic\Bases\MultiplayerBuilder.cs" />
+    <Compile Include="PatchLogic\Bases\Rotation\SubnauticaRotationMetadataFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TranspilerHelper.cs" />
   </ItemGroup>

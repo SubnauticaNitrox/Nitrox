@@ -4,7 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.Logger;
 using System;
 using UnityEngine;
-using NitroxClient.GameLogic;
+using NitroxModel.GameLogic;
 
 
 namespace NitroxClient.MonoBehaviours
@@ -118,27 +118,27 @@ namespace NitroxClient.MonoBehaviours
 
         private void ConstructionBegin(ConstructionBeginEvent constructionBegin)
         {
-            NitroxServiceLocator.LocateService<Building>().Constructable_ConstructionBegin_Remote(constructionBegin.BasePiece);
+            NitroxServiceLocator.LocateService<IBuilding>().ConstructNewBasePiece(constructionBegin.BasePiece);
         }
 
         private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
         {
-            NitroxServiceLocator.LocateService<Building>().Constructable_ConstructionCompleted_Remote(constructionCompleted.PieceId);
+            NitroxServiceLocator.LocateService<IBuilding>().FinishConstruction(constructionCompleted.PieceId);
         }
 
         private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
         {
-            NitroxServiceLocator.LocateService<Building>().Constructable_AmountChanged_Remote(amountChanged.Id, amountChanged.Amount);
+            NitroxServiceLocator.LocateService<IBuilding>().ChangeConstructAmount(amountChanged.Id, amountChanged.Amount);
         }
 
         private void DeconstructionBegin(DeconstructionBeginEvent deconstructBegin)
         {
-            NitroxServiceLocator.LocateService<Building>().Constructable_DeconstructionBegin_Remote(deconstructBegin.PieceId);
+            NitroxServiceLocator.LocateService<IBuilding>().DeconstructBasePiece(deconstructBegin.PieceId);
         }
 
         private void DeconstructionCompleted(DeconstructionCompletedEvent deconstructCompleted)
         {
-            NitroxServiceLocator.LocateService<Building>().Constructable_DeconstructionComplete_Remote(deconstructCompleted.PieceId);
+            NitroxServiceLocator.LocateService<IBuilding>().FinishDeconstruction(deconstructCompleted.PieceId);
         }
     }
 }

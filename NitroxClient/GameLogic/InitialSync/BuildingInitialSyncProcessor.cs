@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
+using NitroxModel.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;
@@ -31,7 +32,7 @@ namespace NitroxClient.GameLogic.InitialSync
         public override IEnumerator Process(InitialPlayerSync packet, WaitScreen.ManualWaitItem waitScreenItem)
         {
             completed = false;
-            NitroxServiceLocator.LocateService<Building>().IsInitialSyncing = true;
+            NitroxServiceLocator.LocateService<IBuilding>().InitialSyncActive = true;
 
             List<BasePiece> basePieces = packet.BasePieces;
             Log.Info("Received initial sync packet with " + basePieces.Count + " base pieces");
@@ -46,7 +47,7 @@ namespace NitroxClient.GameLogic.InitialSync
             if (basePieces.Count == 0)
             {
                 completed = true;
-                NitroxServiceLocator.LocateService<Building>().IsInitialSyncing = false;
+                NitroxServiceLocator.LocateService<IBuilding>().InitialSyncActive = false;
             }
             else
             {
@@ -97,7 +98,7 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             ThrottledBuilder.main.QueueDrained -= FinishedCompletedBuildings;
             completed = true;
-            NitroxServiceLocator.LocateService<Building>().IsInitialSyncing = false;
+            NitroxServiceLocator.LocateService<IBuilding>().InitialSyncActive = false;
         }
 
         // Subnautica changes the Layout of Bases when new BasePieces are added or removed. A simple replay of all the saved BasePieces is not enough, because 

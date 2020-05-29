@@ -7,12 +7,5 @@ namespace NitroxModel.DataStructures.GameLogic.Buildings.Rotation
     [ProtoContract]
     public abstract class RotationMetadata
     {
-        [ProtoIgnore]
-        public Type GhostType { get; set; }
-
-        public RotationMetadata(Type ghostType)
-        {
-            GhostType = ghostType;
-        }
     }
 }

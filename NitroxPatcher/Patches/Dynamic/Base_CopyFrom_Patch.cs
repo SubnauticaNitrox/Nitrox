@@ -1,7 +1,7 @@
 ﻿using Harmony;
 using System.Reflection;
 using NitroxModel.Core;
-using NitroxClient.GameLogic;
+using NitroxPatcher.PatchLogic.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic
 {

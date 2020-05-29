@@ -1,8 +1,9 @@
 ﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 
-namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
+namespace NitroxPatcher.PatchLogic.Bases.Rotation
 {
     public class SubnauticaRotationMetadataFactory : RotationMetadataFactory
     {

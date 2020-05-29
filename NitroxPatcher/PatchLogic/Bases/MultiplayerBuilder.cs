@@ -11,7 +11,7 @@ using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel_Subnautica.Helper.Int3;
 
-namespace NitroxClient.MonoBehaviours.Overrides
+namespace NitroxPatcher.PatchLogic.Bases
 {
     // Token: 0x020006BA RID: 1722
     public static class MultiplayerBuilder
@@ -253,11 +253,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
             {
                 Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
             }
-            else if (component.GetType() != rotationMetadata.GhostType)
+            /*else if (component.GetType() != rotationMetadata.GhostType)
             {
                 Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
-            }
-            else if (component is BaseAddCorridorGhost)
+            }*/
+            else if (component is BaseAddCorridorGhost && rotationMetadata is BaseCorridorRotationMetadata)
             {
                 Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");
 
@@ -270,7 +270,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 ghostBase.SetCorridor(Int3.zero, corridorType, corridor.isGlass);
                 corridor.ReflectionCall("RebuildGhostGeometry");
             }
-            else if (component is BaseAddMapRoomGhost)
+            else if (component is BaseAddMapRoomGhost && rotationMetadata is BaseMapRoomRotationMetadata)
             {
                 Log.Info("Placing MapRoomRotationMetadata Rotation Metadata");
 
@@ -280,11 +280,11 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 mapRoom.ReflectionSet("connectionMask", mapRoomRotationMetadata.ConnectionMask);
 
                 Base ghostBase = (Base)mapRoom.ReflectionGet("ghostBase");
-                
+
                 ghostBase.SetCell(Int3.zero, (Base.CellType)mapRoomRotationMetadata.CellType);
                 mapRoom.ReflectionCall("RebuildGhostGeometry");
             }
-            else if (component is BaseAddModuleGhost)
+            else if (component is BaseAddModuleGhost && rotationMetadata is BaseModuleRotationMetadata)
             {
                 BaseModuleRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseModuleRotationMetadata);
                 BaseAddModuleGhost module = (component as BaseAddModuleGhost);
@@ -303,7 +303,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 //rebuild layout
                 module.ReflectionCall("RebuildGhostGeometry");
             }
-            else if (component is BaseAddFaceGhost)
+            else if (component is BaseAddFaceGhost && rotationMetadata is BaseFaceRotationMetadata)
             {
                 BaseFaceRotationMetadata baseModuleRotationMetadata = (rotationMetadata as BaseFaceRotationMetadata);
                 BaseAddFaceGhost faceGhost = (component as BaseAddFaceGhost);
@@ -485,7 +485,7 @@ namespace NitroxClient.MonoBehaviours.Overrides
                 SubRoot dummyComp = null;
                 SkyEnvironmentChanged.Send(gameObject, dummyComp);
             }
-            
+
             gameObject.transform.position = overridePosition;
             gameObject.transform.rotation = overrideQuaternion;
 

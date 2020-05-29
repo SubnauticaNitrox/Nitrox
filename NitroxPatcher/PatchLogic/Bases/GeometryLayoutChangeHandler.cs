@@ -5,7 +5,7 @@ using NitroxModel.DataStructures;
 using NitroxModel.Helper;
 using UnityEngine;
 
-namespace NitroxClient.GameLogic.Bases
+namespace NitroxPatcher.PatchLogic.Bases
 {
     public class GeometryLayoutChangeHandler
     {

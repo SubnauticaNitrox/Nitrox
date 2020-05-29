@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using Harmony;
-using NitroxClient.GameLogic.Bases;
 using NitroxModel.Core;
+using NitroxPatcher.PatchLogic.Bases;
 using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic

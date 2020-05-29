@@ -37,10 +37,22 @@ namespace NitroxPatcher
 
             Log.Info("Registering Dependencies");
             container = CreatePatchingContainer();
-            NitroxServiceLocator.InitializeDependencyContainer(new ClientAutoFacRegistrar());
+            ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar();
+            clientAutoFacRegistrar.RegisterPatchDependencies += ClientAutoFacRegistrar_RegisterPatchDependencies;
+            NitroxServiceLocator.InitializeDependencyContainer(clientAutoFacRegistrar);
 
             InitPatches();
             ApplyNitroxBehaviours();
+        }
+
+        private static void ClientAutoFacRegistrar_RegisterPatchDependencies(object sender, ClientAutoFacRegistrarEventArgs e)
+        {
+            e.ContainerBuilder.RegisterType<NitroxPatcher.PatchLogic.Bases.GeometryLayoutChangeHandler>()
+                .InstancePerLifetimeScope();
+
+            e.ContainerBuilder.RegisterType<NitroxPatcher.PatchLogic.Bases.Building>()
+                .AsSelf()
+                .As<NitroxModel.GameLogic.IBuilding>().InstancePerLifetimeScope();
         }
 
         public static void Apply()

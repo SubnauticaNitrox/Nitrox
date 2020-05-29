@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using Autofac;
 using Autofac.Core;
 using NitroxClient.Communication;
@@ -23,10 +24,20 @@ using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 
 namespace NitroxClient
 {
+    public class ClientAutoFacRegistrarEventArgs : EventArgs
+    {
+        public ContainerBuilder ContainerBuilder;
+        public ClientAutoFacRegistrarEventArgs(ContainerBuilder containerBuilder)
+        {
+            ContainerBuilder = containerBuilder;
+        }
+    }
+
     public class ClientAutoFacRegistrar : IAutoFacRegistrar
     {
         private static readonly Assembly currentAssembly = Assembly.GetExecutingAssembly();
         private readonly IModule[] modules;
+        public event EventHandler<ClientAutoFacRegistrarEventArgs> RegisterPatchDependencies;
 
         public ClientAutoFacRegistrar(params IModule[] modules)
         {
@@ -41,6 +52,10 @@ namespace NitroxClient
             }
 
             RegisterCoreDependencies(containerBuilder);
+            if (RegisterPatchDependencies != null)
+            {
+                RegisterPatchDependencies(this, new ClientAutoFacRegistrarEventArgs(containerBuilder));
+            }
             RegisterPacketProcessors(containerBuilder);
             RegisterColorSwapManagers(containerBuilder);
             RegisterInitialSyncProcessors(containerBuilder);
@@ -76,18 +91,13 @@ namespace NitroxClient
                             .As<ILocalNitroxPlayer>()
                             .InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<SubnauticaRotationMetadataFactory>()
-                            .As<RotationMetadataFactory>()
-                            .InstancePerLifetimeScope();
-
             containerBuilder.RegisterType<PlayerManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerModelManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PlayerVitalsManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<VisibleCells>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PacketReceiver>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AI>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<GeometryLayoutChangeHandler>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<Building>().InstancePerLifetimeScope();
+
             containerBuilder.RegisterType<PlayerChatManager>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<Entities>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<MedkitFabricator>().InstancePerLifetimeScope();

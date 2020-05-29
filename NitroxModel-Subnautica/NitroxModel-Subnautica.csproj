@@ -52,7 +52,6 @@
     <Compile Include="DataStructures\DataExtensions.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseModuleRotationMetadata.cs" />
     <Compile Include="DataStructures\GameLogic\Buildings\Rotation\Metadata\BaseMapRoomRotationMetadata.cs" />
-    <Compile Include="DataStructures\GameLogic\Buildings\Rotation\SubnauticaRotationMetadataFactory.cs" />
     <Compile Include="DataStructures\GameLogic\Creatures\Actions\SerializableCreatureAction.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsDamageInfoData.cs" />
     <Compile Include="DataStructures\GameLogic\CyclopsFireData.cs" />

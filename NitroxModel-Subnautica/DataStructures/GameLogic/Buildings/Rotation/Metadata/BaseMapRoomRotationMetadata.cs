@@ -18,12 +18,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(2)]
         public int ConnectionMask { get; set; }
 
-        public BaseMapRoomRotationMetadata() : base(typeof(BaseAddMapRoomGhost))
+        public BaseMapRoomRotationMetadata()
         {
             // For serialization purposes
         }
 
-        public BaseMapRoomRotationMetadata(byte cellType, int connectionMask) : base (typeof(BaseAddMapRoomGhost))
+        public BaseMapRoomRotationMetadata(byte cellType, int connectionMask)
         {
             CellType = cellType;
             ConnectionMask = connectionMask;

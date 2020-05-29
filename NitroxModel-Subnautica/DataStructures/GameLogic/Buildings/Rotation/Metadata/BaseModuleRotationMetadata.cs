@@ -24,12 +24,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         [ProtoMember(4)]
         public int ModuleDirection { get; set; }
 
-        public BaseModuleRotationMetadata() : base(typeof(BaseAddModuleGhost))
+        public BaseModuleRotationMetadata()
         {
             // For serialization purposes
         }
 
-        public BaseModuleRotationMetadata(Int3 cell, int facedirection, int facetype, int moduledirection) : base (typeof(BaseAddModuleGhost))
+        public BaseModuleRotationMetadata(Int3 cell, int facedirection, int facetype, int moduledirection)
         {
             AnchoredFaceCell = cell.Model();
             AnchoredFaceDirection = facedirection;

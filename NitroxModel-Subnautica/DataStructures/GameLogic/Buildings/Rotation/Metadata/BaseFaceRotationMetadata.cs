@@ -22,12 +22,12 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
         public int AnchoredFaceType { get; set; }
 
 
-        public BaseFaceRotationMetadata() : base(typeof(BaseAddFaceGhost))
+        public BaseFaceRotationMetadata()
         {
             // For serialization purposes
         }
 
-        public BaseFaceRotationMetadata(Int3 cell, int facedirection, int facetype) : base(typeof(BaseAddFaceGhost))
+        public BaseFaceRotationMetadata(Int3 cell, int facedirection, int facetype)
         {
             AnchoredFaceCell = cell.Model();
             AnchoredFaceDirection = facedirection;

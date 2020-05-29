@@ -60,7 +60,6 @@
     <Compile Include="Communication\Packets\Processors\ExosuitArmActionProcessor.cs" />
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
-    <Compile Include="GameLogic\Bases\GeometryLayoutChangeHandler.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnerResolver.cs" />
     <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />
@@ -209,7 +208,6 @@
     <Compile Include="GameLogic\Bases\Metadata\BasePieceMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\GenericBasePieceMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\SignMetadataProcessor.cs" />
-    <Compile Include="GameLogic\Building.cs" />
     <Compile Include="GameLogic\Bases\BuildThrottlingQueue.cs" />
     <Compile Include="GameLogic\ChatUI\ChatLogEntry.cs" />
     <Compile Include="GameLogic\MobileVehicleBay.cs" />
@@ -315,7 +313,6 @@
     <Compile Include="MonoBehaviours\MultiplayerVehicleControl.cs" />
     <Compile Include="MonoBehaviours\NitroxBootstrapper.cs" />
     <Compile Include="MonoBehaviours\NitroxDebugManager.cs" />
-    <Compile Include="MonoBehaviours\Overrides\MultiplayerBuilder.cs" />
     <Compile Include="MonoBehaviours\PlayerDeathBroadcaster.cs" />
     <Compile Include="MonoBehaviours\PlayerMovement.cs" />
     <Compile Include="MonoBehaviours\PlayerStatsBroadcaster.cs" />

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 using Harmony;
-using NitroxClient.MonoBehaviours.Overrides;
 using NitroxModel.Helper;
+using NitroxPatcher.PatchLogic.Bases;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
