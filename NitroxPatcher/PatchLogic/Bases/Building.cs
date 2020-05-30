@@ -952,7 +952,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 typeof(Builder).ReflectionSet("canPlace", false, true, true);
                 if (typeof(Builder).ReflectionGet("prefab", false, true) == null)
                 {
-                    return true; // the returned true is for skipping the original method, as Builder.Update doesn't have a return value
+                    return false; // the returned false is for skipping the original method, as Builder.Update doesn't have a return value
                 }
                 if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
                 {
@@ -974,9 +974,9 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
                 ((Material)typeof(Builder).ReflectionGet("ghostStructureMaterial", false, true)).SetColor(ShaderPropertyID._Tint, value);
 
-                return true; // return true to skip the original method 
+                return false; // return false to skip the original method 
             }
-            return false; // if local player does something, return false to let original method execute
+            return true; // if local player does something, return true to let original method execute
         }
 
         // On setting up the renderers, subnautica normally would evaluate if the player is currently inside or outside to apply 
@@ -995,7 +995,21 @@ namespace NitroxPatcher.PatchLogic.Bases
                     interior = false;
                 }
             }
-            return false; // Let the original method execute with the changed inputparameter
+            return true; // Let the original method execute with the changed inputparameter
+        }
+
+        #endregion
+
+        #region Position and Metadata applyment to BaseGhosts
+
+        // Apply the position of the builded Piece
+        internal void Builder_SetDefaultPlaceTransform_Post(ref Vector3 position, ref Quaternion rotation)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
+            {
+                position = currentConstructedNewBasePiece.ItemPosition.ToUnity();
+                rotation = currentConstructedNewBasePiece.Rotation.ToUnity();
+            }
         }
 
         // Apply RotationMetaData to Corridors
@@ -1014,6 +1028,10 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
             return true;
         }
+
+        
+
+
 
         #endregion
     }

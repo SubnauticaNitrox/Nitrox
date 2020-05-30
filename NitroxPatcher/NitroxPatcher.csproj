@@ -52,6 +52,7 @@
     <Compile Include="Patches\Dynamic\BaseAddCorridorGhost_UpdateRotation_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseAddModuleGhost_SetupGhost_Patch.cs" />
     <Compile Include="Patches\Dynamic\BaseHullStrength_OnPostRebuildGeometry_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Builder_SetDefaultPlaceTransform_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_SetupRenderers_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_Update_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
