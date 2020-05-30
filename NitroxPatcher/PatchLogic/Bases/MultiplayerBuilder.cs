@@ -210,7 +210,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 {
                     if (component.TargetBase != null)
                     {
-                        NitroxModel.Logger.Log.Error("MulitplayerBuilder - UpdateGhostModel failed - constructableBase: " + componentInParent);
+                        Log.Error("MulitplayerBuilder - UpdateGhostModel failed - constructableBase: " + componentInParent);
                     }
                     else
                     {
@@ -234,7 +234,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 {
                     foreach (var item in list)
                     {
-                        NitroxModel.Logger.Log.Error("MulitplayerBuilder - Obstacles detected - constructableBase: " + componentInParent + " obstacle : " + item);
+                        Log.Error("MulitplayerBuilder - Obstacles detected - constructableBase: " + componentInParent + " obstacle : " + item);
                     }
                 }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxPatcher.PatchLogic.Bases
@@ -416,7 +417,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
             if (id == null)
             {
-                NitroxModel.Logger.Log.Error("BaseDeconstructable_Deconstruct_Pre - Trying to deconstruct an Object that has no NitroxId - gameObject: " + instance.gameObject);
+                Log.Error("BaseDeconstructable_Deconstruct_Pre - Trying to deconstruct an Object that has no NitroxId - gameObject: " + instance.gameObject);
             }
             else
             {

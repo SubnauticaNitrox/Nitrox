@@ -9,6 +9,7 @@ using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
+using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using UnityEngine;
@@ -68,7 +69,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 if (!MultiplayerBuilder.Begin(buildPrefab))
                 {
-                    NitroxModel.Logger.Log.Error("Initial or Remote construction of a new Object failed: " + buildPrefab + " id: " + basePiece.Id);
+                    Log.Error("Initial or Remote construction of a new Object failed: " + buildPrefab + " id: " + basePiece.Id);
 
                     MultiplayerBuilder.End();
                     return;
@@ -150,7 +151,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 if (constructingGameObject == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_AmountChanged_Remote - received AmountChange for unknown id: " + id + " amount: " + constructionAmount);
+                    Log.Error("Constructable_AmountChanged_Remote - received AmountChange for unknown id: " + id + " amount: " + constructionAmount);
                     remoteEventActive = false;
                     return;
                 }
@@ -191,7 +192,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 if (constructingGameObject == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_ConstructionCompleted_Remote - received ConstructionComplete for unknown id: " + id);
+                    Log.Error("Constructable_ConstructionCompleted_Remote - received ConstructionComplete for unknown id: " + id);
                     remoteEventActive = false;
                     return;
                 }
@@ -233,7 +234,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 if (deconstructing == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_ConstructionCompleted_Remote - received DeconstructionBegin for unknown id: " + id);
+                    Log.Error("Constructable_ConstructionCompleted_Remote - received DeconstructionBegin for unknown id: " + id);
                     remoteEventActive = false;
                     return;
                 }
@@ -270,7 +271,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 if (deconstructing == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_DeconstructionComplete_Remote - received DeconstructionComplete for unknown id: " + id);
+                    Log.Error("Constructable_DeconstructionComplete_Remote - received DeconstructionComplete for unknown id: " + id);
                     remoteEventActive = false;
                     return;
                 }
@@ -508,7 +509,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
                 if (id == null)
                 {
-                    NitroxModel.Logger.Log.Error("Constructable_Deconstruct_Post - Trying to deconstruct an Object that has no NitroxId - gameObject: " + instance.gameObject);
+                    Log.Error("Constructable_Deconstruct_Post - Trying to deconstruct an Object that has no NitroxId - gameObject: " + instance.gameObject);
                 }
                 else
                 {
@@ -811,7 +812,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                     NitroxId id = NitroxEntity.GetIdNullable(instance.gameObject);
                     if (id == null)
                     {
-                        NitroxModel.Logger.Log.Error("Constructable_NotifyConstructedChanged_Post - no id on local object - object: " + instance.gameObject);
+                        Log.Error("Constructable_NotifyConstructedChanged_Post - no id on local object - object: " + instance.gameObject);
                     }
                     else
                     {

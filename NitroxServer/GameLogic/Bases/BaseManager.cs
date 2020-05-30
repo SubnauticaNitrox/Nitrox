@@ -2,8 +2,8 @@
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 using NitroxModel.DataStructures;
-using System.Linq;
 using NitroxModel.DataStructures.Util;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -69,7 +69,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 else
                 {
-                    NitroxModel.Logger.Log.Error("BasePieceConstructionAmountChanged - Received ConstructionAmountChange for unknown NitroxID: " + id);
+                    Log.Error("BasePieceConstructionAmountChanged - Received ConstructionAmountChange for unknown NitroxID: " + id);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 else
                 {
-                    NitroxModel.Logger.Log.Error("BasePieceConstructionCompleted - Received ConstructionCompleted for unknown NitroxID: " + id);
+                    Log.Error("BasePieceConstructionCompleted - Received ConstructionCompleted for unknown NitroxID: " + id);
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 else
                 {
-                    NitroxModel.Logger.Log.Error("BasePieceDeconstructionBegin - Received DeconstructionBegin for unknown NitroxID: " + id);
+                    Log.Error("BasePieceDeconstructionBegin - Received DeconstructionBegin for unknown NitroxID: " + id);
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 else
                 {
-                    NitroxModel.Logger.Log.Error("BasePieceDeconstructionCompleted - Received DeconstructionCompleted for unknown NitroxID: " + id);
+                    Log.Error("BasePieceDeconstructionCompleted - Received DeconstructionCompleted for unknown NitroxID: " + id);
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace NitroxServer.GameLogic.Bases
                 }
                 else
                 {
-                    NitroxModel.Logger.Log.Error("UpdateBasePieceMetadata - Received UpdateBasePieceMetadata for unknown NitroxID: " + id);
+                    Log.Error("UpdateBasePieceMetadata - Received UpdateBasePieceMetadata for unknown NitroxID: " + id);
                 }
             }
         }
