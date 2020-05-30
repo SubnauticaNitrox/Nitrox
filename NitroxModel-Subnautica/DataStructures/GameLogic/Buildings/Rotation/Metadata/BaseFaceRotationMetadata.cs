@@ -11,7 +11,7 @@ namespace NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation
     {
         public const long VERSION = 1;
 
-        // Base modules anchor based on a face.  This can be constructed via these two attributes.
+        // Base modules anchor based on a face. 
         [ProtoMember(1)]
         public NitroxModel.DataStructures.Int3 AnchoredFaceCell { get; set; }
 
