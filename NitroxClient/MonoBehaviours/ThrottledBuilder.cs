@@ -87,8 +87,6 @@ namespace NitroxClient.MonoBehaviours
                 {
                     ProgressChanged(this, new ThrottledBuilderProgressEventArgs(buildEvents.Count));
                 }
-
-               
             }
         }
 
@@ -96,49 +94,24 @@ namespace NitroxClient.MonoBehaviours
         {
             if (buildEvent is ConstructionBeginEvent)
             {
-                ConstructionBegin((ConstructionBeginEvent)buildEvent);
+                NitroxServiceLocator.LocateService<IBuilding>().ConstructNewBasePiece(((ConstructionBeginEvent)buildEvent).BasePiece);
             }
             else if (buildEvent is ConstructionCompletedEvent)
             {
-                ConstructionCompleted((ConstructionCompletedEvent)buildEvent);
+                NitroxServiceLocator.LocateService<IBuilding>().FinishConstruction(((ConstructionCompletedEvent)buildEvent).PieceId);
             }
             else if (buildEvent is ConstructionAmountChangedEvent)
             {
-                ConstructionAmountChanged((ConstructionAmountChangedEvent)buildEvent);
+                NitroxServiceLocator.LocateService<IBuilding>().ChangeConstructAmount(((ConstructionAmountChangedEvent)buildEvent).Id, ((ConstructionAmountChangedEvent)buildEvent).Amount);
             }
             else if (buildEvent is DeconstructionBeginEvent)
             {
-                DeconstructionBegin((DeconstructionBeginEvent)buildEvent);
+                NitroxServiceLocator.LocateService<IBuilding>().DeconstructBasePiece(((DeconstructionBeginEvent)buildEvent).PieceId);
             }
             else if (buildEvent is DeconstructionCompletedEvent)
             {
-                DeconstructionCompleted((DeconstructionCompletedEvent)buildEvent);
+                NitroxServiceLocator.LocateService<IBuilding>().FinishDeconstruction(((DeconstructionCompletedEvent)buildEvent).PieceId);
             }
-        }
-
-        private void ConstructionBegin(ConstructionBeginEvent constructionBegin)
-        {
-            NitroxServiceLocator.LocateService<IBuilding>().ConstructNewBasePiece(constructionBegin.BasePiece);
-        }
-
-        private void ConstructionCompleted(ConstructionCompletedEvent constructionCompleted)
-        {
-            NitroxServiceLocator.LocateService<IBuilding>().FinishConstruction(constructionCompleted.PieceId);
-        }
-
-        private void ConstructionAmountChanged(ConstructionAmountChangedEvent amountChanged)
-        {
-            NitroxServiceLocator.LocateService<IBuilding>().ChangeConstructAmount(amountChanged.Id, amountChanged.Amount);
-        }
-
-        private void DeconstructionBegin(DeconstructionBeginEvent deconstructBegin)
-        {
-            NitroxServiceLocator.LocateService<IBuilding>().DeconstructBasePiece(deconstructBegin.PieceId);
-        }
-
-        private void DeconstructionCompleted(DeconstructionCompletedEvent deconstructCompleted)
-        {
-            NitroxServiceLocator.LocateService<IBuilding>().FinishDeconstruction(deconstructCompleted.PieceId);
         }
     }
 }
