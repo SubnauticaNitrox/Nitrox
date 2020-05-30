@@ -880,7 +880,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - isInitialSyncing: " + IsInitialSyncing + " remoteEventActive: " + remoteEventActive);
 #endif
 
-            if (isInitialSyncing || remoteEventActive)
+            if (remoteEventActive)
             {
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Builder_ShowRotationControlsHint_Pre - returning false");
@@ -893,7 +893,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         // Suppress rotation hints on InitialSync and build actions of remote player
         public bool BaseAddModuleGhost_SetupGhost_Pre(BaseAddModuleGhost instance)
         {
-            if (isInitialSyncing || remoteEventActive)
+            if (remoteEventActive)
             {
 
 #if TRACE && BUILDING
@@ -909,5 +909,41 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
+
+        // On constructing base pieces on from a remote player construction or initialsync, 
+        // it is needed to skip and ignore the BuilderTool input handling of the local player.
+        internal bool Builder_Update_Pre()
+        {
+            if (remoteEventActive)
+            {
+                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.Static).Invoke(null, null);
+                typeof(Builder).ReflectionSet("canPlace", false, true, true);
+                if (typeof(Builder).ReflectionGet("prefab", false, true) == null)
+                {
+                    return true; //the true is for skipping the original method, as Builder.Update doesn't have a return value
+                }
+                if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
+                {
+                    // skip original
+                    //Builder.inputHandler.canHandleInput = true;
+                    //InputHandlerStack.main.Push(Builder.inputHandler);
+                }
+                typeof(Builder).ReflectionSet("canPlace", (bool)typeof(Builder).GetMethod("UpdateAllowed", System.Reflection.BindingFlags.Static).Invoke(null, null), false, true);
+                Transform transform = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).transform;
+                transform.position = ((Vector3)typeof(Builder).ReflectionGet("placePosition", false, true)) + ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Vector3)typeof(Builder).ReflectionGet("ghostModelPosition", false, true));
+                transform.rotation = ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Quaternion)typeof(Builder).ReflectionGet("ghostModelRotation", false, true));
+                transform.localScale = ((Vector3)typeof(Builder).ReflectionGet("placeRotation", false, true));
+                Color value = Builder.canPlace ? ((Color)typeof(Builder).ReflectionGet("placeColorAllow", false, true)) : ((Color)typeof(Builder).ReflectionGet("placeColorDeny", false, true));
+                IBuilderGhostModel[] components = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponents<IBuilderGhostModel>();
+                for (int i = 0; i < components.Length; i++)
+                {
+                    components[i].UpdateGhostModelColor(Builder.canPlace, ref value);
+                }
+                ((Material)typeof(Builder).ReflectionGet("ghostStructureMaterial", false, true)).SetColor(ShaderPropertyID._Tint, value);
+
+                return true; // return true to skip original
+            }
+            return false; // if local player does something, return false to let original method execute
+        }
     }
 }
