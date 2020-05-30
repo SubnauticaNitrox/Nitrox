@@ -61,6 +61,7 @@
     <Compile Include="Communication\Packets\Processors\VehicleSpawnedProcessor.cs" />
     <Compile Include="Debuggers\EntityDebugger.cs" />
     <Compile Include="GameLogic\ChatUI\PlayerChatManager.cs" />
+    <Compile Include="GameLogic\IBuilding.cs" />
     <Compile Include="GameLogic\Spawning\EntitySpawnerResolver.cs" />
     <Compile Include="GameLogic\Spawning\ExistingGameObjectSpawner.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\PrecursorDoorwayMetadataProcessor.cs" />

@@ -52,7 +52,7 @@ namespace NitroxPatcher
 
             e.ContainerBuilder.RegisterType<NitroxPatcher.PatchLogic.Bases.Building>()
                 .AsSelf()
-                .As<NitroxModel.GameLogic.IBuilding>().InstancePerLifetimeScope();
+                .As<NitroxClient.GameLogic.IBuilding>().InstancePerLifetimeScope();
         }
 
         public static void Apply()
