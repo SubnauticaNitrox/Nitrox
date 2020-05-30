@@ -20,7 +20,9 @@ namespace NitroxClient.GameLogic.InitialSync
         private readonly BuildThrottlingQueue buildEventQueue;
 
         private bool completed;
-        
+        private int count = 0;
+        private WaitScreen.ManualWaitItem waitItem = null;
+
         public BuildingInitialSyncProcessor(IPacketSender packetSender, BuildThrottlingQueue buildEventQueue)
         {
             this.packetSender = packetSender;
@@ -59,15 +61,33 @@ namespace NitroxClient.GameLogic.InitialSync
                     NitroxModel.Logger.Log.Debug("BuildingInitialSyncProcessor - ordered basePiece: " + item);
                 }
 #endif
+                waitItem = waitScreenItem;
+                count = orderedbasePieces.Count;
 
-                ThrottledBuilder.main.WaitItem = waitScreenItem;
-                ThrottledBuilder.main.Count = orderedbasePieces.Count;
-
+                ThrottledBuilder.main.ProgressChanged += UpdateProgress;
                 QueueUpPieces(orderedbasePieces);
                 ThrottledBuilder.main.QueueDrained += FinishedCompletedBuildings;
             }
 
             yield return new WaitUntil(() => completed);
+        }
+
+        private void UpdateProgress(object sender, ThrottledBuilderProgressEventArgs e)
+        {
+            if (waitItem != null && count != 0)
+            {
+                int prog = count - e.ItemsToProcessCount;
+                if (prog < 0)
+                {
+                    prog = Convert.ToInt32(count / 2 - prog * -1 / 2);
+                }
+                else
+                {
+                    prog = Convert.ToInt32(prog / 2 + count / 2);
+                }
+
+                waitItem.SetProgress(prog, count);
+            }
         }
 
         private void QueueUpPieces(List<BasePiece> basePieces)
@@ -96,6 +116,7 @@ namespace NitroxClient.GameLogic.InitialSync
 
         private void FinishedCompletedBuildings(object sender, EventArgs eventArgs)
         {
+            ThrottledBuilder.main.ProgressChanged -= UpdateProgress;
             ThrottledBuilder.main.QueueDrained -= FinishedCompletedBuildings;
             completed = true;
             NitroxServiceLocator.LocateService<IBuilding>().InitialSyncActive = false;

@@ -9,6 +9,15 @@ using NitroxClient.GameLogic;
 
 namespace NitroxClient.MonoBehaviours
 {
+    public class ThrottledBuilderProgressEventArgs : EventArgs
+    {
+        public int ItemsToProcessCount;
+        public ThrottledBuilderProgressEventArgs(int itemsToProcessCount)
+        {
+            ItemsToProcessCount = itemsToProcessCount;
+        }
+    }
+
     /**
      * Build events normally can not happen within the same frame as they can cause
      * changes to the surrounding environment.  This class encapsulates logic to 
@@ -19,10 +28,9 @@ namespace NitroxClient.MonoBehaviours
     public class ThrottledBuilder : MonoBehaviour
     {
         public static ThrottledBuilder main;
-        public int Count = 0;
-        public WaitScreen.ManualWaitItem WaitItem = null;
 
         public event EventHandler QueueDrained;
+        public event EventHandler<ThrottledBuilderProgressEventArgs> ProgressChanged;
         private BuildThrottlingQueue buildEvents;
         private IPacketSender packetSender;
 
@@ -75,20 +83,12 @@ namespace NitroxClient.MonoBehaviours
 
                 isNextEventFrameBlocked = (processedFrameBlockingEvent && buildEvents.NextEventRequiresFreshFrame());
 
-                if (WaitItem != null && Count != 0)
+                if(ProgressChanged!= null)
                 {
-                    int prog = Count - buildEvents.Count;
-                    if (prog < 0)
-                    {
-                        prog = Convert.ToInt32(Count / 2 - prog * -1 / 2);
-                    }
-                    else
-                    {
-                        prog = Convert.ToInt32(prog / 2 + Count / 2);
-                    }
-
-                    WaitItem.SetProgress(prog, Count);
+                    ProgressChanged(this, new ThrottledBuilderProgressEventArgs(buildEvents.Count));
                 }
+
+               
             }
         }
 
