@@ -13,6 +13,7 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
+using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
 using UnityEngine;
 
 namespace NitroxPatcher.PatchLogic.Bases
@@ -995,6 +996,23 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
             }
             return false; // Let the original method execute with the changed inputparameter
+        }
+
+        // Apply RotationMetaData to Corridors
+        internal bool BaseAddCorridorGhost_UpdateRotation_Pre(BaseAddCorridorGhost instance, ref bool geometryChanged)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.Metadata.HasValue)
+            {
+                // apply saved rotation data instead of BuilderTool input
+                instance.ReflectionSet("rotation", ((BaseCorridorRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).Rotation);
+
+                instance.ReflectionSet("corridorType", (int)instance.ReflectionCall("CalculateCorridorType"));
+                ((Base)instance.ReflectionGet("ghostBase")).SetCorridor(Int3.zero, (int)instance.ReflectionGet("corridorType"), instance.isGlass);
+                instance.ReflectionCall("RebuildGhostGeometry");
+
+                return false;
+            }
+            return true;
         }
 
         #endregion
