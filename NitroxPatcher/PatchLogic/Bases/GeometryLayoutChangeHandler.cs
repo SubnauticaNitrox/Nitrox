@@ -131,7 +131,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                             NitroxModel.Logger.Log.Debug("Base_ClearGeometry_Pre - current clear for : " + info);
 #endif
 
-                            if (!surface.name.Contains("CorridorConnector")) // Have to ignore all CorridorConnectors, because they are automatically spawned in case of adding a Corridor or a Hatch to a Room
+                            if (!surface.name.Contains(IgnorableSurface.CorridorConnector.ToString())) // Have to ignore all CorridorConnectors, because they are automatically spawned in case of adding a Corridor or a Hatch to a Room
                             {
 
                                 NitroxId id = NitroxEntity.GetIdNullable(surface.gameObject);
@@ -182,7 +182,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - base: " + @base + " baseId: " + baseId + " piece: " + surface.gameObject + " pieceID: " + pieceId + " piecePosition: " + surface.position + " pieceIndex: " + surface.GetSiblingIndex() + " pieceCellPosition: " + surface.parent.position + " pieceCellIndex: " + surface.parent.GetSiblingIndex());
                 NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - baseGhostIsFinishing: " + baseGhostIsFinishing + " transferIdforConstructableBaseConstructing: " + preservedIdforConstructableBaseConstructing + " piece: " + surface.gameObject + " pieceID: " + pieceId + " piecePosition: " + surface.position + " pieceIndex: " + surface.GetSiblingIndex() + " pieceCellPosition: " + surface.parent.position + " pieceCellIndex: " + surface.parent.GetSiblingIndex());
 #endif
-                if (surface.name.Contains("CorridorConnector"))
+                if (surface.name.Contains(IgnorableSurface.CorridorConnector.ToString()))
                 {
                     return;
                 }
@@ -280,26 +280,29 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                         NitroxEntity.SetNewId(surface.gameObject, preservedIdforConstructableBaseConstructing);
 
-                        if (surface.name.Contains("BaseRoomWaterParkBottom") || surface.name.Contains("BaseRoomLadderTop") || surface.name.Contains("BaseCorridorLadderTop"))
+                        bool topBottomSurface = false;
+
                         // For WaterParks the BottomShape is always spawned first. For Ladders the TopShape is alwayse spawned first, no matter if build from the lower or upper floor.
+                        foreach (object item in Enum.GetValues(typeof(FirstLoadSurface)))
                         {
-                            if (!relationTopBottomIds.ContainsKey(preservedIdforConstructableBaseConstructing))
+                            if (surface.name.Contains(item.ToString()))
                             {
-                                NitroxId nitroxIdforOtherPart = new NitroxId();
-                                relationTopBottomIds.Add(preservedIdforConstructableBaseConstructing, nitroxIdforOtherPart);
-                                preservedIdforConstructableBaseConstructing = nitroxIdforOtherPart;
+                                if (!relationTopBottomIds.ContainsKey(preservedIdforConstructableBaseConstructing))
+                                {
+                                    NitroxId nitroxIdforOtherPart = new NitroxId();
+                                    relationTopBottomIds.Add(preservedIdforConstructableBaseConstructing, nitroxIdforOtherPart);
+                                    preservedIdforConstructableBaseConstructing = nitroxIdforOtherPart;
+                                    topBottomSurface = true;
 
 #if TRACE && BUILDING
                                 NitroxModel.Logger.Log.Debug("Base_SpawnPiece_Post - caching a new Id for the other Top or Bottom part - cachedPieceIdFromConstructableBasePre: " + preservedIdforConstructableBaseConstructing);
 #endif
 
-                            }
-                            else
-                            {
-                                preservedIdforConstructableBaseConstructing = null;
+                                }
                             }
                         }
-                        else
+
+                        if (!topBottomSurface)
                         {
                             preservedIdforConstructableBaseConstructing = null;
                         }
@@ -351,15 +354,15 @@ namespace NitroxPatcher.PatchLogic.Bases
         private bool checkForConnectorTubeReplacement(Transform surface, out NitroxId id)
         {
             // In case a vertical connector exists and a ladder is build inside the base, then this vertical connector changes its shape and name
-            if (!surface.name.Contains("ConnectorTube"))
+            if (!surface.name.Contains(ConnectorSurfaceIdentifier.ConnectorTube.ToString()))
             {
                 id = null;
                 return false;
             }
 
-            if (surface.name.Contains("Window"))
+            if (surface.name.Contains(ConnectorSurfaceIdentifier.Window.ToString()))
             {
-                GeometryInfo found = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace("ConnectorTubeWindow", "ConnectorTube") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex());
+                GeometryInfo found = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace(ConnectorSurfaceIdentifier.ConnectorTubeWindow.ToString(), ConnectorSurfaceIdentifier.ConnectorTube.ToString()) && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex());
                 if (found != null)
                 {
                     id = found.Id;
@@ -368,7 +371,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
             else
             {
-                GeometryInfo found = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace("ConnectorTube", "ConnectorTubeWindow") && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex());
+                GeometryInfo found = idCacheForGeometryUpdate.Find(g => g.Name == surface.name.Replace(ConnectorSurfaceIdentifier.ConnectorTube.ToString(), ConnectorSurfaceIdentifier.ConnectorTubeWindow.ToString()) && g.CellPosition == surface.parent.position && g.CellIndex == surface.GetSiblingIndex());
                 if (found != null)
                 {
                     id = found.Id;
@@ -417,20 +420,25 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
             else
             {
-                if (instance.name.Contains("BaseRoomWaterParkTop") || instance.name.Contains("BaseRoomLadderBottom") || instance.name.Contains("BaseCorridorLadderBottom"))
+                bool topBottomSurface = false;
+                foreach (object surfacename in Enum.GetValues(typeof(LastLoadSurface)))
                 {
-                    foreach (KeyValuePair<NitroxId, NitroxId> item in relationTopBottomIds)
+                    if (instance.name.Contains(surfacename.ToString()))
                     {
-                        if (item.Value == id)
+                        foreach (KeyValuePair<NitroxId, NitroxId> item in relationTopBottomIds)
                         {
-                            preservedIdforConstructableBaseDeconstructing = item.Key;
-                            NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Key).Value);
-                            NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Value).Value);
-                            break;
+                            if (item.Value == id)
+                            {
+                                preservedIdforConstructableBaseDeconstructing = item.Key;
+                                NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Key).Value);
+                                NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(item.Value).Value);
+                                topBottomSurface = true;
+                                break;
+                            }
                         }
                     }
                 }
-                else
+                if(!topBottomSurface)
                 {
                     preservedIdforConstructableBaseDeconstructing = id;
                     NitroxEntity.RemoveId(NitroxEntity.GetObjectFrom(id).Value);
@@ -475,6 +483,31 @@ namespace NitroxPatcher.PatchLogic.Bases
             AdjustableSupport
         }
 
+        private enum IgnorableSurface
+        {
+            CorridorConnector
+        }
+
+        private enum FirstLoadSurface
+        {
+            BaseRoomWaterParkBottom,
+            BaseRoomLadderTop,
+            BaseCorridorLadderTop
+        }
+
+        private enum LastLoadSurface
+        {
+            BaseRoomWaterParkTop,
+            BaseRoomLadderBottom,
+            BaseCorridorLadderBottom
+        }
+
+        private enum ConnectorSurfaceIdentifier
+        {
+            ConnectorTube,
+            ConnectorTubeWindow,
+            Window
+        }
 
 #if TRACE && BUILDING
         private static string generateGameObjectTransformInfo(Transform transform, int offset)

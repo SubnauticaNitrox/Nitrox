@@ -253,10 +253,6 @@ namespace NitroxPatcher.PatchLogic.Bases
             {
                 Log.Error("Was unable to apply rotation metadata - no BaseGhost found");
             }
-            /*else if (component.GetType() != rotationMetadata.GhostType)
-            {
-                Log.Error("Was unable to apply rotation metadata - " + component.GetType() + " did not match " + rotationMetadata.GhostType);
-            }*/
             else if (component is BaseAddCorridorGhost && rotationMetadata is BaseCorridorRotationMetadata)
             {
                 Log.Info("Placing BaseAddCorridorGhost Rotation Metadata");

@@ -524,17 +524,6 @@ namespace NitroxPatcher.PatchLogic.Bases
                     }
                     else if (result && instance.constructedAmount > 0f)
                     {
-                        //Send every event, because recourses used for construction (or gained for deconstruction) are else not properly taken or credited, 
-                        //because we don't know exactly at which percentage-rate they are needed for every single item. Transfered packets are tiny and 
-                        //building something is only a small amount of play time.
-                        //Positive side effect is, that the process becomes smoother at the remote player side. 
-                        /*timeSinceLastConstructionChangeEvent += Time.deltaTime;
-                        if (timeSinceLastConstructionChangeEvent < CONSTRUCTION_CHANGE_EVENT_COOLDOWN_PERIOD_SECONDS)
-                        {
-                            return;
-                        }
-                        timeSinceLastConstructionChangeEvent = 0.0f;*/
-
 
 #if TRACE && BUILDING
                         NitroxModel.Logger.Log.Debug("Constructable_Deconstruct_Post - sending notify for self deconstructing object  - id: " + id + " amount: " + instance.constructedAmount);
