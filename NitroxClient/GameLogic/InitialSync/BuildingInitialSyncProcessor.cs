@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
@@ -109,10 +110,25 @@ namespace NitroxClient.GameLogic.InitialSync
         {
             List<BasePiece> internalList = new List<BasePiece>();
 
-            // Basic sorting via BuildIndex
-            basePieces.Sort((x, y) => x.BuildIndex.CompareTo(y.BuildIndex));
+            // Basic sorting via ParentBase and BuildIndex
+            
+            basePieces
+                .OrderBy(x =>
+                {
+                    if (x.ParentId.HasValue)
+                    {
+                        return x.ParentId.Value.ToString();
+                    }
+                    else
+                    {
+                        return string.Empty;
+                    }
+                }
+                )
+                .ThenBy(x => x.BuildIndex);
 
-            // Corridors & Rooms & Foundations & Connectors first >> also needed in combination with sort order because old bases may be extended by new pieces
+            // Corridors & Rooms & Foundations & Connectors first also needed in combination 
+            // with sort order because old bases may be extended by new pieces
             // include not finished pieces for correct base targetting and face connecting
 
             foreach (BasePiece item in basePieces)
