@@ -19,6 +19,8 @@ namespace NitroxPatcher.PatchLogic.Bases
 {
     public class Building : IBuilding
     {
+        #region Private Members
+
         // State if currently in InitialSync phase
         private bool isInitialSyncing = false;
         
@@ -36,9 +38,13 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         private Rotation.SubnauticaRotationMetadataFactory rotationMetadataFactory = new Rotation.SubnauticaRotationMetadataFactory();
 
-        bool IBuilding.InitialSyncActive { set => isInitialSyncing = value; }
-
         private BasePiece currentConstructedNewBasePiece = null;
+
+        #endregion
+
+        #region IBuilding Implementation (remote events and initialsync)
+
+        bool IBuilding.InitialSyncActive { set => isInitialSyncing = value; }
 
         void IBuilding.ConstructNewBasePiece(BasePiece basePiece)
         {
@@ -303,170 +309,9 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
+        #endregion
 
-        // For Base objects we need to transfer the ids
-        public void Base_CopyFrom_Pre(Base targetBase, Base sourceBase)
-        {
-            NitroxId sourceBaseId = NitroxEntity.GetIdNullable(sourceBase.gameObject);
-            NitroxId targetBaseId = NitroxEntity.GetIdNullable(targetBase.gameObject);
-
-#if TRACE && BUILDING
-            BaseRoot sourceBaseRoot = sourceBase.GetComponent<BaseRoot>();
-            BaseRoot targetBaseRoot = targetBase.GetComponent<BaseRoot>();
-            NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - Base copy - sourceBase: " + sourceBase + " targetBase: " + targetBase + " targetBaseIsGhost: " + targetBase.isGhost + " sourceBaseId: " + sourceBaseId + " targetBaseId: " + targetBaseId + " sourceBaseRoot: " + sourceBaseRoot + " targetBaseRoot: " + targetBaseRoot);
-#endif
-
-            if (baseGhostsIDCache.ContainsKey(sourceBase.gameObject) && targetBaseId == null && !targetBase.isGhost)
-            {
-
-#if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - assigning cached Id from remote event or initial loading: " + baseGhostsIDCache[sourceBase.gameObject]);
-#endif
-
-                NitroxEntity.SetNewId(targetBase.gameObject, baseGhostsIDCache[sourceBase.gameObject]);
-            }
-            // Transferring from a real base to a ghost base in case of beginning deconstruction of the last basepiece. Need this if player does not completely destroy 
-            // last piece instead chooses to reconstruct this last piece.
-            else if (sourceBaseId != null && !sourceBase.isGhost && !baseGhostsIDCache.ContainsKey(targetBase.gameObject))
-            {
-                baseGhostsIDCache[targetBase.gameObject] = sourceBaseId;
-
-#if TRACE && BUILDING
-                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - caching Base Id from deconstructing object: " + sourceBaseId);
-#endif
-            }
-        }
-
-        // Suppress item consumption and recalculation of construction amount at construction
-        public bool Constructable_Construct_Pre(Constructable instance, ref bool result)
-        {
-            if (remoteEventActive)
-            {
-                if (instance.constructed)
-                {
-                    result = false;
-                }
-                else
-                {
-                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    Validate.NotNull(updateMaterial);
-                    updateMaterial.Invoke(instance, new object[] { });
-                    if (instance.constructedAmount >= 1f)
-                    {
-                        instance.SetState(true, true);
-                    }
-                    result = true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-        // Suppress item granting and recalculation of construction amount at construction  and remove NitroxId from 
-        public bool Constructable_Deconstruct_Pre(Constructable instance, ref bool result)
-        {
-            if (remoteEventActive)
-            {
-                if (instance.constructed)
-                {
-                    result = false;
-                }
-                else
-                {
-                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    Validate.NotNull(updateMaterial);
-                    updateMaterial.Invoke(instance, new object[] { });
-                    if (instance.constructedAmount <= 0f)
-                    {
-                        UnityEngine.Object.Destroy(instance.gameObject);
-                    }
-                    result = true;
-                }
-                return false;
-            }
-            return true;
-        }
-
-
-        // Section: BuilderTool
-
-        public void BuilderTool_OnHoverConstructable_Post(GameObject gameObject, Constructable constructable)
-        {
-
-#if TRACE && BUILDING && HOVERCONSTRUCTABLE
-            NitroxId id = NitroxEntity.GetIdNullable(constructable.gameObject);
-            NitroxModel.Logger.Log.Debug("BuilderTool_OnHoverConstructable_Post - instance: " + constructable.gameObject.name + " id: " + id);
-#endif
-
-            lastHoveredConstructable = constructable;
-        }
-
-        public void BuilderTool_OnHoverDeconstructable_Post(GameObject gameObject, BaseDeconstructable deconstructable)
-        {
-
-#if TRACE && BUILDING && HOVERDECONSTRUCTABLE
-            NitroxId id = NitroxEntity.GetIdNullable(deconstructable.gameObject);
-            NitroxId baseId = null;
-            Base abase = deconstructable.gameObject.GetComponentInParent<Base>();
-            if (abase)
-            {
-                baseId = NitroxEntity.GetIdNullable(abase.gameObject);
-            }
-            NitroxModel.Logger.Log.Debug("BuilderTool_OnHoverDeconstructable_Post - instance: " + deconstructable.gameObject.name + " id: " + id + " baseId: " + baseId + " position: " + deconstructable.gameObject.transform.position + " rotation: " + deconstructable.gameObject.transform.rotation + " cellPosition: " + deconstructable.gameObject.transform.parent.position + " cellIndex: " + deconstructable.gameObject.transform.GetSiblingIndex());
-#endif
-
-        }
-
-        // Besides switching the state of currently handling a builderTool, this method is also intended to precheck if a construction/action even is allowed. If a 
-        // remote player is currently using a gameobject (e.g. Fabricator) or is too using the buildertool on the same object, we want to deny the local action here 
-        // and give a info to the player. 
-        public bool BuilderTool_HandleInput_Pre(GameObject gameObject)
-        {
-
-#if TRACE && BUILDING && HOVER
-            NitroxModel.Logger.Log.Debug("BuilderTool_Pre_HandleInput");
-#endif
-
-            currentlyHandlingBuilderTool = true;
-            return true;
-
-            /*
-             * #TODO BUILDING# #ISSUE# Lock objects that are currently targeted by a player to be not constructed/deconstructed by others. 
-             * 
-            if (lastHoveredConstructable != null)
-            {
-                string _crafterGuid = GuidHelper.GetGuid(lastHoveredConstructable.gameObject);
-                ushort _remotePlayerId;
-                if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasExclusiveLockByRemotePlayer(_crafterGuid, out _remotePlayerId))
-                {
-                    //if Object is in use by remote Player, supress deconstruction
-                    if (GameInput.GetButtonHeld(GameInput.Button.LeftHand) || GameInput.GetButtonDown(GameInput.Button.LeftHand) || GameInput.GetButtonHeld(GameInput.Button.Deconstruct) || GameInput.GetButtonDown(GameInput.Button.Deconstruct))
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        return true;
-                    }
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return true;
-            }*/
-        }
-
-        public void BuilderTool_HandleInput_Post(BuilderTool instance)
-        {
-            currentlyHandlingBuilderTool = false;
-        }
-
-
-        // SECTION: Local Events
+        #region Broadcast changes from local Player
 
         public void Constructable_Construct_Post(Constructable instance, bool result)
         {
@@ -550,7 +395,6 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
             }
         }
-
 
         public void Constructable_NotifyConstructedChanged_Post(Constructable instance)
         {
@@ -836,7 +680,181 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
-        // Suppress hull integrity calculation on InitialSync
+        #endregion
+
+        #region BuilderTool handling
+
+        public void BuilderTool_OnHoverConstructable_Post(GameObject gameObject, Constructable constructable)
+        {
+
+#if TRACE && BUILDING && HOVERCONSTRUCTABLE
+            NitroxId id = NitroxEntity.GetIdNullable(constructable.gameObject);
+            NitroxModel.Logger.Log.Debug("BuilderTool_OnHoverConstructable_Post - instance: " + constructable.gameObject.name + " id: " + id);
+#endif
+
+            lastHoveredConstructable = constructable;
+        }
+
+        public void BuilderTool_OnHoverDeconstructable_Post(GameObject gameObject, BaseDeconstructable deconstructable)
+        {
+
+#if TRACE && BUILDING && HOVERDECONSTRUCTABLE
+            NitroxId id = NitroxEntity.GetIdNullable(deconstructable.gameObject);
+            NitroxId baseId = null;
+            Base abase = deconstructable.gameObject.GetComponentInParent<Base>();
+            if (abase)
+            {
+                baseId = NitroxEntity.GetIdNullable(abase.gameObject);
+            }
+            NitroxModel.Logger.Log.Debug("BuilderTool_OnHoverDeconstructable_Post - instance: " + deconstructable.gameObject.name + " id: " + id + " baseId: " + baseId + " position: " + deconstructable.gameObject.transform.position + " rotation: " + deconstructable.gameObject.transform.rotation + " cellPosition: " + deconstructable.gameObject.transform.parent.position + " cellIndex: " + deconstructable.gameObject.transform.GetSiblingIndex());
+#endif
+
+        }
+
+        // Besides switching the state of currently handling a builderTool, this method is also intended to precheck if a construction/action even is allowed. If a 
+        // remote player is currently using a gameobject (e.g. Fabricator) or is too using the buildertool on the same object, we want to deny the local action here 
+        // and give a info to the player. 
+        public bool BuilderTool_HandleInput_Pre(GameObject gameObject)
+        {
+
+#if TRACE && BUILDING && HOVER
+            NitroxModel.Logger.Log.Debug("BuilderTool_Pre_HandleInput");
+#endif
+
+            currentlyHandlingBuilderTool = true;
+            return true;
+
+            /*
+             * #TODO BUILDING# #ISSUE# Lock objects that are currently targeted by a player to be not constructed/deconstructed by others. 
+             * 
+            if (lastHoveredConstructable != null)
+            {
+                string _crafterGuid = GuidHelper.GetGuid(lastHoveredConstructable.gameObject);
+                ushort _remotePlayerId;
+                if (NitroxServiceLocator.LocateService<SimulationOwnership>().HasExclusiveLockByRemotePlayer(_crafterGuid, out _remotePlayerId))
+                {
+                    //if Object is in use by remote Player, supress deconstruction
+                    if (GameInput.GetButtonHeld(GameInput.Button.LeftHand) || GameInput.GetButtonDown(GameInput.Button.LeftHand) || GameInput.GetButtonHeld(GameInput.Button.Deconstruct) || GameInput.GetButtonDown(GameInput.Button.Deconstruct))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }*/
+        }
+
+        public void BuilderTool_HandleInput_Post(BuilderTool instance)
+        {
+            currentlyHandlingBuilderTool = false;
+        }
+
+        #endregion
+
+        #region NitroxId transfer for Bases
+
+        // For Base objects we need to transfer the ids
+        public void Base_CopyFrom_Pre(Base targetBase, Base sourceBase)
+        {
+            NitroxId sourceBaseId = NitroxEntity.GetIdNullable(sourceBase.gameObject);
+            NitroxId targetBaseId = NitroxEntity.GetIdNullable(targetBase.gameObject);
+
+#if TRACE && BUILDING
+            BaseRoot sourceBaseRoot = sourceBase.GetComponent<BaseRoot>();
+            BaseRoot targetBaseRoot = targetBase.GetComponent<BaseRoot>();
+            NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - Base copy - sourceBase: " + sourceBase + " targetBase: " + targetBase + " targetBaseIsGhost: " + targetBase.isGhost + " sourceBaseId: " + sourceBaseId + " targetBaseId: " + targetBaseId + " sourceBaseRoot: " + sourceBaseRoot + " targetBaseRoot: " + targetBaseRoot);
+#endif
+
+            if (baseGhostsIDCache.ContainsKey(sourceBase.gameObject) && targetBaseId == null && !targetBase.isGhost)
+            {
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - assigning cached Id from remote event or initial loading: " + baseGhostsIDCache[sourceBase.gameObject]);
+#endif
+
+                NitroxEntity.SetNewId(targetBase.gameObject, baseGhostsIDCache[sourceBase.gameObject]);
+            }
+            // Transferring from a real base to a ghost base in case of beginning deconstruction of the last basepiece. Need this if player does not completely destroy 
+            // last piece instead chooses to reconstruct this last piece.
+            else if (sourceBaseId != null && !sourceBase.isGhost && !baseGhostsIDCache.ContainsKey(targetBase.gameObject))
+            {
+                baseGhostsIDCache[targetBase.gameObject] = sourceBaseId;
+
+#if TRACE && BUILDING
+                NitroxModel.Logger.Log.Debug("Base_CopyFrom_Pre - caching Base Id from deconstructing object: " + sourceBaseId);
+#endif
+            }
+        }
+
+        #endregion
+
+        #region Suppress item consumtion/granting for remote events
+
+        // Suppress item consumption and recalculation of construction amount at construction
+        public bool Constructable_Construct_Pre(Constructable instance, ref bool result)
+        {
+            if (remoteEventActive)
+            {
+                if (instance.constructed)
+                {
+                    result = false;
+                }
+                else
+                {
+                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Validate.NotNull(updateMaterial);
+                    updateMaterial.Invoke(instance, new object[] { });
+                    if (instance.constructedAmount >= 1f)
+                    {
+                        instance.SetState(true, true);
+                    }
+                    result = true;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        // Suppress item granting and recalculation of construction amount at construction  and remove NitroxId from 
+        public bool Constructable_Deconstruct_Pre(Constructable instance, ref bool result)
+        {
+            if (remoteEventActive)
+            {
+                if (instance.constructed)
+                {
+                    result = false;
+                }
+                else
+                {
+                    System.Reflection.MethodInfo updateMaterial = typeof(Constructable).GetMethod("UpdateMaterial", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                    Validate.NotNull(updateMaterial);
+                    updateMaterial.Invoke(instance, new object[] { });
+                    if (instance.constructedAmount <= 0f)
+                    {
+                        UnityEngine.Object.Destroy(instance.gameObject);
+                    }
+                    result = true;
+                }
+                return false;
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Suppress hull update infos on initialsync
+
+        // Suppress hull update infos on initialsync
         public bool BaseHullStrength_OnPostRebuildGeometry_Pre(BaseHullStrength instance, Base b)
         {
             if (isInitialSyncing || remoteEventActive)
@@ -878,6 +896,10 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
+        #endregion
+
+        #region Suppress rotation hints for remote player or initialsync
+
         // Suppress rotation hints on InitialSync and build actions of remote player
         public bool Builder_ShowRotationControlsHint_Pre()
         {
@@ -915,6 +937,9 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
+        #endregion
+
+        #region Builder changes to allow multiplayer usage
 
         // On construction of a base piece that is initiated from a remote player or initialsync, 
         // it is needed to skip and ignore the BuilderTool input handling of the local player.
@@ -926,7 +951,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 typeof(Builder).ReflectionSet("canPlace", false, true, true);
                 if (typeof(Builder).ReflectionGet("prefab", false, true) == null)
                 {
-                    return true; //the true is for skipping the original method, as Builder.Update doesn't have a return value
+                    return true; // the returned true is for skipping the original method, as Builder.Update doesn't have a return value
                 }
                 if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
                 {
@@ -948,7 +973,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
                 ((Material)typeof(Builder).ReflectionGet("ghostStructureMaterial", false, true)).SetColor(ShaderPropertyID._Tint, value);
 
-                return true; // return true to skip the original method and just use ours 
+                return true; // return true to skip the original method 
             }
             return false; // if local player does something, return false to let original method execute
         }
@@ -971,5 +996,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
             return false; // Let the original method execute with the changed inputparameter
         }
+
+        #endregion
     }
 }
