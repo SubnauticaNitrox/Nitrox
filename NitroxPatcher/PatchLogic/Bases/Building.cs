@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic;
 using NitroxClient.MonoBehaviours;
@@ -924,7 +925,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
                 if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
                 {
-                    // skip original
+                    // skip original 
                     //Builder.inputHandler.canHandleInput = true;
                     //InputHandlerStack.main.Push(Builder.inputHandler);
                 }
@@ -944,6 +945,22 @@ namespace NitroxPatcher.PatchLogic.Bases
                 return true; // return true to skip original
             }
             return false; // if local player does something, return false to let original method execute
+        }
+
+        // On setting up the renderers, subnautica normally would evaluate if the player is currently inside or outside to apply 
+        // the correct light source (internal or sun) to the objects that are currently created. But because the NitroxPlayer 
+        // is always spawned in the lifepod at initialsync and transfered to it last session position later, we need to change
+        // the renderer here to outside while initial syncing. 
+        // ##TODO BUILDING## This needs more fine tuning, because if a remote player is placing a solarpanel while current player 
+        // is in Base, also the wrong renderers are applied. 
+
+        internal bool Builder_SetupRenderers_Pre(ref bool interior)
+        {
+            if (isInitialSyncing)
+            {
+                interior = false;
+            }
+            return false; // Let the original method execute with the changed inputparameter
         }
     }
 }
