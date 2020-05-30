@@ -38,6 +38,8 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         bool IBuilding.InitialSyncActive { set => isInitialSyncing = value; }
 
+        private BasePiece currentConstructedNewBasePiece = null;
+
         void IBuilding.ConstructNewBasePiece(BasePiece basePiece)
         {
 #if TRACE && BUILDING
@@ -47,6 +49,8 @@ namespace NitroxPatcher.PatchLogic.Bases
             remoteEventActive = true;
             try
             {
+                currentConstructedNewBasePiece = basePiece;
+
 
 #if TRACE && BUILDING
                 NitroxModel.Logger.Log.Debug("Constructable_ConstructionBegin_Remote - techTypeEnum: " + basePiece.TechType.ToUnity());
@@ -134,6 +138,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
             finally
             {
+                currentConstructedNewBasePiece = null;
                 remoteEventActive = false;
             }
         }
@@ -911,7 +916,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         }
 
 
-        // On constructing base pieces on from a remote player construction or initialsync, 
+        // On construction of a base piece that is initiated from a remote player or initialsync, 
         // it is needed to skip and ignore the BuilderTool input handling of the local player.
         internal bool Builder_Update_Pre()
         {
@@ -925,7 +930,8 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
                 if ((bool)typeof(Builder).GetMethod("CreateGhost", System.Reflection.BindingFlags.Static).Invoke(null, null))
                 {
-                    // skip original 
+                    // suppress original code
+
                     //Builder.inputHandler.canHandleInput = true;
                     //InputHandlerStack.main.Push(Builder.inputHandler);
                 }
@@ -942,23 +948,26 @@ namespace NitroxPatcher.PatchLogic.Bases
                 }
                 ((Material)typeof(Builder).ReflectionGet("ghostStructureMaterial", false, true)).SetColor(ShaderPropertyID._Tint, value);
 
-                return true; // return true to skip original
+                return true; // return true to skip the original method and just use ours 
             }
             return false; // if local player does something, return false to let original method execute
         }
 
         // On setting up the renderers, subnautica normally would evaluate if the player is currently inside or outside to apply 
-        // the correct light source (internal or sun) to the objects that are currently created. But because the NitroxPlayer 
-        // is always spawned in the lifepod at initialsync and transfered to it last session position later, we need to change
-        // the renderer here to outside while initial syncing. 
-        // ##TODO BUILDING## This needs more fine tuning, because if a remote player is placing a solarpanel while current player 
-        // is in Base, also the wrong renderers are applied. 
-
+        // the renderer for the view layer to the object that is currently created. On initial sync or remote action we setup the
+        // renderer based on the type of basepiece that is created. 
         internal bool Builder_SetupRenderers_Pre(ref bool interior)
         {
-            if (isInitialSyncing)
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
-                interior = false;
+                if(currentConstructedNewBasePiece.IsFurniture)
+                {
+                    interior = true;
+                }
+                else
+                {
+                    interior = false;
+                }
             }
             return false; // Let the original method execute with the changed inputparameter
         }
