@@ -40,6 +40,7 @@ namespace NitroxPatcher
             ClientAutoFacRegistrar clientAutoFacRegistrar = new ClientAutoFacRegistrar();
             clientAutoFacRegistrar.RegisterPatchDependencies += ClientAutoFacRegistrar_RegisterPatchDependencies;
             NitroxServiceLocator.InitializeDependencyContainer(clientAutoFacRegistrar);
+            clientAutoFacRegistrar.RegisterPatchDependencies -= ClientAutoFacRegistrar_RegisterPatchDependencies;
 
             InitPatches();
             ApplyNitroxBehaviours();

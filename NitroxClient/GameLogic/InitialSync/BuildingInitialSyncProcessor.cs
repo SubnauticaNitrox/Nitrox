@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using NitroxClient.Communication.Abstract;
-using NitroxModel.GameLogic;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.InitialSync.Base;
 using NitroxClient.MonoBehaviours;

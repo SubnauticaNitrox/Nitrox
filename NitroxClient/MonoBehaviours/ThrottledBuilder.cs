@@ -4,7 +4,7 @@ using NitroxModel.Core;
 using NitroxModel.Logger;
 using System;
 using UnityEngine;
-using NitroxModel.GameLogic;
+using NitroxClient.GameLogic;
 
 
 namespace NitroxClient.MonoBehaviours
