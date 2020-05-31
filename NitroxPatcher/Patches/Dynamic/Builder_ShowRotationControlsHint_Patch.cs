@@ -20,6 +20,5 @@ namespace NitroxPatcher.Patches.Dynamic
         {
             PatchPrefix(harmony, TARGET_METHOD);
         }
-
     }
 }

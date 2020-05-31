@@ -23,4 +23,3 @@ namespace NitroxPatcher.Patches.Dynamic
         }
     }
 }
-

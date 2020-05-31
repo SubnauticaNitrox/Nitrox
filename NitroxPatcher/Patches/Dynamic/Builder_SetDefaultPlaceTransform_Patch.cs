@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class Builder_SetDefaultPlaceTransform_Patch : NitroxPatch, IDynamicPatch
+    public class Builder_SetDefaultPlaceTransform_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(Builder);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("SetDefaultPlaceTransform", BindingFlags.NonPublic | BindingFlags.Static);

@@ -22,5 +22,4 @@ namespace NitroxPatcher.Patches.Dynamic
             PatchPostfix(harmony, TARGET_METHOD);
         }
     }
-
 }

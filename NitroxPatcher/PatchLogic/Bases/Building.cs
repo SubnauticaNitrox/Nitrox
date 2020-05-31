@@ -1015,6 +1015,16 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
+        // Apply camera position
+        internal void Builder_GetAimTransform_Post(ref Transform result)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
+            {
+                result.position = currentConstructedNewBasePiece.CameraPosition.ToUnity();
+                result.rotation = currentConstructedNewBasePiece.CameraRotation.ToUnity();
+            }
+        }
+
         // Apply RotationMetaData to CorridorGhosts
         internal bool BaseAddCorridorGhost_UpdateRotation_Pre(BaseAddCorridorGhost instance, ref bool geometryChanged)
         {
@@ -1263,5 +1273,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
             #endregion
         }
+
+       
     }
 }

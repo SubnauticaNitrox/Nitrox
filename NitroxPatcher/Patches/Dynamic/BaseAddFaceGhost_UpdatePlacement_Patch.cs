@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace NitroxPatcher.Patches.Dynamic
 {
-    class BaseAddFaceGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
+    public class BaseAddFaceGhost_UpdatePlacement_Patch : NitroxPatch, IDynamicPatch
     {
         public static readonly Type TARGET_CLASS = typeof(BaseAddFaceGhost);
         public static readonly MethodInfo TARGET_METHOD = TARGET_CLASS.GetMethod("UpdatePlacement", BindingFlags.Public | BindingFlags.Instance);
