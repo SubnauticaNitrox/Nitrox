@@ -14,6 +14,7 @@ using NitroxModel.Logger;
 using NitroxModel.Packets;
 using NitroxModel_Subnautica.DataStructures;
 using NitroxModel_Subnautica.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel_Subnautica.Helper.Int3;
 using UnityEngine;
 
 namespace NitroxPatcher.PatchLogic.Bases
@@ -24,7 +25,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         // State if currently in InitialSync phase
         private bool isInitialSyncing = false;
-        
+
         // Contains the last hovered constructable object hovered by the current player. Is needed to ensure fired events for the correct item.
         private Constructable lastHoveredConstructable = null;
 
@@ -1002,7 +1003,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         #region Position and Metadata applyment to BaseGhosts
 
-        // Apply the position of the builded Piece
+        // Apply the basic position of the builded Piece
         internal void Builder_SetDefaultPlaceTransform_Post(ref Vector3 position, ref Quaternion rotation)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
@@ -1012,7 +1013,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
-        // Apply RotationMetaData to Corridors
+        // Apply RotationMetaData to CorridorGhosts
         internal bool BaseAddCorridorGhost_UpdateRotation_Pre(BaseAddCorridorGhost instance, ref bool geometryChanged)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
@@ -1030,7 +1031,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
-        // Apply RotationMetaData to MapRooms
+        // Apply RotationMetaData to MapRoomGhosts
         internal bool BaseAddMapRoomGhost_UpdateRotation_Pre(BaseAddMapRoomGhost instance, ref bool geometryChanged)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
@@ -1048,7 +1049,78 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
+        // Apply Position and RotationMetaData to ModuleGhosts
+        internal bool BaseAddModuleGhost_UpdatePlacement_Pre(BaseAddModuleGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
+            {
+                positionFound = false;
+                geometryChanged = false;
 
+                // apply saved rotation data instead of BuilderTool input
+                instance.ReflectionSet("direction", ((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).ModuleDirection);
+                geometryChanged = true;
+
+                // skip the check if Player is in base to also place modules at initialsync or by a remote player
+
+                // retrieve and apply targetBase 
+                if (currentConstructedNewBasePiece.ParentId.HasValue)
+                {
+                    GameObject baseObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
+                    if (baseObject != null)
+                    {
+                        Base targetBase = baseObject.GetComponent<Base>();
+                        if (targetBase != null)
+                        {
+                            instance.ReflectionSet("targetBase", targetBase);
+                        }
+                    }
+                }
+
+                // in case a targetbase couldn't be applied, let the game try to find one
+                if (instance.ReflectionGet("targetBase") == null)
+                {
+                    instance.ReflectionSet("targetBase", (Base)typeof(BaseGhost).GetMethod("FindBase", System.Reflection.BindingFlags.Static).Invoke(null, new object[] { camera, 20f }), false, true);
+                }
+
+                if (instance.ReflectionGet("targetBase") == null)
+                {
+                    geometryChanged = (bool)instance.ReflectionCall("SetupInvalid", null);
+                    _result = false;
+                    return false;
+                }
+
+                // skip face validation
+
+                // apply anchored face
+                Base.Face moduleAnchoredFace = new Base.Face(((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceCell.Global(), (Base.Direction)((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
+                Int3 baseAnchoredCell = moduleAnchoredFace.cell + ((Base)instance.ReflectionGet("targetBase")).GetAnchor();
+                Int3 @int = ((Base)instance.ReflectionGet("targetBase")).NormalizeCell(baseAnchoredCell);
+
+                instance.anchoredFace = new Base.Face?(moduleAnchoredFace);
+                Base.CellType cell = ((Base)instance.ReflectionGet("targetBase")).GetCell(@int);
+                Int3 int2 = Base.CellSize[(int)cell];
+                geometryChanged = (bool)instance.ReflectionCall("UpdateSize", false, false, new object[] { int2 });
+                instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), new Int3.Bounds(@int, @int + int2 - 1), @int * -1);
+                Int3 cell2 = baseAnchoredCell - @int;
+                Base.Face face3 = new Base.Face(cell2, (Base.Direction)((BaseModuleRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).AnchoredFaceDirection);
+
+                instance.GhostBase.SetFace(face3, instance.faceType);
+                instance.GhostBase.ClearMasks();
+                instance.GhostBase.SetFaceMask(face3, true);
+                instance.ReflectionCall("RebuildGhostGeometry", null);
+                geometryChanged = true;
+            
+                ghostModelParentConstructableBase.transform.position = ((Base)instance.ReflectionGet("targetBase")).GridToWorld(@int);
+                ghostModelParentConstructableBase.transform.rotation = ((Base)instance.ReflectionGet("targetBase")).transform.rotation;
+                positionFound = true;
+
+                _result = !((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(baseAnchoredCell);
+
+                return false;
+            }
+            return true;
+        }
 
         #endregion
     }
