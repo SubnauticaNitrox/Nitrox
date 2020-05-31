@@ -20,9 +20,14 @@ namespace NitroxServer_Subnautica
     {
         private static readonly Dictionary<string, Assembly> resolvedAssemblyCache = new Dictionary<string, Assembly>();
         private static Lazy<string> gameInstallDir;
-        
+
         private static void Main(string[] args)
         {
+            ConfigureCultureInfo();
+            Log.Setup();
+
+            ConfigureConsoleWindow();
+
             // Allow game path to be given as command argument
             if (args.Length > 0 && Directory.Exists(args[0]) && File.Exists(Path.Combine(args[0], "Subnautica.exe")))
             {
@@ -42,9 +47,6 @@ namespace NitroxServer_Subnautica
 
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
             AppDomain.CurrentDomain.ReflectionOnlyAssemblyResolve += CurrentDomainOnAssemblyResolve;
-            ConfigureConsoleWindow();
-            ConfigureCultureInfo();
-            Log.Setup();
 
             NitroxModel.Helper.Map.Main = new SubnauticaMap();
 
@@ -77,7 +79,7 @@ namespace NitroxServer_Subnautica
                 cmdProcessor.ProcessCommand(Console.ReadLine(), Optional.Empty, Perms.CONSOLE);
             }
         }
-        
+
         private static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             string dllFileName = args.Name.Split(',')[0];
@@ -99,7 +101,7 @@ namespace NitroxServer_Subnautica
             {
                 return val;
             }
-            
+
             // Read assemblies as bytes as to not lock the file so that Nitrox can patch assemblies while server is running.
             using (FileStream stream = new FileStream(dllPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (MemoryStream mstream = new MemoryStream())
@@ -119,7 +121,7 @@ namespace NitroxServer_Subnautica
         /**
          * Internal subnautica files are setup using US english number formats and dates.  To ensure
          * that we parse all of these appropriately, we will set the default cultureInfo to en-US.
-         * This must best done for any thread that is spun up and needs to read from files (unless 
+         * This must best done for any thread that is spun up and needs to read from files (unless
          * we were to migrate to 4.5.)  Failure to set the context can result in very strange behaviour
          * throughout the entire application.  This originally manifested itself as a duplicate spawning
          * issue for players in Europe.  This was due to incorrect parsing of probability tables.
@@ -128,7 +130,7 @@ namespace NitroxServer_Subnautica
         {
             CultureInfo cultureInfo = new CultureInfo("en-US");
 
-            // Although we loaded the en-US cultureInfo, let's make sure to set these incase the 
+            // Although we loaded the en-US cultureInfo, let's make sure to set these incase the
             // default was overriden by the user.
             cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
             cultureInfo.NumberFormat.NumberGroupSeparator = ",";
