@@ -1,5 +1,9 @@
-﻿using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
+﻿using NitroxClient.Communication;
+using NitroxClient.Communication.Abstract;
+using NitroxModel.Core;
+using NitroxModel.DataStructures.GameLogic.Entities.Metadata;
 using NitroxModel.Logger;
+using NitroxModel.Packets;
 using UnityEngine;
 
 namespace NitroxClient.GameLogic.Spawning.Metadata
@@ -15,6 +19,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
 
             if (metadata.Unlocked)
             {
+                PacketSuppressor<EntityMetadataUpdate> packetSuppressor =  NitroxServiceLocator.LocateService<IPacketSender>().Suppress<EntityMetadataUpdate>();
                 if (keypad.root)
                 {
                     keypad.root.BroadcastMessage("UnlockDoor");
@@ -25,6 +30,7 @@ namespace NitroxClient.GameLogic.Spawning.Metadata
                 }
 
                 keypad.UnlockDoor();
+                packetSuppressor.Dispose();
             }
         }
     }
