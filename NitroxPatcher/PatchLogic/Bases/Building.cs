@@ -1001,6 +1001,35 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true; // Let the original method execute with the changed inputparameter
         }
 
+        // For objects outside on surfaces or objects inside on wall or ceiling surfaces (e.g. posters) only retrieve the target surface and perform no checks
+        internal bool Builder_CheckAsSubModule_Pre(ref bool _result)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null)
+            {
+                if (!Constructable.CheckFlags((bool)typeof(Builder).ReflectionGet("allowedInBase", false, true), (bool)typeof(Builder).ReflectionGet("allowedInSub", false, true), (bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+                {
+                    _result = false;
+                    return false;
+                }
+                Transform aimTransform = Builder.GetAimTransform();
+                typeof(Builder).ReflectionSet("placementTarget", null);
+                RaycastHit hit;
+                if (!Physics.Raycast(aimTransform.position, aimTransform.forward, out hit, (float) typeof(Builder).ReflectionGet("placeMaxDistance", false, true), ((LayerMask)typeof(Builder).ReflectionGet("placeLayerMask", false, true)).value, QueryTriggerInteraction.Ignore))
+                {
+                    _result = false;
+                    return false;
+                }
+                typeof(Builder).ReflectionSet("placementTarget", hit.collider.gameObject);
+
+                // skip the surface position calculation because it is already known
+
+                // skipt the rest of the checks
+
+                return false;
+            }
+            return true;
+        }
+
         #endregion
 
         #region Position and Metadata applyment to BaseGhosts
@@ -1075,21 +1104,8 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 // skip the check if Player is in base to also place modules at initialsync or by a remote player
 
-                // retrieve and apply targetBase 
-                if (currentConstructedNewBasePiece.ParentId.HasValue)
-                {
-                    GameObject baseObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
-                    if (baseObject != null)
-                    {
-                        Base targetBase = baseObject.GetComponent<Base>();
-                        if (targetBase != null)
-                        {
-                            instance.ReflectionSet("targetBase", targetBase);
-                        }
-                    }
-                }
 
-                // if no targetbase could be set, something is wrong with the saved informations for this piece or the buildorder missmatches
+                instance.ReflectionSet("targetBase", typeof(BaseGhost).GetMethod("FindBase", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { camera, 20f }));
                 if (instance.ReflectionGet("targetBase") == null)
                 {
                     geometryChanged = (bool)instance.ReflectionCall("SetupInvalid", null);
@@ -1137,21 +1153,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 positionFound = false;
                 geometryChanged = false;
 
-                // retrieve and apply targetBase 
-                if (currentConstructedNewBasePiece.ParentId.HasValue)
-                {
-                    GameObject baseObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
-                    if (baseObject != null)
-                    {
-                        Base targetBase = baseObject.GetComponent<Base>();
-                        if (targetBase != null)
-                        {
-                            instance.ReflectionSet("targetBase", targetBase);
-                        }
-                    }
-                }
-
-                // if no targetbase could be set, something is wrong with the saved informations for this piece or the buildorder missmatches
+                instance.ReflectionSet("targetBase", typeof(BaseGhost).GetMethod("FindBase", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { camera, 20f }));
                 if (instance.ReflectionGet("targetBase") == null)
                 {
                     geometryChanged = (bool)instance.ReflectionCall("SetupInvalid", null);
@@ -1201,6 +1203,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
+        // Apply Position and RotationMetaData to Bulkheads
         internal bool BaseAddBulkheadGhost_UpdatePlacement_Pre(BaseAddModuleGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
@@ -1210,21 +1213,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 // skip the check if Player is in base to also place modules at initialsync or by a remote player
 
-                // retrieve and apply targetBase 
-                if (currentConstructedNewBasePiece.ParentId.HasValue)
-                {
-                    GameObject baseObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
-                    if (baseObject != null)
-                    {
-                        Base targetBase = baseObject.GetComponent<Base>();
-                        if (targetBase != null)
-                        {
-                            instance.ReflectionSet("targetBase", targetBase);
-                        }
-                    }
-                }
-
-                // if no targetbase could be set, something is wrong with the saved informations for this piece or the buildorder missmatches
+                instance.ReflectionSet("targetBase", typeof(BaseGhost).GetMethod("FindBase", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static).Invoke(null, new object[] { camera, 20f }));
                 if (instance.ReflectionGet("targetBase") == null)
                 {
                     geometryChanged = (bool)instance.ReflectionCall("SetupInvalid", null);
@@ -1270,10 +1259,10 @@ namespace NitroxPatcher.PatchLogic.Bases
                 return false;
             }
             return true;
-
-            #endregion
         }
 
-       
+        
+
+        #endregion
     }
 }
