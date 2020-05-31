@@ -989,7 +989,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
-                if(currentConstructedNewBasePiece.IsFurniture)
+                if (currentConstructedNewBasePiece.IsFurniture)
                 {
                     interior = true;
                 }
@@ -1107,7 +1107,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 instance.GhostBase.SetFaceMask(face3, true);
                 instance.ReflectionCall("RebuildGhostGeometry", null);
                 geometryChanged = true;
-            
+
                 ghostModelParentConstructableBase.transform.position = ((Base)instance.ReflectionGet("targetBase")).GridToWorld(@int);
                 ghostModelParentConstructableBase.transform.rotation = ((Base)instance.ReflectionGet("targetBase")).transform.rotation;
                 positionFound = true;
@@ -1181,6 +1181,7 @@ namespace NitroxPatcher.PatchLogic.Bases
                 {
                     if (((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(cell3))
                     {
+                        _result = false;
                         return false;
                     }
                 }
@@ -1190,6 +1191,77 @@ namespace NitroxPatcher.PatchLogic.Bases
             return true;
         }
 
-        #endregion
+        internal bool BaseAddBulkheadGhost_UpdatePlacement_Pre(BaseAddModuleGhost instance, ref bool _result, Transform camera, float placeMaxDistance, ref bool positionFound, ref bool geometryChanged, ConstructableBase ghostModelParentConstructableBase)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
+            {
+                positionFound = false;
+                geometryChanged = false;
+
+                // skip the check if Player is in base to also place modules at initialsync or by a remote player
+
+                // retrieve and apply targetBase 
+                if (currentConstructedNewBasePiece.ParentId.HasValue)
+                {
+                    GameObject baseObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
+                    if (baseObject != null)
+                    {
+                        Base targetBase = baseObject.GetComponent<Base>();
+                        if (targetBase != null)
+                        {
+                            instance.ReflectionSet("targetBase", targetBase);
+                        }
+                    }
+                }
+
+                // if no targetbase could be set, something is wrong with the saved informations for this piece or the buildorder missmatches
+                if (instance.ReflectionGet("targetBase") == null)
+                {
+                    geometryChanged = (bool)instance.ReflectionCall("SetupInvalid", null);
+                    _result = false;
+                    return false;
+                }
+
+                // find the face by camera because it didn't got saved in rotationmetadata
+                Vector3 normal = ((Base)instance.ReflectionGet("targetBase")).transform.InverseTransformDirection(camera.forward);
+                Base.Face adjacentFace = new Base.Face(((Base)instance.ReflectionGet("targetBase")).WorldToGrid(camera.position), Base.NormalToDirection(normal));
+
+                // skip face validation
+
+                Int3 @int = ((Base)instance.ReflectionGet("targetBase")).NormalizeCell(adjacentFace.cell);
+
+                Base.CellType cell = ((Base)instance.ReflectionGet("targetBase")).GetCell(@int);
+                Int3 int2 = Base.CellSize[(int)cell];
+                if (instance.GhostBase.Shape.ToInt3() != int2)
+                {
+                    instance.GhostBase.SetSize(int2);
+                    instance.GhostBase.AllocateMasks();
+                }
+                instance.GhostBase.CopyFrom(((Base)instance.ReflectionGet("targetBase")), new Int3.Bounds(@int, @int + int2 - 1), @int * -1);
+                Int3 cell2 = adjacentFace.cell - @int;
+                Base.Face face = new Base.Face(cell2, adjacentFace.direction);
+                instance.GhostBase.SetFace(face, Base.FaceType.BulkheadClosed);
+                instance.GhostBase.ClearMasks();
+                instance.GhostBase.SetFaceMask(face, true);
+                instance.ReflectionCall("RebuildGhostGeometry", null);
+                geometryChanged = true;
+                instance.ReflectionSet("face", new Base.Face?(adjacentFace));
+
+                ghostModelParentConstructableBase.transform.position = ((Base)instance.ReflectionGet("targetBase")).GridToWorld(@int);
+                ghostModelParentConstructableBase.transform.rotation = ((Base)instance.ReflectionGet("targetBase")).transform.rotation;
+                positionFound = true;
+
+                if (((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(adjacentFace.cell) || (((Base)instance.ReflectionGet("targetBase")).IsCellUnderConstruction(Base.GetAdjacent(adjacentFace))))
+                {
+                    _result = false;
+                    return false;
+                }
+
+                return false;
+            }
+            return true;
+
+            #endregion
+        }
     }
 }
