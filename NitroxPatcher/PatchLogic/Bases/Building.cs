@@ -965,6 +965,9 @@ namespace NitroxPatcher.PatchLogic.Bases
                     //InputHandlerStack.main.Push(Builder.inputHandler);
                 }
                 typeof(Builder).ReflectionSet("canPlace", (bool)typeof(Builder).GetMethod("UpdateAllowed", System.Reflection.BindingFlags.Static).Invoke(null, null), false, true);
+
+                //  ## TODO BUILDING ## maybe skip updating the visible ghostmodel because it is never shown
+
                 Transform transform = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).transform;
                 transform.position = ((Vector3)typeof(Builder).ReflectionGet("placePosition", false, true)) + ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Vector3)typeof(Builder).ReflectionGet("ghostModelPosition", false, true));
                 transform.rotation = ((Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true)) * ((Quaternion)typeof(Builder).ReflectionGet("ghostModelRotation", false, true));
@@ -983,20 +986,14 @@ namespace NitroxPatcher.PatchLogic.Bases
         }
 
         // On setting up the renderers, subnautica normally would evaluate if the player is currently inside or outside to apply 
-        // the renderer for the view layer to the object that is currently created. On initial sync or remote action we setup the
-        // renderer based on the type of basepiece that is created. 
+        // the renderer for the view layer to the object that is currently created. On initial sync or remote action the visual 
+        // ghost is never seen, so set to false.
+        // ## TODO BUILDING ## maybe remove patch completely later
         internal bool Builder_SetupRenderers_Pre(ref bool interior)
         {
             if (remoteEventActive && currentConstructedNewBasePiece != null)
             {
-                if (currentConstructedNewBasePiece.IsFurniture)
-                {
-                    interior = true;
-                }
-                else
-                {
-                    interior = false;
-                }
+                interior = false;
             }
             return true; // Let the original method execute with the changed inputparameter
         }
@@ -1025,6 +1022,85 @@ namespace NitroxPatcher.PatchLogic.Bases
 
                 // skipt the rest of the checks
 
+                return false;
+            }
+            return true;
+        }
+
+        internal bool Builder_TryPlace_Pre(ref bool _result)
+        {
+            if(remoteEventActive)
+            {
+                typeof(Builder).GetMethod("Initialize", System.Reflection.BindingFlags.Static).Invoke(null, null);
+                if (typeof(Builder).ReflectionGet("prefab", false, true) == null || !Builder.canPlace)
+                {
+                    return false;
+                }
+
+                //skip playing sound
+                
+                ConstructableBase componentInParent = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponentInParent<ConstructableBase>();
+                if (componentInParent != null)
+                {
+                    BaseGhost component = ((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)).GetComponent<BaseGhost>();
+                    component.Place();
+                    if (component.TargetBase != null)
+                    {
+                        componentInParent.transform.SetParent(component.TargetBase.transform, true);
+                    }
+                    componentInParent.SetState(false, true);
+                }
+                else
+                {
+                    GameObject gameObject = UnityEngine.Object.Instantiate<GameObject>((GameObject)typeof(Builder).ReflectionGet("prefab", false, true));
+                    bool flag = false;
+                    bool flag2 = false;
+
+                    // instead of setting the subroot by the current player location, use the saved parent
+                    // orig: SubRoot currentSub = Player.main.GetCurrentSub();
+
+                    SubRoot currentSub = null;
+                    GameObject rootObject = NitroxEntity.GetObjectFrom(currentConstructedNewBasePiece.ParentId.Value).OrElse(null);
+
+                    // set the subroot only if it is an inside object, outside objects will find the transform parent by placementTarget
+                    if(rootObject != null && !((bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+                    {
+                        currentSub = rootObject.GetComponent<SubRoot>();
+                    }
+                    
+                    if (currentSub != null)
+                    {
+                        flag = currentSub.isBase;
+                        flag2 = currentSub.isCyclops;
+                        gameObject.transform.parent = currentSub.GetModulesRoot();
+                    }
+                    else if (((GameObject)typeof(Builder).ReflectionGet("placementTarget", false, true)) != null && ((bool)typeof(Builder).ReflectionGet("allowedOutside", false, true)))
+                    {
+                        SubRoot componentInParent2 = ((GameObject)typeof(Builder).ReflectionGet("placementTarget", false, true)).GetComponentInParent<SubRoot>();
+                        if (componentInParent2 != null)
+                        {
+                            gameObject.transform.parent = componentInParent2.GetModulesRoot();
+                        }
+                    }
+                    Transform transform = gameObject.transform;
+                    transform.position = (Vector3)typeof(Builder).ReflectionGet("placePosition", false, true);
+                    transform.rotation = (Quaternion)typeof(Builder).ReflectionGet("placeRotation", false, true);
+                    Constructable componentInParent3 = gameObject.GetComponentInParent<Constructable>();
+                    componentInParent3.SetState(false, true);
+                    global::Utils.SetLayerRecursively(gameObject, LayerMask.NameToLayer(flag ? "Default" : "Interior"), true, -1);
+                    if (((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)) != null)
+                    {
+                        UnityEngine.Object.Destroy(((GameObject)typeof(Builder).ReflectionGet("ghostModel", false, true)));
+                    }
+                    componentInParent3.SetIsInside(flag || flag2);
+                    SkyEnvironmentChanged.Send(gameObject, currentSub);
+                }
+
+                typeof(Builder).ReflectionSet("ghostModel", null);
+                typeof(Builder).ReflectionSet("prefab", null);
+                typeof(Builder).ReflectionSet("canPlace", false);
+
+                _result = true;
                 return false;
             }
             return true;
@@ -1262,6 +1338,8 @@ namespace NitroxPatcher.PatchLogic.Bases
         }
 
         
+
+
 
         #endregion
     }

@@ -59,6 +59,7 @@
     <Compile Include="Patches\Dynamic\Builder_SetDefaultPlaceTransform_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_SetupRenderers_Patch.cs" />
     <Compile Include="Patches\Dynamic\Builder_Update_Patch.cs" />
+    <Compile Include="Patches\Dynamic\Builder_TryPlace_Patch.cs" />
     <Compile Include="Patches\Persistent\SentrySdk_Start_Patch.cs" />
     <Compile Include="Modules\NitroxPatchesModule.cs" />
     <Compile Include="Patches\Dynamic\BaseDeconstructable_MakeCellDeconstructable_Patch.cs" />
