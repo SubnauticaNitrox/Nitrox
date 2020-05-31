@@ -314,7 +314,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         #region Broadcast changes from local Player
 
-        public void Constructable_Construct_Post(Constructable instance, bool result)
+        internal void Constructable_Construct_Post(Constructable instance, bool result)
         {
 
 #if TRACE && BUILDING
@@ -348,7 +348,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
-        public void Constructable_Deconstruct_Post(Constructable instance, bool result)
+        internal void Constructable_Deconstruct_Post(Constructable instance, bool result)
         {
 
 #if TRACE && BUILDING
@@ -397,7 +397,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }
         }
 
-        public void Constructable_NotifyConstructedChanged_Post(Constructable instance)
+        internal void Constructable_NotifyConstructedChanged_Post(Constructable instance)
         {
 
 #if TRACE && BUILDING
@@ -685,7 +685,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         #region BuilderTool handling
 
-        public void BuilderTool_OnHoverConstructable_Post(GameObject gameObject, Constructable constructable)
+        internal void BuilderTool_OnHoverConstructable_Post(GameObject gameObject, Constructable constructable)
         {
 
 #if TRACE && BUILDING && HOVERCONSTRUCTABLE
@@ -696,7 +696,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             lastHoveredConstructable = constructable;
         }
 
-        public void BuilderTool_OnHoverDeconstructable_Post(GameObject gameObject, BaseDeconstructable deconstructable)
+        internal void BuilderTool_OnHoverDeconstructable_Post(GameObject gameObject, BaseDeconstructable deconstructable)
         {
 
 #if TRACE && BUILDING && HOVERDECONSTRUCTABLE
@@ -715,7 +715,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         // Besides switching the state of currently handling a builderTool, this method is also intended to precheck if a construction/action even is allowed. If a 
         // remote player is currently using a gameobject (e.g. Fabricator) or is too using the buildertool on the same object, we want to deny the local action here 
         // and give a info to the player. 
-        public bool BuilderTool_HandleInput_Pre(GameObject gameObject)
+        internal bool BuilderTool_HandleInput_Pre(GameObject gameObject)
         {
 
 #if TRACE && BUILDING && HOVER
@@ -755,7 +755,7 @@ namespace NitroxPatcher.PatchLogic.Bases
             }*/
         }
 
-        public void BuilderTool_HandleInput_Post(BuilderTool instance)
+        internal void BuilderTool_HandleInput_Post(BuilderTool instance)
         {
             currentlyHandlingBuilderTool = false;
         }
@@ -765,7 +765,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         #region NitroxId transfer for Bases
 
         // For Base objects we need to transfer the ids
-        public void Base_CopyFrom_Pre(Base targetBase, Base sourceBase)
+        internal void Base_CopyFrom_Pre(Base targetBase, Base sourceBase)
         {
             NitroxId sourceBaseId = NitroxEntity.GetIdNullable(sourceBase.gameObject);
             NitroxId targetBaseId = NitroxEntity.GetIdNullable(targetBase.gameObject);
@@ -802,7 +802,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         #region Suppress item consumtion/granting for remote events
 
         // Suppress item consumption and recalculation of construction amount at construction
-        public bool Constructable_Construct_Pre(Constructable instance, ref bool result)
+        internal bool Constructable_Construct_Pre(Constructable instance, ref bool result)
         {
             if (remoteEventActive)
             {
@@ -827,7 +827,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         }
 
         // Suppress item granting and recalculation of construction amount at construction  and remove NitroxId from 
-        public bool Constructable_Deconstruct_Pre(Constructable instance, ref bool result)
+        internal bool Constructable_Deconstruct_Pre(Constructable instance, ref bool result)
         {
             if (remoteEventActive)
             {
@@ -856,7 +856,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         #region Suppress hull update infos on initialsync
 
         // Suppress hull update infos on initialsync
-        public bool BaseHullStrength_OnPostRebuildGeometry_Pre(BaseHullStrength instance, Base b)
+        internal bool BaseHullStrength_OnPostRebuildGeometry_Pre(BaseHullStrength instance, Base b)
         {
             if (isInitialSyncing || remoteEventActive)
             {
@@ -902,7 +902,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         #region Suppress rotation hints for remote player or initialsync
 
         // Suppress rotation hints on InitialSync and build actions of remote player
-        public bool Builder_ShowRotationControlsHint_Pre()
+        internal bool Builder_ShowRotationControlsHint_Pre()
         {
 
 #if TRACE && BUILDING
@@ -920,7 +920,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         }
 
         // Suppress rotation hints on InitialSync and build actions of remote player
-        public bool BaseAddModuleGhost_SetupGhost_Pre(BaseAddModuleGhost instance)
+        internal bool BaseAddModuleGhost_SetupGhost_Pre(BaseAddModuleGhost instance)
         {
             if (remoteEventActive)
             {
@@ -940,7 +940,7 @@ namespace NitroxPatcher.PatchLogic.Bases
 
         #endregion
 
-        #region Builder changes to allow multiplayer usage
+        #region Builder patches to allow multiplayer usage
 
         // On construction of a base piece that is initiated from a remote player or initialsync, 
         // it is needed to skip and ignore the BuilderTool input handling of the local player.
@@ -1015,7 +1015,7 @@ namespace NitroxPatcher.PatchLogic.Bases
         // Apply RotationMetaData to Corridors
         internal bool BaseAddCorridorGhost_UpdateRotation_Pre(BaseAddCorridorGhost instance, ref bool geometryChanged)
         {
-            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.Metadata.HasValue)
+            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
             {
                 // apply saved rotation data instead of BuilderTool input
                 instance.ReflectionSet("rotation", ((BaseCorridorRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).Rotation);
@@ -1023,13 +1023,30 @@ namespace NitroxPatcher.PatchLogic.Bases
                 instance.ReflectionSet("corridorType", (int)instance.ReflectionCall("CalculateCorridorType"));
                 ((Base)instance.ReflectionGet("ghostBase")).SetCorridor(Int3.zero, (int)instance.ReflectionGet("corridorType"), instance.isGlass);
                 instance.ReflectionCall("RebuildGhostGeometry");
+                geometryChanged = true;
 
                 return false;
             }
             return true;
         }
 
-        
+        // Apply RotationMetaData to MapRooms
+        internal bool BaseAddMapRoomGhost_UpdateRotation_Pre(BaseAddMapRoomGhost instance, ref bool geometryChanged)
+        {
+            if (remoteEventActive && currentConstructedNewBasePiece != null && currentConstructedNewBasePiece.RotationMetadata.HasValue)
+            {
+                // apply saved rotation data instead of BuilderTool input
+                instance.ReflectionSet("cellType", ((BaseMapRoomRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).CellType);
+                instance.ReflectionSet("connectionMask", ((BaseMapRoomRotationMetadata)currentConstructedNewBasePiece.RotationMetadata.Value).ConnectionMask);
+
+                ((Base)instance.ReflectionGet("ghostBase")).SetCell(Int3.zero, (Base.CellType)instance.ReflectionGet("cellType"));
+                instance.ReflectionCall("RebuildGhostGeometry");
+                geometryChanged = true;
+
+                return false;
+            }
+            return true;
+        }
 
 
 
